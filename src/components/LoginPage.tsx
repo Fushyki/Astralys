@@ -12,7 +12,7 @@ interface LoginPageProps {
 }
 
 export const LoginPage: React.FC<LoginPageProps> = ({ onNavigate }) => {
-  const { user, isAuthenticated, login, register, logout, syncStatus } = useAuth();
+  const { user, isAuthenticated, login, loginWithGoogle, register, logout, syncStatus } = useAuth();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -165,13 +165,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onNavigate }) => {
     try {
       clearErrors();
       setLoading(true);
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: typeof window !== 'undefined' ? window.location.origin : undefined
-        }
-      });
-      if (error) throw error;
+      await loginWithGoogle();
     } catch (err: any) {
       setGeneralError('Erro no login do Google: ' + err.message);
       setLoading(false);

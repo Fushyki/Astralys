@@ -22,7 +22,14 @@ const STORAGE_KEY_TOKEN = 'astralys_sso_token';
 const STORAGE_KEY_USER = 'astralys_sso_user';
 
 export const getApiBaseUrl = (): string => {
-  return (import.meta as any).env?.VITE_API_URL || 'http://localhost:8000';
+  const envUrl = (import.meta as any).env?.VITE_API_URL;
+  if (envUrl && envUrl !== 'http://localhost:8000') {
+    return envUrl;
+  }
+  if (typeof window !== 'undefined' && window.location.hostname.includes('onrender.com')) {
+    return 'https://astralys-api.onrender.com';
+  }
+  return envUrl || 'http://localhost:8000';
 };
 
 export const getStoredToken = (): string | null => {

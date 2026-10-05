@@ -26,15 +26,18 @@ export const getApiBaseUrl = (): string => {
   if (envUrl && envUrl !== 'http://localhost:8000') {
     return envUrl;
   }
-  if (typeof window !== 'undefined' && window.location.hostname.includes('onrender.com')) {
-    return 'https://astralys-api.onrender.com';
+  if (typeof window !== 'undefined') {
+    const host = window.location.hostname;
+    if (host !== 'localhost' && host !== '127.0.0.1') {
+      return 'https://astralys-api.onrender.com';
+    }
   }
   return envUrl || 'http://localhost:8000';
 };
 
 export const getStoredToken = (): string | null => {
   try {
-    return localStorage.getItem(STORAGE_KEY_TOKEN);
+    return localStorage.getItem(STORAGE_KEY_TOKEN) || localStorage.getItem('ametist_sso_token');
   } catch {
     return null;
   }
@@ -42,7 +45,7 @@ export const getStoredToken = (): string | null => {
 
 export const getStoredUser = (): UserProfile | null => {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY_USER);
+    const raw = localStorage.getItem(STORAGE_KEY_USER) || localStorage.getItem('ametist_sso_user');
     return raw ? JSON.parse(raw) : null;
   } catch {
     return null;
@@ -169,3 +172,87 @@ export const getCurrentUser = async (): Promise<UserProfile | null> => {
     return getStoredUser();
   }
 };
+
+/**
+ * Gera um ticket efêmero (60s) para SSO cross-app
+ */
+export const createSsoTicket = async (): Promise<string> => {
+  const baseUrl = getApiBaseUrl();
+  const token = getStoredToken();
+  if (!token) throw new Error('Usuário não autenticado.');
+
+  const response = await fetch(`${baseUrl}/auth/sso/ticket`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error('Falha ao gerar ticket SSO.');
+  }
+
+  const data = await response.json();
+  return data.ticket;
+};
+
+/**
+ * Troca um ticket efêmero recebido via URL por uma sessão autenticada com novo JWT
+ */
+export const exchangeSsoTicket = async (ticket: string): Promise<AuthResponse> => {
+  const baseUrl = getApiBaseUrl();
+  const response = await fetch(`${baseUrl}/auth/sso/exchange`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ ticket })
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({ detail: 'Falha ao validar ticket SSO' }));
+    throw new Error(errorData.detail || 'Ticket SSO inválido ou expirado.');
+  }
+
+  const data: AuthResponse = await response.json();
+  saveAuthSession(data.access_token, data.usuario);
+  return data;
+};
+
+/**
+ * Processa ticket SSO na URL atual (se houver), limpando a barra de endereços
+ */
+export const checkAndConsumeUrlSsoTicket = async (): Promise<UserProfile | null> => {
+  if (typeof window === 'undefined') return null;
+  const params = new URLSearchParams(window.location.search);
+  const ticket = params.get('sso_ticket');
+  if (!ticket) return null;
+
+  try {
+    const res = await exchangeSsoTicket(ticket);
+    params.delete('sso_ticket');
+    const newSearch = params.toString() ? `?${params.toString()}` : '';
+    window.history.replaceState({}, document.title, window.location.pathname + newSearch + window.location.hash);
+    return res.usuario;
+  } catch (err) {
+    console.error('Falha ao consumir ticket SSO da URL:', err);
+    params.delete('sso_ticket');
+    const newSearch = params.toString() ? `?${params.toString()}` : '';
+    window.history.replaceState({}, document.title, window.location.pathname + newSearch + window.location.hash);
+    return null;
+  }
+};
+
+/**
+ * Constrói a URL para redirecionar para o Ametist com SSO autenticado
+ */
+export const buildAmetistSsoUrl = async (ametistBaseUrl: string = 'https://ametist-tier-maker.vercel.app'): Promise<string> => {
+  try {
+    const ticket = await createSsoTicket();
+    const url = new URL(ametistBaseUrl);
+    url.searchParams.set('sso_ticket', ticket);
+    return url.toString();
+  } catch {
+    return ametistBaseUrl;
+  }
+};
+

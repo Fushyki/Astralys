@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Sparkles, Zap, Flame, Swords, FolderGit2, BarChart3, ChevronDown, Cloud, LogOut } from 'lucide-react';
+import { Sparkles, Zap, Flame, Swords, FolderGit2, BarChart3, ChevronDown, Cloud, LogOut, ExternalLink } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { buildAmetistSsoUrl } from '../services/auth';
 
 export type ActiveTab = 'landing' | 'dashboards' | 'vault' | 'generator' | 'weapons' | 'damage' | 'er';
 
@@ -164,6 +165,20 @@ export const Header: React.FC<HeaderProps> = ({
                           Sincronizado
                         </span>
                       </div>
+
+                      <button
+                        type="button"
+                        onClick={async () => {
+                          setIsUserMenuOpen(false);
+                          const targetUrl = await buildAmetistSsoUrl();
+                          window.open(targetUrl, '_blank', 'noopener,noreferrer');
+                        }}
+                        className="w-full mt-1 flex items-center gap-2 px-3 py-2 text-xs font-semibold text-purple-300 hover:text-purple-200 hover:bg-purple-500/10 rounded-lg transition-colors cursor-pointer"
+                        title="Ir para o Ametist TC Hub conectado na mesma conta"
+                      >
+                        <ExternalLink className="w-3.5 h-3.5 text-purple-400" />
+                        Ir para o Ametist (SSO)
+                      </button>
 
                       <button
                         type="button"

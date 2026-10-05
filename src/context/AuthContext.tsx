@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { UserProfile, getCurrentUser, getStoredToken, getStoredUser, login as apiLogin, register as apiRegister, logout as apiLogout } from '../services/auth';
+import { UserProfile, getCurrentUser, getStoredToken, getStoredUser, login as apiLogin, register as apiRegister, logout as apiLogout, checkAndConsumeUrlSsoTicket } from '../services/auth';
 
 export type CloudSyncStatus = 'idle' | 'syncing' | 'synced' | 'offline' | 'error';
 
@@ -27,11 +27,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
   const [syncStatus, setSyncStatus] = useState<CloudSyncStatus>('idle');
 
-  // Ao iniciar a aplicação, valida a sessão ativa no backend
+  // Ao iniciar a aplicação, valida tickets de SSO recebidos via URL ou sessão ativa no backend
   useEffect(() => {
     let isMounted = true;
     const initAuth = async () => {
       try {
+        // Verifica se há ticket de SSO de uso único vindo do Ametist
+        const ssoUser = await checkAndConsumeUrlSsoTicket();
+        if (ssoUser && isMounted) {
+          setUser(ssoUser);
+          setToken(getStoredToken());
+          setSyncStatus('synced');
+          return;
+        }
+
         const currentUser = await getCurrentUser();
         if (isMounted) {
           if (currentUser) {

@@ -355,3 +355,107 @@ export const DEFAULT_CALCULATION_PROJECTS: CalculationProject[] = [
     scenarios: generateScenariosFromCalculation(FLINS_PREMIUM_HIGH_RESULT)
   }
 ];
+
+const PLACEHOLDER_RESULT: DamageAnalysisResult = {
+  title: 'Equipe Modelo (Placeholder)',
+  characters: [
+    {
+      name: 'Personagem 1',
+      element: 'Pyro',
+      weapon: 'Arma (R1)',
+      artifactSet: 'Conjunto 4p',
+      totalDamage: 650000,
+      damagePercentage: 65.0,
+      totalAtk: 2200,
+      critRate: 75.0,
+      critDmg: 200.0,
+      elementalMastery: 150,
+      dmgBonus: 75.0,
+      rolls: { er: 3, cr: 6, cd: 6, atkPct: 4 }
+    },
+    {
+      name: 'Personagem 2',
+      element: 'Hydro',
+      weapon: 'Arma Favonius (R5)',
+      artifactSet: 'Conjunto de Recarga 4p',
+      totalDamage: 200000,
+      damagePercentage: 20.0,
+      totalAtk: 1600,
+      critRate: 65.0,
+      critDmg: 130.0,
+      elementalMastery: 100,
+      rolls: { er: 6, cr: 5, cd: 5, atkPct: 2 }
+    },
+    {
+      name: 'Personagem 3',
+      element: 'Anemo',
+      weapon: 'Arma de Suporte (R5)',
+      artifactSet: 'Conjunto de Suporte 4p',
+      totalDamage: 100000,
+      damagePercentage: 10.0,
+      totalAtk: 1200,
+      critRate: 50.0,
+      critDmg: 100.0,
+      elementalMastery: 750,
+      rolls: { er: 5, cr: 4, cd: 4, em: 5 }
+    },
+    {
+      name: 'Personagem 4',
+      element: 'Geo',
+      weapon: 'Arma de Cura/Buffer',
+      artifactSet: 'Conjunto de Buffer 4p',
+      totalDamage: 50000,
+      damagePercentage: 5.0,
+      totalAtk: 1100,
+      critRate: 40.0,
+      critDmg: 90.0,
+      rolls: { er: 4, hpPct: 8 }
+    }
+  ],
+  hits: [
+    {
+      id: 'hit-p1',
+      label: 'Q',
+      displayName: 'Dano Supremo (Exemplo)',
+      charName: 'Personagem 1',
+      charIndex: 0,
+      damage: 400000,
+      pctOfTotal: 40.0,
+      category: 'burst'
+    },
+    {
+      id: 'hit-p2',
+      label: 'E',
+      displayName: 'Habilidade Elemental (Exemplo)',
+      charName: 'Personagem 1',
+      charIndex: 0,
+      damage: 250000,
+      pctOfTotal: 25.0,
+      category: 'skill'
+    }
+  ],
+  totalDpr: 1000000,
+  dps: 50000,
+  rotationDuration: 20,
+  comboNotation: 'E -> Q -> Combo de Golpes (Exemplo de Rotação)'
+};
+
+export const PLACEHOLDER_PROJECT: CalculationProject = {
+  id: 'proj-placeholder',
+  title: 'Equipe Modelo (Placeholder)',
+  description: 'Estrutura de demonstração limpa para orientar a visualização dos dashboards, gráficos de dano e timelines.',
+  carryName: 'Personagem 1',
+  teamNames: ['Personagem 1', 'Personagem 2', 'Personagem 3', 'Personagem 4'],
+  totalDpr: PLACEHOLDER_RESULT.totalDpr,
+  dps: PLACEHOLDER_RESULT.dps,
+  rotationDuration: 20,
+  comboNotation: PLACEHOLDER_RESULT.comboNotation,
+  tags: ['Placeholder', 'Modelo', '20s'],
+  sheetOrigin: 'Astralys Template',
+  createdAt: '2026-10-05T00:00:00.000Z',
+  updatedAt: '2026-10-05T00:00:00.000Z',
+  calculation: PLACEHOLDER_RESULT,
+  timeline: generateTimelineFromDamageResult(PLACEHOLDER_RESULT),
+  scenarios: generateScenariosFromCalculation(PLACEHOLDER_RESULT)
+};
+

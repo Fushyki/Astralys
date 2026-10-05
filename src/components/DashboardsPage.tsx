@@ -228,6 +228,37 @@ export const DashboardsPage: React.FC<DashboardsPageProps> = ({
   return (
     <div className="space-y-6 animate-fade-in select-none">
       
+      {/* Informative Placeholder Notice Banner */}
+      {(currentProject.id === 'proj-placeholder' || currentProject.tags?.includes('Placeholder')) && (
+        <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-500/10 via-purple-500/10 to-slate-900 border border-amber-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-lg">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-300 shrink-0">
+              <Sparkles className="w-5 h-5 text-amber-300" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs sm:text-sm font-bold text-white">Dashboard em Modo Placeholder</span>
+                <span className="text-[10px] uppercase font-mono font-bold px-2 py-0.5 rounded-full bg-amber-950 text-amber-300 border border-amber-500/30">
+                  Modelo Demonstrativo
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-400 mt-0.5">
+                Nenhum time real está carregado ainda. Os dados abaixo servem como modelo para você se orientar na visualização de gráficos, rotações e timelines.
+              </p>
+            </div>
+          </div>
+          {onOpenDamageAnalyzer && (
+            <button
+              type="button"
+              onClick={onOpenDamageAnalyzer}
+              className="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-600 via-rose-600 to-purple-600 hover:from-amber-500 hover:to-purple-500 text-white text-xs font-bold shadow-md transition-all cursor-pointer whitespace-nowrap hover:scale-105"
+            >
+              Criar / Colar Minha Equipe
+            </button>
+          )}
+        </div>
+      )}
+
       {/* 1. TOP TEAM SWITCHER TABS (Individual por Time) */}
       <div className="p-3 rounded-2xl bg-[#090e17] border border-slate-800 shadow-xl flex items-center justify-between flex-wrap gap-3">
         <div className="flex items-center gap-2 overflow-x-auto py-1 max-w-full">
@@ -237,6 +268,7 @@ export const DashboardsPage: React.FC<DashboardsPageProps> = ({
           </span>
           {availableProjects.map((p) => {
             const isSelected = p.id === currentProject.id;
+            const isPlaceholder = p.id === 'proj-placeholder' || p.tags?.includes('Placeholder');
             return (
               <button
                 key={p.id}
@@ -249,7 +281,9 @@ export const DashboardsPage: React.FC<DashboardsPageProps> = ({
                 }`}
               >
                 <span>{p.title}</span>
-                <span className="text-[10px] opacity-75 font-mono">({Math.round(p.dps / 1000)}k)</span>
+                <span className="text-[10px] opacity-75 font-mono">
+                  {isPlaceholder ? '(Exemplo)' : `(${Math.round(p.dps / 1000)}k)`}
+                </span>
               </button>
             );
           })}

@@ -13,7 +13,7 @@ import { fetchCloudProjects, saveCloudProject, deleteCloudProject, syncLocalProj
 import { ERTransferPayload, InfographicCardData } from './types/infographic';
 import { CharacterWeaponComparison, WeaponOption } from './types/weaponComparison';
 import { CalculationProject } from './types/projectVault';
-import { DEFAULT_CALCULATION_PROJECTS } from './data/defaultProjects';
+import { DEFAULT_CALCULATION_PROJECTS, PLACEHOLDER_PROJECT } from './data/defaultProjects';
 import { CHARACTERS_DATABASE } from './data/characters';
 import { getWeaponData } from './data/weapons';
 import { DamageAnalysisResult } from './types/damageBreakdown';
@@ -34,22 +34,34 @@ const AppContent: React.FC = () => {
 
   const { isAuthenticated, user, setSyncStatus } = useAuth();
 
-  // Calculation Projects State (Astralys Vault)
+  // Calculation Projects State (Astralys Vault & Dashboards)
   const [projects, setProjects] = useState<CalculationProject[]>(() => {
     try {
       const saved = localStorage.getItem('astralys_saved_projects');
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          // Filtra times padrão hardcoded caso o usuário não tenha criado projetos próprios ainda
+          const userOnly = parsed.filter(p => !p.id.startsWith('proj-mavuika') && !p.id.startsWith('proj-flins'));
+          if (userOnly.length > 0) return userOnly;
+        }
       }
     } catch (e) {
       console.warn('Failed to load projects from localStorage:', e);
     }
-    return DEFAULT_CALCULATION_PROJECTS;
+    return [PLACEHOLDER_PROJECT];
   });
 
   const [activeProjectId, setActiveProjectId] = useState<string>(() => {
-    return DEFAULT_CALCULATION_PROJECTS[0]?.id || '';
+    try {
+      const saved = localStorage.getItem('astralys_saved_projects');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        const userOnly = parsed.filter((p: any) => !p.id.startsWith('proj-mavuika') && !p.id.startsWith('proj-flins'));
+        if (userOnly.length > 0) return userOnly[0].id;
+      }
+    } catch {}
+    return PLACEHOLDER_PROJECT.id;
   });
 
   React.useEffect(() => {
@@ -377,7 +389,7 @@ const AppContent: React.FC = () => {
     setActiveTab('generator');
   };
 
-  const currentProject = projects.find(p => p.id === activeProjectId) || projects[0] || DEFAULT_CALCULATION_PROJECTS[0];
+  const currentProject = projects.find(p => p.id === activeProjectId) || projects[0] || PLACEHOLDER_PROJECT;
 
   const handleSelectProject = (project: CalculationProject) => {
     setActiveProjectId(project.id);

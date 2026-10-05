@@ -7,6 +7,7 @@ import { DamageAnalyzer } from './components/DamageAnalyzer';
 import { WeaponComparator } from './components/WeaponComparator';
 import { DashboardsPage } from './components/DashboardsPage';
 import { ProjectVault } from './components/ProjectVault';
+import { LoginPage } from './components/LoginPage';
 import { AuthModal } from './components/AuthModal';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { fetchCloudProjects, saveCloudProject, deleteCloudProject, syncLocalProjectsWithCloud } from './services/projectApi';
@@ -588,6 +589,10 @@ const AppContent: React.FC = () => {
             initialTeam={teamForER}
             onClearInitialTeam={() => setTeamForER(null)}
           />
+        )}
+
+        {activeTab === 'login' && (
+          <LoginPage onNavigate={setActiveTab} />
         )}
       </main>
 

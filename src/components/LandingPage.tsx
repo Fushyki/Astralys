@@ -14,7 +14,10 @@ import {
   Swords,
   FolderGit2,
   Clock,
-  BarChart3
+  BarChart3,
+  Gem,
+  Cloud,
+  Lock
 } from 'lucide-react';
 import { ActiveTab } from './Header';
 import { CharacterAvatar } from './CharacterAvatar';
@@ -443,6 +446,36 @@ export const LandingPage: React.FC<LandingPageProps> = ({ setActiveTab }) => {
           </div>
 
         </div>
+      </section>
+
+      {/* 2B. UNIFIED SSO & CLOUD SHOWCASE */}
+      <section className="relative overflow-hidden rounded-3xl p-6 sm:p-8 bg-gradient-to-r from-ametist-950/60 via-purple-950/40 to-slate-900 border border-ametist-500/30 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
+        <div className="flex items-start gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-ametist-600 via-purple-600 to-amber-400 p-0.5 shadow-lg shadow-ametist-600/30 flex items-center justify-center shrink-0">
+            <div className="w-full h-full bg-[#0a0c16] rounded-[14px] flex items-center justify-center">
+              <Gem className="text-ametist-400 w-6 h-6 animate-pulse" />
+            </div>
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <h3 className="text-base sm:text-lg font-bold text-white tracking-wide">Conta Unificada Astralys & Ametist</h3>
+              <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-ametist-900 text-ametist-300 border border-ametist-500/40">
+                SSO Integrado
+              </span>
+            </div>
+            <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl leading-relaxed">
+              Use a mesma conta para ambos os sites. Entre com o Google ou crie seu cadastro central para sincronizar todos os seus cálculos e rotações na nuvem sem duplicar senhas.
+            </p>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab('login')}
+          className="px-5 py-3 rounded-xl bg-gradient-to-r from-ametist-600 via-purple-600 to-amber-500 hover:from-ametist-500 hover:to-amber-400 text-white font-bold text-xs shadow-lg shadow-ametist-600/30 transition-all cursor-pointer whitespace-nowrap hover:scale-105 shrink-0"
+        >
+          Acessar Conta Unificada
+        </button>
       </section>
 
       {/* 3. SCIENTIFIC & TECHNICAL HIGHLIGHTS */}

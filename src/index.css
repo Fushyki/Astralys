@@ -58,3 +58,25 @@
 .crystal-glow-amber {
   box-shadow: 0 0 25px -5px rgba(245, 158, 11, 0.35);
 }
+
+/* Custom Inline Input Error Badge (Ametist Style) */
+.input-error-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 68, 68, 0.15);
+  border: 1px solid rgba(255, 68, 68, 0.4);
+  color: #ff6b6b;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 2px;
+  animation: errorShake 0.35s ease-in-out;
+}
+
+@keyframes errorShake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-4px); }
+  40%, 80% { transform: translateX(4px); }
+}

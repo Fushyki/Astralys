@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Sparkles, Zap, Flame, Swords, FolderGit2, BarChart3, ChevronDown, Cloud, LogOut, ExternalLink } from 'lucide-react';
+import { Sparkles, Zap, Flame, Swords, FolderGit2, BarChart3, ChevronDown, Cloud, LogOut, ExternalLink, User } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { buildAmetistSsoUrl } from '../services/auth';
 
-export type ActiveTab = 'landing' | 'dashboards' | 'vault' | 'generator' | 'weapons' | 'damage' | 'er';
+export type ActiveTab = 'landing' | 'dashboards' | 'vault' | 'generator' | 'weapons' | 'damage' | 'er' | 'login';
 
 interface HeaderProps {
   activeTab: ActiveTab;
@@ -168,6 +168,19 @@ export const Header: React.FC<HeaderProps> = ({
 
                       <button
                         type="button"
+                        onClick={() => {
+                          setIsUserMenuOpen(false);
+                          setActiveTab('login');
+                        }}
+                        className="w-full mt-1 flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-200 hover:text-white hover:bg-white/5 rounded-lg transition-colors cursor-pointer"
+                        title="Visualizar detalhes da conta e nuvem"
+                      >
+                        <User className="w-3.5 h-3.5 text-ametist-400" />
+                        Minha Conta & Nuvem
+                      </button>
+
+                      <button
+                        type="button"
                         onClick={async () => {
                           setIsUserMenuOpen(false);
                           const targetUrl = await buildAmetistSsoUrl();
@@ -198,9 +211,13 @@ export const Header: React.FC<HeaderProps> = ({
             ) : (
               <button
                 type="button"
-                onClick={openAuthModal}
-                className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-gradient-to-r from-ametist-600 via-purple-600 to-amber-500 hover:from-ametist-500 hover:to-amber-400 text-white text-xs font-bold shadow-md shadow-ametist-600/25 transition-all cursor-pointer hover:scale-105"
-                title="Conectar com SSO Ametist"
+                onClick={() => setActiveTab('login')}
+                className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-white text-xs font-bold transition-all cursor-pointer hover:scale-105 ${
+                  activeTab === 'login'
+                    ? 'bg-gradient-to-r from-ametist-500 via-purple-500 to-amber-400 ring-2 ring-amber-400 shadow-lg shadow-ametist-600/40'
+                    : 'bg-gradient-to-r from-ametist-600 via-purple-600 to-amber-500 hover:from-ametist-500 hover:to-amber-400 shadow-md shadow-ametist-600/25'
+                }`}
+                title="Conectar com SSO Ametist & Astralys"
               >
                 <Sparkles className="w-3.5 h-3.5 text-amber-200" />
                 <span>Entrar / SSO</span>

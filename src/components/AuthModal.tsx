@@ -23,8 +23,8 @@ export const AuthModal: React.FC = () => {
         setErrorMsg('Por favor, informe seu nome.');
         return;
       }
-      if (senha.length < 6) {
-        setErrorMsg('A senha deve ter no mínimo 6 caracteres.');
+      if (senha.length < 8) {
+        setErrorMsg('A senha deve ter no mínimo 8 caracteres (maiúscula, minúscula, número e símbolo).');
         return;
       }
       if (senha !== confirmSenha) {

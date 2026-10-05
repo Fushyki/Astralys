@@ -20,8 +20,10 @@ import {
   Swords,
   FolderGit2,
   Clock,
-  BarChart3
+  BarChart3,
+  Cloud
 } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 import { CharacterAvatar } from './CharacterAvatar';
 import { DamageAnalysisResult, DamageHit, CharacterStatSnapshot } from '../types/damageBreakdown';
 import { parseDamageText, parseDamageWorkbook } from '../engines/damageSheetParser';
@@ -75,6 +77,7 @@ export const DamageAnalyzer: React.FC<DamageAnalyzerProps> = ({
   externalCalculation,
   onClearExternalCalculation
 }) => {
+  const { isAuthenticated } = useAuth();
   const [activeInputTab, setActiveInputTab] = useState<'paste' | 'file'>('paste');
   
   // Persistent Raw Text
@@ -552,13 +555,17 @@ export const DamageAnalyzer: React.FC<DamageAnalyzerProps> = ({
               <button
                 onClick={() => {
                   onSaveToVault(parsedResult);
-                  showToast('Cálculo salvo no Astralys Vault com sucesso!');
+                  showToast(isAuthenticated ? 'Cálculo salvo no Vault e sincronizado na Nuvem!' : 'Cálculo salvo no Astralys Vault com sucesso!');
                 }}
                 className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-purple-600/30 hover:bg-purple-600/40 border border-purple-500/50 text-purple-300 font-bold text-xs shadow-md transition-all cursor-pointer"
-                title="Salvar este cálculo no Astralys Vault"
+                title={isAuthenticated ? 'Salvar no Astralys Vault e sincronizar na Nuvem' : 'Salvar no Astralys Vault'}
               >
-                <FolderGit2 className="w-3.5 h-3.5 text-purple-400" />
-                <span>Salvar no Vault</span>
+                {isAuthenticated ? (
+                  <Cloud className="w-3.5 h-3.5 text-emerald-400" />
+                ) : (
+                  <FolderGit2 className="w-3.5 h-3.5 text-purple-400" />
+                )}
+                <span>{isAuthenticated ? 'Salvar na Nuvem' : 'Salvar no Vault'}</span>
               </button>
             )}
 

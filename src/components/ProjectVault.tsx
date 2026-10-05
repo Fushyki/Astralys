@@ -63,10 +63,10 @@ export const ProjectVault: React.FC<ProjectVaultProps> = ({
       const synced = await syncLocalProjectsWithCloud(projects);
       if (synced && synced.length > 0) {
         synced.forEach(p => onSaveProject(p));
-        showToast('Planilhas sincronizadas com o banco de dados MySQL!');
+        showToast('Planilhas sincronizadas com a Nuvem Astralys com sucesso!');
       }
     } catch {
-      showToast('Falha ao sincronizar com o banco.');
+      showToast('Falha ao sincronizar com a nuvem.');
     } finally {
       setIsSyncing(false);
     }
@@ -180,6 +180,32 @@ export const ProjectVault: React.FC<ProjectVaultProps> = ({
         </div>
       )}
 
+      {/* Cloud Sync Callout Banner for Unauthenticated Users */}
+      {!isAuthenticated && (
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-4 rounded-2xl bg-gradient-to-r from-ametist-950/80 via-purple-950/40 to-slate-900 border border-ametist-600/40 shadow-xl">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-ametist-600/20 border border-ametist-500/30 flex items-center justify-center text-ametist-300 shrink-0">
+              <Cloud className="w-5 h-5 text-amber-300 animate-pulse" />
+            </div>
+            <div>
+              <p className="text-xs sm:text-sm font-bold text-white">
+                Salve suas planilhas e cálculos na nuvem com sua conta Ametist & Astralys
+              </p>
+              <p className="text-[11px] text-slate-400">
+                Sincronize equipes, rotações e DPR em tempo real para acessar de qualquer computador ou celular.
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={openAuthModal}
+            className="w-full sm:w-auto px-4 py-2 rounded-xl bg-gradient-to-r from-ametist-600 to-purple-600 hover:from-ametist-500 hover:to-purple-500 text-white text-xs font-bold shadow-md shadow-ametist-600/30 transition-all cursor-pointer whitespace-nowrap hover:scale-105"
+          >
+            Conectar Conta / Salvar na Nuvem
+          </button>
+        </div>
+      )}
+
       {/* Top Header Bar (Direct, No Fluff) */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-2xl bg-[#090e17] border border-slate-800 shadow-xl">
         <div className="flex items-center gap-3">
@@ -235,10 +261,10 @@ export const ProjectVault: React.FC<ProjectVaultProps> = ({
               onClick={handleManualSync}
               disabled={isSyncing}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-950/60 hover:bg-emerald-900/60 border border-emerald-500/40 text-emerald-300 text-xs font-semibold cursor-pointer transition-all disabled:opacity-50"
-              title="Sincronizar todas as planilhas com o banco de dados MySQL"
+              title="Sincronizar todas as planilhas com a Nuvem Astralys (PostgreSQL)"
             >
               <Cloud className={`w-3.5 h-3.5 ${isSyncing ? 'animate-bounce text-amber-300' : 'text-emerald-400'}`} />
-              <span>{isSyncing ? 'Sincronizando...' : 'MySQL Nuvem'}</span>
+              <span>{isSyncing ? 'Sincronizando...' : 'Nuvem Conectada'}</span>
             </button>
           ) : (
             <button
@@ -282,10 +308,19 @@ export const ProjectVault: React.FC<ProjectVaultProps> = ({
               {/* CALCSHEET SUMMARY BLOCK */}
               <div>
                 {/* 1. TOP TITLE HEADER */}
-                <div className={`${theme.headerBg} px-4 py-2.5 text-center`}>
+                <div className={`${theme.headerBg} px-4 py-2.5 text-center relative flex items-center justify-center`}>
                   <h3 className="font-extrabold text-base sm:text-lg tracking-wide uppercase font-sans drop-shadow-sm">
                     {proj.title}
                   </h3>
+                  {isAuthenticated && (
+                    <span 
+                      className="absolute right-3 top-1/2 -translate-y-1/2 hidden sm:flex items-center gap-1 text-[10px] font-mono text-emerald-300 bg-emerald-950/60 border border-emerald-500/30 px-2 py-0.5 rounded-full"
+                      title="Salvo no banco de dados na nuvem"
+                    >
+                      <Cloud className="w-3 h-3 text-emerald-400" />
+                      <span>Nuvem</span>
+                    </span>
+                  )}
                 </div>
 
                 {/* 2. SUBHEADER: COMBO ROTATION NOTATION */}
@@ -371,6 +406,28 @@ export const ProjectVault: React.FC<ProjectVaultProps> = ({
                   >
                     <Copy className="w-3.5 h-3.5" />
                   </button>
+                  {isAuthenticated ? (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        onSaveProject(proj);
+                        showToast(`"${proj.title}" sincronizado na nuvem!`);
+                      }}
+                      className="p-1.5 rounded-lg text-emerald-400 hover:text-emerald-300 hover:bg-emerald-950/50 transition-colors cursor-pointer"
+                      title="Sincronizar esta planilha na Nuvem Astralys"
+                    >
+                      <Cloud className="w-3.5 h-3.5" />
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={openAuthModal}
+                      className="p-1.5 rounded-lg text-slate-500 hover:text-ametist-300 hover:bg-slate-800 transition-colors cursor-pointer"
+                      title="Conectar com SSO para salvar na nuvem"
+                    >
+                      <CloudOff className="w-3.5 h-3.5" />
+                    </button>
+                  )}
                   <button
                     onClick={() => {
                       if (confirm(`Excluir o cálculo "${proj.title}"?`)) {

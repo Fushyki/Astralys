@@ -3,7 +3,7 @@ import { X, Sparkles, LogIn, UserPlus, AlertCircle, Loader2, ShieldCheck, Gem } 
 import { useAuth } from '../context/AuthContext';
 
 export const AuthModal: React.FC = () => {
-  const { isAuthModalOpen, closeAuthModal, login, register } = useAuth();
+  const { isAuthModalOpen, closeAuthModal, login, loginWithGoogle, register } = useAuth();
   const [mode, setMode] = useState<'login' | 'register'>('login');
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
@@ -13,6 +13,17 @@ export const AuthModal: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (!isAuthModalOpen) return null;
+
+  const handleGoogleLogin = async () => {
+    setErrorMsg(null);
+    setIsSubmitting(true);
+    try {
+      await loginWithGoogle();
+    } catch (err: any) {
+      setErrorMsg(err.message || 'Falha ao conectar com o Google.');
+      setIsSubmitting(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -84,8 +95,34 @@ export const AuthModal: React.FC = () => {
           </button>
         </div>
 
+        {/* Quick Google Sign-In */}
+        <div className="px-6 pt-5 pb-1">
+          <button
+            type="button"
+            onClick={handleGoogleLogin}
+            disabled={isSubmitting}
+            className="w-full flex items-center justify-center gap-3 py-2.5 px-4 rounded-xl bg-white hover:bg-slate-100 text-slate-800 font-bold text-xs shadow-md transition-all cursor-pointer hover:scale-[1.02] active:scale-[0.99] disabled:opacity-50"
+          >
+            <img 
+              src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" 
+              alt="Google" 
+              className="w-4 h-4" 
+            />
+            <span>Continuar com Google</span>
+          </button>
+
+          <div className="relative my-4">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-white/10" />
+            </div>
+            <div className="relative flex justify-center text-[10px] uppercase font-mono font-bold tracking-wider">
+              <span className="bg-[#0a0c16] px-2 text-slate-500">ou com e-mail</span>
+            </div>
+          </div>
+        </div>
+
         {/* Tab Selector */}
-        <div className="p-6 pb-2">
+        <div className="p-6 pt-0 pb-2">
           <div className="grid grid-cols-2 p-1 bg-black/40 rounded-xl border border-white/5">
             <button
               type="button"

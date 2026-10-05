@@ -1,5 +1,17 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { UserProfile, getCurrentUser, getStoredToken, getStoredUser, login as apiLogin, register as apiRegister, logout as apiLogout, checkAndConsumeUrlSsoTicket } from '../services/auth';
+import { 
+  UserProfile, 
+  getCurrentUser, 
+  getStoredToken, 
+  getStoredUser, 
+  login as apiLogin, 
+  register as apiRegister, 
+  logout as apiLogout, 
+  checkAndConsumeUrlSsoTicket,
+  loginWithGoogle as apiLoginWithGoogle,
+  syncOAuthUserWithBackend
+} from '../services/auth';
+import { supabase } from '../services/supabaseClient';
 
 export type CloudSyncStatus = 'idle' | 'syncing' | 'synced' | 'offline' | 'error';
 
@@ -12,6 +24,7 @@ interface AuthContextType {
   openAuthModal: () => void;
   closeAuthModal: () => void;
   login: (email: string, pass: string) => Promise<void>;
+  loginWithGoogle: () => Promise<void>;
   register: (name: string, email: string, pass: string) => Promise<void>;
   logout: () => Promise<void>;
   syncStatus: CloudSyncStatus;
@@ -27,12 +40,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
   const [syncStatus, setSyncStatus] = useState<CloudSyncStatus>('idle');
 
-  // Ao iniciar a aplicação, valida tickets de SSO recebidos via URL ou sessão ativa no backend
+  // Ao iniciar a aplicação, valida tickets de SSO recebidos via URL, sessões Google Supabase ou JWT ativo
   useEffect(() => {
     let isMounted = true;
     const initAuth = async () => {
       try {
-        // Verifica se há ticket de SSO de uso único vindo do Ametist
+        // 1. Verifica se há ticket de SSO de uso único vindo do Ametist
         const ssoUser = await checkAndConsumeUrlSsoTicket();
         if (ssoUser && isMounted) {
           setUser(ssoUser);
@@ -41,6 +54,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           return;
         }
 
+        // 2. Verifica se há sessão ativa do Google via Supabase OAuth
+        try {
+          const { data: { session } } = await supabase.auth.getSession();
+          if (session?.user?.email && isMounted) {
+            const res = await syncOAuthUserWithBackend({
+              email: session.user.email,
+              nome: session.user.user_metadata?.full_name || session.user.user_metadata?.name || session.user.email.split('@')[0],
+              avatar_url: session.user.user_metadata?.avatar_url
+            });
+            setUser(res.usuario);
+            setToken(res.access_token);
+            setSyncStatus('synced');
+            return;
+          }
+        } catch (e) {
+          console.warn('Erro ao consultar sessão Supabase:', e);
+        }
+
+        // 3. Valida JWT existente com a API
         const currentUser = await getCurrentUser();
         if (isMounted) {
           if (currentUser) {
@@ -66,8 +98,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     initAuth();
+
+    // Listener de eventos de autenticação do Supabase (Login com Google via redirecionamento)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if ((event === 'SIGNED_IN' || event === 'USER_UPDATED') && session?.user?.email) {
+        try {
+          const res = await syncOAuthUserWithBackend({
+            email: session.user.email,
+            nome: session.user.user_metadata?.full_name || session.user.user_metadata?.name || session.user.email.split('@')[0],
+            avatar_url: session.user.user_metadata?.avatar_url
+          });
+          setUser(res.usuario);
+          setToken(res.access_token);
+          setSyncStatus('synced');
+          setIsAuthModalOpen(false);
+        } catch (err) {
+          console.warn('Erro ao sincronizar login do Google:', err);
+        }
+      }
+    });
+
     return () => {
       isMounted = false;
+      subscription.unsubscribe();
     };
   }, []);
 
@@ -99,6 +152,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const loginWithGoogle = async (): Promise<void> => {
+    setIsLoading(true);
+    try {
+      await apiLoginWithGoogle();
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const logout = async (): Promise<void> => {
     setIsLoading(true);
     try {
@@ -122,6 +184,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         openAuthModal: () => setIsAuthModalOpen(true),
         closeAuthModal: () => setIsAuthModalOpen(false),
         login,
+        loginWithGoogle,
         register,
         logout,
         syncStatus,

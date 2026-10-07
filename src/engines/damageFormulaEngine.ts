@@ -8,6 +8,7 @@
  */
 
 import { DamageHit, CharacterStatSnapshot } from '../types/damageBreakdown';
+import { cleanHitDisplayName } from './damageSheetParser';
 
 export interface DamageCalculationStep {
   name: string;
@@ -73,7 +74,7 @@ export function explainDamageHit(
     const estimatedTalent = hitDamage / (atk * stellarBaseMult * (1 + dmgStellar) * (emmS + stellarBonusDmg) * enemyResMult * critMult);
 
     return {
-      hitName: hit.displayName || hit.label,
+      hitName: cleanHitDisplayName(hit.displayName || hit.label, hit.label, hit.charName),
       charName: hit.charName,
       category: 'stellar',
       categoryLabel: 'Reação Estelar (Stellar)',
@@ -160,7 +161,7 @@ export function explainDamageHit(
     const resMultLunar = 1 - (-0.30 / 2); // 1.15x (with 30% Lunar RES shred)
 
     return {
-      hitName: hit.displayName || hit.label,
+      hitName: cleanHitDisplayName(hit.displayName || hit.label, hit.label, hit.charName),
       charName: hit.charName,
       category: 'lunar',
       categoryLabel: 'Reação Lunar (Lunar Reaction)',
@@ -226,14 +227,14 @@ export function explainDamageHit(
     const totalDmgBonus = 1 + dmgBonus + (labelUpper === 'QM' ? 0.40 : 0.20); // Extra burst/attack bonus
 
     return {
-      hitName: hit.displayName || hit.label,
+      hitName: cleanHitDisplayName(hit.displayName || hit.label, hit.label, hit.charName),
       charName: hit.charName,
       category: 'melt_vape',
-      categoryLabel: 'Fusão Amplificada (Melt 2.0×)',
-      reactionType: 'Fusão Reversa/Direta (Pyro sobre Cryo)',
+      categoryLabel: 'Reação Amplificada (2.0×)',
+      reactionType: 'Reação Amplificada (Pyro / Cryo)',
       finalDamage: hitDamage,
-      formulaString: 'Dano = Talento% × ATK × MultFusão(2.0) × (1 + BônusEM) × (1 + BônusDano) × Crítico × DEF × RES',
-      explanation: 'Ataque amplificado com a reação de Fusão (Melt). Multiplica o dano base por 2.0×, acrescido do bônus de Proficiência Elemental (EM) e amplificado exponencialmente pelos bônus de dano e acerto crítico.',
+      formulaString: 'Dano = Talento% × ATK × MultReação(2.0) × (1 + BônusEM) × (1 + BônusDano) × Crítico × DEF × RES',
+      explanation: 'Ataque amplificado com multiplicador elemental de 2.0×, acrescido do bônus de Proficiência Elemental (EM) e amplificado pelos bônus de dano e acerto crítico.',
       statsUsed: {
         atk,
         cr: Math.round(cr * 100),
@@ -300,7 +301,7 @@ export function explainDamageHit(
   // 4. Default: Traditional Direct Damage (E, D, C, PewPew, Cryo Beam)
   const totalDmgBonus = 1 + dmgBonus;
   return {
-    hitName: hit.displayName || hit.label,
+    hitName: cleanHitDisplayName(hit.displayName || hit.label, hit.label, hit.charName),
     charName: hit.charName,
     category: 'direct',
     categoryLabel: 'Dano Direto Tradicional',

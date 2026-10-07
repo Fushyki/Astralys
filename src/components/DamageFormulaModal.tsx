@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { CharacterAvatar } from './CharacterAvatar';
 import { DamageBreakdownDetails } from '../engines/damageFormulaEngine';
+import { cleanHitDisplayName } from '../engines/damageSheetParser';
 
 interface DamageFormulaModalProps {
   details: DamageBreakdownDetails | null;
@@ -74,7 +75,7 @@ export const DamageFormulaModal: React.FC<DamageFormulaModalProps> = ({ details,
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="text-base font-black text-white font-cinzel tracking-wider">
-                  {details.hitName}
+                  {cleanHitDisplayName(details.hitName, undefined, details.charName)}
                 </h3>
                 <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${badge.bg}`}>
                   {badge.icon}

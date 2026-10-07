@@ -26,7 +26,7 @@ import {
 import { useAuth } from '../context/AuthContext';
 import { CharacterAvatar } from './CharacterAvatar';
 import { DamageAnalysisResult, DamageHit, CharacterStatSnapshot } from '../types/damageBreakdown';
-import { parseDamageText, parseDamageWorkbook } from '../engines/damageSheetParser';
+import { parseDamageText, parseDamageWorkbook, cleanHitDisplayName } from '../engines/damageSheetParser';
 import { InfographicCardData } from '../types/infographic';
 import { CHARACTERS_DATABASE, getCharacterERData } from '../data/characters';
 import { DamageFormulaModal } from './DamageFormulaModal';
@@ -476,7 +476,11 @@ export const DamageAnalyzer: React.FC<DamageAnalyzerProps> = ({
     if (!parsedResult) return;
     const char = parsedResult.characters.find(c => c.name.toLowerCase() === hit.charName.toLowerCase()) 
       || parsedResult.characters[hit.charIndex];
-    const details = explainDamageHit(hit, char);
+    const cleanedHit: DamageHit = {
+      ...hit,
+      displayName: cleanHitDisplayName(hit.displayName, hit.label, hit.charName)
+    };
+    const details = explainDamageHit(cleanedHit, char);
     setInspectedHitDetails(details);
   };
 
@@ -580,7 +584,7 @@ export const DamageAnalyzer: React.FC<DamageAnalyzerProps> = ({
       {/* Input Section */}
       <div className="p-5 rounded-2xl bg-[#0d111a] border border-slate-800 shadow-xl space-y-4">
         
-        {/* Input Mode Selector */}
+        {/* Input Mode Selector & Action Bar */}
         <div className="flex items-center justify-between flex-wrap gap-3 border-b border-slate-800 pb-3">
           <div className="flex items-center p-1 rounded-xl bg-slate-950 border border-slate-800 text-xs font-semibold">
             <button
@@ -606,6 +610,39 @@ export const DamageAnalyzer: React.FC<DamageAnalyzerProps> = ({
               <span>Importar Planilha (.xlsx)</span>
             </button>
           </div>
+
+          {/* Salvar no Vault - Alinhado à Direita do Bloco */}
+          {onSaveToVault && (
+            <button
+              type="button"
+              onClick={() => {
+                if (!parsedResult) {
+                  alert('Processe ou cole uma planilha primeiro antes de salvar no Vault.');
+                  return;
+                }
+                onSaveToVault(parsedResult);
+                showToast(isAuthenticated ? 'Cálculo salvo no Vault e sincronizado na Nuvem!' : 'Cálculo salvo no Astralys Vault com sucesso!');
+              }}
+              disabled={!parsedResult}
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-md cursor-pointer ${
+                parsedResult
+                  ? 'bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white shadow-purple-900/30 ring-1 ring-purple-400/40 hover:scale-105'
+                  : 'bg-slate-900/60 border border-slate-800 text-slate-500 cursor-not-allowed opacity-60'
+              }`}
+              title={
+                !parsedResult 
+                  ? 'Processe uma planilha primeiro para salvar no Vault' 
+                  : (isAuthenticated ? 'Salvar no Astralys Vault e sincronizar na Nuvem' : 'Salvar no Astralys Vault')
+              }
+            >
+              {isAuthenticated ? (
+                <Cloud className={`w-4 h-4 ${parsedResult ? 'text-emerald-300' : 'text-slate-500'}`} />
+              ) : (
+                <FolderGit2 className={`w-4 h-4 ${parsedResult ? 'text-purple-300' : 'text-slate-500'}`} />
+              )}
+              <span>{isAuthenticated ? 'Salvar na Nuvem (Vault)' : 'Salvar no Vault'}</span>
+            </button>
+          )}
         </div>
 
         {/* TAB 1: PASTE */}
@@ -1185,7 +1222,9 @@ export const DamageAnalyzer: React.FC<DamageAnalyzerProps> = ({
                       <span className="w-6 font-mono font-bold text-slate-500 text-[11px]">#{idx + 1}</span>
                       <CharacterAvatar name={hit.charName} size="xs" showBorder={false} />
                       <div className="min-w-0 truncate">
-                        <span className="font-bold text-slate-200 group-hover:text-rose-200 transition-colors mr-2">{hit.displayName}</span>
+                        <span className="font-bold text-slate-200 group-hover:text-rose-200 transition-colors mr-2">
+                          {cleanHitDisplayName(hit.displayName, hit.label, hit.charName)}
+                        </span>
                         <span className="text-[10px] text-slate-500 font-mono">({hit.charName})</span>
                       </div>
                     </div>

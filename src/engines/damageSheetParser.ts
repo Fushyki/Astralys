@@ -20,25 +20,63 @@ function categorizeHit(label: string): DamageHit['category'] {
   return 'other';
 }
 
-// Generate friendly Portuguese label for cryptic abbreviations
-function formatHitName(label: string): string {
+// Generate friendly Portuguese label for cryptic abbreviations according to Lunaris (without reaction tags)
+export function formatHitName(label: string, charName?: string): string {
   const map: Record<string, string> = {
-    QM: 'QM (Burst com Fusão / Vaporizar)',
-    FM: 'FM (Golpe Finalizador com Fusão)',
-    CM: 'CM (Ataque Carregado com Fusão)',
-    E: 'E (Habilidade Elemental)',
-    C: 'C (Ataque Carregado / Normal)',
-    D: 'D (Arrancada / Dash Attack)',
-    PewPew: 'PewPew (Disparos Automáticos da Sandrone)',
-    'Cryo Beam': 'Cryo Beam (Raio Cryo Contínuo)',
-    'Stellar Beam': 'Stellar Beam (Raio Estelar Lunar)',
-    ECryo: 'ECryo (Explosão Cryo da Skill)',
-    EStellar: 'EStellar (Explosão Estelar da Skill)',
-    Qbombard: 'Qbombard (Bombardeio da Ultimate)',
-    QCryo: 'QCryo (Impacto Cryo da Ultimate)',
-    QStellar: 'QStellar (Impacto Estelar da Ultimate)'
+    QM: 'Supremo (Q)',
+    FM: 'Golpe Finalizador',
+    CM: 'Ataque Carregado',
+    Q: 'Supremo (Q)',
+    E: 'Habilidade Elemental (E)',
+    C: 'Ataque Carregado',
+    CA: 'Ataque Carregado',
+    D: 'Arrancada (Dash)',
+    Dash: 'Arrancada (Dash)',
+    PewPew: 'Disparos Automáticos (PewPew)',
+    'Cryo Beam': 'Raio Criogênico (Cryo Beam)',
+    'Stellar Beam': 'Raio Estelar (Stellar Beam)',
+    ECryo: 'Habilidade Cryo (ECryo)',
+    EStellar: 'Habilidade Estelar (EStellar)',
+    Qbombard: 'Bombardeio Supremo (Qbombard)',
+    QCryo: 'Impacto Cryo Supremo (QCryo)',
+    QStellar: 'Impacto Estelar Supremo (QStellar)',
+    N1: 'Ataque Normal 1 (N1)',
+    N2: 'Ataque Normal 2 (N2)',
+    N3: 'Ataque Normal 3 (N3)',
+    N4: 'Ataque Normal 4 (N4)',
+    N5: 'Ataque Normal 5 (N5)',
+    NA: 'Ataques Normais',
+    Plunge: 'Ataque Imersivo'
   };
-  return map[label] || label;
+  return map[label] || cleanHitDisplayName(label, label, charName);
+}
+
+export function cleanHitDisplayName(displayName?: string, label?: string, charName?: string): string {
+  const raw = (displayName || label || '').trim();
+  if (!raw) return 'Golpe';
+
+  const rawLower = raw.toLowerCase();
+  if (rawLower === 'qm' || rawLower === 'q') return 'Supremo (Q)';
+  if (rawLower === 'fm') return 'Golpe Finalizador';
+  if (rawLower === 'cm' || rawLower === 'c' || rawLower === 'ca') return 'Ataque Carregado';
+  if (rawLower === 'e') return 'Habilidade Elemental (E)';
+  if (rawLower === 'd' || rawLower === 'dash') return 'Arrancada (Dash)';
+
+  // Remove any explicit mention of "fusão", "melt", "vaporizar", "vape"
+  let cleaned = raw
+    .replace(/\s*\((?:burst\s+)?com\s+fus[ãa]o(?:\s*\/\s*vaporizar)?\)/gi, '')
+    .replace(/\s*\(golpe\s+finalizador\s+com\s+fus[ãa]o\)/gi, '')
+    .replace(/\s*\(ataque\s+carregado\s+com\s+fus[ãa]o\)/gi, '')
+    .replace(/\s*\((?:com\s+)?(?:fus[ãa]o|melt|vaporizar|vape)[^)]*\)/gi, '')
+    .replace(/\s*com\s+(?:fus[ãa]o|melt|vaporizar|vape)/gi, '')
+    .replace(/\s*-\s*(?:fus[ãa]o|melt|vaporizar|vape)/gi, '')
+    .trim();
+
+  if (cleaned.toLowerCase() === 'qm') return 'Supremo (Q)';
+  if (cleaned.toLowerCase() === 'fm') return 'Golpe Finalizador';
+  if (cleaned.toLowerCase() === 'cm') return 'Ataque Carregado';
+
+  return cleaned || raw;
 }
 
 // Helper to normalize known weapon names
@@ -372,7 +410,7 @@ export function parseDamageText(rawText: string): DamageAnalysisResult | null {
             hits.push({
               id: `hit-${r}-${i}-${Math.random().toString(36).substring(2, 6)}`,
               label: possibleLabel,
-              displayName: formatHitName(possibleLabel),
+              displayName: formatHitName(possibleLabel, characterNames[i]),
               charName: characterNames[i] || `Personagem ${i + 1}`,
               charIndex: i,
               damage: Math.round(dmg),

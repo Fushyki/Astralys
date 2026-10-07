@@ -8,6 +8,7 @@ import { WeaponComparator } from './components/WeaponComparator';
 import { DashboardsPage } from './components/DashboardsPage';
 import { ProjectVault } from './components/ProjectVault';
 import { LoginPage } from './components/LoginPage';
+import { ProfilePage } from './components/ProfilePage';
 import { AuthModal } from './components/AuthModal';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { fetchCloudProjects, saveCloudProject, deleteCloudProject, syncLocalProjectsWithCloud } from './services/projectApi';
@@ -593,6 +594,17 @@ const AppContent: React.FC = () => {
 
         {activeTab === 'login' && (
           <LoginPage onNavigate={setActiveTab} />
+        )}
+
+        {activeTab === 'profile' && (
+          <ProfilePage
+            projects={projects}
+            setProjects={setProjects}
+            weaponComparisons={weaponComparisons}
+            setWeaponComparisons={setWeaponComparisons}
+            onNavigate={setActiveTab}
+            onSelectProject={handleSelectProject}
+          />
         )}
       </main>
 

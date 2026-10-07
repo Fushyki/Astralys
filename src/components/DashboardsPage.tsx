@@ -229,7 +229,7 @@ export const DashboardsPage: React.FC<DashboardsPageProps> = ({
     <div className="space-y-6 animate-fade-in select-none">
       
       {/* Informative Placeholder Notice Banner */}
-      {(currentProject.id === 'proj-placeholder' || currentProject.tags?.includes('Placeholder')) && (
+      {(currentProject.id === 'proj-placeholder' || currentProject.tags?.includes('Placeholder') || currentProject.tags?.includes('Demo')) && (
         <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-500/10 via-purple-500/10 to-slate-900 border border-amber-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-lg">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-300 shrink-0">
@@ -237,13 +237,13 @@ export const DashboardsPage: React.FC<DashboardsPageProps> = ({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-xs sm:text-sm font-bold text-white">Dashboard em Modo Placeholder</span>
+                <span className="text-xs sm:text-sm font-bold text-white">Sua Equipe (Modo Demo)</span>
                 <span className="text-[10px] uppercase font-mono font-bold px-2 py-0.5 rounded-full bg-amber-950 text-amber-300 border border-amber-500/30">
-                  Modelo Demonstrativo
+                  Demo
                 </span>
               </div>
               <p className="text-[11px] text-slate-400 mt-0.5">
-                Nenhum time real está carregado ainda. Os dados abaixo servem como modelo para você se orientar na visualização de gráficos, rotações e timelines.
+                Nenhum time real foi importado ainda. Os dados abaixo servem como modelo demonstrativo para você se orientar na visualização de gráficos, rotações e timelines.
               </p>
             </div>
           </div>
@@ -268,7 +268,7 @@ export const DashboardsPage: React.FC<DashboardsPageProps> = ({
           </span>
           {availableProjects.map((p) => {
             const isSelected = p.id === currentProject.id;
-            const isPlaceholder = p.id === 'proj-placeholder' || p.tags?.includes('Placeholder');
+            const isPlaceholder = p.id === 'proj-placeholder' || p.tags?.includes('Placeholder') || p.tags?.includes('Demo');
             return (
               <button
                 key={p.id}
@@ -282,7 +282,7 @@ export const DashboardsPage: React.FC<DashboardsPageProps> = ({
               >
                 <span>{p.title}</span>
                 <span className="text-[10px] opacity-75 font-mono">
-                  {isPlaceholder ? '(Exemplo)' : `(${Math.round(p.dps / 1000)}k)`}
+                  {isPlaceholder ? '(Demo)' : `(${Math.round(p.dps / 1000)}k)`}
                 </span>
               </button>
             );

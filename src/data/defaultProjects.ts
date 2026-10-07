@@ -357,7 +357,7 @@ export const DEFAULT_CALCULATION_PROJECTS: CalculationProject[] = [
 ];
 
 const PLACEHOLDER_RESULT: DamageAnalysisResult = {
-  title: 'Equipe Modelo (Placeholder)',
+  title: 'Sua Equipe',
   characters: [
     {
       name: 'Personagem 1',
@@ -442,7 +442,7 @@ const PLACEHOLDER_RESULT: DamageAnalysisResult = {
 
 export const PLACEHOLDER_PROJECT: CalculationProject = {
   id: 'proj-placeholder',
-  title: 'Equipe Modelo (Placeholder)',
+  title: 'Sua Equipe',
   description: 'Estrutura de demonstração limpa para orientar a visualização dos dashboards, gráficos de dano e timelines.',
   carryName: 'Personagem 1',
   teamNames: ['Personagem 1', 'Personagem 2', 'Personagem 3', 'Personagem 4'],
@@ -450,7 +450,7 @@ export const PLACEHOLDER_PROJECT: CalculationProject = {
   dps: PLACEHOLDER_RESULT.dps,
   rotationDuration: 20,
   comboNotation: PLACEHOLDER_RESULT.comboNotation,
-  tags: ['Placeholder', 'Modelo', '20s'],
+  tags: ['Demo', '20s'],
   sheetOrigin: 'Astralys Template',
   createdAt: '2026-10-05T00:00:00.000Z',
   updatedAt: '2026-10-05T00:00:00.000Z',

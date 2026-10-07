@@ -496,23 +496,7 @@ export const DamageAnalyzer: React.FC<DamageAnalyzerProps> = ({
   };
 
   return (
-    <div className="space-y-8 pb-16">
-      
-      {/* Character Autocomplete Datalist */}
-      <datalist id="all-genshin-characters">
-        {CHARACTERS_DATABASE.map(c => (
-          <option key={c.name} value={c.name} />
-        ))}
-      </datalist>
-
-      {/* Toast */}
-      {successToast && (
-        <div className="fixed top-5 right-5 z-50 flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600/90 border border-emerald-400 text-white font-semibold text-xs shadow-xl animate-fade-in backdrop-blur-md">
-          <CheckCircle2 className="w-4 h-4 text-emerald-200" />
-          <span>{successToast}</span>
-        </div>
-      )}
-
+    <div className="space-y-8 pb-16 animate-fade-in">
       {/* Header Banner */}
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 p-5 rounded-2xl bg-gradient-to-r from-slate-900 via-rose-950/20 to-slate-900 border border-rose-500/30 shadow-xl">
         <div>
@@ -1239,6 +1223,21 @@ export const DamageAnalyzer: React.FC<DamageAnalyzerProps> = ({
         details={inspectedHitDetails}
         onClose={() => setInspectedHitDetails(null)}
       />
+
+      {/* Toast Notification */}
+      {successToast && (
+        <div className="fixed top-5 right-5 z-50 flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600/90 border border-emerald-400 text-white font-semibold text-xs shadow-xl animate-fade-in backdrop-blur-md">
+          <CheckCircle2 className="w-4 h-4 text-emerald-200" />
+          <span>{successToast}</span>
+        </div>
+      )}
+
+      {/* Character Autocomplete Datalist */}
+      <datalist id="all-genshin-characters" hidden>
+        {CHARACTERS_DATABASE.map(c => (
+          <option key={c.name} value={c.name} />
+        ))}
+      </datalist>
 
     </div>
   );

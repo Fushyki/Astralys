@@ -95,16 +95,16 @@ export const LandingPage: React.FC<LandingPageProps> = ({ setActiveTab }) => {
             {/* Objective Bullet Highlights */}
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-4 border-t border-slate-800/80 text-xs">
               <div className="space-y-0.5">
-                <span className="text-slate-500 text-[11px] block">Upload Inteligente</span>
-                <span className="font-semibold text-slate-200">Lê .xlsx e Prints</span>
+                <span className="text-slate-500 text-[11px] block">Análise Inteligente</span>
+                <span className="font-semibold text-slate-200">.xml, .xlsx e Prints</span>
               </div>
               <div className="space-y-0.5">
-                <span className="text-slate-500 text-[11px] block">Motor de Recarga</span>
-                <span className="font-semibold text-slate-200">128 Heróis & Favonius</span>
+                <span className="text-slate-500 text-[11px] block">Calculadora de Recarga</span>
+                <span className="font-semibold text-slate-200">128 Personagens + Favonius</span>
               </div>
               <div className="space-y-0.5">
-                <span className="text-slate-500 text-[11px] block">Exportação</span>
-                <span className="font-semibold text-slate-200">PNG Hi-Res & Clipboard</span>
+                <span className="text-slate-500 text-[11px] block">Compartilhar</span>
+                <span className="font-semibold text-slate-200">Salvar e Copiar</span>
               </div>
             </div>
 
@@ -215,233 +215,197 @@ export const LandingPage: React.FC<LandingPageProps> = ({ setActiveTab }) => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4">
 
-          {/* CARD 0A: DASHBOARDS ANALÍTICOS & ROTAÇÕES */}
+          {/* CARD 1: DASHBOARDS */}
           <div 
             onClick={() => setActiveTab('dashboards')}
-            className="crystal-panel rounded-2xl p-6 transition-all duration-300 hover:border-cyan-400/50 hover:shadow-ametist-md cursor-pointer flex flex-col justify-between group bg-gradient-to-b from-cyan-950/20 to-transparent"
+            className="crystal-panel rounded-2xl p-4 sm:p-4.5 transition-all duration-200 hover:border-cyan-400/50 hover:scale-[1.01] cursor-pointer flex flex-col justify-between group bg-gradient-to-b from-cyan-950/15 to-transparent"
           >
-            <div className="space-y-4">
+            <div className="space-y-2.5">
               <div className="flex items-center justify-between">
-                <div className="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 group-hover:scale-105 transition-transform">
-                  <BarChart3 className="w-6 h-6" />
+                <div className="w-9 h-9 rounded-xl bg-cyan-500/10 border border-cyan-500/25 flex items-center justify-center text-cyan-400 group-hover:scale-105 transition-transform">
+                  <BarChart3 className="w-4.5 h-4.5" />
                 </div>
-                <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-cyan-950/80 text-cyan-300 border border-cyan-700/50">
+                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-cyan-950/80 text-cyan-300 border border-cyan-700/40">
                   Destaque
                 </span>
               </div>
 
               <div>
-                <h3 className="text-lg font-bold text-white group-hover:text-cyan-300 transition-colors flex items-center gap-1.5">
+                <h3 className="text-sm sm:text-base font-bold text-white group-hover:text-cyan-300 transition-colors flex items-center gap-1">
                   Dashboards & Rotações
-                  <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+                  <ChevronRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
                 </h3>
-                <p className="text-xs text-slate-400 mt-1 leading-relaxed">
-                  Ranking comparativo de DPS/DPR entre todas as equipes do Vault, linhas do tempo interativas de rotações (quem entra, qual golpe usa, duração exata) e matriz de decisões situacionais.
+                <p className="text-xs text-slate-400 mt-1 line-clamp-2">
+                  Rankings de DPS/DPR, timelines de golpes e matriz situacional de decisões.
                 </p>
-              </div>
-
-              <div className="flex flex-wrap gap-1.5 pt-2">
-                <span className="text-[11px] px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-300">Ranking DPS & DPR</span>
-                <span className="text-[11px] px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-300">Timeline de Golpes</span>
-                <span className="text-[11px] px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-300">Matriz Situacional</span>
               </div>
             </div>
 
-            <div className="pt-6 border-t border-slate-800 mt-6 flex items-center justify-between text-xs text-cyan-400 font-semibold">
+            <div className="pt-3 border-t border-slate-800/60 mt-3 flex items-center justify-between text-xs text-cyan-400 font-semibold">
               <span>Abrir Dashboards</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
             </div>
           </div>
 
-          {/* CARD 0B: ASTRALYS VAULT */}
+          {/* CARD 2: VAULT */}
           <div 
             onClick={() => setActiveTab('vault')}
-            className="crystal-panel rounded-2xl p-6 transition-all duration-300 hover:border-purple-400/50 hover:shadow-ametist-md cursor-pointer flex flex-col justify-between group bg-gradient-to-b from-purple-950/20 to-transparent"
+            className="crystal-panel rounded-2xl p-4 sm:p-4.5 transition-all duration-200 hover:border-purple-400/50 hover:scale-[1.01] cursor-pointer flex flex-col justify-between group bg-gradient-to-b from-purple-950/15 to-transparent"
           >
-            <div className="space-y-4">
+            <div className="space-y-2.5">
               <div className="flex items-center justify-between">
-                <div className="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400 group-hover:scale-105 transition-transform">
-                  <FolderGit2 className="w-6 h-6" />
+                <div className="w-9 h-9 rounded-xl bg-purple-500/10 border border-purple-500/25 flex items-center justify-center text-purple-400 group-hover:scale-105 transition-transform">
+                  <FolderGit2 className="w-4.5 h-4.5" />
                 </div>
-                <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-purple-950/80 text-purple-300 border border-purple-700/50">
+                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-purple-950/80 text-purple-300 border border-purple-700/40">
                   Repositório
                 </span>
               </div>
 
               <div>
-                <h3 className="text-lg font-bold text-white group-hover:text-purple-300 transition-colors flex items-center gap-1.5">
+                <h3 className="text-sm sm:text-base font-bold text-white group-hover:text-purple-300 transition-colors flex items-center gap-1">
                   Astralys Vault
-                  <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+                  <ChevronRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
                 </h3>
-                <p className="text-xs text-slate-400 mt-1 leading-relaxed">
-                  Armazene todas as suas planilhas e cálculos em um só lugar. Organize por Carry, tags e rotações, com backup JSON e carregamento instantâneo.
+                <p className="text-xs text-slate-400 mt-1 line-clamp-2">
+                  Repositório central para salvar, buscar e gerenciar equipes na nuvem e local.
                 </p>
-              </div>
-
-              <div className="flex flex-wrap gap-1.5 pt-2">
-                <span className="text-[11px] px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-300">Todas as Planilhas</span>
-                <span className="text-[11px] px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-300">Tags & Busca</span>
-                <span className="text-[11px] px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-300">Backup JSON</span>
               </div>
             </div>
 
-            <div className="pt-6 border-t border-slate-800 mt-6 flex items-center justify-between text-xs text-purple-400 font-semibold">
-              <span>Abrir Repositório</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            <div className="pt-3 border-t border-slate-800/60 mt-3 flex items-center justify-between text-xs text-purple-400 font-semibold">
+              <span>Abrir Vault</span>
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
             </div>
           </div>
 
-          {/* CARD 1: GERADOR DE INFOGRÁFICOS */}
+          {/* CARD 3: GERADOR DE INFOGRÁFICOS */}
           <div 
             onClick={() => setActiveTab('generator')}
-            className="crystal-panel rounded-2xl p-6 transition-all duration-300 hover:border-ametist-400/50 hover:shadow-ametist-md cursor-pointer flex flex-col justify-between group"
+            className="crystal-panel rounded-2xl p-4 sm:p-4.5 transition-all duration-200 hover:border-cyan-400/50 hover:scale-[1.01] cursor-pointer flex flex-col justify-between group"
           >
-            <div className="space-y-4">
+            <div className="space-y-2.5">
               <div className="flex items-center justify-between">
-                <div className="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 group-hover:scale-105 transition-transform">
-                  <FileSpreadsheet className="w-6 h-6" />
+                <div className="w-9 h-9 rounded-xl bg-cyan-500/10 border border-cyan-500/25 flex items-center justify-center text-cyan-400 group-hover:scale-105 transition-transform">
+                  <FileSpreadsheet className="w-4.5 h-4.5" />
                 </div>
-                <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-cyan-950/80 text-cyan-300 border border-cyan-700/50">
-                  Flagship
+                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-cyan-950/80 text-cyan-300 border border-cyan-700/40">
+                  Infográfico
                 </span>
               </div>
 
               <div>
-                <h3 className="text-lg font-bold text-white group-hover:text-cyan-300 transition-colors flex items-center gap-1.5">
+                <h3 className="text-sm sm:text-base font-bold text-white group-hover:text-cyan-300 transition-colors flex items-center gap-1">
                   Gerador de Infográficos
-                  <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+                  <ChevronRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
                 </h3>
-                <p className="text-xs text-slate-400 mt-1 leading-relaxed">
-                  Arraste sua planilha <code className="text-slate-200">Calc Sheet.xlsx</code> ou cole tabelas de print. O sistema gera automaticamente o card idêntico ao modelo com Damage Share, equipamentos e DPS de rotação.
+                <p className="text-xs text-slate-400 mt-1 line-clamp-2">
+                  Gere cards visuais automáticos com Damage Share, armas e DPS de rotação.
                 </p>
-              </div>
-
-              <div className="flex flex-wrap gap-1.5 pt-2">
-                <span className="text-[11px] px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-300">Lê .xlsx Direto</span>
-                <span className="text-[11px] px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-300">Formatos Sandrone/Wrio</span>
-                <span className="text-[11px] px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-300">Exporta em PNG</span>
               </div>
             </div>
 
-            <div className="pt-6 border-t border-slate-800 mt-6 flex items-center justify-between text-xs text-cyan-400 font-semibold">
-              <span>Abrir Gerador</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            <div className="pt-3 border-t border-slate-800/60 mt-3 flex items-center justify-between text-xs text-cyan-400 font-semibold">
+              <span>Criar Infográfico</span>
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
             </div>
           </div>
 
-          {/* CARD 2: COMPARADOR DE ARMAS */}
+          {/* CARD 4: COMPARADOR DE ARMAS */}
           <div 
             onClick={() => setActiveTab('weapons')}
-            className="crystal-panel rounded-2xl p-6 transition-all duration-300 hover:border-amber-400/50 hover:shadow-ametist-md cursor-pointer flex flex-col justify-between group"
+            className="crystal-panel rounded-2xl p-4 sm:p-4.5 transition-all duration-200 hover:border-amber-400/50 hover:scale-[1.01] cursor-pointer flex flex-col justify-between group"
           >
-            <div className="space-y-4">
+            <div className="space-y-2.5">
               <div className="flex items-center justify-between">
-                <div className="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 group-hover:scale-105 transition-transform">
-                  <Swords className="w-6 h-6" />
+                <div className="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/25 flex items-center justify-center text-amber-400 group-hover:scale-105 transition-transform">
+                  <Swords className="w-4.5 h-4.5" />
                 </div>
-                <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-950/80 text-amber-300 border border-amber-700/50">
-                  Novo
+                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-amber-950/80 text-amber-300 border border-amber-700/40">
+                  Armas
                 </span>
               </div>
 
               <div>
-                <h3 className="text-lg font-bold text-white group-hover:text-amber-300 transition-colors flex items-center gap-1.5">
+                <h3 className="text-sm sm:text-base font-bold text-white group-hover:text-amber-300 transition-colors flex items-center gap-1">
                   Comparador de Armas
-                  <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+                  <ChevronRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
                 </h3>
-                <p className="text-xs text-slate-400 mt-1 leading-relaxed">
-                  Comparação direta de armas e refinamentos (R1 a R5) com baseline dinâmico (100%), gráficos de barras proporcionais, adição de armas personalizadas e exportação em imagem.
+                <p className="text-xs text-slate-400 mt-1 line-clamp-2">
+                  Compare armas e refinamentos (R1 a R5) com baseline dinâmico de 100%.
                 </p>
-              </div>
-
-              <div className="flex flex-wrap gap-1.5 pt-2">
-                <span className="text-[11px] px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-300">Baseline 100% Livre</span>
-                <span className="text-[11px] px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-300">R1 vs R5</span>
-                <span className="text-[11px] px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-300">Injeção no Card</span>
               </div>
             </div>
 
-            <div className="pt-6 border-t border-slate-800 mt-6 flex items-center justify-between text-xs text-amber-400 font-semibold">
+            <div className="pt-3 border-t border-slate-800/60 mt-3 flex items-center justify-between text-xs text-amber-400 font-semibold">
               <span>Comparar Armas</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
             </div>
           </div>
 
-          {/* CARD 3: ANÁLISE DE DANO */}
+          {/* CARD 5: ANÁLISE DE DANO */}
           <div 
             onClick={() => setActiveTab('damage')}
-            className="crystal-panel rounded-2xl p-6 transition-all duration-300 hover:border-rose-400/50 hover:shadow-ametist-md cursor-pointer flex flex-col justify-between group"
+            className="crystal-panel rounded-2xl p-4 sm:p-4.5 transition-all duration-200 hover:border-rose-400/50 hover:scale-[1.01] cursor-pointer flex flex-col justify-between group"
           >
-            <div className="space-y-4">
+            <div className="space-y-2.5">
               <div className="flex items-center justify-between">
-                <div className="w-12 h-12 rounded-xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-rose-400 group-hover:scale-105 transition-transform">
-                  <Flame className="w-6 h-6" />
+                <div className="w-9 h-9 rounded-xl bg-rose-500/10 border border-rose-500/25 flex items-center justify-center text-rose-400 group-hover:scale-105 transition-transform">
+                  <Flame className="w-4.5 h-4.5" />
                 </div>
-                <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-rose-950/80 text-rose-300 border border-rose-700/50">
-                  Golpe a Golpe
+                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-rose-950/80 text-rose-300 border border-rose-700/40">
+                  Combate
                 </span>
               </div>
 
               <div>
-                <h3 className="text-lg font-bold text-white group-hover:text-rose-300 transition-colors flex items-center gap-1.5">
+                <h3 className="text-sm sm:text-base font-bold text-white group-hover:text-rose-300 transition-colors flex items-center gap-1">
                   Análise de Dano & Rotações
-                  <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+                  <ChevronRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
                 </h3>
-                <p className="text-xs text-slate-400 mt-1 leading-relaxed">
-                  Decomposição detalhada dos golpes (QM, FM, E, C), inspetor matemático de fórmulas de reações Lunares e Stellares, e edição instantânea dos status dos personagens no site.
+                <p className="text-xs text-slate-400 mt-1 line-clamp-2">
+                  Decomposição golpe a golpe, fórmulas matemáticas e reações elementais.
                 </p>
-              </div>
-
-              <div className="flex flex-wrap gap-1.5 pt-2">
-                <span className="text-[11px] px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-300">Status Editáveis</span>
-                <span className="text-[11px] px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-300">Fórmulas Matemáticas</span>
-                <span className="text-[11px] px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-300">Reações Stellares/Lunares</span>
               </div>
             </div>
 
-            <div className="pt-6 border-t border-slate-800 mt-6 flex items-center justify-between text-xs text-rose-400 font-semibold">
-              <span>Analisar Golpes</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            <div className="pt-3 border-t border-slate-800/60 mt-3 flex items-center justify-between text-xs text-rose-400 font-semibold">
+              <span>Analisar Dano</span>
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
             </div>
           </div>
 
-          {/* CARD 2: CALCULADORA DE ER */}
+          {/* CARD 6: CALCULADORA DE ER */}
           <div 
             onClick={() => setActiveTab('er')}
-            className="crystal-panel rounded-2xl p-6 transition-all duration-300 hover:border-amber-400/50 hover:shadow-ametist-md cursor-pointer flex flex-col justify-between group"
+            className="crystal-panel rounded-2xl p-4 sm:p-4.5 transition-all duration-200 hover:border-purple-400/50 hover:scale-[1.01] cursor-pointer flex flex-col justify-between group"
           >
-            <div className="space-y-4">
+            <div className="space-y-2.5">
               <div className="flex items-center justify-between">
-                <div className="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 group-hover:scale-105 transition-transform">
-                  <Zap className="w-6 h-6" />
+                <div className="w-9 h-9 rounded-xl bg-purple-500/10 border border-purple-500/25 flex items-center justify-center text-purple-400 group-hover:scale-105 transition-transform">
+                  <Zap className="w-4.5 h-4.5" />
                 </div>
-                <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-950/80 text-amber-300 border border-amber-700/50">
-                  Partículas Reais
+                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-purple-950/80 text-purple-300 border border-purple-700/40">
+                  Recarga
                 </span>
               </div>
 
               <div>
-                <h3 className="text-lg font-bold text-white group-hover:text-amber-300 transition-colors flex items-center gap-1.5">
+                <h3 className="text-sm sm:text-base font-bold text-white group-hover:text-purple-300 transition-colors flex items-center gap-1">
                   Calculadora de Recarga (ER)
-                  <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+                  <ChevronRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
                 </h3>
-                <p className="text-xs text-slate-400 mt-1 leading-relaxed">
-                  Calcule a recarga exata necessária para 128 personagens. Suporte a armas Favonius, canalização dividida (50/50) e transferência em 1 clique para o Card de Infográfico.
+                <p className="text-xs text-slate-400 mt-1 line-clamp-2">
+                  Cálculo de recarga para 128 personagens com Favonius e split funneling.
                 </p>
-              </div>
-
-              <div className="flex flex-wrap gap-1.5 pt-2">
-                <span className="text-[11px] px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-300">128 Heróis</span>
-                <span className="text-[11px] px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-300">Split Funneling</span>
-                <span className="text-[11px] px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-300">Ponte para o Card</span>
               </div>
             </div>
 
-            <div className="pt-6 border-t border-slate-800 mt-6 flex items-center justify-between text-xs text-amber-400 font-semibold">
-              <span>Calcular Recargas</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            <div className="pt-3 border-t border-slate-800/60 mt-3 flex items-center justify-between text-xs text-purple-400 font-semibold">
+              <span>Calcular Recarga</span>
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
             </div>
           </div>
 

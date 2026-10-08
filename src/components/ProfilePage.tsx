@@ -29,6 +29,7 @@ import { CalculationProject } from '../types/projectVault';
 import { CharacterWeaponComparison } from '../types/weaponComparison';
 import { saveCloudProject, deleteCloudProject } from '../services/projectApi';
 import { ActiveTab } from './Header';
+import { DatabaseStorageView } from './DatabaseStorageView';
 
 export interface AstralysDatabasePackage {
   format: 'astralys-database';
@@ -477,7 +478,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           }`}
         >
           <Database className="w-4 h-4" />
-          <span>Download & Upload de Databases</span>
+          <span>Bases de Dados & Storage (Excel)</span>
         </button>
 
         <button
@@ -509,205 +510,14 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
 
       {/* 4. CONTEÚDO DAS ABAS */}
 
-      {/* ABA 1: DOWNLOAD & UPLOAD DE DATABASES (CENTRAL DE MIGRAÇÃO E BACKUP) */}
+      {/* ABA 1: MULTI-DATABASE & STORAGE MANAGER (ESTILO GENSHIN OPTIMIZER COM EXCEL) */}
       {activeSubTab === 'database' && (
-        <div className="space-y-6">
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            
-            {/* BOX DE DOWNLOAD / EXPORTAÇÃO */}
-            <div className="p-6 rounded-3xl bg-[#090e17] border border-slate-800 space-y-4 flex flex-col justify-between">
-              <div className="space-y-2">
-                <div className="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/25 flex items-center justify-center text-purple-400">
-                  <Download className="w-5 h-5" />
-                </div>
-                <h3 className="text-base font-bold text-white">Baixar Database Completa</h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
-                  Exporte todas as equipes do Vault, rotações e comparações de armas desta conta em um arquivo JSON universal. 
-                  Você pode guardar como backup ou enviar para ser importado em outra conta.
-                </p>
-
-                <div className="p-3 rounded-xl bg-black/40 border border-white/5 space-y-1 text-xs">
-                  <div className="flex justify-between text-slate-400">
-                    <span>Equipes a exportar:</span>
-                    <span className="font-bold text-white">{totalEquipes}</span>
-                  </div>
-                  <div className="flex justify-between text-slate-400">
-                    <span>Comparações de armas:</span>
-                    <span className="font-bold text-white">{totalArmasComparadas}</span>
-                  </div>
-                  <div className="flex justify-between text-slate-400">
-                    <span>Formato do arquivo:</span>
-                    <span className="font-mono text-purple-300">.json (Astralys Universal)</span>
-                  </div>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={handleDownloadDatabase}
-                disabled={totalEquipes === 0 && totalArmasComparadas === 0}
-                className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-ametist-600 hover:from-purple-500 hover:to-ametist-500 text-white font-bold text-xs shadow-lg shadow-purple-600/25 transition-all flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.01] active:scale-[0.99] disabled:opacity-40"
-              >
-                <Download className="w-4 h-4" />
-                <span>Exportar e Baixar Minha Database</span>
-              </button>
-            </div>
-
-            {/* BOX DE UPLOAD / IMPORTAÇÃO DE OUTRAS CONTAS */}
-            <div className="p-6 rounded-3xl bg-[#090e17] border border-slate-800 space-y-4 flex flex-col justify-between">
-              <div className="space-y-2">
-                <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/25 flex items-center justify-center text-cyan-400">
-                  <Upload className="w-5 h-5" />
-                </div>
-                <h3 className="text-base font-bold text-white">Importar Database de Outra Conta</h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
-                  Carregue um arquivo JSON de database gerado em qualquer outra conta do Astralys. 
-                  Você pode escolher mesclar com suas equipes atuais ou substituir sua base.
-                </p>
-
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  accept=".json"
-                  onChange={handleFileSelect}
-                  className="hidden"
-                />
-
-                <div 
-                  onClick={() => fileInputRef.current?.click()}
-                  className="p-6 rounded-2xl border-2 border-dashed border-slate-700 hover:border-cyan-500 bg-black/30 hover:bg-cyan-950/10 transition-all cursor-pointer flex flex-col items-center justify-center gap-2 text-center"
-                >
-                  <FileJson className="w-8 h-8 text-cyan-400" />
-                  <span className="text-xs font-bold text-slate-200">Clique para selecionar arquivo .json</span>
-                  <span className="text-[11px] text-slate-500">ou arraste a database para cá</span>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className="w-full py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white font-bold text-xs border border-white/10 transition-all flex items-center justify-center gap-2 cursor-pointer"
-              >
-                <Upload className="w-4 h-4 text-cyan-400" />
-                <span>Selecionar Arquivo de Database</span>
-              </button>
-            </div>
-
-          </div>
-
-          {/* PRÉ-VISUALIZAÇÃO DE IMPORTAÇÃO PENDENTE */}
-          {pendingImport && (
-            <div className="p-6 rounded-3xl bg-gradient-to-r from-cyan-950/30 to-purple-950/30 border border-cyan-500/40 space-y-4 animate-fadeIn">
-              <div className="flex items-center justify-between pb-3 border-b border-white/10">
-                <div className="flex items-center gap-2.5">
-                  <FileJson className="w-5 h-5 text-cyan-400" />
-                  <div>
-                    <h4 className="text-sm font-bold text-white">Database Carregada para Análise</h4>
-                    <p className="text-xs text-slate-400">
-                      Origem: {pendingImport.sourceUser.email || 'Conta Externa'} • {new Date(pendingImport.exportedAt).toLocaleDateString('pt-BR')}
-                    </p>
-                  </div>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => setPendingImport(null)}
-                  className="text-xs text-slate-400 hover:text-white"
-                >
-                  Cancelar
-                </button>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                <div className="p-3.5 rounded-xl bg-black/40 border border-white/5 space-y-1">
-                  <span className="text-slate-400">Equipes Encontradas:</span>
-                  <div className="text-base font-bold text-cyan-300">
-                    {pendingImport.data.projects?.length || 0} equipes
-                  </div>
-                </div>
-
-                <div className="p-3.5 rounded-xl bg-black/40 border border-white/5 space-y-1">
-                  <span className="text-slate-400">Comparações de Armas:</span>
-                  <div className="text-base font-bold text-amber-300">
-                    {Object.keys(pendingImport.data.weaponComparisons || {}).length} personagens
-                  </div>
-                </div>
-              </div>
-
-              {/* Escolha do Modo de Importação */}
-              <div className="space-y-2 pt-2">
-                <label className="text-xs font-bold text-slate-300 block">Modo de Aplicação da Database:</label>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <label 
-                    onClick={() => setImportMode('merge')}
-                    className={`p-3.5 rounded-xl border flex items-start gap-3 cursor-pointer transition-all ${
-                      importMode === 'merge'
-                        ? 'bg-purple-950/40 border-purple-500 text-white'
-                        : 'bg-black/40 border-white/5 text-slate-400'
-                    }`}
-                  >
-                    <input 
-                      type="radio" 
-                      name="importMode" 
-                      checked={importMode === 'merge'} 
-                      onChange={() => setImportMode('merge')} 
-                      className="mt-0.5" 
-                    />
-                    <div>
-                      <div className="font-bold text-xs">Mesclar com Minha Conta (Recomendado)</div>
-                      <div className="text-[11px] opacity-75 mt-0.5">
-                        Adiciona as equipes do arquivo sem apagar o que você já tem salvo.
-                      </div>
-                    </div>
-                  </label>
-
-                  <label 
-                    onClick={() => setImportMode('overwrite')}
-                    className={`p-3.5 rounded-xl border flex items-start gap-3 cursor-pointer transition-all ${
-                      importMode === 'overwrite'
-                        ? 'bg-rose-950/40 border-rose-500 text-white'
-                        : 'bg-black/40 border-white/5 text-slate-400'
-                    }`}
-                  >
-                    <input 
-                      type="radio" 
-                      name="importMode" 
-                      checked={importMode === 'overwrite'} 
-                      onChange={() => setImportMode('overwrite')} 
-                      className="mt-0.5" 
-                    />
-                    <div>
-                      <div className="font-bold text-xs text-rose-300">Substituir Minha Database</div>
-                      <div className="text-[11px] opacity-75 mt-0.5">
-                        Apaga os dados atuais e deixa exatamente o conteúdo deste arquivo.
-                      </div>
-                    </div>
-                  </label>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-end gap-3 pt-3">
-                <button
-                  type="button"
-                  onClick={() => setPendingImport(null)}
-                  className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white"
-                >
-                  Cancelar
-                </button>
-                <button
-                  type="button"
-                  onClick={handleConfirmImport}
-                  disabled={isImporting}
-                  className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-cyan-600 via-indigo-600 to-purple-600 hover:from-cyan-500 hover:to-purple-500 text-white font-bold text-xs shadow-md transition-all cursor-pointer"
-                >
-                  {isImporting ? 'Processando Database...' : 'Confirmar Importação de Dados'}
-                </button>
-              </div>
-            </div>
-          )}
-
-        </div>
+        <DatabaseStorageView
+          currentProjects={projects}
+          onProjectsChange={setProjects}
+          currentWeapons={weaponComparisons}
+          onWeaponsChange={setWeaponComparisons}
+        />
       )}
 
       {/* ABA 2: EQUIPES SALVAS NA CONTA (DADOS DO SITE) */}

@@ -128,7 +128,7 @@ export const RotationTimeline: React.FC<RotationTimelineProps> = ({
     timeMarkers.push(totalDuration);
   }
 
-  const selectedAction = liveActionsWithBuffs.find(a => a.id === selectedActionId) || null;
+  const selectedAction = liveActionsWithBuffs.find(a => a.id === selectedActionId) || (liveActionsWithBuffs.length > 0 ? liveActionsWithBuffs[0] : null);
 
   // Active buffs overlapping the selected action
   const activeBuffsForSelectedAction = useMemo(() => {
@@ -383,6 +383,45 @@ export const RotationTimeline: React.FC<RotationTimelineProps> = ({
     setSelectedActionId(newAction.id);
     setCurrentTime(snappedStart);
     showToast(`Golpe criado em ${snappedStart}s (${newAction.actionLabel})`);
+  };
+
+  // Add Action explicitly for a character
+  const handleAddAction = (charIdx: number, type: ActionType = 'skill', label?: string, duration: number = 1.2) => {
+    const char = characters[charIdx] || characters[0];
+    const charName = char?.name || 'Personagem';
+    const availableMoves = getCharacterMoveOptions(charName, char?.element);
+    const matchingMove = availableMoves.find(m => m.type === type);
+
+    const charActions = actions.filter(a => a.charIndex === charIdx);
+    const lastCharAct = charActions.length > 0 
+      ? charActions.sort((a, b) => (b.startTime + b.duration) - (a.startTime + a.duration))[0] 
+      : null;
+
+    let start = lastCharAct 
+      ? parseFloat((lastCharAct.startTime + lastCharAct.duration).toFixed(1)) 
+      : (actions.length > 0 ? Math.max(...actions.map(a => a.startTime + a.duration)) : 0.0);
+
+    const dur = matchingMove ? matchingMove.duration : duration;
+    if (start + dur > totalDuration) {
+      start = Math.max(0, parseFloat((totalDuration - dur).toFixed(1)));
+    }
+
+    const newAct: TimelineAction = {
+      id: `act-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+      charIndex: charIdx,
+      charName,
+      actionType: type,
+      actionLabel: label || (matchingMove ? matchingMove.label : type === 'burst' ? 'Q (Supremo)' : 'E (Habilidade)'),
+      startTime: Math.max(0, parseFloat(start.toFixed(1))),
+      duration: dur,
+      damage: Math.round((char?.totalDamage || 100000) * (matchingMove?.damageMultiplier ?? 0.25))
+    };
+
+    const updated = [...actions, newAct];
+    commitUpdate(updated, totalDuration);
+    setSelectedActionId(newAct.id);
+    setCurrentTime(newAct.startTime);
+    showToast(`"${newAct.actionLabel}" adicionado à rotação!`);
   };
 
   // Update existing action properties
@@ -854,10 +893,7 @@ export const RotationTimeline: React.FC<RotationTimelineProps> = ({
       </div>
 
       {/* Main Multi-lane Graphic Track (Pixel-Perfect Alignment & Click-to-Create) */}
-      <div 
-        className="space-y-3 overflow-x-auto pb-2"
-        onClick={() => setSelectedActionId(null)}
-      >
+      <div className="space-y-3 overflow-x-auto pb-2">
         <div className="min-w-[760px] space-y-2.5">
           
           {/* Time Ruler (Identical 2-column flex layout for 100% tick alignment) */}
@@ -1095,348 +1131,436 @@ export const RotationTimeline: React.FC<RotationTimelineProps> = ({
         </div>
       </div>
 
-      {/* 1. PAINEL FIXO DE PROPRIEDADES / AÇÕES (ACTION INSPECTOR SEMPRE VISÍVEL) */}
-      {selectedAction ? (
-        <div 
-          onClick={(e) => e.stopPropagation()}
-          className="p-5 sm:p-6 rounded-2xl bg-[#0a0f1d] border-2 border-cyan-500/50 shadow-2xl shadow-cyan-950/30 space-y-5 animate-fade-in transition-all"
-        >
-          {/* Header Bar of Selected Action */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
-            <div className="flex items-center gap-3">
-              <CharacterAvatar 
-                name={selectedAction.charName} 
-                element={(characters[selectedAction.charIndex]?.element as any) || 'Pyro'} 
-                size="md" 
-              />
-              <div>
-                <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded-full bg-cyan-950 text-cyan-300 border border-cyan-500/40 font-bold">
-                    Ação Selecionada
-                  </span>
-                  <span className="text-base font-black text-white font-sans">
-                    {selectedAction.charName}
-                  </span>
-                  <span className="text-base font-bold text-cyan-300 font-sans">
-                    • {selectedAction.actionLabel}
-                  </span>
-                  {selectedAction.charIndex === carryIndex && (
-                    <span className="text-[9px] px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/30 font-mono font-bold">
-                      CARRY DPS
-                    </span>
-                  )}
-                </div>
-                <div className="flex items-center gap-3 text-xs font-mono text-slate-400 mt-1 flex-wrap">
-                  <span>Início: <strong className="text-white">{selectedAction.startTime.toFixed(1)}s</strong></span>
-                  <span>•</span>
-                  <span>Duração: <strong className="text-white">{selectedAction.duration.toFixed(1)}s</strong></span>
-                  <span>•</span>
-                  <span>Fim: <strong className="text-white">{(selectedAction.startTime + selectedAction.duration).toFixed(1)}s</strong></span>
-                  {selectedAction.damage && (
-                    <>
-                      <span>•</span>
-                      <span>Dano Estimado: <strong className="text-rose-400">{selectedAction.damage.toLocaleString('pt-BR')}</strong></span>
-                    </>
-                  )}
-                </div>
-              </div>
-            </div>
+      {/* 1. PAINEL DE EDIÇÃO PERMANENTE (100% DO TEMPO VISÍVEL) */}
+      <div 
+        onClick={(e) => e.stopPropagation()}
+        className="p-5 sm:p-6 rounded-2xl bg-[#0a0f1d] border-2 border-cyan-500/50 shadow-2xl shadow-cyan-950/30 space-y-5 transition-all"
+      >
+        {/* BARRA SUPERIOR: SELETOR DE PERSONAGEM & ATALHOS RÁPIDOS */}
+        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+          <div className="space-y-1.5 w-full lg:w-auto">
+            <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold block">
+              Personagens da Equipe:
+            </span>
+            <div className="flex items-center gap-2 flex-wrap">
+              {characters.map((c, cIdx) => {
+                const charActs = actions.filter(a => a.charIndex === cIdx);
+                const isSelectedChar = selectedAction ? selectedAction.charIndex === cIdx : cIdx === 0;
 
-            {/* Danger Action & Quick Utilities */}
-            <div className="flex items-center gap-2 flex-wrap ml-auto">
-              <button
-                type="button"
-                onClick={() => handleSnapToPrevious(selectedAction.id)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-cyan-300 border border-cyan-500/30 text-xs font-semibold cursor-pointer transition-all"
-                title="Encosta este golpe no final da ação anterior na rotação"
-              >
-                <ArrowLeftRight className="w-3.5 h-3.5" />
-                <span>Encostar no Anterior</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleDuplicateAction(selectedAction.id)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-300 border border-amber-500/30 text-xs font-semibold cursor-pointer transition-all"
-                title="Duplica este golpe"
-              >
-                <Copy className="w-3.5 h-3.5" />
-                <span>Duplicar</span>
-              </button>
-
-              {/* Explicit Highlighted Danger Action Button */}
-              <button
-                type="button"
-                onClick={() => handleDeleteAction(selectedAction.id)}
-                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-rose-950 hover:bg-rose-900 text-rose-200 hover:text-white border border-rose-600 text-xs font-bold cursor-pointer transition-all shadow-md shadow-rose-950/40"
-                title="Remover esta ação da linha do tempo (Delete ou Backspace)"
-              >
-                <Trash2 className="w-3.5 h-3.5" />
-                <span>Remover Ação</span>
-                <kbd className="text-[10px] px-1 py-0.2 rounded bg-black/40 text-rose-300 border border-rose-700/50 font-mono">Del</kbd>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setSelectedActionId(null)}
-                className="p-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-700 transition-colors cursor-pointer"
-                title="Desmarcar seleção (Esc)"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-
-          {/* Section 1: Action Type Pills */}
-          <div className="space-y-2">
-            <label className="text-xs font-bold text-slate-300 font-mono uppercase tracking-wider block">
-              Tipo da Habilidade:
-            </label>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
-              {actionTypesList.map(({ type, label, badge, icon: Icon, colorClass }) => {
-                const isCurrent = selectedAction.actionType === type;
                 return (
                   <button
-                    key={type}
+                    key={cIdx}
                     type="button"
-                    onClick={() => handleSelectActionType(type)}
-                    className={`flex items-center gap-2 p-2.5 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
-                      isCurrent 
-                        ? `${colorClass} ring-2 ring-cyan-400 shadow-md`
-                        : 'bg-slate-950/70 hover:bg-slate-900 border-slate-800 text-slate-400 hover:text-white'
-                    }`}
-                  >
-                    <span className="font-mono text-[10px] px-1.5 py-0.5 rounded bg-black/40 border border-white/10">{badge}</span>
-                    <Icon className="w-3.5 h-3.5 flex-shrink-0" />
-                    <span className="truncate">{label}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Section 2: Timing Precision Controls (Start Time & Duration) */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Start Time Stepper & Slider */}
-            <div className="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800/80 space-y-2.5">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-slate-300 font-mono flex items-center gap-1.5">
-                  <MoveHorizontal className="w-3.5 h-3.5 text-cyan-400" />
-                  Momento de Início:
-                </span>
-                <div className="flex items-center gap-1.5">
-                  <input
-                    type="number"
-                    step="0.1"
-                    min="0"
-                    max={Math.max(0, totalDuration - selectedAction.duration)}
-                    value={selectedAction.startTime}
-                    onChange={(e) => handleUpdateAction(selectedAction.id, { startTime: parseFloat(e.target.value) || 0 })}
-                    className="w-16 px-2 py-0.5 rounded bg-slate-900 border border-slate-700 text-cyan-300 font-mono font-bold text-xs text-right outline-none focus:border-cyan-400"
-                  />
-                  <span className="text-xs text-slate-500 font-mono">s</span>
-                </div>
-              </div>
-
-              <input
-                type="range"
-                min="0"
-                max={Math.max(0, totalDuration - selectedAction.duration)}
-                step="0.1"
-                value={selectedAction.startTime}
-                onChange={(e) => handleUpdateAction(selectedAction.id, { startTime: parseFloat(e.target.value) || 0 })}
-                className="w-full accent-cyan-400 cursor-pointer"
-              />
-
-              {/* Stepper Nudge Buttons */}
-              <div className="flex items-center justify-between gap-1 font-mono text-[11px]">
-                {[-1.0, -0.5, -0.1, 0.1, 0.5, 1.0].map(delta => (
-                  <button
-                    key={delta}
-                    type="button"
-                    onClick={() => handleNudgeAction(selectedAction.id, delta)}
-                    className="flex-1 py-1 rounded bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors cursor-pointer text-center"
-                  >
-                    {delta > 0 ? `+${delta}s` : `${delta}s`}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Duration Stepper, Presets & Slider */}
-            <div className="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800/80 space-y-2.5">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-slate-300 font-mono flex items-center gap-1.5">
-                  <Clock className="w-3.5 h-3.5 text-amber-400" />
-                  Duração da Ação:
-                </span>
-                <div className="flex items-center gap-1.5">
-                  <input
-                    type="number"
-                    step="0.1"
-                    min="0.2"
-                    max="10.0"
-                    value={selectedAction.duration}
-                    onChange={(e) => handleUpdateAction(selectedAction.id, { duration: parseFloat(e.target.value) || 1.0 })}
-                    className="w-16 px-2 py-0.5 rounded bg-slate-900 border border-slate-700 text-amber-300 font-mono font-bold text-xs text-right outline-none focus:border-amber-400"
-                  />
-                  <span className="text-xs text-slate-500 font-mono">s</span>
-                </div>
-              </div>
-
-              <input
-                type="range"
-                min="0.2"
-                max="8.0"
-                step="0.1"
-                value={selectedAction.duration}
-                onChange={(e) => handleUpdateAction(selectedAction.id, { duration: parseFloat(e.target.value) || 1.0 })}
-                className="w-full accent-amber-400 cursor-pointer"
-              />
-
-              {/* Duration Presets */}
-              <div className="flex items-center justify-between gap-1 font-mono text-[10px]">
-                {[
-                  { dur: 0.5, label: '0.5s Troca' },
-                  { dur: 1.0, label: '1.0s Rápido' },
-                  { dur: 1.5, label: '1.5s Habilidade' },
-                  { dur: 2.0, label: '2.0s Supremo' },
-                  { dur: 3.0, label: '3.0s Combo' }
-                ].map(p => (
-                  <button
-                    key={p.dur}
-                    type="button"
-                    onClick={() => handleUpdateAction(selectedAction.id, { duration: p.dur })}
-                    className={`flex-1 py-1 rounded border transition-colors cursor-pointer text-center ${
-                      selectedAction.duration === p.dur
-                        ? 'bg-amber-600 text-white border-amber-500 font-bold'
-                        : 'bg-slate-900 text-slate-400 hover:text-white border-slate-800'
-                    }`}
-                  >
-                    {p.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Section 3: Modifiers & Active Buffs (Snapshot / Buff tags) */}
-          <div className="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800/80 space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-slate-300 font-mono flex items-center gap-1.5 uppercase tracking-wider">
-                <Layers className="w-3.5 h-3.5 text-purple-400" />
-                <span>Buffs Ativos & Modificadores da Equipe:</span>
-              </span>
-              <span className="text-[10px] font-mono text-slate-400">
-                Janela: {selectedAction.startTime.toFixed(1)}s - {(selectedAction.startTime + selectedAction.duration).toFixed(1)}s
-              </span>
-            </div>
-
-            {activeBuffsForSelectedAction.length > 0 ? (
-              <div className="flex items-center gap-2 flex-wrap">
-                {activeBuffsForSelectedAction.map(buff => (
-                  <div 
-                    key={buff.id}
-                    className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-mono font-bold text-white shadow-sm"
-                    style={{
-                      backgroundColor: `${buff.color}25`,
-                      border: `1px solid ${buff.color}60`
+                    onClick={() => {
+                      if (charActs.length > 0) {
+                        setSelectedActionId(charActs[0].id);
+                      } else {
+                        handleAddAction(cIdx, 'skill', 'Habilidade Elemental (E)', 1.2);
+                      }
                     }}
-                  >
-                    <span className="w-2 h-2 rounded-full" style={{ backgroundColor: buff.color }} />
-                    <span>{buff.name}</span>
-                    <span className="text-[10px] text-amber-300 font-normal">({buff.statBonus})</span>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-xs font-mono text-slate-500 italic">
-                Nenhum buff de equipe ativo nesta janela de tempo ({selectedAction.startTime.toFixed(1)}s - {(selectedAction.startTime + selectedAction.duration).toFixed(1)}s).
-              </div>
-            )}
-          </div>
-
-          {/* Section 4: Official Kit Strikes Quick Switcher */}
-          <div className="space-y-2 pt-2 border-t border-slate-800">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-slate-300 font-mono uppercase tracking-wider flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-                <span>Talentos Oficiais Disponíveis ({selectedAction.charName}):</span>
-              </span>
-            </div>
-
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
-              {getCharacterMoveOptions(selectedAction.charName, characters[selectedAction.charIndex]?.element).map(move => {
-                const isCurrent = selectedAction.actionLabel === move.label;
-                return (
-                  <button
-                    key={move.id}
-                    type="button"
-                    onClick={() => handleSwitchActionStrike(move)}
-                    className={`p-2.5 rounded-xl border text-left flex flex-col justify-between transition-all cursor-pointer ${
-                      isCurrent
-                        ? 'bg-cyan-950/90 border-cyan-400 text-white ring-1 ring-cyan-400 shadow-md shadow-cyan-500/20'
-                        : 'bg-slate-950/70 hover:bg-slate-900 border-slate-800 hover:border-slate-700 text-slate-300 hover:text-white'
+                    className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
+                      isSelectedChar
+                        ? 'bg-cyan-950/90 border-cyan-400 text-white shadow-md shadow-cyan-950/50 ring-1 ring-cyan-400'
+                        : 'bg-slate-950/80 hover:bg-slate-900 border-slate-800 text-slate-400 hover:text-white'
                     }`}
                   >
-                    <div className="flex items-center justify-between gap-1 mb-1">
-                      <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-black/40 text-cyan-300 font-bold uppercase">
-                        {move.type}
-                      </span>
-                      <span className="text-[10px] font-mono text-slate-400">
-                        {move.duration}s
-                      </span>
-                    </div>
-                    <span className="text-xs font-bold truncate block">
-                      {move.label}
+                    <CharacterAvatar name={c.name} element={c.element as any} size="xs" showBorder={false} />
+                    <span>{c.name}</span>
+                    <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-black/40 text-cyan-300">
+                      {charActs.length}
                     </span>
                   </button>
                 );
               })}
             </div>
           </div>
+
+          {/* Atalhos Rápidos para Criar Novo Golpe para o Personagem Ativo */}
+          <div className="flex items-center gap-2 flex-wrap ml-auto">
+            <span className="text-[10px] font-mono text-slate-400 block sm:inline">Adicionar Ação:</span>
+            <button
+              type="button"
+              onClick={() => handleAddAction(selectedAction ? selectedAction.charIndex : 0, 'skill', 'Habilidade (E)', 1.2)}
+              className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-slate-900 hover:bg-amber-950 text-amber-300 border border-slate-700 hover:border-amber-500/40 text-xs font-semibold cursor-pointer transition-all"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              <span>+ E Skill</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => handleAddAction(selectedAction ? selectedAction.charIndex : 0, 'burst', 'Supremo (Q)', 1.8)}
+              className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-slate-900 hover:bg-purple-950 text-purple-300 border border-slate-700 hover:border-purple-500/40 text-xs font-semibold cursor-pointer transition-all"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              <span>+ Q Burst</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => handleAddAction(selectedAction ? selectedAction.charIndex : 0, 'swap', 'Swap In', 0.5)}
+              className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-slate-900 hover:bg-cyan-950 text-cyan-300 border border-slate-700 hover:border-cyan-500/40 text-xs font-semibold cursor-pointer transition-all"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              <span>+ Swap</span>
+            </button>
+          </div>
         </div>
-      ) : (
-        /* Empty State Inspector (Sempre visível para manter a estabilidade do layout) */
-        <div className="p-5 sm:p-6 rounded-2xl bg-[#0a0f1d] border border-slate-800 shadow-xl transition-all">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
-            <div className="flex items-center gap-3.5">
-              <div className="w-12 h-12 rounded-2xl bg-slate-900/90 border border-slate-700/60 flex items-center justify-center text-cyan-400 shadow-inner flex-shrink-0">
-                <Sliders className="w-6 h-6 opacity-70" />
-              </div>
-              <div>
-                <div className="flex items-center justify-center md:justify-start gap-2">
-                  <h4 className="text-sm font-bold text-slate-200 font-cinzel">Painel de Propriedades (Action Inspector)</h4>
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-slate-900 text-slate-400 border border-slate-800">Pronto para Edição</span>
+
+        {/* LISTA DE AÇÕES DO PERSONAGEM SELECIONADO (PILLS HORIZONTAIS) */}
+        {selectedAction && (
+          <div className="p-3 rounded-xl bg-slate-950/70 border border-slate-800/80 space-y-2">
+            <div className="flex items-center justify-between text-[11px] font-mono text-slate-400 flex-wrap gap-1">
+              <span>Golpes de <strong>{selectedAction.charName}</strong> na Rotação:</span>
+              <span className="text-slate-500">Clique para alternar o golpe em edição</span>
+            </div>
+            <div className="flex items-center gap-2 flex-wrap">
+              {actions
+                .filter(a => a.charIndex === selectedAction.charIndex)
+                .sort((a, b) => a.startTime - b.startTime)
+                .map((act) => {
+                  const isThisSelected = act.id === selectedAction.id;
+                  return (
+                    <button
+                      key={act.id}
+                      type="button"
+                      onClick={() => setSelectedActionId(act.id)}
+                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-mono font-bold transition-all cursor-pointer ${
+                        isThisSelected
+                          ? 'bg-cyan-950 border-cyan-400 text-white ring-2 ring-cyan-400/50 shadow-md'
+                          : 'bg-slate-900 hover:bg-slate-800 border-slate-700 text-slate-300 hover:text-white'
+                      }`}
+                    >
+                      <span className="text-[9px] px-1 py-0.2 rounded bg-black/40 text-cyan-300">{getActionBadgeText(act.actionType)}</span>
+                      <span>{act.actionLabel}</span>
+                      <span className="text-[10px] text-slate-400">({act.startTime.toFixed(1)}s - {(act.startTime + act.duration).toFixed(1)}s)</span>
+                    </button>
+                  );
+                })}
+            </div>
+          </div>
+        )}
+
+        {/* DETALHES & ATRIBUTOS DA AÇÃO SELECIONADA */}
+        {selectedAction ? (
+          <>
+            {/* Header da Ação */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+              <div className="flex items-center gap-3">
+                <CharacterAvatar 
+                  name={selectedAction.charName} 
+                  element={(characters[selectedAction.charIndex]?.element as any) || 'Pyro'} 
+                  size="md" 
+                />
+                <div>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded-full bg-cyan-950 text-cyan-300 border border-cyan-500/40 font-bold">
+                      Ação em Edição
+                    </span>
+                    <span className="text-base font-black text-white font-sans">
+                      {selectedAction.charName}
+                    </span>
+                    <span className="text-base font-bold text-cyan-300 font-sans">
+                      • {selectedAction.actionLabel}
+                    </span>
+                    {selectedAction.charIndex === carryIndex && (
+                      <span className="text-[9px] px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/30 font-mono font-bold">
+                        CARRY DPS
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-3 text-xs font-mono text-slate-400 mt-1 flex-wrap">
+                    <span>Início: <strong className="text-white">{selectedAction.startTime.toFixed(1)}s</strong></span>
+                    <span>•</span>
+                    <span>Duração: <strong className="text-white">{selectedAction.duration.toFixed(1)}s</strong></span>
+                    <span>•</span>
+                    <span>Fim: <strong className="text-white">{(selectedAction.startTime + selectedAction.duration).toFixed(1)}s</strong></span>
+                    {selectedAction.damage && (
+                      <>
+                        <span>•</span>
+                        <span>Dano Estimado: <strong className="text-rose-400">{selectedAction.damage.toLocaleString('pt-BR')}</strong></span>
+                      </>
+                    )}
+                  </div>
                 </div>
-                <p className="text-xs text-slate-400 mt-1">
-                  Selecione qualquer ação na timeline para editar propriedades, ou <strong className="text-cyan-300">clique em um espaço vazio</strong> da trilha para criar um novo golpe com snap magnético.
-                </p>
+              </div>
+
+              {/* Botões de Ação Perigosa & Utilitários */}
+              <div className="flex items-center gap-2 flex-wrap ml-auto">
+                <button
+                  type="button"
+                  onClick={() => handleSnapToPrevious(selectedAction.id)}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-cyan-300 border border-cyan-500/30 text-xs font-semibold cursor-pointer transition-all"
+                  title="Encosta este golpe no final da ação anterior na rotação"
+                >
+                  <ArrowLeftRight className="w-3.5 h-3.5" />
+                  <span>Encostar no Anterior</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleDuplicateAction(selectedAction.id)}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-300 border border-amber-500/30 text-xs font-semibold cursor-pointer transition-all"
+                  title="Duplica este golpe"
+                >
+                  <Copy className="w-3.5 h-3.5" />
+                  <span>Duplicar</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleDeleteAction(selectedAction.id)}
+                  className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-rose-950 hover:bg-rose-900 text-rose-200 hover:text-white border border-rose-600 text-xs font-bold cursor-pointer transition-all shadow-md shadow-rose-950/40"
+                  title="Remover esta ação da linha do tempo (Delete ou Backspace)"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  <span>Remover Ação</span>
+                  <kbd className="text-[10px] px-1 py-0.2 rounded bg-black/40 text-rose-300 border border-rose-700/50 font-mono">Del</kbd>
+                </button>
               </div>
             </div>
 
-            {/* Productivity Keyboard & Mouse Shortcuts Guide */}
-            <div className="flex items-center gap-2 text-[11px] font-mono text-slate-400 flex-wrap justify-center">
-              <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-950/80 border border-slate-800">
-                <MousePointer className="w-3.5 h-3.5 text-cyan-400" />
-                <span>Clique Vazio: Criar</span>
-              </div>
-              <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-950/80 border border-slate-800">
-                <MoveHorizontal className="w-3.5 h-3.5 text-amber-400" />
-                <span>Arrastar: Mover</span>
-              </div>
-              <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-950/80 border border-slate-800">
-                <Trash2 className="w-3.5 h-3.5 text-rose-400" />
-                <span>Del: Excluir</span>
-              </div>
-              <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-950/80 border border-slate-800">
-                <Play className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Espaço: Play/Pausa</span>
+            {/* Seção 1: Pills de Tipo da Habilidade */}
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-slate-300 font-mono uppercase tracking-wider block">
+                Tipo da Habilidade:
+              </label>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
+                {actionTypesList.map(({ type, label, badge, icon: Icon, colorClass }) => {
+                  const isCurrent = selectedAction.actionType === type;
+                  return (
+                    <button
+                      key={type}
+                      type="button"
+                      onClick={() => handleSelectActionType(type)}
+                      className={`flex items-center gap-2 p-2.5 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
+                        isCurrent 
+                          ? `${colorClass} ring-2 ring-cyan-400 shadow-md`
+                          : 'bg-slate-950/70 hover:bg-slate-900 border-slate-800 text-slate-400 hover:text-white'
+                      }`}
+                    >
+                      <span className="font-mono text-[10px] px-1.5 py-0.5 rounded bg-black/40 border border-white/10">{badge}</span>
+                      <Icon className="w-3.5 h-3.5 flex-shrink-0" />
+                      <span className="truncate">{label}</span>
+                    </button>
+                  );
+                })}
               </div>
             </div>
+
+            {/* Seção 2: Controles de Precisão de Tempo (Início & Duração) */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Momento de Início */}
+              <div className="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800/80 space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-slate-300 font-mono flex items-center gap-1.5">
+                    <MoveHorizontal className="w-3.5 h-3.5 text-cyan-400" />
+                    Momento de Início:
+                  </span>
+                  <div className="flex items-center gap-1.5">
+                    <input
+                      type="number"
+                      step="0.1"
+                      min="0"
+                      max={Math.max(0, totalDuration - selectedAction.duration)}
+                      value={selectedAction.startTime}
+                      onChange={(e) => handleUpdateAction(selectedAction.id, { startTime: parseFloat(e.target.value) || 0 })}
+                      className="w-16 px-2 py-0.5 rounded bg-slate-900 border border-slate-700 text-cyan-300 font-mono font-bold text-xs text-right outline-none focus:border-cyan-400"
+                    />
+                    <span className="text-xs text-slate-500 font-mono">s</span>
+                  </div>
+                </div>
+
+                <input
+                  type="range"
+                  min="0"
+                  max={Math.max(0, totalDuration - selectedAction.duration)}
+                  step="0.1"
+                  value={selectedAction.startTime}
+                  onChange={(e) => handleUpdateAction(selectedAction.id, { startTime: parseFloat(e.target.value) || 0 })}
+                  className="w-full accent-cyan-400 cursor-pointer"
+                />
+
+                <div className="flex items-center justify-between gap-1 font-mono text-[11px]">
+                  {[-1.0, -0.5, -0.1, 0.1, 0.5, 1.0].map(delta => (
+                    <button
+                      key={delta}
+                      type="button"
+                      onClick={() => handleNudgeAction(selectedAction.id, delta)}
+                      className="flex-1 py-1 rounded bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors cursor-pointer text-center"
+                    >
+                      {delta > 0 ? `+${delta}s` : `${delta}s`}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Duração da Ação */}
+              <div className="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800/80 space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-slate-300 font-mono flex items-center gap-1.5">
+                    <Clock className="w-3.5 h-3.5 text-amber-400" />
+                    Duração da Ação:
+                  </span>
+                  <div className="flex items-center gap-1.5">
+                    <input
+                      type="number"
+                      step="0.1"
+                      min="0.2"
+                      max="10.0"
+                      value={selectedAction.duration}
+                      onChange={(e) => handleUpdateAction(selectedAction.id, { duration: parseFloat(e.target.value) || 1.0 })}
+                      className="w-16 px-2 py-0.5 rounded bg-slate-900 border border-slate-700 text-amber-300 font-mono font-bold text-xs text-right outline-none focus:border-amber-400"
+                    />
+                    <span className="text-xs text-slate-500 font-mono">s</span>
+                  </div>
+                </div>
+
+                <input
+                  type="range"
+                  min="0.2"
+                  max="8.0"
+                  step="0.1"
+                  value={selectedAction.duration}
+                  onChange={(e) => handleUpdateAction(selectedAction.id, { duration: parseFloat(e.target.value) || 1.0 })}
+                  className="w-full accent-amber-400 cursor-pointer"
+                />
+
+                <div className="flex items-center justify-between gap-1 font-mono text-[10px]">
+                  {[
+                    { dur: 0.5, label: '0.5s Troca' },
+                    { dur: 1.0, label: '1.0s Rápido' },
+                    { dur: 1.5, label: '1.5s Habilidade' },
+                    { dur: 2.0, label: '2.0s Supremo' },
+                    { dur: 3.0, label: '3.0s Combo' }
+                  ].map(p => (
+                    <button
+                      key={p.dur}
+                      type="button"
+                      onClick={() => handleUpdateAction(selectedAction.id, { duration: p.dur })}
+                      className={`flex-1 py-1 rounded border transition-colors cursor-pointer text-center ${
+                        selectedAction.duration === p.dur
+                          ? 'bg-amber-600 text-white border-amber-500 font-bold'
+                          : 'bg-slate-900 text-slate-400 hover:text-white border-slate-800'
+                      }`}
+                    >
+                      {p.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Seção 3: Buffs Ativos & Modificadores da Equipe */}
+            <div className="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800/80 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-slate-300 font-mono flex items-center gap-1.5 uppercase tracking-wider">
+                  <Layers className="w-3.5 h-3.5 text-purple-400" />
+                  <span>Buffs Ativos & Modificadores da Equipe:</span>
+                </span>
+                <span className="text-[10px] font-mono text-slate-400">
+                  Janela: {selectedAction.startTime.toFixed(1)}s - {(selectedAction.startTime + selectedAction.duration).toFixed(1)}s
+                </span>
+              </div>
+
+              {activeBuffsForSelectedAction.length > 0 ? (
+                <div className="flex items-center gap-2 flex-wrap">
+                  {activeBuffsForSelectedAction.map(buff => (
+                    <div 
+                      key={buff.id}
+                      className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-mono font-bold text-white shadow-sm"
+                      style={{
+                        backgroundColor: `${buff.color}25`,
+                        border: `1px solid ${buff.color}60`
+                      }}
+                    >
+                      <span className="w-2 h-2 rounded-full" style={{ backgroundColor: buff.color }} />
+                      <span>{buff.name}</span>
+                      <span className="text-[10px] text-amber-300 font-normal">({buff.statBonus})</span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-xs font-mono text-slate-500 italic">
+                  Nenhum buff de equipe ativo nesta janela de tempo ({selectedAction.startTime.toFixed(1)}s - {(selectedAction.startTime + selectedAction.duration).toFixed(1)}s).
+                </div>
+              )}
+            </div>
+
+            {/* Seção 4: Talentos Oficiais do Personagem */}
+            <div className="space-y-2 pt-2 border-t border-slate-800">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-slate-300 font-mono uppercase tracking-wider flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+                  <span>Talentos Oficiais Disponíveis ({selectedAction.charName}):</span>
+                </span>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
+                {getCharacterMoveOptions(selectedAction.charName, characters[selectedAction.charIndex]?.element).map(move => {
+                  const isCurrent = selectedAction.actionLabel === move.label;
+                  return (
+                    <button
+                      key={move.id}
+                      type="button"
+                      onClick={() => handleSwitchActionStrike(move)}
+                      className={`p-2.5 rounded-xl border text-left flex flex-col justify-between transition-all cursor-pointer ${
+                        isCurrent
+                          ? 'bg-cyan-950/90 border-cyan-400 text-white ring-1 ring-cyan-400 shadow-md shadow-cyan-500/20'
+                          : 'bg-slate-950/70 hover:bg-slate-900 border-slate-800 hover:border-slate-700 text-slate-300 hover:text-white'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between gap-1 mb-1">
+                        <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-black/40 text-cyan-300 font-bold uppercase">
+                          {move.type}
+                        </span>
+                        <span className="text-[10px] font-mono text-slate-400">
+                          {move.duration}s
+                        </span>
+                      </div>
+                      <span className="text-xs font-bold truncate block">
+                        {move.label}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Seção 5: Duração Total Global da Rotação */}
+            <div className="pt-3 border-t border-slate-800 flex items-center justify-between flex-wrap gap-3">
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-slate-400 font-mono">Duração Total da Rotação:</span>
+                <input
+                  type="number"
+                  step="0.5"
+                  min="5"
+                  max="40"
+                  value={totalDuration}
+                  onChange={(e) => commitUpdate(actions, parseFloat(e.target.value) || 20)}
+                  className="w-20 px-2 py-1 rounded bg-slate-950 border border-slate-700 text-white font-mono font-bold text-xs outline-none focus:border-cyan-500"
+                />
+                <span className="text-xs text-slate-400 font-mono">segundos</span>
+              </div>
+
+              <button
+                type="button"
+                onClick={handleSnapDuration}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-300 border border-amber-500/30 text-xs font-semibold cursor-pointer transition-all"
+                title="Ajusta o tempo total da rotação para o fim do último golpe executado"
+              >
+                <Clock className="w-3.5 h-3.5 text-amber-400" />
+                <span>Encostar Duração ao Último Golpe</span>
+              </button>
+            </div>
+          </>
+        ) : (
+          <div className="p-8 text-center text-slate-400 space-y-3">
+            <p className="text-sm font-bold text-slate-200">Nenhum golpe cadastrado nesta rotação.</p>
+            <p className="text-xs text-slate-400">
+              Clique nos botões "+ E Skill" ou "+ Q Burst" acima para adicionar a primeira ação de qualquer personagem.
+            </p>
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* 2. TABELA COMPLETA DE SEQUÊNCIA DE AÇÕES (Toggleable) */}
       {showActionTable && (

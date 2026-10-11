@@ -21,6 +21,7 @@ import { CalculationProject } from '../types/projectVault';
 import { CharacterAvatar } from './CharacterAvatar';
 import { useAuth } from '../context/AuthContext';
 import { syncLocalProjectsWithCloud } from '../services/projectApi';
+import { ASTRALYS_ELEMENT_COLORS } from '../data/characters';
 
 interface ProjectVaultProps {
   projects: CalculationProject[];
@@ -99,29 +100,29 @@ export const ProjectVault: React.FC<ProjectVaultProps> = ({
     if (lower.includes('mavuika') || lower.includes('bennett') || lower.includes('pyro')) {
       return {
         cardBorder: 'border-amber-900/30 hover:border-amber-500/40',
-        headerBg: 'bg-gradient-to-r from-slate-950 via-amber-950/60 to-slate-950 border-b border-amber-500/25 text-amber-100',
-        subHeaderDark: 'bg-[#0a0805] text-amber-200/70 border-b border-slate-800/80',
+        headerBg: 'bg-slate-900    border-b border-amber-500/25 text-amber-100',
+        subHeaderDark: 'bg-slate-900 text-amber-200/70 border-b border-slate-800/80',
         colHeaderDark: 'bg-slate-950 text-slate-400 border-b border-slate-800',
         rowAltBg: 'bg-slate-950/40',
-        footerDark: 'bg-[#080604] text-slate-300 border-t border-amber-900/30',
+        footerDark: 'bg-slate-900 text-slate-300 border-t border-amber-900/30',
         dpsColor: 'text-amber-300'
       };
     }
     if (lower.includes('flins') || lower.includes('sandrone') || lower.includes('columbina') || lower.includes('electro') || lower.includes('cryo')) {
       return {
         cardBorder: 'border-purple-900/30 hover:border-purple-500/40',
-        headerBg: 'bg-gradient-to-r from-slate-950 via-purple-950/60 to-slate-950 border-b border-purple-500/25 text-purple-100',
-        subHeaderDark: 'bg-[#090710] text-purple-200/70 border-b border-slate-800/80',
+        headerBg: 'bg-slate-900    border-b border-purple-500/25 text-purple-100',
+        subHeaderDark: 'bg-slate-900 text-purple-200/70 border-b border-slate-800/80',
         colHeaderDark: 'bg-slate-950 text-slate-400 border-b border-slate-800',
         rowAltBg: 'bg-slate-950/40',
-        footerDark: 'bg-[#06050b] text-slate-300 border-t border-purple-900/30',
+        footerDark: 'bg-slate-900 text-slate-300 border-t border-purple-900/30',
         dpsColor: 'text-purple-300'
       };
     }
     // Default blue/slate
     return {
       cardBorder: 'border-slate-800 hover:border-slate-700',
-      headerBg: 'bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 border-b border-slate-700/40 text-slate-100',
+      headerBg: 'bg-slate-900    border-b border-slate-700/40 text-slate-100',
       subHeaderDark: 'bg-slate-950 text-slate-400 border-b border-slate-800/80',
       colHeaderDark: 'bg-slate-950 text-slate-400 border-b border-slate-800',
       rowAltBg: 'bg-slate-950/40',
@@ -169,90 +170,51 @@ export const ProjectVault: React.FC<ProjectVaultProps> = ({
     e.target.value = '';
   };
 
+  const elemHex = (el?: string) => (ASTRALYS_ELEMENT_COLORS as any)[el || 'None']?.hex || '#8f8a7d';
+  const ghostBtn =
+    'flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-700 hover:bg-slate-800 text-slate-200 text-sm cursor-pointer transition-colors';
+
   return (
-    <div className="space-y-6 animate-fade-in select-none">
-      
-      {/* Toast Notification */}
+    <div className="space-y-8 select-none">
+
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-slate-900 border border-emerald-500/50 text-emerald-300 shadow-2xl text-xs font-mono font-bold animate-fade-in">
+        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-4 py-2.5 rounded-lg bg-slate-800 border border-slate-700 text-slate-100 text-sm">
           <Check className="w-4 h-4 text-emerald-400" />
           <span>{toastMessage}</span>
         </div>
       )}
 
-      {/* Cloud Sync Callout Banner for Unauthenticated Users */}
-      {!isAuthenticated && (
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-4 rounded-2xl bg-gradient-to-r from-ametist-950/80 via-purple-950/40 to-slate-900 border border-ametist-600/40 shadow-xl">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-ametist-600/20 border border-ametist-500/30 flex items-center justify-center text-ametist-300 shrink-0">
-              <Cloud className="w-5 h-5 text-amber-300 animate-pulse" />
-            </div>
-            <div>
-              <p className="text-xs sm:text-sm font-bold text-white">
-                Salve suas planilhas e cálculos na nuvem com sua conta Ametist & Astralys
-              </p>
-              <p className="text-[11px] text-slate-400">
-                Sincronize equipes, rotações e DPR em tempo real para acessar de qualquer computador ou celular.
-              </p>
-            </div>
-          </div>
-          <button
-            type="button"
-            onClick={openAuthModal}
-            className="w-full sm:w-auto px-4 py-2 rounded-xl bg-gradient-to-r from-ametist-600 to-purple-600 hover:from-ametist-500 hover:to-purple-500 text-white text-xs font-bold shadow-md shadow-ametist-600/30 transition-all cursor-pointer whitespace-nowrap hover:scale-105"
-          >
-            Conectar Conta / Salvar na Nuvem
-          </button>
-        </div>
-      )}
-
-      {/* Top Header Bar (Direct, No Fluff) */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-2xl bg-[#090e17] border border-slate-800 shadow-xl">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-600 via-rose-600 to-purple-600 flex items-center justify-center text-white shadow-md">
-            <FolderGit2 className="w-5 h-5" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h2 className="text-lg font-black text-white font-cinzel tracking-wider">
-                ASTRALYS CALCSHEETS VAULT
-              </h2>
-              <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-slate-900 text-amber-300 border border-amber-500/30">
-                {projects.length} Planilhas
-              </span>
-            </div>
-            <p className="text-[11px] text-slate-400 font-mono">
-              Visualização fiel da página 1 de cálculos de equipes e rotações
-            </p>
-          </div>
+      {/* Cabeçalho */}
+      <div className="flex flex-wrap items-end justify-between gap-4 pb-5 border-b border-slate-800">
+        <div>
+          <h1 className="text-3xl font-semibold text-slate-50 font-cinzel">Vault</h1>
+          <p className="text-slate-400 mt-1">
+            {projects.length} {projects.length === 1 ? 'planilha salva' : 'planilhas salvas'}
+            {isAuthenticated ? ' · sincronizado com a nuvem' : ' · só neste navegador'}
+          </p>
         </div>
 
-        {/* Action Controls */}
         <div className="flex items-center gap-2 flex-wrap">
           <div className="relative">
-            <Search className="w-3.5 h-3.5 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Buscar equipe, carry..."
-              className="w-48 pl-8 pr-3 py-1.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-white placeholder-slate-500 outline-none focus:border-amber-500 font-mono"
+              placeholder="Buscar equipe ou carry"
+              className="w-56 pl-9 pr-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-sm text-slate-100 placeholder-slate-500 outline-none focus:border-purple-400"
             />
           </div>
 
-          <label className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-white text-xs font-semibold cursor-pointer transition-all">
-            <Upload className="w-3 h-3 text-cyan-400" />
-            <span>Importar</span>
+          <label className={ghostBtn}>
+            <Upload className="w-4 h-4" />
+            Importar
             <input type="file" accept=".json" onChange={handleImportJson} className="hidden" />
           </label>
 
-          <button
-            onClick={handleExportAllJson}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-white text-xs font-semibold cursor-pointer transition-all"
-            title="Exportar todos os projetos em arquivo JSON"
-          >
-            <Download className="w-3 h-3 text-emerald-400" />
-            <span>Backup</span>
+          <button onClick={handleExportAllJson} className={ghostBtn} title="Baixar todas as planilhas em um arquivo JSON">
+            <Download className="w-4 h-4" />
+            Backup
           </button>
 
           {isAuthenticated ? (
@@ -260,151 +222,122 @@ export const ProjectVault: React.FC<ProjectVaultProps> = ({
               type="button"
               onClick={handleManualSync}
               disabled={isSyncing}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-950/60 hover:bg-emerald-900/60 border border-emerald-500/40 text-emerald-300 text-xs font-semibold cursor-pointer transition-all disabled:opacity-50"
-              title="Sincronizar todas as planilhas com a Nuvem Astralys (PostgreSQL)"
+              className={`${ghostBtn} disabled:opacity-50`}
+              title="Sincronizar todas as planilhas com a nuvem"
             >
-              <Cloud className={`w-3.5 h-3.5 ${isSyncing ? 'animate-bounce text-amber-300' : 'text-emerald-400'}`} />
-              <span>{isSyncing ? 'Sincronizando...' : 'Nuvem Conectada'}</span>
+              <Cloud className="w-4 h-4 text-emerald-400" />
+              {isSyncing ? 'Sincronizando...' : 'Sincronizar'}
             </button>
           ) : (
             <button
               type="button"
               onClick={openAuthModal}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-ametist-950/70 hover:bg-ametist-900/80 border border-ametist-600/40 text-ametist-300 hover:text-white text-xs font-semibold cursor-pointer transition-all"
-              title="Entrar com SSO para salvar no banco de dados na nuvem"
+              className="px-3.5 py-1.5 rounded-lg bg-purple-400 hover:bg-purple-300 text-slate-950 text-sm font-semibold cursor-pointer transition-colors"
+              title="Entre para salvar na nuvem"
             >
-              <CloudOff className="w-3.5 h-3.5 text-ametist-400" />
-              <span>Salvar na Nuvem</span>
+              Salvar na nuvem
             </button>
           )}
 
           <button
             onClick={() => {
-              if (confirm('Restaurar as planilhas padrão da página 1 (Mavuika Iansan, Mavuika Xilonen, Flins Premium)?')) {
+              if (confirm('Restaurar as planilhas padrão (Mavuika Iansan, Mavuika Xilonen, Flins Premium)?')) {
                 onRestoreDefaults();
                 showToast('Planilhas restauradas com sucesso!');
               }
             }}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-400 hover:text-slate-200 text-xs font-semibold cursor-pointer transition-all"
-            title="Restaurar planilhas originais da captura"
+            className="p-2 rounded-lg text-slate-500 hover:text-slate-200 hover:bg-slate-800 cursor-pointer transition-colors"
+            title="Restaurar planilhas padrão"
           >
-            <RotateCcw className="w-3 h-3" />
+            <RotateCcw className="w-4 h-4" />
           </button>
         </div>
       </div>
 
-      {/* Grid of Calcsheet Cards (Directly Matching the Screenshot) */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {filteredProjects.length === 0 && (
+        <div className="rounded-xl border border-dashed border-slate-700 px-8 py-14 text-center">
+          <h2 className="text-2xl font-semibold text-slate-50 font-cinzel">Nada por aqui</h2>
+          <p className="text-slate-400 mt-2">
+            {searchTerm ? 'Nenhuma planilha combina com a busca.' : 'Salve um cálculo pela Análise de Dano para ele aparecer aqui.'}
+          </p>
+        </div>
+      )}
+
+      {/* Cards */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5">
         {filteredProjects.map((proj) => {
           const calc = proj.calculation;
-          const theme = getTeamCardTheme(proj.carryName);
-          const durationStr = proj.rotationDuration ? proj.rotationDuration.toString().replace('.', ',') : '20,0';
+          const durationStr = proj.rotationDuration ? proj.rotationDuration.toString().replace('.', ',') : '20';
 
           return (
-            <div
+            <article
               key={proj.id}
-              className={`rounded-2xl border-2 ${theme.cardBorder || 'border-slate-800'} overflow-hidden shadow-2xl bg-[#0b0f19] flex flex-col justify-between transition-all duration-200`}
+              className="rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 transition-colors flex flex-col"
             >
-              {/* CALCSHEET SUMMARY BLOCK */}
-              <div>
-                {/* 1. TOP TITLE HEADER */}
-                <div className={`${theme.headerBg} px-4 py-2.5 text-center relative flex items-center justify-center`}>
-                  <h3 className="font-extrabold text-base sm:text-lg tracking-wide uppercase font-sans drop-shadow-sm">
-                    {proj.title}
-                  </h3>
+              <div className="p-5 pb-4">
+                <div className="flex items-start justify-between gap-3">
+                  <h3 className="text-xl font-semibold text-slate-50 font-cinzel leading-snug">{proj.title}</h3>
                   {isAuthenticated && (
-                    <span 
-                      className="absolute right-3 top-1/2 -translate-y-1/2 hidden sm:flex items-center gap-1 text-[10px] font-mono text-emerald-300 bg-emerald-950/60 border border-emerald-500/30 px-2 py-0.5 rounded-full"
-                      title="Salvo no banco de dados na nuvem"
-                    >
-                      <Cloud className="w-3 h-3 text-emerald-400" />
-                      <span>Nuvem</span>
-                    </span>
+                    <span title="Salvo na nuvem" className="flex-shrink-0 mt-1.5"><Cloud className="w-4 h-4 text-emerald-400" /></span>
                   )}
                 </div>
+                <p className="text-sm text-slate-500 font-mono truncate mt-1" title={proj.comboNotation || calc.comboNotation}>
+                  {proj.comboNotation || calc.comboNotation || 'Rotação padrão'}
+                </p>
+              </div>
 
-                {/* 2. SUBHEADER: COMBO ROTATION NOTATION */}
-                <div className={`${theme.subHeaderDark} px-4 py-1.5 text-center font-mono text-xs font-bold truncate`}>
-                  {proj.comboNotation || calc.comboNotation || 'Rotação Padrão'}
-                </div>
-
-                {/* 3. CALCSHEET TABLE */}
-                <div className="overflow-x-auto">
-                  <table className="w-full text-xs font-mono border-collapse">
-                    <thead>
-                      <tr className={`${theme.colHeaderDark} text-[11px] uppercase tracking-wider text-left border-b border-black/60`}>
-                        <th className="py-1.5 px-3 font-black">Character</th>
-                        <th className="py-1.5 px-3 font-black text-right">Damage</th>
-                        <th className="py-1.5 px-3 font-black text-right">Percentage</th>
-                        <th className="py-1.5 px-3 font-black">Weapon</th>
-                        <th className="py-1.5 px-3 font-black">Artefact Set</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-800/60">
-                      {calc.characters.map((char, cIdx) => {
-                        const isAlt = cIdx % 2 === 1;
-
-                        return (
-                          <tr 
-                            key={cIdx}
-                            className={`transition-colors hover:bg-slate-800/40 ${isAlt ? theme.rowAltBg : 'bg-[#0e1320]'}`}
-                          >
-                            {/* Character Name + Mini Avatar */}
-                            <td className="py-1.5 px-3 font-bold text-slate-100 flex items-center gap-2 whitespace-nowrap">
-                              {char.name !== 'Lunar' && (
-                                <CharacterAvatar name={char.name} element={char.element as any} size="xs" showBorder={false} />
-                              )}
-                              <span>{char.name}</span>
-                            </td>
-
-                            {/* Damage (Formatted 4.157.702,28) */}
-                            <td className="py-1.5 px-3 text-right font-black text-slate-200 whitespace-nowrap">
-                              {formatNum(char.totalDamage)}
-                            </td>
-
-                            {/* Percentage (94,64) */}
-                            <td className={`py-1.5 px-3 text-right font-bold ${theme.dpsColor || 'text-amber-300'} whitespace-nowrap`}>
-                              {char.damagePercentage.toFixed(2).replace('.', ',')}
-                            </td>
-
-                            {/* Weapon */}
-                            <td className="py-1.5 px-3 text-slate-300 truncate max-w-[130px]" title={char.weapon}>
-                              {char.weapon || '-'}
-                            </td>
-
-                            {/* Artefact Set */}
-                            <td className="py-1.5 px-3 text-slate-400 truncate max-w-[130px]" title={char.artifactSet}>
-                              {char.artifactSet || '-'}
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </div>
-
-                {/* 4. FOOTER BLOCK: DPR & DPS */}
-                <div className={`${theme.footerDark} p-3 font-mono text-xs flex flex-col justify-center space-y-1`}>
-                  <div className="flex items-center justify-between">
-                    <span className="font-bold uppercase tracking-wider text-slate-400">DPR</span>
-                    <span className="font-black text-sm text-slate-100">{formatNum(proj.totalDpr)}</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="font-bold uppercase tracking-wider text-slate-400">DPS({durationStr})</span>
-                    <span className={`font-black text-sm ${theme.dpsColor || 'text-amber-300'}`}>{formatInt(proj.dps)}</span>
-                  </div>
+              {/* Divisão do dano */}
+              <div className="px-5">
+                <div className="flex h-2.5 rounded-sm overflow-hidden gap-0.5">
+                  {calc.characters.filter(c => c.damagePercentage > 0).map((c, i) => (
+                    <div
+                      key={i}
+                      style={{ width: `${c.damagePercentage}%`, backgroundColor: elemHex(c.element), minWidth: 3 }}
+                      title={`${c.name}: ${c.damagePercentage.toFixed(1)}%`}
+                    />
+                  ))}
                 </div>
               </div>
 
-              {/* CARD ACTIONS TOOLBAR (Sleek & Discreet) */}
-              <div className="p-2.5 bg-[#080c14] border-t border-slate-800 flex items-center justify-between gap-2">
-                <div className="flex items-center gap-1.5">
+              {/* Equipe */}
+              <ul className="px-5 py-3 space-y-2">
+                {calc.characters.map((char, cIdx) => (
+                  <li key={cIdx} className="flex items-center gap-3 text-sm">
+                    {char.name !== 'Lunar' ? (
+                      <CharacterAvatar name={char.name} element={char.element as any} size="xs" showBorder={false} showElementDot={false} />
+                    ) : (
+                      <span className="w-6 h-6" />
+                    )}
+                    <span className="font-medium text-slate-100 w-28 truncate">{char.name}</span>
+                    <span className="text-slate-500 truncate flex-1" title={`${char.weapon} · ${char.artifactSet}`}>
+                      {char.weapon || '—'}
+                    </span>
+                    <span className="font-mono text-slate-200 w-14 text-right">{char.damagePercentage.toFixed(1)}%</span>
+                  </li>
+                ))}
+              </ul>
+
+              {/* Métricas */}
+              <div className="mt-auto flex items-end justify-between px-5 py-4 border-t border-slate-800">
+                <div>
+                  <p className="text-xs text-slate-500">DPS ({durationStr}s)</p>
+                  <p className="font-mono text-2xl font-semibold text-purple-300 leading-none mt-1">{formatInt(proj.dps)}</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-xs text-slate-500">Dano por rotação</p>
+                  <p className="font-mono text-base text-slate-200 mt-1">{formatInt(proj.totalDpr)}</p>
+                </div>
+              </div>
+
+              {/* Ações */}
+              <div className="px-3 py-2.5 border-t border-slate-800 flex items-center justify-between gap-2">
+                <div className="flex items-center">
                   <button
                     onClick={() => onDuplicateProject(proj)}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
-                    title="Duplicar esta tabela"
+                    className="p-2 rounded-md text-slate-500 hover:text-slate-100 hover:bg-slate-800 cursor-pointer transition-colors"
+                    title="Duplicar"
                   >
-                    <Copy className="w-3.5 h-3.5" />
+                    <Copy className="w-4 h-4" />
                   </button>
                   {isAuthenticated ? (
                     <button
@@ -413,19 +346,19 @@ export const ProjectVault: React.FC<ProjectVaultProps> = ({
                         onSaveProject(proj);
                         showToast(`"${proj.title}" sincronizado na nuvem!`);
                       }}
-                      className="p-1.5 rounded-lg text-emerald-400 hover:text-emerald-300 hover:bg-emerald-950/50 transition-colors cursor-pointer"
-                      title="Sincronizar esta planilha na Nuvem Astralys"
+                      className="p-2 rounded-md text-slate-500 hover:text-emerald-300 hover:bg-slate-800 cursor-pointer transition-colors"
+                      title="Sincronizar esta planilha"
                     >
-                      <Cloud className="w-3.5 h-3.5" />
+                      <Cloud className="w-4 h-4" />
                     </button>
                   ) : (
                     <button
                       type="button"
                       onClick={openAuthModal}
-                      className="p-1.5 rounded-lg text-slate-500 hover:text-ametist-300 hover:bg-slate-800 transition-colors cursor-pointer"
-                      title="Conectar com SSO para salvar na nuvem"
+                      className="p-2 rounded-md text-slate-500 hover:text-slate-100 hover:bg-slate-800 cursor-pointer transition-colors"
+                      title="Entre para salvar na nuvem"
                     >
-                      <CloudOff className="w-3.5 h-3.5" />
+                      <CloudOff className="w-4 h-4" />
                     </button>
                   )}
                   <button
@@ -434,34 +367,32 @@ export const ProjectVault: React.FC<ProjectVaultProps> = ({
                         onDeleteProject(proj.id);
                       }
                     }}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition-colors cursor-pointer"
+                    className="p-2 rounded-md text-slate-500 hover:text-rose-400 hover:bg-slate-800 cursor-pointer transition-colors"
                     title="Excluir"
                   >
-                    <Trash2 className="w-3.5 h-3.5" />
+                    <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5">
                   {onOpenInDamageAnalyzer && (
                     <button
                       onClick={() => onOpenInDamageAnalyzer(proj)}
-                      className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-rose-300 hover:text-white border border-rose-500/20 text-xs font-semibold transition-all cursor-pointer"
+                      className="px-3 py-1.5 rounded-md text-sm text-slate-300 hover:bg-slate-800 cursor-pointer transition-colors"
                     >
-                      <Flame className="w-3 h-3" />
-                      <span>Editar</span>
+                      Editar
                     </button>
                   )}
-
                   <button
                     onClick={() => onSelectProject(proj)}
-                    className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold shadow transition-all cursor-pointer"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-purple-400 hover:bg-purple-300 text-slate-950 text-sm font-semibold cursor-pointer transition-colors"
                   >
-                    <span>Abrir nos Dashboards</span>
-                    <ArrowRight className="w-3 h-3" />
+                    Abrir
+                    <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>
               </div>
-            </div>
+            </article>
           );
         })}
       </div>

@@ -146,7 +146,7 @@ export const InfographicGenerator: React.FC<InfographicGeneratorProps> = ({
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-bold transition-all shadow-sm flex-shrink-0 cursor-pointer"
             title="Abre a Calculadora de Recarga carregando estes 4 heróis e a duração desta rotação"
           >
-            <Zap className="w-4 h-4 text-amber-400 animate-pulse" />
+            <Zap className="w-4 h-4 text-amber-400 " />
             <span>⚡ Calcular ER desta Equipe</span>
           </button>
         )}
@@ -204,7 +204,7 @@ export const InfographicGenerator: React.FC<InfographicGeneratorProps> = ({
                 <label className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-slate-700 hover:border-ametist-500/60 rounded-xl cursor-pointer bg-slate-950/60 hover:bg-slate-950 transition-all group">
                   <Upload className="w-8 h-8 text-slate-400 group-hover:text-ametist-400 transition-colors mb-2" />
                   <span className="text-xs font-bold text-slate-200">Arraste seu arquivo .xlsx aqui</span>
-                  <span className="text-[11px] text-slate-500 mt-0.5">ou clique para selecionar do computador</span>
+                  <span className="text-xs text-slate-500 mt-0.5">ou clique para selecionar do computador</span>
                   <input
                     type="file"
                     accept=".xlsx,.xls"
@@ -249,7 +249,7 @@ export const InfographicGenerator: React.FC<InfographicGeneratorProps> = ({
                     <button
                       type="button"
                       onClick={() => setRawText('')}
-                      className="text-[11px] text-slate-500 hover:text-rose-400 transition-colors"
+                      className="text-xs text-slate-500 hover:text-rose-400 transition-colors"
                     >
                       Limpar
                     </button>
@@ -277,7 +277,7 @@ Q CccF cdF cdF cdF Combo`}
                   disabled={!rawText.trim()}
                   className={`w-full py-2.5 rounded-xl font-bold text-xs transition-all shadow-sm flex items-center justify-center gap-1.5 ${
                     rawText.trim()
-                      ? 'bg-gradient-to-r from-ametist-600 to-purple-600 hover:brightness-110 text-white cursor-pointer'
+                      ? 'bg-purple-400   hover:brightness-110 text-white cursor-pointer'
                       : 'bg-slate-800 text-slate-500 cursor-not-allowed'
                   }`}
                 >
@@ -304,9 +304,9 @@ Q CccF cdF cdF cdF Combo`}
                     >
                       <div>
                         <div className="font-bold text-xs">{preset.carryArchetype}</div>
-                        <div className="text-[11px] text-slate-500">{preset.teamName} • DPS: {preset.metrics.dps}</div>
+                        <div className="text-xs text-slate-500">{preset.teamName} • DPS: {preset.metrics.dps}</div>
                       </div>
-                      <span className="text-[11px] font-mono text-ametist-400 font-semibold">Carregar</span>
+                      <span className="text-xs font-mono text-ametist-400 font-semibold">Carregar</span>
                     </button>
                   ))}
                 </div>
@@ -320,17 +320,17 @@ Q CccF cdF cdF cdF Combo`}
                   <Edit3 className="w-3.5 h-3.5 text-amber-400" />
                   Personalizar Títulos & Badges
                 </span>
-                <span className="text-[10px] text-slate-500 font-mono">Edição Rápida</span>
+                <span className="text-xs text-slate-500 font-mono">Edição Rápida</span>
               </div>
 
               {/* Carry Archetype Input */}
               <div className="space-y-1">
-                <label className="text-[11px] text-slate-400">Título / Arquétipo do Card:</label>
+                <label className="text-xs text-slate-400">Título / Arquétipo do Card:</label>
                 <input
                   type="text"
                   value={cardData.carryArchetype}
                   onChange={(e) => setCardData({ ...cardData, carryArchetype: e.target.value.toUpperCase() })}
-                  className="w-full px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-100 font-bold text-xs uppercase outline-none focus:border-ametist-500"
+                  className="w-full px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-100 font-bold text-xs outline-none focus:border-ametist-500"
                   placeholder="ex: SANDRONE V1, MAVUIKA C0..."
                 />
               </div>
@@ -338,8 +338,8 @@ Q CccF cdF cdF cdF Combo`}
               {/* Investment Badge Input + Quick Chips */}
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <label className="text-[11px] text-slate-400">Badge de Investimento:</label>
-                  <span className="text-[10px] text-amber-400/80 font-mono">Texto Livre</span>
+                  <label className="text-xs text-slate-400">Badge de Investimento:</label>
+                  <span className="text-xs text-amber-400/80 font-mono">Texto Livre</span>
                 </div>
                 <input
                   type="text"
@@ -354,7 +354,7 @@ Q CccF cdF cdF cdF Combo`}
                       key={chip}
                       type="button"
                       onClick={() => setCardData({ ...cardData, investmentBadge: chip })}
-                      className="px-2 py-0.5 rounded text-[10px] bg-slate-950 hover:bg-slate-800 text-slate-300 border border-slate-800 transition-colors"
+                      className="px-2 py-0.5 rounded text-xs bg-slate-950 hover:bg-slate-800 text-slate-300 border border-slate-800 transition-colors"
                     >
                       {chip}
                     </button>
@@ -362,7 +362,7 @@ Q CccF cdF cdF cdF Combo`}
                   <button
                     type="button"
                     onClick={() => setCardData({ ...cardData, investmentBadge: '' })}
-                    className="px-2 py-0.5 rounded text-[10px] bg-rose-950/40 hover:bg-rose-950 text-rose-300 border border-rose-800/40 transition-colors"
+                    className="px-2 py-0.5 rounded text-xs bg-rose-950/40 hover:bg-rose-950 text-rose-300 border border-rose-800/40 transition-colors"
                   >
                     Limpar
                   </button>
@@ -372,8 +372,8 @@ Q CccF cdF cdF cdF Combo`}
               {/* STC / Version Status Tag */}
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <label className="text-[11px] text-slate-400">Tag de Status / Versão:</label>
-                  <span className="text-[10px] text-cyan-400 font-mono" title="Subject to Change: Sujeito a Alterações">STC = Subject to Change</span>
+                  <label className="text-xs text-slate-400">Tag de Status / Versão:</label>
+                  <span className="text-xs text-cyan-400 font-mono" title="Subject to Change: Sujeito a Alterações">STC = Subject to Change</span>
                 </div>
                 <input
                   type="text"
@@ -388,7 +388,7 @@ Q CccF cdF cdF cdF Combo`}
                       key={tag}
                       type="button"
                       onClick={() => setCardData({ ...cardData, statusTag: tag })}
-                      className="px-2 py-0.5 rounded text-[10px] bg-slate-950 hover:bg-slate-800 text-slate-300 border border-slate-800 transition-colors"
+                      className="px-2 py-0.5 rounded text-xs bg-slate-950 hover:bg-slate-800 text-slate-300 border border-slate-800 transition-colors"
                     >
                       {tag}
                     </button>
@@ -396,7 +396,7 @@ Q CccF cdF cdF cdF Combo`}
                   <button
                     type="button"
                     onClick={() => setCardData({ ...cardData, statusTag: '' })}
-                    className="px-2 py-0.5 rounded text-[10px] bg-rose-950/40 hover:bg-rose-950 text-rose-300 border border-rose-800/40 transition-colors"
+                    className="px-2 py-0.5 rounded text-xs bg-rose-950/40 hover:bg-rose-950 text-rose-300 border border-rose-800/40 transition-colors"
                   >
                     Ocultar Tag
                   </button>

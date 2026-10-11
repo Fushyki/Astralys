@@ -277,7 +277,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
         <button
           type="button"
           onClick={() => onNavigate('login')}
-          className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-ametist-600 via-purple-600 to-amber-500 hover:from-ametist-500 hover:to-amber-400 text-white font-bold text-xs shadow-lg shadow-ametist-600/30 transition-all cursor-pointer"
+          className="w-full py-3 px-4 rounded-xl bg-purple-400 hover:bg-purple-300      text-slate-950 font-bold text-xs shadow-lg  transition-all cursor-pointer"
         >
           Fazer Login com SSO Ametist
         </button>
@@ -296,7 +296,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
     <div className="max-w-6xl mx-auto py-6 px-4 space-y-6 animate-fadeIn">
       
       {/* 1. CABEÇALHO DO PERFIL (Idêntico ao padrão Ametist, com acabamento refinado) */}
-      <div className="crystal-panel rounded-3xl p-6 sm:p-8 bg-gradient-to-r from-[#0c0e1c] via-[#090b14] to-[#0c0e1c] border border-ametist-600/40 shadow-2xl relative overflow-hidden">
+      <div className="crystal-panel rounded-3xl p-6 sm:p-8 bg-slate-900    border border-ametist-600/40 shadow-2xl relative overflow-hidden">
         
         {/* Glow ambient background */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-ametist-600/10 rounded-full blur-3xl pointer-events-none" />
@@ -311,13 +311,13 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
             <div className="relative group">
               <div 
                 onClick={() => setIsEditingAvatar(!isEditingAvatar)}
-                className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden border-2 border-ametist-500 shadow-xl shadow-ametist-600/25 cursor-pointer relative transition-transform duration-200 group-hover:scale-105"
+                className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden border-2 border-ametist-500 shadow-xl  cursor-pointer relative transition-transform duration-200 group-hover:scale-105"
                 title="Clique para alterar foto de perfil"
               >
                 {customAvatar ? (
                   <img src={customAvatar} alt={user.nome} className="w-full h-full object-cover" />
                 ) : (
-                  <div className="w-full h-full bg-gradient-to-tr from-ametist-600 via-purple-600 to-amber-500 text-white font-black text-3xl flex items-center justify-center">
+                  <div className="w-full h-full bg-purple-400    text-white font-black text-3xl flex items-center justify-center">
                     {user.nome.charAt(0).toUpperCase()}
                   </div>
                 )}
@@ -333,19 +333,19 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
             {/* Dados do Usuário */}
             <div className="space-y-1.5">
               <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
-                <h1 className="text-xl sm:text-2xl font-bold text-white tracking-wide">{user.nome}</h1>
-                <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-ametist-900/90 text-ametist-300 border border-ametist-500/40">
+                <h1 className="text-xl sm:text-2xl font-bold text-white ">{user.nome}</h1>
+                <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-ametist-900/90 text-ametist-300 border border-ametist-500/40">
                   Conta Unificada
                 </span>
-                <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-emerald-950/80 text-emerald-300 border border-emerald-500/30 flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-950/80 text-emerald-300 border border-emerald-500/30 flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 " />
                   SSO Ativo
                 </span>
               </div>
 
               <p className="text-xs text-slate-300 font-mono">{user.email}</p>
               
-              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 text-[11px] text-slate-400 pt-1">
+              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 text-xs text-slate-400 pt-1">
                 <span className="flex items-center gap-1 text-emerald-400">
                   <Cloud className="w-3.5 h-3.5" />
                   Nuvem PostgreSQL: Sincronizado
@@ -361,7 +361,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
             <button
               type="button"
               onClick={handleOpenAmetistSso}
-              className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 border border-purple-500/30 text-xs font-semibold transition-all cursor-pointer hover:scale-105"
+              className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 border border-purple-500/30 text-xs font-semibold transition-all cursor-pointer "
               title="Acessar o Ametist TC Hub conectado nesta mesma conta"
             >
               <ExternalLink className="w-3.5 h-3.5 text-purple-400" />
@@ -427,25 +427,25 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
 
       {/* 2. CARDS RESUMO DOS DADOS DA CONTA NO SITE */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        <div className="p-4 rounded-2xl bg-[#090e17] border border-slate-800 space-y-1">
+        <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-1">
           <div className="flex items-center justify-between text-xs text-slate-400">
             <span>Equipes no Vault</span>
             <FolderGit2 className="w-4 h-4 text-purple-400" />
           </div>
           <div className="text-xl sm:text-2xl font-black text-white">{totalEquipes}</div>
-          <p className="text-[10px] text-slate-500">Composições e rotações salvas</p>
+          <p className="text-xs text-slate-500">Composições e rotações salvas</p>
         </div>
 
-        <div className="p-4 rounded-2xl bg-[#090e17] border border-slate-800 space-y-1">
+        <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-1">
           <div className="flex items-center justify-between text-xs text-slate-400">
             <span>Comparações de Armas</span>
             <Swords className="w-4 h-4 text-amber-400" />
           </div>
           <div className="text-xl sm:text-2xl font-black text-white">{totalArmasComparadas}</div>
-          <p className="text-[10px] text-slate-500">Personagens com testes R1 a R5</p>
+          <p className="text-xs text-slate-500">Personagens com testes R1 a R5</p>
         </div>
 
-        <div className="p-4 rounded-2xl bg-[#090e17] border border-slate-800 space-y-1">
+        <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-1">
           <div className="flex items-center justify-between text-xs text-slate-400">
             <span>DPR Médio</span>
             <Flame className="w-4 h-4 text-rose-400" />
@@ -453,27 +453,27 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           <div className="text-xl sm:text-2xl font-black text-white font-mono">
             {dpsMedio > 0 ? `${Math.round(dpsMedio / 1000)}k` : '0'}
           </div>
-          <p className="text-[10px] text-slate-500">Dano médio das suas rotações</p>
+          <p className="text-xs text-slate-500">Dano médio das suas rotações</p>
         </div>
 
-        <div className="p-4 rounded-2xl bg-[#090e17] border border-slate-800 space-y-1">
+        <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-1">
           <div className="flex items-center justify-between text-xs text-slate-400">
             <span>Nuvem PostgreSQL</span>
             <Database className="w-4 h-4 text-cyan-400" />
           </div>
           <div className="text-xl sm:text-2xl font-black text-emerald-400">Ativa</div>
-          <p className="text-[10px] text-slate-500">Backup automático habilitado</p>
+          <p className="text-xs text-slate-500">Backup automático habilitado</p>
         </div>
       </div>
 
       {/* 3. NAVEGAÇÃO DE ABAS INTERNAS (SEM CONFIG DE VISUAL) */}
-      <div className="p-1 bg-[#090e17] rounded-xl border border-slate-800 flex items-center gap-1">
+      <div className="p-1 bg-slate-900 rounded-xl border border-slate-800 flex items-center gap-1">
         <button
           type="button"
           onClick={() => setActiveSubTab('database')}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
             activeSubTab === 'database'
-              ? 'bg-gradient-to-r from-ametist-600 to-purple-600 text-white shadow-md'
+              ? 'bg-purple-400   text-white shadow-md'
               : 'text-slate-400 hover:text-white'
           }`}
         >
@@ -486,7 +486,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           onClick={() => setActiveSubTab('projects')}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
             activeSubTab === 'projects'
-              ? 'bg-gradient-to-r from-cyan-600 to-indigo-600 text-white shadow-md'
+              ? 'bg-cyan-500   text-white shadow-md'
               : 'text-slate-400 hover:text-white'
           }`}
         >
@@ -499,7 +499,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           onClick={() => setActiveSubTab('weapons')}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
             activeSubTab === 'weapons'
-              ? 'bg-gradient-to-r from-amber-600 to-amber-500 text-white shadow-md'
+              ? 'bg-purple-400   text-white shadow-md'
               : 'text-slate-400 hover:text-white'
           }`}
         >
@@ -536,7 +536,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           </div>
 
           {projects.length === 0 ? (
-            <div className="p-8 rounded-3xl bg-[#090e17] border border-slate-800 text-center space-y-2">
+            <div className="p-8 rounded-3xl bg-slate-900 border border-slate-800 text-center space-y-2">
               <FolderGit2 className="w-8 h-8 mx-auto text-slate-600" />
               <p className="text-xs text-slate-400">Nenhuma equipe personalizada salva ainda nesta conta.</p>
               <button
@@ -552,14 +552,14 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
               {projects.map((proj) => (
                 <div
                   key={proj.id}
-                  className="p-4 rounded-2xl bg-[#090e17] border border-slate-800 hover:border-slate-700 space-y-3 flex flex-col justify-between"
+                  className="p-4 rounded-2xl bg-slate-900 border border-slate-800 hover:border-slate-700 space-y-3 flex flex-col justify-between"
                 >
                   <div className="space-y-1.5">
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-slate-900 text-cyan-300 border border-slate-800">
+                      <span className="text-xs font-mono font-bold px-2 py-0.5 rounded-full bg-slate-900 text-cyan-300 border border-slate-800">
                         {proj.carryName || 'Personagem'}
                       </span>
-                      <span className="text-[10px] text-slate-500 font-mono">
+                      <span className="text-xs text-slate-500 font-mono">
                         {new Date(proj.updatedAt || proj.createdAt).toLocaleDateString('pt-BR')}
                       </span>
                     </div>
@@ -568,15 +568,15 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                     
                     <div className="flex items-center gap-3 text-xs pt-1">
                       <div>
-                        <span className="text-[10px] text-slate-500 block">DPS</span>
+                        <span className="text-xs text-slate-500 block">DPS</span>
                         <span className="font-bold text-white font-mono">{Math.round((proj.dps || 0) / 1000)}k</span>
                       </div>
                       <div>
-                        <span className="text-[10px] text-slate-500 block">DPR</span>
+                        <span className="text-xs text-slate-500 block">DPR</span>
                         <span className="font-bold text-slate-300 font-mono">{((proj.totalDpr || 0) / 1000000).toFixed(2)}M</span>
                       </div>
                       <div>
-                        <span className="text-[10px] text-slate-500 block">Rotação</span>
+                        <span className="text-xs text-slate-500 block">Rotação</span>
                         <span className="font-bold text-amber-300 font-mono">{proj.rotationDuration || 20}s</span>
                       </div>
                     </div>
@@ -634,7 +634,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           </div>
 
           {totalArmasComparadas === 0 ? (
-            <div className="p-8 rounded-3xl bg-[#090e17] border border-slate-800 text-center space-y-2">
+            <div className="p-8 rounded-3xl bg-slate-900 border border-slate-800 text-center space-y-2">
               <Swords className="w-8 h-8 mx-auto text-slate-600" />
               <p className="text-xs text-slate-400">Nenhum comparador de armas salvo nesta conta.</p>
               <button
@@ -648,14 +648,14 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
               {Object.entries(weaponComparisons).map(([charName, comp]) => (
-                <div key={charName} className="p-4 rounded-2xl bg-[#090e17] border border-slate-800 space-y-2">
+                <div key={charName} className="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-bold text-white">{charName}</span>
-                    <span className="text-[10px] text-amber-300 font-mono">
+                    <span className="text-xs text-amber-300 font-mono">
                       {comp.weapons?.length || 0} armas testadas
                     </span>
                   </div>
-                  <p className="text-[11px] text-slate-400">
+                  <p className="text-xs text-slate-400">
                     Baseline: {comp.weapons?.find(w => w.isBaseline)?.name || 'Arma Base'} (100%)
                   </p>
                   <button

@@ -52,54 +52,54 @@ export const Header: React.FC<HeaderProps> = ({
       label: 'Dashboards',
       tooltip: 'Painel Geral: DPS, DPR, gráficos de contribuição e linha do tempo',
       icon: BarChart3,
-      iconColor: 'text-cyan-400',
-      activeBg: 'bg-gradient-to-r from-cyan-600 to-indigo-600 text-white shadow-md shadow-cyan-600/25',
-      activeBorder: 'border-cyan-400/40'
+      iconColor: 'text-slate-500',
+      activeBg: 'text-slate-50',
+      activeBorder: ''
     },
     {
       id: 'damage',
       label: 'Análise de Dano',
       tooltip: 'Cálculo e Rotações: Golpe a golpe, edição de status e importação .xlsx',
       icon: Flame,
-      iconColor: 'text-rose-400',
-      activeBg: 'bg-gradient-to-r from-rose-600 to-rose-500 text-white shadow-md shadow-rose-600/25',
-      activeBorder: 'border-rose-400/40'
+      iconColor: 'text-slate-500',
+      activeBg: 'text-slate-50',
+      activeBorder: ''
     },
     {
       id: 'er',
       label: 'Recarga ER',
       tooltip: 'Calculadora de Partículas & Favonius: Metas de ER% para toda a equipe',
       icon: Zap,
-      iconColor: 'text-purple-400',
-      activeBg: 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md shadow-purple-600/25',
-      activeBorder: 'border-purple-400/40'
+      iconColor: 'text-slate-500',
+      activeBg: 'text-slate-50',
+      activeBorder: ''
     },
     {
       id: 'weapons',
       label: 'Comparador',
       tooltip: 'Showdown de Armas: Comparação percentual e refinamentos vs Baseline',
       icon: Swords,
-      iconColor: 'text-amber-400',
-      activeBg: 'bg-gradient-to-r from-amber-600 to-amber-500 text-white shadow-md shadow-amber-600/25',
-      activeBorder: 'border-amber-400/40'
+      iconColor: 'text-slate-500',
+      activeBg: 'text-slate-50',
+      activeBorder: ''
     },
     {
       id: 'generator',
       label: 'Card Infográfico',
       tooltip: 'Gerador Visual: Cards de alta resolução para compartilhar e salvar',
       icon: Sparkles,
-      iconColor: 'text-emerald-400',
-      activeBg: 'bg-gradient-to-r from-ametist-600 via-purple-600 to-emerald-600 text-white shadow-md shadow-purple-600/25',
-      activeBorder: 'border-emerald-400/40'
+      iconColor: 'text-slate-500',
+      activeBg: 'text-slate-50',
+      activeBorder: ''
     },
     {
       id: 'vault',
       label: 'Vault',
       tooltip: 'Cofre de Equipes: Projetos salvos, histórico, backups e sincronização',
       icon: FolderGit2,
-      iconColor: 'text-indigo-300',
-      activeBg: 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md shadow-indigo-600/25',
-      activeBorder: 'border-indigo-400/40'
+      iconColor: 'text-slate-500',
+      activeBg: 'text-slate-50',
+      activeBorder: ''
     }
   ];
 
@@ -109,7 +109,7 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-50 backdrop-blur-xl bg-ametist-950/85 border-b border-ametist-700/40 select-none">
+    <header className="sticky top-0 z-50 bg-slate-950 border-b border-slate-800 select-none">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 gap-3">
           
@@ -120,31 +120,26 @@ export const Header: React.FC<HeaderProps> = ({
             onClick={() => handleSelectTab('landing')}
             title="Ir para o Hub Inicial (Astralys)"
           >
-            <div className="relative">
-              <div className={`w-10 h-10 rounded-xl bg-gradient-to-tr from-ametist-600 via-ametist-400 to-purple-300 flex items-center justify-center shadow-ametist-sm group-hover:shadow-ametist-glow transition-all duration-300 ${
-                activeTab === 'landing' ? 'ring-2 ring-ametist-400 ring-offset-2 ring-offset-ametist-950' : ''
-              }`}>
-                <Sparkles className="w-5 h-5 text-white animate-pulse" />
-              </div>
-              <div className="absolute -inset-1 rounded-xl bg-ametist-400/20 blur-sm -z-10 group-hover:bg-ametist-400/40 transition-colors" />
+            <div className="w-9 h-9 rounded-lg bg-purple-400 flex items-center justify-center">
+              <Sparkles className="w-5 h-5 text-slate-950" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-cinzel font-bold text-lg tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-purple-100 via-ametist-200 to-ametist-400">
+                <span className="font-cinzel font-semibold text-xl text-slate-50">
                   ASTRALYS
                 </span>
-                <span className="text-[10px] font-mono font-bold tracking-widest px-1.5 py-0.5 rounded-md bg-ametist-800/90 text-ametist-300 border border-ametist-600/40">
+                <span className="text-xs font-mono text-slate-500">
                   2.5
                 </span>
               </div>
-              <p className="text-[10px] text-slate-400 font-medium group-hover:text-ametist-300 transition-colors">
+              <p className="text-xs text-slate-500">
                 Theorycraft & Rotações
               </p>
             </div>
           </button>
 
           {/* Desktop Navigation Links (UX Optimized Flow) */}
-          <nav className="hidden lg:flex items-center gap-1 bg-[#0a0d18]/90 p-1.5 rounded-2xl border border-ametist-800/60 shadow-inner">
+          <nav className="hidden lg:flex items-center gap-1">
             {navItems.map((item) => {
               const isActive = activeTab === item.id;
               const Icon = item.icon;
@@ -155,17 +150,13 @@ export const Header: React.FC<HeaderProps> = ({
                   type="button"
                   onClick={() => handleSelectTab(item.id)}
                   title={item.tooltip}
-                  className={`relative flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-semibold tracking-wide transition-all cursor-pointer whitespace-nowrap ${
+                  className={`relative flex items-center px-3 py-5 text-sm font-medium transition-colors cursor-pointer whitespace-nowrap border-b-2 ${
                     isActive
-                      ? `${item.activeBg} ring-1 ${item.activeBorder}`
-                      : 'text-slate-300 hover:text-white hover:bg-white/5'
+                      ? 'text-slate-50 border-purple-400'
+                      : 'text-slate-400 hover:text-slate-100 border-transparent'
                   }`}
                 >
-                  <Icon className={`w-3.5 h-3.5 transition-transform duration-200 ${isActive ? 'text-white scale-110' : item.iconColor}`} />
                   <span>{item.label}</span>
-                  {isActive && (
-                    <span className="w-1 h-1 rounded-full bg-white animate-ping ml-0.5" />
-                  )}
                 </button>
               );
             })}
@@ -204,7 +195,7 @@ export const Header: React.FC<HeaderProps> = ({
                 {isUserMenuOpen && (
                   <>
                     <div className="fixed inset-0 z-40" onClick={() => setIsUserMenuOpen(false)} />
-                    <div className="absolute right-0 mt-2 w-64 bg-[#0a0d17] border border-ametist-700/60 rounded-2xl shadow-2xl p-2.5 z-50 animate-fade-in backdrop-blur-2xl">
+                    <div className="absolute right-0 mt-2 w-64 bg-slate-900 border border-ametist-700/60 rounded-2xl shadow-2xl p-2.5 z-50 animate-fade-in backdrop-blur-2xl">
                       <div className="px-3 py-2.5 border-b border-white/5 mb-1.5 bg-white/[0.02] rounded-xl">
                         <p className="text-xs font-bold text-white truncate">{user.nome}</p>
                         <p className="text-[11px] text-slate-400 truncate">{user.email}</p>
@@ -271,15 +262,14 @@ export const Header: React.FC<HeaderProps> = ({
               <button
                 type="button"
                 onClick={() => handleSelectTab('login')}
-                className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-white text-xs font-bold transition-all cursor-pointer hover:scale-105 ${
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors cursor-pointer ${
                   activeTab === 'login'
-                    ? 'bg-gradient-to-r from-ametist-500 via-purple-500 to-amber-400 ring-2 ring-amber-400 shadow-lg shadow-ametist-600/40'
-                    : 'bg-gradient-to-r from-ametist-600 via-purple-600 to-amber-500 hover:from-ametist-500 hover:to-amber-400 shadow-md shadow-ametist-600/25'
+                    ? 'bg-purple-300 text-slate-950'
+                    : 'bg-purple-400 hover:bg-purple-300 text-slate-950'
                 }`}
                 title="Conectar com SSO Ametist & Astralys"
               >
-                <Sparkles className="w-3.5 h-3.5 text-amber-200" />
-                <span>Entrar / SSO</span>
+                <span>Entrar</span>
               </button>
             )}
 
@@ -304,8 +294,8 @@ export const Header: React.FC<HeaderProps> = ({
 
       {/* Mobile Drawer Navigation (lg:hidden) */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden border-t border-ametist-800/80 bg-[#090c16]/98 backdrop-blur-2xl px-4 py-4 space-y-2 animate-fade-in shadow-2xl">
-          <div className="flex items-center justify-between pb-2 border-b border-white/5 text-[11px] font-mono text-slate-400 uppercase tracking-wider">
+        <div className="lg:hidden border-t border-ametist-800/80 bg-slate-900/98 backdrop-blur-2xl px-4 py-4 space-y-2 animate-fade-in shadow-2xl">
+          <div className="flex items-center justify-between pb-2 border-b border-white/5 text-[11px] font-mono text-slate-400 ">
             <span className="flex items-center gap-1.5">
               <Compass className="w-3.5 h-3.5 text-ametist-400" />
               Módulos Astralys

@@ -656,1122 +656,334 @@ export const RotationTimeline: React.FC<RotationTimelineProps> = ({
     { type: 'plunge', label: 'Imersivo (Plunge)', badge: '[Plunge]', icon: ArrowDown, colorClass: 'bg-indigo-950/70 border-indigo-500/60 text-indigo-300' }
   ];
 
+  // Cores por tipo de golpe: blocos chapados, sem degradê.
+  const BLOCK_STYLE: Record<string, string> = {
+    burst: 'bg-purple-400 text-slate-950',
+    skill: 'bg-purple-900 text-purple-100 border border-purple-700',
+    normal: 'bg-slate-700 text-slate-100',
+    charged: 'bg-rose-800 text-rose-50',
+    swap: 'bg-cyan-800 text-cyan-50',
+    plunge: 'bg-emerald-800 text-emerald-50',
+    special: 'bg-slate-600 text-slate-100'
+  };
+  const blockStyle = (type: ActionType) => BLOCK_STYLE[type] || BLOCK_STYLE.special;
+
+  const selected = selectedActionId ? liveActionsWithBuffs.find(a => a.id === selectedActionId) || null : null;
+  const selectedChar = selected ? characters[selected.charIndex] : null;
+  const selectedMoves = selected ? getCharacterMoveOptions(selected.charName, selectedChar?.element) : [];
+  const selectedMoveId = selectedMoves.find(m => m.label === selected?.actionLabel)?.id ?? '';
+
+  const numInput =
+    'w-16 px-2 py-1 rounded-md bg-slate-950 border border-slate-700 text-sm font-mono text-slate-100 focus:outline-none focus:border-purple-400';
+
   return (
-    <div className="p-5 sm:p-6 rounded-3xl bg-[#070b14] border border-slate-800 shadow-2xl space-y-6 select-none relative">
-      
-      {/* Toast Notification */}
+    <div className="rounded-xl bg-slate-900 border border-slate-800 select-none relative">
+
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-slate-900/95 border border-cyan-500/50 text-cyan-300 shadow-2xl text-xs font-mono font-bold animate-fade-in backdrop-blur-md">
-          <CheckCircle2 className="w-4 h-4 text-cyan-400" />
-          <span>{toastMessage}</span>
+        <div className="fixed bottom-6 right-6 z-50 px-3.5 py-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-100 text-sm">
+          {toastMessage}
         </div>
       )}
 
-      {/* Floating Rich Tooltip Portal on Hover (Never clipped by track overflow) */}
+      {/* Tooltip leve ao passar o mouse */}
       {hoveredActionData && !draggingActionId && (
-        <div 
-          className="fixed z-50 pointer-events-none -translate-x-1/2 -translate-y-full mb-3 shadow-2xl animate-fade-in"
-          style={{ 
-            left: Math.max(160, Math.min(window.innerWidth - 160, hoveredActionData.rect.left + hoveredActionData.rect.width / 2)), 
-            top: hoveredActionData.rect.top - 6 
+        <div
+          className="fixed z-50 pointer-events-none -translate-x-1/2 -translate-y-full"
+          style={{
+            left: Math.max(120, Math.min(window.innerWidth - 120, hoveredActionData.rect.left + hoveredActionData.rect.width / 2)),
+            top: hoveredActionData.rect.top - 6
           }}
         >
-          <div className="w-72 p-3.5 rounded-2xl bg-slate-950/95 backdrop-blur-md border border-cyan-500/40 shadow-2xl shadow-cyan-950/60 text-xs space-y-2">
-            {/* Header */}
-            <div className="flex items-center justify-between gap-2 border-b border-slate-800 pb-2">
-              <div className="flex items-center gap-2">
-                <CharacterAvatar 
-                  name={hoveredActionData.action.charName} 
-                  element={(characters[hoveredActionData.action.charIndex]?.element as any) || 'Pyro'} 
-                  size="xs" 
-                  showBorder={false} 
-                />
-                <span className="font-bold text-white text-xs">{hoveredActionData.action.charName}</span>
-              </div>
-              <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-900 border border-cyan-500/30 text-cyan-300">
-                {getActionBadgeText(hoveredActionData.action.actionType)} {hoveredActionData.action.actionType.toUpperCase()}
-              </span>
-            </div>
-
-            {/* Action Details */}
-            <div>
-              <p className="font-bold text-sm text-slate-100 truncate">
-                {hoveredActionData.action.actionLabel}
-              </p>
-              <div className="flex items-center justify-between text-[11px] font-mono text-slate-400 mt-1">
-                <span>Tempo: <strong className="text-cyan-300">{hoveredActionData.action.startTime.toFixed(1)}s - {(hoveredActionData.action.startTime + hoveredActionData.action.duration).toFixed(1)}s</strong></span>
-                <span>Duração: <strong className="text-white">{hoveredActionData.action.duration.toFixed(1)}s</strong></span>
-              </div>
-              {hoveredActionData.action.damage && (
-                <div className="text-[11px] font-mono text-slate-400 mt-0.5">
-                  Dano Estimado: <strong className="text-rose-400">{hoveredActionData.action.damage.toLocaleString('pt-BR')}</strong>
-                </div>
-              )}
-            </div>
-
-            {/* Active Buffs during this window */}
-            {(() => {
-              const actionBuffs = liveBuffs.filter(b => 
-                b.startTime < (hoveredActionData.action.startTime + hoveredActionData.action.duration) &&
-                b.endTime > hoveredActionData.action.startTime
-              );
-              if (actionBuffs.length === 0) return null;
-              return (
-                <div className="pt-1.5 border-t border-slate-800/80">
-                  <span className="text-[10px] font-mono uppercase text-slate-400 block mb-1">
-                    Buffs Ativos ({actionBuffs.length}):
-                  </span>
-                  <div className="flex items-center gap-1.5 flex-wrap">
-                    {actionBuffs.map(b => (
-                      <span 
-                        key={b.id} 
-                        className="text-[9px] font-mono px-1.5 py-0.5 rounded text-white font-bold"
-                        style={{ backgroundColor: `${b.color}40`, border: `1px solid ${b.color}80` }}
-                      >
-                        {b.name}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              );
-            })()}
-
-            {/* Tooltip Footer Shortcut Hint */}
-            <div className="pt-1.5 border-t border-slate-800/80 text-[10px] font-mono text-slate-400 flex items-center justify-between">
-              <span>Arraste p/ mover</span>
-              <span>•</span>
-              <span>Clique p/ inspecionar</span>
-              <span>•</span>
-              <span>Del p/ apagar</span>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Main Header Bar */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-indigo-600/20">
-            <Clock className="w-5 h-5" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2 flex-wrap">
-              <h3 className="text-base font-bold text-white font-cinzel tracking-wide">
-                Linha do Tempo & Sequência de Rotação
-              </h3>
-              <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-slate-900 text-cyan-300 border border-cyan-500/30">
-                {totalDuration}s Frame-Accurate
-              </span>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-purple-950/60 text-purple-300 border border-purple-500/30">
-                {actions.length} Ações
-              </span>
-              {hasCharacterOverlaps && (
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-950/80 text-amber-300 border border-amber-500/40 flex items-center gap-1">
-                  <AlertTriangle className="w-3 h-3 text-amber-400" />
-                  Sobreposição Detectada
-                </span>
-              )}
-            </div>
-            <p className="text-xs text-slate-400 mt-0.5">
-              Clique em um espaço vazio para criar um golpe, arraste para reposicionar no tempo ou selecione para inspecionar no painel.
+          <div className="px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-xs space-y-0.5 shadow-lg">
+            <p className="font-semibold text-slate-100">{hoveredActionData.action.actionLabel}</p>
+            <p className="text-slate-400 font-mono">
+              {hoveredActionData.action.startTime.toFixed(1)}s – {(hoveredActionData.action.startTime + hoveredActionData.action.duration).toFixed(1)}s
+              {hoveredActionData.action.damage ? ` · ${hoveredActionData.action.damage.toLocaleString('pt-BR')} dano` : ''}
             </p>
           </div>
         </div>
+      )}
 
-        {/* Global Controls & Efficiency Badge */}
-        <div className="flex items-center gap-2 flex-wrap">
-          <button
-            type="button"
-            onClick={() => setShowActionTable(!showActionTable)}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 hover:text-white transition-all cursor-pointer"
-            title="Exibir ou ocultar lista detalhada de ações em formato de tabela"
-          >
-            <Sliders className="w-3.5 h-3.5 text-cyan-400" />
-            <span>{showActionTable ? 'Ocultar Tabela' : `Tabela (${actions.length})`}</span>
-          </button>
-
-          <div className="flex items-center gap-2 p-2 rounded-xl bg-slate-950/80 border border-slate-800">
-            <Award className="w-4 h-4 text-emerald-400" />
-            <div className="text-right font-mono">
-              <span className="text-[9px] text-slate-400 block uppercase tracking-wider">Cobertura de Buffs</span>
-              <span className="text-xs font-black text-emerald-300">
-                {efficiency}% no Carry
-              </span>
-            </div>
-          </div>
+      {/* Barra superior: título à esquerda, controles de reprodução à direita */}
+      <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-4 border-b border-slate-800">
+        <div>
+          <h3 className="text-lg font-semibold text-slate-50 font-cinzel">Rotação</h3>
+          <p className="text-sm text-slate-400">
+            {actions.length} golpes · {efficiency}% de buffs no carry
+            {hasCharacterOverlaps && <span className="text-purple-300"> · golpes sobrepostos</span>}
+          </p>
         </div>
-      </div>
 
-      {/* Playback Simulation Toolbar */}
-      <div className="flex items-center justify-between flex-wrap gap-3 p-3 rounded-2xl bg-[#0c111e] border border-slate-800/80 shadow-inner">
         <div className="flex items-center gap-2">
-          {/* Play / Pause Button */}
           <button
             type="button"
             onClick={togglePlay}
-            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl font-bold text-xs shadow-md transition-all cursor-pointer ${
-              isPlaying
-                ? 'bg-amber-600 hover:bg-amber-500 text-white shadow-amber-900/30'
-                : 'bg-gradient-to-r from-rose-600 to-amber-600 hover:brightness-110 text-white shadow-rose-900/30'
-            }`}
-            title="Reproduzir rotação frame a frame (Espaço)"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-purple-400 hover:bg-purple-300 text-slate-950 text-sm font-semibold cursor-pointer transition-colors"
+            title="Reproduzir (Espaço)"
           >
-            {isPlaying ? (
-              <>
-                <Pause className="w-3.5 h-3.5" />
-                <span>Pausar</span>
-              </>
-            ) : (
-              <>
-                <Play className="w-3.5 h-3.5 fill-current" />
-                <span>Reproduzir</span>
-              </>
-            )}
+            {isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current" />}
+            {isPlaying ? 'Pausar' : 'Reproduzir'}
           </button>
-
-          {/* Reset button */}
           <button
             type="button"
             onClick={handleResetPlayback}
-            className="p-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 hover:text-white transition-colors cursor-pointer"
-            title="Reiniciar indicador para 0.0s"
+            className="p-2 rounded-lg border border-slate-700 text-slate-300 hover:bg-slate-800 cursor-pointer transition-colors"
+            title="Voltar ao início"
           >
             <RotateCcw className="w-4 h-4" />
           </button>
-
-          {/* Speed selector */}
-          <div className="flex items-center bg-slate-950 p-0.5 rounded-xl border border-slate-800 text-[11px] font-mono">
-            {[0.5, 1, 1.5, 2].map(speed => (
-              <button
-                key={speed}
-                type="button"
-                onClick={() => setPlaybackSpeed(speed)}
-                className={`px-2 py-0.5 rounded-lg font-bold transition-colors cursor-pointer ${
-                  playbackSpeed === speed
-                    ? 'bg-cyan-600 text-white'
-                    : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                {speed}×
-              </button>
-            ))}
-          </div>
-
-          {/* Time Scrubber Display */}
-          <div className="px-3 py-1 rounded-xl bg-slate-950 border border-slate-800 font-mono text-xs flex items-center gap-1.5">
-            <Clock className="w-3.5 h-3.5 text-cyan-400" />
-            <span className="font-bold text-white">{currentTime.toFixed(1)}s</span>
-            <span className="text-slate-500">/</span>
-            <span className="text-slate-400">{totalDuration.toFixed(1)}s</span>
-          </div>
-        </div>
-
-        {/* Live on-field status readout & Auto-Cascade Button */}
-        <div className="flex items-center gap-2 text-xs font-mono">
-          {activeOnFieldAction ? (
-            <div className="flex items-center gap-2 px-3 py-1 rounded-xl bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 animate-pulse">
-              <span className="w-2 h-2 rounded-full bg-emerald-400" />
-              <span>No Campo: <strong>{activeOnFieldAction.charName}</strong> ({activeOnFieldAction.actionLabel})</span>
-            </div>
-          ) : (
-            <div className="flex items-center gap-2 px-3 py-1 rounded-xl bg-slate-950 border border-slate-800 text-slate-500">
-              <span>Intervalo de Transição / Troca</span>
-            </div>
-          )}
-
-          {/* Auto-Organize Action Button */}
+          <button
+            type="button"
+            onClick={() => setPlaybackSpeed(s => (s >= 2 ? 0.5 : s === 0.5 ? 1 : s === 1 ? 1.5 : 2))}
+            className="w-12 py-1.5 rounded-lg border border-slate-700 text-sm font-mono text-slate-300 hover:bg-slate-800 cursor-pointer transition-colors"
+            title="Velocidade"
+          >
+            {playbackSpeed}×
+          </button>
+          <span className="font-mono text-sm text-slate-300 w-24 text-right">
+            {currentTime.toFixed(1)} / {totalDuration.toFixed(0)}s
+          </span>
           <button
             type="button"
             onClick={handleAutoCascade}
-            className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-cyan-300 hover:text-white font-semibold transition-all cursor-pointer text-xs"
-            title="Organiza todas as ações sequencialmente sem sobreposição"
+            className="p-2 rounded-lg border border-slate-700 text-slate-300 hover:bg-slate-800 cursor-pointer transition-colors"
+            title="Alinhar golpes em sequência, sem sobreposição"
           >
-            <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-            <span>Auto-Alinhar</span>
+            <ArrowLeftRight className="w-4 h-4" />
           </button>
         </div>
       </div>
 
-      {/* Main Multi-lane Graphic Track (Pixel-Perfect Alignment & Click-to-Create) */}
-      <div className="space-y-3 overflow-x-auto pb-2">
-        <div className="min-w-[760px] space-y-2.5">
-          
-          {/* Time Ruler (Identical 2-column flex layout for 100% tick alignment) */}
-          <div className="flex items-center gap-2 p-1.5">
-            {/* Left Header Spacer */}
-            <div className="w-28 sm:w-32 pr-2 border-r border-transparent flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-wider text-slate-500 font-bold flex-shrink-0">
-              <Clock className="w-3.5 h-3.5 text-cyan-400" />
-              <span>Tempo (s)</span>
-            </div>
-
-            {/* Right Ruler Area with Drag-Scrubbing */}
-            <div 
+      {/* Linhas por personagem */}
+      <div className="px-5 pt-4 pb-3 overflow-x-auto">
+        <div className="min-w-[720px]">
+          {/* Régua */}
+          <div className="flex items-end gap-3 mb-1">
+            <div className="w-36 flex-shrink-0" />
+            <div
               ref={rulerRef}
-              className="flex-1 relative h-6 border-b border-slate-800 cursor-ew-resize select-none"
+              className="flex-1 relative h-6 cursor-ew-resize"
               onMouseDown={handleRulerScrubStart}
-              title="Clique ou arraste para posicionar a agulha de reprodução"
+              title="Arraste para posicionar a agulha"
             >
               {timeMarkers.map(sec => (
-                <div 
-                  key={sec} 
-                  className="absolute -translate-x-1/2 flex flex-col items-center pointer-events-none"
+                <span
+                  key={sec}
+                  className="absolute -translate-x-1/2 text-xs font-mono text-slate-500 pointer-events-none"
                   style={{ left: `${(sec / totalDuration) * 100}%` }}
                 >
-                  <span className="text-[10px] font-mono font-bold text-slate-400">{sec}s</span>
-                  <div className="w-px h-1.5 bg-slate-700 mt-0.5" />
-                </div>
+                  {sec}
+                </span>
               ))}
-
-              {/* Scrubber Playhead Pointer on Ruler */}
-              <div 
-                className="absolute top-1 bottom-0 pointer-events-none -translate-x-1/2 z-40"
-                style={{ left: `${(currentTime / totalDuration) * 100}%` }}
-              >
-                <div className="w-2.5 h-2.5 bg-rose-500 rotate-45 -mt-1 shadow-md shadow-rose-500/50" />
-              </div>
             </div>
           </div>
 
-          {/* 4 Character Lanes */}
-          {characters.map((char, charIdx) => {
-            const charActions = liveActionsWithBuffs.filter(a => a.charIndex === charIdx);
-            const isCarry = charIdx === carryIndex;
-            const isOnFieldNow = activeOnFieldAction?.charIndex === charIdx;
+          <div className="space-y-1.5">
+            {characters.map((char, charIdx) => {
+              const charActions = liveActionsWithBuffs.filter(a => a.charIndex === charIdx);
+              const isCarry = charIdx === carryIndex;
+              const isOnFieldNow = activeOnFieldAction?.charIndex === charIdx;
 
-            return (
-              <div 
-                key={charIdx}
-                className={`flex items-center gap-2 p-1.5 rounded-2xl transition-all ${
-                  isOnFieldNow
-                    ? 'bg-slate-900/90 border border-cyan-500/50 shadow-lg shadow-cyan-950/40 ring-1 ring-cyan-500/30'
-                    : 'bg-slate-950/60 border border-slate-800/80 hover:border-slate-700/80'
-                }`}
-              >
-                {/* Character Badge Header (Left column) */}
-                <div className="w-28 sm:w-32 flex items-center gap-2 flex-shrink-0 pr-2 border-r border-slate-800/80">
-                  <div className="relative">
-                    <CharacterAvatar name={char.name} element={char.element as any} size="sm" />
-                    {isOnFieldNow && (
-                      <span className="absolute -bottom-1 -right-1 w-2.5 h-2.5 rounded-full bg-emerald-400 ring-2 ring-slate-950 animate-ping" />
-                    )}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-1">
-                      <span className="text-xs font-bold text-white truncate">{char.name}</span>
-                      {isCarry && (
-                        <span className="text-[9px] px-1 py-0.2 rounded bg-rose-500/20 text-rose-300 border border-rose-500/30 font-mono">
-                          DPS
-                        </span>
-                      )}
+              return (
+                <div key={charIdx} className="flex items-center gap-3">
+                  <div className="w-36 flex-shrink-0 flex items-center gap-2">
+                    <CharacterAvatar name={char.name} element={char.element as any} size="sm" showElementDot={false} />
+                    <div className="min-w-0">
+                      <p className={`text-sm truncate ${isOnFieldNow ? 'text-purple-300 font-semibold' : 'text-slate-200'}`}>
+                        {char.name}
+                      </p>
+                      {isCarry && <p className="text-xs text-slate-500 leading-none">carry</p>}
                     </div>
-                    <span className="text-[10px] text-slate-400 font-mono block truncate">
-                      {isOnFieldNow ? (
-                        <span className="text-emerald-400 font-bold">EM CAMPO</span>
-                      ) : (
-                        `${charActions.length} ações`
-                      )}
-                    </span>
+                  </div>
+
+                  <div
+                    ref={el => { laneRefs.current[charIdx] = el; }}
+                    className="flex-1 h-11 rounded-md bg-slate-950 border border-slate-800 relative overflow-hidden cursor-crosshair"
+                    onClick={(e) => handleTrackClickToCreate(e, charIdx)}
+                    title="Clique num espaço vazio para criar um golpe"
+                  >
+                    {timeMarkers.map(sec => (
+                      <div
+                        key={sec}
+                        className="absolute top-0 bottom-0 w-px bg-slate-800 pointer-events-none"
+                        style={{ left: `${(sec / totalDuration) * 100}%` }}
+                      />
+                    ))}
+
+                    {charActions.map(action => {
+                      const leftPct = (action.startTime / totalDuration) * 100;
+                      const widthPct = Math.max(3.0, (action.duration / totalDuration) * 100);
+                      const isSelected = selectedActionId === action.id;
+                      const isDragging = draggingActionId === action.id;
+                      const isCompact = action.duration < 1.2 || widthPct < 7.5;
+                      const short = getActionBadgeText(action.actionType).replace(/[\[\]]/g, '');
+
+                      return (
+                        <div
+                          key={action.id}
+                          onMouseDown={(e) => {
+                            e.stopPropagation();
+                            setSelectedActionId(action.id);
+                            if (onSelectAction) onSelectAction(action);
+                            setDraggingActionId(action.id);
+                            setDragStartX(e.clientX);
+                            setDragInitialTime(action.startTime);
+                          }}
+                          onClick={(e) => e.stopPropagation()}
+                          onMouseEnter={(e) => setHoveredActionData({ action, rect: e.currentTarget.getBoundingClientRect() })}
+                          onMouseLeave={() => setHoveredActionData(null)}
+                          className={`absolute top-1 bottom-1 rounded px-1.5 flex items-center text-xs font-semibold overflow-hidden ${blockStyle(action.actionType)} ${
+                            isSelected ? 'outline outline-2 outline-slate-50 z-30' : 'z-10 hover:brightness-110'
+                          } ${isDragging ? 'opacity-80 cursor-grabbing' : 'cursor-grab'}`}
+                          style={{ left: `${leftPct}%`, width: `${widthPct}%` }}
+                        >
+                          <span className="truncate">{isCompact ? short : action.actionLabel}</span>
+                        </div>
+                      );
+                    })}
+
+                    {/* Agulha */}
+                    <div
+                      className="absolute top-0 bottom-0 w-px bg-rose-400 z-40 pointer-events-none"
+                      style={{ left: `${(currentTime / totalDuration) * 100}%` }}
+                    />
                   </div>
                 </div>
+              );
+            })}
 
-                {/* Track Lane (Right Area) — Click to Create in Empty Space */}
-                <div 
-                  ref={el => { laneRefs.current[charIdx] = el; }}
-                  className="flex-1 h-12 bg-slate-900/60 hover:bg-slate-900/80 rounded-xl relative overflow-hidden border border-slate-800/60 cursor-crosshair transition-colors"
-                  onClick={(e) => handleTrackClickToCreate(e, charIdx)}
-                  title="Clique em um espaço vazio para criar uma nova ação com snap magnético (0.5s)"
-                >
-                  {/* Subtle Grid Guidelines matching time markers */}
-                  {timeMarkers.map(sec => (
-                    <div 
-                      key={sec}
-                      className="absolute top-0 bottom-0 w-px bg-slate-800/40 pointer-events-none"
-                      style={{ left: `${(sec / totalDuration) * 100}%` }}
-                    />
-                  ))}
-
-                  {/* Playhead Scrubber Line */}
-                  <div 
-                    className="absolute top-0 bottom-0 w-0.5 bg-rose-500 shadow-[0_0_8px_#f43f5e] z-40 pointer-events-none -translate-x-1/2"
-                    style={{ left: `${(currentTime / totalDuration) * 100}%` }}
-                  />
-
-                  {/* Action Blocks (Clean, No Emojis, No Internal Delete Buttons, Tooltip on Hover) */}
-                  {charActions.map((action) => {
-                    const leftPct = (action.startTime / totalDuration) * 100;
-                    const widthPct = Math.max(3.0, (action.duration / totalDuration) * 100);
-                    const isSelected = selectedActionId === action.id;
-                    const isCurrentlyActive = currentTime >= action.startTime && currentTime < (action.startTime + action.duration);
-                    const isDragging = draggingActionId === action.id;
-
-                    // Narrow block detection: If under 1.2s or narrow percentage, hide cramped text
-                    const isCompact = action.duration < 1.2 || widthPct < 7.5;
-
+            {/* Buffs: uma faixa fina por buff, só o nome */}
+            {liveBuffs.length > 0 && (
+              <div className="flex gap-3 pt-2">
+                <div className="w-36 flex-shrink-0 text-sm text-slate-500 pt-0.5">Buffs</div>
+                <div className="flex-1 space-y-1">
+                  {liveBuffs.map(buff => {
+                    const leftPct = (buff.startTime / totalDuration) * 100;
+                    const widthPct = Math.max(3.5, ((buff.endTime - buff.startTime) / totalDuration) * 100);
                     return (
-                      <div
-                        key={action.id}
-                        onMouseDown={(e) => {
-                          e.stopPropagation();
-                          setSelectedActionId(action.id);
-                          if (onSelectAction) onSelectAction(action);
-                          setDraggingActionId(action.id);
-                          setDragStartX(e.clientX);
-                          setDragInitialTime(action.startTime);
-                        }}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedActionId(action.id);
-                          if (onSelectAction) onSelectAction(action);
-                        }}
-                        onMouseEnter={(e) => {
-                          const rect = e.currentTarget.getBoundingClientRect();
-                          setHoveredActionData({ action, rect });
-                        }}
-                        onMouseLeave={() => {
-                          setHoveredActionData(null);
-                        }}
-                        className={`absolute top-1.5 bottom-1.5 rounded-lg border flex items-center justify-between gap-1.5 px-2 text-[10px] font-mono font-bold transition-all duration-150 select-none shadow-md overflow-hidden ${
-                          isSelected 
-                            ? 'ring-2 ring-cyan-400 border-cyan-400 z-30 scale-[1.02] shadow-lg shadow-cyan-500/30' 
-                            : isCurrentlyActive
-                              ? 'ring-2 ring-emerald-400 border-emerald-400 z-20 shadow-md shadow-emerald-500/20'
-                              : 'hover:brightness-125 z-10'
-                        } ${isDragging ? 'opacity-80 cursor-grabbing' : 'cursor-grab'} bg-gradient-to-r ${getActionColor(action.actionType)}`}
-                        style={{
-                          left: `${leftPct}%`,
-                          width: `${widthPct}%`
-                        }}
-                      >
-                        {/* Compact vs Normal Representation */}
-                        {isCompact ? (
-                          <div className="w-full flex items-center justify-center gap-1">
-                            {getActionIcon(action.actionType)}
-                            <span className="text-[10px] font-bold tracking-tight">
-                              {getActionBadgeText(action.actionType)}
-                            </span>
-                          </div>
-                        ) : (
-                          <>
-                            <div className="flex items-center gap-1.5 min-w-0 truncate">
-                              <span className="text-[9px] px-1 py-0.2 rounded bg-black/30 font-bold opacity-90 flex-shrink-0">
-                                {getActionBadgeText(action.actionType)}
-                              </span>
-                              {getActionIcon(action.actionType)}
-                              <span className="truncate text-[10px] font-medium text-slate-100">
-                                {action.actionLabel}
-                              </span>
-                            </div>
-
-                            <span className="text-[9px] opacity-75 font-mono ml-auto flex-shrink-0">
-                              {action.duration}s
-                            </span>
-                          </>
-                        )}
+                      <div key={buff.id} className="relative h-5 rounded bg-slate-950 border border-slate-800">
+                        <div
+                          className="absolute top-0 bottom-0 rounded px-1.5 flex items-center text-xs text-slate-100 truncate"
+                          style={{
+                            left: `${leftPct}%`,
+                            width: `${widthPct}%`,
+                            backgroundColor: `${buff.color}33`,
+                            borderLeft: `3px solid ${buff.color}`
+                          }}
+                          title={`${buff.name} (${buff.startTime}s–${buff.endTime}s): ${buff.statBonus} · ${buff.sourceChar}`}
+                        >
+                          <span className="truncate">{buff.name}</span>
+                        </div>
                       </div>
                     );
                   })}
                 </div>
               </div>
-            );
-          })}
-
-          {/* Buff Coverage Tracks (Dynamically Computed from Real Actions) */}
-          <div className="pt-2 border-t border-slate-800/80">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-2 text-[11px] font-bold text-slate-300 uppercase tracking-wider font-mono">
-                <Layers className="w-3.5 h-3.5 text-amber-400" />
-                <span>Faixas de Buffs da Equipe ({liveBuffs.length} detectados)</span>
-              </div>
-              <span className="text-[10px] text-slate-500 font-mono">
-                Alinhamento dinâmico calculado com base nos golpes
-              </span>
-            </div>
-
-            <div className="space-y-1.5 pl-28 sm:pl-32">
-              {liveBuffs.map((buff) => {
-                const leftPct = (buff.startTime / totalDuration) * 100;
-                const widthPct = Math.max(3.5, ((buff.endTime - buff.startTime) / totalDuration) * 100);
-                const isBuffActiveNow = currentTime >= buff.startTime && currentTime <= buff.endTime;
-
-                return (
-                  <div key={buff.id} className="relative h-6 bg-slate-950/80 rounded-lg overflow-hidden border border-slate-800/60">
-                    {/* Playhead Scrubber Line passing through buffs */}
-                    <div 
-                      className="absolute top-0 bottom-0 w-0.5 bg-rose-500 shadow-[0_0_8px_#f43f5e] z-30 pointer-events-none -translate-x-1/2"
-                      style={{ left: `${(currentTime / totalDuration) * 100}%` }}
-                    />
-
-                    <div 
-                      className={`absolute top-0.5 bottom-0.5 rounded-md px-2 flex items-center justify-between text-[10px] font-mono font-bold text-white shadow-sm overflow-hidden transition-all ${
-                        isBuffActiveNow ? 'ring-1 ring-white/30 brightness-125' : 'opacity-85'
-                      }`}
-                      style={{
-                        left: `${leftPct}%`,
-                        width: `${widthPct}%`,
-                        backgroundColor: `${buff.color}20`,
-                        border: `1px solid ${buff.color}50`
-                      }}
-                      title={`${buff.name} (${buff.startTime}s - ${buff.endTime}s): ${buff.statBonus} • Origem: ${buff.sourceChar}`}
-                    >
-                      <span className="truncate flex items-center gap-1.5">
-                        <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: buff.color }} />
-                        <strong className="text-slate-100">{buff.name}</strong>
-                        <span className="text-[9px] text-slate-400 opacity-80">({buff.startTime}s - {buff.endTime}s)</span>
-                      </span>
-                      <span className="text-[9px] text-amber-300 ml-2 truncate">
-                        {buff.statBonus}
-                      </span>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+            )}
           </div>
-
         </div>
       </div>
 
-      {/* 1. PAINEL DE EDIÇÃO PERMANENTE (100% DO TEMPO VISÍVEL) */}
-      <div 
-        onClick={(e) => e.stopPropagation()}
-        className="p-5 sm:p-6 rounded-2xl bg-[#0a0f1d] border-2 border-cyan-500/50 shadow-2xl shadow-cyan-950/30 space-y-5 transition-all"
-      >
-        {/* BARRA SUPERIOR: SELETOR DE PERSONAGEM & ATALHOS RÁPIDOS */}
-        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 pb-4 border-b border-slate-800">
-          <div className="space-y-1.5 w-full lg:w-auto">
-            <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold block">
-              Personagens da Equipe:
-            </span>
-            <div className="flex items-center gap-2 flex-wrap">
-              {characters.map((c, cIdx) => {
-                const charActs = actions.filter(a => a.charIndex === cIdx);
-                const isSelectedChar = selectedAction ? selectedAction.charIndex === cIdx : cIdx === 0;
-
-                return (
-                  <button
-                    key={cIdx}
-                    type="button"
-                    onClick={() => {
-                      if (charActs.length > 0) {
-                        setSelectedActionId(charActs[0].id);
-                      } else {
-                        handleAddAction(cIdx, 'skill', 'Habilidade Elemental (E)', 1.2);
-                      }
-                    }}
-                    className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
-                      isSelectedChar
-                        ? 'bg-cyan-950/90 border-cyan-400 text-white shadow-md shadow-cyan-950/50 ring-1 ring-cyan-400'
-                        : 'bg-slate-950/80 hover:bg-slate-900 border-slate-800 text-slate-400 hover:text-white'
-                    }`}
-                  >
-                    <CharacterAvatar name={c.name} element={c.element as any} size="xs" showBorder={false} />
-                    <span>{c.name}</span>
-                    <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-black/40 text-cyan-300">
-                      {charActs.length}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
+      {/* Editor: só aparece quando um golpe está selecionado */}
+      {selected ? (
+        <div className="flex flex-wrap items-end gap-4 px-5 py-4 border-t border-slate-800 bg-slate-950/50 rounded-b-xl">
+          <div className="min-w-[180px] flex-1">
+            <label className="block text-xs text-slate-500 mb-1">{selected.charName}</label>
+            <select
+              value={selectedMoveId}
+              onChange={(e) => {
+                const move = selectedMoves.find(m => m.id === e.target.value);
+                if (move) handleSwitchActionStrike(move);
+              }}
+              className="w-full px-2 py-1.5 rounded-md bg-slate-950 border border-slate-700 text-sm text-slate-100 focus:outline-none focus:border-purple-400"
+            >
+              {selectedMoveId === '' && <option value="">{selected.actionLabel}</option>}
+              {selectedMoves.map(m => (
+                <option key={m.id} value={m.id}>{m.label}</option>
+              ))}
+            </select>
           </div>
 
-          {/* Atalhos Rápidos para Criar Novo Golpe para o Personagem Ativo */}
-          <div className="flex items-center gap-2 flex-wrap ml-auto">
-            <span className="text-[10px] font-mono text-slate-400 block sm:inline">Adicionar Ação:</span>
+          <div>
+            <label className="block text-xs text-slate-500 mb-1">Início (s)</label>
+            <input
+              type="number"
+              step={0.1}
+              min={0}
+              value={selected.startTime}
+              onChange={(e) => {
+                const v = parseFloat(e.target.value);
+                if (!isNaN(v)) handleUpdateAction(selected.id, { startTime: Math.max(0, Math.min(totalDuration - selected.duration, v)) });
+              }}
+              className={numInput}
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs text-slate-500 mb-1">Duração (s)</label>
+            <input
+              type="number"
+              step={0.1}
+              min={0.1}
+              value={selected.duration}
+              onChange={(e) => {
+                const v = parseFloat(e.target.value);
+                if (!isNaN(v) && v > 0) handleUpdateAction(selected.id, { duration: Math.min(v, totalDuration - selected.startTime) });
+              }}
+              className={numInput}
+            />
+          </div>
+
+          <div className="flex items-center gap-1 ml-auto">
             <button
               type="button"
-              onClick={() => handleAddAction(selectedAction ? selectedAction.charIndex : 0, 'skill', 'Habilidade (E)', 1.2)}
-              className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-slate-900 hover:bg-amber-950 text-amber-300 border border-slate-700 hover:border-amber-500/40 text-xs font-semibold cursor-pointer transition-all"
+              onClick={() => handleDuplicateAction(selected.id)}
+              className="p-2 rounded-lg border border-slate-700 text-slate-300 hover:bg-slate-800 cursor-pointer"
+              title="Duplicar"
             >
-              <Plus className="w-3.5 h-3.5" />
-              <span>+ E Skill</span>
+              <Copy className="w-4 h-4" />
             </button>
             <button
               type="button"
-              onClick={() => handleAddAction(selectedAction ? selectedAction.charIndex : 0, 'burst', 'Supremo (Q)', 1.8)}
-              className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-slate-900 hover:bg-purple-950 text-purple-300 border border-slate-700 hover:border-purple-500/40 text-xs font-semibold cursor-pointer transition-all"
+              onClick={() => handleDeleteAction(selected.id)}
+              className="p-2 rounded-lg border border-slate-700 text-rose-400 hover:bg-slate-800 cursor-pointer"
+              title="Remover (Del)"
             >
-              <Plus className="w-3.5 h-3.5" />
-              <span>+ Q Burst</span>
+              <Trash2 className="w-4 h-4" />
             </button>
             <button
               type="button"
-              onClick={() => handleAddAction(selectedAction ? selectedAction.charIndex : 0, 'swap', 'Swap In', 0.5)}
-              className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-slate-900 hover:bg-cyan-950 text-cyan-300 border border-slate-700 hover:border-cyan-500/40 text-xs font-semibold cursor-pointer transition-all"
+              onClick={() => setSelectedActionId(null)}
+              className="p-2 rounded-lg text-slate-400 hover:bg-slate-800 cursor-pointer"
+              title="Fechar (Esc)"
             >
-              <Plus className="w-3.5 h-3.5" />
-              <span>+ Swap</span>
+              <X className="w-4 h-4" />
             </button>
           </div>
         </div>
-
-        {/* LISTA DE AÇÕES DO PERSONAGEM SELECIONADO (PILLS HORIZONTAIS) */}
-        {selectedAction && (
-          <div className="p-3 rounded-xl bg-slate-950/70 border border-slate-800/80 space-y-2">
-            <div className="flex items-center justify-between text-[11px] font-mono text-slate-400 flex-wrap gap-1">
-              <span>Golpes de <strong>{selectedAction.charName}</strong> na Rotação:</span>
-              <span className="text-slate-500">Clique para alternar o golpe em edição</span>
-            </div>
-            <div className="flex items-center gap-2 flex-wrap">
-              {actions
-                .filter(a => a.charIndex === selectedAction.charIndex)
-                .sort((a, b) => a.startTime - b.startTime)
-                .map((act) => {
-                  const isThisSelected = act.id === selectedAction.id;
-                  return (
-                    <button
-                      key={act.id}
-                      type="button"
-                      onClick={() => setSelectedActionId(act.id)}
-                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-mono font-bold transition-all cursor-pointer ${
-                        isThisSelected
-                          ? 'bg-cyan-950 border-cyan-400 text-white ring-2 ring-cyan-400/50 shadow-md'
-                          : 'bg-slate-900 hover:bg-slate-800 border-slate-700 text-slate-300 hover:text-white'
-                      }`}
-                    >
-                      <span className="text-[9px] px-1 py-0.2 rounded bg-black/40 text-cyan-300">{getActionBadgeText(act.actionType)}</span>
-                      <span>{act.actionLabel}</span>
-                      <span className="text-[10px] text-slate-400">({act.startTime.toFixed(1)}s - {(act.startTime + act.duration).toFixed(1)}s)</span>
-                    </button>
-                  );
-                })}
-            </div>
-          </div>
-        )}
-
-        {/* DETALHES & ATRIBUTOS DA AÇÃO SELECIONADA */}
-        {selectedAction ? (
-          <>
-            {/* Header da Ação */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
-              <div className="flex items-center gap-3">
-                <CharacterAvatar 
-                  name={selectedAction.charName} 
-                  element={(characters[selectedAction.charIndex]?.element as any) || 'Pyro'} 
-                  size="md" 
-                />
-                <div>
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded-full bg-cyan-950 text-cyan-300 border border-cyan-500/40 font-bold">
-                      Ação em Edição
-                    </span>
-                    <span className="text-base font-black text-white font-sans">
-                      {selectedAction.charName}
-                    </span>
-                    <span className="text-base font-bold text-cyan-300 font-sans">
-                      • {selectedAction.actionLabel}
-                    </span>
-                    {selectedAction.charIndex === carryIndex && (
-                      <span className="text-[9px] px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/30 font-mono font-bold">
-                        CARRY DPS
-                      </span>
-                    )}
-                  </div>
-                  <div className="flex items-center gap-3 text-xs font-mono text-slate-400 mt-1 flex-wrap">
-                    <span>Início: <strong className="text-white">{selectedAction.startTime.toFixed(1)}s</strong></span>
-                    <span>•</span>
-                    <span>Duração: <strong className="text-white">{selectedAction.duration.toFixed(1)}s</strong></span>
-                    <span>•</span>
-                    <span>Fim: <strong className="text-white">{(selectedAction.startTime + selectedAction.duration).toFixed(1)}s</strong></span>
-                    {selectedAction.damage && (
-                      <>
-                        <span>•</span>
-                        <span>Dano Estimado: <strong className="text-rose-400">{selectedAction.damage.toLocaleString('pt-BR')}</strong></span>
-                      </>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {/* Botões de Ação Perigosa & Utilitários */}
-              <div className="flex items-center gap-2 flex-wrap ml-auto">
-                <button
-                  type="button"
-                  onClick={() => handleSnapToPrevious(selectedAction.id)}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-cyan-300 border border-cyan-500/30 text-xs font-semibold cursor-pointer transition-all"
-                  title="Encosta este golpe no final da ação anterior na rotação"
-                >
-                  <ArrowLeftRight className="w-3.5 h-3.5" />
-                  <span>Encostar no Anterior</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => handleDuplicateAction(selectedAction.id)}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-300 border border-amber-500/30 text-xs font-semibold cursor-pointer transition-all"
-                  title="Duplica este golpe"
-                >
-                  <Copy className="w-3.5 h-3.5" />
-                  <span>Duplicar</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => handleDeleteAction(selectedAction.id)}
-                  className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-rose-950 hover:bg-rose-900 text-rose-200 hover:text-white border border-rose-600 text-xs font-bold cursor-pointer transition-all shadow-md shadow-rose-950/40"
-                  title="Remover esta ação da linha do tempo (Delete ou Backspace)"
-                >
-                  <Trash2 className="w-3.5 h-3.5" />
-                  <span>Remover Ação</span>
-                  <kbd className="text-[10px] px-1 py-0.2 rounded bg-black/40 text-rose-300 border border-rose-700/50 font-mono">Del</kbd>
-                </button>
-              </div>
-            </div>
-
-            {/* Seção 1: Pills de Tipo da Habilidade */}
-            <div className="space-y-2">
-              <label className="text-xs font-bold text-slate-300 font-mono uppercase tracking-wider block">
-                Tipo da Habilidade:
-              </label>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
-                {actionTypesList.map(({ type, label, badge, icon: Icon, colorClass }) => {
-                  const isCurrent = selectedAction.actionType === type;
-                  return (
-                    <button
-                      key={type}
-                      type="button"
-                      onClick={() => handleSelectActionType(type)}
-                      className={`flex items-center gap-2 p-2.5 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
-                        isCurrent 
-                          ? `${colorClass} ring-2 ring-cyan-400 shadow-md`
-                          : 'bg-slate-950/70 hover:bg-slate-900 border-slate-800 text-slate-400 hover:text-white'
-                      }`}
-                    >
-                      <span className="font-mono text-[10px] px-1.5 py-0.5 rounded bg-black/40 border border-white/10">{badge}</span>
-                      <Icon className="w-3.5 h-3.5 flex-shrink-0" />
-                      <span className="truncate">{label}</span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Seção 2: Controles de Precisão de Tempo (Início & Duração) */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Momento de Início */}
-              <div className="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800/80 space-y-2.5">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-slate-300 font-mono flex items-center gap-1.5">
-                    <MoveHorizontal className="w-3.5 h-3.5 text-cyan-400" />
-                    Momento de Início:
-                  </span>
-                  <div className="flex items-center gap-1.5">
-                    <input
-                      type="number"
-                      step="0.1"
-                      min="0"
-                      max={Math.max(0, totalDuration - selectedAction.duration)}
-                      value={selectedAction.startTime}
-                      onChange={(e) => handleUpdateAction(selectedAction.id, { startTime: parseFloat(e.target.value) || 0 })}
-                      className="w-16 px-2 py-0.5 rounded bg-slate-900 border border-slate-700 text-cyan-300 font-mono font-bold text-xs text-right outline-none focus:border-cyan-400"
-                    />
-                    <span className="text-xs text-slate-500 font-mono">s</span>
-                  </div>
-                </div>
-
-                <input
-                  type="range"
-                  min="0"
-                  max={Math.max(0, totalDuration - selectedAction.duration)}
-                  step="0.1"
-                  value={selectedAction.startTime}
-                  onChange={(e) => handleUpdateAction(selectedAction.id, { startTime: parseFloat(e.target.value) || 0 })}
-                  className="w-full accent-cyan-400 cursor-pointer"
-                />
-
-                <div className="flex items-center justify-between gap-1 font-mono text-[11px]">
-                  {[-1.0, -0.5, -0.1, 0.1, 0.5, 1.0].map(delta => (
-                    <button
-                      key={delta}
-                      type="button"
-                      onClick={() => handleNudgeAction(selectedAction.id, delta)}
-                      className="flex-1 py-1 rounded bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors cursor-pointer text-center"
-                    >
-                      {delta > 0 ? `+${delta}s` : `${delta}s`}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Duração da Ação */}
-              <div className="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800/80 space-y-2.5">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-slate-300 font-mono flex items-center gap-1.5">
-                    <Clock className="w-3.5 h-3.5 text-amber-400" />
-                    Duração da Ação:
-                  </span>
-                  <div className="flex items-center gap-1.5">
-                    <input
-                      type="number"
-                      step="0.1"
-                      min="0.2"
-                      max="10.0"
-                      value={selectedAction.duration}
-                      onChange={(e) => handleUpdateAction(selectedAction.id, { duration: parseFloat(e.target.value) || 1.0 })}
-                      className="w-16 px-2 py-0.5 rounded bg-slate-900 border border-slate-700 text-amber-300 font-mono font-bold text-xs text-right outline-none focus:border-amber-400"
-                    />
-                    <span className="text-xs text-slate-500 font-mono">s</span>
-                  </div>
-                </div>
-
-                <input
-                  type="range"
-                  min="0.2"
-                  max="8.0"
-                  step="0.1"
-                  value={selectedAction.duration}
-                  onChange={(e) => handleUpdateAction(selectedAction.id, { duration: parseFloat(e.target.value) || 1.0 })}
-                  className="w-full accent-amber-400 cursor-pointer"
-                />
-
-                <div className="flex items-center justify-between gap-1 font-mono text-[10px]">
-                  {[
-                    { dur: 0.5, label: '0.5s Troca' },
-                    { dur: 1.0, label: '1.0s Rápido' },
-                    { dur: 1.5, label: '1.5s Habilidade' },
-                    { dur: 2.0, label: '2.0s Supremo' },
-                    { dur: 3.0, label: '3.0s Combo' }
-                  ].map(p => (
-                    <button
-                      key={p.dur}
-                      type="button"
-                      onClick={() => handleUpdateAction(selectedAction.id, { duration: p.dur })}
-                      className={`flex-1 py-1 rounded border transition-colors cursor-pointer text-center ${
-                        selectedAction.duration === p.dur
-                          ? 'bg-amber-600 text-white border-amber-500 font-bold'
-                          : 'bg-slate-900 text-slate-400 hover:text-white border-slate-800'
-                      }`}
-                    >
-                      {p.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Seção 3: Buffs Ativos & Modificadores da Equipe */}
-            <div className="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800/80 space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-slate-300 font-mono flex items-center gap-1.5 uppercase tracking-wider">
-                  <Layers className="w-3.5 h-3.5 text-purple-400" />
-                  <span>Buffs Ativos & Modificadores da Equipe:</span>
-                </span>
-                <span className="text-[10px] font-mono text-slate-400">
-                  Janela: {selectedAction.startTime.toFixed(1)}s - {(selectedAction.startTime + selectedAction.duration).toFixed(1)}s
-                </span>
-              </div>
-
-              {activeBuffsForSelectedAction.length > 0 ? (
-                <div className="flex items-center gap-2 flex-wrap">
-                  {activeBuffsForSelectedAction.map(buff => (
-                    <div 
-                      key={buff.id}
-                      className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-mono font-bold text-white shadow-sm"
-                      style={{
-                        backgroundColor: `${buff.color}25`,
-                        border: `1px solid ${buff.color}60`
-                      }}
-                    >
-                      <span className="w-2 h-2 rounded-full" style={{ backgroundColor: buff.color }} />
-                      <span>{buff.name}</span>
-                      <span className="text-[10px] text-amber-300 font-normal">({buff.statBonus})</span>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-xs font-mono text-slate-500 italic">
-                  Nenhum buff de equipe ativo nesta janela de tempo ({selectedAction.startTime.toFixed(1)}s - {(selectedAction.startTime + selectedAction.duration).toFixed(1)}s).
-                </div>
-              )}
-            </div>
-
-            {/* Seção 4: Talentos Oficiais do Personagem */}
-            <div className="space-y-2 pt-2 border-t border-slate-800">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-slate-300 font-mono uppercase tracking-wider flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-                  <span>Talentos Oficiais Disponíveis ({selectedAction.charName}):</span>
-                </span>
-              </div>
-
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
-                {getCharacterMoveOptions(selectedAction.charName, characters[selectedAction.charIndex]?.element).map(move => {
-                  const isCurrent = selectedAction.actionLabel === move.label;
-                  return (
-                    <button
-                      key={move.id}
-                      type="button"
-                      onClick={() => handleSwitchActionStrike(move)}
-                      className={`p-2.5 rounded-xl border text-left flex flex-col justify-between transition-all cursor-pointer ${
-                        isCurrent
-                          ? 'bg-cyan-950/90 border-cyan-400 text-white ring-1 ring-cyan-400 shadow-md shadow-cyan-500/20'
-                          : 'bg-slate-950/70 hover:bg-slate-900 border-slate-800 hover:border-slate-700 text-slate-300 hover:text-white'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between gap-1 mb-1">
-                        <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-black/40 text-cyan-300 font-bold uppercase">
-                          {move.type}
-                        </span>
-                        <span className="text-[10px] font-mono text-slate-400">
-                          {move.duration}s
-                        </span>
-                      </div>
-                      <span className="text-xs font-bold truncate block">
-                        {move.label}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Seção 5: Duração Total Global da Rotação */}
-            <div className="pt-3 border-t border-slate-800 flex items-center justify-between flex-wrap gap-3">
-              <div className="flex items-center gap-2">
-                <span className="text-xs text-slate-400 font-mono">Duração Total da Rotação:</span>
-                <input
-                  type="number"
-                  step="0.5"
-                  min="5"
-                  max="40"
-                  value={totalDuration}
-                  onChange={(e) => commitUpdate(actions, parseFloat(e.target.value) || 20)}
-                  className="w-20 px-2 py-1 rounded bg-slate-950 border border-slate-700 text-white font-mono font-bold text-xs outline-none focus:border-cyan-500"
-                />
-                <span className="text-xs text-slate-400 font-mono">segundos</span>
-              </div>
-
-              <button
-                type="button"
-                onClick={handleSnapDuration}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-300 border border-amber-500/30 text-xs font-semibold cursor-pointer transition-all"
-                title="Ajusta o tempo total da rotação para o fim do último golpe executado"
-              >
-                <Clock className="w-3.5 h-3.5 text-amber-400" />
-                <span>Encostar Duração ao Último Golpe</span>
-              </button>
-            </div>
-          </>
-        ) : (
-          <div className="p-8 text-center text-slate-400 space-y-3">
-            <p className="text-sm font-bold text-slate-200">Nenhum golpe cadastrado nesta rotação.</p>
-            <p className="text-xs text-slate-400">
-              Clique nos botões "+ E Skill" ou "+ Q Burst" acima para adicionar a primeira ação de qualquer personagem.
-            </p>
-          </div>
-        )}
-      </div>
-
-      {/* 2. TABELA COMPLETA DE SEQUÊNCIA DE AÇÕES (Toggleable) */}
-      {showActionTable && (
-        <div className="p-4 rounded-2xl bg-[#090d16] border border-slate-800 space-y-3 animate-fade-in">
-          <div className="flex items-center justify-between flex-wrap gap-2">
-            <h4 className="text-xs font-bold text-slate-200 uppercase tracking-wider flex items-center gap-1.5 font-mono">
-              <Sliders className="w-4 h-4 text-cyan-400" />
-              <span>Sequência de Ações da Rotação ({actions.length} golpes)</span>
-            </h4>
-            <span className="text-[11px] text-slate-400 font-mono">
-              Clique em uma linha para inspecionar e editar
-            </span>
-          </div>
-
-          <div className="overflow-x-auto">
-            <table className="w-full text-xs font-mono border-collapse">
-              <thead>
-                <tr className="bg-slate-950 text-slate-400 text-[10px] uppercase tracking-wider border-b border-slate-800 text-left">
-                  <th className="py-2 px-2.5 w-12 text-center">#</th>
-                  <th className="py-2 px-2.5">Personagem</th>
-                  <th className="py-2 px-2.5">Tipo</th>
-                  <th className="py-2 px-2.5">Rótulo do Golpe</th>
-                  <th className="py-2 px-2.5 w-24">Início (s)</th>
-                  <th className="py-2 px-2.5 w-24">Duração (s)</th>
-                  <th className="py-2 px-2.5 w-20 text-right">Fim</th>
-                  <th className="py-2 px-3 w-28 text-center">Ações</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-800/60">
-                {actions.map((act, idx) => {
-                  const isSelected = selectedActionId === act.id;
-
-                  return (
-                    <tr 
-                      key={act.id}
-                      onClick={() => setSelectedActionId(act.id)}
-                      className={`transition-colors cursor-pointer ${
-                        isSelected ? 'bg-cyan-950/40 ring-1 ring-cyan-500/40' : idx % 2 === 1 ? 'bg-slate-950/40' : 'bg-transparent'
-                      } hover:bg-slate-900/60`}
-                    >
-                      {/* Index + Reorder buttons */}
-                      <td className="py-1.5 px-2 text-center text-slate-500" onClick={(e) => e.stopPropagation()}>
-                        <div className="flex items-center justify-center gap-0.5">
-                          <button
-                            type="button"
-                            onClick={(e) => handleMoveAction(e, idx, 'up')}
-                            disabled={idx === 0}
-                            className="p-0.5 hover:text-white disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed"
-                            title="Mover antes"
-                          >
-                            <ArrowUp className="w-3 h-3" />
-                          </button>
-                          <span className="w-4 text-center">{idx + 1}</span>
-                          <button
-                            type="button"
-                            onClick={(e) => handleMoveAction(e, idx, 'down')}
-                            disabled={idx === actions.length - 1}
-                            className="p-0.5 hover:text-white disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed"
-                            title="Mover depois"
-                          >
-                            <ArrowDown className="w-3 h-3" />
-                          </button>
-                        </div>
-                      </td>
-
-                      {/* Character selector */}
-                      <td className="py-1.5 px-2.5" onClick={(e) => e.stopPropagation()}>
-                        <div className="flex items-center gap-1.5">
-                          <CharacterAvatar name={act.charName} element={(characters[act.charIndex]?.element as any) || 'Pyro'} size="xs" showBorder={false} />
-                          <select
-                            value={act.charIndex}
-                            onChange={(e) => handleUpdateAction(act.id, { charIndex: Number(e.target.value) })}
-                            className="bg-slate-950 border border-slate-700 rounded px-2 py-1 text-slate-200 text-xs font-bold outline-none focus:border-cyan-500 cursor-pointer"
-                          >
-                            {characters.map((c, i) => (
-                              <option key={i} value={i} className="bg-slate-900 text-white">
-                                {c.name}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                      </td>
-
-                      {/* Action Type */}
-                      <td className="py-1.5 px-2.5" onClick={(e) => e.stopPropagation()}>
-                        <select
-                          value={act.actionType}
-                          onChange={(e) => handleUpdateAction(act.id, { actionType: e.target.value as ActionType })}
-                          className="bg-slate-950 border border-slate-700 rounded px-2 py-1 text-slate-300 text-xs outline-none focus:border-cyan-500 cursor-pointer"
-                        >
-                          <option value="skill">E (Skill)</option>
-                          <option value="burst">Q (Burst)</option>
-                          <option value="normal">Normais (N)</option>
-                          <option value="charged">Carregado (CA)</option>
-                          <option value="swap">Swap In</option>
-                          <option value="plunge">Plunge</option>
-                          <option value="special">Especial</option>
-                        </select>
-                      </td>
-
-                      {/* Label Input */}
-                      <td className="py-1.5 px-2.5" onClick={(e) => e.stopPropagation()}>
-                        <input
-                          type="text"
-                          value={act.actionLabel}
-                          onChange={(e) => handleUpdateAction(act.id, { actionLabel: e.target.value })}
-                          className="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-slate-100 text-xs outline-none focus:border-cyan-500"
-                        />
-                      </td>
-
-                      {/* Start Time */}
-                      <td className="py-1.5 px-2.5" onClick={(e) => e.stopPropagation()}>
-                        <input
-                          type="number"
-                          step="0.1"
-                          min="0"
-                          max={totalDuration}
-                          value={act.startTime}
-                          onChange={(e) => handleUpdateAction(act.id, { startTime: parseFloat(e.target.value) || 0 })}
-                          className="w-20 bg-slate-950 border border-slate-700 rounded px-2 py-1 text-cyan-300 text-xs font-bold outline-none focus:border-cyan-500"
-                        />
-                      </td>
-
-                      {/* Duration */}
-                      <td className="py-1.5 px-2.5" onClick={(e) => e.stopPropagation()}>
-                        <input
-                          type="number"
-                          step="0.1"
-                          min="0.2"
-                          max="20"
-                          value={act.duration}
-                          onChange={(e) => handleUpdateAction(act.id, { duration: parseFloat(e.target.value) || 1 })}
-                          className="w-20 bg-slate-950 border border-slate-700 rounded px-2 py-1 text-slate-200 text-xs outline-none focus:border-cyan-500"
-                        />
-                      </td>
-
-                      {/* Calculated End */}
-                      <td className="py-1.5 px-2.5 text-right font-bold text-slate-400">
-                        {(act.startTime + act.duration).toFixed(1)}s
-                      </td>
-
-                      {/* Explicit Action Buttons */}
-                      <td className="py-1.5 px-3 text-center" onClick={(e) => e.stopPropagation()}>
-                        <div className="flex items-center justify-center gap-1.5">
-                          <button
-                            type="button"
-                            onClick={() => setSelectedActionId(act.id)}
-                            className={`px-2 py-1 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
-                              isSelected
-                                ? 'bg-cyan-600 text-white'
-                                : 'bg-slate-900 text-slate-300 hover:text-white'
-                            }`}
-                            title="Selecionar este golpe para ajustar"
-                          >
-                            Editar
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => handleDeleteAction(act.id)}
-                            className="p-1 rounded-lg bg-rose-950/60 hover:bg-rose-900 text-rose-400 hover:text-white border border-rose-600/40 transition-colors cursor-pointer"
-                            title="Apagar este golpe"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        </div>
+      ) : (
+        <p className="px-5 py-3 border-t border-slate-800 text-sm text-slate-500 rounded-b-xl">
+          Clique numa linha vazia para criar um golpe. Clique num golpe para editar; arraste para mover.
+        </p>
       )}
 
-      {/* Legend & Instructions */}
-      <div className="flex items-center justify-between flex-wrap gap-3 pt-2 border-t border-slate-800 text-[11px] font-mono text-slate-500">
-        <div className="flex items-center gap-3 flex-wrap">
-          <div className="flex items-center gap-1.5">
-            <div className="w-2.5 h-2.5 rounded bg-purple-500/60 border border-purple-400/50" />
-            <span>[Q] Supremo</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <div className="w-2.5 h-2.5 rounded bg-amber-500/60 border border-amber-400/50" />
-            <span>[E] Habilidade</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <div className="w-2.5 h-2.5 rounded bg-rose-500/60 border border-rose-400/50" />
-            <span>[CA] Carregado</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <div className="w-2.5 h-2.5 rounded bg-slate-700/80 border border-slate-600/50" />
-            <span>[N] Normais</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <div className="w-2.5 h-2.5 rounded bg-cyan-600/60 border border-cyan-400/50" />
-            <span>[Swap] Troca</span>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2 text-[10px] text-slate-400">
-          <span>Clique em espaço vazio para criar</span>
-          <span>•</span>
-          <span>Arraste para mover</span>
-          <span>•</span>
-          <span>Del para apagar</span>
-          <span>•</span>
-          <span>Espaço para Play</span>
-        </div>
+      {/* Duração total */}
+      <div className="flex items-center gap-2 px-5 pb-4 text-sm text-slate-400">
+        <label htmlFor="rot-total">Duração da rotação</label>
+        <input
+          id="rot-total"
+          type="number"
+          min={1}
+          step={1}
+          value={totalDuration}
+          onChange={(e) => {
+            const v = parseFloat(e.target.value);
+            if (!isNaN(v) && v > 0) commitUpdate(actions, v);
+          }}
+          className={numInput}
+        />
+        <span>s</span>
       </div>
-
     </div>
   );
 };

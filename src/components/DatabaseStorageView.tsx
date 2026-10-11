@@ -252,13 +252,13 @@ export const DatabaseStorageView: React.FC<DatabaseStorageViewProps> = ({
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
         
         {/* Card Superior Esquerdo: Configurações & Suporte */}
-        <div className="lg:col-span-6 p-5 sm:p-6 rounded-3xl bg-[#090e17] border border-slate-800 flex flex-col justify-between space-y-4 shadow-xl">
+        <div className="lg:col-span-6 p-5 sm:p-6 rounded-3xl bg-slate-900 border border-slate-800 flex flex-col justify-between space-y-4 shadow-xl">
           <div className="space-y-2">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-xl bg-cyan-950 border border-cyan-500/40 flex items-center justify-center text-cyan-400">
                 <Database className="w-4 h-4" />
               </div>
-              <h3 className="text-sm font-bold text-white uppercase tracking-wider font-cinzel">
+              <h3 className="text-sm font-bold text-white font-cinzel">
                 Bases de Dados & Armazenamento
               </h3>
             </div>
@@ -269,7 +269,7 @@ export const DatabaseStorageView: React.FC<DatabaseStorageViewProps> = ({
 
           <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between flex-wrap gap-2 text-xs font-mono text-slate-400">
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="w-2 h-2 rounded-full bg-emerald-400 " />
               <span>Base Ativa: <strong className="text-emerald-300">{slots.find(s => s.id === activeSlotId)?.name || 'Database 1'}</strong></span>
             </div>
 
@@ -286,7 +286,7 @@ export const DatabaseStorageView: React.FC<DatabaseStorageViewProps> = ({
         </div>
 
         {/* Card Superior Direito: Donut Chart de Armazenamento */}
-        <div className="lg:col-span-6 p-5 sm:p-6 rounded-3xl bg-[#090e17] border border-slate-800 shadow-xl flex flex-col sm:flex-row items-center gap-6">
+        <div className="lg:col-span-6 p-5 sm:p-6 rounded-3xl bg-slate-900 border border-slate-800 shadow-xl flex flex-col sm:flex-row items-center gap-6">
           
           {/* SVG Donut Chart */}
           <div className="relative w-32 h-32 flex-shrink-0 flex items-center justify-center">
@@ -320,7 +320,7 @@ export const DatabaseStorageView: React.FC<DatabaseStorageViewProps> = ({
               <span className="text-base font-black text-white font-mono leading-none">
                 {storageStats.percentUsed}%
               </span>
-              <span className="text-[9px] uppercase tracking-wider text-slate-400 font-mono mt-1 font-bold">
+              <span className="text-xs text-slate-400 font-mono mt-1 font-bold">
                 Ocupado
               </span>
             </div>
@@ -341,7 +341,7 @@ export const DatabaseStorageView: React.FC<DatabaseStorageViewProps> = ({
             {/* Lista com cores de cada Database */}
             <div className="space-y-1.5 pt-1">
               {storageStats.slotsUsage.map((item) => (
-                <div key={item.id} className="flex items-center justify-between text-[11px] font-mono">
+                <div key={item.id} className="flex items-center justify-between text-xs font-mono">
                   <div className="flex items-center gap-2 truncate">
                     <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: item.color }} />
                     <span className={`truncate ${item.isActive ? 'font-bold text-emerald-300' : 'text-slate-400'}`}>
@@ -363,11 +363,11 @@ export const DatabaseStorageView: React.FC<DatabaseStorageViewProps> = ({
       {/* 2. GRID DE SLOTS DE BASES DE DADOS (Database Cards) */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider font-mono flex items-center gap-1.5">
+          <h4 className="text-xs font-bold text-slate-300 font-mono flex items-center gap-1.5">
             <Layers className="w-3.5 h-3.5 text-cyan-400" />
             <span>Slots de Bancos de Dados Disponíveis ({slots.length})</span>
           </h4>
-          <span className="text-[11px] text-slate-500 font-mono">
+          <span className="text-xs text-slate-500 font-mono">
             Alterne entre bases com 1 clique
           </span>
         </div>
@@ -381,8 +381,8 @@ export const DatabaseStorageView: React.FC<DatabaseStorageViewProps> = ({
                 key={slot.id}
                 className={`p-5 rounded-2xl border transition-all duration-200 space-y-4 relative ${
                   isActive
-                    ? 'bg-gradient-to-b from-[#091520] to-[#0a101b] border-emerald-500/60 shadow-xl shadow-emerald-950/20 ring-1 ring-emerald-500/40'
-                    : 'bg-[#090d16] border-slate-800 hover:border-slate-700/80 shadow-md'
+                    ? 'bg-slate-900   border-emerald-500/60 shadow-xl  ring-1 ring-emerald-500/40'
+                    : 'bg-slate-900 border-slate-800 hover:border-slate-700/80 shadow-md'
                 }`}
               >
                 {/* Header do Card */}
@@ -401,13 +401,13 @@ export const DatabaseStorageView: React.FC<DatabaseStorageViewProps> = ({
                           {slot.name}
                         </h5>
                         {isActive && (
-                          <span className="text-[9px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-500/40 flex items-center gap-1 animate-pulse">
+                          <span className="text-xs font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-500/40 flex items-center gap-1 ">
                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
                             Base de Dados Atual
                           </span>
                         )}
                       </div>
-                      <p className="text-[11px] text-slate-400 mt-0.5">
+                      <p className="text-xs text-slate-400 mt-0.5">
                         {slot.description}
                       </p>
                     </div>
@@ -418,7 +418,7 @@ export const DatabaseStorageView: React.FC<DatabaseStorageViewProps> = ({
                     <button
                       type="button"
                       onClick={() => handleSwitchActiveSlot(slot.id)}
-                      className="px-3.5 py-1.5 rounded-xl font-bold text-xs bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 transition-all cursor-pointer shadow-sm hover:scale-105"
+                      className="px-3.5 py-1.5 rounded-xl font-bold text-xs bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 transition-all cursor-pointer shadow-sm "
                       title="Ativar esta base de dados"
                     >
                       Mudar
@@ -429,34 +429,34 @@ export const DatabaseStorageView: React.FC<DatabaseStorageViewProps> = ({
                 {/* Métricas e Contadores Rápidos do Slot */}
                 <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 p-3 rounded-xl bg-slate-950/70 border border-slate-800/80 font-mono text-center">
                   <div>
-                    <span className="text-[9px] text-slate-500 uppercase block">Personagens</span>
+                    <span className="text-xs text-slate-500 block">Personagens</span>
                     <strong className="text-xs text-slate-200">{slot.stats.characters}</strong>
                   </div>
                   <div>
-                    <span className="text-[9px] text-slate-500 uppercase block">Equipes</span>
+                    <span className="text-xs text-slate-500 block">Equipes</span>
                     <strong className="text-xs text-cyan-300">{slot.stats.teams}</strong>
                   </div>
                   <div>
-                    <span className="text-[9px] text-slate-500 uppercase block">Artefatos</span>
+                    <span className="text-xs text-slate-500 block">Artefatos</span>
                     <strong className="text-xs text-amber-300">{slot.stats.artifacts}</strong>
                   </div>
                   <div>
-                    <span className="text-[9px] text-slate-500 uppercase block">Armas</span>
+                    <span className="text-xs text-slate-500 block">Armas</span>
                     <strong className="text-xs text-purple-300">{slot.stats.weapons}</strong>
                   </div>
                   <div>
-                    <span className="text-[9px] text-slate-500 uppercase block">Rotações</span>
+                    <span className="text-xs text-slate-500 block">Rotações</span>
                     <strong className="text-xs text-emerald-300">{slot.stats.rotations}</strong>
                   </div>
                   <div>
-                    <span className="text-[9px] text-slate-500 uppercase block">Tamanho</span>
+                    <span className="text-xs text-slate-500 block">Tamanho</span>
                     <strong className="text-xs text-slate-400">{(slot.stats.sizeBytes / 1024).toFixed(0)}k</strong>
                   </div>
                 </div>
 
                 {/* Rodapé com Ações do Card */}
                 <div className="flex items-center justify-between flex-wrap gap-2 pt-2 border-t border-slate-800/80 text-xs font-mono">
-                  <div className="text-[10px] text-slate-500 flex items-center gap-1">
+                  <div className="text-xs text-slate-500 flex items-center gap-1">
                     <Clock className="w-3 h-3" />
                     <span>Modificado: {new Date(slot.lastModified).toLocaleDateString('pt-BR')}</span>
                   </div>
@@ -522,7 +522,7 @@ export const DatabaseStorageView: React.FC<DatabaseStorageViewProps> = ({
       {/* 3. MODAL: UPLOAD DE EXCEL (.xlsx / .csv) COM DROPZONE & PRÉ-VISUALIZAÇÃO */}
       {excelTargetSlotId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
-          <div className="w-full max-w-xl p-6 rounded-3xl bg-[#0a0f1d] border border-cyan-500/40 shadow-2xl space-y-5 animate-scale-up">
+          <div className="w-full max-w-xl p-6 rounded-3xl bg-slate-900 border border-cyan-500/40 shadow-2xl space-y-5 animate-scale-up">
             
             <div className="flex items-center justify-between pb-3 border-b border-slate-800">
               <div className="flex items-center gap-2.5">
@@ -531,7 +531,7 @@ export const DatabaseStorageView: React.FC<DatabaseStorageViewProps> = ({
                 </div>
                 <div>
                   <h4 className="font-bold text-white text-sm">Importar Planilha Excel (.xlsx)</h4>
-                  <p className="text-[11px] text-slate-400 font-mono">
+                  <p className="text-xs text-slate-400 font-mono">
                     Destino: {slots.find(s => s.id === excelTargetSlotId)?.name}
                   </p>
                 </div>
@@ -562,7 +562,7 @@ export const DatabaseStorageView: React.FC<DatabaseStorageViewProps> = ({
                 <p className="text-xs font-bold text-white">
                   {selectedFile ? selectedFile.name : 'Clique para selecionar ou arraste o arquivo .xlsx'}
                 </p>
-                <p className="text-[11px] text-slate-400 font-mono mt-1">
+                <p className="text-xs text-slate-400 font-mono mt-1">
                   Suporta planilhas multi-aba com abas: Equipes, Personagens, Armas e Rotações.
                 </p>
               </div>
@@ -571,20 +571,20 @@ export const DatabaseStorageView: React.FC<DatabaseStorageViewProps> = ({
             {/* Pré-Visualização das Abas Reconhecidas */}
             {filePreview && (
               <div className="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 space-y-2 font-mono text-xs">
-                <span className="text-[10px] text-slate-400 uppercase font-bold block">
+                <span className="text-xs text-slate-400 font-bold block">
                   Resumo dos Dados Identificados:
                 </span>
                 <div className="grid grid-cols-3 gap-2 text-center">
                   <div className="p-2 rounded-lg bg-slate-900 border border-slate-800">
-                    <span className="text-[10px] text-slate-500 block">Equipes</span>
+                    <span className="text-xs text-slate-500 block">Equipes</span>
                     <strong className="text-cyan-300 font-bold">{filePreview.summary.teamsCount}</strong>
                   </div>
                   <div className="p-2 rounded-lg bg-slate-900 border border-slate-800">
-                    <span className="text-[10px] text-slate-500 block">Personagens</span>
+                    <span className="text-xs text-slate-500 block">Personagens</span>
                     <strong className="text-amber-300 font-bold">{filePreview.summary.charactersCount}</strong>
                   </div>
                   <div className="p-2 rounded-lg bg-slate-900 border border-slate-800">
-                    <span className="text-[10px] text-slate-500 block">Armas</span>
+                    <span className="text-xs text-slate-500 block">Armas</span>
                     <strong className="text-purple-300 font-bold">{filePreview.summary.weaponsCount}</strong>
                   </div>
                 </div>
@@ -593,7 +593,7 @@ export const DatabaseStorageView: React.FC<DatabaseStorageViewProps> = ({
 
             {/* Opções de Importação: Substituir vs Mesclar */}
             <div className="space-y-2">
-              <label className="text-xs font-bold text-slate-300 font-mono uppercase tracking-wider block">
+              <label className="text-xs font-bold text-slate-300 font-mono block">
                 Modo de Gravação no Slot:
               </label>
               <div className="grid grid-cols-2 gap-3">
@@ -607,7 +607,7 @@ export const DatabaseStorageView: React.FC<DatabaseStorageViewProps> = ({
                   }`}
                 >
                   <strong className="text-xs block text-rose-300">Substituir Slot</strong>
-                  <span className="text-[10px] text-slate-400 mt-0.5 block leading-tight">
+                  <span className="text-xs text-slate-400 mt-0.5 block leading-tight">
                     Substitui todas as equipes antigas pelos dados da planilha.
                   </span>
                 </button>
@@ -622,7 +622,7 @@ export const DatabaseStorageView: React.FC<DatabaseStorageViewProps> = ({
                   }`}
                 >
                   <strong className="text-xs block text-cyan-300">Mesclar / Atualizar</strong>
-                  <span className="text-[10px] text-slate-400 mt-0.5 block leading-tight">
+                  <span className="text-xs text-slate-400 mt-0.5 block leading-tight">
                     Mantém as equipes atuais e adiciona as novas da planilha.
                   </span>
                 </button>
@@ -642,7 +642,7 @@ export const DatabaseStorageView: React.FC<DatabaseStorageViewProps> = ({
                 type="button"
                 disabled={!filePreview || isProcessingFile}
                 onClick={handleConfirmImportExcel}
-                className="px-5 py-2 rounded-xl text-xs font-bold text-white bg-cyan-600 hover:bg-cyan-500 disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer shadow-lg shadow-cyan-600/30 flex items-center gap-1.5"
+                className="px-5 py-2 rounded-xl text-xs font-bold text-white bg-cyan-600 hover:bg-cyan-500 disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer shadow-lg  flex items-center gap-1.5"
               >
                 <Check className="w-4 h-4" />
                 <span>Confirmar Importação</span>
@@ -656,7 +656,7 @@ export const DatabaseStorageView: React.FC<DatabaseStorageViewProps> = ({
       {/* 4. MODAL: CONFIRMAÇÃO DE CÓPIA ENTRE SLOTS */}
       {copySourceSlotId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
-          <div className="w-full max-w-md p-6 rounded-3xl bg-[#0a0f1d] border border-cyan-500/40 shadow-2xl space-y-4">
+          <div className="w-full max-w-md p-6 rounded-3xl bg-slate-900 border border-cyan-500/40 shadow-2xl space-y-4">
             <h4 className="font-bold text-white text-sm">Duplicar Base de Dados</h4>
             <p className="text-xs text-slate-400">
               Selecione o slot de destino onde deseja colar a cópia de <strong>{slots.find(s => s.id === copySourceSlotId)?.name}</strong>:
@@ -707,7 +707,7 @@ export const DatabaseStorageView: React.FC<DatabaseStorageViewProps> = ({
       {/* 5. MODAL: CONFIRMAÇÃO DE EXCLUSÃO DE SLOT */}
       {deleteConfirmSlotId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
-          <div className="w-full max-w-md p-6 rounded-3xl bg-[#0a0f1d] border border-rose-500/50 shadow-2xl space-y-4">
+          <div className="w-full max-w-md p-6 rounded-3xl bg-slate-900 border border-rose-500/50 shadow-2xl space-y-4">
             <div className="flex items-center gap-3 text-rose-400">
               <AlertTriangle className="w-6 h-6 flex-shrink-0" />
               <h4 className="font-bold text-white text-sm">Limpar Base de Dados?</h4>
@@ -727,7 +727,7 @@ export const DatabaseStorageView: React.FC<DatabaseStorageViewProps> = ({
               <button
                 type="button"
                 onClick={handleConfirmDelete}
-                className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-rose-600 hover:bg-rose-500 cursor-pointer shadow-md shadow-rose-600/30"
+                className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-rose-600 hover:bg-rose-500 cursor-pointer shadow-md "
               >
                 Sim, Limpar Base
               </button>

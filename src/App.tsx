@@ -491,7 +491,7 @@ const AppContent: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#060a12] text-slate-100 flex flex-col font-sans selection:bg-ametist-500 selection:text-white antialiased">
+    <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col font-sans selection:bg-ametist-500 selection:text-white antialiased">
       {/* Sticky Header with Navigation and Astralys Branding */}
       <Header 
         activeTab={activeTab}
@@ -612,7 +612,7 @@ const AppContent: React.FC = () => {
       <footer className="border-t border-slate-800/80 bg-slate-950/80 backdrop-blur-md py-6 text-xs text-slate-500 mt-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <span className="font-cinzel font-bold text-ametist-400 tracking-wider">ASTRALYS</span>
+            <span className="font-cinzel font-bold text-ametist-400 ">ASTRALYS</span>
             <span>•</span>
             <span>Genshin Impact Theorycrafting & Rotações</span>
           </div>

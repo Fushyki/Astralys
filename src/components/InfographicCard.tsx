@@ -50,62 +50,111 @@ export const InfographicCard: React.FC<InfographicCardProps> = ({
   const [isEditing, setIsEditing] = useState(false);
   const [cardOrientation, setCardOrientation] = useState<'landscape' | 'vertical'>('landscape');
 
+  const [feedback, setFeedback] = useState<{ kind: 'ok' | 'error'; text: string } | null>(null);
+
+  const notify = (kind: 'ok' | 'error', text: string) => {
+    setFeedback({ kind, text });
+    setTimeout(() => setFeedback(null), 3500);
+  };
+
+  const exportOptions = () => ({
+    cacheBust: true,
+    pixelRatio: cardOrientation === 'vertical' ? 3.0 : 2.5,
+    backgroundColor: '#07131d',
+    // Esconde a UI de edição (inputs) caso o card seja exportado no modo edição
+    filter: (node: HTMLElement) => !(node instanceof HTMLElement && node.dataset?.noExport !== undefined)
+  });
+
+  const safeFileName = () => {
+    const base = (data.carryArchetype || 'card')
+      .normalize('NFD').replace(/[̀-ͯ]/g, '')
+      .toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+    return `${base || 'card'}_${cardOrientation}_astralys.png`;
+  };
+
+  const renderBlob = async () => {
+    if (!cardRef.current) return null;
+    // Garante que as fontes carregaram antes de rasterizar
+    try { await (document as any).fonts?.ready; } catch { /* ignore */ }
+    return toBlob(cardRef.current, exportOptions());
+  };
+
+  const downloadBlob = (blob: Blob) => {
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.download = safeFileName();
+    link.href = url;
+    link.click();
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+  };
+
   // Handle Export to PNG
   const handleExportPNG = async () => {
-    if (!cardRef.current) return;
+    if (isExporting) return;
     try {
       setIsExporting(true);
-      const dataUrl = await toPng(cardRef.current, {
-        cacheBust: true,
-        pixelRatio: cardOrientation === 'vertical' ? 3.0 : 2.5,
-        backgroundColor: '#0a0f1d'
-      });
-      const link = document.createElement('a');
-      link.download = `${data.carryArchetype.toLowerCase()}_${cardOrientation}_astralys.png`;
-      link.href = dataUrl;
-      link.click();
+      const blob = await renderBlob();
+      if (!blob) throw new Error('empty blob');
+      downloadBlob(blob);
+      notify('ok', 'PNG baixado!');
     } catch (err) {
       console.error('Failed to export PNG:', err);
+      notify('error', 'Não foi possível gerar o PNG. Tente novamente.');
     } finally {
       setIsExporting(false);
     }
   };
 
-  // Handle Copy Image to Clipboard
+  // Handle Copy Image to Clipboard (cai para download se o navegador não suportar)
   const handleCopyClipboard = async () => {
-    if (!cardRef.current) return;
+    if (isExporting) return;
     try {
       setIsExporting(true);
-      const blob = await toBlob(cardRef.current, {
-        cacheBust: true,
-        pixelRatio: 2.5,
-        backgroundColor: '#0a0f1d'
-      });
-      if (blob && navigator.clipboard && window.ClipboardItem) {
+      const blob = await renderBlob();
+      if (!blob) throw new Error('empty blob');
+      if (navigator.clipboard && (window as any).ClipboardItem) {
         await navigator.clipboard.write([
-          new window.ClipboardItem({ 'image/png': blob })
+          new (window as any).ClipboardItem({ 'image/png': blob })
         ]);
         setIsCopied(true);
         setTimeout(() => setIsCopied(false), 2500);
+      } else {
+        downloadBlob(blob);
+        notify('ok', 'Seu navegador não copia imagens — o PNG foi baixado.');
       }
     } catch (err) {
       console.error('Failed to copy image to clipboard:', err);
+      notify('error', 'Não foi possível copiar a imagem. Use "Baixar PNG".');
     } finally {
       setIsExporting(false);
     }
   };
 
   // Handle Share URL Link
-  const handleShareLink = () => {
+  const handleShareLink = async () => {
     try {
       const json = JSON.stringify(data);
       const encoded = btoa(unescape(encodeURIComponent(json)));
       const shareUrl = `${window.location.origin}${window.location.pathname}#card=${encoded}`;
-      navigator.clipboard.writeText(shareUrl);
+      try {
+        await navigator.clipboard.writeText(shareUrl);
+      } catch {
+        // Fallback para contextos sem Clipboard API
+        const ta = document.createElement('textarea');
+        ta.value = shareUrl;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        const ok = document.execCommand('copy');
+        document.body.removeChild(ta);
+        if (!ok) throw new Error('copy failed');
+      }
       setIsCopiedLink(true);
       setTimeout(() => setIsCopiedLink(false), 2500);
     } catch (e) {
       console.error('Error generating share URL:', e);
+      notify('error', 'Não foi possível copiar o link.');
     }
   };
 
@@ -202,7 +251,7 @@ export const InfographicCard: React.FC<InfographicCardProps> = ({
             <button
               onClick={handleCopyClipboard}
               disabled={isExporting}
-              className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-[11px] font-semibold transition-all cursor-pointer"
+              className="disabled:opacity-50 disabled:cursor-wait flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-[11px] font-semibold transition-all cursor-pointer"
               title="Copiar imagem PNG para colar direto no Discord"
             >
               {isCopied ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
@@ -212,12 +261,25 @@ export const InfographicCard: React.FC<InfographicCardProps> = ({
             <button
               onClick={handleExportPNG}
               disabled={isExporting}
-              className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-gradient-to-r from-ametist-600 to-purple-600 text-white font-bold text-[11px] shadow-sm hover:shadow-ametist-glow transition-all cursor-pointer"
+              className="disabled:opacity-50 disabled:cursor-wait flex items-center gap-1.5 px-3 py-1 rounded-lg bg-gradient-to-r from-ametist-600 to-purple-600 text-white font-bold text-[11px] shadow-sm hover:shadow-ametist-glow transition-all cursor-pointer"
             >
               <Download className="w-3 h-3" />
               <span>{isExporting ? 'Renderizando...' : 'Baixar PNG'}</span>
             </button>
           </div>
+        </div>
+      )}
+
+      {feedback && (
+        <div
+          role="status"
+          className={`w-full px-3 py-1.5 rounded-lg border text-xs ${
+            feedback.kind === 'ok'
+              ? 'bg-emerald-950/60 border-emerald-700/50 text-emerald-300'
+              : 'bg-rose-950/60 border-rose-700/50 text-rose-300'
+          }`}
+        >
+          {feedback.text}
         </div>
       )}
 

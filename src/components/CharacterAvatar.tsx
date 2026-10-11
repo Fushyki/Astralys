@@ -12,8 +12,8 @@ interface CharacterAvatarProps {
 }
 
 const SIZE_MAP = {
-  xs: 'w-6 h-6 text-[9px]',
-  sm: 'w-8 h-8 text-[11px]',
+  xs: 'w-6 h-6 text-xs',
+  sm: 'w-8 h-8 text-xs',
   md: 'w-10 h-10 text-xs',
   lg: 'w-12 h-12 text-sm',
   xl: 'w-16 h-16 text-base',
@@ -48,7 +48,7 @@ export const CharacterAvatar: React.FC<CharacterAvatarProps> = ({
 
   return (
     <div 
-      className={`relative rounded-full flex-shrink-0 flex items-center justify-center font-bold uppercase select-none shadow-md overflow-hidden ${sizeClass} ${className}`}
+      className={`relative rounded-full flex-shrink-0 flex items-center justify-center font-bold select-none shadow-md overflow-hidden ${sizeClass} ${className}`}
       style={{
         border: showBorder ? `2px solid ${elemColors.border}` : undefined,
         background: elemColors.bgGradient,

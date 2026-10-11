@@ -64,7 +64,7 @@ export const AuthModal: React.FC = () => {
       <div className="absolute inset-0" onClick={closeAuthModal} />
 
       {/* Modal Dialog */}
-      <div className="relative w-full max-w-md bg-[#0a0c16] border border-ametist-600/40 rounded-2xl shadow-2xl shadow-ametist-950/60 overflow-hidden z-10">
+      <div className="relative w-full max-w-md bg-slate-900 border border-ametist-600/40 rounded-2xl shadow-2xl  overflow-hidden z-10">
         {/* Glow ambient background */}
         <div className="absolute top-0 right-0 w-48 h-48 bg-ametist-600/15 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-purple-600/10 rounded-full blur-3xl pointer-events-none" />
@@ -72,15 +72,15 @@ export const AuthModal: React.FC = () => {
         {/* Header */}
         <div className="relative p-6 border-b border-white/5 flex items-start justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-ametist-600 via-purple-600 to-amber-400 p-0.5 shadow-md flex items-center justify-center">
-              <div className="w-full h-full bg-[#0a0c16] rounded-[10px] flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-purple-400    p-0.5 shadow-md flex items-center justify-center">
+              <div className="w-full h-full bg-slate-900 rounded-[10px] flex items-center justify-center">
                 <Gem className="text-ametist-400 w-5 h-5" />
               </div>
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="text-base font-bold text-white tracking-wide">SSO Ametist & Astralys</h3>
-                <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-ametist-900/80 text-ametist-300 border border-ametist-500/30">
+                <h3 className="text-base font-bold text-white ">SSO Ametist & Astralys</h3>
+                <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-ametist-900/80 text-ametist-300 border border-ametist-500/30">
                   Conta Unificada
                 </span>
               </div>
@@ -115,8 +115,8 @@ export const AuthModal: React.FC = () => {
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-white/10" />
             </div>
-            <div className="relative flex justify-center text-[10px] uppercase font-mono font-bold tracking-wider">
-              <span className="bg-[#0a0c16] px-2 text-slate-500">ou com e-mail</span>
+            <div className="relative flex justify-center text-xs font-mono font-bold ">
+              <span className="bg-slate-900 px-2 text-slate-500">ou com e-mail</span>
             </div>
           </div>
         </div>
@@ -215,7 +215,7 @@ export const AuthModal: React.FC = () => {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full py-2.5 px-4 bg-gradient-to-r from-ametist-600 to-purple-600 hover:from-ametist-500 hover:to-purple-500 text-white font-semibold text-sm rounded-xl shadow-lg shadow-ametist-600/30 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+            className="w-full py-2.5 px-4 bg-purple-400 hover:bg-purple-300     text-slate-950 font-semibold text-sm rounded-xl shadow-lg  transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
           >
             {isSubmitting ? (
               <>
@@ -237,7 +237,7 @@ export const AuthModal: React.FC = () => {
         </form>
 
         {/* Footer info */}
-        <div className="p-4 bg-black/50 border-t border-white/5 flex items-center justify-between text-[11px] text-slate-400">
+        <div className="p-4 bg-black/50 border-t border-white/5 flex items-center justify-between text-xs text-slate-400">
           <div className="flex items-center gap-1.5">
             <ShieldCheck className="w-4 h-4 text-emerald-400" />
             <span>Autenticação JWT Segura</span>

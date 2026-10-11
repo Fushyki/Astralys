@@ -72,13 +72,13 @@ export const DashboardsPage: React.FC<DashboardsPageProps> = ({
     const lower = (currentProject.carryName || '').toLowerCase();
     if (lower.includes('mavuika') || lower.includes('bennett') || lower.includes('pyro')) {
       return {
-        pillActive: 'bg-amber-500/15 text-amber-200 border-amber-500/40 shadow-sm shadow-amber-500/10 font-bold',
+        pillActive: 'bg-amber-500/15 text-amber-200 border-amber-500/40 shadow-sm  font-bold',
         cardBorder: 'border-amber-900/30',
-        headerBg: 'bg-gradient-to-r from-slate-950 via-amber-950/60 to-slate-950 border-b border-amber-500/25 text-amber-100',
-        subHeaderDark: 'bg-[#0a0805] text-amber-200/70 border-b border-slate-800/80',
+        headerBg: 'bg-slate-900    border-b border-amber-500/25 text-amber-100',
+        subHeaderDark: 'bg-slate-900 text-amber-200/70 border-b border-slate-800/80',
         colHeaderDark: 'bg-slate-950 text-slate-400 border-b border-slate-800',
         rowAltBg: 'bg-slate-950/40',
-        footerDark: 'bg-[#080604] text-slate-300 border-t border-amber-900/30',
+        footerDark: 'bg-slate-900 text-slate-300 border-t border-amber-900/30',
         accentText: 'text-amber-300',
         accentBorder: 'border-amber-500/30',
         accentBg: 'bg-amber-500/10'
@@ -86,22 +86,22 @@ export const DashboardsPage: React.FC<DashboardsPageProps> = ({
     }
     if (lower.includes('flins') || lower.includes('electro') || lower.includes('cryo') || lower.includes('columbina')) {
       return {
-        pillActive: 'bg-purple-500/15 text-purple-200 border-purple-500/40 shadow-sm shadow-purple-500/10 font-bold',
+        pillActive: 'bg-purple-500/15 text-purple-200 border-purple-500/40 shadow-sm  font-bold',
         cardBorder: 'border-purple-900/30',
-        headerBg: 'bg-gradient-to-r from-slate-950 via-purple-950/60 to-slate-950 border-b border-purple-500/25 text-purple-100',
-        subHeaderDark: 'bg-[#090710] text-purple-200/70 border-b border-slate-800/80',
+        headerBg: 'bg-slate-900    border-b border-purple-500/25 text-purple-100',
+        subHeaderDark: 'bg-slate-900 text-purple-200/70 border-b border-slate-800/80',
         colHeaderDark: 'bg-slate-950 text-slate-400 border-b border-slate-800',
         rowAltBg: 'bg-slate-950/40',
-        footerDark: 'bg-[#06050b] text-slate-300 border-t border-purple-900/30',
+        footerDark: 'bg-slate-900 text-slate-300 border-t border-purple-900/30',
         accentText: 'text-purple-300',
         accentBorder: 'border-purple-500/30',
         accentBg: 'bg-purple-500/10'
       };
     }
     return {
-      pillActive: 'bg-cyan-500/15 text-cyan-200 border-cyan-500/40 shadow-sm shadow-cyan-500/10 font-bold',
+      pillActive: 'bg-cyan-500/15 text-cyan-200 border-cyan-500/40 shadow-sm  font-bold',
       cardBorder: 'border-slate-800',
-      headerBg: 'bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 border-b border-slate-700/40 text-slate-100',
+      headerBg: 'bg-slate-900    border-b border-slate-700/40 text-slate-100',
       subHeaderDark: 'bg-slate-950 text-slate-400 border-b border-slate-800/80',
       colHeaderDark: 'bg-slate-950 text-slate-400 border-b border-slate-800',
       rowAltBg: 'bg-slate-950/40',
@@ -230,7 +230,7 @@ export const DashboardsPage: React.FC<DashboardsPageProps> = ({
       
       {/* Informative Placeholder Notice Banner */}
       {(currentProject.id === 'proj-placeholder' || currentProject.tags?.includes('Placeholder') || currentProject.tags?.includes('Demo')) && (
-        <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-500/10 via-purple-500/10 to-slate-900 border border-amber-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-lg">
+        <div className="p-4 rounded-2xl bg-slate-900    border border-amber-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-lg">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-300 shrink-0">
               <Sparkles className="w-5 h-5 text-amber-300" />
@@ -238,11 +238,11 @@ export const DashboardsPage: React.FC<DashboardsPageProps> = ({
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-xs sm:text-sm font-bold text-white">Sua Equipe (Modo Demo)</span>
-                <span className="text-[10px] uppercase font-mono font-bold px-2 py-0.5 rounded-full bg-amber-950 text-amber-300 border border-amber-500/30">
+                <span className="text-xs font-mono font-bold px-2 py-0.5 rounded-full bg-amber-950 text-amber-300 border border-amber-500/30">
                   Demo
                 </span>
               </div>
-              <p className="text-[11px] text-slate-400 mt-0.5">
+              <p className="text-xs text-slate-400 mt-0.5">
                 Nenhum time real foi importado ainda. Os dados abaixo servem como modelo demonstrativo para você se orientar na visualização de gráficos, rotações e timelines.
               </p>
             </div>
@@ -251,7 +251,7 @@ export const DashboardsPage: React.FC<DashboardsPageProps> = ({
             <button
               type="button"
               onClick={onOpenDamageAnalyzer}
-              className="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-600 via-rose-600 to-purple-600 hover:from-amber-500 hover:to-purple-500 text-white text-xs font-bold shadow-md transition-all cursor-pointer whitespace-nowrap hover:scale-105"
+              className="px-4 py-2 rounded-xl bg-purple-400 hover:bg-purple-300      text-slate-950 text-xs font-bold shadow-md transition-all cursor-pointer whitespace-nowrap "
             >
               Criar / Colar Minha Equipe
             </button>
@@ -260,9 +260,9 @@ export const DashboardsPage: React.FC<DashboardsPageProps> = ({
       )}
 
       {/* 1. TOP TEAM SWITCHER TABS (Individual por Time) */}
-      <div className="p-3 rounded-2xl bg-[#090e17] border border-slate-800 shadow-xl flex items-center justify-between flex-wrap gap-3">
+      <div className="p-3 rounded-2xl bg-slate-900 border border-slate-800 shadow-xl flex items-center justify-between flex-wrap gap-3">
         <div className="flex items-center gap-2 overflow-x-auto py-1 max-w-full">
-          <span className="text-xs font-bold text-slate-400 uppercase tracking-wider font-mono mr-1 flex items-center gap-1.5 flex-shrink-0">
+          <span className="text-xs font-bold text-slate-400 font-mono mr-1 flex items-center gap-1.5 flex-shrink-0">
             <Sliders className="w-3.5 h-3.5 text-cyan-400" />
             <span>Selecionar Time:</span>
           </span>
@@ -281,7 +281,7 @@ export const DashboardsPage: React.FC<DashboardsPageProps> = ({
                 }`}
               >
                 <span>{p.title}</span>
-                <span className="text-[10px] opacity-75 font-mono">
+                <span className="text-xs opacity-75 font-mono">
                   {isPlaceholder ? '(Demo)' : `(${Math.round(p.dps / 1000)}k)`}
                 </span>
               </button>
@@ -316,10 +316,10 @@ export const DashboardsPage: React.FC<DashboardsPageProps> = ({
       </div>
 
       {/* 2. CALCSHEET SUMMARY BLOCK DA EQUIPE (Fiel à captura de tela, cores suaves) */}
-      <div className={`rounded-2xl border-2 ${theme.cardBorder} overflow-hidden shadow-2xl bg-[#090d16] flex flex-col justify-between`}>
+      <div className={`rounded-2xl border-2 ${theme.cardBorder} overflow-hidden shadow-2xl bg-slate-900 flex flex-col justify-between`}>
         {/* Top Header Banner */}
         <div className={`${theme.headerBg} px-4 py-2.5 text-center`}>
-          <h2 className="font-extrabold text-base sm:text-lg tracking-wide uppercase font-sans drop-shadow-sm">
+          <h2 className="font-extrabold text-base sm:text-lg font-sans drop-shadow-sm">
             {currentProject.title}
           </h2>
         </div>
@@ -333,7 +333,7 @@ export const DashboardsPage: React.FC<DashboardsPageProps> = ({
         <div className="overflow-x-auto">
           <table className="w-full text-xs font-mono border-collapse">
             <thead>
-              <tr className={`${theme.colHeaderDark} text-[11px] uppercase tracking-wider text-left border-b border-black/60`}>
+              <tr className={`${theme.colHeaderDark} text-xs text-left border-b border-black/60`}>
                 <th className="py-2 px-3 font-black">Character</th>
                 <th className="py-2 px-3 font-black text-right">Damage</th>
                 <th className="py-2 px-3 font-black text-right">Percentage</th>
@@ -349,7 +349,7 @@ export const DashboardsPage: React.FC<DashboardsPageProps> = ({
                   <tr 
                     key={cIdx}
                     onClick={() => handleInspectCharacter(char)}
-                    className={`transition-colors cursor-pointer hover:bg-slate-800/40 ${isAlt ? theme.rowAltBg : 'bg-[#0e1320]'}`}
+                    className={`transition-colors cursor-pointer hover:bg-slate-800/40 ${isAlt ? theme.rowAltBg : 'bg-slate-900'}`}
                     title="Clique para ver o cálculo e fórmula matemática deste personagem"
                   >
                     {/* Character */}
@@ -359,7 +359,7 @@ export const DashboardsPage: React.FC<DashboardsPageProps> = ({
                       )}
                       <span>{char.name}</span>
                       {cIdx === 0 && (
-                        <span className="text-[9px] px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-300 border border-rose-500/30">
+                        <span className="text-xs px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-300 border border-rose-500/30">
                           CARRY
                         </span>
                       )}
@@ -394,11 +394,11 @@ export const DashboardsPage: React.FC<DashboardsPageProps> = ({
         {/* Footer: DPR & DPS */}
         <div className={`${theme.footerDark} p-3 font-mono text-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2`}>
           <div className="flex items-center gap-2">
-            <span className="font-bold uppercase tracking-wider text-slate-400">DPR</span>
+            <span className="font-bold text-slate-400">DPR</span>
             <span className="font-black text-base text-slate-100">{formatNum(currentProject.totalDpr)}</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="font-bold uppercase tracking-wider text-slate-400">DPS({durationStr})</span>
+            <span className="font-bold text-slate-400">DPS({durationStr})</span>
             <span className={`font-black text-base ${theme.accentText}`}>{formatInt(currentProject.dps)}</span>
           </div>
         </div>
@@ -408,15 +408,15 @@ export const DashboardsPage: React.FC<DashboardsPageProps> = ({
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         
         {/* GRÁFICO A: Distribuição de Dano entre os 4 Personagens */}
-        <div className="p-5 rounded-3xl bg-[#090e17] border border-slate-800 shadow-xl space-y-4">
+        <div className="p-5 rounded-3xl bg-slate-900 border border-slate-800 shadow-xl space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <PieChart className="w-4 h-4 text-cyan-400" />
-              <h3 className="text-sm font-bold uppercase tracking-wider text-slate-200">
+              <h3 className="text-sm font-bold text-slate-200">
                 Participação de Dano na Equipe
               </h3>
             </div>
-            <span className="text-[11px] font-mono text-slate-500">
+            <span className="text-xs font-mono text-slate-500">
               DPR: {(calc.totalDpr / 1000000).toFixed(2)}M
             </span>
           </div>
@@ -428,7 +428,7 @@ export const DashboardsPage: React.FC<DashboardsPageProps> = ({
                   <div className="flex items-center gap-2">
                     <CharacterAvatar name={c.name} element={c.element as any} size="xs" showBorder={false} />
                     <span className="font-bold text-white">{c.name}</span>
-                    {i === 0 && <span className="text-[9px] text-rose-400 font-bold">CARRY</span>}
+                    {i === 0 && <span className="text-xs text-rose-400 font-bold">CARRY</span>}
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="text-slate-300">{formatInt(c.totalDamage)}</span>
@@ -440,8 +440,8 @@ export const DashboardsPage: React.FC<DashboardsPageProps> = ({
                   <div 
                     className={`h-full rounded-full transition-all duration-700 ${
                       i === 0 
-                        ? 'bg-gradient-to-r from-rose-500/80 to-amber-400/80' 
-                        : 'bg-gradient-to-r from-cyan-500/70 to-indigo-500/70'
+                        ? 'bg-rose-500  ' 
+                        : 'bg-cyan-500  '
                     }`}
                     style={{ width: `${Math.min(100, Math.max(3, c.damagePercentage))}%` }}
                   />
@@ -452,15 +452,15 @@ export const DashboardsPage: React.FC<DashboardsPageProps> = ({
         </div>
 
         {/* GRÁFICO B: Decomposição por Categoria de Golpe (Burst / Skill / Normal / Reação) */}
-        <div className="p-5 rounded-3xl bg-[#090e17] border border-slate-800 shadow-xl space-y-4">
+        <div className="p-5 rounded-3xl bg-slate-900 border border-slate-800 shadow-xl space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Activity className="w-4 h-4 text-amber-400" />
-              <h3 className="text-sm font-bold uppercase tracking-wider text-slate-200">
+              <h3 className="text-sm font-bold text-slate-200">
                 Origem do Dano por Tipo de Golpe
               </h3>
             </div>
-            <span className="text-[11px] font-mono text-slate-500">
+            <span className="text-xs font-mono text-slate-500">
               {damageByCategory.length} Categorias
             </span>
           </div>

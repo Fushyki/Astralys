@@ -234,7 +234,7 @@ export const ERCalculator: React.FC<ERCalculatorProps> = ({
       {/* Top Header Banner with 3-Step Guide */}
       <div className="p-6 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-4">
         <div>
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-[11px] font-bold text-amber-300 uppercase tracking-wider mb-2">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-xs font-bold text-amber-300 mb-2">
             <Zap className="w-3.5 h-3.5" />
             Cálculo Preciso de Partículas & Rotação
           </div>
@@ -249,30 +249,30 @@ export const ERCalculator: React.FC<ERCalculatorProps> = ({
         {/* 3-Step Flow Explanation */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-3 border-t border-slate-800/80 text-xs">
           <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800/60 space-y-1">
-            <span className="font-bold text-amber-400 font-mono text-[11px]">PASSO 1: HERÓIS</span>
-            <p className="text-slate-400 text-[11px]">Selecione os 4 integrantes ou clique em "Simular ER" direto no seu Card.</p>
+            <span className="font-bold text-amber-400 font-mono text-xs">PASSO 1: HERÓIS</span>
+            <p className="text-slate-400 text-xs">Selecione os 4 integrantes ou clique em "Simular ER" direto no seu Card.</p>
           </div>
           <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800/60 space-y-1">
-            <span className="font-bold text-cyan-400 font-mono text-[11px]">PASSO 2: HABILIDADES</span>
-            <p className="text-slate-400 text-[11px]">Ajuste quem usa Ultimate (Q), usos do E e quem ativa armas Favonius.</p>
+            <span className="font-bold text-cyan-400 font-mono text-xs">PASSO 2: HABILIDADES</span>
+            <p className="text-slate-400 text-xs">Ajuste quem usa Ultimate (Q), usos do E e quem ativa armas Favonius.</p>
           </div>
           <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800/60 space-y-1">
-            <span className="font-bold text-emerald-400 font-mono text-[11px]">PASSO 3: SINCRONIZAR</span>
-            <p className="text-slate-400 text-[11px]">Clique em "Aplicar Metas ao Card" para injetar os números no infográfico.</p>
+            <span className="font-bold text-emerald-400 font-mono text-xs">PASSO 3: SINCRONIZAR</span>
+            <p className="text-slate-400 text-xs">Clique em "Aplicar Metas ao Card" para injetar os números no infográfico.</p>
           </div>
         </div>
       </div>
 
       {/* Live Sync Bar: Shows Calculated Goals & 1-Click Transfer */}
-      <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-slate-900 via-[#0a1b2a] to-slate-900 border border-cyan-500/30 shadow-xl flex flex-col xl:flex-row items-stretch xl:items-center justify-between gap-4">
+      <div className="p-4 sm:p-5 rounded-2xl bg-slate-900    border border-cyan-500/30 shadow-xl flex flex-col xl:flex-row items-stretch xl:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 rounded-xl bg-cyan-950/80 border border-cyan-500/40 flex items-center justify-center text-cyan-400 flex-shrink-0 shadow-md">
-            <Zap className="w-6 h-6 animate-pulse" />
+            <Zap className="w-6 h-6 " />
           </div>
           <div>
             <div className="font-bold text-sm text-white flex items-center gap-2 flex-wrap">
               <span>Metas para o Card de Rotação</span>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-slate-950 text-slate-300 border border-slate-800">
+              <span className="text-xs font-mono px-2 py-0.5 rounded-full bg-slate-950 text-slate-300 border border-slate-800">
                 ⏱️ {rotationTime}s de rotação
               </span>
             </div>
@@ -303,7 +303,7 @@ export const ERCalculator: React.FC<ERCalculatorProps> = ({
           
           {/* Margem do Card: Baixa | Média | Alta */}
           <div className="flex items-center bg-slate-950/90 p-1 rounded-xl border border-slate-800 shadow-inner w-full sm:w-auto justify-between sm:justify-start">
-            <span className="text-[10px] font-bold text-slate-400 px-2 uppercase tracking-wider flex items-center gap-1" title="Esta margem altera apenas o valor que é enviado para o card">
+            <span className="text-xs font-bold text-slate-400 px-2 flex items-center gap-1" title="Esta margem altera apenas o valor que é enviado para o card">
               <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />
               Margem do Card:
             </span>
@@ -359,12 +359,12 @@ export const ERCalculator: React.FC<ERCalculatorProps> = ({
           {/* Transfer Button */}
           <button
             onClick={handleTransferToCard}
-            className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 via-amber-400 to-amber-500 hover:brightness-110 text-slate-950 font-black text-xs sm:text-sm shadow-lg hover:shadow-amber-500/20 transition-all transform hover:-translate-y-0.5 cursor-pointer flex-shrink-0"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-purple-400    hover:brightness-110 text-slate-950 font-black text-xs sm:text-sm shadow-lg  transition-all   cursor-pointer flex-shrink-0"
             title={`Aplicar metas calculadas com margem ${getMarginLabel(erMargin)} ao card de rotação`}
           >
             <Sparkles className="w-4 h-4 text-slate-950" />
             <span>Aplicar Metas ao Card</span>
-            <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-950/20 text-slate-950 font-extrabold uppercase">
+            <span className="text-xs font-mono px-1.5 py-0.5 rounded bg-slate-950/20 text-slate-950 font-extrabold ">
               {getMarginLabel(erMargin)}
             </span>
             <ArrowRight className="w-4 h-4 text-slate-950" />
@@ -395,12 +395,12 @@ export const ERCalculator: React.FC<ERCalculatorProps> = ({
           <div className="flex items-center gap-2">
             <button
               onClick={handleExportBackup}
-              className="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-medium flex items-center gap-1"
+              className="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium flex items-center gap-1"
             >
               <Download className="w-3 h-3" />
               Backup JSON
             </button>
-            <label className="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-medium flex items-center gap-1 cursor-pointer">
+            <label className="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium flex items-center gap-1 cursor-pointer">
               <Upload className="w-3 h-3" />
               Importar
               <input type="file" accept=".json" onChange={handleImportBackup} className="hidden" />
@@ -410,13 +410,13 @@ export const ERCalculator: React.FC<ERCalculatorProps> = ({
 
         {/* Saved Teams Chips */}
         <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-800/60">
-          <span className="text-[11px] text-slate-400 font-semibold flex items-center gap-1">
+          <span className="text-xs text-slate-400 font-semibold flex items-center gap-1">
             <Save className="w-3 h-3 text-amber-400" />
             Times Salvos:
           </span>
 
           {savedTeams.length === 0 ? (
-            <span className="text-[11px] text-slate-500 italic">
+            <span className="text-xs text-slate-500 italic">
               Nenhum time salvo no momento. Digite um nome acima e clique em &quot;Salvar Time&quot;.
             </span>
           ) : (
@@ -424,7 +424,7 @@ export const ERCalculator: React.FC<ERCalculatorProps> = ({
               <div
                 key={saved.id}
                 onClick={() => handleLoadTeam(saved)}
-                className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-amber-950/40 border border-amber-500/40 text-amber-200 text-[11px] font-medium cursor-pointer hover:bg-amber-950/70 hover:border-amber-400 transition-all shadow-sm group"
+                className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-amber-950/40 border border-amber-500/40 text-amber-200 text-xs font-medium cursor-pointer hover:bg-amber-950/70 hover:border-amber-400 transition-all shadow-sm group"
                 title={`Carregar time "${saved.name}"`}
               >
                 <span>💾 {saved.name}</span>
@@ -472,8 +472,8 @@ export const ERCalculator: React.FC<ERCalculatorProps> = ({
           </div>
         </div>
 
-        <div className="text-[11px] text-emerald-400 font-semibold flex items-center gap-1.5">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+        <div className="text-xs text-emerald-400 font-semibold flex items-center gap-1.5">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 " />
           Auto-Save Ativo no Navegador
         </div>
       </div>
@@ -494,10 +494,10 @@ export const ERCalculator: React.FC<ERCalculatorProps> = ({
               <div className="flex items-center justify-between border-b border-slate-800/80 pb-3">
                 <span className="text-xs font-mono font-bold text-slate-400">SLOT {slot.id}</span>
                 <div className="flex items-center gap-1.5">
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-800 text-slate-300">
+                  <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-slate-800 text-slate-300">
                     {charData.element}
                   </span>
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-800 text-cyan-300">
+                  <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-slate-800 text-cyan-300">
                     Custo: {charData.burst_cost}
                   </span>
                 </div>
@@ -524,10 +524,10 @@ export const ERCalculator: React.FC<ERCalculatorProps> = ({
                 <div className="text-3xl font-extrabold font-mono tracking-tight text-cyan-400">
                   {slot.use_burst ? `${(result.neededER * 100).toFixed(1)}%` : '100.0%'}
                 </div>
-                <div className="text-[11px] font-bold">
+                <div className="text-xs font-bold">
                   {result.statusLabel}
                 </div>
-                <div className="text-[10px] text-slate-500 font-mono">
+                <div className="text-xs text-slate-500 font-mono">
                   {slot.use_burst 
                     ? `Cálculo exato • Custo: ${charData.burst_cost} • Partículas base: ${result.totalBaseEnergy.toFixed(1)}`
                     : 'Foque 100% em atributos ofensivos (Crit / Dano)'
@@ -544,7 +544,7 @@ export const ERCalculator: React.FC<ERCalculatorProps> = ({
                   <select
                     value={slot.use_burst ? 'true' : 'false'}
                     onChange={(e) => handleSlotChange(idx, { use_burst: e.target.value === 'true' })}
-                    className="px-2 py-1 rounded bg-slate-950 border border-slate-800 text-[11px] font-semibold text-white outline-none"
+                    className="px-2 py-1 rounded bg-slate-950 border border-slate-800 text-xs font-semibold text-white outline-none"
                   >
                     <option value="true">Sim (Todo ciclo)</option>
                     <option value="false">Não (Ignorar ER)</option>
@@ -580,11 +580,11 @@ export const ERCalculator: React.FC<ERCalculatorProps> = ({
 
                 {/* Funneling Target */}
                 <div className="flex flex-col gap-1">
-                  <span className="text-slate-400 text-[11px]">Quem absorve partículas do E:</span>
+                  <span className="text-slate-400 text-xs">Quem absorve partículas do E:</span>
                   <select
                     value={slot.funnel}
                     onChange={(e) => handleSlotChange(idx, { funnel: e.target.value as FunnelTarget })}
-                    className="w-full px-2 py-1 rounded bg-slate-950 border border-slate-800 text-[11px] font-semibold text-white outline-none"
+                    className="w-full px-2 py-1 rounded bg-slate-950 border border-slate-800 text-xs font-semibold text-white outline-none"
                   >
                     <option value="Ele mesmo (Em campo)">Ele mesmo (Em campo)</option>
                     <option value="Passar p/ Slot 1">Passar p/ Slot 1</option>
@@ -613,11 +613,11 @@ export const ERCalculator: React.FC<ERCalculatorProps> = ({
                 {/* Favonius Target */}
                 {slot.fav > 0 && (
                   <div className="flex flex-col gap-1">
-                    <span className="text-slate-400 text-[11px]">Quem absorve Favonius:</span>
+                    <span className="text-slate-400 text-xs">Quem absorve Favonius:</span>
                     <select
                       value={slot.fav_target}
                       onChange={(e) => handleSlotChange(idx, { fav_target: e.target.value as FavTarget })}
-                      className="w-full px-2 py-1 rounded bg-slate-950 border border-slate-800 text-[11px] font-semibold text-white outline-none"
+                      className="w-full px-2 py-1 rounded bg-slate-950 border border-slate-800 text-xs font-semibold text-white outline-none"
                     >
                       <option value="Ele mesmo (Em campo)">Ele mesmo (Em campo)</option>
                       <option value="Passar p/ Slot 1">Passar p/ Slot 1</option>
@@ -658,7 +658,7 @@ export const ERCalculator: React.FC<ERCalculatorProps> = ({
               </div>
 
               {/* Energy Breakdown Mini-Box */}
-              <div className="p-2.5 rounded-lg bg-slate-950/60 border border-slate-800 text-[11px] space-y-1 font-mono text-slate-400">
+              <div className="p-2.5 rounded-lg bg-slate-950/60 border border-slate-800 text-xs space-y-1 font-mono text-slate-400">
                 <div className="flex justify-between">
                   <span>Habilidades:</span>
                   <span className="text-slate-200">{result.baseFromSkills.toFixed(1)}</span>

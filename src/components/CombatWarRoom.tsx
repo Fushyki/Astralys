@@ -122,21 +122,21 @@ export const CombatWarRoom: React.FC<CombatWarRoomProps> = ({
     <div className="space-y-7 animate-fade-in select-none">
       
       {/* Top War Room Header & Project Switcher */}
-      <div className="p-6 sm:p-7 rounded-3xl bg-[#090e17] border border-slate-800 shadow-2xl flex flex-col lg:flex-row items-start lg:items-center justify-between gap-5">
+      <div className="p-6 sm:p-7 rounded-3xl bg-slate-900 border border-slate-800 shadow-2xl flex flex-col lg:flex-row items-start lg:items-center justify-between gap-5">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-purple-600 via-rose-600 to-amber-500 flex items-center justify-center text-white shadow-lg shadow-rose-600/20">
+          <div className="w-12 h-12 rounded-2xl bg-purple-400    flex items-center justify-center text-white shadow-lg ">
             <Swords className="w-6 h-6" />
           </div>
           <div>
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-xs uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-rose-950/60 text-rose-300 border border-rose-500/40">
+              <span className="text-xs px-2.5 py-0.5 rounded-full bg-rose-950/60 text-rose-300 border border-rose-500/40">
                 Combat War Room
               </span>
-              <span className="text-[10px] font-mono text-slate-400">
+              <span className="text-xs font-mono text-slate-400">
                 {currentProject.tags.join(' • ')}
               </span>
             </div>
-            <h1 className="text-xl sm:text-2xl font-black text-white font-cinzel tracking-wider mt-1">
+            <h1 className="text-xl sm:text-2xl font-black text-white font-cinzel mt-1">
               {currentProject.title}
             </h1>
           </div>
@@ -175,7 +175,7 @@ export const CombatWarRoom: React.FC<CombatWarRoomProps> = ({
           {onExportToCard && (
             <button
               onClick={handleExportCard}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:brightness-110 text-white text-xs font-bold shadow-md transition-all cursor-pointer"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-purple-400 hover:bg-purple-300   hover:brightness-110 text-slate-950 text-xs font-bold shadow-md transition-all cursor-pointer"
             >
               <Sparkles className="w-3.5 h-3.5 text-white" />
               <span>Gerar Card Infográfico</span>
@@ -186,36 +186,36 @@ export const CombatWarRoom: React.FC<CombatWarRoomProps> = ({
 
       {/* 4 Key Metrics Banners */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div className="p-4 rounded-2xl bg-[#0c111c] border border-slate-800 shadow-md">
-          <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider block">DPR Total da Rotação</span>
+        <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 shadow-md">
+          <span className="text-xs font-mono font-bold text-slate-400 block">DPR Total da Rotação</span>
           <div className="text-xl sm:text-2xl font-black font-mono text-cyan-400 mt-1">
             {calc.totalDpr.toLocaleString('pt-BR')}
           </div>
-          <span className="text-[10px] text-slate-500 font-mono mt-0.5 block">KQM Standard</span>
+          <span className="text-xs text-slate-500 font-mono mt-0.5 block">KQM Standard</span>
         </div>
 
-        <div className="p-4 rounded-2xl bg-[#0c111c] border border-slate-800 shadow-md">
-          <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider block">DPS da Equipe</span>
+        <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 shadow-md">
+          <span className="text-xs font-mono font-bold text-slate-400 block">DPS da Equipe</span>
           <div className="text-xl sm:text-2xl font-black font-mono text-amber-400 mt-1">
             {calc.dps.toLocaleString('pt-BR')}
           </div>
-          <span className="text-[10px] text-slate-500 font-mono mt-0.5 block">Em {calc.rotationDuration} segundos</span>
+          <span className="text-xs text-slate-500 font-mono mt-0.5 block">Em {calc.rotationDuration} segundos</span>
         </div>
 
-        <div className="p-4 rounded-2xl bg-[#0c111c] border border-slate-800 shadow-md">
-          <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider block">Carry Principal</span>
+        <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 shadow-md">
+          <span className="text-xs font-mono font-bold text-slate-400 block">Carry Principal</span>
           <div className="text-xl sm:text-2xl font-black text-rose-400 mt-1 truncate">
             {calc.characters[0]?.name}
           </div>
-          <span className="text-[10px] text-slate-500 font-mono mt-0.5 block">{calc.characters[0]?.damagePercentage}% do dano total</span>
+          <span className="text-xs text-slate-500 font-mono mt-0.5 block">{calc.characters[0]?.damagePercentage}% do dano total</span>
         </div>
 
-        <div className="p-4 rounded-2xl bg-[#0c111c] border border-slate-800 shadow-md">
-          <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider block">Tempo da Rotação</span>
+        <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 shadow-md">
+          <span className="text-xs font-mono font-bold text-slate-400 block">Tempo da Rotação</span>
           <div className="text-xl sm:text-2xl font-black font-mono text-emerald-400 mt-1">
             {calc.rotationDuration}s
           </div>
-          <span className="text-[10px] text-slate-500 font-mono mt-0.5 block">{timeline.actions.length} ações mapeadas</span>
+          <span className="text-xs text-slate-500 font-mono mt-0.5 block">{timeline.actions.length} ações mapeadas</span>
         </div>
       </div>
 
@@ -224,7 +224,7 @@ export const CombatWarRoom: React.FC<CombatWarRoomProps> = ({
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <Flame className="w-4 h-4 text-rose-400" />
-            <h2 className="text-sm font-bold uppercase tracking-wider text-slate-200">
+            <h2 className="text-sm font-bold text-slate-200">
               Dano Individual & Status de Cada Personagem
             </h2>
           </div>
@@ -241,8 +241,8 @@ export const CombatWarRoom: React.FC<CombatWarRoomProps> = ({
               <div
                 key={idx}
                 onClick={() => handleInspectCharacter(char)}
-                className={`p-4 rounded-2xl bg-[#0c111c] border flex flex-col justify-between space-y-3 shadow-lg transition-all cursor-pointer group hover:-translate-y-0.5 ${
-                  isCarry ? 'border-rose-500/50 ring-1 ring-rose-500/30 bg-[#101422]' : 'border-slate-800 hover:border-slate-700'
+                className={`p-4 rounded-2xl bg-slate-900 border flex flex-col justify-between space-y-3 shadow-lg transition-all cursor-pointer group  ${
+                  isCarry ? 'border-rose-500/50 ring-1 ring-rose-500/30 bg-slate-900' : 'border-slate-800 hover:border-slate-700'
                 }`}
               >
                 {/* Header */}
@@ -255,13 +255,13 @@ export const CombatWarRoom: React.FC<CombatWarRoomProps> = ({
                           {char.name}
                         </h3>
                         {isCarry && (
-                          <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-300 border border-rose-500/30">
+                          <span className="text-xs font-bold px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-300 border border-rose-500/30">
                             CARRY
                           </span>
                         )}
                       </div>
-                      <p className="text-[10px] text-amber-300 font-medium truncate">{char.weapon}</p>
-                      <p className="text-[10px] text-slate-400 truncate">{char.artifactSet}</p>
+                      <p className="text-xs text-amber-300 font-medium truncate">{char.weapon}</p>
+                      <p className="text-xs text-slate-400 truncate">{char.artifactSet}</p>
                     </div>
                   </div>
 
@@ -271,7 +271,7 @@ export const CombatWarRoom: React.FC<CombatWarRoomProps> = ({
                 {/* Individual Damage Share Bar */}
                 <div className="space-y-1">
                   <div className="flex items-center justify-between text-xs font-mono">
-                    <span className="text-slate-400 text-[11px]">Dano Total:</span>
+                    <span className="text-slate-400 text-xs">Dano Total:</span>
                     <div className="flex items-center gap-1.5">
                       <span className="font-black text-white group-hover:text-rose-300 transition-colors">
                         {char.totalDamage.toLocaleString('pt-BR')}
@@ -282,7 +282,7 @@ export const CombatWarRoom: React.FC<CombatWarRoomProps> = ({
                   <div className="h-2 bg-slate-950 rounded-full overflow-hidden border border-slate-800">
                     <div 
                       className={`h-full rounded-full transition-all duration-700 ${
-                        isCarry ? 'bg-gradient-to-r from-rose-500 to-amber-400' : 'bg-gradient-to-r from-cyan-500 to-indigo-500'
+                        isCarry ? 'bg-rose-500  ' : 'bg-rose-500  '
                       }`}
                       style={{ width: `${Math.min(100, Math.max(3, char.damagePercentage))}%` }}
                     />
@@ -290,7 +290,7 @@ export const CombatWarRoom: React.FC<CombatWarRoomProps> = ({
                 </div>
 
                 {/* Combat Stats Grid */}
-                <div className="grid grid-cols-2 gap-1.5 text-[10px] font-mono pt-2 border-t border-slate-800/80">
+                <div className="grid grid-cols-2 gap-1.5 text-xs font-mono pt-2 border-t border-slate-800/80">
                   {char.totalAtk && (
                     <div className="p-1 rounded bg-slate-950/80 border border-slate-800/60">
                       <span className="text-slate-500 block">ATK</span>
@@ -319,7 +319,7 @@ export const CombatWarRoom: React.FC<CombatWarRoomProps> = ({
 
                 {/* Substat rolls if available */}
                 {char.rolls && (
-                  <div className="text-[9px] font-mono text-slate-400 pt-1 border-t border-slate-800/60 flex items-center justify-between">
+                  <div className="text-xs font-mono text-slate-400 pt-1 border-t border-slate-800/60 flex items-center justify-between">
                     <span>Rolls KQM:</span>
                     <span className="text-cyan-400 font-bold">{char.rolls.cr} CR • {char.rolls.cd} CD</span>
                   </div>

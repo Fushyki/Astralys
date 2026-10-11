@@ -475,7 +475,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onNavigate }) => {
         {/* Divisor */}
         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
           <div style={{ flex: 1, height: '1px', backgroundColor: '#2d2d35' }}></div>
-          <span style={{ padding: '0 12px', color: '#6e6e7d', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+          <span style={{ padding: '0 12px', color: '#6e6e7d', fontSize: '0.8rem', textTransform: '', letterSpacing: '0.5px' }}>
             ou use e-mail
           </span>
           <div style={{ flex: 1, height: '1px', backgroundColor: '#2d2d35' }}></div>

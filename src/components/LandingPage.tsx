@@ -60,7 +60,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ setActiveTab }) => {
             <div className="flex flex-wrap items-center gap-3 pt-2">
               <button
                 onClick={() => setActiveTab('dashboards')}
-                className="flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-cyan-600 via-indigo-600 to-purple-600 text-white font-bold text-xs sm:text-sm shadow-ametist-md hover:shadow-ametist-glow transition-all transform hover:-translate-y-0.5 cursor-pointer"
+                className="flex items-center gap-2 px-5 py-3 rounded-xl bg-purple-400 hover:bg-purple-300    text-slate-950 font-bold text-xs sm:text-sm   transition-all   cursor-pointer"
               >
                 <BarChart3 className="w-4 h-4 text-cyan-300" />
                 Dashboards & Rotações
@@ -69,7 +69,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ setActiveTab }) => {
 
               <button
                 onClick={() => setActiveTab('vault')}
-                className="flex items-center gap-2 px-4 py-3 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-purple-300 font-bold text-xs sm:text-sm border border-purple-500/40 transition-all transform hover:-translate-y-0.5 cursor-pointer"
+                className="flex items-center gap-2 px-4 py-3 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-purple-300 font-bold text-xs sm:text-sm border border-purple-500/40 transition-all   cursor-pointer"
               >
                 <FolderGit2 className="w-4 h-4 text-purple-400" />
                 Astralys Vault
@@ -77,7 +77,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ setActiveTab }) => {
 
               <button
                 onClick={() => setActiveTab('damage')}
-                className="flex items-center gap-2 px-4 py-3 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-rose-300 font-bold text-xs sm:text-sm border border-rose-500/40 transition-all transform hover:-translate-y-0.5 cursor-pointer"
+                className="flex items-center gap-2 px-4 py-3 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-rose-300 font-bold text-xs sm:text-sm border border-rose-500/40 transition-all   cursor-pointer"
               >
                 <Flame className="w-4 h-4 text-rose-400" />
                 Análise de Dano
@@ -85,7 +85,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ setActiveTab }) => {
 
               <button
                 onClick={() => setActiveTab('weapons')}
-                className="flex items-center gap-2 px-4 py-3 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-amber-300 font-bold text-xs sm:text-sm border border-amber-500/40 transition-all transform hover:-translate-y-0.5 cursor-pointer"
+                className="flex items-center gap-2 px-4 py-3 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-amber-300 font-bold text-xs sm:text-sm border border-amber-500/40 transition-all   cursor-pointer"
               >
                 <Swords className="w-4 h-4 text-amber-400" />
                 Armas
@@ -95,15 +95,15 @@ export const LandingPage: React.FC<LandingPageProps> = ({ setActiveTab }) => {
             {/* Objective Bullet Highlights */}
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-4 border-t border-slate-800/80 text-xs">
               <div className="space-y-0.5">
-                <span className="text-slate-500 text-[11px] block">Análise Inteligente</span>
+                <span className="text-slate-500 text-xs block">Análise Inteligente</span>
                 <span className="font-semibold text-slate-200">.xml, .xlsx e Prints</span>
               </div>
               <div className="space-y-0.5">
-                <span className="text-slate-500 text-[11px] block">Calculadora de Recarga</span>
+                <span className="text-slate-500 text-xs block">Calculadora de Recarga</span>
                 <span className="font-semibold text-slate-200">128 Personagens + Favonius</span>
               </div>
               <div className="space-y-0.5">
-                <span className="text-slate-500 text-[11px] block">Compartilhar</span>
+                <span className="text-slate-500 text-xs block">Compartilhar</span>
                 <span className="font-semibold text-slate-200">Salvar e Copiar</span>
               </div>
             </div>
@@ -114,26 +114,26 @@ export const LandingPage: React.FC<LandingPageProps> = ({ setActiveTab }) => {
           <div className="lg:col-span-5 flex justify-center relative">
             
             {/* Ambient Halo */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-ametist-500/20 to-cyan-500/20 rounded-2xl blur-xl -z-10" />
+            <div className="absolute inset-0 bg-purple-400   rounded-2xl blur-xl -z-10" />
 
             {/* Floating Mini Mockup of the Infographic Card */}
-            <div className="w-full max-w-sm p-5 rounded-2xl bg-[#091522]/95 border border-cyan-500/30 shadow-2xl space-y-4 font-sans text-slate-100 transform hover:scale-[1.02] transition-transform duration-300">
+            <div className="w-full max-w-sm p-5 rounded-2xl bg-slate-900/95 border border-cyan-500/30 shadow-2xl space-y-4 font-sans text-slate-100  hover:scale-[1.02] transition-transform duration-300">
               
               {/* Mockup Header */}
               <div className="text-center border-b border-slate-800/80 pb-3">
-                <span className="text-[10px] font-mono tracking-widest text-cyan-400 block uppercase">
+                <span className="text-xs font-mono text-cyan-400 block ">
                   ASTRALYS INFOGRAPHIC PREVIEW
                 </span>
-                <h3 className="font-cinzel text-xl font-bold tracking-wider text-white">
+                <h3 className="font-cinzel text-xl font-bold text-white">
                   SANDRONE V1
                 </h3>
-                <span className="text-[10px] text-amber-300 font-semibold uppercase">
+                <span className="text-xs text-amber-300 font-semibold ">
                   KQM Investment • 6.7 Beta
                 </span>
               </div>
 
               {/* Mockup Progress Bars Preview */}
-              <div className="space-y-2.5 text-[11px]">
+              <div className="space-y-2.5 text-xs">
                 <div className="flex items-center gap-2">
                   <CharacterAvatar name="Sandrone" element="Cryo" size="sm" />
                   <div className="flex-1 min-w-0">
@@ -142,7 +142,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ setActiveTab }) => {
                       <span className="text-cyan-300 font-mono">52%</span>
                     </div>
                     <div className="h-2 bg-slate-900 rounded overflow-hidden">
-                      <div className="h-full bg-gradient-to-r from-cyan-400 to-blue-500 rounded" style={{ width: '52%' }} />
+                      <div className="h-full bg-cyan-500   rounded" style={{ width: '52%' }} />
                     </div>
                   </div>
                 </div>
@@ -155,7 +155,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ setActiveTab }) => {
                       <span className="text-purple-300 font-mono">31%</span>
                     </div>
                     <div className="h-2 bg-slate-900 rounded overflow-hidden">
-                      <div className="h-full bg-gradient-to-r from-purple-400 to-purple-600 rounded" style={{ width: '31%' }} />
+                      <div className="h-full bg-purple-400   rounded" style={{ width: '31%' }} />
                     </div>
                   </div>
                 </div>
@@ -168,7 +168,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ setActiveTab }) => {
                       <span className="text-cyan-300 font-mono">16%</span>
                     </div>
                     <div className="h-2 bg-slate-900 rounded overflow-hidden">
-                      <div className="h-full bg-gradient-to-r from-cyan-400 to-sky-500 rounded" style={{ width: '16%' }} />
+                      <div className="h-full bg-cyan-500   rounded" style={{ width: '16%' }} />
                     </div>
                   </div>
                 </div>
@@ -181,13 +181,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({ setActiveTab }) => {
                   <span className="text-slate-600 mx-1.5">|</span>
                   <span className="text-cyan-400">DPR: 3.88M</span>
                 </div>
-                <div className="text-[10px] text-slate-400 font-mono truncate">
+                <div className="text-xs text-slate-400 font-mono truncate">
                   (20.5s) Odette EE Yae EEE Qiqi E Sandrone CA E...
                 </div>
               </div>
 
               {/* Floating Badges */}
-              <div className="flex items-center justify-between text-[10px] font-mono text-slate-400 pt-1">
+              <div className="flex items-center justify-between text-xs font-mono text-slate-400 pt-1">
                 <span className="flex items-center gap-1 text-emerald-400">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
                   Pronto p/ Exportar
@@ -220,14 +220,14 @@ export const LandingPage: React.FC<LandingPageProps> = ({ setActiveTab }) => {
           {/* CARD 1: DASHBOARDS */}
           <div 
             onClick={() => setActiveTab('dashboards')}
-            className="crystal-panel rounded-2xl p-4 sm:p-4.5 transition-all duration-200 hover:border-cyan-400/50 hover:scale-[1.01] cursor-pointer flex flex-col justify-between group bg-gradient-to-b from-cyan-950/15 to-transparent"
+            className="crystal-panel rounded-2xl p-4 sm:p-4.5 transition-all duration-200 hover:border-cyan-400/50 hover:scale-[1.01] cursor-pointer flex flex-col justify-between group bg-slate-900  "
           >
             <div className="space-y-2.5">
               <div className="flex items-center justify-between">
                 <div className="w-9 h-9 rounded-xl bg-cyan-500/10 border border-cyan-500/25 flex items-center justify-center text-cyan-400 group-hover:scale-105 transition-transform">
                   <BarChart3 className="w-4.5 h-4.5" />
                 </div>
-                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-cyan-950/80 text-cyan-300 border border-cyan-700/40">
+                <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-cyan-950/80 text-cyan-300 border border-cyan-700/40">
                   Destaque
                 </span>
               </div>
@@ -252,14 +252,14 @@ export const LandingPage: React.FC<LandingPageProps> = ({ setActiveTab }) => {
           {/* CARD 2: VAULT */}
           <div 
             onClick={() => setActiveTab('vault')}
-            className="crystal-panel rounded-2xl p-4 sm:p-4.5 transition-all duration-200 hover:border-purple-400/50 hover:scale-[1.01] cursor-pointer flex flex-col justify-between group bg-gradient-to-b from-purple-950/15 to-transparent"
+            className="crystal-panel rounded-2xl p-4 sm:p-4.5 transition-all duration-200 hover:border-purple-400/50 hover:scale-[1.01] cursor-pointer flex flex-col justify-between group bg-slate-900  "
           >
             <div className="space-y-2.5">
               <div className="flex items-center justify-between">
                 <div className="w-9 h-9 rounded-xl bg-purple-500/10 border border-purple-500/25 flex items-center justify-center text-purple-400 group-hover:scale-105 transition-transform">
                   <FolderGit2 className="w-4.5 h-4.5" />
                 </div>
-                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-purple-950/80 text-purple-300 border border-purple-700/40">
+                <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-purple-950/80 text-purple-300 border border-purple-700/40">
                   Repositório
                 </span>
               </div>
@@ -291,7 +291,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ setActiveTab }) => {
                 <div className="w-9 h-9 rounded-xl bg-cyan-500/10 border border-cyan-500/25 flex items-center justify-center text-cyan-400 group-hover:scale-105 transition-transform">
                   <FileSpreadsheet className="w-4.5 h-4.5" />
                 </div>
-                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-cyan-950/80 text-cyan-300 border border-cyan-700/40">
+                <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-cyan-950/80 text-cyan-300 border border-cyan-700/40">
                   Infográfico
                 </span>
               </div>
@@ -323,7 +323,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ setActiveTab }) => {
                 <div className="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/25 flex items-center justify-center text-amber-400 group-hover:scale-105 transition-transform">
                   <Swords className="w-4.5 h-4.5" />
                 </div>
-                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-amber-950/80 text-amber-300 border border-amber-700/40">
+                <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-amber-950/80 text-amber-300 border border-amber-700/40">
                   Armas
                 </span>
               </div>
@@ -355,7 +355,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ setActiveTab }) => {
                 <div className="w-9 h-9 rounded-xl bg-rose-500/10 border border-rose-500/25 flex items-center justify-center text-rose-400 group-hover:scale-105 transition-transform">
                   <Flame className="w-4.5 h-4.5" />
                 </div>
-                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-rose-950/80 text-rose-300 border border-rose-700/40">
+                <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-rose-950/80 text-rose-300 border border-rose-700/40">
                   Combate
                 </span>
               </div>
@@ -387,7 +387,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ setActiveTab }) => {
                 <div className="w-9 h-9 rounded-xl bg-purple-500/10 border border-purple-500/25 flex items-center justify-center text-purple-400 group-hover:scale-105 transition-transform">
                   <Zap className="w-4.5 h-4.5" />
                 </div>
-                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-purple-950/80 text-purple-300 border border-purple-700/40">
+                <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-purple-950/80 text-purple-300 border border-purple-700/40">
                   Recarga
                 </span>
               </div>
@@ -413,17 +413,17 @@ export const LandingPage: React.FC<LandingPageProps> = ({ setActiveTab }) => {
       </section>
 
       {/* 2B. UNIFIED SSO & CLOUD SHOWCASE */}
-      <section className="relative overflow-hidden rounded-3xl p-6 sm:p-8 bg-gradient-to-r from-ametist-950/60 via-purple-950/40 to-slate-900 border border-ametist-500/30 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
+      <section className="relative overflow-hidden rounded-3xl p-6 sm:p-8 bg-slate-900    border border-ametist-500/30 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
         <div className="flex items-start gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-ametist-600 via-purple-600 to-amber-400 p-0.5 shadow-lg shadow-ametist-600/30 flex items-center justify-center shrink-0">
-            <div className="w-full h-full bg-[#0a0c16] rounded-[14px] flex items-center justify-center">
-              <Gem className="text-ametist-400 w-6 h-6 animate-pulse" />
+          <div className="w-12 h-12 rounded-2xl bg-purple-400    p-0.5 shadow-lg  flex items-center justify-center shrink-0">
+            <div className="w-full h-full bg-slate-900 rounded-[14px] flex items-center justify-center">
+              <Gem className="text-ametist-400 w-6 h-6 " />
             </div>
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="text-base sm:text-lg font-bold text-white tracking-wide">Conta Unificada Astralys & Ametist</h3>
-              <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-ametist-900 text-ametist-300 border border-ametist-500/40">
+              <h3 className="text-base sm:text-lg font-bold text-white ">Conta Unificada Astralys & Ametist</h3>
+              <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-ametist-900 text-ametist-300 border border-ametist-500/40">
                 SSO Integrado
               </span>
             </div>
@@ -436,7 +436,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ setActiveTab }) => {
         <button
           type="button"
           onClick={() => setActiveTab('login')}
-          className="px-5 py-3 rounded-xl bg-gradient-to-r from-ametist-600 via-purple-600 to-amber-500 hover:from-ametist-500 hover:to-amber-400 text-white font-bold text-xs shadow-lg shadow-ametist-600/30 transition-all cursor-pointer whitespace-nowrap hover:scale-105 shrink-0"
+          className="px-5 py-3 rounded-xl bg-purple-400 hover:bg-purple-300      text-slate-950 font-bold text-xs shadow-lg  transition-all cursor-pointer whitespace-nowrap  shrink-0"
         >
           Acessar Conta Unificada
         </button>
@@ -453,7 +453,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ setActiveTab }) => {
           <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-1">
             <span className="font-bold text-cyan-300 block">Lunaris.moe API</span>
             <span className="text-slate-300 font-semibold block">Versão 7.1 / 6.7 Suportada</span>
-            <p className="text-slate-400 text-[11px]">
+            <p className="text-slate-400 text-xs">
               Compatibilidade total com personagens novos e armas do meta futuro presentes na sua planilha.
             </p>
           </div>
@@ -461,7 +461,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ setActiveTab }) => {
           <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-1">
             <span className="font-bold text-amber-300 block">Absorção de Partículas</span>
             <span className="text-slate-300 font-semibold block">Regras Reais de Combate</span>
-            <p className="text-slate-400 text-[11px]">
+            <p className="text-slate-400 text-xs">
               3.0/1.8 no mesmo elemento, 1.0/0.6 em elemento diferente e partículas neutras de Favonius.
             </p>
           </div>
@@ -469,7 +469,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ setActiveTab }) => {
           <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-1">
             <span className="font-bold text-purple-300 block">Template KQM / TGS</span>
             <span className="text-slate-300 font-semibold block">Layout images.jfif</span>
-            <p className="text-slate-400 text-[11px]">
+            <p className="text-slate-400 text-xs">
               Renderização visual em 4 quadrantes com alta densidade de informação e contraste nítido.
             </p>
           </div>
@@ -477,7 +477,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ setActiveTab }) => {
           <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-1">
             <span className="font-bold text-emerald-300 block">Exportação Direta</span>
             <span className="text-slate-300 font-semibold block">PNG 2.5x Hi-Res</span>
-            <p className="text-slate-400 text-[11px]">
+            <p className="text-slate-400 text-xs">
               Gera imagens nítidas sem cortes, prontas para colar diretamente no Discord ou redes sociais.
             </p>
           </div>

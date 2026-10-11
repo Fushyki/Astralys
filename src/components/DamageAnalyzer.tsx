@@ -28,7 +28,7 @@ import { CharacterAvatar } from './CharacterAvatar';
 import { DamageAnalysisResult, DamageHit, CharacterStatSnapshot } from '../types/damageBreakdown';
 import { parseDamageText, parseDamageWorkbook, cleanHitDisplayName } from '../engines/damageSheetParser';
 import { InfographicCardData } from '../types/infographic';
-import { CHARACTERS_DATABASE, getCharacterERData } from '../data/characters';
+import { CHARACTERS_DATABASE, getCharacterERData, ASTRALYS_ELEMENT_COLORS } from '../data/characters';
 import { DamageFormulaModal } from './DamageFormulaModal';
 import { explainDamageHit, DamageBreakdownDetails } from '../engines/damageFormulaEngine';
 import { Calculator } from 'lucide-react';
@@ -499,90 +499,70 @@ export const DamageAnalyzer: React.FC<DamageAnalyzerProps> = ({
     setInspectedHitDetails(details);
   };
 
+  const elemHex = (el?: string) => (ASTRALYS_ELEMENT_COLORS as any)[el || 'None']?.hex || '#8f8a7d';
+  const maxHitDamage = parsedResult ? Math.max(1, ...parsedResult.hits.map(h => h.damage)) : 1;
+  const closeMenu = (e: React.MouseEvent) => (e.currentTarget as HTMLElement).closest('details')?.removeAttribute('open');
+
   return (
     <div className="space-y-8 pb-16 animate-fade-in">
-      {/* Header Banner */}
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 p-5 rounded-2xl bg-gradient-to-r from-slate-900 via-rose-950/20 to-slate-900 border border-rose-500/30 shadow-xl">
+      {/* Cabeçalho */}
+      <div className="flex flex-wrap items-end justify-between gap-4 pb-5 border-b border-slate-800">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/30 text-[11px] font-bold text-rose-300 uppercase tracking-wider mb-2">
-            <Flame className="w-3.5 h-3.5 text-rose-400" />
-            <span>Theorycraft Damage Breakdown</span>
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white font-cinzel tracking-wide">
-            Análise de Dano Golpe a Golpe & Rotações
-          </h1>
-          <p className="text-xs text-slate-400 mt-1 max-w-2xl">
-            Cole os dados da sua planilha de cálculos (ou envie o arquivo <strong>.xlsx</strong>) para decompor cada golpe da rotação, <strong>editar os status dos personagens diretamente pelo site</strong> e transferir para o Card Infográfico.
+          <h1 className="text-3xl font-semibold text-slate-50 font-cinzel">Análise de dano</h1>
+          <p className="text-slate-400 mt-1 max-w-xl">
+            Cole a planilha de cálculo ou envie um .xlsx. O site separa cada golpe da rotação e deixa você ajustar os status.
           </p>
         </div>
 
-        {/* Quick Bridges */}
         {parsedResult && (
-          <div className="flex items-center gap-2 flex-wrap">
-            {onOpenWeaponComparator && (
-              <button
-                onClick={onOpenWeaponComparator}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-amber-600/20 hover:bg-amber-600/30 border border-amber-500/40 text-amber-300 font-bold text-xs shadow-md transition-all cursor-pointer"
-                title="Comparar armas e opções de refinamento para o Carry"
-              >
-                <Swords className="w-3.5 h-3.5 text-amber-400" />
-                <span>Comparar Armas{carryWeaponsCompared.length > 0 ? ` (${carryWeaponsCompared.length})` : ''}</span>
-              </button>
-            )}
-
+          <div className="flex items-center gap-2">
             <button
-              onClick={handleSendToER}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-purple-500/20 hover:bg-purple-500/30 border border-purple-500/40 text-purple-300 font-bold text-xs shadow-md transition-all cursor-pointer"
-              title="Abrir Calculadora de ER com esta equipe"
+              onClick={handleExportToCard}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-400 hover:bg-purple-300 text-slate-950 font-semibold text-sm cursor-pointer transition-colors"
+              title="Gerar card infográfico com esta equipe"
             >
-              <Zap className="w-3.5 h-3.5 text-purple-400" />
-              <span>Simular ER</span>
+              Criar card
+              <ArrowRight className="w-4 h-4" />
             </button>
 
             {onSaveToVault && (
               <button
                 onClick={() => {
                   onSaveToVault(parsedResult);
-                  showToast(isAuthenticated ? 'Cálculo salvo no Vault e sincronizado na Nuvem!' : 'Cálculo salvo no Astralys Vault com sucesso!');
+                  showToast(isAuthenticated ? 'Salvo no Vault e sincronizado' : 'Salvo no Vault');
                 }}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-purple-600/30 hover:bg-purple-600/40 border border-purple-500/50 text-purple-300 font-bold text-xs shadow-md transition-all cursor-pointer"
-                title={isAuthenticated ? 'Salvar no Astralys Vault e sincronizar na Nuvem' : 'Salvar no Astralys Vault'}
+                className="px-4 py-2 rounded-lg border border-slate-700 hover:bg-slate-800 text-slate-100 text-sm font-medium cursor-pointer transition-colors"
               >
-                {isAuthenticated ? (
-                  <Cloud className="w-3.5 h-3.5 text-emerald-400" />
-                ) : (
-                  <FolderGit2 className="w-3.5 h-3.5 text-purple-400" />
+                {isAuthenticated ? 'Salvar na nuvem' : 'Salvar'}
+              </button>
+            )}
+
+            <details className="relative">
+              <summary className="list-none px-3 py-2 rounded-lg border border-slate-700 hover:bg-slate-800 text-slate-300 text-sm cursor-pointer select-none">
+                Mais
+              </summary>
+              <div className="absolute right-0 mt-1 w-56 rounded-lg bg-slate-900 border border-slate-700 shadow-lg z-30 py-1 text-sm">
+                {onOpenWeaponComparator && (
+                  <button onClick={(e) => { closeMenu(e); onOpenWeaponComparator(); }} className="w-full text-left px-3 py-2 hover:bg-slate-800 text-slate-200 cursor-pointer">
+                    Comparar armas{carryWeaponsCompared.length > 0 ? ` (${carryWeaponsCompared.length})` : ''}
+                  </button>
                 )}
-                <span>{isAuthenticated ? 'Salvar na Nuvem' : 'Salvar no Vault'}</span>
-              </button>
-            )}
-
-            {onOpenWarRoom && (
-              <button
-                onClick={() => onOpenWarRoom(parsedResult)}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-cyan-600/20 hover:bg-cyan-600/30 border border-cyan-500/40 text-cyan-300 font-bold text-xs shadow-md transition-all cursor-pointer"
-                title="Abrir nos Dashboards com ranking, timeline e cenários"
-              >
-                <BarChart3 className="w-3.5 h-3.5 text-cyan-400" />
-                <span>Ver nos Dashboards</span>
-              </button>
-            )}
-
-            <button
-              onClick={handleExportToCard}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-rose-600 via-purple-600 to-ametist-600 hover:brightness-110 text-white font-black text-xs shadow-lg hover:shadow-rose-500/20 transition-all transform hover:-translate-y-0.5 cursor-pointer"
-              title="Gerar Card Infográfico com esta equipe e DPS"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-white" />
-              <span>Injetar no Card</span>
-              <ArrowRight className="w-3.5 h-3.5 text-white" />
-            </button>
+                <button onClick={(e) => { closeMenu(e); handleSendToER(); }} className="w-full text-left px-3 py-2 hover:bg-slate-800 text-slate-200 cursor-pointer">
+                  Simular recarga (ER)
+                </button>
+                {onOpenWarRoom && (
+                  <button onClick={(e) => { closeMenu(e); onOpenWarRoom(parsedResult); }} className="w-full text-left px-3 py-2 hover:bg-slate-800 text-slate-200 cursor-pointer">
+                    Ver nos dashboards
+                  </button>
+                )}
+              </div>
+            </details>
           </div>
         )}
       </div>
 
       {/* Input Section */}
-      <div className="p-5 rounded-2xl bg-[#0d111a] border border-slate-800 shadow-xl space-y-4">
+      <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-xl space-y-4">
         
         {/* Input Mode Selector & Action Bar */}
         <div className="flex items-center justify-between flex-wrap gap-3 border-b border-slate-800 pb-3">
@@ -591,7 +571,7 @@ export const DamageAnalyzer: React.FC<DamageAnalyzerProps> = ({
               onClick={() => setActiveInputTab('paste')}
               className={`flex items-center gap-1.5 px-4 py-1.5 rounded-lg transition-all cursor-pointer ${
                 activeInputTab === 'paste'
-                  ? 'bg-rose-600 text-white shadow-sm'
+                  ? 'bg-purple-400 text-slate-950 shadow-sm'
                   : 'text-slate-400 hover:text-white'
               }`}
             >
@@ -602,7 +582,7 @@ export const DamageAnalyzer: React.FC<DamageAnalyzerProps> = ({
               onClick={() => setActiveInputTab('file')}
               className={`flex items-center gap-1.5 px-4 py-1.5 rounded-lg transition-all cursor-pointer ${
                 activeInputTab === 'file'
-                  ? 'bg-rose-600 text-white shadow-sm'
+                  ? 'bg-purple-400 text-slate-950 shadow-sm'
                   : 'text-slate-400 hover:text-white'
               }`}
             >
@@ -611,38 +591,6 @@ export const DamageAnalyzer: React.FC<DamageAnalyzerProps> = ({
             </button>
           </div>
 
-          {/* Salvar no Vault - Alinhado à Direita do Bloco */}
-          {onSaveToVault && (
-            <button
-              type="button"
-              onClick={() => {
-                if (!parsedResult) {
-                  alert('Processe ou cole uma planilha primeiro antes de salvar no Vault.');
-                  return;
-                }
-                onSaveToVault(parsedResult);
-                showToast(isAuthenticated ? 'Cálculo salvo no Vault e sincronizado na Nuvem!' : 'Cálculo salvo no Astralys Vault com sucesso!');
-              }}
-              disabled={!parsedResult}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-md cursor-pointer ${
-                parsedResult
-                  ? 'bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white shadow-purple-900/30 ring-1 ring-purple-400/40 hover:scale-105'
-                  : 'bg-slate-900/60 border border-slate-800 text-slate-500 cursor-not-allowed opacity-60'
-              }`}
-              title={
-                !parsedResult 
-                  ? 'Processe uma planilha primeiro para salvar no Vault' 
-                  : (isAuthenticated ? 'Salvar no Astralys Vault e sincronizar na Nuvem' : 'Salvar no Astralys Vault')
-              }
-            >
-              {isAuthenticated ? (
-                <Cloud className={`w-4 h-4 ${parsedResult ? 'text-emerald-300' : 'text-slate-500'}`} />
-              ) : (
-                <FolderGit2 className={`w-4 h-4 ${parsedResult ? 'text-purple-300' : 'text-slate-500'}`} />
-              )}
-              <span>{isAuthenticated ? 'Salvar na Nuvem (Vault)' : 'Salvar no Vault'}</span>
-            </button>
-          )}
         </div>
 
         {/* TAB 1: PASTE */}
@@ -653,10 +601,10 @@ export const DamageAnalyzer: React.FC<DamageAnalyzerProps> = ({
               value={rawText}
               onChange={(e) => setRawText(e.target.value)}
               placeholder="Cole aqui as linhas da sua planilha (ex: com os golpes QM, FM, E, AtkT, Cr, Cd, DPS, DPR)..."
-              className="w-full p-3.5 rounded-xl bg-slate-950 border border-slate-800 font-mono text-xs text-slate-200 outline-none focus:border-rose-500 leading-relaxed placeholder:text-slate-600"
+              className="w-full p-3.5 rounded-xl bg-slate-950 border border-slate-800 font-mono text-xs text-slate-200 outline-none focus:border-purple-500 leading-relaxed placeholder:text-slate-600"
             />
             <div className="flex items-center justify-between flex-wrap gap-2">
-              <span className="text-[11px] text-slate-500 font-mono">
+              <span className="text-xs text-slate-500 font-mono">
                 Dica: Você pode copiar células inteiras no Excel ou Google Sheets e colar direto aqui.
               </span>
               <div className="flex items-center gap-2">
@@ -668,7 +616,7 @@ export const DamageAnalyzer: React.FC<DamageAnalyzerProps> = ({
                 </button>
                 <button
                   onClick={handleProcessText}
-                  className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold shadow-md shadow-rose-600/20 transition-all cursor-pointer"
+                  className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-purple-400 hover:bg-purple-300 text-slate-950 text-xs font-bold shadow-md  transition-all cursor-pointer"
                 >
                   <Flame className="w-3.5 h-3.5" />
                   <span>Processar Planilha</span>
@@ -681,12 +629,12 @@ export const DamageAnalyzer: React.FC<DamageAnalyzerProps> = ({
         {/* TAB 2: EXCEL FILE UPLOAD */}
         {activeInputTab === 'file' && (
           <div className="space-y-4">
-            <label className="flex flex-col items-center justify-center p-8 rounded-xl border-2 border-dashed border-slate-700 hover:border-rose-500/60 bg-slate-950/60 cursor-pointer transition-all group">
-              <Upload className="w-8 h-8 text-slate-500 group-hover:text-rose-400 mb-2 transition-colors" />
+            <label className="flex flex-col items-center justify-center p-8 rounded-xl border-2 border-dashed border-slate-700 hover:border-purple-500/60 bg-slate-950/60 cursor-pointer transition-all group">
+              <Upload className="w-8 h-8 text-slate-500 group-hover:text-purple-400 mb-2 transition-colors" />
               <span className="text-xs font-semibold text-slate-200 group-hover:text-white">
                 Selecione ou arraste seu arquivo Excel (.xlsx)
               </span>
-              <span className="text-[11px] text-slate-500 mt-1">
+              <span className="text-xs text-slate-500 mt-1">
                 Suporta planilhas complexas com várias abas e variantes de armas.
               </span>
               <input
@@ -713,7 +661,7 @@ export const DamageAnalyzer: React.FC<DamageAnalyzerProps> = ({
                       onClick={() => handleSelectSheetVariant(sheetName, 0)}
                       className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                         selectedSheet === sheetName
-                          ? 'bg-rose-600 text-white shadow-sm'
+                          ? 'bg-purple-400 text-slate-950 shadow-sm'
                           : 'bg-slate-900 text-slate-300 hover:text-white border border-slate-800'
                       }`}
                     >
@@ -726,12 +674,12 @@ export const DamageAnalyzer: React.FC<DamageAnalyzerProps> = ({
                 {selectedSheet && workbookData[selectedSheet]?.length > 1 && (
                   <div className="pt-2 border-t border-slate-800 flex items-center justify-between gap-2 flex-wrap">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-[11px] text-slate-500 font-semibold">Variantes:</span>
+                      <span className="text-xs text-slate-500 font-semibold">Variantes:</span>
                       {workbookData[selectedSheet].map((v, idx) => (
                         <button
                           key={idx}
                           onClick={() => handleSelectSheetVariant(selectedSheet, idx)}
-                          className={`px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all cursor-pointer ${
+                          className={`px-2.5 py-1 rounded-md text-xs font-semibold transition-all cursor-pointer ${
                             selectedVariantIdx === idx
                               ? 'bg-purple-600 text-white shadow-sm'
                               : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
@@ -768,24 +716,18 @@ export const DamageAnalyzer: React.FC<DamageAnalyzerProps> = ({
       {parsedResult && (
         <div className="space-y-6 animate-fade-in">
           
-          {/* Top Key Metrics Banner */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <div className="p-4 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 shadow-md">
-              <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-wider">DPR (Dano por Rotação)</span>
-              <div className="text-xl sm:text-2xl font-black font-mono text-cyan-400 mt-1">
-                {parsedResult.totalDpr.toLocaleString('pt-BR')}
-              </div>
+          {/* Métricas principais */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-px rounded-xl overflow-hidden bg-slate-800 border border-slate-800">
+            <div className="p-5 bg-slate-900">
+              <p className="text-sm text-slate-400">Dano por rotação</p>
+              <p className="text-3xl font-semibold font-mono text-slate-50 mt-1">{parsedResult.totalDpr.toLocaleString('pt-BR')}</p>
             </div>
-
-            <div className="p-4 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 shadow-md">
-              <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-wider">DPS da Equipe</span>
-              <div className="text-xl sm:text-2xl font-black font-mono text-amber-400 mt-1">
-                {parsedResult.dps.toLocaleString('pt-BR')}
-              </div>
+            <div className="p-5 bg-slate-900">
+              <p className="text-sm text-slate-400">DPS da equipe</p>
+              <p className="text-3xl font-semibold font-mono text-purple-300 mt-1">{parsedResult.dps.toLocaleString('pt-BR')}</p>
             </div>
-
-            <div className="p-4 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 shadow-md">
-              <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-wider">Duração da Rotação</span>
+            <div className="p-5 bg-slate-900">
+              <p className="text-sm text-slate-400">Duração</p>
               {isGlobalEditMode ? (
                 <div className="flex items-center gap-1 mt-1">
                   <input
@@ -793,28 +735,48 @@ export const DamageAnalyzer: React.FC<DamageAnalyzerProps> = ({
                     step="0.5"
                     value={parsedResult.rotationDuration}
                     onChange={(e) => handleUpdateMetrics(parseFloat(e.target.value) || 20)}
-                    className="w-20 px-2 py-0.5 rounded bg-slate-950 border border-rose-500 text-white font-mono font-black text-lg outline-none"
+                    className="w-24 px-2 py-0.5 rounded bg-slate-950 border border-purple-400 text-slate-50 font-mono font-semibold text-2xl outline-none"
                   />
-                  <span className="text-sm font-mono text-slate-400">s</span>
+                  <span className="text-lg font-mono text-slate-400">s</span>
                 </div>
               ) : (
-                <div className="text-xl sm:text-2xl font-black font-mono text-slate-200 mt-1">
-                  {parsedResult.rotationDuration}s
-                </div>
+                <p className="text-3xl font-semibold font-mono text-slate-50 mt-1">{parsedResult.rotationDuration}s</p>
               )}
             </div>
+            <div className="p-5 bg-slate-900">
+              <p className="text-sm text-slate-400">Carry</p>
+              <p className="text-3xl font-semibold text-slate-50 mt-1 truncate">
+                {parsedResult.characters[0]?.name}
+                <span className="text-lg text-slate-400 font-mono"> {parsedResult.characters[0]?.damagePercentage}%</span>
+              </p>
+            </div>
+          </div>
 
-            <div className="p-4 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 shadow-md">
-              <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-wider">Carry Principal</span>
-              <div className="text-xl sm:text-2xl font-black text-rose-400 mt-1 truncate">
-                {parsedResult.characters[0]?.name} ({parsedResult.characters[0]?.damagePercentage}%)
-              </div>
+          {/* Divisão do dano da equipe */}
+          <div>
+            <div className="flex h-4 rounded-md overflow-hidden gap-0.5">
+              {parsedResult.characters.filter(c => c.damagePercentage > 0).map(c => (
+                <div
+                  key={c.name}
+                  style={{ width: `${c.damagePercentage}%`, backgroundColor: elemHex(c.element), minWidth: 4 }}
+                  title={`${c.name}: ${c.damagePercentage}%`}
+                />
+              ))}
+            </div>
+            <div className="flex flex-wrap gap-x-5 gap-y-1 mt-2 text-sm text-slate-300">
+              {parsedResult.characters.map(c => (
+                <span key={c.name} className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: elemHex(c.element) }} />
+                  {c.name}
+                  <span className="font-mono text-slate-400">{c.damagePercentage}%</span>
+                </span>
+              ))}
             </div>
           </div>
 
           {/* Active Weapon Comparison Notification Banner */}
           {carryWeaponsCompared.length > 0 && onOpenWeaponComparator && (
-            <div className="flex items-center justify-between p-3.5 rounded-2xl bg-gradient-to-r from-amber-950/40 via-slate-900 to-amber-950/40 border border-amber-500/40 shadow-lg animate-fade-in">
+            <div className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-900 border border-slate-700 animate-fade-in">
               <div className="flex items-center gap-2.5 min-w-0">
                 <div className="w-8 h-8 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 flex-shrink-0">
                   <Swords className="w-4 h-4" />
@@ -826,7 +788,7 @@ export const DamageAnalyzer: React.FC<DamageAnalyzerProps> = ({
                       {carryWeaponsCompared.length} {carryWeaponsCompared.length === 1 ? 'arma selecionada' : 'armas selecionadas'} para {carryName}
                     </span>
                   </div>
-                  <p className="text-[11px] text-slate-400 truncate mt-0.5 font-mono">
+                  <p className="text-xs text-slate-400 truncate mt-0.5 font-mono">
                     {carryWeaponsCompared.map(w => `${w.name} (${w.percentageOfBaseline}%)`).join(' • ')}
                   </p>
                 </div>
@@ -841,49 +803,29 @@ export const DamageAnalyzer: React.FC<DamageAnalyzerProps> = ({
             </div>
           )}
 
-          {/* Section Header with Edit Mode Controls */}
+          {/* Personagens */}
           <div className="flex items-center justify-between flex-wrap gap-3 pt-2">
-            <div className="flex items-center gap-2">
-              <Sliders className="w-4 h-4 text-rose-400" />
-              <h2 className="text-sm font-bold uppercase tracking-wider text-slate-200">
-                Personagens & Status de Combate
-              </h2>
-              <span className="text-[11px] text-slate-500 font-mono hidden sm:inline">
-                ({parsedResult.characters.length} integrantes)
-              </span>
-            </div>
+            <h2 className="text-xl font-semibold text-slate-50 font-cinzel">Personagens</h2>
 
             <div className="flex items-center gap-2">
               {backupResult && (
                 <button
                   onClick={handleRestoreOriginal}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-400 hover:text-white text-xs font-semibold transition-all cursor-pointer"
-                  title="Restaurar valores importados da planilha"
+                  className="px-3 py-1.5 rounded-lg border border-slate-700 hover:bg-slate-800 text-slate-300 text-sm cursor-pointer"
+                  title="Voltar aos valores importados da planilha"
                 >
-                  <RotateCw className="w-3.5 h-3.5" />
-                  <span>Restaurar Planilha</span>
+                  Restaurar planilha
                 </button>
               )}
-
               <button
                 onClick={() => setIsGlobalEditMode(!isGlobalEditMode)}
-                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer shadow-sm ${
+                className={`px-3.5 py-1.5 rounded-lg text-sm font-medium cursor-pointer transition-colors ${
                   isGlobalEditMode
-                    ? 'bg-emerald-600 hover:bg-emerald-500 text-white'
-                    : 'bg-rose-600/20 hover:bg-rose-600/30 text-rose-300 border border-rose-500/40'
+                    ? 'bg-purple-400 hover:bg-purple-300 text-slate-950'
+                    : 'border border-slate-700 hover:bg-slate-800 text-slate-100'
                 }`}
               >
-                {isGlobalEditMode ? (
-                  <>
-                    <Check className="w-3.5 h-3.5" />
-                    <span>Concluir Edição</span>
-                  </>
-                ) : (
-                  <>
-                    <Edit3 className="w-3.5 h-3.5" />
-                    <span>Editar Status no Site</span>
-                  </>
-                )}
+                {isGlobalEditMode ? 'Concluir edição' : 'Editar status'}
               </button>
             </div>
           </div>
@@ -905,8 +847,8 @@ export const DamageAnalyzer: React.FC<DamageAnalyzerProps> = ({
               return (
                 <div 
                   key={idx}
-                  className={`p-4 rounded-2xl bg-[#0e121b] border flex flex-col justify-between space-y-3 shadow-lg relative transition-all ${
-                    isEditingThis ? 'border-rose-500/60 ring-1 ring-rose-500/30 bg-[#121622]' : 'border-slate-800 hover:border-slate-700'
+                  className={`p-4 rounded-2xl bg-slate-900 border flex flex-col justify-between space-y-3 shadow-lg relative transition-all ${
+                    isEditingThis ? 'border-purple-500/60 ring-1 ring-purple-500/30 bg-slate-900' : 'border-slate-800 hover:border-slate-700'
                   }`}
                 >
                   {/* Card Header */}
@@ -923,7 +865,7 @@ export const DamageAnalyzer: React.FC<DamageAnalyzerProps> = ({
                               value={char.name}
                               onChange={(e) => handleUpdateCharacter(idx, { name: e.target.value })}
                               placeholder="Nome"
-                              className="w-full px-2 py-0.5 rounded bg-slate-950 border border-slate-700 text-xs font-bold text-white outline-none focus:border-rose-500"
+                              className="w-full px-2 py-0.5 rounded bg-slate-950 border border-slate-700 text-xs font-bold text-white outline-none focus:border-purple-500"
                             />
                             <input
                               type="text"
@@ -931,7 +873,7 @@ export const DamageAnalyzer: React.FC<DamageAnalyzerProps> = ({
                               value={char.weapon}
                               onChange={(e) => handleUpdateCharacter(idx, { weapon: e.target.value })}
                               placeholder={allowedWeaponType && allowedWeaponType !== 'None' ? `Arma (${allowedWeaponType})` : "Arma"}
-                              className="w-full px-2 py-0.5 rounded bg-slate-950 border border-slate-700 text-[10px] text-amber-300 outline-none focus:border-rose-500"
+                              className="w-full px-2 py-0.5 rounded bg-slate-950 border border-slate-700 text-xs text-amber-300 outline-none focus:border-purple-500"
                             />
                             <datalist id={weaponDatalistId}>
                               {compatibleWeapons.map(w => (
@@ -943,14 +885,14 @@ export const DamageAnalyzer: React.FC<DamageAnalyzerProps> = ({
                               value={char.artifactSet}
                               onChange={(e) => handleUpdateCharacter(idx, { artifactSet: e.target.value })}
                               placeholder="Artefato"
-                              className="w-full px-2 py-0.5 rounded bg-slate-950 border border-slate-700 text-[10px] text-slate-300 outline-none focus:border-rose-500"
+                              className="w-full px-2 py-0.5 rounded bg-slate-950 border border-slate-700 text-xs text-slate-300 outline-none focus:border-purple-500"
                             />
                           </div>
                         ) : (
                           <>
                             <h3 className="font-bold text-sm text-white truncate">{char.name}</h3>
-                            <p className="text-[10px] text-amber-300 font-medium truncate">{char.weapon}</p>
-                            <p className="text-[10px] text-slate-400 truncate">{char.artifactSet}</p>
+                            <p className="text-xs text-amber-300 font-medium truncate">{char.weapon}</p>
+                            <p className="text-xs text-slate-400 truncate">{char.artifactSet}</p>
                           </>
                         )}
                       </div>
@@ -962,7 +904,7 @@ export const DamageAnalyzer: React.FC<DamageAnalyzerProps> = ({
                         onClick={() => setEditingCharIdx(editingCharIdx === idx ? null : idx)}
                         className={`p-1.5 rounded-lg text-xs transition-colors cursor-pointer ${
                           editingCharIdx === idx 
-                            ? 'bg-rose-600 text-white' 
+                            ? 'bg-purple-400 text-slate-950' 
                             : 'bg-slate-950 text-slate-500 hover:text-slate-200 border border-slate-800'
                         }`}
                         title={editingCharIdx === idx ? 'Concluir' : 'Editar este personagem'}
@@ -975,16 +917,16 @@ export const DamageAnalyzer: React.FC<DamageAnalyzerProps> = ({
                   {/* Damage Share Bar & Input */}
                   <div className="space-y-1">
                     <div className="flex items-center justify-between text-xs font-mono">
-                      <span className="text-slate-400 text-[11px]">Dano Total:</span>
+                      <span className="text-slate-400 text-xs">Dano Total:</span>
                       {isEditingThis ? (
                         <div className="flex items-center gap-1">
                           <input
                             type="number"
                             value={char.totalDamage}
                             onChange={(e) => handleUpdateCharacter(idx, { totalDamage: parseFloat(e.target.value) || 0 })}
-                            className="w-28 px-1.5 py-0.5 rounded bg-slate-950 border border-slate-700 text-right font-black text-rose-300 text-xs outline-none focus:border-rose-500"
+                            className="w-28 px-1.5 py-0.5 rounded bg-slate-950 border border-slate-700 text-right font-black text-slate-50 text-sm outline-none focus:border-purple-500"
                           />
-                          <span className="font-bold text-cyan-400 text-[11px]">{char.damagePercentage}%</span>
+                          <span className="font-bold text-cyan-400 text-xs">{char.damagePercentage}%</span>
                         </div>
                       ) : (
                         <div 
@@ -992,18 +934,18 @@ export const DamageAnalyzer: React.FC<DamageAnalyzerProps> = ({
                           onClick={() => handleInspectCharacterDamage(char)}
                           title="Clique para ver o cálculo e fórmula matemática"
                         >
-                          <span className="font-black text-slate-100 group-hover/dmg:text-rose-300 transition-colors underline decoration-dotted decoration-slate-600 underline-offset-2">
+                          <span className="font-black text-slate-100 group-hover/dmg:text-purple-300 transition-colors underline decoration-dotted decoration-slate-600 underline-offset-2">
                             {char.totalDamage.toLocaleString('pt-BR')}
                           </span>
                           <span className="font-bold text-cyan-400">{char.damagePercentage}%</span>
-                          <Calculator className="w-3 h-3 text-slate-500 group-hover/dmg:text-rose-400 opacity-60 group-hover/dmg:opacity-100 transition-opacity" />
+                          <Calculator className="w-3 h-3 text-slate-500 group-hover/dmg:text-purple-400 opacity-60 group-hover/dmg:opacity-100 transition-opacity" />
                         </div>
                       )}
                     </div>
-                    <div className="h-2 bg-slate-950 rounded-full overflow-hidden border border-slate-800">
+                    <div className="h-2.5 bg-slate-950 rounded-full overflow-hidden">
                       <div 
-                        className="h-full rounded-full bg-gradient-to-r from-rose-500 to-cyan-400"
-                        style={{ width: `${Math.min(100, Math.max(3, char.damagePercentage))}%` }}
+                        className="h-full rounded-full"
+                        style={{ width: `${Math.min(100, Math.max(3, char.damagePercentage))}%`, backgroundColor: elemHex(char.element) }}
                       />
                     </div>
                   </div>
@@ -1011,7 +953,7 @@ export const DamageAnalyzer: React.FC<DamageAnalyzerProps> = ({
                   {/* Buffed Combat Stats Grid */}
                   <div className="pt-2 border-t border-slate-800/80">
                     {isEditingThis ? (
-                      <div className="grid grid-cols-2 gap-2 text-[10px] font-mono">
+                      <div className="grid grid-cols-2 gap-2 text-xs font-mono">
                         <div>
                           <label className="text-slate-500 block mb-0.5">ATK Buffado</label>
                           <input
@@ -1019,7 +961,7 @@ export const DamageAnalyzer: React.FC<DamageAnalyzerProps> = ({
                             value={char.totalAtk || ''}
                             onChange={(e) => handleUpdateCharacter(idx, { totalAtk: parseFloat(e.target.value) || undefined })}
                             placeholder="5800"
-                            className="w-full px-1.5 py-1 rounded bg-slate-950 border border-slate-700 text-slate-200 outline-none focus:border-rose-500"
+                            className="w-full px-1.5 py-1 rounded bg-slate-950 border border-slate-700 text-slate-200 outline-none focus:border-purple-500"
                           />
                         </div>
                         <div>
@@ -1030,7 +972,7 @@ export const DamageAnalyzer: React.FC<DamageAnalyzerProps> = ({
                             value={char.critRate || ''}
                             onChange={(e) => handleUpdateCharacter(idx, { critRate: parseFloat(e.target.value) || undefined })}
                             placeholder="89.0"
-                            className="w-full px-1.5 py-1 rounded bg-slate-950 border border-slate-700 text-slate-200 outline-none focus:border-rose-500"
+                            className="w-full px-1.5 py-1 rounded bg-slate-950 border border-slate-700 text-slate-200 outline-none focus:border-purple-500"
                           />
                         </div>
                         <div>
@@ -1041,7 +983,7 @@ export const DamageAnalyzer: React.FC<DamageAnalyzerProps> = ({
                             value={char.critDmg || ''}
                             onChange={(e) => handleUpdateCharacter(idx, { critDmg: parseFloat(e.target.value) || undefined })}
                             placeholder="285.0"
-                            className="w-full px-1.5 py-1 rounded bg-slate-950 border border-slate-700 text-slate-200 outline-none focus:border-rose-500"
+                            className="w-full px-1.5 py-1 rounded bg-slate-950 border border-slate-700 text-slate-200 outline-none focus:border-purple-500"
                           />
                         </div>
                         <div>
@@ -1051,7 +993,7 @@ export const DamageAnalyzer: React.FC<DamageAnalyzerProps> = ({
                             value={char.elementalMastery || ''}
                             onChange={(e) => handleUpdateCharacter(idx, { elementalMastery: parseFloat(e.target.value) || undefined })}
                             placeholder="440"
-                            className="w-full px-1.5 py-1 rounded bg-slate-950 border border-slate-700 text-slate-200 outline-none focus:border-rose-500"
+                            className="w-full px-1.5 py-1 rounded bg-slate-950 border border-slate-700 text-slate-200 outline-none focus:border-purple-500"
                           />
                         </div>
                         <div>
@@ -1062,7 +1004,7 @@ export const DamageAnalyzer: React.FC<DamageAnalyzerProps> = ({
                             value={char.dmgBonus || ''}
                             onChange={(e) => handleUpdateCharacter(idx, { dmgBonus: parseFloat(e.target.value) || undefined })}
                             placeholder="182"
-                            className="w-full px-1.5 py-1 rounded bg-slate-950 border border-slate-700 text-slate-200 outline-none focus:border-rose-500"
+                            className="w-full px-1.5 py-1 rounded bg-slate-950 border border-slate-700 text-slate-200 outline-none focus:border-purple-500"
                           />
                         </div>
                         <div>
@@ -1081,12 +1023,12 @@ export const DamageAnalyzer: React.FC<DamageAnalyzerProps> = ({
                               });
                             }}
                             placeholder="Rolls ER"
-                            className="w-full px-1.5 py-1 rounded bg-slate-950 border border-slate-700 text-cyan-300 outline-none focus:border-rose-500"
+                            className="w-full px-1.5 py-1 rounded bg-slate-950 border border-slate-700 text-cyan-300 outline-none focus:border-purple-500"
                           />
                         </div>
                       </div>
                     ) : (
-                      <div className="grid grid-cols-2 gap-1.5 text-[10px] font-mono">
+                      <div className="grid grid-cols-2 gap-1.5 text-xs font-mono">
                         {char.totalAtk !== undefined && (
                           <div className="p-1 rounded bg-slate-950/80 border border-slate-800/60">
                             <span className="text-slate-500 block">ATK Buffado</span>
@@ -1117,7 +1059,7 @@ export const DamageAnalyzer: React.FC<DamageAnalyzerProps> = ({
 
                   {/* Substat Rolls Snapshot */}
                   {char.rolls && !isEditingThis && (
-                    <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between text-[10px] font-mono text-slate-400">
+                    <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between text-xs font-mono text-slate-400">
                       <span>Rolls ({char.rolls.totalRolls}):</span>
                       <span className="text-cyan-400 font-bold">
                         {char.rolls.cr} CR • {char.rolls.cd} CD • {char.rolls.er} ER
@@ -1138,9 +1080,9 @@ export const DamageAnalyzer: React.FC<DamageAnalyzerProps> = ({
                           <button
                             type="button"
                             onClick={() => handleToggleWeaponComparison(char)}
-                            className={`w-full py-1.5 px-2 rounded-xl text-[11px] font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                            className={`w-full py-1.5 px-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
                               isCompared
-                                ? 'bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 shadow-sm shadow-amber-500/10'
+                                ? 'bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 shadow-sm '
                                 : 'bg-slate-950/80 hover:bg-slate-900 text-slate-400 hover:text-white border border-slate-800 hover:border-slate-700'
                             }`}
                             title={isCompared ? 'Arma incluída na comparação. Clique para remover.' : 'Adicionar esta arma ao Comparador de Armas'}
@@ -1162,16 +1104,13 @@ export const DamageAnalyzer: React.FC<DamageAnalyzerProps> = ({
           </div>
 
           {/* Hit-by-Hit Breakdown (Golpe a Golpe) */}
-          <div className="p-5 rounded-2xl bg-[#0c1018] border border-slate-800 shadow-xl space-y-4">
+          <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-xl space-y-4">
             
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
               <div>
-                <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                  <Activity className="w-4 h-4 text-rose-400" />
-                  <span>Detalhamento Golpe a Golpe ({parsedResult.hits.length} ações na rotação)</span>
-                </h3>
-                <p className="text-[11px] text-slate-400 mt-0.5">
-                  Ordenado pelo maior impacto no dano total da equipe.
+                <h3 className="text-xl font-semibold text-slate-50 font-cinzel">Golpe a golpe <span className="text-base text-slate-500 font-sans">({parsedResult.hits.length})</span></h3>
+                <p className="text-xs text-slate-400 mt-0.5">
+                  Do maior para o menor impacto. Clique num golpe para ver o cálculo.
                 </p>
               </div>
 
@@ -1181,7 +1120,7 @@ export const DamageAnalyzer: React.FC<DamageAnalyzerProps> = ({
                   onClick={() => setSelectedCharFilter('all')}
                   className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                     selectedCharFilter === 'all'
-                      ? 'bg-rose-600 text-white'
+                      ? 'bg-purple-400 text-slate-950'
                       : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
                   }`}
                 >
@@ -1193,7 +1132,7 @@ export const DamageAnalyzer: React.FC<DamageAnalyzerProps> = ({
                     onClick={() => setSelectedCharFilter(c.name)}
                     className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                       selectedCharFilter === c.name
-                        ? 'bg-rose-600 text-white'
+                        ? 'bg-purple-400 text-slate-950'
                         : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
                     }`}
                   >
@@ -1203,52 +1142,45 @@ export const DamageAnalyzer: React.FC<DamageAnalyzerProps> = ({
               </div>
             </div>
 
-            {/* Hits List */}
-            <div className="space-y-2 max-h-96 overflow-y-auto pr-1">
+            {/* Lista de golpes */}
+            <div className="max-h-[28rem] overflow-y-auto pr-1 divide-y divide-slate-800">
               {filteredHits.length === 0 ? (
-                <div className="text-center py-8 text-slate-500 font-mono text-xs">
+                <div className="text-center py-8 text-slate-500 text-sm">
                   Nenhum golpe encontrado para o filtro selecionado.
                 </div>
               ) : (
-                filteredHits.map((hit, idx) => (
-                  <div
-                    key={hit.id}
-                    onClick={() => handleInspectHit(hit)}
-                    className="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800/80 hover:border-rose-500/60 hover:bg-slate-900/90 flex items-center justify-between gap-3 transition-all text-xs cursor-pointer group"
-                    title="Clique para ver a fórmula e o cálculo matemático deste golpe"
-                  >
-                    {/* Rank & Character */}
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      <span className="w-6 font-mono font-bold text-slate-500 text-[11px]">#{idx + 1}</span>
-                      <CharacterAvatar name={hit.charName} size="xs" showBorder={false} />
-                      <div className="min-w-0 truncate">
-                        <span className="font-bold text-slate-200 group-hover:text-rose-200 transition-colors mr-2">
-                          {cleanHitDisplayName(hit.displayName, hit.label, hit.charName)}
-                        </span>
-                        <span className="text-[10px] text-slate-500 font-mono">({hit.charName})</span>
+                filteredHits.map((hit, idx) => {
+                  const hitChar = parsedResult.characters[hit.charIndex] || parsedResult.characters.find(c => c.name === hit.charName);
+                  return (
+                    <div
+                      key={hit.id}
+                      onClick={() => handleInspectHit(hit)}
+                      className="grid grid-cols-[1.5rem_minmax(0,1fr)_minmax(0,1.2fr)_7rem_4rem] items-center gap-4 py-3 px-2 hover:bg-slate-800/60 rounded-md cursor-pointer"
+                      title="Clique para ver a fórmula deste golpe"
+                    >
+                      <span className="font-mono text-sm text-slate-500">{idx + 1}</span>
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <CharacterAvatar name={hit.charName} size="xs" showBorder={false} showElementDot={false} />
+                        <div className="min-w-0">
+                          <p className="text-sm font-medium text-slate-100 truncate">
+                            {cleanHitDisplayName(hit.displayName, hit.label, hit.charName)}
+                          </p>
+                          <p className="text-xs text-slate-500 truncate">{hit.charName}</p>
+                        </div>
                       </div>
-                    </div>
-
-                    {/* Progress Bar & Value & Calculator Badge */}
-                    <div className="flex items-center gap-3 flex-shrink-0">
-                      <div className="w-24 sm:w-36 h-2 bg-slate-900 rounded-full overflow-hidden border border-slate-800 hidden sm:block">
-                        <div 
-                          className="h-full rounded-full bg-gradient-to-r from-rose-500 to-amber-400"
-                          style={{ width: `${Math.min(100, Math.max(3, hit.pctOfTotal * 2.5))}%` }}
+                      <div className="h-3 bg-slate-950 rounded-sm overflow-hidden hidden sm:block">
+                        <div
+                          className="h-full rounded-sm"
+                          style={{ width: `${Math.max(2, (hit.damage / maxHitDamage) * 100)}%`, backgroundColor: elemHex(hitChar?.element) }}
                         />
                       </div>
-                      <div className="flex items-center gap-1.5 justify-end">
-                        <span className="font-mono font-black text-rose-300 group-hover:text-rose-200 text-right w-24">
-                          {hit.damage.toLocaleString('pt-BR')}
-                        </span>
-                        <Calculator className="w-3.5 h-3.5 text-slate-500 group-hover:text-rose-400 transition-colors" />
-                      </div>
-                      <span className="font-mono text-[10px] font-bold text-slate-400 w-12 text-right">
-                        {hit.pctOfTotal}%
+                      <span className="font-mono text-sm font-semibold text-slate-50 text-right">
+                        {hit.damage.toLocaleString('pt-BR')}
                       </span>
+                      <span className="font-mono text-sm text-slate-400 text-right">{hit.pctOfTotal}%</span>
                     </div>
-                  </div>
-                ))
+                  );
+                })
               )}
             </div>
 

@@ -320,7 +320,8 @@ export const WeaponComparator: React.FC<WeaponComparatorProps> = ({
       const dataUrl = await toPng(chartRef.current, {
         cacheBust: true,
         pixelRatio: 2.5,
-        backgroundColor: '#0a0f1d'
+        backgroundColor: '#1b1a17',
+        filter: (node: HTMLElement) => !(node && node.dataset && node.dataset.noExport)
       });
       const link = document.createElement('a');
       link.download = `comparador_armas_${activeChar.toLowerCase() || 'carry'}_astralys.png`;
@@ -362,130 +363,83 @@ export const WeaponComparator: React.FC<WeaponComparatorProps> = ({
         </div>
       )}
 
-      {/* Header Banner */}
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 p-5 rounded-2xl bg-gradient-to-r from-slate-900 via-amber-950/20 to-slate-900 border border-amber-500/30 shadow-xl">
+      {/* Cabeçalho */}
+      <div className="flex flex-wrap items-end justify-between gap-4 pb-5 border-b border-slate-800">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-[11px] font-bold text-amber-300 uppercase tracking-wider mb-2">
-            <Swords className="w-3.5 h-3.5 text-amber-400" />
-            <span>Weapon & Build Showdown</span>
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white font-cinzel tracking-wide">
-            Comparador Direto de Armas & Refinamentos
-          </h1>
-          <p className="text-xs text-slate-400 mt-1 max-w-2xl">
-            Compare o impacto percentual exato das armas selecionadas no dano final da rotação (DPR e DPS). As armas exibidas são decididas diretamente a partir da sua Análise de Dano.
+          <h1 className="text-3xl font-semibold text-slate-50 font-cinzel">Comparador de armas</h1>
+          <p className="text-slate-400 mt-1 max-w-xl">
+            Quanto cada arma muda o dano da rotação. As armas vêm da Análise de Dano.
           </p>
         </div>
 
-        {/* Global Action Buttons */}
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex items-center gap-2">
           {onOpenDamageAnalyzer && (
             <button
               onClick={onOpenDamageAnalyzer}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 hover:text-white font-semibold text-xs transition-colors cursor-pointer"
-              title="Voltar para a aba de Análise de Dano"
+              className="px-3 py-2 rounded-lg border border-slate-700 hover:bg-slate-800 text-slate-300 text-sm cursor-pointer transition-colors"
             >
-              <ArrowRight className="w-3.5 h-3.5 rotate-180" />
-              <span>Análise de Dano</span>
+              Voltar à análise
             </button>
           )}
-
           {currentCharData && currentCharData.weapons.length > 0 && (
             <button
               onClick={handleClearCurrent}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900 hover:bg-rose-950/40 border border-slate-700 hover:border-rose-500/40 text-slate-400 hover:text-rose-300 font-semibold text-xs transition-colors cursor-pointer"
-              title="Remover armas deste personagem da comparação"
+              className="px-3 py-2 rounded-lg border border-slate-700 hover:bg-slate-800 text-slate-300 text-sm cursor-pointer transition-colors"
+              title="Remover as armas deste personagem da comparação"
             >
-              <Trash2 className="w-3.5 h-3.5" />
-              <span>Limpar</span>
+              Limpar
             </button>
           )}
-
           {currentCharData && currentCharData.weapons.length > 0 && (
             <button
               onClick={handleExportPNG}
               disabled={isExporting}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-amber-600 to-rose-600 hover:brightness-110 text-white font-black text-xs shadow-lg transition-all cursor-pointer"
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-400 hover:bg-purple-300 text-slate-950 text-sm font-semibold cursor-pointer transition-colors"
             >
-              <Download className="w-3.5 h-3.5" />
-              <span>{isExporting ? 'Exportando...' : 'Baixar Imagem (PNG)'}</span>
+              <Download className="w-4 h-4" />
+              {isExporting ? 'Exportando...' : 'Baixar PNG'}
             </button>
           )}
         </div>
       </div>
 
-      {/* Empty State when no weapons added */}
       {(!currentCharData || currentCharData.weapons.length === 0) ? (
-        <div className="p-10 sm:p-14 text-center rounded-3xl bg-[#090e17] border border-slate-800 shadow-2xl space-y-6">
-          <div className="w-16 h-16 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center mx-auto text-amber-400 shadow-lg shadow-amber-500/5">
-            <Swords className="w-8 h-8" />
-          </div>
-          
-          <div className="max-w-lg mx-auto space-y-2">
-            <h2 className="text-xl sm:text-2xl font-black text-white font-cinzel tracking-wide">
-              Nenhuma Arma Selecionada
-            </h2>
-            <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
-              As armas só aparecem aqui quando você decidir quais deseja comparar a partir da <strong className="text-rose-300">Análise de Dano</strong>.
-            </p>
-          </div>
-
-          <div className="p-4 max-w-md mx-auto rounded-2xl bg-slate-950/80 border border-slate-800 text-left space-y-2.5 text-xs">
-            <div className="font-bold text-amber-400 uppercase tracking-wider text-[11px]">
-              Como adicionar armas para o comparador:
-            </div>
-            <div className="flex items-start gap-2.5 text-slate-300">
-              <span className="w-5 h-5 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-[10px] font-bold text-amber-300 flex-shrink-0 mt-0.5">1</span>
-              <span>Acesse a aba <strong>Análise de Dano</strong> (cole seus dados ou envie sua planilha).</span>
-            </div>
-            <div className="flex items-start gap-2.5 text-slate-300">
-              <span className="w-5 h-5 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-[10px] font-bold text-amber-300 flex-shrink-0 mt-0.5">2</span>
-              <span>No card do personagem Carry (ex: Mavuika), clique no botão <strong>[+ Comparar Arma]</strong>.</span>
-            </div>
-            <div className="flex items-start gap-2.5 text-slate-300">
-              <span className="w-5 h-5 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-[10px] font-bold text-amber-300 flex-shrink-0 mt-0.5">3</span>
-              <span>Altere a arma no site ou use <strong>[Comparar todas as armas da planilha]</strong> para comparar 2 ou mais opções lado a lado!</span>
-            </div>
-          </div>
-
-          <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
-            {onOpenDamageAnalyzer && (
-              <button
-                onClick={onOpenDamageAnalyzer}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-600 via-rose-600 to-ametist-600 hover:brightness-110 text-white font-bold text-xs shadow-lg shadow-amber-600/20 transition-all cursor-pointer transform hover:-translate-y-0.5"
-              >
-                <Flame className="w-4 h-4 text-white" />
-                <span>Ir para Análise de Dano</span>
-                <ArrowRight className="w-4 h-4 text-white" />
-              </button>
-            )}
-          </div>
+        <div className="rounded-xl border border-dashed border-slate-700 px-8 py-14 text-center">
+          <h2 className="text-2xl font-semibold text-slate-50 font-cinzel">Nenhuma arma para comparar</h2>
+          <p className="text-slate-400 mt-2 max-w-md mx-auto">
+            Na Análise de Dano, clique em "Comparar arma" no card do personagem. Para comparar várias armas de uma vez, importe uma planilha com variantes.
+          </p>
+          {onOpenDamageAnalyzer && (
+            <button
+              onClick={onOpenDamageAnalyzer}
+              className="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-400 hover:bg-purple-300 text-slate-950 text-sm font-semibold cursor-pointer transition-colors"
+            >
+              Ir para a Análise de Dano
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          )}
         </div>
       ) : (
         <>
-          {/* Character Selector Chips */}
-          <div className="flex items-center justify-between flex-wrap gap-3 p-4 rounded-2xl bg-[#0c1018] border border-slate-800 shadow-md">
+          {/* Seleção do carry */}
+          <div className="flex items-center justify-between flex-wrap gap-3">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider mr-1">
-                Personagem Carry:
-              </span>
               {availableChars.map(charKey => {
                 const comp = comparisons[charKey];
                 const isSelected = activeChar === charKey;
-
                 return (
                   <button
                     key={charKey}
                     onClick={() => setSelectedChar(charKey)}
-                    className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                    className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium cursor-pointer transition-colors ${
                       isSelected
-                        ? 'bg-gradient-to-r from-amber-500 to-rose-600 text-white shadow-md'
-                        : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
+                        ? 'bg-slate-700 text-slate-50'
+                        : 'text-slate-400 hover:text-slate-100 hover:bg-slate-800'
                     }`}
                   >
-                    <CharacterAvatar name={comp.characterName} size="xs" showBorder={false} />
-                    <span>{comp.characterName}</span>
-                    <span className="text-[10px] opacity-80 font-mono">({comp.weapons.length} armas)</span>
+                    <CharacterAvatar name={comp.characterName} size="xs" showBorder={false} showElementDot={false} />
+                    {comp.characterName}
+                    <span className="text-slate-500 font-mono">{comp.weapons.length}</span>
                   </button>
                 );
               })}
@@ -493,213 +447,137 @@ export const WeaponComparator: React.FC<WeaponComparatorProps> = ({
 
             <button
               onClick={handleOpenAddModal}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-600/20 hover:bg-rose-600/30 text-rose-300 border border-rose-500/40 text-xs font-bold transition-all cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-700 hover:bg-slate-800 text-slate-100 text-sm cursor-pointer transition-colors"
             >
-              <Plus className="w-3.5 h-3.5" />
-              <span>+ Adicionar Nova Arma</span>
+              <Plus className="w-4 h-4" />
+              Adicionar arma
             </button>
           </div>
 
-      {/* COMPARISON BOARD (Renderable into PNG) */}
-      <div 
-        ref={chartRef}
-        className="p-6 sm:p-7 rounded-3xl bg-[#090e17] border border-slate-800/90 shadow-2xl space-y-6 select-none relative overflow-hidden"
-        style={{
-          backgroundImage: 'radial-gradient(ellipse at 50% 0%, #152033 0%, #090e17 80%)'
-        }}
-      >
-        {/* Board Top Header */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
-          <div className="flex items-center gap-3">
-            <CharacterAvatar name={currentCharData.characterName} size="lg" />
-            <div>
-              <div className="flex items-center gap-2">
-                <h2 className="text-xl sm:text-2xl font-black text-white font-cinzel tracking-wider">
-                  {currentCharData.characterName.toUpperCase()}
-                </h2>
-                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-slate-900 text-amber-300 border border-amber-500/40">
-                  {currentCharData.carryArchetype}
-                </span>
+          {/* Card de comparação (é isto que vira PNG) */}
+          <div
+            ref={chartRef}
+            className="rounded-xl bg-slate-900 border border-slate-800 p-7 select-none"
+          >
+            <div className="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-slate-800">
+              <div className="flex items-center gap-4">
+                <CharacterAvatar name={currentCharData.characterName} size="lg" showElementDot={false} />
+                <div>
+                  <h2 className="text-3xl font-semibold text-slate-50 font-cinzel leading-tight">
+                    {currentCharData.characterName}
+                  </h2>
+                  <p className="text-sm text-slate-400">
+                    Rotação de {currentCharData.rotationDuration}s
+                    {currentCharData.carryArchetype ? ` · ${currentCharData.carryArchetype}` : ''}
+                  </p>
+                </div>
               </div>
-              <p className="text-xs text-slate-400 font-mono mt-0.5">
-                Rotação de <strong>{currentCharData.rotationDuration}s</strong> • Ordenado pelo DPR da Equipe
-              </p>
+
+              <div className="text-right">
+                <p className="text-xs text-slate-500">Base (100%)</p>
+                <p className="text-lg font-semibold text-purple-300">
+                  {baselineWeapon.name} <span className="text-slate-400 font-mono text-sm">{baselineWeapon.refinement}</span>
+                </p>
+                <p className="text-sm text-slate-400 font-mono">
+                  {baselineWeapon.dpr.toLocaleString('pt-BR')} dano · {baselineWeapon.dps.toLocaleString('pt-BR')} DPS
+                </p>
+              </div>
             </div>
-          </div>
 
-          {/* Current Baseline Indicator */}
-          <div className="p-3 rounded-xl bg-slate-950/80 border border-amber-500/30 text-right">
-            <span className="text-[10px] uppercase font-mono font-bold text-slate-500 block">
-              Arma Baseline (100.0%)
-            </span>
-            <div className="flex items-center gap-1.5 text-xs font-black text-amber-300 font-mono mt-0.5">
-              <span>{baselineWeapon.name}</span>
-              <span className="text-[10px] px-1 py-0.2 rounded bg-amber-950 border border-amber-500/50">
-                {baselineWeapon.refinement}
-              </span>
-            </div>
-            <span className="text-[10px] text-slate-400 font-mono">
-              {baselineWeapon.dpr.toLocaleString('pt-BR')} DPR • {baselineWeapon.dps.toLocaleString('pt-BR')} DPS
-            </span>
-          </div>
-        </div>
+            <div className="divide-y divide-slate-800">
+              {currentCharData.weapons.map((w, idx) => {
+                const diffFromBase = parseFloat((w.percentageOfBaseline - 100).toFixed(1));
+                const isBase = w.isBaseline;
+                const barPct = Math.min(100, Math.max(6, (w.percentageOfBaseline / 115) * 100));
 
-        {/* Weapons Comparison List (Horizontal Bars) */}
-        <div className="space-y-3.5">
-          {currentCharData.weapons.map((w, idx) => {
-            const diffFromBase = parseFloat((w.percentageOfBaseline - 100).toFixed(1));
-            const isBase = w.isBaseline;
-            const barPct = Math.min(100, Math.max(10, (w.percentageOfBaseline / 115) * 100));
+                let barColor = '#d4a24c';
+                let deltaClass = 'text-purple-300';
+                if (!isBase) {
+                  if (diffFromBase > 0) { barColor = '#7ba166'; deltaClass = 'text-emerald-400'; }
+                  else if (diffFromBase >= -10) { barColor = '#5f9bb5'; deltaClass = 'text-cyan-300'; }
+                  else { barColor = '#d27a62'; deltaClass = 'text-rose-400'; }
+                }
 
-            // Dynamic color badge based on performance
-            let badgeBg = 'bg-slate-800 text-slate-300 border-slate-700';
-            let barGradient = 'from-slate-600 to-slate-400';
-            if (isBase) {
-              badgeBg = 'bg-amber-500/20 text-amber-300 border-amber-500/50';
-              barGradient = 'from-amber-600 via-amber-400 to-yellow-300';
-            } else if (diffFromBase > 0) {
-              badgeBg = 'bg-emerald-500/20 text-emerald-300 border-emerald-500/50';
-              barGradient = 'from-emerald-600 via-emerald-400 to-cyan-300';
-            } else if (diffFromBase >= -10) {
-              badgeBg = 'bg-cyan-500/20 text-cyan-300 border-cyan-500/50';
-              barGradient = 'from-cyan-600 to-blue-400';
-            } else if (diffFromBase >= -20) {
-              badgeBg = 'bg-purple-500/20 text-purple-300 border-purple-500/50';
-              barGradient = 'from-purple-600 to-indigo-400';
-            } else {
-              badgeBg = 'bg-rose-500/20 text-rose-300 border-rose-500/50';
-              barGradient = 'from-rose-600 to-red-400';
-            }
-
-            return (
-              <div 
-                key={w.id}
-                className={`p-3.5 rounded-2xl bg-[#0d131f] border transition-all space-y-2.5 relative ${
-                  isBase ? 'border-amber-500/50 ring-1 ring-amber-500/30 bg-[#121927]' : 'border-slate-800/80 hover:border-slate-700'
-                }`}
-              >
-                {/* Top Info Line */}
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-                  <div className="flex items-center gap-2.5 min-w-0">
-                    <span className="w-6 font-mono font-bold text-slate-500 text-xs">#{idx + 1}</span>
-
-                    <span className={`px-1.5 py-0.5 rounded text-[10px] font-mono font-black ${
-                      w.rarity === 5 ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' : 'bg-purple-500/20 text-purple-300 border border-purple-500/40'
-                    }`}>
-                      {w.rarity}★ {w.refinement}
-                    </span>
-
-                    <span className="font-bold text-sm text-white truncate">{w.name}</span>
-
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-950 border border-slate-800 text-slate-400 hidden sm:inline">
-                      {w.subStatType}: {w.subStatValue}%
-                    </span>
-
-                    {w.notes && (
-                      <span className="text-[10px] text-slate-500 font-mono truncate hidden md:inline">
-                        • {w.notes}
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Percentage & DPS Badge */}
-                  <div className="flex items-center gap-3 flex-shrink-0 self-end sm:self-center">
-                    <div className="text-right font-mono">
-                      <span className="text-xs font-black text-slate-200 block">
-                        {w.dpr.toLocaleString('pt-BR')} DPR
-                      </span>
-                      <span className="text-[10px] text-slate-400">
-                        {w.dps.toLocaleString('pt-BR')} DPS
-                      </span>
-                    </div>
-
-                    <div className={`px-2.5 py-1 rounded-xl border font-mono font-black text-xs text-center min-w-[76px] ${badgeBg}`}>
-                      {isBase ? (
-                        '100.0%'
-                      ) : (
-                        <span>
-                          {w.percentageOfBaseline}%
-                          <span className="text-[9px] block font-bold">
-                            {diffFromBase > 0 ? `+${diffFromBase}%` : `${diffFromBase}%`}
-                          </span>
+                return (
+                  <div key={w.id} className="py-5">
+                    <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+                      <div className="flex items-baseline gap-3 min-w-0">
+                        <span className="font-mono text-sm text-slate-500 w-5">{idx + 1}</span>
+                        <span className="text-xl font-semibold text-slate-50 truncate">{w.name}</span>
+                        <span className="text-sm text-slate-400 font-mono">
+                          {w.rarity}★ {w.refinement}
                         </span>
-                      )}
+                        <span className="text-sm text-slate-500 hidden md:inline">
+                          {w.subStatType} {w.subStatValue}%
+                        </span>
+                      </div>
+
+                      <div className="flex items-baseline gap-5">
+                        <span className="text-sm text-slate-400 font-mono">
+                          {w.dpr.toLocaleString('pt-BR')} · {w.dps.toLocaleString('pt-BR')} DPS
+                        </span>
+                        <span className={`text-2xl font-semibold font-mono w-24 text-right ${deltaClass}`}>
+                          {isBase ? 'Base' : `${diffFromBase > 0 ? '+' : '−'}${Math.abs(diffFromBase)}%`}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="relative h-3 mt-3 bg-slate-950 rounded-sm">
+                      <div className="h-full rounded-sm" style={{ width: `${barPct}%`, backgroundColor: barColor }} />
+                      <div
+                        className="absolute -top-1 -bottom-1 w-0.5 bg-slate-100/70"
+                        style={{ left: `${(100 / 115) * 100}%` }}
+                        title="100%"
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between gap-4 mt-2.5">
+                      <p className="text-sm text-slate-400 truncate">{w.passiveEffect}</p>
+                      <div className="flex items-center gap-3 flex-shrink-0 text-sm" data-no-export="true">
+                        {!isBase && (
+                          <button
+                            onClick={() => handleSetBaseline(w.id)}
+                            className="text-slate-400 hover:text-purple-300 cursor-pointer transition-colors"
+                            title="Usar esta arma como base de 100%"
+                          >
+                            Definir como base
+                          </button>
+                        )}
+                        {onInjectToCard && (
+                          <button
+                            onClick={() => handleInjectWeaponToCard(w)}
+                            className="text-slate-400 hover:text-purple-300 cursor-pointer transition-colors"
+                            title="Enviar esta arma para o card infográfico"
+                          >
+                            Enviar ao card
+                          </button>
+                        )}
+                        <button
+                          onClick={() => handleDeleteWeapon(w.id)}
+                          className="text-slate-500 hover:text-rose-400 cursor-pointer transition-colors"
+                          title="Remover da comparação"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
+                );
+              })}
+            </div>
 
-                {/* Relative Performance Bar */}
-                <div className="space-y-1">
-                  <div className="h-2.5 bg-slate-950 rounded-full overflow-hidden border border-slate-800 relative">
-                    {/* 100% Benchmark Line */}
-                    <div 
-                      className="absolute top-0 bottom-0 w-0.5 bg-white/40 z-10" 
-                      style={{ left: `${(100 / 115) * 100}%` }}
-                      title="Linha Base 100%"
-                    />
-                    <div 
-                      className={`h-full rounded-full bg-gradient-to-r ${barGradient} transition-all duration-700`}
-                      style={{ width: `${barPct}%` }}
-                    />
-                  </div>
-                </div>
-
-                {/* Weapon Action Footer */}
-                <div className="flex items-center justify-between pt-1 text-[10px] font-mono text-slate-500 border-t border-slate-800/60">
-                  <span className="truncate max-w-sm text-slate-400">
-                    {w.passiveEffect}
-                  </span>
-
-                  <div className="flex items-center gap-2 flex-shrink-0">
-                    {!isBase && (
-                      <button
-                        onClick={() => handleSetBaseline(w.id)}
-                        className="px-2 py-0.5 rounded bg-slate-900 hover:bg-slate-800 text-amber-300 hover:text-amber-200 border border-amber-500/30 transition-colors cursor-pointer"
-                        title="Definir esta arma como a base 100%"
-                      >
-                        Definir como Base (100%)
-                      </button>
-                    )}
-
-                    {onInjectToCard && (
-                      <button
-                        onClick={() => handleInjectWeaponToCard(w)}
-                        className="px-2 py-0.5 rounded bg-slate-900 hover:bg-slate-800 text-cyan-300 hover:text-cyan-200 border border-cyan-500/30 transition-colors cursor-pointer"
-                        title="Injetar dano e arma no Card de Infográfico"
-                      >
-                        Injetar no Card
-                      </button>
-                    )}
-
-                    <button
-                      onClick={() => handleDeleteWeapon(w.id)}
-                      className="p-1 text-slate-600 hover:text-rose-400 transition-colors cursor-pointer"
-                      title="Excluir arma da comparação"
-                    >
-                      <Trash2 className="w-3 h-3" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Board Watermark & Legend */}
-        <div className="pt-3 border-t border-slate-800 flex items-center justify-between text-[11px] font-mono text-slate-500">
-          <span>KQM Theorycrafting Standards • Refinamentos comparados na mesma rotação</span>
-          <span className="font-bold text-ametist-400 uppercase tracking-widest">
-            ASTRALYS
-          </span>
-        </div>
-      </div>
+            <div className="pt-4 border-t border-slate-800 flex items-center justify-between text-sm text-slate-500">
+              <span>Todas as armas na mesma rotação</span>
+              <span className="font-cinzel font-semibold text-slate-300">Astralys</span>
+            </div>
+          </div>
         </>
       )}
 
       {/* ADD WEAPON MODAL */}
       {showAddModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
-          <div className="w-full max-w-md bg-[#0d131f] border border-slate-800 rounded-2xl p-6 shadow-2xl space-y-4">
+          <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl space-y-4">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <h3 className="text-base font-bold text-white flex items-center gap-2">
                 <Plus className="w-4 h-4 text-rose-400" />
@@ -722,7 +600,7 @@ export const WeaponComparator: React.FC<WeaponComparatorProps> = ({
 
             <div className="space-y-3 text-xs font-mono">
               {allowedWeaponType && allowedWeaponType !== 'None' && (
-                <div className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-amber-950/40 border border-amber-500/30 text-[11px] text-amber-300">
+                <div className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-amber-950/40 border border-amber-500/30 text-xs text-amber-300">
                   <Swords className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
                   <span>
                     Filtro ativo: <strong className="text-white">{activeChar}</strong> só pode equipar armas do tipo <strong className="text-white">{WEAPON_TYPE_LABELS[allowedWeaponType] || allowedWeaponType}</strong>.
@@ -746,7 +624,7 @@ export const WeaponComparator: React.FC<WeaponComparatorProps> = ({
 
               {/* Incompatible Weapon Warning */}
               {weaponTypeError && (
-                <div className="flex items-center gap-2 p-2.5 rounded-xl bg-rose-950/60 border border-rose-500/50 text-[11px] text-rose-300 animate-fade-in">
+                <div className="flex items-center gap-2 p-2.5 rounded-xl bg-rose-950/60 border border-rose-500/50 text-xs text-rose-300 animate-fade-in">
                   <Shield className="w-4 h-4 text-rose-400 flex-shrink-0" />
                   <span>{weaponTypeError}</span>
                 </div>
@@ -754,7 +632,7 @@ export const WeaponComparator: React.FC<WeaponComparatorProps> = ({
 
               {/* Automatic Stats Notification Badge */}
               {detectedWeapon && (
-                <div className="flex items-center gap-2 p-2.5 rounded-xl bg-emerald-950/50 border border-emerald-500/40 text-[11px] text-emerald-300 animate-fade-in">
+                <div className="flex items-center gap-2 p-2.5 rounded-xl bg-emerald-950/50 border border-emerald-500/40 text-xs text-emerald-300 animate-fade-in">
                   <Sparkles className="w-4 h-4 text-emerald-400 flex-shrink-0" />
                   <span>
                     Status oficiais detectados: <strong className="text-white">{detectedWeapon.rarity}★ {WEAPON_TYPE_LABELS[detectedWeapon.type] || detectedWeapon.type}</strong> • ATK Base <strong className="text-white">{detectedWeapon.baseAtk}</strong> • {detectedWeapon.subStatType} <strong className="text-white">{detectedWeapon.subStatValue}%</strong>

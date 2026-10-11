@@ -65,24 +65,24 @@ export const DamageFormulaModal: React.FC<DamageFormulaModalProps> = ({ details,
       onClick={onClose}
     >
       <div 
-        className="w-full max-w-2xl bg-[#0b0f17] border border-slate-800 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+        className="w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="p-5 border-b border-slate-800/80 flex items-center justify-between bg-gradient-to-r from-slate-900 via-slate-950 to-[#0b0f17]">
+        <div className="p-5 border-b border-slate-800/80 flex items-center justify-between bg-slate-900   ">
           <div className="flex items-center gap-3">
             <CharacterAvatar name={details.charName} size="md" />
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="text-base font-black text-white font-cinzel tracking-wider">
+                <h3 className="text-base font-black text-white font-cinzel ">
                   {cleanHitDisplayName(details.hitName, undefined, details.charName)}
                 </h3>
-                <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${badge.bg}`}>
+                <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold border ${badge.bg}`}>
                   {badge.icon}
                   <span>{details.categoryLabel}</span>
                 </span>
               </div>
-              <p className="text-[11px] text-slate-400 font-mono mt-0.5">
+              <p className="text-xs text-slate-400 font-mono mt-0.5">
                 Executado por <strong>{details.charName}</strong> • {details.reactionType}
               </p>
             </div>
@@ -100,19 +100,19 @@ export const DamageFormulaModal: React.FC<DamageFormulaModalProps> = ({ details,
         <div className="p-6 space-y-6 overflow-y-auto">
           
           {/* Main Damage Value Display */}
-          <div className="p-4 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800/90 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="p-4 rounded-2xl bg-slate-900   border border-slate-800/90 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
-              <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500 font-bold block">
+              <span className="text-xs font-mono text-slate-500 font-bold block">
                 Dano Calculado do Golpe
               </span>
-              <div className="text-3xl sm:text-4xl font-black font-mono text-transparent bg-clip-text bg-gradient-to-r from-white via-rose-200 to-amber-300 mt-0.5">
+              <div className="text-3xl sm:text-4xl font-black font-mono text-transparent bg-clip-text bg-slate-900    mt-0.5">
                 {details.finalDamage.toLocaleString('pt-BR')}
               </div>
             </div>
 
             {/* Formula Pill */}
-            <div className="p-2.5 rounded-xl bg-slate-950 border border-slate-800 text-[11px] font-mono text-slate-300 max-w-sm">
-              <span className="text-slate-500 block text-[9px] uppercase font-bold mb-0.5">Equação Utilizada:</span>
+            <div className="p-2.5 rounded-xl bg-slate-950 border border-slate-800 text-xs font-mono text-slate-300 max-w-sm">
+              <span className="text-slate-500 block text-xs font-bold mb-0.5">Equação Utilizada:</span>
               <code className="text-cyan-300 leading-tight block">
                 {details.formulaString}
               </code>
@@ -121,18 +121,18 @@ export const DamageFormulaModal: React.FC<DamageFormulaModalProps> = ({ details,
 
           {/* Theorycrafting Explanation */}
           <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 text-xs text-slate-300 leading-relaxed space-y-2">
-            <div className="flex items-center gap-1.5 text-rose-400 font-bold uppercase text-[10px] tracking-wider">
+            <div className="flex items-center gap-1.5 text-rose-400 font-bold text-xs ">
               <HelpCircle className="w-3.5 h-3.5" />
               <span>Como Funciona Esta Mecânica</span>
             </div>
-            <p className="text-slate-300 text-[11px]">
+            <p className="text-slate-300 text-xs">
               {details.explanation}
             </p>
           </div>
 
           {/* Factor Breakdown Steps */}
           <div className="space-y-3">
-            <h4 className="text-xs font-bold text-slate-200 uppercase tracking-wider flex items-center gap-2">
+            <h4 className="text-xs font-bold text-slate-200 flex items-center gap-2">
               <Calculator className="w-3.5 h-3.5 text-cyan-400" />
               <span>Decomposição Passo a Passo dos Fatores</span>
             </h4>
@@ -141,16 +141,16 @@ export const DamageFormulaModal: React.FC<DamageFormulaModalProps> = ({ details,
               {details.steps.map((step, idx) => (
                 <div 
                   key={idx}
-                  className="p-3 rounded-xl bg-[#0e121b] border border-slate-800 hover:border-slate-700 transition-colors flex flex-col justify-between space-y-1.5"
+                  className="p-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 transition-colors flex flex-col justify-between space-y-1.5"
                 >
                   <div className="flex items-center justify-between text-xs">
-                    <span className="font-bold text-slate-300 text-[11px] truncate">{step.name}</span>
+                    <span className="font-bold text-slate-300 text-xs truncate">{step.name}</span>
                     <span className="font-mono font-black text-cyan-400 text-xs">{step.formattedValue}</span>
                   </div>
-                  <div className="text-[10px] font-mono text-slate-500 bg-slate-950 px-2 py-0.5 rounded border border-slate-800/80 truncate">
+                  <div className="text-xs font-mono text-slate-500 bg-slate-950 px-2 py-0.5 rounded border border-slate-800/80 truncate">
                     {step.formula}
                   </div>
-                  <p className="text-[10px] text-slate-400 leading-tight">
+                  <p className="text-xs text-slate-400 leading-tight">
                     {step.description}
                   </p>
                 </div>
@@ -160,32 +160,32 @@ export const DamageFormulaModal: React.FC<DamageFormulaModalProps> = ({ details,
 
           {/* Combat Stats Snapshot Used */}
           <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
-            <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500 font-bold block">
+            <span className="text-xs font-mono text-slate-500 font-bold block">
               Atributos de Entrada Utilizados no Cálculo
             </span>
             <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 text-center font-mono text-xs">
               <div className="p-2 rounded bg-slate-900 border border-slate-800">
-                <span className="text-[9px] text-slate-500 block">ATK</span>
+                <span className="text-xs text-slate-500 block">ATK</span>
                 <span className="font-bold text-slate-200">{details.statsUsed.atk}</span>
               </div>
               <div className="p-2 rounded bg-slate-900 border border-slate-800">
-                <span className="text-[9px] text-slate-500 block">CR / CD</span>
+                <span className="text-xs text-slate-500 block">CR / CD</span>
                 <span className="font-bold text-slate-200">{details.statsUsed.cr}% / {details.statsUsed.cd}%</span>
               </div>
               <div className="p-2 rounded bg-slate-900 border border-slate-800">
-                <span className="text-[9px] text-slate-500 block">EM</span>
+                <span className="text-xs text-slate-500 block">EM</span>
                 <span className="font-bold text-slate-200">{details.statsUsed.em}</span>
               </div>
               <div className="p-2 rounded bg-slate-900 border border-slate-800">
-                <span className="text-[9px] text-slate-500 block">Dano Bônus</span>
+                <span className="text-xs text-slate-500 block">Dano Bônus</span>
                 <span className="font-bold text-slate-200">+{details.statsUsed.dmgBonus}%</span>
               </div>
               <div className="p-2 rounded bg-slate-900 border border-slate-800">
-                <span className="text-[9px] text-slate-500 block">DEF Inimigo</span>
+                <span className="text-xs text-slate-500 block">DEF Inimigo</span>
                 <span className="font-bold text-slate-200">{details.statsUsed.enemyDef.toFixed(2)}×</span>
               </div>
               <div className="p-2 rounded bg-slate-900 border border-slate-800">
-                <span className="text-[9px] text-slate-500 block">RES Inimigo</span>
+                <span className="text-xs text-slate-500 block">RES Inimigo</span>
                 <span className="font-bold text-slate-200">{details.statsUsed.enemyRes.toFixed(2)}×</span>
               </div>
             </div>
@@ -195,7 +195,7 @@ export const DamageFormulaModal: React.FC<DamageFormulaModalProps> = ({ details,
 
         {/* Footer */}
         <div className="p-4 border-t border-slate-800/80 bg-slate-950 flex items-center justify-between text-xs text-slate-500">
-          <span className="font-mono text-[11px]">
+          <span className="font-mono text-xs">
             Astralys Theorycraft Engine • Meta 6.7 / 7.0
           </span>
           <button

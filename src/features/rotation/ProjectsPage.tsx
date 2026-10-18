@@ -5,15 +5,28 @@
 import { useRef, useState } from 'react';
 import '../../ui/ast.css';
 import { Link, useNavigate } from 'react-router-dom';
-import { formatInt } from '../../ui/format';
+import { ELEMENT_COLOR, formatDecimal, formatInt } from '../../ui/format';
+import { compact } from '../card/RotationCard';
 import { useGameData } from './data';
 import { downloadProject, importJson, importXlsx, type ImportResult } from './importFile';
+import { useProjectStats } from './useProjectStats';
 import { SAMPLE_ID, cloneProject, deleteStoredProject, listProjects, loadProject, saveProject, type ProjectSummary } from './persistence';
 
 const when = (iso: string) => {
   const d = new Date(iso);
   return Number.isNaN(d.getTime()) ? '' : d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
 };
+
+const IMAGE_BASE = 'https://api.lunaris.moe/data/assets/gachaicon';
+
+function Face({ icon, name, color }: { icon?: string; name: string; color?: string }) {
+  const [failed, setFailed] = useState(false);
+  return (
+    <span className="face" style={{ ['--c' as string]: color ?? '#d8b668' }} title={name}>
+      {icon && !failed ? <img src={`${IMAGE_BASE}/${icon}.webp`} alt="" loading="lazy" onError={() => setFailed(true)} /> : <b>{name.charAt(0)}</b>}
+    </span>
+  );
+}
 
 export default function ProjectsPage() {
   const navigate = useNavigate();
@@ -27,6 +40,9 @@ export default function ProjectsPage() {
   const xlsxInput = useRef<HTMLInputElement>(null);
   const jsonInput = useRef<HTMLInputElement>(null);
   const refresh = () => setItems(listProjects());
+  const stats = useProjectStats(items.map((i) => i.id), data, items.map((i) => i.id + i.updatedAt).join());
+  const characters = data?.game.characters ?? [];
+  const characterOf = (name: string) => characters.find((c) => c.name === name);
 
   const finish = (r: ImportResult) => {
     if (!saveProject(r.project)) throw new Error('Não foi possível salvar: o armazenamento do navegador está cheio ou bloqueado.');
@@ -119,11 +135,38 @@ export default function ProjectsPage() {
                 )}
                 {p.isSample && <span className="ast-flag">exemplo</span>}
               </div>
+              <div className="faces" aria-hidden="true">
+                {p.members.map((n) => {
+                  const c = characterOf(n);
+                  return <Face key={n} icon={c?.icon} name={n} color={c ? ELEMENT_COLOR[c.element] : undefined} />;
+                })}
+              </div>
+              {(() => {
+                const st = stats[p.id];
+                if (!st || st === 'error') {
+                  return <p className="meta">{st === 'error' ? 'Não foi possível calcular este projeto.' : 'Calculando…'}</p>;
+                }
+                return (
+                  <>
+                    <div className="mix" role="img" aria-label={p.members.map((n, i) => `${n} ${formatDecimal((st.shares[i] ?? 0) * 100, 1)}%`).join(', ')}>
+                      {p.members.map((n, i) => (
+                        <i key={n} style={{ flexGrow: Math.max(st.shares[i] ?? 0, 0.004), background: ELEMENT_COLOR[characterOf(n)?.element ?? ''] ?? '#d8b668' }} />
+                      ))}
+                    </div>
+                    <div className="kp">
+                      <span><b>{compact(st.dps)}</b> DPS</span>
+                      <span><b>{compact(st.dpr)}</b> DPR</span>
+                      <span>{formatDecimal(st.duration, 1)} s</span>
+                    </div>
+                  </>
+                );
+              })()}
               <p className="meta">
-                {p.members.join(', ')} · {formatInt(p.actions)} golpes{p.updatedAt ? ` · ${when(p.updatedAt)}` : ''}
+                {formatInt(p.actions)} golpes{p.updatedAt ? ` · ${when(p.updatedAt)}` : ''}
               </p>
               <p className="acts">
                 <Link className="ast-link" to={`/rotacao/${p.id}`}>Abrir</Link>
+                <Link className="ast-link" to={`/rotacao/${p.id}/card`}>Card</Link>
                 <button type="button" className="ast-link" onClick={() => duplicate(p.id)}>Duplicar</button>
                 <button type="button" className="ast-link" onClick={() => setRenaming(p.id)}>Renomear</button>
                 <button type="button" className="ast-link" onClick={() => { const full = loadProject(p.id); if (full) downloadProject(full); }}>Exportar</button>

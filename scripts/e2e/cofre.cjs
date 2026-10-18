@@ -32,6 +32,10 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.waitForSelector('.ast-project');
 
   check('lista começa só com o exemplo', (await cards()).length === 1 && /Exemplo/.test((await cards())[0]), (await cards()).join(' | '));
+  await page.waitForSelector('.ast-project .kp', { timeout: 20000 });
+  const kp = await page.$eval('.ast-project .kp', (e) => e.textContent);
+  check('o cartão mostra DPS e DPR do projeto', /216,6k/.test(kp) && /3,79M/.test(kp), kp);
+  check('o cartão mostra os 4 retratos e a barra de participação', (await page.$$('.ast-project .face')).length === 4 && (await page.$$('.ast-project .mix i')).length === 4);
   await page.screenshot({ path: path.join(OUT, 'cofre.png') });
 
   // Importar a planilha

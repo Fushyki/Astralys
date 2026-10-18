@@ -2,7 +2,7 @@
 
 Ambiente de theorycrafting de Genshin Impact: monta rotações de time numa timeline, mostra de onde vem cada buff e quanto vale, guarda tudo num Vault e gera cards para partilhar. Meta: melhor que o Genshin Optimizer em times/rotações e mais legível que o GCSim.
 
-Dono: Davi. UI em pt-BR. Commits em português. Trabalhar na branch `v2/core`, nunca direto no `main`.
+Dono: Davi. UI em pt-BR. Commits em português. Trabalhar em branch própria (agora `v2/redesign`), nunca direto no `main`; PRs abertos pelo Davi no GitHub.
 
 ## Stack
 React 18 + Vite + TypeScript, CSS próprio (sem Tailwind). Testes: Vitest + e2e com playwright-core (`npm run e2e`). Backend separado: `Fushyki/Astralys-BackEnd` (FastAPI + SQLAlchemy + JWT), pasta `C:\Users\dabiv\Astralys-BackEnd`.
@@ -78,10 +78,13 @@ API não oficial `https://api.lunaris.moe/data/` (descoberta lendo o bundle do s
   - [x] 3d importar planilha .xlsx, cofre, card, recarga e remoção da interface antiga (branch `v2/cards-vault-er`, PR aberto pelo Davi)
 - [ ] Fases 4–6 — vault/cards, comparadores, otimizador GOOD (plano próprio)
 
-## Interface (Fase 3)
-- Identidade visual aprovada: céu índigo com estrelas e filetes dourados (carta celeste) + cartões retangulares com títulos em CAIXA ALTA condensada (mesa de mixagem). Barlow Condensed (títulos, números) e Barlow (texto). Sem itálico. Tema em `src/ui/ast.css` escopado em `.ast-app`; componentes em `src/ui/components.tsx`. Maquete de referência publicada como artefato (conceitos do Astralys).
-- Cada KPI tem nome, valor, unidade e uma frase explicando o cálculo. Buffs sem origem conhecida da planilha aparecem sempre, marcados "a confirmar".
-- A lógica de tela é pura e testada: `projectOps.ts` (edição), `summary.ts` (números da tela). O estado só orquestra histórico (100 passos) e seleção.
-- Para ver a página: `npm run build && npx vite preview`, abrir `/rotacao`. Teste de fumo com Edge headless: `playwright-core` com `channel: 'msedge'` (o MCP do Playwright não conecta nesta máquina).
+## Interface (redesign, branch `v2/redesign`)
+- Fluxo em telas separadas, cada uma em `src/screens/` (CSS ao lado): **Equipe** `/projeto/:id` → **Personagem** `/projeto/:id/personagem/:nome` → **Rotação e buffs** `/projeto/:id/rotacao` → **Dano do time** `/projeto/:id/time` → **Armas e constelações** `/projeto/:id/armas/:nome?` → **Recarga** `/projeto/:id/recarga` (e avulsa em `/recarga`) → **Vault** `/vault` (todos os times como cartões) e **Card** `/card/:id` (4:5 padrão, 16:9, 9:16). Também `/comparar?a=&b=` e a home `/`. As rotas antigas `/rotacao*` redirecionam.
+- Design system em `src/design/`: `tokens.css` (cores: fundo #0A0E1C, superfície #111733, ouro #E9C46A, cores dos elementos e variação escura para o 2º do mesmo elemento), `design.css` (classes `dz-*`), `primitives.tsx`, `fields.tsx`, `charts.tsx`, `elements.ts`. Fontes Saira Condensed (títulos/números) e IBM Plex Sans (texto). Controles com 44 px, raio 16. CSS com variáveis, sem Tailwind. O cartão da Equipe (`eq-card`) é a base do cartão do Vault.
+- `src/app/`: `ProjectLayout` abre o projeto por id, salva sozinho (400 ms), roda o motor UMA vez no worker e entrega tudo às telas por `useProjectView()` (`ProjectContext`); `AppHeader` tem as abas e "Salvar no Vault" (favorita e leva ao Vault).
+- Lógica de tela pura e testada em `src/features/*Model.ts` (`team/teamModel`, `character/characterModel`, `rotation/rotationModel`, `time/timeModel`, `vault/vaultModel`, `card/cardModel`). Nenhum número de mockup é copiado: tudo vem do motor. Buffs sem origem conhecida da planilha aparecem sempre, marcados "a confirmar".
+- Motor intacto no gabarito; extensão: `RotationProject.disabled` (ids de fontes desligadas, `TeamInput.disabled`). DPS 216.600 e DPR 3.790.496 do exemplo devem aparecer em toda tela onde existem.
+- Verificação: `npx tsc --noEmit`, `npm test`, `npm run build`, e `npm run e2e` (9 roteiros em `scripts/e2e/`, com screenshots em `scripts/e2e/out/`; precisa de `npx vite preview --port 4173` ligado e de Edge). O MCP do Playwright não conecta nesta máquina.
+- Decisões em aberto do redesign: `docs/DECISOES_PENDENTES.md` (itens 15 a 26).
 
 Plano completo: `C:\Users\dabiv\.claude\plans\hashed-nibbling-island.md`. Strix (pentest) só no fim, em `localhost`, com um LLM que não seja o Claude.

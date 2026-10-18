@@ -116,6 +116,9 @@ export function BuildEditor({ project, data, bundle, index }: { project: Rotatio
             <NumberField label="ER mínimo" value={Math.round((ref.minER ?? 0) * 1000) / 10} min={0} step={5} suffix="%" onCommit={(v) => update(index, { minER: Math.max(0, v) / 100 })} />
           </div>
 
+        </div>
+
+        <div className="ast-build-form ast-build-subs">
           <fieldset className="ast-source">
             <legend>Substats</legend>
             <label>

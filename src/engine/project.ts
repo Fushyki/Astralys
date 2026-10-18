@@ -46,6 +46,8 @@ export const ArtifactConfigSchema = z.object({
 export const MemberRefSchema = z.object({
   character: z.string().min(1),
   weapon: z.string().min(1),
+  /** Refinamento da arma (1 a 5). Ausente = 1. */
+  refinement: z.number().int().min(1).max(5).optional(),
   primarySet: z.string().min(1).optional(),
   secondarySet: z.string().min(1).optional(),
   /** false = só 2 peças do set principal (sem o bônus de 4 peças). Padrão: 4 peças quando não há segundo set. */
@@ -263,6 +265,7 @@ export function resolveMember(ref: MemberRef, data: GameData, effects: EffectsDa
     primarySet: setOf(ref.primarySet),
     secondarySet: setOf(ref.secondarySet),
     fourPiece: ref.fourPiece,
+    refinement: ref.refinement,
     artifacts: ref.artifacts,
     talents: ref.talents,
     minER: ref.minER,

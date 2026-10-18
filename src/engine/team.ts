@@ -3,6 +3,7 @@
  * ressonância e redução de RES do inimigo.
  */
 import type { Element } from '../data/schema';
+import { weaponStatsAt } from '../effects/schema';
 import type { ResistanceMap } from './damage';
 import {
   addDelta,
@@ -106,7 +107,7 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
 
   // 2) Buffs de arma e de 4 peças que vão ao time (valem para todos, inclusive o dono)
   members.forEach((m, i) => {
-    const w = m.weaponEffect?.team;
+    const w = m.weaponEffect ? weaponStatsAt(m.weaponEffect, m.refinement).team : undefined;
     const s = fourPieceActive(m) ? m.primarySet?.effect?.fourPiece?.team : undefined;
     const atkPct = (w?.atkPct ?? 0) + (s?.atkPct ?? 0);
     const dmgBonus = (w?.dmgPct ?? 0) + (s?.dmgPct ?? 0);
@@ -161,6 +162,8 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
     members.forEach((m, i) => {
       const r = m.characterEffect?.resShred;
       if (r && r.value > 0 && r.elements.includes(el) && !off(`res-shred-${i}`)) shred += r.value;
+      const sr = fourPieceActive(m) ? m.primarySet?.effect?.fourPiece?.resShred : undefined;
+      if (sr && sr.value > 0 && sr.elements.includes(el) && !off(`set-res-shred-${i}`)) shred += sr.value;
     });
     enemyRes[el] = config.enemyBaseRes - shred;
   }

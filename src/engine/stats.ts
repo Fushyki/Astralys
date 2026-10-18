@@ -7,7 +7,7 @@
  * as janelas de tempo dos buffs preenchem isso.
  */
 import type { Character, HitType, Weapon } from '../data/schema';
-import type { CharacterEffect, SetEffect, WeaponEffect } from '../effects/schema';
+import { weaponStatsAt, type CharacterEffect, type SetEffect, type WeaponEffect } from '../effects/schema';
 import {
   FLOWER_HP,
   MAIN_STAT_VALUES,
@@ -123,6 +123,8 @@ export interface MemberInput {
   weapon: Weapon;
   characterEffect?: CharacterEffect;
   weaponEffect?: WeaponEffect;
+  /** Refinamento da arma (1 a 5) para efeitos com tabela por refinamento. Padrão: 1. */
+  refinement?: number;
   primarySet?: SetSelection;
   /** Se informado, vira 2+2 (só os bônus de 2 peças valem). */
   secondarySet?: SetSelection;
@@ -189,9 +191,20 @@ function mainStatValue(slot: 'sands' | 'goblet' | 'circlet', stat: string, rarit
 }
 
 /** Bônus de 2 peças como "stat nomeado + valor" (modelo da planilha). */
-function twoPieceDelta(set: SetSelection | undefined): StatDelta | null {
-  const tp = set?.effect?.twoPiece;
-  return tp ? namedStatDelta(tp.stat, tp.value) : null;
+function twoPieceDelta(set: SetSelection | undefined, element: string): StatDelta | null {
+  const effect = set?.effect;
+  if (!effect) return null;
+  const out = zeroBlock() as StatBlock;
+  let any = false;
+  for (const tp of [effect.twoPiece, ...(effect.twoPieceMore ?? [])]) {
+    if (!tp || (tp.element && tp.element !== element)) continue;
+    const d = namedStatDelta(tp.stat, tp.value);
+    if (d) {
+      addDelta(out, d);
+      any = true;
+    }
+  }
+  return any ? out : null;
 }
 
 // ---------- Origem de cada bônus (para atribuição) ----------
@@ -239,8 +252,8 @@ export function staticSources(m: MemberInput, member = 0): StatSource[] {
       lunarisStatDelta(m.weapon.substat.stat, m.weapon.substat.value, el));
   }
 
-  add('set2p-primary', `${m.primarySet?.name ?? 'Set'} (2 peças)`, 'set-2p', twoPieceDelta(m.primarySet));
-  add('set2p-secondary', `${m.secondarySet?.name ?? 'Set'} (2 peças)`, 'set-2p', twoPieceDelta(m.secondarySet));
+  add('set2p-primary', `${m.primarySet?.name ?? 'Set'} (2 peças)`, 'set-2p', twoPieceDelta(m.primarySet, el));
+  add('set2p-secondary', `${m.secondarySet?.name ?? 'Set'} (2 peças)`, 'set-2p', twoPieceDelta(m.secondarySet, el));
 
   const ce = m.characterEffect;
   if (ce) {
@@ -248,10 +261,12 @@ export function staticSources(m: MemberInput, member = 0): StatSource[] {
       { atkPct: ce.atkPct, dmgBonus: ce.dmgPct, critRate: ce.critRate, critDmg: ce.critDmg, em: ce.em });
   }
 
-  const we = m.weaponEffect;
+  const we = m.weaponEffect ? weaponStatsAt(m.weaponEffect, m.refinement) : undefined;
   if (we) {
-    add('weapon', `${m.weapon.name}: passiva`, 'weapon',
-      { atkPct: we.atkPct, dmgBonus: we.dmgPct, critRate: we.critRate, critDmg: we.critDmg, em: we.em, er: we.er });
+    add('weapon', `${m.weapon.name}: passiva`, 'weapon', {
+      atkPct: we.atkPct, dmgBonus: we.dmgPct, critRate: we.critRate, critDmg: we.critDmg, em: we.em, er: we.er,
+      hpPct: we.hpPct, defPct: we.defPct, dmgByType: we.dmgPctByType,
+    });
   }
 
   const four = fourPieceActive(m) ? m.primarySet?.effect?.fourPiece : undefined;
@@ -259,6 +274,7 @@ export function staticSources(m: MemberInput, member = 0): StatSource[] {
     add('set4p', `${m.primarySet?.name} (4 peças)`, 'set-4p', {
       atkPct: four.atkPct, dmgBonus: four.dmgPct, critRate: four.critRate, critDmg: four.critDmg, em: four.em,
       meltBonus: four.meltBonus, vaporizeBonus: four.vaporizeBonus, dmgByType: four.dmgPctByType,
+      er: four.er, hpPct: four.hpPct, defPct: four.defPct,
     });
   }
 
@@ -332,7 +348,7 @@ export interface FinalStats {
 }
 
 export function weaponErAtkPct(m: MemberInput, er: number): number {
-  const p = m.weaponEffect?.atkPctPerEr;
+  const p = m.weaponEffect ? weaponStatsAt(m.weaponEffect, m.refinement).atkPctPerEr : undefined;
   return p ? Math.min(Math.max(er - 1, 0) * p.coef, p.cap) : 0;
 }
 

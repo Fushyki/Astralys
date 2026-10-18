@@ -1,9 +1,948 @@
 [
-  {"set":"Obsidian Codex","twoPiece":{"stat":"DMG%","value":0.15},"fourPiece":{"atkPct":0,"dmgPct":0,"critRate":0.4,"critDmg":0,"em":0,"dmgPctByType":{},"meltBonus":0,"vaporizeBonus":0},"fonte_info":"planilha Mavuika_Iansan_Combo2, aba \"Sets (efeitos)\""},
-  {"set":"Scroll of the Hero of Cinder City","fonte_info":"planilha Mavuika_Iansan_Combo2, aba \"Sets (efeitos)\". 12% + 28% em Nightsoul"},
-  {"set":"Noblesse Oblige","twoPiece":{"stat":"DMG% Supremo","value":0.2},"fourPiece":{"atkPct":0,"dmgPct":0,"critRate":0,"critDmg":0,"em":0,"dmgPctByType":{},"meltBonus":0,"vaporizeBonus":0,"team":{"atkPct":0.2,"dmgPct":0,"em":0}},"fonte_info":"planilha Mavuika_Iansan_Combo2, aba \"Sets (efeitos)\""},
-  {"set":"Instructor","twoPiece":{"stat":"EM","value":80},"fourPiece":{"atkPct":0,"dmgPct":0,"critRate":0,"critDmg":0,"em":0,"dmgPctByType":{},"meltBonus":0,"vaporizeBonus":0,"team":{"atkPct":0,"dmgPct":0,"em":120}},"fonte_info":"planilha Mavuika_Iansan_Combo2, aba \"Sets (efeitos)\""},
-  {"set":"Crimson Witch of Flames","twoPiece":{"stat":"DMG%","value":0.15},"fourPiece":{"atkPct":0,"dmgPct":0.075,"critRate":0,"critDmg":0,"em":0,"dmgPctByType":{},"meltBonus":0.15,"vaporizeBonus":0.15},"fonte_info":"planilha Mavuika_Iansan_Combo2, aba \"Sets (efeitos)\". 1 stack"},
-  {"set":"Gladiator's Finale","twoPiece":{"stat":"ATK%","value":0.18},"fourPiece":{"atkPct":0,"dmgPct":0,"critRate":0,"critDmg":0,"em":0,"dmgPctByType":{"normal":0.35},"meltBonus":0,"vaporizeBonus":0},"fonte_info":"planilha Mavuika_Iansan_Combo2, aba \"Sets (efeitos)\""},
-  {"set":"Shimenawa's Reminiscence","twoPiece":{"stat":"ATK%","value":0.18},"fourPiece":{"atkPct":0,"dmgPct":0,"critRate":0,"critDmg":0,"em":0,"dmgPctByType":{"normal":0.5,"charged":0.5},"meltBonus":0,"vaporizeBonus":0},"fonte_info":"planilha Mavuika_Iansan_Combo2, aba \"Sets (efeitos)\""}
+  {
+    "set": "Resolution of Sojourner",
+    "twoPiece": {
+      "stat": "ATK%",
+      "value": 0.18
+    },
+    "twoPieceMore": [],
+    "note": "4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Brave Heart",
+    "twoPiece": {
+      "stat": "ATK%",
+      "value": 0.18
+    },
+    "twoPieceMore": [],
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0.3,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {},
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0
+    },
+    "note": "Assume inimigo com mais de 50% de HP.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Defender's Will",
+    "twoPiece": {
+      "stat": "DEF%",
+      "value": 0.3
+    },
+    "twoPieceMore": [],
+    "note": "4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Tiny Miracle",
+    "twoPieceMore": [],
+    "note": "2 peças (\"All Elemental RES increased by 20%.\") não entra: sem efeito em dano. 4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Berserker",
+    "twoPiece": {
+      "stat": "CR",
+      "value": 0.12
+    },
+    "twoPieceMore": [],
+    "note": "4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Martial Artist",
+    "twoPiece": {
+      "stat": "DMG% Normal",
+      "value": 0.15
+    },
+    "twoPieceMore": [
+      {
+        "stat": "DMG% Charged",
+        "value": 0.15
+      }
+    ],
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {
+        "normal": 0.25,
+        "charged": 0.25
+      },
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0
+    },
+    "note": "Assume o bônus de 8 s depois da habilidade sempre ativo.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Instructor",
+    "twoPiece": {
+      "stat": "EM",
+      "value": 80
+    },
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {},
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "team": {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "em": 120
+      }
+    },
+    "fonte_info": "planilha Mavuika_Iansan_Combo2, aba \"Sets (efeitos)\""
+  },
+  {
+    "set": "Gambler",
+    "twoPiece": {
+      "stat": "DMG% Skill",
+      "value": 0.2
+    },
+    "twoPieceMore": [],
+    "note": "4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "The Exile",
+    "twoPiece": {
+      "stat": "ER",
+      "value": 0.2
+    },
+    "twoPieceMore": [],
+    "note": "4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Adventurer",
+    "twoPieceMore": [],
+    "note": "2 peças (\"Max HP increased by 1,000.\") não entra: sem efeito em dano. 4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Lucky Dog",
+    "twoPieceMore": [],
+    "note": "2 peças (\"DEF increased by 100.\") não entra: sem efeito em dano. 4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Scholar",
+    "twoPiece": {
+      "stat": "ER",
+      "value": 0.2
+    },
+    "twoPieceMore": [],
+    "note": "4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Traveling Doctor",
+    "twoPieceMore": [],
+    "note": "2 peças (\"Increases incoming healing by 20%.\") não entra: sem efeito em dano. 4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Blizzard Strayer",
+    "twoPiece": {
+      "stat": "DMG%",
+      "value": 0.15,
+      "element": "Cryo"
+    },
+    "twoPieceMore": [],
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0,
+      "critRate": 0.2,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {},
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0
+    },
+    "note": "Assume inimigo sob Cryo. Os +20% extras contra inimigo congelado NÃO entram.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Thundersoother",
+    "twoPieceMore": [],
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0.35,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {},
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0
+    },
+    "note": "2 peças (\"Electro RES increased by 40%.\") não entra: sem efeito em dano. Assume inimigo sob Electro.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Lavawalker",
+    "twoPieceMore": [],
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0.35,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {},
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0
+    },
+    "note": "2 peças (\"Pyro RES increased by 40%.\") não entra: sem efeito em dano. Assume inimigo sob Pyro.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Maiden Beloved",
+    "twoPieceMore": [],
+    "note": "2 peças (\"Character Healing Effectiveness +15%\") não entra: sem efeito em dano. 4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Gladiator's Finale",
+    "twoPiece": {
+      "stat": "ATK%",
+      "value": 0.18
+    },
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {
+        "normal": 0.35
+      },
+      "meltBonus": 0,
+      "vaporizeBonus": 0
+    },
+    "fonte_info": "planilha Mavuika_Iansan_Combo2, aba \"Sets (efeitos)\""
+  },
+  {
+    "set": "Viridescent Venerer",
+    "twoPiece": {
+      "stat": "DMG%",
+      "value": 0.15,
+      "element": "Anemo"
+    },
+    "twoPieceMore": [],
+    "note": "4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Wanderer's Troupe",
+    "twoPiece": {
+      "stat": "EM",
+      "value": 80
+    },
+    "twoPieceMore": [],
+    "note": "4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Glacier and Snowfield",
+    "twoPiece": {
+      "stat": "DMG%",
+      "value": 0.15,
+      "element": "Cryo"
+    },
+    "twoPieceMore": [],
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0.3,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {},
+      "meltBonus": 0.15,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0
+    },
+    "note": "Assume o +30% de dano Cryo do Supremo (10 s) sempre ativo. Os +100% de Supercondutor NÃO entram.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Thundering Fury",
+    "twoPiece": {
+      "stat": "DMG%",
+      "value": 0.15,
+      "element": "Electro"
+    },
+    "twoPieceMore": [],
+    "note": "4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Crimson Witch of Flames",
+    "twoPiece": {
+      "stat": "DMG%",
+      "value": 0.15
+    },
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0.075,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {},
+      "meltBonus": 0.15,
+      "vaporizeBonus": 0.15
+    },
+    "fonte_info": "planilha Mavuika_Iansan_Combo2, aba \"Sets (efeitos)\". 1 stack"
+  },
+  {
+    "set": "Noblesse Oblige",
+    "twoPiece": {
+      "stat": "DMG% Supremo",
+      "value": 0.2
+    },
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {},
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "team": {
+        "atkPct": 0.2,
+        "dmgPct": 0,
+        "em": 0
+      }
+    },
+    "fonte_info": "planilha Mavuika_Iansan_Combo2, aba \"Sets (efeitos)\""
+  },
+  {
+    "set": "Bloodstained Chivalry",
+    "twoPieceMore": [],
+    "note": "2 peças (\"Physical DMG +25%\") não entra: sem efeito em dano. 4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Archaic Petra",
+    "twoPiece": {
+      "stat": "DMG%",
+      "value": 0.15,
+      "element": "Geo"
+    },
+    "twoPieceMore": [],
+    "note": "4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Retracing Bolide",
+    "twoPieceMore": [],
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {
+        "normal": 0.4,
+        "charged": 0.4
+      },
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0
+    },
+    "note": "2 peças (\"Increases Shield Strength by 35%.\") não entra: sem efeito em dano. Assume personagem protegido por escudo.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Heart of Depth",
+    "twoPiece": {
+      "stat": "DMG%",
+      "value": 0.15,
+      "element": "Hydro"
+    },
+    "twoPieceMore": [],
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {
+        "normal": 0.3,
+        "charged": 0.3
+      },
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0
+    },
+    "note": "Assume o bônus de 15 s depois da habilidade sempre ativo.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Tenacity of the Millelith",
+    "twoPiece": {
+      "stat": "HP%",
+      "value": 0.2
+    },
+    "twoPieceMore": [],
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {},
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0,
+      "team": {
+        "atkPct": 0.2,
+        "dmgPct": 0,
+        "em": 0
+      }
+    },
+    "note": "ATK da equipe por 3 s depois da habilidade: só vale nas janelas de buff. A força do escudo NÃO entra.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Pale Flame",
+    "twoPieceMore": [],
+    "fourPiece": {
+      "atkPct": 0.18,
+      "dmgPct": 0,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {},
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0
+    },
+    "note": "2 peças (\"Physical DMG is increased by 25%.\") não entra: sem efeito em dano. Assume 2 stacks (9% cada). O dobro do bônus de dano Físico de 2 peças com 2 stacks NÃO entra.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Shimenawa's Reminiscence",
+    "twoPiece": {
+      "stat": "ATK%",
+      "value": 0.18
+    },
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {
+        "normal": 0.5,
+        "charged": 0.5
+      },
+      "meltBonus": 0,
+      "vaporizeBonus": 0
+    },
+    "fonte_info": "planilha Mavuika_Iansan_Combo2, aba \"Sets (efeitos)\""
+  },
+  {
+    "set": "Emblem of Severed Fate",
+    "twoPiece": {
+      "stat": "ER",
+      "value": 0.2
+    },
+    "twoPieceMore": [],
+    "note": "4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Husk of Opulent Dreams",
+    "twoPiece": {
+      "stat": "DEF%",
+      "value": 0.3
+    },
+    "twoPieceMore": [],
+    "note": "4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Ocean-Hued Clam",
+    "twoPieceMore": [],
+    "note": "2 peças (\"Healing Bonus +15%.\") não entra: sem efeito em dano. 4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Vermillion Hereafter",
+    "twoPiece": {
+      "stat": "ATK%",
+      "value": 0.18
+    },
+    "twoPieceMore": [],
+    "fourPiece": {
+      "atkPct": 0.08,
+      "dmgPct": 0,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {},
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0
+    },
+    "note": "Só os 8% de ATK do Supremo. Os +10% por perda de HP (até 4 vezes) NÃO entram.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Echoes of an Offering",
+    "twoPiece": {
+      "stat": "ATK%",
+      "value": 0.18
+    },
+    "twoPieceMore": [],
+    "note": "4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Deepwood Memories",
+    "twoPiece": {
+      "stat": "DMG%",
+      "value": 0.15,
+      "element": "Dendro"
+    },
+    "twoPieceMore": [],
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {},
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0,
+      "resShred": {
+        "value": 0.3,
+        "elements": [
+          "Dendro"
+        ]
+      }
+    },
+    "note": "Reduz a RES Dendro do inimigo em 30% (assume sempre ativo).",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Gilded Dreams",
+    "twoPiece": {
+      "stat": "EM",
+      "value": 80
+    },
+    "twoPieceMore": [],
+    "note": "4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Desert Pavilion Chronicle",
+    "twoPiece": {
+      "stat": "DMG%",
+      "value": 0.15,
+      "element": "Anemo"
+    },
+    "twoPieceMore": [],
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {
+        "normal": 0.4,
+        "charged": 0.4,
+        "plunge": 0.4
+      },
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0
+    },
+    "note": "Assume o bônus de 15 s depois do ataque carregado sempre ativo. A velocidade de ataque NÃO entra.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Flower of Paradise Lost",
+    "twoPiece": {
+      "stat": "EM",
+      "value": 80
+    },
+    "twoPieceMore": [],
+    "note": "4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Nymph's Dream",
+    "twoPiece": {
+      "stat": "DMG%",
+      "value": 0.15,
+      "element": "Hydro"
+    },
+    "twoPieceMore": [],
+    "fourPiece": {
+      "atkPct": 0.25,
+      "dmgPct": 0.15,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {},
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0
+    },
+    "note": "Assume 3 stacks de Mirrored Nymph (ATK +25% e dano Hydro +15%).",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Vourukasha's Glow",
+    "twoPiece": {
+      "stat": "HP%",
+      "value": 0.2
+    },
+    "twoPieceMore": [],
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {
+        "skill": 0.1,
+        "burst": 0.1
+      },
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0
+    },
+    "note": "Só os +10% de dano de habilidade e Supremo. O aumento por levar dano (até 5 stacks) NÃO entra.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Marechaussee Hunter",
+    "twoPiece": {
+      "stat": "DMG% Normal",
+      "value": 0.15
+    },
+    "twoPieceMore": [
+      {
+        "stat": "DMG% Charged",
+        "value": 0.15
+      }
+    ],
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0,
+      "critRate": 0.36,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {},
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0
+    },
+    "note": "Assume 3 stacks de +12% de Taxa Crítica (variação de HP).",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Golden Troupe",
+    "twoPiece": {
+      "stat": "DMG% Skill",
+      "value": 0.2
+    },
+    "twoPieceMore": [],
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {
+        "skill": 0.25
+      },
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0
+    },
+    "note": "Só os +25% de dano da habilidade em campo. Os +25% fora de campo NÃO entram.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Song of Days Past",
+    "twoPieceMore": [],
+    "note": "2 peças (\"Healing Bonus +15%.\") não entra: sem efeito em dano. 4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Nighttime Whispers in the Echoing Woods",
+    "twoPiece": {
+      "stat": "ATK%",
+      "value": 0.18
+    },
+    "twoPieceMore": [],
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0.2,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {},
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0
+    },
+    "note": "Assume +20% de dano Geo depois da habilidade sempre ativo. O aumento com escudo de Cristalizar NÃO entra.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Fragment of Harmonic Whimsy",
+    "twoPiece": {
+      "stat": "ATK%",
+      "value": 0.18
+    },
+    "twoPieceMore": [],
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0.54,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {},
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0
+    },
+    "note": "Assume 3 stacks de +18% de dano (Bond of Life).",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Unfinished Reverie",
+    "twoPiece": {
+      "stat": "ATK%",
+      "value": 0.18
+    },
+    "twoPieceMore": [],
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0.5,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {},
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0
+    },
+    "note": "Assume o bônus máximo de 50% de dano (fora de combate ou com inimigo em Queimadura).",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Scroll of the Hero of Cinder City",
+    "fonte_info": "planilha Mavuika_Iansan_Combo2, aba \"Sets (efeitos)\". 12% + 28% em Nightsoul"
+  },
+  {
+    "set": "Obsidian Codex",
+    "twoPiece": {
+      "stat": "DMG%",
+      "value": 0.15
+    },
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0,
+      "critRate": 0.4,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {},
+      "meltBonus": 0,
+      "vaporizeBonus": 0
+    },
+    "fonte_info": "planilha Mavuika_Iansan_Combo2, aba \"Sets (efeitos)\""
+  },
+  {
+    "set": "Long Night's Oath",
+    "twoPiece": {
+      "stat": "DMG% Plunge",
+      "value": 0.25
+    },
+    "twoPieceMore": [],
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {
+        "plunge": 0.75
+      },
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0
+    },
+    "note": "Assume 5 stacks de +15% de dano do ataque imersivo.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Finale of the Deep Galleries",
+    "twoPiece": {
+      "stat": "DMG%",
+      "value": 0.15,
+      "element": "Cryo"
+    },
+    "twoPieceMore": [],
+    "note": "4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Night of the Sky's Unveiling",
+    "twoPiece": {
+      "stat": "EM",
+      "value": 80
+    },
+    "twoPieceMore": [],
+    "note": "4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Silken Moon's Serenade",
+    "twoPiece": {
+      "stat": "ER",
+      "value": 0.2
+    },
+    "twoPieceMore": [],
+    "note": "4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Aubade of Morningstar and Moon",
+    "twoPiece": {
+      "stat": "EM",
+      "value": 80
+    },
+    "twoPieceMore": [],
+    "note": "4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "A Day Carved From Rising Winds",
+    "twoPiece": {
+      "stat": "ATK%",
+      "value": 0.18
+    },
+    "twoPieceMore": [],
+    "fourPiece": {
+      "atkPct": 0.25,
+      "dmgPct": 0,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {},
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0
+    },
+    "note": "Só o +25% de ATK. O efeito extra de \"Witch's Homework\" NÃO entra.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Celestial Gift",
+    "twoPiece": {
+      "stat": "ER",
+      "value": 0.2
+    },
+    "twoPieceMore": [],
+    "note": "4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Disenchantment in Deep Shadow",
+    "twoPiece": {
+      "stat": "ATK%",
+      "value": 0.18
+    },
+    "twoPieceMore": [],
+    "note": "4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Scarlet Proof",
+    "twoPiece": {
+      "stat": "ATK%",
+      "value": 0.18
+    },
+    "twoPieceMore": [],
+    "note": "4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Heart of the Furnace",
+    "twoPiece": {
+      "stat": "ATK%",
+      "value": 0.18
+    },
+    "twoPieceMore": [],
+    "note": "4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  }
 ]

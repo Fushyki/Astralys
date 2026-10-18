@@ -13,7 +13,9 @@ import { useRotationStore } from './store';
 import { summarize, type Summary } from './summary';
 import { useAnalysis } from './useAnalysis';
 import { Inspector } from './Inspector';
+import { BuildEditor } from './BuildEditor';
 import { Palette } from './Palette';
+import { TeamBar } from './TeamBar';
 import { Timeline } from './Timeline';
 import { buffLanes } from './buffLanes';
 import type { ActionResult } from '../../engine';
@@ -180,6 +182,7 @@ export default function RotationPage() {
   const dirty = useRotationStore((s) => s.dirty);
   const open = useRotationStore((s) => s.open);
   const markSaved = useRotationStore((s) => s.markSaved);
+  const selectedMember = useRotationStore((s) => s.selectedMember);
 
   // Abre o projeto da rota (salvo localmente ou o exemplo).
   useEffect(() => {
@@ -257,6 +260,10 @@ export default function RotationPage() {
 
   const summary = summarize(analysis.bundle, analysis.resolved);
   const lanes = buffLanes(analysis.resolved.team);
+  // A análise roda no worker e chega alguns instantes depois da edição: enquanto a equipe dela não é a mesma
+  // do projeto (membro adicionado, removido ou trocado), as partes que dependem dos dois ficam em espera.
+  const resolvedMembers = analysis.resolved.team.members;
+  const inSync = resolvedMembers.length === current.members.length && resolvedMembers.every((m, i) => m.character.name === current.members[i].character);
   const results = analysis.bundle.optimization.result.actions;
   return (
     <div className="ast-app">
@@ -269,22 +276,24 @@ export default function RotationPage() {
           </span>
           <Link className="ast-btn" to="/">Voltar ao site</Link>
         </header>
-        <div className="ast-members" aria-label="Equipe">
-          {summary.members.map((m) => (
-            <span className="ast-chip" key={m.name} style={{ ['--c' as string]: m.color }}>
-              <i />
-              {m.name}
-            </span>
-          ))}
-        </div>
+        {data && <TeamBar project={current} data={data} />}
         <Kpis s={summary} />
         <h2 className="ast-sec ast-caps">Linha do tempo</h2>
         <Toolbar hasManual={current.actions.some((a) => a.tagSource === 'manual')} isSample={current.id === SAMPLE_ID} />
-        <Timeline project={current} results={results} members={summary.members} lanes={lanes} total={summary.avg} />
+        {inSync ? (
+          <Timeline project={current} results={results} members={summary.members} lanes={lanes} total={summary.avg} />
+        ) : (
+          <p className="ast-hint" style={{ padding: 18 }} role="status">Atualizando a equipe…</p>
+        )}
         <div className="ast-edit">
           <Inspector project={current} results={results} lanes={lanes} />
           {data && <Palette project={current} moves={data.game.moves} members={summary.members} />}
         </div>
+        {data && inSync && (
+          <div className="ast-panels">
+            <BuildEditor project={current} data={data} bundle={analysis.bundle} index={Math.min(selectedMember, current.members.length - 1)} />
+          </div>
+        )}
         <Panels s={summary} />
         <h2 className="ast-sec ast-caps">Ações da rotação</h2>
         <ActionsTable actions={results} total={summary.avg} />

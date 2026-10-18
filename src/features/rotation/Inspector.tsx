@@ -2,9 +2,9 @@
  * Inspetor: edita o golpe ou a janela de buff selecionados na linha do tempo e mostra a cascata de multiplicadores
  * do golpe. Os campos numéricos confirmam ao sair do campo ou com Enter (uma entrada no histórico por edição).
  */
-import type { KeyboardEvent } from 'react';
 import { hitWaterfall, type ActionResult, type ActionRef, type RotationProject } from '../../engine';
 import { Hint, Panel } from '../../ui/components';
+import { NumberField } from '../../ui/NumberField';
 import { formatDecimal, formatInt } from '../../ui/format';
 import type { BuffLane } from './buffLanes';
 import { useRotationStore } from './store';
@@ -16,33 +16,6 @@ const REACTIONS: [ActionRef['reaction'], string][] = [
   ['spread', 'Espalhar'],
   ['aggravate', 'Intensificar'],
 ];
-
-function NumberField({ label, value, min, step, suffix, onCommit }: { label: string; value: number; min?: number; step: number; suffix?: string; onCommit: (v: number) => void }) {
-  const commit = (el: HTMLInputElement) => {
-    const v = Number(el.value.replace(',', '.'));
-    if (Number.isFinite(v) && v !== value) onCommit(v);
-    else el.value = String(value);
-  };
-  return (
-    <label className="ast-field">
-      <span>{label}</span>
-      <span className="in">
-        <input
-          // A chave refaz o campo quando o valor muda por outro caminho (desfazer, arrastar).
-          key={String(value)}
-          type="number"
-          inputMode="decimal"
-          min={min}
-          step={step}
-          defaultValue={value}
-          onBlur={(e) => commit(e.currentTarget)}
-          onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => e.key === 'Enter' && e.currentTarget.blur()}
-        />
-        {suffix ? <em>{suffix}</em> : null}
-      </span>
-    </label>
-  );
-}
 
 function ActionEditor({ action, result, lanes }: { action: ActionRef; result?: ActionResult; lanes: BuffLane[] }) {
   const update = useRotationStore((s) => s.updateAction);

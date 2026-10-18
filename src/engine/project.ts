@@ -6,6 +6,7 @@
 import { z } from 'zod';
 import type { ArtifactSet, Character, Move, Talent, Weapon } from '../data/schema';
 import type { CharacterEffect, FlatDamageEffect, SetEffect, WeaponEffect } from '../effects/schema';
+import { SUBSTATS, type Rolls } from './artifacts';
 import { AMP_EM_COEFFICIENT_SHEET } from './constants/reactions';
 import type { ExtraScale, ReactionChoice, ResolvedMove, RotationAction } from './rotation';
 import type { MemberInput } from './stats';
@@ -52,6 +53,8 @@ export const MemberRefSchema = z.object({
   minER: z.number().min(0).optional(),
   totalRolls: z.number().int().min(0).optional(),
   forcedCritRolls: z.number().int().min(0).optional(),
+  /** Rolls totais por substat definidos à mão (os que faltam valem o mínimo). Ausente = otimizar. */
+  manualRolls: z.record(z.enum(SUBSTATS), z.number().int().min(0).max(60)).optional(),
 });
 export type MemberRef = z.infer<typeof MemberRefSchema>;
 
@@ -226,7 +229,7 @@ function byName<T extends { name: string }>(list: T[], name: string, what: strin
   return found;
 }
 
-export function resolveMember(ref: MemberRef, data: GameData, effects: EffectsData): MemberInput {
+export function resolveMember(ref: MemberRef, data: GameData, effects: EffectsData, minRolls = 0): MemberInput {
   const setOf = (name?: string) => (name ? { name, effect: effects.sets.find((s) => s.set === name) } : undefined);
   const weapon = byName(data.weapons, ref.weapon, 'Arma');
   return {
@@ -241,7 +244,15 @@ export function resolveMember(ref: MemberRef, data: GameData, effects: EffectsDa
     minER: ref.minER,
     totalRolls: ref.totalRolls,
     forcedCritRolls: ref.forcedCritRolls,
+    manualRolls: ref.manualRolls ? manualToRolls(ref.manualRolls, minRolls) : undefined,
   };
+}
+
+/** Completa os rolls manuais: o que não foi informado vale o mínimo configurado. */
+export function manualToRolls(partial: Partial<Record<(typeof SUBSTATS)[number], number>>, minRolls: number): Rolls {
+  const rolls = {} as Rolls;
+  for (const s of SUBSTATS) rolls[s] = partial[s] ?? minRolls;
+  return rolls;
 }
 
 export interface ResolvedProject {
@@ -254,7 +265,7 @@ export interface ResolvedProject {
 
 /** Transforma o projeto salvo nas entradas do motor. Lança ProjectResolveError se algo não existir nos dados. */
 export function resolveProject(project: RotationProject, data: GameData, effects: EffectsData): ResolvedProject {
-  const members = project.members.map((m) => resolveMember(m, data, effects));
+  const members = project.members.map((m) => resolveMember(m, data, effects, project.config.minRollsPerSubstat));
   const moves = indexMoves(data.moves);
   const config: GlobalConfig = { ...project.config };
 

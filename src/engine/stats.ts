@@ -134,6 +134,11 @@ export interface MemberInput {
   totalRolls?: number;
   /** Rolls TOTAIS em CR+CD forçados (inclui os mínimos). Vazio = otimizar. */
   forcedCritRolls?: number;
+  /**
+   * Rolls TOTAIS por substat (inclui o mínimo) definidos à mão. Quando presente, o otimizador não mexe neste
+   * membro: é o modo "theorycraft" manual.
+   */
+  manualRolls?: Rolls;
 }
 
 export const fourPieceActive = (m: MemberInput) => !!m.primarySet && !m.secondarySet;

@@ -3,8 +3,9 @@
  * A lógica de edição está em projectOps.ts; aqui só se orquestra histórico e seleção.
  */
 import { create } from 'zustand';
-import type { ActionRef, RotationProject } from '../../engine';
+import type { ActionRef, MemberRef, RotationProject, Substat } from '../../engine';
 import * as ops from './projectOps';
+import * as team from './teamOps';
 
 const HISTORY_LIMIT = 100;
 
@@ -14,6 +15,8 @@ export interface RotationState {
   future: RotationProject[];
   selectedActionId: string | null;
   selectedWindowId: string | null;
+  /** Membro cujo build está aberto no editor. */
+  selectedMember: number;
   /** Instante (s) marcado na régua; onde novos golpes são inseridos. */
   playhead: number;
   /** Há alterações desde que o projeto foi aberto ou salvo. */
@@ -23,6 +26,7 @@ export interface RotationState {
   markSaved: () => void;
   select: (id: string | null) => void;
   selectWindow: (id: string | null) => void;
+  selectMember: (index: number) => void;
   setPlayhead: (t: number) => void;
 
   addAction: (input: ops.NewAction) => string | null;
@@ -38,6 +42,14 @@ export interface RotationState {
   removeWindow: (id: string) => void;
   setTagSource: (id: string, source: 'manual' | 'windows') => void;
   convertProfilesToWindows: () => void;
+
+  updateMember: (index: number, patch: Partial<MemberRef>) => void;
+  addMember: (ref: MemberRef) => void;
+  removeMember: (index: number) => void;
+  replaceMember: (index: number, ref: MemberRef) => void;
+  useManualRolls: (index: number, start: Record<Substat, number>) => void;
+  useAutoRolls: (index: number) => void;
+  setManualRoll: (index: number, substat: Substat, value: number) => void;
 
   undo: () => void;
   redo: () => void;
@@ -63,13 +75,15 @@ export const useRotationStore = create<RotationState>((set, get) => {
     future: [],
     selectedActionId: null,
     selectedWindowId: null,
+    selectedMember: 0,
     playhead: 0,
     dirty: false,
 
-    open: (project) => set({ project, past: [], future: [], selectedActionId: null, selectedWindowId: null, playhead: 0, dirty: false }),
+    open: (project) => set({ project, past: [], future: [], selectedActionId: null, selectedWindowId: null, selectedMember: 0, playhead: 0, dirty: false }),
     markSaved: () => set({ dirty: false }),
     select: (id) => set({ selectedActionId: id, ...(id ? { selectedWindowId: null } : {}) }),
     selectWindow: (id) => set({ selectedWindowId: id, ...(id ? { selectedActionId: null } : {}) }),
+    selectMember: (index) => set({ selectedMember: index }),
     setPlayhead: (t) => set({ playhead: ops.clampTime(t) }),
 
     addAction: (input) => {
@@ -114,6 +128,30 @@ export const useRotationStore = create<RotationState>((set, get) => {
     },
     setTagSource: (id, source) => commit(get().project && ops.setTagSource(get().project!, id, source)),
     convertProfilesToWindows: () => commit(get().project && ops.windowsFromProfiles(get().project!)),
+
+    updateMember: (index, patch) => commit(get().project && team.updateMember(get().project!, index, patch)),
+    addMember: (ref) => {
+      const project = get().project;
+      if (!project) return;
+      const next = team.addMember(project, ref);
+      commit(next);
+      if (next !== project) set({ selectedMember: next.members.length - 1 });
+    },
+    removeMember: (index) => {
+      const project = get().project;
+      if (!project) return;
+      const next = team.removeMember(project, index);
+      commit(next, null);
+      if (next !== project) set({ selectedMember: Math.min(get().selectedMember, next.members.length - 1), selectedWindowId: null });
+    },
+    replaceMember: (index, ref) => {
+      const project = get().project;
+      if (!project) return;
+      commit(team.replaceMember(project, index, ref), null);
+    },
+    useManualRolls: (index, start) => commit(get().project && team.useManualRolls(get().project!, index, start)),
+    useAutoRolls: (index) => commit(get().project && team.useAutoRolls(get().project!, index)),
+    setManualRoll: (index, substat, value) => commit(get().project && team.setManualRoll(get().project!, index, substat, value)),
 
     undo: () => {
       const { project, past, future } = get();

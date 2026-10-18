@@ -56,6 +56,8 @@ export interface OptimizationResult {
   mainScale: MainScale;
   /** Suporte sem dano próprio: maximiza o stat do dano fixo que fornece. */
   support: boolean;
+  /** Os rolls foram definidos à mão (não houve otimização). */
+  manual?: boolean;
   budget: { total: number; free: number; erRolls: number; damageRolls: number };
   /** Rolls livres (além do mínimo) em cada destino. */
   free: { cr: number; cd: number; scale: number; em: number; er: number };
@@ -80,6 +82,22 @@ const ceilTol = (x: number) => Math.ceil(x - 1e-9);
 export function optimizeMember(ctx: OptimizerContext, memberIndex: number, flatByAction?: readonly number[]): OptimizationResult {
   const { members, assembly, config } = ctx;
   const m = members[memberIndex];
+
+  // Rolls definidos à mão: não há o que otimizar.
+  if (m.manualRolls) {
+    const rolls = { ...m.manualRolls };
+    const used = Object.values(rolls).reduce((s, x) => s + x, 0);
+    return {
+      member: memberIndex,
+      rolls,
+      mainScale: 'atk',
+      support: false,
+      manual: true,
+      budget: { total: used, free: 0, erRolls: 0, damageRolls: 0 },
+      free: { cr: 0, cd: 0, scale: 0, em: 0, er: 0 },
+      expectedAvg: 0,
+    };
+  }
   const names = members.map((x) => x.character.name);
   const statics = assembly.statics[memberIndex];
   const rv = rollValues(m.artifacts);

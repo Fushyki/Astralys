@@ -118,6 +118,23 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   check('a tabela marca os golpes com reação', (await page.$$('.ast-dmgtable .ast-flag')).length > 0);
   await page.selectOption('select[aria-label="Reação da tabela de dano"]', 'none'); await settle();
 
+  // Otimizador interativo
+  await page.waitForSelector('.ast-opt svg');
+  const optTitle = await page.textContent('.ast-panel:has(.ast-opt) > h2');
+  check('otimizador do personagem selecionado', optTitle === 'Otimizador de Mavuika', optTitle);
+  const rollsNow = async () => page.$eval('.ast-slider b', (e) => Number(e.textContent));
+  const startRolls = await rollsNow();
+  await page.$eval('.ast-slider input', (el) => { const set = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set; set.call(el, '0'); el.dispatchEvent(new Event('input', { bubbles: true })); });
+  await settle();
+  const lowRolls = await rollsNow();
+  const lowInfo = await page.$eval('.ast-opt-info', (e) => e.textContent);
+  check('o controle muda a distribuição mostrada', lowRolls < startRolls && /Contra o build atual-/.test(lowInfo), `${startRolls} → ${lowRolls}`);
+  await page.click('button:has-text("Usar 4 rolls em crítico")'); await page.waitForTimeout(900);
+  const forcedField = await field('Rolls em critico fixos (0 = otimizar)').locator('input').inputValue().catch(() => null);
+  const forcedField2 = forcedField ?? (await page.$eval('label.ast-field:has(span:text-matches("Rolls em cr.tico fixos"))  input', (e) => e.value));
+  check('aplicar a distribuição fixa os rolls em crítico do build', forcedField2 === '4', `campo = ${forcedField2}`);
+  await page.click('button:has-text("Deixar o otimizador escolher")'); await page.waitForTimeout(900);
+
   // Persistência da equipe
   await page.waitForTimeout(700);
   await page.reload({ waitUntil: 'networkidle' }); await page.waitForSelector('.ast-slot');

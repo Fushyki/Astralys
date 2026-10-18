@@ -14,3 +14,4 @@ export * from './analysis';
 export * from './project';
 export * from './bundle';
 export * from './damageTable';
+export * from './critSweep';

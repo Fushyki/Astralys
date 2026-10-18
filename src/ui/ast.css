@@ -217,3 +217,26 @@
 .ast-dmgtable th:first-child, .ast-dmgtable td:first-child { text-align: left }
 .ast-dmgtable .group th { text-align: left; background: var(--ink-3); color: var(--txt) }
 .ast-dmgtable .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 8px }
+
+/* ---------- Otimizador interativo ---------- */
+.ast-opt svg { width: 100%; height: auto; max-height: 260px; display: block }
+.ast-opt .grid { stroke: var(--track) }
+.ast-opt .tick { fill: var(--dim); font-size: 11px; font-family: var(--body) }
+.ast-opt .line { fill: none; stroke: var(--gold); stroke-width: 2 }
+.ast-opt .cursor { stroke: var(--edge); stroke-dasharray: 3 3 }
+.ast-opt circle.best { fill: none; stroke: var(--gold); stroke-width: 2 }
+.ast-opt circle.cur { fill: #6fb7ff }
+.ast-opt circle.sel { fill: var(--txt) }
+.ast-opt .axis { text-align: center; color: var(--dim); font-size: .8rem; margin: 0 }
+.ast-slider { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; margin: 10px 0; color: var(--dim) }
+.ast-slider input { width: 100%; accent-color: var(--gold) }
+.ast-slider b { color: var(--txt); min-width: 2ch; text-align: right }
+.ast-opt-info { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 8px 24px; margin: 8px 0 }
+.ast-opt-info div { display: flex; justify-content: space-between; gap: 12px; border-bottom: 1px solid var(--track); padding: 4px 0 }
+.ast-opt-info dt { color: var(--dim) }
+.ast-opt-info dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums }
+.ast-opt .legend { color: var(--dim); font-size: .85rem; margin: 8px 0 12px }
+.ast-opt .legend .k { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin: 0 4px 0 12px; vertical-align: -1px }
+.ast-opt .legend .k.best { border: 2px solid var(--gold) }
+.ast-opt .legend .k.cur { background: #6fb7ff }
+.ast-opt-info div:last-child { grid-column: 1 / -1 }

@@ -14,6 +14,7 @@ import { summarize, type Summary } from './summary';
 import { useAnalysis } from './useAnalysis';
 import { Inspector } from './Inspector';
 import { BuildEditor } from './BuildEditor';
+import { CritOptimizer } from './CritOptimizer';
 import { DamageTable } from './DamageTable';
 import { Palette } from './Palette';
 import { TeamBar } from './TeamBar';
@@ -334,6 +335,7 @@ export default function RotationPage() {
         )}
         {data && inSync && (
           <div className="ast-panels">
+            <CritOptimizer project={current} resolved={analysis.resolved} bundle={analysis.bundle} index={Math.min(selectedMember, current.members.length - 1)} />
             <DamageTable resolved={analysis.resolved} bundle={analysis.bundle} data={data} index={Math.min(selectedMember, current.members.length - 1)} />
           </div>
         )}

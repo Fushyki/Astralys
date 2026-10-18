@@ -21,6 +21,41 @@ const TeamFlatAtkSchema = z.object({
   cap: frac,
 });
 
+/** Bônus que um talento (passiva ou constelação) dá, em frações (EM em pontos). */
+const BuffStatsSchema = z.object({
+  atkPct: frac,
+  dmgPct: frac,
+  critRate: frac,
+  critDmg: frac,
+  em: frac,
+  er: frac,
+  hpPct: frac,
+  defPct: frac,
+  dmgPctByType: z.record(HitTypeSchema, z.number()).default({}),
+});
+export type BuffStats = z.infer<typeof BuffStatsSchema>;
+
+/**
+ * Um buff de passiva ou constelação. Vale a partir de `minConstellation`. `timed` buffs viram uma faixa na linha do
+ * tempo (só valem nas janelas em que você os liga); sem `timed`, só o próprio personagem (`self`) ganha, o tempo todo.
+ */
+export const CharacterBuffSchema = z.object({
+  id: z.string().min(1),
+  /** Nome curto da faixa na linha do tempo, ex.: "Hu Tao: A1". */
+  label: z.string().min(1),
+  minConstellation: z.number().int().min(0).max(6).default(0),
+  scope: z.enum(['self', 'others', 'team']),
+  timed: z.boolean(),
+  /** Só personagens destes elementos recebem (ex.: "+15% de DMG Pyro" para a equipe). */
+  forElements: z.array(ElementSchema).optional(),
+  stats: BuffStatsSchema.optional(),
+  /** Redução de RES do inimigo (vale o tempo todo). */
+  resShred: z.object({ value: z.number(), elements: z.array(ElementSchema).min(1) }).optional(),
+  /** O que foi assumido e o que não entra. */
+  note: z.string().optional(),
+});
+export type CharacterBuff = z.infer<typeof CharacterBuffSchema>;
+
 export const CharacterEffectSchema = z.object({
   character: z.string().min(1),
   atkPct: frac,
@@ -33,6 +68,8 @@ export const CharacterEffectSchema = z.object({
   appliesToSelf: z.boolean().default(false),
   /** Redução de RES no inimigo, só nos elementos listados. */
   resShred: z.object({ value: z.number(), elements: z.array(ElementSchema).min(1) }).optional(),
+  /** Passivas e constelações com número (a partir de `minConstellation`). */
+  buffs: z.array(CharacterBuffSchema).default([]),
   fonte_info: FonteInfo,
 });
 export type CharacterEffect = z.infer<typeof CharacterEffectSchema>;

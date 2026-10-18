@@ -253,7 +253,7 @@ export function Timeline({ project, results, members, lanes, total }: Props) {
                   onDoubleClick={(e) => st().addWindow(lane.tag, snap(timeFromEvent(e)))}
                 />
                 <rect x={8} y={y} width={108} height={BUFF_BAR_H + 4} fill="#0e1126" stroke="#2a2e55" />
-                <text x={16} y={y + 16.5} fontSize="13" fontWeight="600" fill="#efe3c2" letterSpacing=".6">{lane.label.toUpperCase()}</text>
+                <text x={16} y={y + 16.5} fontSize={lane.label.length > 11 ? 10.5 : 13} fontWeight="600" fill="#efe3c2" letterSpacing=".6">{lane.label.toUpperCase()}</text>
                 {project.buffWindows
                   .filter((w) => w.tag === lane.tag)
                   .map((w) => {

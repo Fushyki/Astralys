@@ -52,6 +52,8 @@ export const CharacterSchema = z.object({
     cooldown: z.number().nullable(),
   }),
   particles: z.array(ParticleSourceSchema),
+  /** Talento cujo nível sobe 3 pontos na C3 e na C5 (null = o texto não casa com nenhum talento). */
+  constellationBoosts: z.object({ c3: z.enum(['normal', 'skill', 'burst']).nullable(), c5: z.enum(['normal', 'skill', 'burst']).nullable() }).optional(),
 });
 export type Character = z.infer<typeof CharacterSchema>;
 

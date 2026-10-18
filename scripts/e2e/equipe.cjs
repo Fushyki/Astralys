@@ -168,6 +168,18 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   check('tabela de refinamentos R1 a R5 da arma atual', refineRows.length === 5 && /R5.*atual/.test(refineRows[4]), refineRows.map((t) => t.slice(0, 12)).join(' | '));
   await field('Arma').locator('select').selectOption({ label: '5★ A Thousand Blazing Suns' }); await settle();
 
+  // Constelação e buffs de passivas
+  const lanesText = await page.$$eval('svg text', (t) => t.map((x) => x.textContent));
+  check('passivas de personagem viram faixas de buff na linha do tempo (Ayaka A1 e A4)', lanesText.includes('AYAKA A1') && lanesText.includes('AYAKA A4'), lanesText.filter((t) => /AYAKA/.test(t)).join(', '));
+  check('constelações só aparecem na linha do tempo a partir do nível pedido', !lanesText.includes('RAIDEN C4'));
+  await page.click('.ast-slot-main:has-text("Mavuika")'); await settle();
+  const talentsText = async () => page.$eval('.ast-build', (e) => e.textContent.match(/Níveis efetivos: ([\d/]+)/)?.[1]);
+  const t0 = await talentsText();
+  await field('Constelação').locator('select').selectOption('3'); await settle();
+  const t3 = await talentsText();
+  check('a constelação C3 soma +3 ao talento certo (Mavuika: Supremo)', t0 === '10/10/10' && t3 === '10/10/13', `${t0} → ${t3}`);
+  await field('Constelação').locator('select').selectOption('0'); await settle();
+
   // Persistência da equipe
   await page.waitForTimeout(700);
   await page.reload({ waitUntil: 'networkidle' }); await page.waitForSelector('.ast-slot');

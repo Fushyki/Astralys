@@ -65,10 +65,12 @@ interface RawArtifactListEntry {
   qualityType: string;
 }
 interface RawSkill {
+  name?: string;
   multipliers?: Record<string, string[]>;
 }
 interface RawCharDetail {
   skills: { normalattack?: RawSkill; elementalskill?: RawSkill; elementalburst?: RawSkill };
+  constellations?: Record<string, { name?: string; description?: string }>;
   energy?: { source: string; particles: string; chance: string; cd: string }[];
 }
 interface RawWeaponDetail {
@@ -204,6 +206,30 @@ function buildMoves(char: Character, detail: RawCharDetail, detailPt: RawCharDet
   return moves;
 }
 
+/** C3 e C5 aumentam em 3 o nível de um talento: o texto diz qual ("Increases the Level of X by 3"). */
+function constellationBoosts(detail: RawCharDetail): { c3: Talent | null; c5: Talent | null } {
+  const strip = (t: string) =>
+    t
+      .replace(/<[^>]*>/g, '')
+      .replace(/\{\/?LINK[^}]*\}/g, '')
+      .replace(/^\s*(normal attack|elemental skill|elemental burst):?\s*/i, '')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .toLowerCase();
+  const talentOf = (name: string): Talent | null => {
+    for (const [key, talent] of TALENTS) {
+      const skillName = (detail.skills[key] as { name?: string } | undefined)?.name;
+      if (skillName && strip(skillName) === name) return talent;
+    }
+    return null;
+  };
+  const of = (key: string): Talent | null => {
+    const m = (detail.constellations?.[key]?.description ?? '').match(/Increases? the Level of (.*?) by 3/i);
+    return m ? talentOf(strip(m[1])) : null;
+  };
+  return { c3: of('const3'), c5: of('const5') };
+}
+
 function burstInfo(detail: RawCharDetail) {
   const m = detail.skills.elementalburst?.multipliers ?? {};
   return {
@@ -290,6 +316,7 @@ async function main() {
       baseDef: def,
       ascension,
       burst: burstInfo(detail),
+      constellationBoosts: constellationBoosts(detail),
       particles: (detail.energy ?? []).map((e) => ({
         source: e.source,
         particles: e.particles,

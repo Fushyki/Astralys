@@ -53,7 +53,10 @@ export const MemberRefSchema = z.object({
   /** false = só 2 peças do set principal (sem o bônus de 4 peças). Padrão: 4 peças quando não há segundo set. */
   fourPiece: z.boolean().optional(),
   artifacts: ArtifactConfigSchema,
+  /** Níveis BASE dos talentos (sem o +3 das constelações). */
   talents: z.object({ normal: TalentLevel, skill: TalentLevel, burst: TalentLevel }),
+  /** Constelação (0 a 6). Ausente = C0. Sobe em 3 o nível dos talentos da C3 e da C5. */
+  constellation: z.number().int().min(0).max(6).optional(),
   minER: z.number().min(0).optional(),
   totalRolls: z.number().int().min(0).optional(),
   forcedCritRolls: z.number().int().min(0).optional(),
@@ -254,11 +257,26 @@ function byName<T extends { name: string }>(list: T[], name: string, what: strin
   return found;
 }
 
+/** Níveis efetivos dos talentos: o nível base mais 3 no talento da C3 (se C≥3) e no da C5 (se C≥5), no máximo 15. */
+export function effectiveTalents(
+  base: { normal: number; skill: number; burst: number },
+  constellation: number | undefined,
+  character: { constellationBoosts?: { c3: Talent | null; c5: Talent | null } },
+): { normal: number; skill: number; burst: number } {
+  const out = { ...base };
+  const c = constellation ?? 0;
+  const b = character.constellationBoosts;
+  if (b?.c3 && c >= 3) out[b.c3] = Math.min(15, out[b.c3] + 3);
+  if (b?.c5 && c >= 5) out[b.c5] = Math.min(15, out[b.c5] + 3);
+  return out;
+}
+
 export function resolveMember(ref: MemberRef, data: GameData, effects: EffectsData, minRolls = 0): MemberInput {
   const setOf = (name?: string) => (name ? { name, effect: effects.sets.find((s) => s.set === name) } : undefined);
   const weapon = byName(data.weapons, ref.weapon, 'Arma');
+  const character = byName(data.characters, ref.character, 'Personagem');
   return {
-    character: byName(data.characters, ref.character, 'Personagem'),
+    character,
     weapon,
     characterEffect: effects.characters.find((c) => c.character === ref.character),
     weaponEffect: effects.weapons.find((w) => w.weapon === weapon.name),
@@ -267,7 +285,8 @@ export function resolveMember(ref: MemberRef, data: GameData, effects: EffectsDa
     fourPiece: ref.fourPiece,
     refinement: ref.refinement,
     artifacts: ref.artifacts,
-    talents: ref.talents,
+    talents: effectiveTalents(ref.talents, ref.constellation, character),
+    constellation: ref.constellation,
     minER: ref.minER,
     totalRolls: ref.totalRolls,
     forcedCritRolls: ref.forcedCritRolls,

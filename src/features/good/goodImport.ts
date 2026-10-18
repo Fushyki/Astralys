@@ -5,7 +5,7 @@
  *
  * Limites desta importação (anotados nas notas devolvidas ao usuário): o nível das peças e da arma não entra (o motor
  * assume peças no nível máximo), o refinamento e as constelações não entram nos números, e os níveis de talento do
- * GOOD não incluem o bônus de constelação. O refinamento da arma entra (armas com tabela por refinamento).
+ * GOOD não incluem o bônus de constelação (o motor soma o +3 pela constelação importada). O refinamento da arma entra (armas com tabela por refinamento).
  */
 import { z } from 'zod';
 import type { Character } from '../../data/schema';
@@ -77,7 +77,7 @@ const isDmgKey = (k: string) => /_dmg_$/.test(k);
 
 export interface GoodBuild {
   /** Campos do membro que o import preenche. */
-  patch: Pick<MemberRef, 'artifacts' | 'talents' | 'manualRolls'> & Partial<Pick<MemberRef, 'weapon' | 'refinement' | 'primarySet' | 'secondarySet' | 'fourPiece'>>;
+  patch: Pick<MemberRef, 'artifacts' | 'talents' | 'manualRolls' | 'constellation'> & Partial<Pick<MemberRef, 'weapon' | 'refinement' | 'primarySet' | 'secondarySet' | 'fourPiece'>>;
   /** Avisos e limites desta importação, em português. */
   notes: string[];
   /** Refinamento da arma no GOOD (1 a 5), informativo. */
@@ -173,11 +173,12 @@ export function buildFromGood(good: Good, characterName: string, game: Pick<Game
   const tal = gc.talent ?? {};
   const clamp = (v: number | undefined) => Math.min(15, Math.max(1, Math.round(v ?? 10)));
   const talents = { normal: clamp(tal.auto), skill: clamp(tal.skill), burst: clamp(tal.burst) };
-  if ((gc.constellation ?? 0) >= 3) notes.push('O GOOD não inclui o +3 de nível de talento das constelações; ajuste os níveis à mão se precisar.');
+  const constellation = Math.min(6, Math.max(0, Math.round(gc.constellation ?? 0)));
+  if (constellation >= 3) notes.push(`C${constellation}: o +3 de nível dos talentos das constelações é somado ao nível base do inventário.`);
   notes.push('Rolls calculados pela soma exata dos substats das peças (fracionários). O nível da arma e das peças não entra: o motor usa o nível máximo. O refinamento vem do inventário e vale nas armas com tabela por refinamento.');
 
   return {
-    patch: { ...(weapon ? { weapon, ...(gw?.refinement ? { refinement: Math.min(5, Math.max(1, Math.round(gw.refinement))) } : {}) } : {}), primarySet, secondarySet, fourPiece, artifacts, talents, manualRolls },
+    patch: { ...(weapon ? { weapon, ...(gw?.refinement ? { refinement: Math.min(5, Math.max(1, Math.round(gw.refinement))) } : {}) } : {}), primarySet, secondarySet, fourPiece, artifacts, talents, manualRolls, constellation: constellation || undefined },
     notes,
     refinement: gw?.refinement,
   };

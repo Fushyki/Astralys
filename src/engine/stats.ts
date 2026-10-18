@@ -7,7 +7,7 @@
  * as janelas de tempo dos buffs preenchem isso.
  */
 import type { Character, HitType, Weapon } from '../data/schema';
-import { weaponStatsAt, type CharacterEffect, type SetEffect, type WeaponEffect } from '../effects/schema';
+import { weaponStatsAt, type BuffStats, type CharacterBuff, type CharacterEffect, type SetEffect, type WeaponEffect } from '../effects/schema';
 import {
   FLOWER_HP,
   MAIN_STAT_VALUES,
@@ -131,7 +131,9 @@ export interface MemberInput {
   /** false = só 2 peças do set principal (sem o bônus de 4 peças e sem segundo set). Padrão: true. */
   fourPiece?: boolean;
   artifacts: ArtifactConfig;
+  /** Níveis EFETIVOS (já com o +3 das constelações). */
   talents: { normal: number; skill: number; burst: number };
+  constellation?: number;
   /** ER mínimo desejado (1 = 100%). */
   minER?: number;
   /** Rolls totais de substat (padrão: 9 por peça 5★ + 7 por peça 4★). */
@@ -189,6 +191,19 @@ function mainStatValue(slot: 'sands' | 'goblet' | 'circlet', stat: string, rarit
   if (!pair) throw new Error(`Main stat "${stat}" não existe para ${slot}`);
   return pick(pair, rarity);
 }
+
+/** Delta de um buff de personagem (passiva/constelação). Os campos podem faltar: os JSON não passam pelo Zod. */
+export function characterBuffDelta(stats: BuffStats | undefined): StatDelta {
+  if (!stats) return {};
+  return {
+    atkPct: stats.atkPct ?? 0, dmgBonus: stats.dmgPct ?? 0, critRate: stats.critRate ?? 0, critDmg: stats.critDmg ?? 0,
+    em: stats.em ?? 0, er: stats.er ?? 0, hpPct: stats.hpPct ?? 0, defPct: stats.defPct ?? 0, dmgByType: stats.dmgPctByType ?? {},
+  };
+}
+
+/** Buffs de personagem que valem na constelação do membro. */
+export const activeCharacterBuffs = (m: MemberInput): CharacterBuff[] =>
+  (m.characterEffect?.buffs ?? []).filter((b) => (m.constellation ?? 0) >= (b.minConstellation ?? 0));
 
 /** Bônus de 2 peças como "stat nomeado + valor" (modelo da planilha). */
 function twoPieceDelta(set: SetSelection | undefined, element: string): StatDelta | null {
@@ -259,6 +274,10 @@ export function staticSources(m: MemberInput, member = 0): StatSource[] {
   if (ce) {
     add('character', 'Passivas', 'character',
       { atkPct: ce.atkPct, dmgBonus: ce.dmgPct, critRate: ce.critRate, critDmg: ce.critDmg, em: ce.em });
+  }
+
+  for (const b of activeCharacterBuffs(m)) {
+    if (!b.timed && b.scope === 'self') add(`cbuff-${b.id}`, b.label, 'character', characterBuffDelta(b.stats));
   }
 
   const we = m.weaponEffect ? weaponStatsAt(m.weaponEffect, m.refinement) : undefined;

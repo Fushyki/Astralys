@@ -10,13 +10,14 @@ Branch: `v2/cards-vault-er` (sai de `v2/core`). Abrir em: https://github.com/Fus
 - **Dano das reações** (transformativas, Lunares e Estelares) na tabela de dano e **comparar dois projetos** (`/comparar`).
 - **Inventário GOOD**: importa o export do Genshin Optimizer e aplica o build real (rolls fracionários) a um personagem.
 - **Efeitos em escala**: 60 sets e 83 armas com efeito numérico (refinamentos R1 a R5), com as suposições de cada um no painel do build.
+- **Constelações e passivas**: seletor de constelação (+3 de talento na C3/C5) e 25 personagens com buffs de passivas/constelações como faixas na linha do tempo.
 - **Página inicial nova** e **remoção da interface antiga** (App, components, engines, services, context, types, Tailwind e os testes dela).
 
 ## Como testar
 ```
 npm ci
 npx tsc --noEmit
-npm test            # 462 testes
+npm test            # 478 testes
 npm run build
 npx vite preview --port 4173   # em outro terminal
 npm run e2e         # 7 roteiros em navegador real (rotação, equipe, cofre, card, recarga, comparar, good)

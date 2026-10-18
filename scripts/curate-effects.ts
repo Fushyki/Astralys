@@ -13,10 +13,11 @@
  */
 import { readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
-import { SetEffectSchema, WeaponEffectSchema, type SetEffect, type WeaponEffect, type WeaponStats } from '../src/effects/schema';
+import { CharacterEffectSchema, SetEffectSchema, WeaponEffectSchema, type CharacterEffect, type SetEffect, type WeaponEffect, type WeaponStats } from '../src/effects/schema';
 import { FOUR_PIECE, type Val } from './curation/sets';
 import { parseTwoPiece } from './lib/twoPiece';
 import { WEAPONS, type Sum } from './curation/weapons';
+import { CHARACTERS as CHARACTER_BUFFS } from './curation/characters';
 
 const root = process.cwd();
 const read = <T>(rel: string): T => JSON.parse(readFileSync(path.join(root, rel), 'utf8'));
@@ -25,6 +26,9 @@ const write = (rel: string, data: unknown) => writeFileSync(path.join(root, rel)
 interface Bonus { description: string; params: number[] }
 interface RawSet { name: string; bonuses: { twoPiece?: Bonus; fourPiece?: Bonus } }
 const meta = read<{ gameVersion: string }>('src/data/generated/meta.json');
+
+/** Entradas feitas à mão (planilha de referência); as geradas por este script são refeitas a cada execução. */
+const handMade = <T extends { fonte_info: string }>(list: T[]): T[] => list.filter((e) => !e.fonte_info.includes('scripts/curation/'));
 
 const round = (n: number) => Math.round(n * 1e6) / 1e6;
 const valueOf = (v: Val, params: number[], where: string): number => {
@@ -37,7 +41,7 @@ const valueOf = (v: Val, params: number[], where: string): number => {
 
 function buildSets(): SetEffect[] {
   const raw = read<RawSet[]>('src/data/generated/artifacts.json');
-  const existing = read<SetEffect[]>('src/effects/sets.json');
+  const existing = handMade(read<SetEffect[]>('src/effects/sets.json'));
   const keep = new Map(existing.map((e) => [e.set, e]));
   const out: SetEffect[] = [];
   const source = `Lunaris ${meta.gameVersion} (descrição e parâmetros)`;
@@ -101,7 +105,7 @@ const sumOf = (v: Sum | undefined, params: number[], where: string): number =>
 
 function buildWeapons(): WeaponEffect[] {
   const raw = read<RawWeapon[]>('src/data/generated/weapons.json');
-  const existing = read<WeaponEffect[]>('src/effects/weapons.json');
+  const existing = handMade(read<WeaponEffect[]>('src/effects/weapons.json'));
   const keep = new Map(existing.map((e) => [e.weapon, e]));
   const out: WeaponEffect[] = [...existing];
   const errors: string[] = [];
@@ -147,3 +151,79 @@ function buildWeapons(): WeaponEffect[] {
 const weapons = buildWeapons();
 write('src/effects/weapons.json', weapons);
 console.log(`weapons.json: ${weapons.length} armas (${weapons.filter((w) => w.refinements).length} com tabela por refinamento)`);
+
+// ---------- Personagens (passivas e constelações) ----------
+
+interface RawChar {
+  passives?: Record<string, { description: string; params: number[] }>;
+  constellations?: Record<string, { description: string; params: number[] }>;
+}
+
+function buildCharacters(): CharacterEffect[] {
+  const existing = handMade(read<CharacterEffect[]>('src/effects/characters.json'));
+  const chars = read<{ id: string; name: string }[]>('src/data/generated/characters.json');
+  const out: CharacterEffect[] = [...existing];
+  const errors: string[] = [];
+  const source = `Lunaris ${meta.gameVersion} (passivas e constelações)`;
+  const strip = (t: string) => t.replace(/<[^>]*>/g, '').replace(/\n/g, ' ').replace(/\s+/g, ' ');
+
+  for (const [name, list] of Object.entries(CHARACTER_BUFFS)) {
+    if (existing.some((e) => e.character === name)) {
+      errors.push(`${name}: já tem efeito da planilha (some as passivas à mão ou remova da curadoria)`);
+      continue;
+    }
+    const c = chars.find((x) => x.name === name);
+    if (!c) {
+      errors.push(`${name}: não existe nos dados do jogo`);
+      continue;
+    }
+    let raw: RawChar;
+    try {
+      raw = read<RawChar>(`data/raw/lunaris/${meta.gameVersion}/en/char/${c.id}.json`);
+    } catch {
+      errors.push(`${name}: sem o JSON bruto em data/raw (rode npm run sync:data)`);
+      continue;
+    }
+    const buffs = list.map((b) => {
+      const isConst = b.src.startsWith('const');
+      const node = (isConst ? raw.constellations : raw.passives)?.[b.src];
+      if (!node) throw new Error(`${name} ${b.id}: ${b.src} não existe`);
+      if (!strip(node.description).includes(b.expect)) {
+        errors.push(`${name} ${b.id}: a descrição de ${b.src} não contém "${b.expect}" (o Lunaris mudou?)`);
+      }
+      const v = (x: Val | undefined) => (x === undefined ? 0 : valueOf(x, node.params, `${name} ${b.id}`));
+      const s = b.stats;
+      return {
+        id: b.id,
+        label: b.label,
+        minConstellation: isConst ? Number(b.src.slice(5)) : 0,
+        scope: b.scope,
+        timed: b.timed,
+        ...(b.forElements ? { forElements: b.forElements } : {}),
+        ...(s
+          ? {
+              stats: {
+                atkPct: v(s.atkPct), dmgPct: v(s.dmgPct), critRate: v(s.critRate), critDmg: v(s.critDmg), em: v(s.em),
+                er: 0, hpPct: v(s.hpPct), defPct: v(s.defPct),
+                dmgPctByType: Object.fromEntries(Object.entries(s.byType ?? {}).map(([k, x]) => [k, v(x)])),
+              },
+            }
+          : {}),
+        ...(b.resShred ? { resShred: { value: v(b.resShred.value), elements: b.resShred.elements } } : {}),
+        note: b.note,
+      };
+    });
+    out.push(CharacterEffectSchema.parse({
+      character: name,
+      atkPct: 0, dmgPct: 0, critRate: 0, critDmg: 0, em: 0,
+      buffs,
+      fonte_info: `${source}; curadoria em scripts/curation/characters.ts.`,
+    }));
+  }
+  if (errors.length) throw new Error(['Curadoria de personagens com problemas:', ...errors].join('\n  '));
+  return out;
+}
+
+const characters = buildCharacters();
+write('src/effects/characters.json', characters);
+console.log(`characters.json: ${characters.length} personagens (${characters.filter((c) => c.buffs?.length).length} com passivas/constelações)`);

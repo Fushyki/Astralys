@@ -71,7 +71,7 @@ describe('cobertura de efeitos', () => {
   });
 
   it('um personagem novo por defeito geralmente não tem efeitos cadastrados', () => {
-    const ref = defaultMember('Kamisato Ayaka', data);
+    const ref = defaultMember('Fischl', data);
     expect(effectCoverage(ref, effects).characterHasEffect).toBe(false);
   });
 });

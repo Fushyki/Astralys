@@ -6,10 +6,13 @@ import type { Element } from '../data/schema';
 import { weaponStatsAt } from '../effects/schema';
 import type { ResistanceMap } from './damage';
 import {
+  activeCharacterBuffs,
   addDelta,
+  characterBuffDelta,
   finalStats,
   fourPieceActive,
   foldSources,
+  isEmptyDelta,
   namedStatDelta,
   staticSources,
   activeTeamDelta,
@@ -117,6 +120,22 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
     }
   });
 
+  // 2b) Buffs de passivas e constelações em janela: viram faixas na linha do tempo
+  members.forEach((m, i) => {
+    for (const b of activeCharacterBuffs(m)) {
+      if (!b.timed || !b.stats) continue;
+      const delta = characterBuffDelta(b.stats);
+      if (isEmptyDelta(delta) || off(`cbuff-${i}-${b.id}`)) continue;
+      const targets = names.filter((n, j) => {
+        if (b.scope === 'self' && j !== i) return false;
+        if (b.scope === 'others' && j === i) return false;
+        return !b.forElements || b.forElements.includes(members[j].character.element);
+      });
+      if (targets.length === 0) continue;
+      buffs.push({ id: `cbuff-${i}-${b.id}`, tag: labelTag(b.label), targets, delta, description: `${names[i]}: ${b.label}` });
+    }
+  });
+
   // 3) Extras de time (com etiqueta)
   extras.forEach((e, n) => {
     if (!e.team) return;
@@ -162,6 +181,10 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
     members.forEach((m, i) => {
       const r = m.characterEffect?.resShred;
       if (r && r.value > 0 && r.elements.includes(el) && !off(`res-shred-${i}`)) shred += r.value;
+      for (const b of activeCharacterBuffs(m)) {
+        const br = b.resShred;
+        if (br && br.value > 0 && br.elements.includes(el) && !off(`cbuff-res-${i}-${b.id}`)) shred += br.value;
+      }
       const sr = fourPieceActive(m) ? m.primarySet?.effect?.fourPiece?.resShred : undefined;
       if (sr && sr.value > 0 && sr.elements.includes(el) && !off(`set-res-shred-${i}`)) shred += sr.value;
     });

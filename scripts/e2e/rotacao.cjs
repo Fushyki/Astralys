@@ -1,7 +1,8 @@
 /**
- * Teste de interação do editor de rotação num navegador real (Edge ou Chrome já instalados; não baixa nada).
+ * Redesign, tela Rotação e buffs (/projeto/:id/rotacao): linha do tempo, cascata, buffs que cobrem o golpe, edição,
+ * paleta, janelas, configurações, realinhar e persistência.
  *   1) npm run build && npx vite preview --port 4173
- *   2) npm run e2e            (E2E_URL e E2E_BROWSER=msedge|chrome opcionais; capturas em scripts/e2e/out/)
+ *   2) node scripts/e2e/rotacao.cjs
  */
 const { chromium } = require('playwright-core');
 const path = require('path');
@@ -14,142 +15,129 @@ fs.mkdirSync(OUT, { recursive: true });
 
 const results = [];
 const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 'OK  ' : 'FALHA'} ${name}${extra ? ' — ' + extra : ''}`); };
+const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.'));
 
 (async () => {
   const browser = await chromium.launch({ channel: CHANNEL, headless: true });
-  const ctx = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
-  const page = await ctx.newPage();
+  const page = await (await browser.newContext({ viewport: { width: 1440, height: 1000 } })).newPage();
   const problems = [];
   page.on('console', (m) => { if (['error', 'warning'].includes(m.type())) problems.push(`console.${m.type()}: ${m.text().slice(0, 200)}`); });
   page.on('pageerror', (e) => problems.push(`pageerror: ${e.message.slice(0, 200)}`));
+  const settle = () => page.waitForTimeout(500);
+  const dps = () => page.textContent('[data-testid="live-dps"]');
+  const hits = () => page.$$('.rt-hit');
+  const hitTimes = () => page.$$eval('.rt-hit', (g) => g.map((x) => { const m = /aos ([\d,]+) segundos/.exec(x.getAttribute('aria-label')); return m ? Number(m[1].replace(',', '.')) : -1; }));
+  const bigHit = () => page.locator('.rt-hit[aria-label*="Supremo (200 FS)"]').first();
+  const center = async (loc) => { const b = await loc.boundingBox(); return { x: b.x + b.width / 2, y: b.y + b.height / 2 }; };
 
-  await page.goto(`${BASE}/rotacao/exemplo`, { waitUntil: 'networkidle' });
-  await page.waitForSelector('.ast-star');
+  await page.goto(`${BASE}/projeto/exemplo/rotacao`, { waitUntil: 'networkidle' });
   await page.evaluate(() => localStorage.clear());
   await page.reload({ waitUntil: 'networkidle' });
-  await page.waitForSelector('.ast-star');
+  await page.waitForSelector('.rt-hit');
 
-  const dps = () => page.$eval('.ast-kpi .v', (e) => e.textContent);
-  const rows = () => page.$$eval('.ast-actions tbody tr', (r) => r.length);
-  const stars = () => page.$$eval('.ast-star', (r) => r.length);
-  const settle = () => page.waitForTimeout(450);
-  const undo = async () => { await page.click('button:has-text("Desfazer")'); await settle(); };
-  const timeOfRow = (label) => page.$$eval('.ast-actions tbody tr', (trs, l) => { const tr = trs.find((t) => t.children[2].textContent.includes(l)); return tr ? tr.children[0].textContent : null; }, label);
+  check('24 golpes na linha do tempo', (await hits()).length === 24, String((await hits()).length));
+  check('DPS ao vivo do exemplo é 216.600', (await dps()) === '216.600', await dps());
+  check('o cabeçalho conta golpes e buffs com janela', /24 golpes · \d+ buffs com janela/.test(await page.textContent('.dz-pagehead')));
+  const lanes = await page.$$eval('.rt-svg .buff-src', (e) => e.map((x) => x.textContent));
+  check('o exemplo abre com as faixas de buff preenchidas (6 ou mais, com fonte)', lanes.length >= 6 && lanes.some((l) => /Citlali · TTDS/.test(l)) && lanes.some((l) => /ATK fixo Bennett/.test(l)), lanes.join(' | '));
+  const wins = await page.$$eval('.rt-win', (e) => e.length);
+  check('há barras de buff nas janelas de tempo', wins >= 10, `${wins} barras`);
+  check('desfazer e refazer começam desativados', (await page.isDisabled('button:has-text("Desfazer")')) && (await page.isDisabled('button:has-text("Refazer")')));
+  await page.screenshot({ path: path.join(OUT, 'r-rotacao.png'), fullPage: true });
 
-  check('estrelas e linhas iniciais', (await stars()) === 24 && (await rows()) === 24, `${await stars()} estrelas, ${await rows()} linhas`);
-  const dps0 = await dps();
-  check('DPS inicial = planilha', dps0 === '216.600', dps0);
-  await page.screenshot({ path: path.join(OUT, 'tl-inicial.png'), clip: { x: 0, y: 0, width: 1440, height: 1050 } });
+  // Selecionar o Supremo: cascata e buffs que cobrem
+  await bigHit().click({ force: true }); await settle();
+  check('selecionar mostra o nome do golpe e o dano médio 1.239.638', /Supremo \(200 FS\)/.test(await page.textContent('.rt-hitname')) && (await page.textContent('[data-testid="hit-avg"]')) === '1.239.638');
+  const cascade = await page.$$eval('.rt-cascade .step .k', (e) => e.map((x) => x.textContent));
+  check('cascata na ordem do mockup', cascade.join() === 'Dano base,Bônus de dano,DEF,RES,Reação,Crítico médio', cascade.join());
+  const cov = await page.$$eval('.rt-cov', (e) => e.map((x) => x.textContent));
+  check('os buffs que cobrem o golpe começam pelo ATK fixo do Bennett (15 a 30%)', /ATK fixo de Bennett/.test(cov[0]) && num(cov[0].match(/\+([\d,]+)%/)[1]) > 15 && num(cov[0].match(/\+([\d,]+)%/)[1]) < 30, cov[0]);
+  await page.locator('.rt-hit[aria-label*="aos 0,4 segundos"]').first().click({ force: true }); await settle();
+  const dimmed = await page.$$eval('.rt-win', (g) => g.filter((x) => x.getAttribute('opacity') === '0.35').length);
+  check('as barras que não cobrem o golpe selecionado (o 1º, aos 0,4 s) ficam esmaecidas', dimmed > 0, `${dimmed} esmaecidas`);
+  await bigHit().click({ force: true }); await settle();
 
-  // A estrela maior (Supremo 7,4 s)
-  const bigStar = async () => page.evaluateHandle(() => {
-    let best = null, br = 0;
-    document.querySelectorAll('.ast-star').forEach((g) => { const r = g.querySelectorAll('circle')[2]?.r.baseVal.value ?? 0; if (r > br) { br = r; best = g; } });
-    return best;
-  });
-  const center = async (h) => { const b = await h.asElement().boundingBox(); return { x: b.x + b.width / 2, y: b.y + b.height / 2 }; };
+  // Reação: tirar o Derreter reduz o dano
+  const before = num(await dps());
+  await page.selectOption('.dz-panel:has(h2:text-is("Editar golpe")) select', 'none'); await settle();
+  check('trocar a reação do golpe para "Sem reação" reduz o DPS ao vivo', num(await dps()) < before * 0.8, `${before} → ${await dps()}`);
+  await page.keyboard.press('Control+z'); await settle();
+  check('Ctrl+Z restaura o DPS', (await dps()) === '216.600');
+  check('agora Refazer fica ativo', !(await page.isDisabled('button:has-text("Refazer")')));
+  await page.click('button:has-text("Refazer")'); await settle();
+  await page.click('button:has-text("Desfazer")'); await settle();
 
-  // 1) Arrastar a estrela do Supremo ~ +1,5 s
-  let g = await bigStar();
-  await g.asElement().scrollIntoViewIfNeeded();
-  let c = await center(g);
-  const t0 = await timeOfRow('Supremo (200 FS)');
-  await page.mouse.move(c.x, c.y); await page.mouse.down(); await page.mouse.move(c.x + 40, c.y, { steps: 4 }); await page.mouse.move(c.x + 110, c.y, { steps: 6 }); await page.mouse.up();
-  await settle();
-  const t1 = await timeOfRow('Supremo (200 FS)');
-  check('arrastar muda o tempo do golpe', t0 === '7,4 s' && t1 !== t0, `${t0} → ${t1}`);
-  const selected = await page.$$eval('.ast-actions tbody tr[data-selected="true"]', (r) => r.length);
-  check('golpe arrastado fica selecionado', selected === 1);
-
-  // 2) Desfazer com Ctrl+Z
+  // Arrastar o Supremo
+  const t0 = (await hitTimes()).filter((t) => t > 0);
+  await bigHit().scrollIntoViewIfNeeded();
+  const c = await center(bigHit());
+  await page.mouse.move(c.x, c.y); await page.mouse.down(); await page.mouse.move(c.x + 40, c.y, { steps: 4 }); await page.mouse.move(c.x + 110, c.y, { steps: 6 }); await page.mouse.up(); await settle();
+  const t1 = (await hitTimes()).filter((t) => t > 0);
+  check('arrastar muda o tempo do golpe', JSON.stringify(t0) !== JSON.stringify(t1), `${t0.join(',').slice(0, 30)} → ${t1.join(',').slice(0, 30)}`);
+  check('o golpe arrastado fica selecionado', (await page.locator('.rt-hit[aria-pressed="true"]').count()) === 1);
   await page.mouse.click(5, 5);
   await page.keyboard.press('Control+z'); await settle();
-  check('Ctrl+Z devolve o tempo', (await timeOfRow('Supremo (200 FS)')) === '7,4 s', await timeOfRow('Supremo (200 FS)'));
+  check('Ctrl+Z devolve o tempo', JSON.stringify((await hitTimes()).filter((t) => t > 0)) === JSON.stringify(t0));
 
-  // 3) Converter perfis em janelas
-  await page.click('text=Converter perfis em janelas'); await settle();
-  const wins = await page.$$eval('.ast-win', (r) => r.length);
-  const noticeGone = (await page.$$('.ast-notice')).length === 0;
-  check('converter cria janelas e some o aviso', wins >= 4 && noticeGone, `${wins} janelas, aviso removido: ${noticeGone}`);
-  const dps1 = await dps();
-  console.log(`     DPS depois de converter: ${dps1} (antes ${dps0}; pode mudar)`);
-
-  // 4) Paleta: inserir um golpe do Bennett no marcador
-  const ruler = await page.$('.ast-svg rect[style*="crosshair"]');
+  // Paleta
+  const ruler = await page.$('.rt-svg rect[style*="crosshair"]');
   const rb = await ruler.boundingBox();
-  await page.mouse.click(rb.x + rb.width * 0.5, rb.y + 10);
-  await page.click('.ast-tab:has-text("Bennett")');
-  const before = await rows();
-  await page.click('.ast-move >> nth=0'); await settle();
-  check('paleta insere um golpe', (await rows()) === before + 1 && (await stars()) === before + 1, `${before} → ${await rows()} linhas`);
+  await page.mouse.click(rb.x + rb.width * 0.5, rb.y + 10); await page.waitForTimeout(200);
+  check('clicar na régua marca o instante de inserção', /Inserir em \d+,\d s/.test(await page.textContent('.dz-panel:has(.rt-pal-tabs) h2')), await page.textContent('.dz-panel:has(.rt-pal-tabs) h2'));
+  await page.click('.rt-pal-tabs button:has-text("Bennett")');
+  const nBefore = (await hits()).length;
+  await page.click('.rt-chips .chip >> nth=0'); await settle();
+  check('a paleta insere um golpe do Bennett', (await hits()).length === nBefore + 1);
+  await page.keyboard.press('Control+z'); await settle();
 
-  // 5) Duplo clique numa faixa de buff cria janela
-  const winsBefore = await page.$$eval('.ast-win', (r) => r.length);
-  const lanes = await page.$$('.ast-svg rect[fill="#141833"]');
-  // última faixa de buff (a última rect com esse fill é uma faixa de buff)
-  const lastLane = lanes[lanes.length - 1];
+  // Duplo clique numa faixa de buff cria janela
+  const winsBefore = await page.$$eval('.rt-win', (e) => e.length);
+  const lastLane = (await page.$$('.rt-svg rect.lane-bg')).pop();
   const lb = await lastLane.boundingBox();
-  await page.mouse.dblclick(lb.x + lb.width * 0.97, lb.y + lb.height / 2); await settle(); // depois do fim das janelas existentes
-  const winsAfter = await page.$$eval('.ast-win', (r) => r.length);
-  check('duplo clique cria uma janela de buff', winsAfter === winsBefore + 1, `${winsBefore} → ${winsAfter}`);
+  await page.mouse.dblclick(lb.x + lb.width * 0.985, lb.y + lb.height / 2); await settle();
+  check('duplo clique numa faixa cria uma barra de buff', (await page.$$eval('.rt-win', (e) => e.length)) === winsBefore + 1);
+  check('a nova janela fica selecionada e pode ser editada', (await page.locator('.dz-panel:has(h2:text-matches("Janela"))').count()) === 1);
+  await page.keyboard.press('Control+z'); await settle();
 
-  // 6) Teclado numa estrela: seta move +0,1 s, Delete apaga
-  const first = (await page.$$('.ast-star'))[5];
-  await first.focus();
-  const label = await first.getAttribute('aria-label');
+  // Teclado
+  const target = (await hits())[5];
+  await target.focus();
+  const label0 = await target.getAttribute('aria-label');
   await page.keyboard.press('ArrowRight'); await settle();
-  const label2 = await (await page.$$('.ast-star'))[5].getAttribute('aria-label');
-  check('seta move o item focado', label !== label2, `${label.split(',')[1]} → ${label2.split(',')[1]}`);
-  const rowsBeforeDel = await rows();
+  check('seta move o golpe focado', label0 !== (await (await hits())[5].getAttribute('aria-label')));
+  const countBefore = (await hits()).length;
   await page.keyboard.press('Delete'); await settle();
-  check('Delete apaga o item focado', (await rows()) === rowsBeforeDel - 1);
+  check('Delete apaga o golpe focado', (await hits()).length === countBefore - 1);
+  await page.keyboard.press('Control+z'); await page.keyboard.press('Control+z'); await settle();
 
-  // 7) Inspetor: editar execuções de uma ação selecionada
-  await (await page.$$('.ast-star'))[2].click({ force: true });
-  const hasInspector = (await page.$$('.ast-fields')).length > 0;
-  check('inspetor aparece ao selecionar', hasInspector);
-  await page.screenshot({ path: path.join(OUT, 'tl-final.png'), clip: { x: 0, y: 380, width: 1440, height: 1100 } });
-
-  // 8) Persistência
-  await page.waitForTimeout(700);
-  const winsNow = await page.$$eval('.ast-win', (r) => r.length);
-  const noticeBefore = (await page.$$('.ast-notice')).length;
-  await page.reload({ waitUntil: 'networkidle' }); await page.waitForSelector('.ast-star');
-  const winsReload = await page.$$eval('.ast-win', (r) => r.length);
-  check('recarregar mantém as edições (janelas e conversão)', winsReload === winsNow && winsNow > 0 && noticeBefore === 0 && (await page.$$('.ast-notice')).length === 0, `${winsNow} → ${winsReload} janelas`);
-  await page.click('text=Restaurar exemplo'); await settle();
-  check('restaurar exemplo volta ao original', (await rows()) === 24 && (await dps()) === '216.600');
-
-  // 8b) Realinhar: mantém a ordem, tira os espaços e desfaz num passo
-  const timesCol = () => page.$$eval('.ast-actions tbody tr', (trs) => trs.map((t) => t.children[0].textContent));
-  const namesCol = () => page.$$eval('.ast-actions tbody tr', (trs) => trs.map((t) => t.children[1].textContent + '|' + t.children[2].textContent));
-  const namesBefore = await namesCol();
-  const timesBefore = await timesCol();
-  await page.click('button:has-text("Realinhar")'); await settle();
-  const timesAfter = await timesCol();
-  check('realinhar deixa os golpes seguidos a partir de 0 s', timesAfter.slice(0, 4).join() === '0,0 s,0,5 s,1,0 s,1,5 s' && timesAfter[23] === '11,5 s', timesAfter.slice(0, 4).join(' | ') + ' … ' + timesAfter[23]);
-  check('realinhar mantém a ordem dos golpes', (await namesCol()).join('#') === namesBefore.join('#'));
-  await undo();
-  check('desfazer o realinhamento devolve os tempos originais', (await timesCol()).join() === timesBefore.join());
-  await page.fill('input[aria-label^="Intervalo entre golpes"]', '1'); 
-  await page.click('button:has-text("Realinhar")'); await settle();
-  check('o intervalo é configurável (1 s)', (await timesCol()).slice(0, 3).join() === '0,0 s,1,0 s,2,0 s', (await timesCol()).slice(0, 3).join(' | '));
-  await page.fill('input[aria-label^="Intervalo entre golpes"]', '0'); 
-  check('intervalo inválido desativa o botão', await page.isDisabled('button:has-text("Realinhar")'));
-  await page.fill('input[aria-label^="Intervalo entre golpes"]', '0.5');
-  await undo();
-  const dpsNormal = await dps();
-  const dur = page.locator('label.ast-field:has(span:text-is("Duração da rotação")) input');
+  // Configurações: duração, realinhar
+  await page.click('button:has-text("Configurações")');
+  const dur = page.locator('.dz-dialog label.dz-field:has(span:text-is("Duração da rotação")) input');
   await dur.fill('35'); await dur.blur(); await settle();
-  check('dobrar a duração divide o DPS por 2', (await dps()) === '108.300', `${dpsNormal} → ${await dps()}`);
-  await undo();
-  check('desfazer a duração restaura o DPS', (await dps()) === dpsNormal);
+  check('dobrar a duração divide o DPS por 2', num(await dps()) === 108300 || Math.abs(num(await dps()) - 108300) < 2, await dps());
+  await page.keyboard.press('Escape');
+  await page.keyboard.press('Control+z'); await settle();
+  check('Ctrl+Z restaura a duração', (await dps()) === '216.600');
+  await page.click('button:has-text("Configurações")');
+  await page.click('.dz-dialog button:has-text("Realinhar")'); await settle();
+  await page.keyboard.press('Escape');
+  const times = (await hitTimes()).sort((a, b) => a - b);
+  check('realinhar deixa os golpes seguidos a partir de 0 s (0, 0,5, 1…)', times.slice(0, 3).join() === '0,0.5,1' && times[23] === 11.5, times.slice(0, 4).join(',') + ' … ' + times[23]);
+  await page.keyboard.press('Control+z'); await settle();
 
-  // 9) Móvel
-  await page.setViewportSize({ width: 400, height: 800 });
-  await page.waitForTimeout(300);
-  const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1);
-  check('móvel sem scroll horizontal da página', !overflow);
+  // Persistência e restaurar
+  await page.waitForTimeout(700);
+  await page.reload({ waitUntil: 'networkidle' }); await page.waitForSelector('.rt-hit');
+  check('recarregar mantém o projeto (24 golpes e 216.600)', (await hits()).length === 24 && (await dps()) === '216.600');
+  await page.click('button:has-text("Configurações")');
+  await page.click('.dz-dialog button:has-text("Restaurar exemplo")'); await settle();
+  await page.keyboard.press('Escape');
+  check('restaurar exemplo volta ao original com as faixas de buff', (await hits()).length === 24 && (await dps()) === '216.600' && (await page.$$eval('.rt-win', (e) => e.length)) >= 10);
+
+  // Celular
+  await page.setViewportSize({ width: 390, height: 900 }); await page.waitForTimeout(400);
+  check('celular sem rolagem horizontal da página', !(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1)));
+  await page.screenshot({ path: path.join(OUT, 'r-rotacao-mobile.png'), fullPage: true });
 
   await browser.close();
   console.log('\nProblemas de consola:', problems.length ? '\n' + problems.join('\n') : 'nenhum');

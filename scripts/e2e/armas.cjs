@@ -1,7 +1,7 @@
 /**
  * Redesign, tela Armas e constelações (/projeto/:id/armas/:nome?): lista de armas, filtros, Usar e constelações.
  *   1) npm run build && npx vite preview --port 4173
- *   2) node scripts/e2e/r-armas.cjs
+ *   2) node scripts/e2e/armas.cjs
  */
 const { chromium } = require('playwright-core');
 const path = require('path');

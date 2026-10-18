@@ -1,7 +1,7 @@
 /**
  * Redesign, tela Dano do time (/projeto/:id/time): KPIs do gabarito, curva acumulada, rosca, buffs, leitura rápida e ranking.
  *   1) npm run build && npx vite preview --port 4173
- *   2) node scripts/e2e/r-time.cjs
+ *   2) node scripts/e2e/time.cjs
  */
 const { chromium } = require('playwright-core');
 const path = require('path');

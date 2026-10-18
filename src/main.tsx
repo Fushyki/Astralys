@@ -1,7 +1,7 @@
 import React, { Suspense, lazy } from 'react';
 import ReactDOM from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes, useParams } from 'react-router-dom';
 import './index.css';
 
 // O editor (e os ~1 MB de dados do jogo) só é baixado quando a rota é aberta.
@@ -14,13 +14,15 @@ const Armas = lazy(() => import('./screens/Armas'));
 const Recarga = lazy(() => import('./screens/Recarga'));
 const RecargaLivre = lazy(() => import('./screens/RecargaLivre'));
 const Vault = lazy(() => import('./screens/Vault'));
+const Comparar = lazy(() => import('./screens/Comparar'));
+const Inicio = lazy(() => import('./screens/Inicio'));
 const Card = lazy(() => import('./screens/Card'));
-const HomePage = lazy(() => import('./features/home/HomePage'));
-const RotationPage = lazy(() => import('./features/rotation/RotationPage'));
-const CardPage = lazy(() => import('./features/card/CardPage'));
-const EnergyPage = lazy(() => import('./features/energy/EnergyPage'));
-const ComparePage = lazy(() => import('./features/compare/ComparePage'));
-const ProjectsPage = lazy(() => import('./features/rotation/ProjectsPage'));
+
+/** Rotas da versão anterior: mandam para as telas novas. */
+const To = ({ to }: { to: (id: string) => string }) => {
+  const { id = 'exemplo' } = useParams();
+  return <Navigate to={to(id)} replace />;
+};
 
 const queryClient = new QueryClient();
 const rootElement = document.getElementById('root');
@@ -34,46 +36,11 @@ ReactDOM.createRoot(rootElement).render(
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Routes>
-          <Route
-            path="/rotacao"
-            element={
-              <Suspense fallback={null}>
-                <ProjectsPage />
-              </Suspense>
-            }
-          />
-          <Route
-            path="/comparar"
-            element={
-              <Suspense fallback={null}>
-                <ComparePage />
-              </Suspense>
-            }
-          />
-          <Route
-            path="/rotacao/:id/card"
-            element={
-              <Suspense fallback={null}>
-                <CardPage />
-              </Suspense>
-            }
-          />
-          <Route
-            path="/rotacao/:id/recarga"
-            element={
-              <Suspense fallback={null}>
-                <EnergyPage />
-              </Suspense>
-            }
-          />
-          <Route
-            path="/rotacao/:id"
-            element={
-              <Suspense fallback={null}>
-                <RotationPage />
-              </Suspense>
-            }
-          />
+          <Route path="/rotacao" element={<Navigate to="/vault" replace />} />
+          <Route path="/rotacao/:id" element={<To to={(id) => `/projeto/${id}/rotacao`} />} />
+          <Route path="/rotacao/:id/card" element={<To to={(id) => `/card/${id}`} />} />
+          <Route path="/rotacao/:id/recarga" element={<To to={(id) => `/projeto/${id}/recarga`} />} />
+          <Route path="/comparar" element={<Suspense fallback={null}><Comparar /></Suspense>} />
           <Route
             path="/projeto/:id"
             element={
@@ -92,14 +59,7 @@ ReactDOM.createRoot(rootElement).render(
           <Route path="/card/:id" element={<Suspense fallback={null}><Card /></Suspense>} />
           <Route path="/vault" element={<Suspense fallback={null}><Vault /></Suspense>} />
           <Route path="/recarga" element={<Suspense fallback={null}><RecargaLivre /></Suspense>} />
-          <Route
-            path="/"
-            element={
-              <Suspense fallback={null}>
-                <HomePage />
-              </Suspense>
-            }
-          />
+          <Route path="/" element={<Suspense fallback={null}><Inicio /></Suspense>} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>

@@ -1,7 +1,7 @@
 /**
  * Redesign, Vault (/vault): cartões dos times, números do gabarito, busca/filtros, favoritos, duplicar, apagar.
  *   1) npm run build && npx vite preview --port 4173
- *   2) node scripts/e2e/r-vault.cjs
+ *   2) node scripts/e2e/vault.cjs
  */
 const { chromium } = require('playwright-core');
 const path = require('path');

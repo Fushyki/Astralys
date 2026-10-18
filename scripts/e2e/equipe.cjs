@@ -1,7 +1,7 @@
 /**
- * Teste de interação da equipe e do editor de build num navegador real.
+ * Redesign, tela Equipe (/projeto/:id): KPIs do exemplo, cartões, troca/remoção/adição de personagem e navegação.
  *   1) npm run build && npx vite preview --port 4173
- *   2) node scripts/e2e/equipe.cjs   (ou npm run e2e, que roda os dois testes)
+ *   2) node scripts/e2e/equipe.cjs
  */
 const { chromium } = require('playwright-core');
 const path = require('path');
@@ -17,180 +17,80 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
 
 (async () => {
   const browser = await chromium.launch({ channel: CHANNEL, headless: true });
-  const ctx = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
-  const page = await ctx.newPage();
+  const page = await (await browser.newContext({ viewport: { width: 1440, height: 1000 } })).newPage();
   const problems = [];
-  page.on('console', (m) => { if (['error', 'warning'].includes(m.type())) problems.push(`console.${m.type()}: ${m.text().slice(0, 200)}`); });
+  page.on('console', (m) => { // O Lunaris não tem ícone do Viajante (404 esperado; o avatar cai na inicial).
+    if (['error', 'warning'].includes(m.type()) && !/404/.test(m.text())) problems.push(`console.${m.type()}: ${m.text().slice(0, 200)}`); });
   page.on('pageerror', (e) => problems.push(`pageerror: ${e.message.slice(0, 200)}`));
+  const settle = () => page.waitForTimeout(900);
+  const cards = () => page.$$eval('.eq-card .name', (e) => e.map((x) => x.textContent));
+  const kpi = (label) => page.locator(`.dz-kpi:has(.lbl:text-is("${label}")) .v`).textContent();
 
-  await page.goto(`${BASE}/rotacao/exemplo`, { waitUntil: 'networkidle' });
+  await page.goto(`${BASE}/projeto/exemplo`, { waitUntil: 'networkidle' });
   await page.evaluate(() => localStorage.clear());
   await page.reload({ waitUntil: 'networkidle' });
-  await page.waitForSelector('.ast-slot');
+  await page.waitForSelector('.eq-card');
 
-  const settle = () => page.waitForTimeout(500);
-  const dps = () => page.$eval('.ast-kpi .v', (e) => e.textContent);
-  const rows = () => page.$$eval('.ast-actions tbody tr', (r) => r.length);
-  const slotNames = () => page.$$eval('.ast-slot-main .n', (e) => e.map((x) => x.textContent));
-  const undo = async () => { await page.click('button:has-text("Desfazer")'); await settle(); };
-  const field = (label) => page.locator(`label.ast-field:has(span:text-is("${label}"))`);
-  const dpsNum = async () => Number((await dps()).replace(/\./g, ''));
+  check('DPS do time do exemplo é 216.600', (await kpi('DPS do time')) === '216.600', await kpi('DPS do time'));
+  check('dano da rotação do exemplo é 3.790.496', (await kpi('Dano da rotação')) === '3.790.496', await kpi('Dano da rotação'));
+  check('a reação principal é Derreter', (await kpi('Reação principal')) === 'Derreter');
+  check('quatro cartões na ordem do time', (await cards()).join() === 'Mavuika,Citlali,Iansan,Bennett', (await cards()).join());
+  const roles = await page.$$eval('.eq-card .role', (e) => e.map((x) => x.textContent));
+  check('papéis vêm da participação no dano (DPS principal e suportes)', /DPS principal · Pyro/.test(roles[0]) && roles.slice(1).every((r) => /Suporte/.test(r)), roles.join(' | '));
+  const mav = await page.locator('.eq-card:has(.name:text-is("Mavuika"))').textContent();
+  check('o cartão da Mavuika mostra arma, set, ATK e críticos reais', /A Thousand Blazing Suns/.test(mav) && /Obsidian Codex/.test(mav) && /5\.791/.test(mav) && /98,9%/.test(mav) && /231,8%/.test(mav));
+  const cit = await page.locator('.eq-card:has(.name:text-is("Citlali"))').textContent();
+  check('a Citlali mostra o que dá ao time (RES e Maestria)', /RES Pyro\/Hydro −20%/.test(cit) && /\+120 EM/.test(cit), cit.match(/RES[^A-Z]*/)?.[0]);
+  const ben = await page.locator('.eq-card:has(.name:text-is("Bennett"))').textContent();
+  check('o Bennett mostra o ATK fixo e o set', /ATK fixo/.test(ben) && /\+20% ATK/.test(ben));
+  const chips = await page.$$eval('.dz-chips .dz-chip', (e) => e.map((x) => x.textContent));
+  check('chips de configuração e ressonância Pyro', chips.some((c) => /Inimigo nível 100/.test(c)) && chips.some((c) => /Rotação de 17,5 s/.test(c)) && chips.some((c) => /Ressonância Pyro/.test(c)), chips.join(' | '));
+  await page.screenshot({ path: path.join(OUT, 'r-equipe.png'), fullPage: true });
 
-  check('equipe inicial e DPS da planilha', (await slotNames()).join() === 'Mavuika,Citlali,Iansan,Bennett' && (await dps()) === '216.600', (await slotNames()).join(', '));
-  const res = await page.$$eval('.ast-res .on', (e) => e.map((x) => x.textContent));
-  check('ressonância Pyro mostrada como aplicada', res.length === 1 && /Pyro/.test(res[0]) && /25%/.test(res[0]), res[0]);
-  check('editor de build abre no primeiro membro', (await page.textContent('.ast-panel.ast-wide > h2')) === 'Build de Mavuika');
-  await page.screenshot({ path: path.join(OUT, 'equipe-build.png'), fullPage: true });
+  // Navegação
+  check('a aba Equipe está marcada', (await page.getAttribute('.dz-nav a:has-text("Equipe")', 'aria-current')) === 'page');
+  await page.click('.eq-card:has(.name:text-is("Citlali")) a:has-text("Abrir calculadora")');
+  await page.waitForURL(/\/projeto\/exemplo\/personagem\/Citlali/);
+  check('Abrir calculadora leva à aba do personagem', true);
+  await page.goBack(); await page.waitForSelector('.eq-card');
 
-  // Arma
-  const before = await dpsNum();
-  await field('Arma').locator('select').selectOption({ label: "5★ Wolf's Gravestone" }); await settle();
-  const afterWeapon = await dpsNum();
-  check('trocar a arma muda o DPS', afterWeapon !== before && afterWeapon < before, `${before} → ${afterWeapon}`);
-  await undo();
-  check('desfazer devolve a arma', (await dpsNum()) === before);
+  // Trocar, remover e adicionar
+  await page.click('.eq-card:has(.name:text-is("Bennett")) button:has-text("Trocar")');
+  await page.fill('.dz-dialog input[type="search"]', 'Xingqiu');
+  await page.click('.dz-dialog .pick:has-text("Xingqiu")'); await settle();
+  check('trocar o Bennett pelo Xingqiu', (await cards()).join() === 'Mavuika,Citlali,Iansan,Xingqiu', (await cards()).join());
+  const pyroChip = await page.locator('.dz-chips').textContent();
+  check('ao sair o 2º Pyro, a ressonância Pyro some do cabeçalho', !/Ressonância Pyro/.test(pyroChip), pyroChip.slice(0, 80));
+  await page.keyboard.press('Control+z'); await settle();
+  check('Ctrl+Z desfaz a troca', (await cards()).join() === 'Mavuika,Citlali,Iansan,Bennett', (await cards()).join());
 
-  // Talento
-  await field('Habilidade').locator('input').fill('13'); await field('Habilidade').locator('input').blur(); await settle();
-  const afterTalent = await dpsNum();
-  check('subir o talento aumenta o DPS', afterTalent > before, `${before} → ${afterTalent}`);
-  await undo();
-
-  // Rolls manuais
-  await page.click('label:has-text("Definir à mão") input'); await settle();
-  check('modo manual com os mesmos rolls dá o mesmo DPS', (await dpsNum()) === before);
-  const cd = page.locator('label.ast-field:has-text("Dano Crítico (máx")').locator('input');
-  await cd.fill('2'); await cd.blur(); await settle();
-  const lowCd = await dpsNum();
-  check('menos rolls de CD derrubam o DPS', lowCd < before, `${before} → ${lowCd}`);
-  await cd.fill('40'); await cd.blur(); await settle();
-  const warn = await page.$$eval('.ast-error', (e) => e.map((x) => x.textContent));
-  check('rolls acima do limite geram aviso', warn.some((t) => /comportam no máximo/.test(t)), warn[0]);
-  await page.click('label:has-text("Otimizar automaticamente") input'); await settle();
-  check('voltar ao automático restaura o DPS e limpa o aviso', (await dpsNum()) === before && (await page.$$('.ast-error')).length === 0);
-
-  // Trocar personagem
-  const rows0 = await rows();
-  await page.locator('.ast-slot').nth(1).locator('.ast-link:has-text("Trocar")').click();
-  await page.waitForSelector('.ast-dialog');
-  await page.fill('.ast-dialog input[type="search"]', 'Ayaka');
-  const found = await page.$$eval('.ast-pick span', (e) => e.map((x) => x.textContent));
-  check('busca no diálogo filtra os personagens', found.length >= 1 && found.every((n) => /Ayaka/.test(n)), found.join(', '));
-  await page.click('.ast-pick:has-text("Kamisato Ayaka")'); await settle();
-  check('trocar a Citlali pela Ayaka remove as 4 ações dela', (await slotNames())[1] === 'Kamisato Ayaka' && (await rows()) === rows0 - 4, `${rows0} → ${await rows()} linhas`);
-  check('o diálogo fecha ao escolher', (await page.$$('.ast-dialog')).length === 0);
-  await undo();
-  check('desfazer volta à Citlali e às ações', (await slotNames())[1] === 'Citlali' && (await rows()) === rows0);
-
-  // Esc fecha o diálogo
-  await page.locator('.ast-slot').nth(1).locator('.ast-link:has-text("Trocar")').click();
-  await page.waitForSelector('.ast-dialog');
+  await page.click('.eq-card:has(.name:text-is("Bennett")) button:has-text("Remover")'); await settle();
+  check('remover deixa 3 personagens e mostra o botão de adicionar', (await cards()).length === 3 && (await page.locator('.eq-add').count()) === 1);
+  await page.click('.eq-add');
+  check('o diálogo não oferece quem já está no time', !(await page.$$eval('.dz-dialog .pick .n', (e) => e.map((x) => x.textContent))).some((n) => ['Mavuika', 'Citlali', 'Iansan'].includes(n)));
   await page.keyboard.press('Escape');
-  check('Esc fecha o diálogo', (await page.$$('.ast-dialog')).length === 0);
+  check('Esc fecha o diálogo', (await page.locator('.dz-dialog').count()) === 0);
+  await page.keyboard.press('Control+z'); await settle();
 
-  // Remover e adicionar
-  await page.locator('.ast-slot').nth(3).locator('.ast-link:has-text("Remover")').click(); await settle();
-  check('remover o Bennett deixa 3 membros e 23 ações', (await slotNames()).length === 3 && (await rows()) === 23, `${(await slotNames()).length} membros, ${await rows()} linhas`);
-  check('aparece o botão de adicionar', (await page.$$('.ast-slot.add')).length === 1);
-  await page.click('.ast-slot.add');
-  await page.waitForSelector('.ast-dialog');
-  const excluded = await page.$$eval('.ast-pick span', (e) => e.map((x) => x.textContent));
-  check('o diálogo não oferece quem já está na equipe', !excluded.some((n) => ['Mavuika', 'Citlali', 'Iansan'].includes(n)));
-  await page.fill('.ast-dialog input[type="search"]', 'Ayaka');
-  await page.click('.ast-pick:has-text("Kamisato Ayaka")'); await settle();
-  check('adicionar a Ayaka seleciona o build dela', (await slotNames()).length === 4 && (await page.textContent('.ast-panel.ast-wide > h2')) === 'Build de Kamisato Ayaka');
-  check('com a arma por defeito (Absolution, com efeito) não há aviso', (await page.$$('.ast-notice-inline')).length === 0);
-  await field('Arma').locator('select').selectOption({ label: '2★ Dull Blade (sem efeito)' }); await settle();
-  const notice = await page.$$eval('.ast-notice-inline', (e) => e.map((x) => x.textContent));
-  check('arma sem efeito cadastrado gera aviso claro', notice.length === 1 && /Sem efeito numérico cadastrado: arma Dull Blade/.test(notice[0]), notice[0]?.slice(0, 90));
-  await page.screenshot({ path: path.join(OUT, 'equipe-nova.png'), fullPage: true });
+  // Favoritar e duplicar
+  await page.click('button:has-text("Salvar no Vault")');
+  await page.waitForURL('**/vault'); await page.waitForSelector('.vt-card');
+  check('Salvar no Vault leva ao Vault com o time favoritado', (await page.locator('.vt-fav[aria-pressed="true"]').count()) === 1);
+  await page.goto(`${BASE}/projeto/exemplo`, { waitUntil: 'networkidle' }); await page.waitForSelector('.eq-card');
+  check('o botão passa a "Salvo no Vault"', (await page.locator('button:has-text("Salvo no Vault")').count()) === 1);
+  await page.click('button:has-text("Duplicar")');
+  await page.waitForURL(/\/projeto\/(?!exemplo)[^/]+$/);
+  await page.waitForSelector('.eq-card');
+  check('duplicar abre a cópia com o mesmo DPS', (await kpi('DPS do time')) === '216.600');
 
-  // Tabela de dano do personagem selecionado
-  await page.click('.ast-slot-main:has-text("Mavuika")'); await settle();
-  const dmgTitle = await page.textContent('.ast-panel:has(.ast-dmgtable) > h2');
-  check('tabela de dano do personagem selecionado', dmgTitle === 'Tabela de dano de Mavuika', dmgTitle);
-  const firstAvg = async () => page.$eval('.ast-dmgtable tbody:nth-of-type(1) tr:nth-child(2) td:nth-child(4)', (e) => e.textContent);
-  const dmgBefore = await firstAvg();
-  await page.selectOption('select[aria-label="Reação da tabela de dano"]', 'melt'); await settle();
-  const dmgAfter = await firstAvg();
-  const num = (t) => Number(t.replace(/\./g, '').replace(',', '.'));
-  check('escolher Derreter aumenta o dano Pyro da tabela', num(dmgAfter) > num(dmgBefore), `${dmgBefore} → ${dmgAfter}`);
-  check('a tabela marca os golpes com reação', (await page.$$('.ast-dmgtable .ast-flag')).length > 0);
-  await page.selectOption('select[aria-label="Reação da tabela de dano"]', 'none'); await settle();
+  // Persistência
+  await page.reload({ waitUntil: 'networkidle' }); await page.waitForSelector('.eq-card');
+  check('a cópia sobrevive ao recarregar', (await cards()).length === 4);
 
-  // Otimizador interativo
-  await page.waitForSelector('.ast-opt svg');
-  const optTitle = await page.textContent('.ast-panel:has(.ast-opt) > h2');
-  check('otimizador do personagem selecionado', optTitle === 'Otimizador de Mavuika', optTitle);
-  const rollsNow = async () => page.$eval('.ast-slider b', (e) => Number(e.textContent));
-  const startRolls = await rollsNow();
-  await page.$eval('.ast-slider input', (el) => { const set = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set; set.call(el, '0'); el.dispatchEvent(new Event('input', { bubbles: true })); });
-  await settle();
-  const lowRolls = await rollsNow();
-  const lowInfo = await page.$eval('.ast-opt-info', (e) => e.textContent);
-  check('o controle muda a distribuição mostrada', lowRolls < startRolls && /Contra o build atual-/.test(lowInfo), `${startRolls} → ${lowRolls}`);
-  await page.click('button:has-text("Usar 4 rolls em crítico")'); await page.waitForTimeout(900);
-  const forcedField = await field('Rolls em critico fixos (0 = otimizar)').locator('input').inputValue().catch(() => null);
-  const forcedField2 = forcedField ?? (await page.$eval('label.ast-field:has(span:text-matches("Rolls em cr.tico fixos"))  input', (e) => e.value));
-  check('aplicar a distribuição fixa os rolls em crítico do build', forcedField2 === '4', `campo = ${forcedField2}`);
-  await page.click('button:has-text("Deixar o otimizador escolher")'); await page.waitForTimeout(900);
-
-  // Mapa de calor e comparação de armas
-  const heatRows = await page.$$eval('.ast-heat tbody tr', (r) => r.length);
-  check('mapa de calor de +1 roll com linhas por substat', heatRows >= 4, `${heatRows} linhas`);
-  await page.waitForSelector('.ast-weapons tbody tr');
-  const weaponRows = await page.$$eval('.ast-weapons tbody tr', (r) => r.map((x) => x.textContent));
-  check('comparação de armas marca a arma atual na primeira linha (a melhor do exemplo)', /atual/.test(weaponRows[0]) && weaponRows.length >= 10, weaponRows[0]?.slice(0, 40));
-  await page.click('.ast-weapons tbody tr:nth-child(2) button:has-text("Usar")'); await page.waitForTimeout(1200);
-  const newWeapon = await field('Arma').locator('select').inputValue();
-  check('"Usar" troca a arma do build', newWeapon !== 'A Thousand Blazing Suns', newWeapon);
-  await field('Arma').locator('select').selectOption('A Thousand Blazing Suns'); await settle();
-
-  // Dano das reações
-  const reactionRows = await page.$$eval('.ast-reactions tbody tr:not(.group)', (r) => r.map((x) => x.textContent));
-  check('tabela de dano das reações (transformativas, Lunares e Estelares)', reactionRows.length >= 15 && reactionRows.some((t) => /Sobrecarga/.test(t)) && reactionRows.some((t) => /Lunar-Carregado/.test(t)) && reactionRows.some((t) => /Estelar/.test(t)), `${reactionRows.length} linhas`);
-
-  // Refinamento e suposições dos efeitos
-  await page.click('.ast-slot-main:has-text("Mavuika")'); await settle();
-  const critOf = async () => Number((await page.$$eval('.ast-statbox dl div', (rows) => rows.find((r) => /Taxa Cr/.test(r.textContent))?.querySelector('dd')?.textContent ?? '0')).replace('%', '').replace(',', '.'));
-  check('arma sem tabela por refinamento não mostra o seletor de refino', (await page.locator('label.ast-field:has(span:text-is("Refino"))').count()) === 0);
-  await field('Arma').locator('select').selectOption({ label: '4★ Royal Greatsword' }); await settle();
-  check('arma com tabela por refinamento mostra o seletor de refino', (await page.locator('label.ast-field:has(span:text-is("Refino"))').count()) === 1);
-  const crit1 = await critOf();
-  await field('Refino').locator('select').selectOption('5'); await settle();
-  const crit5 = await critOf();
-  // o otimizador reajusta os substats quando o refino muda, então o ganho visível fica entre 20 e 40 pontos
-  check('subir o refino de R1 para R5 sobe a Taxa Crítica (Royal)', crit5 - crit1 > 20, `${crit1}% → ${crit5}%`);
-  const assume = await page.textContent('.ast-assume');
-  check('mostra o que está assumido nos efeitos', /Royal Greatsword/.test(assume) && /Melhor caso/.test(assume));
-  await page.waitForSelector('.ast-refine tbody tr', { timeout: 20000 });
-  const refineRows = await page.$$eval('.ast-refine tbody tr', (r) => r.map((x) => x.textContent));
-  check('tabela de refinamentos R1 a R5 da arma atual', refineRows.length === 5 && /R5.*atual/.test(refineRows[4]), refineRows.map((t) => t.slice(0, 12)).join(' | '));
-  await page.waitForSelector('.ast-cons tbody tr', { timeout: 20000 });
-  const consRows = await page.$$eval('.ast-cons tbody tr', (r) => r.map((x) => x.textContent));
-  check('tabela de constelações C0 a C6 do personagem selecionado', consRows.length === 7 && /C0.*atual/.test(consRows[0]), consRows.map((t) => t.slice(0, 8)).join(' | '));
-  await field('Arma').locator('select').selectOption({ label: '5★ A Thousand Blazing Suns' }); await settle();
-
-  // Constelação e buffs de passivas
-  const lanesText = await page.$$eval('svg text', (t) => t.map((x) => x.textContent));
-  check('passivas de personagem viram faixas de buff na linha do tempo (Ayaka A1 e A4)', lanesText.includes('AYAKA A1') && lanesText.includes('AYAKA A4'), lanesText.filter((t) => /AYAKA/.test(t)).join(', '));
-  check('constelações só aparecem na linha do tempo a partir do nível pedido', !lanesText.includes('RAIDEN C4'));
-  await page.click('.ast-slot-main:has-text("Mavuika")'); await settle();
-  const talentsText = async () => page.$eval('.ast-build', (e) => e.textContent.match(/Níveis efetivos: ([\d/]+)/)?.[1]);
-  const t0 = await talentsText();
-  await field('Constelação').locator('select').selectOption('3'); await settle();
-  const t3 = await talentsText();
-  check('a constelação C3 soma +3 ao talento certo (Mavuika: Supremo)', t0 === '10/10/10' && t3 === '10/10/13', `${t0} → ${t3}`);
-  await field('Constelação').locator('select').selectOption('0'); await settle();
-
-  // Persistência da equipe
-  await page.waitForTimeout(700);
-  await page.reload({ waitUntil: 'networkidle' }); await page.waitForSelector('.ast-slot');
-  check('recarregar mantém a equipe editada', (await slotNames()).join() === 'Mavuika,Citlali,Iansan,Kamisato Ayaka', (await slotNames()).join(', '));
-
-  await page.setViewportSize({ width: 400, height: 800 });
-  await page.waitForTimeout(300);
-  check('móvel sem scroll horizontal da página', !(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1)));
+  // Celular
+  await page.setViewportSize({ width: 390, height: 900 }); await page.waitForTimeout(400);
+  check('celular sem rolagem horizontal da página', !(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1)));
+  await page.screenshot({ path: path.join(OUT, 'r-equipe-mobile.png'), fullPage: true });
 
   await browser.close();
   console.log('\nProblemas de consola:', problems.length ? '\n' + problems.join('\n') : 'nenhum');

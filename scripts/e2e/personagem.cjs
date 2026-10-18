@@ -2,7 +2,7 @@
  * Redesign, tela Personagem (/projeto/:id/personagem/:nome): constelação, talentos, rolls, build, tabela de dano,
  * reações, buffs recebidos e ferramentas (otimizador e inventário GOOD).
  *   1) npm run build && npx vite preview --port 4173
- *   2) node scripts/e2e/r-personagem.cjs
+ *   2) node scripts/e2e/personagem.cjs
  */
 const { chromium } = require('playwright-core');
 const path = require('path');

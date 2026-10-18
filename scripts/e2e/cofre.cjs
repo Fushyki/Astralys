@@ -26,6 +26,15 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   const settle = () => page.waitForTimeout(500);
   const cards = () => page.$$eval('.ast-project .name', (e) => e.map((x) => x.textContent));
 
+  // Página inicial
+  await page.goto(`${BASE}/`, { waitUntil: 'networkidle' });
+  check('a página inicial mostra o nome e as funções', (await page.textContent('.ast-home h1')) === 'Astralys' && (await page.$$('.ast-home .features li')).length === 4);
+  await page.click('.ast-home a:has-text("Meus projetos")');
+  await page.waitForSelector('.ast-project');
+  check('o botão leva ao cofre', page.url().endsWith('/rotacao'));
+  await page.goto(`${BASE}/endereco-que-nao-existe`, { waitUntil: 'networkidle' });
+  check('endereço desconhecido volta para a página inicial', page.url() === `${BASE}/`, page.url());
+
   await page.goto(`${BASE}/rotacao`, { waitUntil: 'networkidle' });
   await page.evaluate(() => localStorage.clear());
   await page.reload({ waitUntil: 'networkidle' });

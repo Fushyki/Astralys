@@ -11,6 +11,8 @@ const Personagem = lazy(() => import('./screens/Personagem'));
 const Rotacao = lazy(() => import('./screens/Rotacao'));
 const Time = lazy(() => import('./screens/Time'));
 const Armas = lazy(() => import('./screens/Armas'));
+const Recarga = lazy(() => import('./screens/Recarga'));
+const RecargaLivre = lazy(() => import('./screens/RecargaLivre'));
 const HomePage = lazy(() => import('./features/home/HomePage'));
 const RotationPage = lazy(() => import('./features/rotation/RotationPage'));
 const CardPage = lazy(() => import('./features/card/CardPage'));
@@ -82,8 +84,10 @@ ReactDOM.createRoot(rootElement).render(
             <Route path="personagem/:nome" element={<Suspense fallback={null}><Personagem /></Suspense>} />
             <Route path="rotacao" element={<Suspense fallback={null}><Rotacao /></Suspense>} />
             <Route path="armas/:nome?" element={<Suspense fallback={null}><Armas /></Suspense>} />
+            <Route path="recarga" element={<Suspense fallback={null}><Recarga /></Suspense>} />
             <Route path="time" element={<Suspense fallback={null}><Time /></Suspense>} />
           </Route>
+          <Route path="/recarga" element={<Suspense fallback={null}><RecargaLivre /></Suspense>} />
           <Route
             path="/"
             element={

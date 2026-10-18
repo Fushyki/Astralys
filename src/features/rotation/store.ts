@@ -47,6 +47,8 @@ export interface RotationState {
   realign: (step?: number) => void;
   updateConfig: (patch: Partial<RotationProject['config']>) => void;
   setSourceEnabled: (id: string, enabled: boolean) => void;
+  /** Grava a configuração da calculadora de recarga (`meta.energy`), sem entrar no desfazer. */
+  setEnergy: (next: RotationProject) => void;
 
   updateMember: (index: number, patch: Partial<MemberRef>) => void;
   addMember: (ref: MemberRef) => void;
@@ -113,6 +115,11 @@ export const useRotationStore = create<RotationState>((set, get) => {
       commit(next, newId ?? undefined);
     },
     rename: (name) => commit(get().project && ops.renameProject(get().project!, name)),
+    setEnergy: (next) => {
+      const project = get().project;
+      if (!project || project.id !== next.id) return;
+      set({ project: { ...project, meta: { ...project.meta, energy: next.meta.energy } }, dirty: true });
+    },
     setFavorite: (favorite) => {
       const project = get().project;
       if (!project || project.meta.favorite === favorite) return;

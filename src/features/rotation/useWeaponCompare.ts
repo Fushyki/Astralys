@@ -5,8 +5,8 @@ import type { LoadedData } from './data';
 import { EngineClient } from './engineClient';
 import { weaponsFor } from './teamOps';
 
-export function useWeaponCompare(project: RotationProject, resolved: ResolvedProject, data: LoadedData, member: number): { rows: WeaponCompareRow[] | null; error: string | null } {
-  const [state, setState] = useState<{ rows: WeaponCompareRow[] | null; error: string | null }>({ rows: null, error: null });
+export function useWeaponCompare(project: RotationProject, resolved: ResolvedProject, data: LoadedData, member: number, refinement?: number): { rows: WeaponCompareRow[] | null; error: string | null } {
+  const [state, setState] = useState<{ key: string; rows: WeaponCompareRow[] | null; error: string | null }>({ key: '', rows: null, error: null });
   const client = useRef<EngineClient | null>(null);
 
   useEffect(() => {
@@ -17,6 +17,7 @@ export function useWeaponCompare(project: RotationProject, resolved: ResolvedPro
     };
   }, []);
 
+  const key = `${member}:${refinement ?? 0}`;
   useEffect(() => {
     let cancelled = false;
     const timer = setTimeout(() => {
@@ -29,7 +30,7 @@ export function useWeaponCompare(project: RotationProject, resolved: ResolvedPro
           team: {
             ...resolved.team,
             members: resolved.team.members.map((m, i) =>
-              i === member ? resolveMember({ ...ref, weapon: w.name }, data.game, data.effects, project.config.minRollsPerSubstat) : m,
+              i === member ? resolveMember({ ...ref, weapon: w.name, ...(refinement ? { refinement } : {}) }, data.game, data.effects, project.config.minRollsPerSubstat) : m,
             ),
           },
         }));
@@ -58,17 +59,18 @@ export function useWeaponCompare(project: RotationProject, resolved: ResolvedPro
         }
         client.current
           ?.request<WeaponCompareRow[]>({ type: 'weaponCompare', input: { member, candidates, actions: resolved.actions, flatEffects: resolved.flatEffects, ampCoefficient: resolved.ampCoefficient } })
-          .then((rows) => !cancelled && setState({ rows, error: null }))
-          .catch((e) => !cancelled && setState({ rows: null, error: e instanceof Error ? e.message : String(e) }));
+          .then((rows) => !cancelled && setState({ key, rows, error: null }))
+          .catch((e) => !cancelled && setState({ key, rows: null, error: e instanceof Error ? e.message : String(e) }));
       } catch (e) {
-        setState({ rows: null, error: e instanceof Error ? e.message : String(e) });
+        setState({ key, rows: null, error: e instanceof Error ? e.message : String(e) });
       }
     }, 300);
     return () => {
       cancelled = true;
       clearTimeout(timer);
     };
-  }, [project, resolved, data, member]);
+  }, [project, resolved, data, member, refinement, key]);
 
-  return state;
+  // Resultado de outro personagem (ou refino) ainda em cálculo não é mostrado.
+  return state.key === key ? { rows: state.rows, error: state.error } : { rows: null, error: null };
 }

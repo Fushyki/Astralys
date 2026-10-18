@@ -30,7 +30,7 @@ API não oficial `https://api.lunaris.moe/data/` (descoberta lendo o bundle do s
 `.env` nunca no git (só `.env.example` com `VITE_API_URL`). Auth só e-mail+senha via JWT do backend; Supabase e login Google foram removidos (reintroduzir Google só com verificação de token no backend).
 
 ## Estado das fases
-- [ ] Fase 0 — higiene e segurança (frontend + backend)
+- [x] Fase 0 — higiene e segurança (frontend + backend). Branches `v2/core` enviadas; PRs por abrir. Backend: ver `Astralys-BackEnd` (testes: `pytest tests`, deps em `requirements-dev.txt`). Pendente: colunas `schemaVersion/revision/patch/tags` + Alembic ficam para a Fase 3.
 - [ ] Fase 1 — pipeline de dados (Lunaris → JSON + Zod)
 - [ ] Fase 2 — motor de dano + testes de gabarito
 - [ ] Fases 3–6 — editor de rotação, vault/cards, comparadores, otimizador GOOD (plano próprio)

@@ -31,16 +31,20 @@ export interface EffectCoverage {
   weaponHasEffect: boolean;
   primarySetHasEffect: boolean | null;
   secondarySetHasEffect: boolean | null;
+  /** O build usa 4 peças do set principal, mas o bônus de 4 peças ainda não está cadastrado. */
+  fourPieceMissing: boolean;
   characterHasEffect: boolean;
 }
 
 /** Quais partes do build têm efeito numérico cadastrado (sem ele, só os stats base valem). */
 export function effectCoverage(member: MemberRef, effects: EffectsData): EffectCoverage {
-  const setCovered = (name?: string) => (name ? effects.sets.some((s) => s.set === name) : null);
+  const setCovered = (name?: string) => (name ? effects.sets.some((s) => s.set === name && (s.twoPiece || s.fourPiece)) : null);
   return {
     weaponHasEffect: effects.weapons.some((w) => w.weapon === member.weapon),
     primarySetHasEffect: setCovered(member.primarySet),
     secondarySetHasEffect: setCovered(member.secondarySet),
+    fourPieceMissing:
+      !!member.primarySet && !member.secondarySet && member.fourPiece !== false && !effects.sets.some((s) => s.set === member.primarySet && s.fourPiece),
     characterHasEffect: effects.characters.some((c) => c.character === member.character),
   };
 }
@@ -52,5 +56,6 @@ export function missingEffects(member: MemberRef, effects: EffectsData): string[
   if (!c.weaponHasEffect) out.push(`arma ${member.weapon}`);
   if (c.primarySetHasEffect === false) out.push(`set ${member.primarySet}`);
   if (c.secondarySetHasEffect === false) out.push(`set ${member.secondarySet}`);
+  if (c.fourPieceMissing && c.primarySetHasEffect !== false) out.push(`4 peças de ${member.primarySet}`);
   return out;
 }

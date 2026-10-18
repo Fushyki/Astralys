@@ -796,7 +796,21 @@
   },
   {
     "set": "Scroll of the Hero of Cinder City",
-    "fonte_info": "planilha Mavuika_Iansan_Combo2, aba \"Sets (efeitos)\". 12% + 28% em Nightsoul"
+    "fonte_info": "planilha Mavuika_Iansan_Combo2, aba \"Sets (efeitos)\". 12% + 28% em Nightsoul",
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {},
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0
+    },
+    "note": "Os bônus de 4 peças (12% + 28% em Nightsoul) entram como buffs extras do projeto, não aqui."
   },
   {
     "set": "Obsidian Codex",

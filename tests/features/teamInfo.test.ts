@@ -49,11 +49,19 @@ describe('cobertura de efeitos', () => {
   });
 
   it('arma e set sem efeito cadastrado são apontados', () => {
-    const m = { ...p.members[0], weapon: 'Redhorn Stonethresher', primarySet: 'Gilded Dreams' };
+    const m = { ...p.members[0], weapon: 'Dull Blade', primarySet: 'Tiny Miracle' };
     const c = effectCoverage(m, effects);
     expect(c.weaponHasEffect).toBe(false);
     expect(c.primarySetHasEffect).toBe(false);
-    expect(missingEffects(m, effects)).toEqual(['arma Redhorn Stonethresher', 'set Gilded Dreams']);
+    expect(missingEffects(m, effects)).toEqual(['arma Dull Blade', 'set Tiny Miracle']);
+  });
+
+  it('set com 2 peças cadastradas mas sem 4 peças avisa só o bônus de 4 peças', () => {
+    const m = { ...p.members[0], primarySet: 'Gilded Dreams', secondarySet: undefined };
+    expect(effectCoverage(m, effects).primarySetHasEffect).toBe(true);
+    expect(effectCoverage(m, effects).fourPieceMissing).toBe(true);
+    expect(missingEffects(m, effects)).toContain('4 peças de Gilded Dreams');
+    expect(missingEffects({ ...m, fourPiece: false }, effects)).not.toContain('4 peças de Gilded Dreams');
   });
 
   it('sem set escolhido não é falta', () => {

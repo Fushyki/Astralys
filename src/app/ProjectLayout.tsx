@@ -3,7 +3,7 @@
  * no worker e entrega o resultado às telas pelo contexto. Editar numa tela atualiza as outras sem recarregar.
  */
 import { useEffect, useMemo } from 'react';
-import { Link, Outlet, useLocation, useParams } from 'react-router-dom';
+import { Link, Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
 import '../design/design.css';
 import { memberColors } from '../design/elements';
 import { StateCard } from '../design/primitives';
@@ -20,6 +20,7 @@ const SAVE_DELAY_MS = 400;
 export default function ProjectLayout() {
   const { id = SAMPLE_ID } = useParams();
   const { pathname } = useLocation();
+  const navigate = useNavigate();
   const { data, error: dataError } = useGameData();
   const project = useRotationStore((s) => s.project);
   const dirty = useRotationStore((s) => s.dirty);
@@ -86,6 +87,14 @@ export default function ProjectLayout() {
   const routeMember = /personagem\/([^/]+)/.exec(pathname);
   const headerMember = (routeMember ? decodeURIComponent(routeMember[1]) : undefined) ?? current?.members[selectedMember]?.character ?? current?.members[0]?.character;
 
+  // Salvar no Vault: marca como favorito, grava na hora (a navegação cancelaria o salvamento atrasado) e leva ao Vault.
+  const toggleFavorite = (p: NonNullable<typeof current>) => {
+    const favorite = !p.meta.favorite;
+    setFavorite(favorite);
+    saveProject({ ...p, meta: { ...p.meta, favorite, updatedAt: new Date().toISOString() } });
+    if (favorite) navigate('/vault');
+  };
+
   if (!exists && !current) {
     return (
       <StateCard title="Projeto não encontrado">
@@ -124,7 +133,7 @@ export default function ProjectLayout() {
 
   return (
     <div className="dz">
-      <AppHeader projectId={id} memberName={headerMember} favorite={!!current.meta.favorite} onToggleFavorite={() => setFavorite(!current.meta.favorite)} />
+      <AppHeader projectId={id} memberName={headerMember} favorite={!!current.meta.favorite} onToggleFavorite={() => toggleFavorite(current)} />
       <ProjectProvider value={{ id, project: current, data, bundle: ready.bundle, resolved: ready.resolved, stale: ready.stale, inSync, summary, colors }}>
         <div className={ready.stale ? 'dz-busy' : undefined}>
           <Outlet />

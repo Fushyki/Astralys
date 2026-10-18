@@ -58,6 +58,7 @@ export interface ProjectSummary {
   actions: number;
   updatedAt: string;
   isSample: boolean;
+  favorite: boolean;
 }
 
 export const summarize = (p: RotationProject): ProjectSummary => ({
@@ -67,6 +68,7 @@ export const summarize = (p: RotationProject): ProjectSummary => ({
   actions: p.actions.length,
   updatedAt: p.meta.updatedAt,
   isSample: p.id === SAMPLE_ID,
+  favorite: !!p.meta.favorite,
 });
 
 /** Projetos salvos neste navegador, do mais recente ao mais antigo; o exemplo entra se ainda não foi editado. */

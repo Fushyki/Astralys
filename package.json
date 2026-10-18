@@ -10,7 +10,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "sync:data": "tsx scripts/sync-data.ts",
-    "e2e": "node scripts/e2e/rotacao.cjs && node scripts/e2e/equipe.cjs && node scripts/e2e/cofre.cjs && node scripts/e2e/card.cjs && node scripts/e2e/recarga.cjs"
+    "e2e": "node scripts/e2e/rotacao.cjs && node scripts/e2e/equipe.cjs && node scripts/e2e/cofre.cjs && node scripts/e2e/card.cjs && node scripts/e2e/recarga.cjs && node scripts/e2e/comparar.cjs"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.104.4",

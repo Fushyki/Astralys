@@ -9,6 +9,7 @@ const HomePage = lazy(() => import('./features/home/HomePage'));
 const RotationPage = lazy(() => import('./features/rotation/RotationPage'));
 const CardPage = lazy(() => import('./features/card/CardPage'));
 const EnergyPage = lazy(() => import('./features/energy/EnergyPage'));
+const ComparePage = lazy(() => import('./features/compare/ComparePage'));
 const ProjectsPage = lazy(() => import('./features/rotation/ProjectsPage'));
 
 const queryClient = new QueryClient();
@@ -28,6 +29,14 @@ ReactDOM.createRoot(rootElement).render(
             element={
               <Suspense fallback={null}>
                 <ProjectsPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/comparar"
+            element={
+              <Suspense fallback={null}>
+                <ComparePage />
               </Suspense>
             }
           />

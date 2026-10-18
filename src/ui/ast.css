@@ -309,3 +309,13 @@
 .ast-home .note { padding: 0 28px 24px; color: var(--dim); font-size: .85rem }
 .ast-btn.ghost { border-color: var(--edge); color: var(--txt) }
 .ast-subtitle { margin: 18px 0 4px; font-size: 1.05rem; color: var(--gold) }
+
+/* ---------- Comparar projetos ---------- */
+.ast-compare { padding: 18px; display: flex; flex-direction: column; gap: 14px }
+.ast-compare .verdict { margin: 0; font-family: var(--display); font-size: 1.5rem; font-weight: 600; letter-spacing: .03em; color: var(--gold) }
+.ast-cmp td:nth-child(n+2), .ast-cmp th:nth-child(n+2) { text-align: right }
+.ast-cmp td.build { text-align: left; color: var(--dim); font-size: .85rem }
+.ast-cmp td.up { color: var(--good) }
+.ast-cmp td.down { color: var(--bad) }
+.ast-table.ast-cmp th:nth-child(-n+3), .ast-table.ast-cmp td:nth-child(-n+3) { text-align: right }
+.ast-table.ast-cmp th:first-child, .ast-table.ast-cmp td:first-child { text-align: left }

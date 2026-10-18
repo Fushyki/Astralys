@@ -88,7 +88,7 @@ export function DamageTable({ resolved, bundle, data, index }: { resolved: Resol
                   <tr key={r.move.id} style={{ cursor: 'default' }}>
                     <td>
                       <i className="dot" style={{ background: r.element === 'Physical' ? '#c9c9c9' : ELEMENT_COLOR[r.element] }} aria-hidden="true" />
-                      {r.move.label}
+                      <span title={r.move.label}>{r.move.labelPt ?? r.move.label}</span>
                       {r.reactionApplied && reaction !== 'none' ? <span className="ast-flag">reação</span> : null}
                     </td>
                     <td>{formatInt(r.noCrit)}</td>

@@ -22,7 +22,7 @@ export function Palette({ project, moves, members }: { project: RotationProject;
   const character = project.members[member]?.character;
   const groups = useMemo(() => {
     const q = query.trim().toLowerCase();
-    const mine = moves.filter((m) => m.character === character && (!q || m.label.toLowerCase().includes(q)));
+    const mine = moves.filter((m) => m.character === character && (!q || m.label.toLowerCase().includes(q) || (m.labelPt ?? '').toLowerCase().includes(q)));
     return TALENT_ORDER.map((t) => ({ talent: t, items: mine.filter((m) => m.talent === t) })).filter((g) => g.items.length > 0);
   }, [moves, character, query]);
 
@@ -51,12 +51,12 @@ export function Palette({ project, moves, members }: { project: RotationProject;
                   add({
                     member,
                     move: { character: m.character, talent: m.talent, label: m.label, variant: m.variant },
-                    displayName: `${m.character} - ${m.label}${m.variants > 1 ? ` (${m.variant + 1}/${m.variants})` : ''}`,
+                    displayName: `${m.character} - ${m.labelPt ?? m.label}${m.variants > 1 ? ` (${m.variant + 1}/${m.variants})` : ''}`,
                     time: playhead,
                   })
                 }
               >
-                <span>{m.label}{m.variants > 1 ? ` (${m.variant + 1}/${m.variants})` : ''}</span>
+                <span title={m.label}>{m.labelPt ?? m.label}{m.variants > 1 ? ` (${m.variant + 1}/${m.variants})` : ''}</span>
                 <em>{HIT_LABEL[m.hitType]}{m.hits > 1 ? ` · ${m.hits} hits` : ''}</em>
               </button>
             ))}

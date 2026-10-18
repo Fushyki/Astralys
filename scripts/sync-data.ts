@@ -138,13 +138,17 @@ interface Unparsed {
   sample: string;
 }
 
-function buildMoves(char: Character, detail: RawCharDetail, unparsed: Unparsed[], candidates: Unparsed[]): Move[] {
+function buildMoves(char: Character, detail: RawCharDetail, detailPt: RawCharDetail | null, unparsed: Unparsed[], candidates: Unparsed[]): Move[] {
   const moves: Move[] = [];
   const seen = new Set<string>();
 
   for (const [skillKey, talent] of TALENTS) {
     const mult = detail.skills[skillKey]?.multipliers ?? {};
+    // Os rótulos em português vêm na MESMA ordem dos em inglês; só usados se as listas têm o mesmo tamanho.
+    const ptKeys = Object.keys(detailPt?.skills[skillKey]?.multipliers ?? {});
+    const ptAligned = ptKeys.length === Object.keys(mult).length;
     for (const [label, levels] of Object.entries(mult)) {
+      const labelPt = ptAligned ? ptKeys[Object.keys(mult).indexOf(label)] : undefined;
       const record = { character: char.name, talent, label, sample: String(levels[0]) };
 
       if (!isDamageLabel(label)) {
@@ -187,6 +191,7 @@ function buildMoves(char: Character, detail: RawCharDetail, unparsed: Unparsed[]
           talent,
           hitType: hitTypeFor(label, talent),
           label,
+          ...(labelPt ? { labelPt } : {}),
           variant: v,
           variants,
           hits: first.variants[v].hits,
@@ -250,6 +255,14 @@ async function main() {
     }
   });
 
+  const charDetailsPt = await mapLimit(charIds, CONCURRENCY, async (id) => {
+    try {
+      return await fetchJson<RawCharDetail>(`${version}/pt/char/${id}.json`, opts);
+    } catch {
+      return null;
+    }
+  });
+
   charIds.forEach((id, i) => {
     const entry = charList[id];
     const detail = charDetails[i];
@@ -285,7 +298,7 @@ async function main() {
       })),
     });
     characters.push(char);
-    moves.push(...buildMoves(char, detail, unparsed, candidates));
+    moves.push(...buildMoves(char, detail, charDetailsPt[i], unparsed, candidates));
   });
 
   // --- Armas ---

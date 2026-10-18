@@ -24,4 +24,4 @@ npm run e2e         # 6 roteiros em navegador real (rotação, equipe, cofre, ca
 Ver `docs/DECISOES_PENDENTES.md` (partículas da tabela antiga não verificadas, atalho da Raiden removido, imagens vindas do CDN do Lunaris, login fora por enquanto).
 
 ## Ainda não feito
-Constelações/refinamentos no custo-benefício (faltam efeitos numéricos), rótulos dos golpes em português (o Lunaris tem textos em pt; falta sincronizar e casar com os golpes), importador GOOD e otimizador de artefatos reais, Strix (por último, sem Claude), deploy do backend (SECRET_KEY etc.).
+Constelações/refinamentos no custo-benefício (faltam efeitos numéricos), importador GOOD e otimizador de artefatos reais, Strix (por último, sem Claude), deploy do backend (SECRET_KEY etc.).

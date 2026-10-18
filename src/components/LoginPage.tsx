@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { Mail, Lock, Eye, EyeOff, LogIn, UserPlus, Sparkles, AlertCircle, Check, LogOut, ExternalLink, ArrowRight } from 'lucide-react';
-import { supabase } from '../services/supabaseClient';
 import { isValidEmail, checkPasswordStrength } from '../utils/authValidators';
 import { useAuth } from '../context/AuthContext';
-import { syncOAuthUserWithBackend, buildAmetistSsoUrl } from '../services/auth';
+import { buildAmetistSsoUrl } from '../services/auth';
 import { ActiveTab } from './Header';
 import '../index.css';
 
@@ -12,7 +11,7 @@ interface LoginPageProps {
 }
 
 export const LoginPage: React.FC<LoginPageProps> = ({ onNavigate }) => {
-  const { user, isAuthenticated, login, loginWithGoogle, register, logout, syncStatus } = useAuth();
+  const { user, isAuthenticated, login, register, logout, syncStatus } = useAuth();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -98,76 +97,29 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onNavigate }) => {
     
     try {
       if (isLogin) {
-        // Tenta autenticação unificada Ametist & Astralys
         try {
           await login(cleanEmail, cleanPassword);
           onNavigate('dashboards');
-        } catch (apiErr: any) {
-          // Se falhar na API direta, tenta autenticar no Supabase (caso a conta tenha sido criada originalmente no Ametist)
-          const { data: supaData, error: supaError } = await supabase.auth.signInWithPassword({ 
-            email: cleanEmail, 
-            password: cleanPassword 
-          });
-          
-          if (supaError || !supaData?.user?.email) {
-            setPasswordError('Senha incorreta ou e-mail não cadastrado.');
-            return;
-          }
-
-          // Sincroniza usuário do Ametist para o banco Astralys
-          await syncOAuthUserWithBackend({
-            email: supaData.user.email,
-            nome: supaData.user.user_metadata?.full_name || supaData.user.email.split('@')[0],
-            avatar_url: supaData.user.user_metadata?.avatar_url
-          });
-
-          onNavigate('dashboards');
+        } catch {
+          setPasswordError('Senha incorreta ou e-mail não cadastrado.');
         }
       } else {
-        // Cadastro unificado no ecossistema
         const defaultName = cleanEmail.split('@')[0];
         try {
           await register(defaultName, cleanEmail, cleanPassword);
           onNavigate('dashboards');
         } catch (regErr: any) {
-          // Se já existir ou der erro no backend, tenta via Supabase
-          const { data: supaReg, error: supaRegErr } = await supabase.auth.signUp({
-            email: cleanEmail,
-            password: cleanPassword
-          });
-
-          if (supaRegErr) {
-            if (supaRegErr.message.toLowerCase().includes('email')) {
-              setEmailError(supaRegErr.message);
-            } else {
-              setPasswordError(supaRegErr.message || 'Erro ao criar conta.');
-            }
-            return;
-          }
-
-          if (supaReg?.user?.email) {
-            await syncOAuthUserWithBackend({
-              email: supaReg.user.email,
-              nome: defaultName
-            });
-            onNavigate('dashboards');
+          const msg = regErr?.message || 'Erro ao criar conta.';
+          if (msg.toLowerCase().includes('e-mail') || msg.toLowerCase().includes('email')) {
+            setEmailError(msg);
+          } else {
+            setPasswordError(msg);
           }
         }
       }
     } catch (err: any) {
       setGeneralError('Ocorreu um erro ao processar. Tente novamente.');
     } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleGoogleLogin = async () => {
-    try {
-      clearErrors();
-      setLoading(true);
-      await loginWithGoogle();
-    } catch (err: any) {
-      setGeneralError('Erro no login do Google: ' + err.message);
       setLoading(false);
     }
   };
@@ -440,45 +392,6 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onNavigate }) => {
             <UserPlus size={17} />
             Criar Conta
           </button>
-        </div>
-
-        {/* Botão Rápido do Google */}
-        <button 
-          onClick={handleGoogleLogin}
-          disabled={loading}
-          type="button"
-          style={{ 
-            width: '100%',
-            padding: '13px 16px', 
-            backgroundColor: '#ffffff', 
-            color: '#1f1f23', 
-            border: 'none', 
-            borderRadius: '12px', 
-            fontWeight: '600', 
-            fontSize: '0.95rem',
-            cursor: loading ? 'not-allowed' : 'pointer',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            gap: '10px',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-            transition: 'all 0.2s ease',
-            marginBottom: '20px'
-          }}
-          onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#f3f3f5'}
-          onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#ffffff'}
-        >
-          <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google" style={{ width: '20px', height: '20px' }} />
-          Continuar com Google
-        </button>
-
-        {/* Divisor */}
-        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
-          <div style={{ flex: 1, height: '1px', backgroundColor: '#2d2d35' }}></div>
-          <span style={{ padding: '0 12px', color: '#6e6e7d', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-            ou use e-mail
-          </span>
-          <div style={{ flex: 1, height: '1px', backgroundColor: '#2d2d35' }}></div>
         </div>
 
         {/* Erro Geral (se houver) */}

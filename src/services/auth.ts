@@ -1,9 +1,7 @@
 /**
  * Serviço de Autenticação e SSO para Astralys & Ametist Suite
- * Conecta-se ao microsserviço ms-identity (FastAPI + JWT + PostgreSQL) e Supabase OAuth
+ * Conecta-se ao microsserviço ms-identity (FastAPI + JWT)
  */
-
-import { supabase } from './supabaseClient';
 
 export interface UserProfile {
   id: string;
@@ -125,52 +123,7 @@ export const register = async (nome: string, email: string, senha: string): Prom
 };
 
 /**
- * Inicia o fluxo de Login do Google via Supabase OAuth
- */
-export const loginWithGoogle = async (): Promise<void> => {
-  const { error } = await supabase.auth.signInWithOAuth({
-    provider: 'google',
-    options: {
-      redirectTo: typeof window !== 'undefined' ? window.location.origin : undefined
-    }
-  });
-  if (error) {
-    throw new Error(`Erro no login do Google: ${error.message}`);
-  }
-};
-
-/**
- * Sincroniza o perfil do Google com a API ms-identity e obtém o token JWT SSO
- */
-export const syncOAuthUserWithBackend = async (googleUser: {
-  email: string;
-  nome: string;
-  avatar_url?: string | null;
-}): Promise<AuthResponse> => {
-  const baseUrl = getApiBaseUrl();
-  const response = await fetch(`${baseUrl}/auth/oauth-sync`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      email: googleUser.email,
-      nome: googleUser.nome,
-      avatar_url: googleUser.avatar_url,
-      provider: 'google'
-    })
-  });
-
-  if (!response.ok) {
-    const err = await response.json().catch(() => ({ detail: 'Falha ao sincronizar conta Google' }));
-    throw new Error(err.detail || 'Não foi possível sincronizar sua conta Google.');
-  }
-
-  const data: AuthResponse = await response.json();
-  saveAuthSession(data.access_token, data.usuario);
-  return data;
-};
-
-/**
- * Encerra a sessão ativa do usuário no SSO (FastAPI e Supabase)
+ * Encerra a sessão ativa do usuário no SSO (FastAPI)
  */
 export const logout = async (): Promise<void> => {
   const baseUrl = getApiBaseUrl();
@@ -185,12 +138,6 @@ export const logout = async (): Promise<void> => {
     } catch (e) {
       console.warn('Não foi possível notificar o servidor sobre o logout:', e);
     }
-  }
-
-  try {
-    await supabase.auth.signOut();
-  } catch (e) {
-    console.warn('Erro ao deslogar do Supabase:', e);
   }
 
   clearAuthSession();

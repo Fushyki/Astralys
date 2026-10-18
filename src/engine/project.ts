@@ -144,6 +144,8 @@ export const RotationProjectSchema = z
         author: z.string().optional(),
         patch: z.string().optional(),
         tags: z.array(z.string()).default([]),
+        /** Textos do card infográfico (título, selo de investimento e etiqueta de versão). */
+        card: z.object({ title: z.string().max(60), badge: z.string().max(40), tag: z.string().max(40) }).partial().optional(),
         createdAt: z.string(),
         updatedAt: z.string(),
       })

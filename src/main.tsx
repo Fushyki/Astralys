@@ -7,6 +7,7 @@ import './index.css';
 
 // O editor (e os ~1 MB de dados do jogo) só é baixado quando a rota é aberta.
 const RotationPage = lazy(() => import('./features/rotation/RotationPage'));
+const CardPage = lazy(() => import('./features/card/CardPage'));
 const ProjectsPage = lazy(() => import('./features/rotation/ProjectsPage'));
 
 const queryClient = new QueryClient();
@@ -26,6 +27,14 @@ ReactDOM.createRoot(rootElement).render(
             element={
               <Suspense fallback={null}>
                 <ProjectsPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/rotacao/:id/card"
+            element={
+              <Suspense fallback={null}>
+                <CardPage />
               </Suspense>
             }
           />

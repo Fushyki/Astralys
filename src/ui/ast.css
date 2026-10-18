@@ -113,8 +113,8 @@
 .ast-field { display: grid; gap: 3px; font-size: .8rem; color: var(--dim) }
 .ast-field .in { display: flex; align-items: center; gap: 6px }
 .ast-field em { font-style: normal; color: var(--dim) }
-.ast-app input[type="number"], .ast-app input[type="search"], .ast-app select { width: 100%; min-width: 0; background: var(--ink); color: var(--txt); border: 1px solid var(--edge); padding: 6px 8px; font: inherit; font-variant-numeric: tabular-nums }
-.ast-app input[type="number"]:focus, .ast-app input[type="search"]:focus, .ast-app select:focus { border-color: var(--gold) }
+.ast-app input[type="number"], .ast-app input[type="text"], .ast-app input:not([type]), .ast-app input[type="search"], .ast-app select { width: 100%; min-width: 0; background: var(--ink); color: var(--txt); border: 1px solid var(--edge); padding: 6px 8px; font: inherit; font-variant-numeric: tabular-nums }
+.ast-app input[type="number"]:focus, .ast-app input[type="text"]:focus, .ast-app input:not([type]):focus, .ast-app input[type="search"]:focus, .ast-app select:focus { border-color: var(--gold) }
 .ast-source { border: 1px solid var(--edge); padding: 8px 12px 10px; margin: 0 0 12px; display: grid; gap: 4px; font-size: .9rem }
 .ast-source legend { font-family: var(--display); text-transform: uppercase; letter-spacing: .06em; color: var(--gold); padding: 0 6px; font-size: .8rem }
 .ast-source label { display: flex; align-items: center; gap: 8px }
@@ -255,3 +255,10 @@
 .ast-project .meta { margin: 0; color: var(--dim); font-size: .85rem }
 .ast-project .acts { margin: 4px 0 0; display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: center }
 .ast-project .warn { color: var(--gold); font-size: .85rem }
+
+/* ---------- Página do card ---------- */
+.ast-cardpage { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 22px; padding: 18px; align-items: start }
+.ast-cardform { display: flex; flex-direction: column; gap: 12px }
+.ast-cardacts { display: flex; flex-wrap: wrap; gap: 8px }
+.ast-cardview { min-width: 0 }
+@media (max-width: 900px) { .ast-cardpage { grid-template-columns: minmax(0, 1fr) } }

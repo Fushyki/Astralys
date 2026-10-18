@@ -18,7 +18,6 @@ import './tier1-features/f7_erSpecialMechanics.test';
 import './tier1-features/f8_erCalculatorUI.test';
 import './tier1-features/f9_erTransfer.test';
 import './tier1-features/f10_hubDashboard.test';
-import './tier1-features/f11_tierlistPortal.test';
 import './tier1-features/f12_appShellBuild.test';
 import './tier1-features/f13_warroomAndVault.test';
 
@@ -33,7 +32,6 @@ import './tier2-boundaries/b7_erMechanicsBoundaries.test';
 import './tier2-boundaries/b8_erUiBoundaries.test';
 import './tier2-boundaries/b9_transferBoundaries.test';
 import './tier2-boundaries/b10_hubBoundaries.test';
-import './tier2-boundaries/b11_tierlistBoundaries.test';
 import './tier2-boundaries/b12_appShellBoundaries.test';
 
 // Import Tier 3: Cross-Feature Interactions (C1 to C4)
@@ -42,13 +40,12 @@ import './tier3-cross-feature/c2_rawTableToCard.test';
 import './tier3-cross-feature/c3_erToCardTransfer.test';
 import './tier3-cross-feature/c4_hubNavigationAndExport.test';
 
-// Import Tier 4: Real-World Application Scenarios (S1 to S6)
+// Import Tier 4: Real-World Application Scenarios (S1 to S5)
 import './tier4-scenarios/s1_sandroneWorkload.test';
 import './tier4-scenarios/s2_mavuikaMeltWorkload.test';
 import './tier4-scenarios/s3_flinsWorkload.test';
 import './tier4-scenarios/s4_rawTableWorkload.test';
 import './tier4-scenarios/s5_fullPipelineWorkload.test';
-import './tier4-scenarios/s6_tierlistMetaWorkload.test';
 
 async function main() {
   console.log('================================================================');

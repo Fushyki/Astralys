@@ -90,24 +90,19 @@ export function goodCharacterNames(good: Good, characters: readonly Character[])
   return good.characters.map((c) => byNorm.get(norm(c.key))).filter((n): n is string => !!n);
 }
 
-export function buildFromGood(good: Good, characterName: string, game: Pick<GameData, 'characters' | 'weapons' | 'artifacts'>): GoodBuild {
-  const character = game.characters.find((c) => c.name === characterName);
-  if (!character) throw new Error(`"${characterName}" não existe nos dados do jogo.`);
-  const gc = good.characters.find((c) => norm(c.key) === norm(characterName));
-  if (!gc) throw new Error(`${characterName} não está neste inventário.`);
-  const notes: string[] = [];
+export type GoodArtifact = Good['artifacts'][number];
 
-  // ---- Arma ----
-  const gw = good.weapons.find((w) => norm(w.location) === norm(gc.key));
-  let weapon: string | undefined;
-  if (gw) {
-    const w = game.weapons.find((x) => norm(x.name) === norm(gw.key));
-    if (w && w.type === character.weapon) weapon = w.name;
-    else notes.push(w ? `A arma ${w.name} não é do tipo de ${characterName}; mantive a arma atual.` : `Arma "${gw.key}" não encontrada nos dados do jogo; mantive a arma atual.`);
-  } else notes.push('O personagem não tem arma equipada no inventário; mantive a arma atual.');
+export interface Loadout {
+  artifacts: MemberRef['artifacts'];
+  primarySet?: string;
+  secondarySet?: string;
+  fourPiece?: boolean;
+  /** Rolls fracionários que reproduzem a soma exata dos substats das peças. */
+  manualRolls: Record<Substat, number>;
+}
 
-  // ---- Peças equipadas ----
-  const equipped = good.artifacts.filter((a) => norm(a.location) === norm(gc.key));
+/** Converte até 5 peças (uma por posição) no que o motor entende: main stats, raridades, sets e rolls. */
+export function loadoutFromPieces(equipped: readonly GoodArtifact[], game: Pick<GameData, 'artifacts'>, notes: string[] = []): Loadout {
   const bySlot = new Map<PieceSlot, (typeof equipped)[number]>();
   for (const a of equipped) bySlot.set(a.slotKey, a);
   const missing = (['flower', 'plume', 'sands', 'goblet', 'circlet'] as const).filter((s) => !bySlot.has(s));
@@ -169,6 +164,28 @@ export function buildFromGood(good: Good, characterName: string, game: Pick<Game
   }
   const perRoll = rollValues(artifacts as never);
   const manualRolls = Object.fromEntries(SUBSTATS.map((s) => [s, Math.round((sums[s] / perRoll[s]) * 1000) / 1000])) as Record<Substat, number>;
+  return { artifacts, primarySet, secondarySet, fourPiece, manualRolls };
+}
+
+export function buildFromGood(good: Good, characterName: string, game: Pick<GameData, 'characters' | 'weapons' | 'artifacts'>): GoodBuild {
+  const character = game.characters.find((c) => c.name === characterName);
+  if (!character) throw new Error(`"${characterName}" não existe nos dados do jogo.`);
+  const gc = good.characters.find((c) => norm(c.key) === norm(characterName));
+  if (!gc) throw new Error(`${characterName} não está neste inventário.`);
+  const notes: string[] = [];
+
+  // ---- Arma ----
+  const gw = good.weapons.find((w) => norm(w.location) === norm(gc.key));
+  let weapon: string | undefined;
+  if (gw) {
+    const w = game.weapons.find((x) => norm(x.name) === norm(gw.key));
+    if (w && w.type === character.weapon) weapon = w.name;
+    else notes.push(w ? `A arma ${w.name} não é do tipo de ${characterName}; mantive a arma atual.` : `Arma "${gw.key}" não encontrada nos dados do jogo; mantive a arma atual.`);
+  } else notes.push('O personagem não tem arma equipada no inventário; mantive a arma atual.');
+
+  // ---- Peças equipadas ----
+  const equipped = good.artifacts.filter((a) => norm(a.location) === norm(gc.key));
+  const { artifacts, primarySet, secondarySet, fourPiece, manualRolls } = loadoutFromPieces(equipped, game, notes);
 
   const tal = gc.talent ?? {};
   const clamp = (v: number | undefined) => Math.min(15, Math.max(1, Math.round(v ?? 10)));

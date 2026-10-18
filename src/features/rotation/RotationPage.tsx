@@ -340,7 +340,7 @@ export default function RotationPage() {
         )}
         {data && inSync && (
           <div className="ast-panels">
-            <GoodPanel data={data} name={current.members[Math.min(selectedMember, current.members.length - 1)].character} index={Math.min(selectedMember, current.members.length - 1)} />
+            <GoodPanel project={current} resolved={analysis.resolved} bundle={analysis.bundle} data={data} name={current.members[Math.min(selectedMember, current.members.length - 1)].character} index={Math.min(selectedMember, current.members.length - 1)} />
             <CritOptimizer project={current} resolved={analysis.resolved} bundle={analysis.bundle} index={Math.min(selectedMember, current.members.length - 1)} />
             <GainHeatmap project={current} bundle={analysis.bundle} />
             <WeaponCompare project={current} resolved={analysis.resolved} data={data} index={Math.min(selectedMember, current.members.length - 1)} />

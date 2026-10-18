@@ -3,16 +3,181 @@
   "version": 2,
   "source": "teste e2e",
   "characters": [
-    { "key": "Mavuika", "level": 90, "constellation": 0, "talent": { "auto": 9, "skill": 8, "burst": 7 } }
+    {
+      "key": "Mavuika",
+      "level": 90,
+      "constellation": 0,
+      "talent": {
+        "auto": 9,
+        "skill": 8,
+        "burst": 7
+      }
+    }
   ],
   "weapons": [
-    { "key": "AThousandBlazingSuns", "level": 90, "refinement": 1, "location": "Mavuika" }
+    {
+      "key": "AThousandBlazingSuns",
+      "level": 90,
+      "refinement": 1,
+      "location": "Mavuika"
+    }
   ],
   "artifacts": [
-    { "setKey": "ObsidianCodex", "slotKey": "flower", "level": 20, "rarity": 5, "mainStatKey": "hp", "location": "Mavuika", "substats": [{ "key": "critRate_", "value": 6.6 }, { "key": "critDMG_", "value": 13.2 }, { "key": "atk_", "value": 4.95 }] },
-    { "setKey": "ObsidianCodex", "slotKey": "plume", "level": 20, "rarity": 5, "mainStatKey": "atk", "location": "Mavuika", "substats": [{ "key": "critDMG_", "value": 7.0 }, { "key": "eleMas", "value": 39 }] },
-    { "setKey": "ObsidianCodex", "slotKey": "sands", "level": 20, "rarity": 5, "mainStatKey": "eleMas", "location": "Mavuika", "substats": [{ "key": "critRate_", "value": 3.3 }, { "key": "critDMG_", "value": 6.6 }, { "key": "atk", "value": 18 }] },
-    { "setKey": "ObsidianCodex", "slotKey": "goblet", "level": 20, "rarity": 5, "mainStatKey": "pyro_dmg_", "location": "Mavuika", "substats": [{ "key": "critRate_", "value": 9.9 }, { "key": "enerRech_", "value": 5.5 }] },
-    { "setKey": "GladiatorsFinale", "slotKey": "circlet", "level": 20, "rarity": 5, "mainStatKey": "critDMG_", "location": "Mavuika", "substats": [{ "key": "critRate_", "value": 3.9 }, { "key": "atk_", "value": 5.8 }] }
+    {
+      "setKey": "ObsidianCodex",
+      "slotKey": "flower",
+      "level": 20,
+      "rarity": 5,
+      "mainStatKey": "hp",
+      "location": "Mavuika",
+      "substats": [
+        {
+          "key": "critRate_",
+          "value": 6.6
+        },
+        {
+          "key": "critDMG_",
+          "value": 13.2
+        },
+        {
+          "key": "atk_",
+          "value": 4.95
+        }
+      ]
+    },
+    {
+      "setKey": "ObsidianCodex",
+      "slotKey": "plume",
+      "level": 20,
+      "rarity": 5,
+      "mainStatKey": "atk",
+      "location": "Mavuika",
+      "substats": [
+        {
+          "key": "critDMG_",
+          "value": 7.0
+        },
+        {
+          "key": "eleMas",
+          "value": 39
+        }
+      ]
+    },
+    {
+      "setKey": "ObsidianCodex",
+      "slotKey": "sands",
+      "level": 20,
+      "rarity": 5,
+      "mainStatKey": "eleMas",
+      "location": "Mavuika",
+      "substats": [
+        {
+          "key": "critRate_",
+          "value": 3.3
+        },
+        {
+          "key": "critDMG_",
+          "value": 6.6
+        },
+        {
+          "key": "atk",
+          "value": 18
+        }
+      ]
+    },
+    {
+      "setKey": "ObsidianCodex",
+      "slotKey": "goblet",
+      "level": 20,
+      "rarity": 5,
+      "mainStatKey": "pyro_dmg_",
+      "location": "Mavuika",
+      "substats": [
+        {
+          "key": "critRate_",
+          "value": 9.9
+        },
+        {
+          "key": "enerRech_",
+          "value": 5.5
+        }
+      ]
+    },
+    {
+      "setKey": "GladiatorsFinale",
+      "slotKey": "circlet",
+      "level": 20,
+      "rarity": 5,
+      "mainStatKey": "critDMG_",
+      "location": "Mavuika",
+      "substats": [
+        {
+          "key": "critRate_",
+          "value": 3.9
+        },
+        {
+          "key": "atk_",
+          "value": 5.8
+        }
+      ]
+    },
+    {
+      "setKey": "ObsidianCodex",
+      "slotKey": "flower",
+      "level": 20,
+      "rarity": 5,
+      "mainStatKey": "hp",
+      "location": "",
+      "substats": [
+        {
+          "key": "critRate_",
+          "value": 10.5
+        },
+        {
+          "key": "critDMG_",
+          "value": 14.0
+        },
+        {
+          "key": "atk_",
+          "value": 9.9
+        }
+      ]
+    },
+    {
+      "setKey": "ObsidianCodex",
+      "slotKey": "plume",
+      "level": 20,
+      "rarity": 5,
+      "mainStatKey": "atk",
+      "location": "",
+      "substats": [
+        {
+          "key": "critRate_",
+          "value": 6.6
+        },
+        {
+          "key": "critDMG_",
+          "value": 20.2
+        }
+      ]
+    },
+    {
+      "setKey": "ObsidianCodex",
+      "slotKey": "circlet",
+      "level": 20,
+      "rarity": 5,
+      "mainStatKey": "critDMG_",
+      "location": "",
+      "substats": [
+        {
+          "key": "critRate_",
+          "value": 10.1
+        },
+        {
+          "key": "eleMas",
+          "value": 58
+        }
+      ]
+    }
   ]
 }

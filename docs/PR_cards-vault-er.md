@@ -11,13 +11,14 @@ Branch: `v2/cards-vault-er` (sai de `v2/core`). Abrir em: https://github.com/Fus
 - **Inventário GOOD**: importa o export do Genshin Optimizer e aplica o build real (rolls fracionários) a um personagem.
 - **Efeitos em escala**: 60 sets e 83 armas com efeito numérico (refinamentos R1 a R5), com as suposições de cada um no painel do build.
 - **Constelações e passivas**: seletor de constelação (+3 de talento na C3/C5) e 25 personagens com buffs de passivas/constelações como faixas na linha do tempo.
+- **Melhor build do inventário**: busca, entre as peças do GOOD, o conjunto de 5 artefatos que mais aumenta o dano da equipe.
 - **Página inicial nova** e **remoção da interface antiga** (App, components, engines, services, context, types, Tailwind e os testes dela).
 
 ## Como testar
 ```
 npm ci
 npx tsc --noEmit
-npm test            # 478 testes
+npm test            # 486 testes
 npm run build
 npx vite preview --port 4173   # em outro terminal
 npm run e2e         # 7 roteiros em navegador real (rotação, equipe, cofre, card, recarga, comparar, good)
@@ -27,4 +28,4 @@ npm run e2e         # 7 roteiros em navegador real (rotação, equipe, cofre, ca
 Ver `docs/DECISOES_PENDENTES.md` (partículas da tabela antiga não verificadas, atalho da Raiden removido, imagens vindas do CDN do Lunaris, login fora por enquanto).
 
 ## Ainda não feito
-Efeitos de personagens (passivas/constelações) além dos 4 cadastrados, conversões de stat (ATK por HP/EM) e o custo-benefício de constelações, otimizador que escolhe artefatos reais do inventário, Strix (por último, sem Claude), deploy do backend (SECRET_KEY etc.).
+Efeitos de personagens (passivas/constelações) além dos 4 cadastrados, conversões de stat (ATK por HP/EM) e o custo-benefício de constelações, busca exaustiva de artefatos (a atual é heurística), Strix (por último, sem Claude), deploy do backend (SECRET_KEY etc.).

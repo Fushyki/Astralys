@@ -331,3 +331,7 @@
 .ast-assume { border: 1px solid var(--edge); background: var(--ink-3); padding: 6px 10px; font-size: .85rem; color: var(--dim) }
 .ast-assume summary { cursor: pointer; color: var(--txt) }
 .ast-assume ul { margin: 6px 0 2px; padding-left: 18px; display: grid; gap: 4px }
+.ast-good .loadout { display: flex; flex-direction: column; gap: 8px; border-top: 1px solid var(--edge); padding-top: 10px }
+.ast-good .found { display: flex; flex-direction: column; gap: 8px }
+.ast-found { min-width: 520px }
+.ast-found td, .ast-found th { text-align: left !important }

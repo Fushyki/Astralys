@@ -70,6 +70,7 @@ API não oficial `https://api.lunaris.moe/data/` (descoberta lendo o bundle do s
   - [x] Ressonâncias com stats: Pyro (+25% ATK), Hydro (+25% HP), Cryo (+15% Taxa Crítica, assumido sempre), Dendro (+50 EM), Geo (-20% RES Geo) em `engine/team.ts` (`resonanceEffects`); Electro e Anemo não mudam stats.
   - [x] Constelações: tabela C0 a C6 no painel de armas (só +3 de talento e buffs cadastrados; efeitos próprios do kit não entram).
   - [x] Refinamentos: tabela "Refinamentos de {arma}" (R1 a R5, dano da equipe e ganho) no painel de armas.
+  - [x] Melhor build do inventário (`features/good/loadoutSearch.ts`, painel no GOOD): subida por trocas de uma peça a partir do conjunto equipado e do melhor de cada set (60 peças por posição), avaliando o dano da equipe com os substats reais (0,35 ms por conjunto; `scripts/bench-loadout.ts`). NÃO é busca exaustiva. Opção de usar peças de outros personagens.
   - [x] Comparar projetos A/B (`/comparar?a=&b=`, `features/compare/`: `compareModel.ts` puro + `ComparePage.tsx`): veredito, DPS/DPR/duração e dano e build por personagem; atalho "Comparar" no cofre. Teste: `scripts/e2e/comparar.cjs`.
   - [ ] 3c-2 tabela de dano por personagem (como a aba Talentos do GO: cada golpe com dano sem crítico/crítico/médio, seletor de reação e modo de crítico)
   - [ ] 3c-3 otimizador interativo (alvo, restrições, curva de dano × rolls em crítico)

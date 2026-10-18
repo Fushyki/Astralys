@@ -41,7 +41,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   // Importar
   await page.setInputFiles('input[aria-label="Escolher inventário GOOD"]', FIXTURE); await settle();
   const summary = await page.textContent('.ast-good .summary');
-  check('mostra o resumo do inventário', /1 personagens, 1 armas e 5 artefatos/.test(summary), summary);
+  check('mostra o resumo do inventário', /1 personagens, 1 armas e 8 artefatos/.test(summary), summary);
 
   // Selecionar a Citlali (fora do inventário): botão desativado
   await page.click('.ast-slot-main:has-text("Citlali")'); await settle();
@@ -64,9 +64,21 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   check('os níveis de talento vêm do inventário (9/8/7)', talents.join('/') === '9/8/7', talents.join('/'));
   await page.screenshot({ path: path.join(OUT, 'good.png'), fullPage: false });
 
+  // Busca do melhor build do inventário
+  await page.click('.ast-good button:has-text("Buscar o melhor build de Mavuika")');
+  await page.waitForSelector('.ast-found', { timeout: 30000 });
+  const foundText = await page.textContent('.ast-good .found .summary');
+  check('a busca mostra o dano da equipe e quantos conjuntos avaliou', /de dano da equipe/.test(foundText) && /conjuntos avaliados/.test(foundText), foundText.slice(0, 80));
+  const better = /\+\d/.test(foundText);
+  check('a busca acha um conjunto melhor que o equipado (peças soltas com crítico)', better, foundText.slice(0, 90));
+  const foundRows = await page.$$eval('.ast-found tbody tr', (r) => r.map((x) => x.textContent));
+  check('a tabela traz as 5 posições, com a flor e a pena novas', foundRows.length === 5 && /10,5%/.test(foundRows[0]) && /20,2%/.test(foundRows[1]), foundRows[0]?.slice(0, 60));
+  await page.click('.ast-good button:has-text("Aplicar este build")'); await page.waitForTimeout(1500);
+  check('aplicar o build da busca avisa e mantém o modo manual', /Build do inventário aplicado/.test(await page.textContent('.ast-good .notes')) && (await page.locator('input[name="rolls-0"]').nth(1).isChecked()));
+
   // Persistência do inventário
   await page.reload({ waitUntil: 'networkidle' }); await page.waitForSelector('.ast-good');
-  check('o inventário fica guardado ao recarregar', /5 artefatos/.test(await page.textContent('.ast-good .summary')));
+  check('o inventário fica guardado ao recarregar', /8 artefatos/.test(await page.textContent('.ast-good .summary')));
 
   // Remover
   await page.click('.ast-good button:has-text("Remover o inventário")'); await settle();

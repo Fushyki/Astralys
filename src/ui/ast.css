@@ -240,3 +240,7 @@
 .ast-opt .legend .k.best { border: 2px solid var(--gold) }
 .ast-opt .legend .k.cur { background: #6fb7ff }
 .ast-opt-info div:last-child { grid-column: 1 / -1 }
+.ast-table.ast-heat td, .ast-table.ast-heat th { text-align: right }
+.ast-table.ast-heat td:first-child, .ast-table.ast-heat th:first-child { text-align: left }
+.ast-heat .none { color: var(--dim) }
+.ast-weapons td:nth-child(n+2), .ast-weapons th:nth-child(n+2) { text-align: right }

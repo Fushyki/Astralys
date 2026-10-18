@@ -30,7 +30,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
 
   const settle = () => page.waitForTimeout(500);
   const dps = () => page.$eval('.ast-kpi .v', (e) => e.textContent);
-  const rows = () => page.$$eval('.ast-table:not(.ast-dmgtable) tbody tr', (r) => r.length);
+  const rows = () => page.$$eval('.ast-actions tbody tr', (r) => r.length);
   const slotNames = () => page.$$eval('.ast-slot-main .n', (e) => e.map((x) => x.textContent));
   const undo = async () => { await page.click('button:has-text("Desfazer")'); await settle(); };
   const field = (label) => page.locator(`label.ast-field:has(span:text-is("${label}"))`);
@@ -134,6 +134,17 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   const forcedField2 = forcedField ?? (await page.$eval('label.ast-field:has(span:text-matches("Rolls em cr.tico fixos"))  input', (e) => e.value));
   check('aplicar a distribuição fixa os rolls em crítico do build', forcedField2 === '4', `campo = ${forcedField2}`);
   await page.click('button:has-text("Deixar o otimizador escolher")'); await page.waitForTimeout(900);
+
+  // Mapa de calor e comparação de armas
+  const heatRows = await page.$$eval('.ast-heat tbody tr', (r) => r.length);
+  check('mapa de calor de +1 roll com linhas por substat', heatRows >= 4, `${heatRows} linhas`);
+  await page.waitForSelector('.ast-weapons tbody tr');
+  const weaponRows = await page.$$eval('.ast-weapons tbody tr', (r) => r.map((x) => x.textContent));
+  check('comparação de armas marca a arma atual na primeira linha (a melhor do exemplo)', /atual/.test(weaponRows[0]) && weaponRows.length >= 10, weaponRows[0]?.slice(0, 40));
+  await page.click('.ast-weapons tbody tr:nth-child(2) button:has-text("Usar")'); await page.waitForTimeout(1200);
+  const newWeapon = await field('Arma').locator('select').inputValue();
+  check('"Usar" troca a arma do build', newWeapon !== 'A Thousand Blazing Suns', newWeapon);
+  await field('Arma').locator('select').selectOption('A Thousand Blazing Suns'); await settle();
 
   // Persistência da equipe
   await page.waitForTimeout(700);

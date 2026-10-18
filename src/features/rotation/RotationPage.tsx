@@ -14,6 +14,7 @@ import { summarize, type Summary } from './summary';
 import { useAnalysis } from './useAnalysis';
 import { Inspector } from './Inspector';
 import { BuildEditor } from './BuildEditor';
+import { GainHeatmap, WeaponCompare } from './BuildInsights';
 import { CritOptimizer } from './CritOptimizer';
 import { DamageTable } from './DamageTable';
 import { Palette } from './Palette';
@@ -178,7 +179,7 @@ function ActionsTable({ actions, total }: { actions: ActionResult[]; total: numb
   const select = useRotationStore((st) => st.select);
   return (
     <div className="ast-scroll">
-      <table className="ast-table">
+      <table className="ast-table ast-actions">
         <caption className="sr-only" style={{ position: 'absolute', left: -9999 }}>Ações da rotação em ordem de tempo</caption>
         <thead>
           <tr>
@@ -336,6 +337,8 @@ export default function RotationPage() {
         {data && inSync && (
           <div className="ast-panels">
             <CritOptimizer project={current} resolved={analysis.resolved} bundle={analysis.bundle} index={Math.min(selectedMember, current.members.length - 1)} />
+            <GainHeatmap project={current} bundle={analysis.bundle} />
+            <WeaponCompare project={current} resolved={analysis.resolved} data={data} index={Math.min(selectedMember, current.members.length - 1)} />
             <DamageTable resolved={analysis.resolved} bundle={analysis.bundle} data={data} index={Math.min(selectedMember, current.members.length - 1)} />
           </div>
         )}

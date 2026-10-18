@@ -81,17 +81,17 @@ export function BuildEditor({ project, data, bundle, index }: { project: Rotatio
       <div className="ast-build">
         <div className="ast-build-form">
           <div className="ast-fields">
-            <Select
+            <div style={{ gridColumn: '1 / -1' }}><Select
               label="Arma"
               value={ref.weapon}
               onChange={(v) => update(index, { weapon: v })}
               options={weapons.map((w) => ({ value: w.name, label: `${w.rarity}★ ${w.name}${data.effects.weapons.some((e) => e.weapon === w.name) ? '' : ' (sem efeito)'}` }))}
-            />
+            /></div>
             <Select label="Set principal" value={ref.primarySet ?? ''} onChange={(v) => update(index, { primarySet: v || undefined, ...(v ? {} : { secondarySet: undefined }) })} options={setOptions} />
             <Select label="Segundo set (2+2)" value={ref.secondarySet ?? ''} onChange={(v) => update(index, { secondarySet: v || undefined })} options={ref.primarySet ? setOptions : [{ value: '', label: 'Escolha o principal' }]} />
           </div>
 
-          <div className="ast-fields">
+          <div className="ast-fields three">
             <Select label="Areia" value={ref.artifacts.sands} onChange={(v) => setArtifacts({ sands: v })} options={mainOptions('sands')} />
             <Select label="Cálice" value={ref.artifacts.goblet} onChange={(v) => setArtifacts({ goblet: v })} options={mainOptions('goblet')} />
             <Select label="Tiara" value={ref.artifacts.circlet} onChange={(v) => setArtifacts({ circlet: v })} options={mainOptions('circlet')} />
@@ -109,11 +109,11 @@ export function BuildEditor({ project, data, bundle, index }: { project: Rotatio
             ))}
           </div>
 
-          <div className="ast-fields">
-            <NumberField label="Talento normal" value={ref.talents.normal} min={1} max={15} step={1} onCommit={(v) => update(index, { talents: { ...ref.talents, normal: clamp(v, 1, 15) } })} />
-            <NumberField label="Habilidade" value={ref.talents.skill} min={1} max={15} step={1} onCommit={(v) => update(index, { talents: { ...ref.talents, skill: clamp(v, 1, 15) } })} />
-            <NumberField label="Supremo" value={ref.talents.burst} min={1} max={15} step={1} onCommit={(v) => update(index, { talents: { ...ref.talents, burst: clamp(v, 1, 15) } })} />
-            <NumberField label="ER mínimo" value={Math.round((ref.minER ?? 0) * 1000) / 10} min={0} step={5} suffix="%" onCommit={(v) => update(index, { minER: Math.max(0, v) / 100 })} />
+          <div className="ast-fields four">
+            <NumberField label="Normal" value={ref.talents.normal} min={1} max={15} step={1} onCommit={(v) => update(index, { talents: { ...ref.talents, normal: clamp(v, 1, 15) } })} />
+            <NumberField label="Skill" value={ref.talents.skill} min={1} max={15} step={1} onCommit={(v) => update(index, { talents: { ...ref.talents, skill: clamp(v, 1, 15) } })} />
+            <NumberField label="Burst" value={ref.talents.burst} min={1} max={15} step={1} onCommit={(v) => update(index, { talents: { ...ref.talents, burst: clamp(v, 1, 15) } })} />
+            <NumberField label="ER mín." value={Math.round((ref.minER ?? 0) * 1000) / 10} min={0} step={5} suffix="%" onCommit={(v) => update(index, { minER: Math.max(0, v) / 100 })} />
           </div>
 
         </div>

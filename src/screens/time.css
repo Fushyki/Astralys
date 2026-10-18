@@ -30,3 +30,11 @@
 
 @media (max-width: 1100px) { .tm-grid, .tm-grid.even { grid-template-columns: minmax(0, 1fr); } }
 @media (max-width: 520px) { .dz-donut { grid-template-columns: minmax(0, 1fr); } .dz-donut svg { max-width: 180px; margin: 0 auto; } }
+@media (max-width: 520px) {
+  .tm-bars .dz-barrow { grid-template-columns: minmax(0, 1fr) auto; row-gap: 6px; }
+  .tm-bars .dz-barrow .name { grid-column: 1 / -1; white-space: normal; overflow: visible; flex-wrap: wrap; }
+  .tm-bars .dz-barrow .dz-bar { grid-column: 1; grid-row: 2; }
+  .tm-bars .dz-barrow .val { grid-column: 2; grid-row: 2; }
+  .dz-chart .tick { font-size: 20px; }
+  .dz-chart .mark { font-size: 22px; }
+}

@@ -163,6 +163,9 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   check('subir o refino de R1 para R5 sobe a Taxa Crítica (Royal)', crit5 - crit1 > 20, `${crit1}% → ${crit5}%`);
   const assume = await page.textContent('.ast-assume');
   check('mostra o que está assumido nos efeitos', /Royal Greatsword/.test(assume) && /Melhor caso/.test(assume));
+  await page.waitForSelector('.ast-refine tbody tr', { timeout: 20000 });
+  const refineRows = await page.$$eval('.ast-refine tbody tr', (r) => r.map((x) => x.textContent));
+  check('tabela de refinamentos R1 a R5 da arma atual', refineRows.length === 5 && /R5.*atual/.test(refineRows[4]), refineRows.map((t) => t.slice(0, 12)).join(' | '));
   await field('Arma').locator('select').selectOption({ label: '5★ A Thousand Blazing Suns' }); await settle();
 
   // Persistência da equipe

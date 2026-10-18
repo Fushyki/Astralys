@@ -1,6 +1,6 @@
 /** Compara as armas do tipo do personagem no Web Worker (a rotação inteira é reanalisada para cada arma). */
 import { useEffect, useRef, useState } from 'react';
-import { resolveMember, type ResolvedProject, type RotationProject, type WeaponCompareRow } from '../../engine';
+import { resolveMember, type ResolvedProject, type RotationProject, type WeaponCandidate, type WeaponCompareRow } from '../../engine';
 import type { LoadedData } from './data';
 import { EngineClient } from './engineClient';
 import { weaponsFor } from './teamOps';
@@ -24,7 +24,7 @@ export function useWeaponCompare(project: RotationProject, resolved: ResolvedPro
         const ref = project.members[member];
         const character = data.game.characters.find((c) => c.name === ref?.character);
         if (!ref || !character) return;
-        const candidates = weaponsFor(character, data.game.weapons).map((w) => ({
+        const candidates: WeaponCandidate[] = weaponsFor(character, data.game.weapons).map((w) => ({
           weapon: w.name,
           team: {
             ...resolved.team,
@@ -33,6 +33,19 @@ export function useWeaponCompare(project: RotationProject, resolved: ResolvedPro
             ),
           },
         }));
+        const hasTable = data.effects.weapons.find((e) => e.weapon === ref.weapon)?.refinements;
+        if (hasTable) {
+          for (const r of [1, 2, 3, 4, 5]) {
+            candidates.push({
+              weapon: ref.weapon,
+              refinement: r,
+              team: {
+                ...resolved.team,
+                members: resolved.team.members.map((m, i) => (i === member ? resolveMember({ ...ref, refinement: r }, data.game, data.effects, project.config.minRollsPerSubstat) : m)),
+              },
+            });
+          }
+        }
         client.current
           ?.request<WeaponCompareRow[]>({ type: 'weaponCompare', input: { member, candidates, actions: resolved.actions, flatEffects: resolved.flatEffects, ampCoefficient: resolved.ampCoefficient } })
           .then((rows) => !cancelled && setState({ rows, error: null }))

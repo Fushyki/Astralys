@@ -64,7 +64,8 @@ const SHOWN = 10;
 /** Dano da equipe trocando a arma do personagem selecionado (substats reotimizados para cada arma). */
 export function WeaponCompare({ project, resolved, data, index }: { project: RotationProject; resolved: ResolvedProject; data: LoadedData; index: number }) {
   const update = useRotationStore((s) => s.updateMember);
-  const { rows, error } = useWeaponCompare(project, resolved, data, index);
+  const { rows: allRows, error } = useWeaponCompare(project, resolved, data, index);
+  let rows = allRows;
   const [all, setAll] = useState(false);
   const ref = project.members[index];
   const name = ref?.character ?? '';
@@ -72,6 +73,8 @@ export function WeaponCompare({ project, resolved, data, index }: { project: Rot
   if (error) return <Panel title={`Armas de ${name}`} wide><p className="ast-error ast-full" role="alert">{error}</p></Panel>;
   if (!rows) return <Panel title={`Armas de ${name}`} wide><Hint>Comparando as armas…</Hint></Panel>;
 
+  const refRows = rows.filter((r) => r.refinement).sort((a, b) => a.refinement! - b.refinement!);
+  rows = rows.filter((r) => !r.refinement);
   const current = rows.find((r) => r.weapon === ref.weapon);
   const hasEffect = (w: string) => data.effects.weapons.some((e) => e.weapon === w);
   const rarity = (w: string) => data.game.weapons.find((x) => x.name === w)?.rarity ?? 0;
@@ -117,6 +120,30 @@ export function WeaponCompare({ project, resolved, data, index }: { project: Rot
           </tbody>
         </table>
       </div>
+      {refRows.length > 0 && (
+        <div className="ast-full">
+          <h3 className="ast-subtitle ast-caps">Refinamentos de {ref.weapon}</h3>
+          <table className="ast-table ast-weapons ast-refine">
+            <thead><tr><th scope="col">Refino</th><th scope="col">Dano da equipe</th><th scope="col">Contra o R1</th><th scope="col">Contra o refino atual</th></tr></thead>
+            <tbody>
+              {refRows.map((r) => {
+                const r1 = refRows[0].teamAvg;
+                const cur = refRows.find((x) => x.refinement === (ref.refinement ?? 1))?.teamAvg ?? r1;
+                const pct = (v: number, base: number) => (r.refinement === (ref.refinement ?? 1) && base === cur ? '—' : `${v / base - 1 >= 0 ? '+' : ''}${formatDecimal((v / base - 1) * 100, 2)}%`);
+                return (
+                  <tr key={r.refinement} data-selected={r.refinement === (ref.refinement ?? 1)} style={{ cursor: 'default' }}>
+                    <td>R{r.refinement}{r.refinement === (ref.refinement ?? 1) ? <span className="ast-flag">atual</span> : null}</td>
+                    <td>{formatInt(r.teamAvg)}</td>
+                    <td>{r.refinement === 1 ? '—' : pct(r.teamAvg, r1)}</td>
+                    <td>{pct(r.teamAvg, cur)}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+          <p className="ast-hint">Quanto cada refino rende para a equipe, com os substats reotimizados. Serve para decidir se vale gastar recursos para refinar.</p>
+        </div>
+      )}
       {rows.length > SHOWN && (
         <button type="button" className="ast-link ast-full" onClick={() => setAll(!all)}>
           {all ? 'Mostrar só as melhores' : `Mostrar todas as ${rows.length} armas`}

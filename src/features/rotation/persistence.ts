@@ -4,12 +4,17 @@
  * (modo privado, cota cheia): todas as funções toleram isso.
  */
 import { parseProject, type RotationProject } from '../../engine';
+import { windowsFromProfiles } from './projectOps';
 import sample from './sample/mavuika-iansan.json';
 
 export const SAMPLE_ID = 'exemplo';
 const KEY = (id: string) => `astralys:projeto:${id}`;
 
+/** O exemplo como está no JSON: etiquetas de buff manuais, como na planilha (usado pelos testes de gabarito). */
 export const sampleProject = (): RotationProject => parseProject(sample);
+
+/** O exemplo que o site abre: os buffs já em janelas na linha do tempo, com o mesmo dano da planilha. */
+export const sampleForApp = (): RotationProject => windowsFromProfiles(sampleProject());
 
 export function saveProject(project: RotationProject): boolean {
   try {
@@ -39,7 +44,7 @@ export function deleteStoredProject(id: string): void {
 
 /** Projeto salvo com esse id; para o exemplo, cai no projeto de exemplo; senão null. */
 export function loadProject(id: string): RotationProject | null {
-  return loadStoredProject(id) ?? (id === SAMPLE_ID ? sampleProject() : null);
+  return loadStoredProject(id) ?? (id === SAMPLE_ID ? sampleForApp() : null);
 }
 
 // ---------- Cofre (lista de projetos salvos) ----------
@@ -77,7 +82,7 @@ export function listProjects(): ProjectSummary[] {
   } catch {
     /* sem armazenamento: só o exemplo */
   }
-  if (!out.some((p) => p.id === SAMPLE_ID)) out.push(summarize(sampleProject()));
+  if (!out.some((p) => p.id === SAMPLE_ID)) out.push(summarize(sampleForApp()));
   return out.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
 }
 

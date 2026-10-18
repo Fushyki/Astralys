@@ -134,26 +134,36 @@ export function setTagSource(project: RotationProject, id: string, source: 'manu
 }
 
 /**
- * Converte as etiquetas manuais (perfis da planilha) em janelas: uma por etiqueta, do primeiro ao último golpe
- * que a usa. Todas as ações passam a seguir as janelas. O resultado pode mudar, porque uma ação dentro da janela
- * que antes não tinha aquela etiqueta passa a tê-la.
+ * Converte as etiquetas manuais (perfis da planilha) em janelas: uma janela por TRECHO de golpes seguidos (na ordem
+ * do tempo) que usam a etiqueta. Assim cada golpe continua com exatamente as mesmas etiquetas de antes, e o dano
+ * não muda. Uma etiqueta usada em golpes separados por um golpe sem ela vira duas janelas.
  */
 export function windowsFromProfiles(project: RotationProject): RotationProject {
   const manual = project.actions.filter((a) => a.tagSource === 'manual');
   if (manual.length === 0) return project;
 
-  const span = new Map<string, { min: number; max: number }>();
-  for (const a of manual) {
-    for (const tag of a.activeTags) {
-      const cur = span.get(tag);
-      span.set(tag, cur ? { min: Math.min(cur.min, a.time), max: Math.max(cur.max, a.time) } : { min: a.time, max: a.time });
+  const ordered = chronological(project);
+  const tags = [...new Set(manual.flatMap((a) => a.activeTags))].sort((x, y) => x.localeCompare(y));
+  const has = (a: ActionRef, tag: string) => a.tagSource === 'manual' && a.activeTags.includes(tag);
+
+  const derived = new Set(tags);
+  let next: RotationProject = { ...project, buffWindows: project.buffWindows.filter((w) => !derived.has(w.tag)) };
+  for (const tag of tags) {
+    let i = 0;
+    while (i < ordered.length) {
+      if (!has(ordered[i], tag)) {
+        i++;
+        continue;
+      }
+      let j = i;
+      while (j + 1 < ordered.length && has(ordered[j + 1], tag)) j++;
+      const start = ordered[i].time;
+      const last = ordered[j].time;
+      const following = ordered[j + 1]?.time;
+      const end = Math.max(Math.min(last + MIN_WINDOW, following ?? Infinity), last + 0.05);
+      next = touch({ ...next, buffWindows: [...next.buffWindows, { id: nextWindowId(next), tag, start, end }] });
+      i = j + 1;
     }
-  }
-  const derived = new Set(span.keys());
-  const kept = project.buffWindows.filter((w) => !derived.has(w.tag));
-  let next: RotationProject = { ...project, buffWindows: kept };
-  for (const [tag, { min, max }] of [...span.entries()].sort((a, b) => a[0].localeCompare(b[0]))) {
-    next = addWindow(next, tag, min, max - min + MIN_WINDOW);
   }
   return touch({ ...next, actions: next.actions.map((a) => (a.tagSource === 'manual' ? { ...a, tagSource: 'windows' as const } : a)) });
 }

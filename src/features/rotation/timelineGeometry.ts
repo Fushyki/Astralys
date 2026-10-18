@@ -5,7 +5,7 @@
 import type { RotationProject } from '../../engine';
 
 export const VIEW_W = 1000;
-export const X0 = 124; // início do eixo (depois da coluna de nomes)
+export const X0 = 184; // início do eixo (depois da coluna de nomes e fontes)
 export const X1 = 984; // fim do eixo
 export const SNAP = 0.1; // segundos
 export const SNAP_COARSE = 0.5; // com Shift
@@ -13,8 +13,8 @@ export const SNAP_COARSE = 0.5; // com Shift
 export const LANE_H = 44;
 export const LANE_GAP = 8;
 export const RULER_H = 28;
-export const BUFF_ROW_H = 28;
-export const BUFF_BAR_H = 20;
+export const BUFF_ROW_H = 34;
+export const BUFF_BAR_H = 26;
 
 /** Fim do eixo em segundos: cobre a duração, as ações e as janelas, arredondado para cima a um passo par. */
 export function axisEnd(project: Pick<RotationProject, 'config' | 'actions' | 'buffWindows'>): number {

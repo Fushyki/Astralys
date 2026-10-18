@@ -192,3 +192,11 @@
 .ast-scenario { display: flex; flex-wrap: wrap; align-items: end; gap: 10px 20px; padding: 10px 18px 12px; background: var(--ink-2); border-bottom: 1px solid var(--edge) }
 .ast-scenario .ast-field { min-width: 120px }
 .ast-scenario .ast-link { align-self: center }
+
+/* ---------- Retratos da equipe ---------- */
+.ast-portrait { grid-row: 1 / span 2; width: 64px; height: 64px; position: relative; overflow: hidden; border: 1px solid var(--c, var(--gold)); background: radial-gradient(circle at 50% 30%, color-mix(in srgb, var(--c, var(--gold)) 35%, var(--ink-3)), var(--ink-3)); display: grid; place-items: center }
+.ast-portrait img { width: 100%; height: 100%; object-fit: cover }
+.ast-portrait b { font-family: var(--display); font-size: 1.8rem; color: var(--c, var(--gold)) }
+.ast-slot-main { column-gap: 12px !important; padding: 10px 14px 4px !important }
+.ast-slot { min-width: 220px }
+.ast-slot-actions { padding-left: 90px !important }

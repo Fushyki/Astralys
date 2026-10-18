@@ -326,7 +326,13 @@ export default function RotationPage() {
           <Link className="ast-btn" to="/">Voltar ao site</Link>
         </header>
         {data && <TeamBar project={current} data={data} />}
+        {data && inSync && (
+          <div className="ast-panels">
+            <BuildEditor project={current} data={data} bundle={analysis.bundle} index={Math.min(selectedMember, current.members.length - 1)} />
+          </div>
+        )}
         <Kpis s={summary} />
+        <Panels s={summary} />
         <h2 className="ast-sec ast-caps">Linha do tempo</h2>
         <Toolbar project={current} hasManual={current.actions.some((a) => a.tagSource === 'manual')} isSample={current.id === SAMPLE_ID} />
         {inSync ? (
@@ -338,12 +344,6 @@ export default function RotationPage() {
           <Inspector project={current} results={results} lanes={lanes} />
           {data && <Palette project={current} moves={data.game.moves} members={summary.members} />}
         </div>
-        {data && inSync && (
-          <div className="ast-panels">
-            <BuildEditor project={current} data={data} bundle={analysis.bundle} index={Math.min(selectedMember, current.members.length - 1)} />
-          </div>
-        )}
-        <Panels s={summary} />
         <h2 className="ast-sec ast-caps">Ações da rotação</h2>
         <ActionsTable actions={results} total={summary.avg} />
       </div>

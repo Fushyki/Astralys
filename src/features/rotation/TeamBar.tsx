@@ -10,6 +10,18 @@ import { useRotationStore } from './store';
 import { resonanceOf } from './teamInfo';
 import { defaultMember } from './teamOps';
 
+const IMAGE_BASE = 'https://api.lunaris.moe/data/assets/gachaicon';
+
+/** Retrato do personagem (imagem do Lunaris); se não carregar, mostra a inicial. */
+export function Portrait({ icon, name }: { icon?: string; name: string }) {
+  const [failed, setFailed] = useState(false);
+  return (
+    <span className="ast-portrait" aria-hidden="true">
+      {icon && !failed ? <img src={`${IMAGE_BASE}/${icon}.webp`} alt="" loading="lazy" onError={() => setFailed(true)} /> : <b>{name.charAt(0)}</b>}
+    </span>
+  );
+}
+
 type PickerState = { mode: 'replace'; index: number } | { mode: 'add' } | null;
 
 export function TeamBar({ project, data }: { project: RotationProject; data: LoadedData }) {
@@ -22,8 +34,7 @@ export function TeamBar({ project, data }: { project: RotationProject; data: Loa
   const [error, setError] = useState<string | null>(null);
 
   const characters = data.game.characters;
-  const element = (name: string) => characters.find((c) => c.name === name)?.element;
-  const resonances = resonanceOf(project.members.map((m) => element(m.character)).filter((e): e is NonNullable<typeof e> => !!e));
+  const resonances = resonanceOf(project.members.map((m) => characters.find((c) => c.name === m.character)?.element).filter((e): e is NonNullable<typeof e> => !!e));
 
   const pick = (name: string) => {
     try {
@@ -43,12 +54,13 @@ export function TeamBar({ project, data }: { project: RotationProject; data: Loa
     <div className="ast-team">
       <div className="ast-members" role="tablist" aria-label="Equipe">
         {project.members.map((m, i) => {
-          const el = element(m.character);
+          const ch = characters.find((c) => c.name === m.character);
+          const el = ch?.element;
           const isSel = i === selected;
           return (
             <div className="ast-slot" key={m.character} data-selected={isSel} style={{ ['--c' as string]: el ? ELEMENT_COLOR[el] : '#d8b668' }}>
               <button type="button" role="tab" aria-selected={isSel} className="ast-slot-main" onClick={() => selectMember(i)}>
-                <i />
+                <Portrait icon={ch?.icon} name={m.character} />
                 <span className="n">{m.character}</span>
                 <span className="w">{m.weapon}</span>
               </button>

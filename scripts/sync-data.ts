@@ -49,6 +49,7 @@ interface RawCharListEntry {
   weaponType: string;
   qualityType: string;
   CardImg?: string;
+  GachaImg?: string;
   ascensionStats: AscensionStats;
 }
 interface RawWeaponListEntry {
@@ -269,6 +270,8 @@ async function main() {
       element: parsedElement.data,
       weapon: WEAPON_TYPES[entry.weaponType],
       rarity: QUALITY[entry.qualityType],
+      icon: entry.CardImg || undefined,
+      splash: entry.GachaImg || undefined,
       baseHp: hp,
       baseAtk: atk,
       baseDef: def,

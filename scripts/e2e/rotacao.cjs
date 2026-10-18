@@ -51,6 +51,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
 
   // 1) Arrastar a estrela do Supremo ~ +1,5 s
   let g = await bigStar();
+  await g.asElement().scrollIntoViewIfNeeded();
   let c = await center(g);
   const t0 = await timeOfRow('Supremo (200 FS)');
   await page.mouse.move(c.x, c.y); await page.mouse.down(); await page.mouse.move(c.x + 40, c.y, { steps: 4 }); await page.mouse.move(c.x + 110, c.y, { steps: 6 }); await page.mouse.up();

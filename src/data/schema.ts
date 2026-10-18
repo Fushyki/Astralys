@@ -39,6 +39,9 @@ export const CharacterSchema = z.object({
   element: ElementSchema,
   weapon: WeaponTypeSchema,
   rarity: z.union([z.literal(4), z.literal(5)]),
+  /** Nomes dos arquivos de imagem no Lunaris (sem extensão): ícone (UI_Gacha_AvatarIcon_X) e arte grande. */
+  icon: z.string().optional(),
+  splash: z.string().optional(),
   /** Stats base no nível 90 (o `charlist` do Lunaris só traz o nível máximo). */
   baseHp: z.number().positive(),
   baseAtk: z.number().positive(),

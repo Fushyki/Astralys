@@ -35,6 +35,8 @@ export interface RotationState {
   removeAction: (id: string) => void;
   duplicateAction: (id: string) => void;
   rename: (name: string) => void;
+  /** Marca ou desmarca o projeto como favorito no Vault (preferência: não entra no desfazer). */
+  setFavorite: (favorite: boolean) => void;
 
   addWindow: (tag: string, start: number, length?: number) => string | null;
   updateWindow: (id: string, patch: { start?: number; end?: number }) => void;
@@ -110,6 +112,11 @@ export const useRotationStore = create<RotationState>((set, get) => {
       commit(next, newId ?? undefined);
     },
     rename: (name) => commit(get().project && ops.renameProject(get().project!, name)),
+    setFavorite: (favorite) => {
+      const project = get().project;
+      if (!project || project.meta.favorite === favorite) return;
+      set({ project: { ...project, meta: { ...project.meta, favorite, updatedAt: new Date().toISOString() } }, dirty: true });
+    },
 
     addWindow: (tag, start, length) => {
       const project = get().project;

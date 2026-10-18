@@ -151,6 +151,8 @@ export const RotationProjectSchema = z
         author: z.string().optional(),
         patch: z.string().optional(),
         tags: z.array(z.string()).default([]),
+        /** Marcado no Vault como favorito ("Salvar no Vault"). */
+        favorite: z.boolean().optional(),
         /** Textos do card infográfico (título, selo de investimento e etiqueta de versão). */
         card: z.object({ title: z.string().max(60), badge: z.string().max(40), tag: z.string().max(40) }).partial().optional(),
         /** Calculadora de recarga: partículas de inimigos e a configuração de cada personagem (pelo nome). */

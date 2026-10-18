@@ -5,6 +5,8 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import './index.css';
 
 // O editor (e os ~1 MB de dados do jogo) só é baixado quando a rota é aberta.
+const ProjectLayout = lazy(() => import('./app/ProjectLayout'));
+const Equipe = lazy(() => import('./screens/Equipe'));
 const HomePage = lazy(() => import('./features/home/HomePage'));
 const RotationPage = lazy(() => import('./features/rotation/RotationPage'));
 const CardPage = lazy(() => import('./features/card/CardPage'));
@@ -64,6 +66,16 @@ ReactDOM.createRoot(rootElement).render(
               </Suspense>
             }
           />
+          <Route
+            path="/projeto/:id"
+            element={
+              <Suspense fallback={null}>
+                <ProjectLayout />
+              </Suspense>
+            }
+          >
+            <Route index element={<Suspense fallback={null}><Equipe /></Suspense>} />
+          </Route>
           <Route
             path="/"
             element={

@@ -33,6 +33,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   const rows = () => page.$$eval('.ast-table tbody tr', (r) => r.length);
   const stars = () => page.$$eval('.ast-star', (r) => r.length);
   const settle = () => page.waitForTimeout(450);
+  const undo = async () => { await page.click('button:has-text("Desfazer")'); await settle(); };
   const timeOfRow = (label) => page.$$eval('.ast-table tbody tr', (trs, l) => { const tr = trs.find((t) => t.children[2].textContent.includes(l)); return tr ? tr.children[0].textContent : null; }, label);
 
   check('estrelas e linhas iniciais', (await stars()) === 24 && (await rows()) === 24, `${await stars()} estrelas, ${await rows()} linhas`);
@@ -117,6 +118,31 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   check('recarregar mantém as edições (janelas e conversão)', winsReload === winsNow && winsNow > 0 && noticeBefore === 0 && (await page.$$('.ast-notice')).length === 0, `${winsNow} → ${winsReload} janelas`);
   await page.click('text=Restaurar exemplo'); await settle();
   check('restaurar exemplo volta ao original', (await rows()) === 24 && (await dps()) === '216.600');
+
+  // 8b) Realinhar: mantém a ordem, tira os espaços e desfaz num passo
+  const timesCol = () => page.$$eval('.ast-table tbody tr', (trs) => trs.map((t) => t.children[0].textContent));
+  const namesCol = () => page.$$eval('.ast-table tbody tr', (trs) => trs.map((t) => t.children[1].textContent + '|' + t.children[2].textContent));
+  const namesBefore = await namesCol();
+  const timesBefore = await timesCol();
+  await page.click('button:has-text("Realinhar")'); await settle();
+  const timesAfter = await timesCol();
+  check('realinhar deixa os golpes seguidos a partir de 0 s', timesAfter.slice(0, 4).join() === '0,0 s,0,5 s,1,0 s,1,5 s' && timesAfter[23] === '11,5 s', timesAfter.slice(0, 4).join(' | ') + ' … ' + timesAfter[23]);
+  check('realinhar mantém a ordem dos golpes', (await namesCol()).join('#') === namesBefore.join('#'));
+  await undo();
+  check('desfazer o realinhamento devolve os tempos originais', (await timesCol()).join() === timesBefore.join());
+  await page.fill('input[aria-label^="Intervalo entre golpes"]', '1'); 
+  await page.click('button:has-text("Realinhar")'); await settle();
+  check('o intervalo é configurável (1 s)', (await timesCol()).slice(0, 3).join() === '0,0 s,1,0 s,2,0 s', (await timesCol()).slice(0, 3).join(' | '));
+  await page.fill('input[aria-label^="Intervalo entre golpes"]', '0'); 
+  check('intervalo inválido desativa o botão', await page.isDisabled('button:has-text("Realinhar")'));
+  await page.fill('input[aria-label^="Intervalo entre golpes"]', '0.5');
+  await undo();
+  const dpsNormal = await dps();
+  const dur = page.locator('label.ast-field:has(span:text-is("Duração da rotação")) input');
+  await dur.fill('35'); await dur.blur(); await settle();
+  check('dobrar a duração divide o DPS por 2', (await dps()) === '108.300', `${dpsNormal} → ${await dps()}`);
+  await undo();
+  check('desfazer a duração restaura o DPS', (await dps()) === dpsNormal);
 
   // 9) Móvel
   await page.setViewportSize({ width: 400, height: 800 });

@@ -2,7 +2,7 @@
  * Página do editor de rotação (/rotacao/:id). Esta primeira parte carrega o projeto, calcula tudo no worker e
  * mostra os indicadores, os painéis de leitura e a lista de ações. A linha do tempo vem na parte seguinte.
  */
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import '../../ui/ast.css';
 import { BarRow, Hint, Kpi, Panel, StackedBar } from '../../ui/components';
@@ -17,6 +17,9 @@ import { BuildEditor } from './BuildEditor';
 import { Palette } from './Palette';
 import { TeamBar } from './TeamBar';
 import { Timeline } from './Timeline';
+import { DEFAULT_REALIGN_STEP, MIN_REALIGN_STEP, lastActionTime } from './projectOps';
+import { NumberField } from '../../ui/NumberField';
+import type { RotationProject } from '../../engine';
 import { buffLanes } from './buffLanes';
 import type { ActionResult } from '../../engine';
 
@@ -43,23 +46,69 @@ function StateCard({ title, children }: { title: string; children: React.ReactNo
   );
 }
 
-function Toolbar({ hasManual, isSample }: { hasManual: boolean; isSample: boolean }) {
-  const canUndo = useRotationStore((s) => s.past.length > 0);
-  const canRedo = useRotationStore((s) => s.future.length > 0);
-  const dirty = useRotationStore((s) => s.dirty);
-  const undo = useRotationStore((s) => s.undo);
-  const redo = useRotationStore((s) => s.redo);
-  const convert = useRotationStore((s) => s.convertProfilesToWindows);
-  const open = useRotationStore((s) => s.open);
+function Toolbar({ project, hasManual, isSample }: { project: RotationProject; hasManual: boolean; isSample: boolean }) {
+  const canUndo = useRotationStore((st) => st.past.length > 0);
+  const canRedo = useRotationStore((st) => st.future.length > 0);
+  const dirty = useRotationStore((st) => st.dirty);
+  const undo = useRotationStore((st) => st.undo);
+  const redo = useRotationStore((st) => st.redo);
+  const convert = useRotationStore((st) => st.convertProfilesToWindows);
+  const realign = useRotationStore((st) => st.realign);
+  const updateConfig = useRotationStore((st) => st.updateConfig);
+  const open = useRotationStore((st) => st.open);
+  const [step, setStep] = useState(String(DEFAULT_REALIGN_STEP));
+  const stepNum = Number(step.replace(',', '.'));
+  const stepOk = Number.isFinite(stepNum) && stepNum >= MIN_REALIGN_STEP;
+  const cfg = project.config;
+  const last = lastActionTime(project);
+
   return (
     <>
       <div className="ast-toolbar">
         <button type="button" className="ast-btn sm" onClick={undo} disabled={!canUndo} title="Ctrl+Z">Desfazer</button>
         <button type="button" className="ast-btn sm" onClick={redo} disabled={!canRedo} title="Ctrl+Y">Refazer</button>
+        <span className="ast-sep" aria-hidden="true" />
+        <button
+          type="button"
+          className="ast-btn sm"
+          disabled={!stepOk || project.actions.length === 0}
+          onClick={() => realign(stepNum)}
+          title="Mantém a ordem em que você colocou os golpes e tira os espaços vazios: ficam um logo depois do outro, a partir de 0 s. As janelas de buff acompanham."
+        >
+          Realinhar
+        </button>
+        <label className="ast-inline">
+          intervalo
+          <input
+            type="number"
+            min={MIN_REALIGN_STEP}
+            step={0.1}
+            value={step}
+            aria-label="Intervalo entre golpes ao realinhar, em segundos"
+            aria-invalid={!stepOk || undefined}
+            onChange={(e) => setStep(e.target.value)}
+          />
+          s
+        </label>
         {isSample && (
           <button type="button" className="ast-btn sm" onClick={() => open(sampleProject())} title="Volta ao exemplo original da planilha">Restaurar exemplo</button>
         )}
         <span className="grow">{dirty ? 'Salvando neste navegador…' : 'Salvo neste navegador'}</span>
+      </div>
+      <div className="ast-scenario" aria-label="Cenário">
+        <NumberField label="Duração da rotação" value={cfg.rotationDuration} min={0.5} step={0.5} suffix="s" onCommit={(v) => updateConfig({ rotationDuration: v })} />
+        <button
+          type="button"
+          className="ast-link"
+          disabled={last <= 0 || Math.abs(last - cfg.rotationDuration) < 0.005}
+          onClick={() => updateConfig({ rotationDuration: last })}
+          title="Usa o instante do último golpe como duração da rotação"
+        >
+          usar o fim do último golpe ({formatDecimal(last)} s)
+        </button>
+        <NumberField label="Nível do inimigo" value={cfg.enemyLevel} min={1} max={200} step={1} onCommit={(v) => updateConfig({ enemyLevel: v })} />
+        <NumberField label="RES base do inimigo" value={Math.round(cfg.enemyBaseRes * 1000) / 10} step={1} suffix="%" onCommit={(v) => updateConfig({ enemyBaseRes: v / 100 })} />
+        <NumberField label="Redução de DEF" value={Math.round(cfg.enemyDefRed * 1000) / 10} min={0} max={90} step={1} suffix="%" onCommit={(v) => updateConfig({ enemyDefRed: v / 100 })} />
       </div>
       {hasManual && (
         <p className="ast-notice">
@@ -279,7 +328,7 @@ export default function RotationPage() {
         {data && <TeamBar project={current} data={data} />}
         <Kpis s={summary} />
         <h2 className="ast-sec ast-caps">Linha do tempo</h2>
-        <Toolbar hasManual={current.actions.some((a) => a.tagSource === 'manual')} isSample={current.id === SAMPLE_ID} />
+        <Toolbar project={current} hasManual={current.actions.some((a) => a.tagSource === 'manual')} isSample={current.id === SAMPLE_ID} />
         {inSync ? (
           <Timeline project={current} results={results} members={summary.members} lanes={lanes} total={summary.avg} />
         ) : (

@@ -42,6 +42,8 @@ export interface RotationState {
   removeWindow: (id: string) => void;
   setTagSource: (id: string, source: 'manual' | 'windows') => void;
   convertProfilesToWindows: () => void;
+  realign: (step?: number) => void;
+  updateConfig: (patch: Partial<RotationProject['config']>) => void;
 
   updateMember: (index: number, patch: Partial<MemberRef>) => void;
   addMember: (ref: MemberRef) => void;
@@ -128,6 +130,8 @@ export const useRotationStore = create<RotationState>((set, get) => {
     },
     setTagSource: (id, source) => commit(get().project && ops.setTagSource(get().project!, id, source)),
     convertProfilesToWindows: () => commit(get().project && ops.windowsFromProfiles(get().project!)),
+    realign: (step) => commit(get().project && ops.realignActions(get().project!, step)),
+    updateConfig: (patch) => commit(get().project && ops.updateConfig(get().project!, patch)),
 
     updateMember: (index, patch) => commit(get().project && team.updateMember(get().project!, index, patch)),
     addMember: (ref) => {

@@ -86,6 +86,17 @@ export const ExtraScaleSchema = z
   .object({ atk: z.number(), em: z.number(), hp: z.number(), def: z.number(), flat: z.number() })
   .partial();
 
+/** Intervalo em que a fonte de buff `tag` está ativa (início incluído, fim excluído). */
+export const BuffWindowSchema = z
+  .object({
+    id: z.string().min(1),
+    tag: z.string().min(1),
+    start: z.number().min(0),
+    end: z.number().min(0),
+  })
+  .refine((w) => w.end > w.start, { message: 'O fim da janela deve ser depois do início.', path: ['end'] });
+export type BuffWindow = z.infer<typeof BuffWindowSchema>;
+
 export const ReactionChoiceSchema = z.enum(['none', 'melt', 'vaporize', 'spread', 'aggravate']);
 
 export const ActionSchema = z.object({
@@ -97,8 +108,10 @@ export const ActionSchema = z.object({
   extraScale: ExtraScaleSchema.optional(),
   executions: z.number().positive().default(1),
   reaction: ReactionChoiceSchema.default('none'),
-  /** Etiquetas de buff de time ativas nesta ação. */
+  /** Etiquetas de buff de time ativas nesta ação (usadas quando `tagSource` é 'manual'). */
   activeTags: z.array(z.string()).default([]),
+  /** 'manual': usa `activeTags` (perfis da planilha). 'windows': as etiquetas vêm das janelas de buff, pelo `time`. */
+  tagSource: z.enum(['manual', 'windows']).default('manual'),
   dmgAdjust: z.number().default(0),
   /** Instante da rotação, em segundos. */
   time: z.number().min(0),
@@ -119,6 +132,8 @@ export const RotationProjectSchema = z
     members: z.array(MemberRefSchema).min(1).max(MAX_TEAM_SIZE),
     extras: z.array(ExtraBuffSchema).default([]),
     actions: z.array(ActionSchema).default([]),
+    /** Janelas de buff no tempo; dão as etiquetas das ações com `tagSource: 'windows'`. */
+    buffWindows: z.array(BuffWindowSchema).default([]),
     /** Perfis nomeados (conjuntos de etiquetas), úteis para aplicar rápido a várias ações. */
     profiles: z.record(z.array(z.string())).default({}),
     meta: z
@@ -148,12 +163,24 @@ export const RotationProjectSchema = z
       if (ids.has(a.id)) ctx.addIssue({ code: 'custom', path: ['actions', i, 'id'], message: `Id de ação repetido: ${a.id}` });
       ids.add(a.id);
     });
+    const wids = new Set<string>();
+    p.buffWindows.forEach((w, i) => {
+      if (wids.has(w.id)) ctx.addIssue({ code: 'custom', path: ['buffWindows', i, 'id'], message: `Id de janela repetido: ${w.id}` });
+      wids.add(w.id);
+    });
   });
 
 export type RotationProject = z.infer<typeof RotationProjectSchema>;
 
 /** Valida um projeto vindo de fora (arquivo, backend, localStorage). Lança ZodError com os problemas. */
 export const parseProject = (raw: unknown): RotationProject => RotationProjectSchema.parse(raw);
+
+/** Etiquetas ativas no instante `t`: as das janelas que o cobrem. Resultado ordenado e sem repetição. */
+export function tagsAt(windows: readonly BuffWindow[], t: number): string[] {
+  const tags = new Set<string>();
+  for (const w of windows) if (t >= w.start && t < w.end) tags.add(w.tag);
+  return [...tags].sort();
+}
 
 // ---------- Resolução ----------
 
@@ -242,7 +269,7 @@ export function resolveProject(project: RotationProject, data: GameData, effects
       move,
       executions: a.executions,
       reaction: a.reaction as ReactionChoice,
-      activeTags: a.activeTags,
+      activeTags: a.tagSource === 'windows' ? tagsAt(project.buffWindows, a.time) : a.activeTags,
       dmgAdjust: a.dmgAdjust,
       time: a.time,
       note: a.note,

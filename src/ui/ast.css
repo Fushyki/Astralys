@@ -78,3 +78,60 @@
 .ast-btn:hover { background: var(--gold); color: #1a1405 }
 .ast-busy { opacity: .6; transition: opacity .15s }
 @media (prefers-reduced-motion: reduce) { .ast-busy { transition: none } }
+
+/* ---------- Linha do tempo ---------- */
+.ast-tl { position: relative; padding: 6px 6px 0 }
+.ast-svg { display: block; width: 100%; min-width: 880px; height: auto; touch-action: pan-y; user-select: none }
+.ast-svg text { font-family: var(--display); pointer-events: none }
+.ast-star:focus, .ast-win:focus { outline: none }
+.ast-star:focus-visible circle:first-child { stroke: var(--gold); stroke-width: 2 }
+.ast-win:focus-visible rect:first-of-type { stroke: #fff; stroke-width: 2 }
+.ast-tip { position: absolute; z-index: 5; max-width: 300px; padding: 9px 12px; background: var(--ink-3); border: 1px solid var(--gold); display: grid; gap: 2px; font-size: .85rem; pointer-events: none; box-shadow: 0 6px 20px rgba(0, 0, 0, .5) }
+.ast-tip strong { font-family: var(--display); text-transform: uppercase; letter-spacing: .05em; font-size: .95rem; color: var(--gold) }
+.ast-tip span { color: var(--dim) }
+.ast-tip .n { font-variant-numeric: tabular-nums; color: var(--txt) }
+.ast-tl-help { margin: 8px 12px 12px }
+@media (prefers-reduced-motion: no-preference) { .ast-pulse { animation: astpulse 3.6s ease-in-out infinite } @keyframes astpulse { 50% { opacity: .55 } } }
+
+/* ---------- Barra de ferramentas e avisos ---------- */
+.ast-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 10px 18px; background: var(--ink-2); border-bottom: 1px solid var(--edge) }
+.ast-toolbar .grow { margin-left: auto; color: var(--dim); font-size: .85rem }
+.ast-btn.sm { padding: 4px 10px; font-size: .85rem }
+.ast-btn:disabled { opacity: .35; cursor: not-allowed }
+.ast-btn:disabled:hover { background: none; color: var(--gold) }
+.ast-btn.danger { border-color: var(--bad); color: var(--bad) }
+.ast-btn.danger:hover { background: var(--bad); color: #1a0a06 }
+.ast-notice { margin: 0; padding: 10px 18px; background: #1a1730; border-bottom: 1px solid var(--edge); font-size: .88rem; display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center }
+.ast-notice span { color: var(--dim); max-width: 78ch }
+
+/* ---------- Inspetor e paleta ---------- */
+.ast-edit { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 14px; padding: 14px }
+.ast-sel-title { margin: 0 0 10px; font-family: var(--display); text-transform: uppercase; letter-spacing: .05em; font-weight: 600; font-size: 1.05rem }
+.ast-sel-title.small { font-size: .82rem; color: var(--gold); margin: 12px 0 6px }
+.ast-fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 12px }
+.ast-field { display: grid; gap: 3px; font-size: .8rem; color: var(--dim) }
+.ast-field .in { display: flex; align-items: center; gap: 6px }
+.ast-field em { font-style: normal; color: var(--dim) }
+.ast-app input[type="number"], .ast-app input[type="search"], .ast-app select { width: 100%; min-width: 0; background: var(--ink); color: var(--txt); border: 1px solid var(--edge); padding: 6px 8px; font: inherit; font-variant-numeric: tabular-nums }
+.ast-app input[type="number"]:focus, .ast-app input[type="search"]:focus, .ast-app select:focus { border-color: var(--gold) }
+.ast-source { border: 1px solid var(--edge); padding: 8px 12px 10px; margin: 0 0 12px; display: grid; gap: 4px; font-size: .9rem }
+.ast-source legend { font-family: var(--display); text-transform: uppercase; letter-spacing: .06em; color: var(--gold); padding: 0 6px; font-size: .8rem }
+.ast-source label { display: flex; align-items: center; gap: 8px }
+.ast-actions-row { display: flex; gap: 8px; margin-bottom: 4px }
+.ast-wf-block { margin-top: 14px }
+.ast-wf { display: grid; gap: 8px }
+.ast-wf .wr { display: grid; grid-template-columns: 98px minmax(0, 1fr) auto; gap: 10px; align-items: center; font-size: .85rem }
+.ast-wf .tr { height: 14px; background: var(--track); position: relative }
+.ast-wf .tr i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--gold) }
+.ast-wf .wr.cut .tr i { background: var(--bad) }
+.ast-wf .num { font-variant-numeric: tabular-nums; text-align: right; color: var(--dim); white-space: nowrap }
+.ast-wf .num b { color: var(--txt); font-weight: 600 }
+.ast-tabs { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 10px }
+.ast-tab { font: inherit; font-size: .88rem; color: var(--dim); background: var(--ink-3); border: 1px solid var(--edge); padding: 4px 10px; cursor: pointer; display: inline-flex; align-items: center; gap: 7px }
+.ast-tab i { width: 8px; height: 8px; border-radius: 50%; background: var(--c) }
+.ast-tab[aria-selected="true"] { color: var(--txt); border-color: var(--gold) }
+.ast-search { margin-bottom: 8px }
+.ast-moves { max-height: 300px; overflow-y: auto }
+.ast-move { display: flex; justify-content: space-between; gap: 12px; width: 100%; text-align: left; font: inherit; font-size: .88rem; color: var(--txt); background: none; border: 0; border-bottom: 1px solid var(--track); padding: 6px 4px; cursor: pointer }
+.ast-move:hover { background: var(--ink-3) }
+.ast-move em { font-style: normal; color: var(--dim); white-space: nowrap }

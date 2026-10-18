@@ -27,3 +27,6 @@ Thumbs.db
 
 # Cache bruto do Lunaris (nao versionar os dumps)
 data/raw/
+
+# Capturas do teste e2e
+scripts/e2e/out/

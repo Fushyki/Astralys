@@ -13,12 +13,17 @@ export interface RotationState {
   past: RotationProject[];
   future: RotationProject[];
   selectedActionId: string | null;
+  selectedWindowId: string | null;
+  /** Instante (s) marcado na régua; onde novos golpes são inseridos. */
+  playhead: number;
   /** Há alterações desde que o projeto foi aberto ou salvo. */
   dirty: boolean;
 
   open: (project: RotationProject) => void;
   markSaved: () => void;
   select: (id: string | null) => void;
+  selectWindow: (id: string | null) => void;
+  setPlayhead: (t: number) => void;
 
   addAction: (input: ops.NewAction) => string | null;
   updateAction: (id: string, patch: Partial<Omit<ActionRef, 'id'>>) => void;
@@ -26,6 +31,13 @@ export interface RotationState {
   removeAction: (id: string) => void;
   duplicateAction: (id: string) => void;
   rename: (name: string) => void;
+
+  addWindow: (tag: string, start: number, length?: number) => string | null;
+  updateWindow: (id: string, patch: { start?: number; end?: number }) => void;
+  shiftWindow: (id: string, start: number) => void;
+  removeWindow: (id: string) => void;
+  setTagSource: (id: string, source: 'manual' | 'windows') => void;
+  convertProfilesToWindows: () => void;
 
   undo: () => void;
   redo: () => void;
@@ -50,11 +62,15 @@ export const useRotationStore = create<RotationState>((set, get) => {
     past: [],
     future: [],
     selectedActionId: null,
+    selectedWindowId: null,
+    playhead: 0,
     dirty: false,
 
-    open: (project) => set({ project, past: [], future: [], selectedActionId: null, dirty: false }),
+    open: (project) => set({ project, past: [], future: [], selectedActionId: null, selectedWindowId: null, playhead: 0, dirty: false }),
     markSaved: () => set({ dirty: false }),
-    select: (id) => set({ selectedActionId: id }),
+    select: (id) => set({ selectedActionId: id, ...(id ? { selectedWindowId: null } : {}) }),
+    selectWindow: (id) => set({ selectedWindowId: id, ...(id ? { selectedActionId: null } : {}) }),
+    setPlayhead: (t) => set({ playhead: ops.clampTime(t) }),
 
     addAction: (input) => {
       const project = get().project;
@@ -78,6 +94,26 @@ export const useRotationStore = create<RotationState>((set, get) => {
       commit(next, newId ?? undefined);
     },
     rename: (name) => commit(get().project && ops.renameProject(get().project!, name)),
+
+    addWindow: (tag, start, length) => {
+      const project = get().project;
+      if (!project) return null;
+      const next = ops.addWindow(project, tag, start, length);
+      const id = next.buffWindows[next.buffWindows.length - 1].id;
+      commit(next);
+      set({ selectedWindowId: id, selectedActionId: null });
+      return id;
+    },
+    updateWindow: (id, patch) => commit(get().project && ops.updateWindow(get().project!, id, patch)),
+    shiftWindow: (id, start) => commit(get().project && ops.shiftWindow(get().project!, id, start)),
+    removeWindow: (id) => {
+      const project = get().project;
+      if (!project) return;
+      commit(ops.removeWindow(project, id));
+      if (get().selectedWindowId === id) set({ selectedWindowId: null });
+    },
+    setTagSource: (id, source) => commit(get().project && ops.setTagSource(get().project!, id, source)),
+    convertProfilesToWindows: () => commit(get().project && ops.windowsFromProfiles(get().project!)),
 
     undo: () => {
       const { project, past, future } = get();

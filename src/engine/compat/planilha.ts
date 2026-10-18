@@ -290,10 +290,12 @@ export function projectFromPlanilha(imported: PlanilhaImport, options: ProjectFr
       executions: a.executions,
       reaction: a.reaction,
       activeTags: [...a.activeTags],
+      tagSource: 'manual' as const,
       dmgAdjust: a.dmgAdjust,
       time: options.timeOf ? options.timeOf(a, i) : i,
       note: a.note,
     })),
+    buffWindows: [],
     profiles: imported.profiles,
     meta: { tags: [], createdAt: now, updatedAt: now },
   };

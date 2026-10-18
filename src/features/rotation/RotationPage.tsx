@@ -8,10 +8,14 @@ import '../../ui/ast.css';
 import { BarRow, Hint, Kpi, Panel, StackedBar } from '../../ui/components';
 import { formatDecimal, formatInt, formatPercent } from '../../ui/format';
 import { useGameData } from './data';
-import { SAMPLE_ID, loadProject, saveProject } from './persistence';
+import { SAMPLE_ID, loadProject, sampleProject, saveProject } from './persistence';
 import { useRotationStore } from './store';
 import { summarize, type Summary } from './summary';
 import { useAnalysis } from './useAnalysis';
+import { Inspector } from './Inspector';
+import { Palette } from './Palette';
+import { Timeline } from './Timeline';
+import { buffLanes } from './buffLanes';
 import type { ActionResult } from '../../engine';
 
 const REACTION_LABEL: Record<string, string> = { none: '—', melt: 'Derreter', vaporize: 'Vaporizar', spread: 'Espalhar', aggravate: 'Intensificar' };
@@ -34,6 +38,37 @@ function StateCard({ title, children }: { title: string; children: React.ReactNo
         {children}
       </div>
     </div>
+  );
+}
+
+function Toolbar({ hasManual, isSample }: { hasManual: boolean; isSample: boolean }) {
+  const canUndo = useRotationStore((s) => s.past.length > 0);
+  const canRedo = useRotationStore((s) => s.future.length > 0);
+  const dirty = useRotationStore((s) => s.dirty);
+  const undo = useRotationStore((s) => s.undo);
+  const redo = useRotationStore((s) => s.redo);
+  const convert = useRotationStore((s) => s.convertProfilesToWindows);
+  const open = useRotationStore((s) => s.open);
+  return (
+    <>
+      <div className="ast-toolbar">
+        <button type="button" className="ast-btn sm" onClick={undo} disabled={!canUndo} title="Ctrl+Z">Desfazer</button>
+        <button type="button" className="ast-btn sm" onClick={redo} disabled={!canRedo} title="Ctrl+Y">Refazer</button>
+        {isSample && (
+          <button type="button" className="ast-btn sm" onClick={() => open(sampleProject())} title="Volta ao exemplo original da planilha">Restaurar exemplo</button>
+        )}
+        <span className="grow">{dirty ? 'Salvando neste navegador…' : 'Salvo neste navegador'}</span>
+      </div>
+      {hasManual && (
+        <p className="ast-notice">
+          <span>
+            Alguns golpes usam perfis fixos de buff, como na planilha: mudar o tempo deles ou as janelas não altera os buffs que valem para eles.
+            Converta os perfis em janelas para editar os buffs no tempo. O resultado pode mudar um pouco.
+          </span>
+          <button type="button" className="ast-btn sm" onClick={convert}>Converter perfis em janelas</button>
+        </p>
+      )}
+    </>
   );
 }
 
@@ -164,6 +199,25 @@ export default function RotationPage() {
 
   const exists = useMemo(() => loadProject(id) !== null, [id]);
   const current = project && project.id === id ? project : null;
+
+  // Ctrl+Z desfaz, Ctrl+Y (ou Ctrl+Shift+Z) refaz; ignorado enquanto se digita num campo.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const el = e.target as HTMLElement | null;
+      if (el && /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName)) return;
+      if (!(e.ctrlKey || e.metaKey)) return;
+      const k = e.key.toLowerCase();
+      if (k === 'z' && !e.shiftKey) {
+        e.preventDefault();
+        useRotationStore.getState().undo();
+      } else if (k === 'y' || (k === 'z' && e.shiftKey)) {
+        e.preventDefault();
+        useRotationStore.getState().redo();
+      }
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, []);
   const analysis = useAnalysis(current, data);
 
   useEffect(() => {
@@ -202,6 +256,8 @@ export default function RotationPage() {
   }
 
   const summary = summarize(analysis.bundle, analysis.resolved);
+  const lanes = buffLanes(analysis.resolved.team);
+  const results = analysis.bundle.optimization.result.actions;
   return (
     <div className="ast-app">
       <div className={`ast-shell${analysis.stale ? ' ast-busy' : ''}`}>
@@ -222,9 +278,16 @@ export default function RotationPage() {
           ))}
         </div>
         <Kpis s={summary} />
+        <h2 className="ast-sec ast-caps">Linha do tempo</h2>
+        <Toolbar hasManual={current.actions.some((a) => a.tagSource === 'manual')} isSample={current.id === SAMPLE_ID} />
+        <Timeline project={current} results={results} members={summary.members} lanes={lanes} total={summary.avg} />
+        <div className="ast-edit">
+          <Inspector project={current} results={results} lanes={lanes} />
+          {data && <Palette project={current} moves={data.game.moves} members={summary.members} />}
+        </div>
         <Panels s={summary} />
         <h2 className="ast-sec ast-caps">Ações da rotação</h2>
-        <ActionsTable actions={analysis.bundle.optimization.result.actions} total={summary.avg} />
+        <ActionsTable actions={results} total={summary.avg} />
       </div>
     </div>
   );

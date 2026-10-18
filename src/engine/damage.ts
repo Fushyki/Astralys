@@ -2,7 +2,7 @@
  * Dano direto de um golpe: base × bônus × crítico × DEF × RES, com reações amplificadoras
  * (Derreter/Vaporizar) e catalisadoras (Espalhar/Intensificar).
  *
- *   total = (base + danoFixo + termoAditivo) × (1 + DMG%) × crítico × DEF × RES × amplificação
+ *   total = ((base + termoAditivo) × execuções + danoFixo) × (1 + DMG%) × crítico × DEF × RES × amplificação
  *
  * O termo aditivo (catalisadoras) entra ANTES de DMG%/crítico/DEF/RES, e a amplificação multiplica no fim.
  * O dano fixo (ex.: Lead Vocal) também entra na base, como na planilha de referência.
@@ -58,9 +58,11 @@ export interface ReactionTrigger {
 
 export interface HitInput {
   element: ElementOrPhysical;
-  /** Dano base já escalado: Σ(stat × multiplicador do talento) × acertos. */
+  /** Dano base de UMA execução do golpe: Σ(stat × multiplicador do talento). */
   base: number;
-  /** Dano fixo somado à base (antes dos multiplicadores). */
+  /** Quantas vezes o golpe é executado (coluna "Hits" da rotação). Multiplica a base e o termo aditivo. Padrão 1. */
+  executions?: number;
+  /** Dano fixo TOTAL da linha, somado à base (antes dos multiplicadores). Não é multiplicado por `executions`. */
   flatDamage?: number;
   /** Soma dos bônus de DMG% aplicáveis a este golpe (geral + elemento + tipo de golpe), em fração. */
   dmgBonus: number;
@@ -77,11 +79,13 @@ export interface HitInput {
 }
 
 export interface HitBreakdown {
+  /** Base de uma execução. */
   base: number;
+  executions: number;
   flatDamage: number;
   /** Termo das catalisadoras (0 se não houve reação aditiva válida). */
   additive: number;
-  /** base + dano fixo + termo aditivo. */
+  /** (base + termo aditivo) × execuções + dano fixo. */
   baseTotal: number;
   dmgMultiplier: number;
   crit: number;
@@ -121,6 +125,7 @@ export function additiveTerm(
 }
 
 export function computeHit(input: HitInput): HitBreakdown {
+  const executions = input.executions ?? 1;
   const flatDamage = input.flatDamage ?? 0;
   const coefficient = input.ampCoefficient ?? AMP_EM_COEFFICIENT;
   const bonus = input.reaction?.bonus ?? 0;
@@ -138,7 +143,8 @@ export function computeHit(input: HitInput): HitBreakdown {
     }
   }
 
-  const baseTotal = input.base + flatDamage + additive;
+  // A base e o termo aditivo valem por execução; o dano fixo já vem somado para a linha inteira.
+  const baseTotal = (input.base + additive) * executions + flatDamage;
   const dmgMultiplier = 1 + input.dmgBonus;
   const crit = critFactor(input.critMode, input.critRate, input.critDmg);
   const def = defMultiplier(
@@ -151,6 +157,7 @@ export function computeHit(input: HitInput): HitBreakdown {
 
   return {
     base: input.base,
+    executions,
     flatDamage,
     additive,
     baseTotal,

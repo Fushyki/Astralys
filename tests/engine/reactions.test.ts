@@ -47,6 +47,14 @@ describe('dano direto', () => {
     expect(r.total).toBeCloseTo((1000 + 500) * 1.5 * 1.5 * DEF_90_vs_90 * 0.9, 6);
   });
 
+  it('execuções multiplicam a base e o termo aditivo, mas não o dano fixo (como a planilha)', () => {
+    const r = computeHit({ ...base, executions: 8, flatDamage: 500 });
+    expect(r.total).toBeCloseTo((1000 * 8 + 500) * 1.5 * 1.5 * DEF_90_vs_90 * 0.9, 6);
+    const term = L90 * 1.15;
+    const agg = computeHit({ ...base, element: 'Electro', executions: 3, reaction: { kind: 'aggravate' } });
+    expect(agg.total).toBeCloseTo((1000 + term) * 3 * 1.5 * 1.5 * DEF_90_vs_90 * 0.9, 6);
+  });
+
   it('Derreter: Pyro ×2, Cryo ×1,5; EM 0', () => {
     const pyro = computeHit({ ...base, reaction: { kind: 'melt' } });
     expect(pyro.amp).toBeCloseTo(2, 12);

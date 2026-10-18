@@ -1,0 +1,32 @@
+/* Tela Dano do time. */
+.tm-grid { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: 16px; }
+.tm-grid.even { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.tm-stack { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.tm-bars { display: flex; flex-direction: column; gap: 12px; }
+.tm-read { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 8px; font-size: 15px; }
+.tm-top { min-width: 520px; }
+/* # e golpe à esquerda; números à direita */
+.tm-top th:nth-child(2), .tm-top td:nth-child(2) { text-align: left; }
+.tm-top .rk { width: 36px; color: var(--muted); }
+.tm-hit { color: var(--text); text-decoration: none; display: inline-flex; align-items: center; }
+.tm-hit:hover { color: var(--gold); }
+.dz-panel:has(.tm-top) { overflow-x: auto; }
+.dz-panel .note { margin: 12px 0 0; font-size: 13px; color: var(--muted); }
+
+.dz-chart { width: 100%; height: auto; display: block; }
+.dz-chart .grid { stroke: var(--divider); stroke-width: 1; }
+.dz-chart .tick { fill: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+.dz-chart .curve { fill: none; stroke: var(--gold); stroke-width: 2.5; stroke-linejoin: round; }
+.dz-chart .mark { font-size: 12px; font-weight: 600; }
+
+.dz-donut { display: grid; grid-template-columns: 160px minmax(0, 1fr); gap: 16px; align-items: center; }
+.dz-donut svg { width: 100%; height: auto; }
+.dz-donut .center { fill: var(--text); font-family: var(--font-display); font-weight: 700; font-size: 30px; }
+.dz-donut ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; font-size: 14px; }
+.dz-donut li { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; gap: 8px; align-items: center; }
+.dz-donut .n { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dz-donut .v { color: var(--muted); }
+.dz-donut .p { font-weight: 600; min-width: 52px; text-align: right; }
+
+@media (max-width: 1100px) { .tm-grid, .tm-grid.even { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 520px) { .dz-donut { grid-template-columns: minmax(0, 1fr); } .dz-donut svg { max-width: 180px; margin: 0 auto; } }

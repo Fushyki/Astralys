@@ -9,6 +9,7 @@ const ProjectLayout = lazy(() => import('./app/ProjectLayout'));
 const Equipe = lazy(() => import('./screens/Equipe'));
 const Personagem = lazy(() => import('./screens/Personagem'));
 const Rotacao = lazy(() => import('./screens/Rotacao'));
+const Time = lazy(() => import('./screens/Time'));
 const HomePage = lazy(() => import('./features/home/HomePage'));
 const RotationPage = lazy(() => import('./features/rotation/RotationPage'));
 const CardPage = lazy(() => import('./features/card/CardPage'));
@@ -79,6 +80,7 @@ ReactDOM.createRoot(rootElement).render(
             <Route index element={<Suspense fallback={null}><Equipe /></Suspense>} />
             <Route path="personagem/:nome" element={<Suspense fallback={null}><Personagem /></Suspense>} />
             <Route path="rotacao" element={<Suspense fallback={null}><Rotacao /></Suspense>} />
+            <Route path="time" element={<Suspense fallback={null}><Time /></Suspense>} />
           </Route>
           <Route
             path="/"

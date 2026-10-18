@@ -238,3 +238,13 @@ export function updateConfig(project: RotationProject, patch: Partial<Config>): 
   if (JSON.stringify(next) === JSON.stringify(project.config)) return project;
   return touch({ ...project, config: next });
 }
+
+
+// ---------- Fontes desligadas ----------
+
+/** Liga ou desliga uma fonte/buff (id do motor, ex.: "gear-3", "extra-0"). */
+export function setSourceEnabled(project: RotationProject, id: string, enabled: boolean): RotationProject {
+  const has = project.disabled.includes(id);
+  if (enabled === !has) return project;
+  return touch({ ...project, disabled: enabled ? project.disabled.filter((x) => x !== id) : [...project.disabled, id] });
+}

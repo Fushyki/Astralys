@@ -144,6 +144,8 @@ export const RotationProjectSchema = z
     actions: z.array(ActionSchema).default([]),
     /** Janelas de buff no tempo; dão as etiquetas das ações com `tagSource: 'windows'`. */
     buffWindows: z.array(BuffWindowSchema).default([]),
+    /** Ids de buffs/fontes desligados pelo usuário (checkbox em "Buffs recebidos"). */
+    disabled: z.array(z.string()).default([]),
     /** Perfis nomeados (conjuntos de etiquetas), úteis para aplicar rápido a várias ações. */
     profiles: z.record(z.array(z.string())).default({}),
     meta: z
@@ -336,7 +338,7 @@ export function resolveProject(project: RotationProject, data: GameData, effects
   });
 
   return {
-    team: { members, extras: project.extras, config },
+    team: { members, extras: project.extras, config, disabled: project.disabled },
     actions,
     flatEffects: effects.flatDamage,
     ampCoefficient: project.compat === 'planilha' ? AMP_EM_COEFFICIENT_SHEET : undefined,

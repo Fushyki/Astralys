@@ -52,6 +52,8 @@ export interface TeamInput {
   members: MemberInput[];
   extras: ExtraBuff[];
   config: GlobalConfig;
+  /** Ids de fontes/buffs que o usuário desligou (ver `AssembleOptions.disabled`). */
+  disabled?: string[];
 }
 
 export interface AssembleOptions {
@@ -110,7 +112,8 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
   const warnings: string[] = [];
   const names = members.map((m) => m.character.name);
 
-  const off = (id: string) => options.disabled?.has(id) === true;
+  const offIds = new Set<string>([...(input.disabled ?? []), ...(options.disabled ?? [])]);
+  const off = (id: string) => offIds.has(id);
 
   // 1) Estáticos + extras que não são de time, sempre com a origem de cada bônus
   const sources: StatSource[][] = members.map((m, i) => staticSources(m, i).filter((s) => !off(s.id)));

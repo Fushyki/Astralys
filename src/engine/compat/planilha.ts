@@ -296,6 +296,7 @@ export function projectFromPlanilha(imported: PlanilhaImport, options: ProjectFr
       note: a.note,
     })),
     buffWindows: [],
+    disabled: [],
     profiles: imported.profiles,
     meta: { tags: [], createdAt: now, updatedAt: now },
   };

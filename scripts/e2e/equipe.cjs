@@ -23,7 +23,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   page.on('console', (m) => { if (['error', 'warning'].includes(m.type())) problems.push(`console.${m.type()}: ${m.text().slice(0, 200)}`); });
   page.on('pageerror', (e) => problems.push(`pageerror: ${e.message.slice(0, 200)}`));
 
-  await page.goto(`${BASE}/rotacao`, { waitUntil: 'networkidle' });
+  await page.goto(`${BASE}/rotacao/exemplo`, { waitUntil: 'networkidle' });
   await page.evaluate(() => localStorage.clear());
   await page.reload({ waitUntil: 'networkidle' });
   await page.waitForSelector('.ast-slot');

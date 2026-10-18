@@ -326,6 +326,7 @@ export default function RotationPage() {
           <span className="ast-sub">
             Rotação de {formatDecimal(summary.duration)} s · inimigo nível {current.config.enemyLevel}
           </span>
+          <Link className="ast-btn" to="/rotacao">Meus projetos</Link>
           <Link className="ast-btn" to="/">Voltar ao site</Link>
         </header>
         {data && <TeamBar project={current} data={data} />}

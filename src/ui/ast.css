@@ -244,3 +244,14 @@
 .ast-table.ast-heat td:first-child, .ast-table.ast-heat th:first-child { text-align: left }
 .ast-heat .none { color: var(--dim) }
 .ast-weapons td:nth-child(n+2), .ast-weapons th:nth-child(n+2) { text-align: right }
+
+/* ---------- Meus projetos ---------- */
+.ast-projects { list-style: none; margin: 0; padding: 18px; display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px }
+.ast-project { border: 1px solid var(--edge); background: var(--ink-2); padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; min-width: 0 }
+.ast-project .top { display: flex; align-items: center; gap: 10px; min-width: 0 }
+.ast-project .name { font-family: var(--display); text-transform: uppercase; letter-spacing: .05em; font-weight: 600; font-size: 1.1rem; color: var(--txt); text-decoration: none; overflow-wrap: anywhere }
+.ast-project .name:hover { color: var(--gold) }
+.ast-project input { width: 100%; background: var(--ink-3); border: 1px solid var(--gold); color: var(--txt); padding: 4px 8px; font: inherit }
+.ast-project .meta { margin: 0; color: var(--dim); font-size: .85rem }
+.ast-project .acts { margin: 4px 0 0; display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: center }
+.ast-project .warn { color: var(--gold); font-size: .85rem }

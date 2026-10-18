@@ -1,12 +1,13 @@
 import React, { Suspense, lazy } from 'react';
 import ReactDOM from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import App from './App';
 import './index.css';
 
 // O editor (e os ~1 MB de dados do jogo) só é baixado quando a rota é aberta.
 const RotationPage = lazy(() => import('./features/rotation/RotationPage'));
+const ProjectsPage = lazy(() => import('./features/rotation/ProjectsPage'));
 
 const queryClient = new QueryClient();
 const rootElement = document.getElementById('root');
@@ -20,7 +21,14 @@ ReactDOM.createRoot(rootElement).render(
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Routes>
-          <Route path="/rotacao" element={<Navigate to="/rotacao/exemplo" replace />} />
+          <Route
+            path="/rotacao"
+            element={
+              <Suspense fallback={null}>
+                <ProjectsPage />
+              </Suspense>
+            }
+          />
           <Route
             path="/rotacao/:id"
             element={

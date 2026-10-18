@@ -24,11 +24,15 @@ describe('ressonância', () => {
     expect(r[0].text).toMatch(/25%/);
   });
 
-  it('outros elementos aparecem como "ainda não calculado", sem inventar valor', () => {
-    const r = resonanceOf(['Hydro', 'Hydro', 'Cryo', 'Geo']);
-    expect(r[0]).toMatchObject({ element: 'Hydro', applied: false });
-    expect(r[0].text).toMatch(/ainda não/);
-    expect(r[0].text).not.toMatch(/\d+%/);
+  it('Hydro, Cryo, Dendro e Geo também são calculadas; Electro e Anemo não mudam stats', () => {
+    const r = resonanceOf(['Hydro', 'Hydro', 'Cryo', 'Cryo', 'Dendro', 'Dendro', 'Geo', 'Geo', 'Electro', 'Electro', 'Anemo', 'Anemo']);
+    const by = Object.fromEntries(r.map((x) => [x.element, x]));
+    for (const el of ['Hydro', 'Cryo', 'Dendro', 'Geo']) expect(by[el].applied, el).toBe(true);
+    for (const el of ['Electro', 'Anemo']) expect(by[el].applied, el).toBe(false);
+    expect(by.Hydro.text).toMatch(/25%.*HP/);
+    expect(by.Cryo.text).toMatch(/15%.*Taxa Crítica/);
+    expect(by.Dendro.text).toMatch(/50.*Maestria/);
+    expect(by.Geo.text).toMatch(/20%.*RES Geo/);
   });
 
   it('4 elementos diferentes ou 1 de cada: nenhuma ressonância', () => {
@@ -49,11 +53,19 @@ describe('cobertura de efeitos', () => {
   });
 
   it('arma e set sem efeito cadastrado são apontados', () => {
-    const m = { ...p.members[0], weapon: 'Redhorn Stonethresher', primarySet: 'Gilded Dreams' };
+    const m = { ...p.members[0], weapon: 'Dull Blade', primarySet: 'Tiny Miracle' };
     const c = effectCoverage(m, effects);
     expect(c.weaponHasEffect).toBe(false);
     expect(c.primarySetHasEffect).toBe(false);
-    expect(missingEffects(m, effects)).toEqual(['arma Redhorn Stonethresher', 'set Gilded Dreams']);
+    expect(missingEffects(m, effects)).toEqual(['arma Dull Blade', 'set Tiny Miracle']);
+  });
+
+  it('set com 2 peças cadastradas mas sem 4 peças avisa só o bônus de 4 peças', () => {
+    const m = { ...p.members[0], primarySet: 'Gilded Dreams', secondarySet: undefined };
+    expect(effectCoverage(m, effects).primarySetHasEffect).toBe(true);
+    expect(effectCoverage(m, effects).fourPieceMissing).toBe(true);
+    expect(missingEffects(m, effects)).toContain('4 peças de Gilded Dreams');
+    expect(missingEffects({ ...m, fourPiece: false }, effects)).not.toContain('4 peças de Gilded Dreams');
   });
 
   it('sem set escolhido não é falta', () => {
@@ -63,7 +75,7 @@ describe('cobertura de efeitos', () => {
   });
 
   it('um personagem novo por defeito geralmente não tem efeitos cadastrados', () => {
-    const ref = defaultMember('Kamisato Ayaka', data);
+    const ref = defaultMember('Fischl', data);
     expect(effectCoverage(ref, effects).characterHasEffect).toBe(false);
   });
 });

@@ -52,6 +52,8 @@ export const CharacterSchema = z.object({
     cooldown: z.number().nullable(),
   }),
   particles: z.array(ParticleSourceSchema),
+  /** Talento cujo nível sobe 3 pontos na C3 e na C5 (null = o texto não casa com nenhum talento). */
+  constellationBoosts: z.object({ c3: z.enum(['normal', 'skill', 'burst']).nullable(), c5: z.enum(['normal', 'skill', 'burst']).nullable() }).optional(),
 });
 export type Character = z.infer<typeof CharacterSchema>;
 
@@ -89,6 +91,8 @@ export const MoveSchema = z.object({
   hitType: HitTypeSchema,
   /** Rótulo original do Lunaris em inglês, ex.: "Flamestrider Charged Attack Cyclic DMG". */
   label: z.string(),
+  /** Rótulo em português do Lunaris (mesma posição do original); ausente se as listas não casam. */
+  labelPt: z.string().optional(),
   /** Índice da variante quando o valor traz "a/b" (ex.: queda baixa/alta). 0 se não houver. */
   variant: z.number().int().min(0),
   variants: z.number().int().min(1),

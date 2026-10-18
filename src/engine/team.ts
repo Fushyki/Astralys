@@ -3,13 +3,18 @@
  * ressonância e redução de RES do inimigo.
  */
 import type { Element } from '../data/schema';
+import { weaponStatsAt } from '../effects/schema';
 import type { ResistanceMap } from './damage';
 import {
+  activeCharacterBuffs,
   addDelta,
+  characterBuffDelta,
   finalStats,
   fourPieceActive,
   foldSources,
+  isEmptyDelta,
   namedStatDelta,
+  type StatDelta,
   staticSources,
   activeTeamDelta,
   minimumRolls,
@@ -72,6 +77,30 @@ export const labelTag = (label?: string) => `label:${label?.trim() ? label.trim(
 export const gearTag = (memberIndex: number) => `gear:${memberIndex}`;
 export const characterTag = (memberIndex: number) => `char:${memberIndex}`;
 
+/** Ressonâncias com efeito em stats (além da Pyro, que entra como ATK% da equipe): 2 ou mais do mesmo elemento. */
+export interface ResonanceEffect {
+  element: Element;
+  label: string;
+  delta: StatDelta;
+  /** Redução de RES do inimigo no elemento indicado. */
+  resShred?: { value: number; element: Element };
+  note: string;
+}
+
+export function resonanceEffects(members: MemberInput[]): ResonanceEffect[] {
+  const count = (el: Element) => members.filter((m) => m.character.element === el).length;
+  const out: ResonanceEffect[] = [];
+  if (count('Hydro') >= 2) out.push({ element: 'Hydro', label: 'Ressonância Hydro (+25% de HP máx.)', delta: { hpPct: 0.25 }, note: '+25% de HP máximo para a equipe.' });
+  if (count('Cryo') >= 2) {
+    out.push({ element: 'Cryo', label: 'Ressonância Cryo (+15% de Taxa Crítica)', delta: { critRate: 0.15 }, note: '+15% de Taxa Crítica contra inimigos sob Cryo ou congelados (assumido sempre ativo).' });
+  }
+  if (count('Dendro') >= 2) out.push({ element: 'Dendro', label: 'Ressonância Dendro (+50 de Maestria)', delta: { em: 50 }, note: '+50 de Maestria. Os +30 e +20 depois de reações NÃO entram.' });
+  if (count('Geo') >= 2) {
+    out.push({ element: 'Geo', label: 'Ressonância Geo (-20% de RES Geo)', delta: {}, resShred: { value: 0.2, element: 'Geo' }, note: '-20% de RES Geo do inimigo (assumido sempre ativo). O +15% de DMG com escudo NÃO entra.' });
+  }
+  return out;
+}
+
 export function pyroResonanceAtkPct(members: MemberInput[]): number {
   return members.filter((m) => m.character.element === 'Pyro').length >= 2 ? 0.25 : 0;
 }
@@ -99,6 +128,13 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
       }
     });
   });
+  // 1b) Ressonâncias (estáticas para todos os membros)
+  resonanceEffects(members).forEach((r) => {
+    const id = `resonance-${r.element.toLowerCase()}`;
+    if (off(id) || isEmptyDelta(r.delta)) return;
+    members.forEach((_, i) => sources[i].push({ id: `m${i}:${id}`, label: r.label, kind: 'resonance', member: i, delta: r.delta }));
+  });
+
   const statics = sources.map((src) => foldSources(src));
 
   const resonanceAtkPct = off('resonance-pyro') ? 0 : pyroResonanceAtkPct(members);
@@ -106,13 +142,29 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
 
   // 2) Buffs de arma e de 4 peças que vão ao time (valem para todos, inclusive o dono)
   members.forEach((m, i) => {
-    const w = m.weaponEffect?.team;
+    const w = m.weaponEffect ? weaponStatsAt(m.weaponEffect, m.refinement).team : undefined;
     const s = fourPieceActive(m) ? m.primarySet?.effect?.fourPiece?.team : undefined;
     const atkPct = (w?.atkPct ?? 0) + (s?.atkPct ?? 0);
     const dmgBonus = (w?.dmgPct ?? 0) + (s?.dmgPct ?? 0);
     const em = (w?.em ?? 0) + (s?.em ?? 0);
     if ((atkPct || dmgBonus || em) && !off(`gear-${i}`)) {
       buffs.push({ id: `gear-${i}`, tag: gearTag(i), targets: 'all', delta: { atkPct, dmgBonus, em }, description: `Arma/set de ${names[i]}` });
+    }
+  });
+
+  // 2b) Buffs de passivas e constelações em janela: viram faixas na linha do tempo
+  members.forEach((m, i) => {
+    for (const b of activeCharacterBuffs(m)) {
+      if (!b.timed || !b.stats) continue;
+      const delta = characterBuffDelta(b.stats);
+      if (isEmptyDelta(delta) || off(`cbuff-${i}-${b.id}`)) continue;
+      const targets = names.filter((n, j) => {
+        if (b.scope === 'self' && j !== i) return false;
+        if (b.scope === 'others' && j === i) return false;
+        return !b.forElements || b.forElements.includes(members[j].character.element);
+      });
+      if (targets.length === 0) continue;
+      buffs.push({ id: `cbuff-${i}-${b.id}`, tag: labelTag(b.label), targets, delta, description: `${names[i]}: ${b.label}` });
     }
   });
 
@@ -156,11 +208,19 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
 
   // 6) RES do inimigo por elemento (redução de RES de personagens; vale o tempo todo)
   const enemyRes: ResistanceMap = { Physical: config.enemyBaseRes };
+  const resonanceShred = resonanceEffects(members).filter((r) => r.resShred && !off(`resonance-${r.element.toLowerCase()}`));
   for (const el of ELEMENTS) {
     let shred = 0;
+    for (const r of resonanceShred) if (r.resShred!.element === el) shred += r.resShred!.value;
     members.forEach((m, i) => {
       const r = m.characterEffect?.resShred;
       if (r && r.value > 0 && r.elements.includes(el) && !off(`res-shred-${i}`)) shred += r.value;
+      for (const b of activeCharacterBuffs(m)) {
+        const br = b.resShred;
+        if (br && br.value > 0 && br.elements.includes(el) && !off(`cbuff-res-${i}-${b.id}`)) shred += br.value;
+      }
+      const sr = fourPieceActive(m) ? m.primarySet?.effect?.fourPiece?.resShred : undefined;
+      if (sr && sr.value > 0 && sr.elements.includes(el) && !off(`set-res-shred-${i}`)) shred += sr.value;
     });
     enemyRes[el] = config.enemyBaseRes - shred;
   }

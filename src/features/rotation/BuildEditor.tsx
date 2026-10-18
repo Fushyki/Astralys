@@ -4,6 +4,7 @@
  */
 import {
   MAIN_STAT_VALUES,
+  effectiveTalents,
   PIECE_SLOTS,
   SUBSTATS,
   defaultTotalRolls,
@@ -64,6 +65,14 @@ export function BuildEditor({ project, data, bundle, index }: { project: Rotatio
   const missing = missingEffects(ref, data.effects);
   const cover = effectCoverage(ref, data.effects);
   const weapons = weaponsFor(character, data.game.weapons);
+  const weaponEffect = data.effects.weapons.find((e) => e.weapon === ref.weapon);
+  const charEffect = data.effects.characters.find((e) => e.character === ref.character);
+  const charNotes = (charEffect?.buffs ?? []).map((b) => ((ref.constellation ?? 0) >= (b.minConstellation ?? 0) ? `${b.label}: ${b.note ?? ''}` : `${b.label}: só a partir de C${b.minConstellation}.`));
+  const assumptions = [
+    ...charNotes,
+    weaponEffect?.note && `${ref.weapon}: ${weaponEffect.note}`,
+    ...[ref.primarySet, ref.secondarySet].map((n) => (n ? data.effects.sets.find((e) => e.set === n) : undefined)).map((e) => e?.note && `${e.set}: ${e.note}`),
+  ].filter((x): x is string => !!x);
   const budget = ref.totalRolls ?? defaultTotalRolls(ref.artifacts);
   const used = SUBSTATS.reduce((s, k) => s + rolls[k], 0);
 
@@ -81,12 +90,16 @@ export function BuildEditor({ project, data, bundle, index }: { project: Rotatio
       <div className="ast-build">
         <div className="ast-build-form">
           <div className="ast-fields">
-            <div style={{ gridColumn: '1 / -1' }}><Select
+            <div style={{ gridColumn: '1 / -1', display: 'grid', gridTemplateColumns: weaponEffect?.refinements ? 'minmax(0, 1fr) 88px' : 'minmax(0, 1fr)', gap: 10 }}><Select
               label="Arma"
               value={ref.weapon}
               onChange={(v) => update(index, { weapon: v })}
               options={weapons.map((w) => ({ value: w.name, label: `${w.rarity}★ ${w.name}${data.effects.weapons.some((e) => e.weapon === w.name) ? '' : ' (sem efeito)'}` }))}
-            /></div>
+            />
+            {weaponEffect?.refinements && (
+              <Select label="Refino" value={String(ref.refinement ?? 1)} onChange={(v) => update(index, { refinement: Number(v) })} options={[1, 2, 3, 4, 5].map((r) => ({ value: String(r), label: `R${r}` }))} />
+            )}
+            </div>
             <Select label="Set principal" value={ref.primarySet ?? ''} onChange={(v) => update(index, { primarySet: v || undefined, ...(v ? {} : { secondarySet: undefined }) })} options={setOptions} />
             <Select label="Segundo set (2+2)" value={ref.secondarySet ?? ''} onChange={(v) => update(index, { secondarySet: v || undefined })} options={ref.primarySet ? setOptions : [{ value: '', label: 'Escolha o principal' }]} />
           </div>
@@ -116,6 +129,21 @@ export function BuildEditor({ project, data, bundle, index }: { project: Rotatio
             <NumberField label="ER mín." value={Math.round((ref.minER ?? 0) * 1000) / 10} min={0} step={5} suffix="%" onCommit={(v) => update(index, { minER: Math.max(0, v) / 100 })} />
           </div>
 
+          <div className="ast-fields">
+            <Select label="Constelação" value={String(ref.constellation ?? 0)} onChange={(v) => update(index, { constellation: Number(v) || undefined })} options={[0, 1, 2, 3, 4, 5, 6].map((c) => ({ value: String(c), label: `C${c}` }))} />
+            <p className="ast-hint" style={{ margin: 0, alignSelf: 'end' }}>
+              Níveis efetivos: {(() => { const t = effectiveTalents(ref.talents, ref.constellation, character); return `${t.normal}/${t.skill}/${t.burst}`; })()}
+              {(ref.constellation ?? 0) >= 3 ? ' (com o +3 da constelação)' : ''}
+            </p>
+          </div>
+          {assumptions.length > 0 && (
+            <details className="ast-assume">
+              <summary>O que está assumido nos efeitos ({assumptions.length})</summary>
+              <ul>
+                {assumptions.map((a) => (<li key={a}>{a}</li>))}
+              </ul>
+            </details>
+          )}
         </div>
 
         <div className="ast-build-form ast-build-subs">

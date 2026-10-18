@@ -1,12 +1,15 @@
 import React, { Suspense, lazy } from 'react';
 import ReactDOM from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import App from './App';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import './index.css';
 
 // O editor (e os ~1 MB de dados do jogo) só é baixado quando a rota é aberta.
+const HomePage = lazy(() => import('./features/home/HomePage'));
 const RotationPage = lazy(() => import('./features/rotation/RotationPage'));
+const CardPage = lazy(() => import('./features/card/CardPage'));
+const EnergyPage = lazy(() => import('./features/energy/EnergyPage'));
+const ComparePage = lazy(() => import('./features/compare/ComparePage'));
 const ProjectsPage = lazy(() => import('./features/rotation/ProjectsPage'));
 
 const queryClient = new QueryClient();
@@ -30,6 +33,30 @@ ReactDOM.createRoot(rootElement).render(
             }
           />
           <Route
+            path="/comparar"
+            element={
+              <Suspense fallback={null}>
+                <ComparePage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/rotacao/:id/card"
+            element={
+              <Suspense fallback={null}>
+                <CardPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/rotacao/:id/recarga"
+            element={
+              <Suspense fallback={null}>
+                <EnergyPage />
+              </Suspense>
+            }
+          />
+          <Route
             path="/rotacao/:id"
             element={
               <Suspense fallback={null}>
@@ -37,8 +64,15 @@ ReactDOM.createRoot(rootElement).render(
               </Suspense>
             }
           />
-          {/* Interface antiga: continua funcionando até ser substituída, rota por rota. */}
-          <Route path="*" element={<App />} />
+          <Route
+            path="/"
+            element={
+              <Suspense fallback={null}>
+                <HomePage />
+              </Suspense>
+            }
+          />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>

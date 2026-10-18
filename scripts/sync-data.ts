@@ -65,10 +65,12 @@ interface RawArtifactListEntry {
   qualityType: string;
 }
 interface RawSkill {
+  name?: string;
   multipliers?: Record<string, string[]>;
 }
 interface RawCharDetail {
   skills: { normalattack?: RawSkill; elementalskill?: RawSkill; elementalburst?: RawSkill };
+  constellations?: Record<string, { name?: string; description?: string }>;
   energy?: { source: string; particles: string; chance: string; cd: string }[];
 }
 interface RawWeaponDetail {
@@ -138,13 +140,17 @@ interface Unparsed {
   sample: string;
 }
 
-function buildMoves(char: Character, detail: RawCharDetail, unparsed: Unparsed[], candidates: Unparsed[]): Move[] {
+function buildMoves(char: Character, detail: RawCharDetail, detailPt: RawCharDetail | null, unparsed: Unparsed[], candidates: Unparsed[]): Move[] {
   const moves: Move[] = [];
   const seen = new Set<string>();
 
   for (const [skillKey, talent] of TALENTS) {
     const mult = detail.skills[skillKey]?.multipliers ?? {};
+    // Os rótulos em português vêm na MESMA ordem dos em inglês; só usados se as listas têm o mesmo tamanho.
+    const ptKeys = Object.keys(detailPt?.skills[skillKey]?.multipliers ?? {});
+    const ptAligned = ptKeys.length === Object.keys(mult).length;
     for (const [label, levels] of Object.entries(mult)) {
+      const labelPt = ptAligned ? ptKeys[Object.keys(mult).indexOf(label)] : undefined;
       const record = { character: char.name, talent, label, sample: String(levels[0]) };
 
       if (!isDamageLabel(label)) {
@@ -187,6 +193,7 @@ function buildMoves(char: Character, detail: RawCharDetail, unparsed: Unparsed[]
           talent,
           hitType: hitTypeFor(label, talent),
           label,
+          ...(labelPt ? { labelPt } : {}),
           variant: v,
           variants,
           hits: first.variants[v].hits,
@@ -197,6 +204,30 @@ function buildMoves(char: Character, detail: RawCharDetail, unparsed: Unparsed[]
     }
   }
   return moves;
+}
+
+/** C3 e C5 aumentam em 3 o nível de um talento: o texto diz qual ("Increases the Level of X by 3"). */
+function constellationBoosts(detail: RawCharDetail): { c3: Talent | null; c5: Talent | null } {
+  const strip = (t: string) =>
+    t
+      .replace(/<[^>]*>/g, '')
+      .replace(/\{\/?LINK[^}]*\}/g, '')
+      .replace(/^\s*(normal attack|elemental skill|elemental burst):?\s*/i, '')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .toLowerCase();
+  const talentOf = (name: string): Talent | null => {
+    for (const [key, talent] of TALENTS) {
+      const skillName = (detail.skills[key] as { name?: string } | undefined)?.name;
+      if (skillName && strip(skillName) === name) return talent;
+    }
+    return null;
+  };
+  const of = (key: string): Talent | null => {
+    const m = (detail.constellations?.[key]?.description ?? '').match(/Increases? the Level of (.*?) by 3/i);
+    return m ? talentOf(strip(m[1])) : null;
+  };
+  return { c3: of('const3'), c5: of('const5') };
 }
 
 function burstInfo(detail: RawCharDetail) {
@@ -250,6 +281,14 @@ async function main() {
     }
   });
 
+  const charDetailsPt = await mapLimit(charIds, CONCURRENCY, async (id) => {
+    try {
+      return await fetchJson<RawCharDetail>(`${version}/pt/char/${id}.json`, opts);
+    } catch {
+      return null;
+    }
+  });
+
   charIds.forEach((id, i) => {
     const entry = charList[id];
     const detail = charDetails[i];
@@ -277,6 +316,7 @@ async function main() {
       baseDef: def,
       ascension,
       burst: burstInfo(detail),
+      constellationBoosts: constellationBoosts(detail),
       particles: (detail.energy ?? []).map((e) => ({
         source: e.source,
         particles: e.particles,
@@ -285,7 +325,7 @@ async function main() {
       })),
     });
     characters.push(char);
-    moves.push(...buildMoves(char, detail, unparsed, candidates));
+    moves.push(...buildMoves(char, detail, charDetailsPt[i], unparsed, candidates));
   });
 
   // --- Armas ---

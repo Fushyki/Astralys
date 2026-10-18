@@ -100,9 +100,9 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.click('.ast-pick:has-text("Kamisato Ayaka")'); await settle();
   check('adicionar a Ayaka seleciona o build dela', (await slotNames()).length === 4 && (await page.textContent('.ast-panel.ast-wide > h2')) === 'Build de Kamisato Ayaka');
   check('com a arma por defeito (Absolution, com efeito) não há aviso', (await page.$$('.ast-notice-inline')).length === 0);
-  await field('Arma').locator('select').selectOption({ label: '5★ Aquila Favonia (sem efeito)' }); await settle();
+  await field('Arma').locator('select').selectOption({ label: '2★ Dull Blade (sem efeito)' }); await settle();
   const notice = await page.$$eval('.ast-notice-inline', (e) => e.map((x) => x.textContent));
-  check('arma sem efeito cadastrado gera aviso claro', notice.length === 1 && /Sem efeito numérico cadastrado: arma Aquila Favonia/.test(notice[0]), notice[0]?.slice(0, 90));
+  check('arma sem efeito cadastrado gera aviso claro', notice.length === 1 && /Sem efeito numérico cadastrado: arma Dull Blade/.test(notice[0]), notice[0]?.slice(0, 90));
   await page.screenshot({ path: path.join(OUT, 'equipe-nova.png'), fullPage: true });
 
   // Tabela de dano do personagem selecionado
@@ -145,6 +145,43 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   const newWeapon = await field('Arma').locator('select').inputValue();
   check('"Usar" troca a arma do build', newWeapon !== 'A Thousand Blazing Suns', newWeapon);
   await field('Arma').locator('select').selectOption('A Thousand Blazing Suns'); await settle();
+
+  // Dano das reações
+  const reactionRows = await page.$$eval('.ast-reactions tbody tr:not(.group)', (r) => r.map((x) => x.textContent));
+  check('tabela de dano das reações (transformativas, Lunares e Estelares)', reactionRows.length >= 15 && reactionRows.some((t) => /Sobrecarga/.test(t)) && reactionRows.some((t) => /Lunar-Carregado/.test(t)) && reactionRows.some((t) => /Estelar/.test(t)), `${reactionRows.length} linhas`);
+
+  // Refinamento e suposições dos efeitos
+  await page.click('.ast-slot-main:has-text("Mavuika")'); await settle();
+  const critOf = async () => Number((await page.$$eval('.ast-statbox dl div', (rows) => rows.find((r) => /Taxa Cr/.test(r.textContent))?.querySelector('dd')?.textContent ?? '0')).replace('%', '').replace(',', '.'));
+  check('arma sem tabela por refinamento não mostra o seletor de refino', (await page.locator('label.ast-field:has(span:text-is("Refino"))').count()) === 0);
+  await field('Arma').locator('select').selectOption({ label: '4★ Royal Greatsword' }); await settle();
+  check('arma com tabela por refinamento mostra o seletor de refino', (await page.locator('label.ast-field:has(span:text-is("Refino"))').count()) === 1);
+  const crit1 = await critOf();
+  await field('Refino').locator('select').selectOption('5'); await settle();
+  const crit5 = await critOf();
+  // o otimizador reajusta os substats quando o refino muda, então o ganho visível fica entre 20 e 40 pontos
+  check('subir o refino de R1 para R5 sobe a Taxa Crítica (Royal)', crit5 - crit1 > 20, `${crit1}% → ${crit5}%`);
+  const assume = await page.textContent('.ast-assume');
+  check('mostra o que está assumido nos efeitos', /Royal Greatsword/.test(assume) && /Melhor caso/.test(assume));
+  await page.waitForSelector('.ast-refine tbody tr', { timeout: 20000 });
+  const refineRows = await page.$$eval('.ast-refine tbody tr', (r) => r.map((x) => x.textContent));
+  check('tabela de refinamentos R1 a R5 da arma atual', refineRows.length === 5 && /R5.*atual/.test(refineRows[4]), refineRows.map((t) => t.slice(0, 12)).join(' | '));
+  await page.waitForSelector('.ast-cons tbody tr', { timeout: 20000 });
+  const consRows = await page.$$eval('.ast-cons tbody tr', (r) => r.map((x) => x.textContent));
+  check('tabela de constelações C0 a C6 do personagem selecionado', consRows.length === 7 && /C0.*atual/.test(consRows[0]), consRows.map((t) => t.slice(0, 8)).join(' | '));
+  await field('Arma').locator('select').selectOption({ label: '5★ A Thousand Blazing Suns' }); await settle();
+
+  // Constelação e buffs de passivas
+  const lanesText = await page.$$eval('svg text', (t) => t.map((x) => x.textContent));
+  check('passivas de personagem viram faixas de buff na linha do tempo (Ayaka A1 e A4)', lanesText.includes('AYAKA A1') && lanesText.includes('AYAKA A4'), lanesText.filter((t) => /AYAKA/.test(t)).join(', '));
+  check('constelações só aparecem na linha do tempo a partir do nível pedido', !lanesText.includes('RAIDEN C4'));
+  await page.click('.ast-slot-main:has-text("Mavuika")'); await settle();
+  const talentsText = async () => page.$eval('.ast-build', (e) => e.textContent.match(/Níveis efetivos: ([\d/]+)/)?.[1]);
+  const t0 = await talentsText();
+  await field('Constelação').locator('select').selectOption('3'); await settle();
+  const t3 = await talentsText();
+  check('a constelação C3 soma +3 ao talento certo (Mavuika: Supremo)', t0 === '10/10/10' && t3 === '10/10/13', `${t0} → ${t3}`);
+  await field('Constelação').locator('select').selectOption('0'); await settle();
 
   // Persistência da equipe
   await page.waitForTimeout(700);

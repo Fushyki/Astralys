@@ -46,15 +46,22 @@ export const ArtifactConfigSchema = z.object({
 export const MemberRefSchema = z.object({
   character: z.string().min(1),
   weapon: z.string().min(1),
+  /** Refinamento da arma (1 a 5). Ausente = 1. */
+  refinement: z.number().int().min(1).max(5).optional(),
   primarySet: z.string().min(1).optional(),
   secondarySet: z.string().min(1).optional(),
+  /** false = só 2 peças do set principal (sem o bônus de 4 peças). Padrão: 4 peças quando não há segundo set. */
+  fourPiece: z.boolean().optional(),
   artifacts: ArtifactConfigSchema,
+  /** Níveis BASE dos talentos (sem o +3 das constelações). */
   talents: z.object({ normal: TalentLevel, skill: TalentLevel, burst: TalentLevel }),
+  /** Constelação (0 a 6). Ausente = C0. Sobe em 3 o nível dos talentos da C3 e da C5. */
+  constellation: z.number().int().min(0).max(6).optional(),
   minER: z.number().min(0).optional(),
   totalRolls: z.number().int().min(0).optional(),
   forcedCritRolls: z.number().int().min(0).optional(),
   /** Rolls totais por substat definidos à mão (os que faltam valem o mínimo). Ausente = otimizar. */
-  manualRolls: z.record(z.enum(SUBSTATS), z.number().int().min(0).max(60)).optional(),
+  manualRolls: z.record(z.enum(SUBSTATS), z.number().min(0).max(60)).optional(),
 });
 export type MemberRef = z.infer<typeof MemberRefSchema>;
 
@@ -144,6 +151,27 @@ export const RotationProjectSchema = z
         author: z.string().optional(),
         patch: z.string().optional(),
         tags: z.array(z.string()).default([]),
+        /** Textos do card infográfico (título, selo de investimento e etiqueta de versão). */
+        card: z.object({ title: z.string().max(60), badge: z.string().max(40), tag: z.string().max(40) }).partial().optional(),
+        /** Calculadora de recarga: partículas de inimigos e a configuração de cada personagem (pelo nome). */
+        energy: z
+          .object({
+            enemyParticles: z.number().min(0).max(100),
+            margin: z.enum(['low', 'medium', 'high']).default('medium'),
+            slots: z.record(
+              z.object({
+                skillUses: z.number().min(0).max(50),
+                particles: z.number().min(0).max(20).optional(),
+                onField: z.array(z.string()),
+                favProcs: z.number().min(0).max(50),
+                favTarget: z.string().nullable(),
+                flat: z.number().min(0).max(500),
+                fieldTime: z.number().min(0).max(1),
+                useBurst: z.boolean(),
+              }),
+            ),
+          })
+          .optional(),
         createdAt: z.string(),
         updatedAt: z.string(),
       })
@@ -229,18 +257,36 @@ function byName<T extends { name: string }>(list: T[], name: string, what: strin
   return found;
 }
 
+/** Níveis efetivos dos talentos: o nível base mais 3 no talento da C3 (se C≥3) e no da C5 (se C≥5), no máximo 15. */
+export function effectiveTalents(
+  base: { normal: number; skill: number; burst: number },
+  constellation: number | undefined,
+  character: { constellationBoosts?: { c3: Talent | null; c5: Talent | null } },
+): { normal: number; skill: number; burst: number } {
+  const out = { ...base };
+  const c = constellation ?? 0;
+  const b = character.constellationBoosts;
+  if (b?.c3 && c >= 3) out[b.c3] = Math.min(15, out[b.c3] + 3);
+  if (b?.c5 && c >= 5) out[b.c5] = Math.min(15, out[b.c5] + 3);
+  return out;
+}
+
 export function resolveMember(ref: MemberRef, data: GameData, effects: EffectsData, minRolls = 0): MemberInput {
   const setOf = (name?: string) => (name ? { name, effect: effects.sets.find((s) => s.set === name) } : undefined);
   const weapon = byName(data.weapons, ref.weapon, 'Arma');
+  const character = byName(data.characters, ref.character, 'Personagem');
   return {
-    character: byName(data.characters, ref.character, 'Personagem'),
+    character,
     weapon,
     characterEffect: effects.characters.find((c) => c.character === ref.character),
     weaponEffect: effects.weapons.find((w) => w.weapon === weapon.name),
     primarySet: setOf(ref.primarySet),
     secondarySet: setOf(ref.secondarySet),
+    fourPiece: ref.fourPiece,
+    refinement: ref.refinement,
     artifacts: ref.artifacts,
-    talents: ref.talents,
+    talents: effectiveTalents(ref.talents, ref.constellation, character),
+    constellation: ref.constellation,
     minER: ref.minER,
     totalRolls: ref.totalRolls,
     forcedCritRolls: ref.forcedCritRolls,

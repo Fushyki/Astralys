@@ -144,4 +144,15 @@ describe('personagens e armas gerados vs. L_Personagens / L_Armas', () => {
       expect(w!.baseAtk, `${r[0]} ATK`).toBe(Number(r[3]));
     }
   });
+
+  it('golpes têm rótulo em português (Lunaris), sem caractere quebrado', () => {
+    const withPt = moves.filter((m) => m.labelPt);
+    expect(withPt.length / moves.length).toBeGreaterThan(0.95);
+    for (const m of withPt) {
+      expect(m.labelPt!.trim().length, m.id).toBeGreaterThan(0);
+      expect(m.labelPt, m.id).not.toContain('�');
+    }
+    const mav = moves.find((m) => m.character === 'Mavuika' && m.label === 'Charged Attack DMG');
+    expect(mav?.labelPt).toBe('Dano de Ataque Carregado');
+  });
 });

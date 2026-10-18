@@ -26,12 +26,25 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   const settle = () => page.waitForTimeout(500);
   const cards = () => page.$$eval('.ast-project .name', (e) => e.map((x) => x.textContent));
 
+  // Página inicial
+  await page.goto(`${BASE}/`, { waitUntil: 'networkidle' });
+  check('a página inicial mostra o nome e as funções', (await page.textContent('.ast-home h1')) === 'Astralys' && (await page.$$('.ast-home .features li')).length === 4);
+  await page.click('.ast-home a:has-text("Meus projetos")');
+  await page.waitForSelector('.ast-project');
+  check('o botão leva ao cofre', page.url().endsWith('/rotacao'));
+  await page.goto(`${BASE}/endereco-que-nao-existe`, { waitUntil: 'networkidle' });
+  check('endereço desconhecido volta para a página inicial', page.url() === `${BASE}/`, page.url());
+
   await page.goto(`${BASE}/rotacao`, { waitUntil: 'networkidle' });
   await page.evaluate(() => localStorage.clear());
   await page.reload({ waitUntil: 'networkidle' });
   await page.waitForSelector('.ast-project');
 
   check('lista começa só com o exemplo', (await cards()).length === 1 && /Exemplo/.test((await cards())[0]), (await cards()).join(' | '));
+  await page.waitForSelector('.ast-project .kp', { timeout: 20000 });
+  const kp = await page.$eval('.ast-project .kp', (e) => e.textContent);
+  check('o cartão mostra DPS e DPR do projeto', /216,6k/.test(kp) && /3,79M/.test(kp), kp);
+  check('o cartão mostra os 4 retratos e a barra de participação', (await page.$$('.ast-project .face')).length === 4 && (await page.$$('.ast-project .mix i')).length === 4);
   await page.screenshot({ path: path.join(OUT, 'cofre.png') });
 
   // Importar a planilha

@@ -10,6 +10,10 @@ import type { TeamInput } from './team';
 
 export interface WeaponCandidate {
   weapon: string;
+  /** Quando informado, é uma linha de comparação de refinamentos da mesma arma. */
+  refinement?: number;
+  /** Quando informado, é uma linha de comparação de constelações do mesmo personagem. */
+  constellation?: number;
   team: TeamInput;
 }
 
@@ -23,6 +27,8 @@ export interface WeaponCompareInput {
 
 export interface WeaponCompareRow {
   weapon: string;
+  refinement?: number;
+  constellation?: number;
   /** Dano médio da rotação da equipe e do membro com esta arma. */
   teamAvg: number;
   memberAvg: number;
@@ -31,10 +37,10 @@ export interface WeaponCompareRow {
 
 export function compareWeapons(input: WeaponCompareInput): WeaponCompareRow[] {
   return input.candidates
-    .map(({ weapon, team }) => {
+    .map(({ weapon, refinement, constellation, team }) => {
       const b = analyzeProject({ team, actions: input.actions, flatEffects: input.flatEffects, ampCoefficient: input.ampCoefficient });
       const totals = b.optimization.result.totals;
-      return { weapon, teamAvg: totals.avg, memberAvg: b.optimization.result.members[input.member].avg, dps: totals.dps };
+      return { weapon, ...(refinement ? { refinement } : {}), ...(constellation !== undefined ? { constellation } : {}), teamAvg: totals.avg, memberAvg: b.optimization.result.members[input.member].avg, dps: totals.dps };
     })
     .sort((a, b) => b.teamAvg - a.teamAvg);
 }

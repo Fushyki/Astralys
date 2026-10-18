@@ -58,4 +58,17 @@ describe('comparação de armas', () => {
   it('o dano do membro nunca passa o da equipe', () => {
     for (const r of run(mavuikaWeapons.slice(0, 6))) expect(r.memberAvg).toBeLessThanOrEqual(r.teamAvg + 1e-6);
   });
+
+  it('linhas de refinamento: R5 rende mais que R1 numa arma com tabela por refinamento', () => {
+    const royal = { ...project.members[0], weapon: 'Royal Greatsword' };
+    const cands = [1, 5].map((refinement) => ({
+      weapon: 'Royal Greatsword',
+      refinement,
+      team: { ...resolved.team, members: resolved.team.members.map((m, i) => (i === 0 ? resolveMember({ ...royal, refinement }, game, effects, project.config.minRollsPerSubstat) : m)) },
+    }));
+    const rows = compareWeapons({ member: 0, candidates: cands, actions: resolved.actions, flatEffects: resolved.flatEffects, ampCoefficient: resolved.ampCoefficient });
+    const get = (r: number) => rows.find((x) => x.refinement === r)!.teamAvg;
+    expect(get(5)).toBeGreaterThan(get(1));
+    expect(rows.every((x) => x.weapon === 'Royal Greatsword')).toBe(true);
+  });
 });

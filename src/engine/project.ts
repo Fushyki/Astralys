@@ -146,6 +146,25 @@ export const RotationProjectSchema = z
         tags: z.array(z.string()).default([]),
         /** Textos do card infográfico (título, selo de investimento e etiqueta de versão). */
         card: z.object({ title: z.string().max(60), badge: z.string().max(40), tag: z.string().max(40) }).partial().optional(),
+        /** Calculadora de recarga: partículas de inimigos e a configuração de cada personagem (pelo nome). */
+        energy: z
+          .object({
+            enemyParticles: z.number().min(0).max(100),
+            margin: z.enum(['low', 'medium', 'high']).default('medium'),
+            slots: z.record(
+              z.object({
+                skillUses: z.number().min(0).max(50),
+                particles: z.number().min(0).max(20).optional(),
+                onField: z.array(z.string()),
+                favProcs: z.number().min(0).max(50),
+                favTarget: z.string().nullable(),
+                flat: z.number().min(0).max(500),
+                fieldTime: z.number().min(0).max(1),
+                useBurst: z.boolean(),
+              }),
+            ),
+          })
+          .optional(),
         createdAt: z.string(),
         updatedAt: z.string(),
       })

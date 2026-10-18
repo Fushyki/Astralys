@@ -270,3 +270,26 @@
 .ast-project .mix i { display: block; min-width: 3px }
 .ast-project .kp { display: flex; flex-wrap: wrap; gap: 4px 18px; color: var(--dim); font-size: .85rem }
 .ast-project .kp b { font-family: var(--display); font-size: 1.5rem; font-weight: 700; color: var(--gold); margin-right: 4px }
+
+/* ---------- Calculadora de recarga ---------- */
+.ast-energy { display: grid; grid-template-columns: repeat(auto-fit, minmax(255px, 1fr)); gap: 14px; padding: 18px }
+.ast-ecard { border: 1px solid var(--edge); border-top: 3px solid var(--c); background: var(--ink-2); padding: 14px 16px; display: flex; flex-direction: column; gap: 12px; min-width: 0 }
+.ast-ecard .head { display: flex; align-items: center; gap: 12px }
+.ast-ecard .head .ast-portrait { grid-row: auto; width: 56px; height: 56px }
+.ast-ecard h2 { margin: 0; font-size: 1.2rem }
+.ast-ecard .head p { margin: 0; color: var(--dim); font-size: .85rem }
+.ast-ecard .need { display: flex; flex-direction: column; gap: 6px; padding: 10px 12px; background: var(--ink-3); border: 1px solid var(--edge) }
+.ast-ecard .need .v { font-family: var(--display); font-weight: 700; font-size: 2.4rem; line-height: 1; color: var(--gold) }
+.ast-ecard .need[data-status="critical"] .v { color: var(--bad) }
+.ast-ecard .need[data-status="ignored"] .v { color: var(--dim) }
+.ast-ecard .need .l { color: var(--dim); font-size: .85rem }
+.ast-ecard .meter { position: relative; height: 10px; background: var(--track); margin: 4px 0 }
+.ast-ecard .meter .need-bar { position: absolute; inset: 0 auto 0 0; background: color-mix(in srgb, var(--gold) 55%, transparent) }
+.ast-ecard .meter .have-mark { position: absolute; top: -4px; bottom: -4px; width: 3px; background: #6fb7ff; transform: translateX(-1px) }
+.ast-ecard .cmp { margin: 0; font-size: .9rem }
+.ast-ecard .split { display: flex; flex-wrap: wrap; gap: 4px 16px; color: var(--dim); font-size: .85rem }
+.ast-ecard .split b { color: var(--txt); font-variant-numeric: tabular-nums; margin-left: 4px }
+.ast-ecard .fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px }
+.ast-ecard .fields > .ast-check, .ast-ecard .fields > label.ast-field:last-child { grid-column: 1 / -1 }
+.ast-check { display: flex; align-items: center; gap: 6px; color: var(--txt); font-size: .9rem }
+.ast-check input { accent-color: var(--gold) }

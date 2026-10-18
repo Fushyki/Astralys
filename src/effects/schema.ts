@@ -102,3 +102,12 @@ export const FlatDamageEffectSchema = z.object({
   fonte_info: FonteInfo,
 });
 export type FlatDamageEffect = z.infer<typeof FlatDamageEffectSchema>;
+
+/** Partículas elementais que a habilidade de cada personagem solta por uso (média, quando varia). */
+export const SkillParticlesSchema = z.object({
+  character: z.string().min(1),
+  particles: z.number().min(0),
+  note: z.string().default(''),
+  fonte_info: FonteInfo,
+});
+export type SkillParticles = z.infer<typeof SkillParticlesSchema>;

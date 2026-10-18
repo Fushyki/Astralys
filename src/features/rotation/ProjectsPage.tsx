@@ -167,6 +167,7 @@ export default function ProjectsPage() {
               <p className="acts">
                 <Link className="ast-link" to={`/rotacao/${p.id}`}>Abrir</Link>
                 <Link className="ast-link" to={`/rotacao/${p.id}/card`}>Card</Link>
+                <Link className="ast-link" to={`/rotacao/${p.id}/recarga`}>Recarga</Link>
                 <button type="button" className="ast-link" onClick={() => duplicate(p.id)}>Duplicar</button>
                 <button type="button" className="ast-link" onClick={() => setRenaming(p.id)}>Renomear</button>
                 <button type="button" className="ast-link" onClick={() => { const full = loadProject(p.id); if (full) downloadProject(full); }}>Exportar</button>

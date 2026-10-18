@@ -1,0 +1,806 @@
+[
+  {
+    "character": "Aether (Anemo)",
+    "particles": 2.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Aether (Cryo)",
+    "particles": 3.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Aether (Dendro)",
+    "particles": 2.5,
+    "note": "Razorgrass Blade: 2 or 3 Dendro particles (avg 2.5)",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Aether (Electro)",
+    "particles": 1.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Aether (Geo)",
+    "particles": 3.33,
+    "note": "Starfell Sword: 3 or 4 Geo particles (avg 3.33)",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Aether (Hydro)",
+    "particles": 3.33,
+    "note": "Aquacrest Saber: 3 or 4 Hydro particles (avg 3.33)",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Aether (Pyro)",
+    "particles": 1.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Aino",
+    "particles": 3.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Albedo",
+    "particles": 3.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Alhaitham",
+    "particles": 1.0,
+    "note": "Projection Attack hit on-field generates 1 particle (1.6s CD)",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Alyosha",
+    "particles": 5.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Amber",
+    "particles": 4.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Arataki Itto",
+    "particles": 3.5,
+    "note": "Skill generates 3 or 4 particles (avg 3.5)",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Arlecchino",
+    "particles": 5.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Baizhu",
+    "particles": 3.5,
+    "note": "Skill generates 3 or 4 particles (avg 3.5)",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Barbara",
+    "particles": 3.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Beidou",
+    "particles": 2.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Bennett",
+    "particles": 2.25,
+    "note": "Press: 75% chance 2 particles, 25% chance 3 particles (avg 2.25)",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Candace",
+    "particles": 2.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Charlotte",
+    "particles": 3.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Chasca",
+    "particles": 5.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Chevreuse",
+    "particles": 4.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Chiori",
+    "particles": 3.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Chongyun",
+    "particles": 4.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Citlali",
+    "particles": 5.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Clorinde",
+    "particles": 4.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Collei",
+    "particles": 3.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Columbina",
+    "particles": 3.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Cyno",
+    "particles": 3.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Dahlia",
+    "particles": 3.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Dehya",
+    "particles": 3.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Diluc",
+    "particles": 3.75,
+    "note": "3-Skill Searing Onset combo (avg 1.25 particles per cast = 3.75 total)",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Diona",
+    "particles": 1.6,
+    "note": "Press fires 2 paws (0.8/paw = 1.6 avg); Hold fires 5 paws (4.0)",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Dori",
+    "particles": 2.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Durin",
+    "particles": 4.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Emilie",
+    "particles": 3.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Escoffier",
+    "particles": 4.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Eula",
+    "particles": 1.5,
+    "note": "Tap: 1-2 particles (avg 1.5); Hold generates 2-3 (avg 2.5)",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Faruzan",
+    "particles": 2.0,
+    "note": "Skill creates buffed Aimed Shot / Crowfeather that procs particles",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Fischl",
+    "particles": 6.7,
+    "note": "Oz attacks over 10s duration (~67% chance per hit, avg 6.7)",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Flins",
+    "particles": 4.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Freminet",
+    "particles": 2.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Furina",
+    "particles": 6.5,
+    "note": "Salon Members periodic attacks over 20s (avg 6.5 particles)",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Gaming",
+    "particles": 2.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Ganyu",
+    "particles": 4.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Gorou",
+    "particles": 2.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Hu Tao",
+    "particles": 4.8,
+    "note": "Blood Blossom procs over 9s duration (avg 4.8 particles)",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Iansan",
+    "particles": 4.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Ifa",
+    "particles": 4.3,
+    "note": "Skill generates 4.3 Anemo particles on average",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Illuga",
+    "particles": 4.5,
+    "note": "Skill / stance generates 4 or 5 particles (avg 4.5)",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Ineffa",
+    "particles": 3.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Jahoda",
+    "particles": 4.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Jean",
+    "particles": 2.67,
+    "note": "Press: 33% chance 2 particles, 67% chance 3 particles (avg 2.67)",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Kachina",
+    "particles": 3.0,
+    "note": "Turbo Twirler independent ground strikes generate ~3 particles total",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Kaedehara Kazuha",
+    "particles": 3.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Kaeya",
+    "particles": 2.67,
+    "note": "Press: 2 or 3 Cryo particles (avg 2.67 without freeze passive)",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Kamisato Ayaka",
+    "particles": 4.5,
+    "note": "Skill / stance generates 4 or 5 particles (avg 4.5)",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Kamisato Ayato",
+    "particles": 4.5,
+    "note": "Skill / stance generates 4 or 5 particles (avg 4.5)",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Kaveh",
+    "particles": 2.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Keqing",
+    "particles": 2.5,
+    "note": "Stellar Restoration generates 2 or 3 Electro particles (avg 2.5)",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Kinich",
+    "particles": 5.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Kirara",
+    "particles": 3.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Klee",
+    "particles": 4.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Kujou Sara",
+    "particles": 3.0,
+    "note": "Skill creates buffed Aimed Shot / Crowfeather that procs particles",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Kuki Shinobu",
+    "particles": 3.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Lan Yan",
+    "particles": 3.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Lauma",
+    "particles": 3.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Layla",
+    "particles": 3.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Linnea",
+    "particles": 3.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Lisa",
+    "particles": 0.0,
+    "note": "Generates 0 particles on tap/press",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Lohen",
+    "particles": 5.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Lumine (Anemo)",
+    "particles": 2.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Lumine (Cryo)",
+    "particles": 3.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Lumine (Dendro)",
+    "particles": 2.5,
+    "note": "Razorgrass Blade: 2 or 3 Dendro particles (avg 2.5)",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Lumine (Electro)",
+    "particles": 1.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Lumine (Geo)",
+    "particles": 3.33,
+    "note": "Starfell Sword: 3 or 4 Geo particles (avg 3.33)",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Lumine (Hydro)",
+    "particles": 3.33,
+    "note": "Aquacrest Saber: 3 or 4 Hydro particles (avg 3.33)",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Lumine (Pyro)",
+    "particles": 1.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Lynette",
+    "particles": 4.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Lyney",
+    "particles": 5.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Mavuika",
+    "particles": 5.0,
+    "note": "Alternate energy mechanic (Nightsoul / Stance), cost 0",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Mika",
+    "particles": 4.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Mona",
+    "particles": 3.33,
+    "note": "Phantom explosion: 3 or 4 particles (avg 3.33)",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Mualani",
+    "particles": 4.5,
+    "note": "Skill / stance generates 4 or 5 particles (avg 4.5)",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Nahida",
+    "particles": 6.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Navia",
+    "particles": 3.5,
+    "note": "Skill generates 3 or 4 particles (avg 3.5)",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Nefer",
+    "particles": 2.67,
+    "note": "Skill generates 2 or 3 Dendro particles (avg 2.67)",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Neuvillette",
+    "particles": 4.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Nicole",
+    "particles": 5.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Nilou",
+    "particles": 4.5,
+    "note": "Skill / stance generates 4 or 5 particles (avg 4.5)",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Ningguang",
+    "particles": 3.4,
+    "note": "Jade Screen: 3 or 4 Geo particles (avg 3.4, 6s internal CD)",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Noelle",
+    "particles": 3.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Odette",
+    "particles": 5.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Ororon",
+    "particles": 3.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Prune",
+    "particles": 5.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Qiqi",
+    "particles": 3.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Raiden Shogun",
+    "particles": 6.5,
+    "note": "Eye of Stormy Judgment periodic hits (50% chance, 0.9s CD, avg 6.5)",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Razor",
+    "particles": 3.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Rosaria",
+    "particles": 3.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Sandrone",
+    "particles": 1.0,
+    "note": "Hit on-field with mechanical automata generates 1 particle",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Sangonomiya Kokomi",
+    "particles": 3.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Sayu",
+    "particles": 2.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Sethos",
+    "particles": 2.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Shenhe",
+    "particles": 3.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Shikanoin Heizou",
+    "particles": 2.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Sigewinne",
+    "particles": 4.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Skirk",
+    "particles": 4.0,
+    "note": "Alternate energy mechanic (Nightsoul / Stance), cost 0",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Sucrose",
+    "particles": 4.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Tartaglia",
+    "particles": 3.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Tartaglia",
+    "particles": 3.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Thoma",
+    "particles": 3.4,
+    "note": "Blazing Blessing: 3 or 4 Pyro particles (avg 3.4)",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Tighnari",
+    "particles": 3.5,
+    "note": "Skill generates 3 or 4 particles (avg 3.5)",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Varesa",
+    "particles": 2.5,
+    "note": "Skill generates 2 or 3 Electro particles (avg 2.5)",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Varka",
+    "particles": 6.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Venti",
+    "particles": 3.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Vesna",
+    "particles": 5.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Vodyanitsa",
+    "particles": 5.0,
+    "note": "Press skill generates 5.0 Hydro particles",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Wanderer",
+    "particles": 4.0,
+    "note": "Windfavored state normal/charged hits generate ~4 particles over 8-10s",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Wriothesley",
+    "particles": 1.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Xiangling",
+    "particles": 4.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Xianyun",
+    "particles": 5.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Xiao",
+    "particles": 3.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Xilonen",
+    "particles": 4.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Xingqiu",
+    "particles": 5.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Xinyan",
+    "particles": 4.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Yae Miko",
+    "particles": 3.0,
+    "note": "Sesshou Sakura totem strikes generate ~3 particles across rotation",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Yanfei",
+    "particles": 3.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Yaoyao",
+    "particles": 3.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Yelan",
+    "particles": 4.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Yoimiya",
+    "particles": 4.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Yumemizuki Mizuki",
+    "particles": 4.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Yun Jin",
+    "particles": 2.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Zhongli",
+    "particles": 3.0,
+    "note": "Standard fixed particle drop",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  },
+  {
+    "character": "Zibai",
+    "particles": 4.7,
+    "note": "Skill / Lunar Phase Shift generates 4 or 5 Geo particles (avg 4.7)",
+    "fonte_info": "Tabela do app antigo (escrita com o Gemini, não verificada em jogo): conferir contra a wiki/Lunaris antes de confiar."
+  }
+]

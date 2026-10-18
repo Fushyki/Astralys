@@ -24,3 +24,6 @@ yarn-error.log*
 .idea/
 .DS_Store
 Thumbs.db
+
+# Cache bruto do Lunaris (nao versionar os dumps)
+data/raw/

@@ -1,0 +1,9 @@
+[
+  {"set":"Obsidian Codex","twoPiece":{"stat":"DMG%","value":0.15},"fourPiece":{"atkPct":0,"dmgPct":0,"critRate":0.4,"critDmg":0,"em":0,"dmgPctByType":{},"meltBonus":0,"vaporizeBonus":0},"fonte_info":"planilha Mavuika_Iansan_Combo2, aba \"Sets (efeitos)\""},
+  {"set":"Scroll of the Hero of Cinder City","fonte_info":"planilha Mavuika_Iansan_Combo2, aba \"Sets (efeitos)\". 12% + 28% em Nightsoul"},
+  {"set":"Noblesse Oblige","twoPiece":{"stat":"DMG% Supremo","value":0.2},"fourPiece":{"atkPct":0,"dmgPct":0,"critRate":0,"critDmg":0,"em":0,"dmgPctByType":{},"meltBonus":0,"vaporizeBonus":0,"team":{"atkPct":0.2,"dmgPct":0,"em":0}},"fonte_info":"planilha Mavuika_Iansan_Combo2, aba \"Sets (efeitos)\""},
+  {"set":"Instructor","twoPiece":{"stat":"EM","value":80},"fourPiece":{"atkPct":0,"dmgPct":0,"critRate":0,"critDmg":0,"em":0,"dmgPctByType":{},"meltBonus":0,"vaporizeBonus":0,"team":{"atkPct":0,"dmgPct":0,"em":120}},"fonte_info":"planilha Mavuika_Iansan_Combo2, aba \"Sets (efeitos)\""},
+  {"set":"Crimson Witch of Flames","twoPiece":{"stat":"DMG%","value":0.15},"fourPiece":{"atkPct":0,"dmgPct":0.075,"critRate":0,"critDmg":0,"em":0,"dmgPctByType":{},"meltBonus":0.15,"vaporizeBonus":0.15},"fonte_info":"planilha Mavuika_Iansan_Combo2, aba \"Sets (efeitos)\". 1 stack"},
+  {"set":"Gladiator's Finale","twoPiece":{"stat":"ATK%","value":0.18},"fourPiece":{"atkPct":0,"dmgPct":0,"critRate":0,"critDmg":0,"em":0,"dmgPctByType":{"normal":0.35},"meltBonus":0,"vaporizeBonus":0},"fonte_info":"planilha Mavuika_Iansan_Combo2, aba \"Sets (efeitos)\""},
+  {"set":"Shimenawa's Reminiscence","twoPiece":{"stat":"ATK%","value":0.18},"fourPiece":{"atkPct":0,"dmgPct":0,"critRate":0,"critDmg":0,"em":0,"dmgPctByType":{"normal":0.5,"charged":0.5},"meltBonus":0,"vaporizeBonus":0},"fonte_info":"planilha Mavuika_Iansan_Combo2, aba \"Sets (efeitos)\""}
+]

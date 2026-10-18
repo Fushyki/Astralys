@@ -1,0 +1,9 @@
+[
+  {"weapon":"A Thousand Blazing Suns","atkPct":0.49,"dmgPct":0,"critRate":0,"critDmg":0.35,"em":0,"er":0,"fonte_info":"planilha Mavuika_Iansan_Combo2, aba \"Armas (efeitos)\". R1 em Nightsoul (×1,75): 28%→49% ATK, 20%→35% CD."},
+  {"weapon":"Thrilling Tales of Dragon Slayers","atkPct":0,"dmgPct":0,"critRate":0,"critDmg":0,"em":0,"er":0,"fonte_info":"planilha Mavuika_Iansan_Combo2, aba \"Armas (efeitos)\". Vai só ao PRÓXIMO personagem: use 'Buffs extras' (R5 = 48%)."},
+  {"weapon":"Engulfing Lightning","atkPct":0,"dmgPct":0,"critRate":0,"critDmg":0,"em":0,"er":0,"atkPctPerEr":{"coef":0.28,"cap":0.8},"fonte_info":"planilha Mavuika_Iansan_Combo2, aba \"Armas (efeitos)\". R1: ATK% = 28% do ER acima de 100%, máx. 80%."},
+  {"weapon":"Absolution","atkPct":0,"dmgPct":0,"critRate":0,"critDmg":0.2,"em":0,"er":0,"fonte_info":"planilha Mavuika_Iansan_Combo2, aba \"Armas (efeitos)\". R1: +20% dano crit (stacks de DMG não incluídos)."},
+  {"weapon":"Wolf's Gravestone","atkPct":0.2,"dmgPct":0,"critRate":0,"critDmg":0,"em":0,"er":0,"fonte_info":"planilha Mavuika_Iansan_Combo2, aba \"Armas (efeitos)\". R1: +20% ATK (buff condicional de time não incluído)."},
+  {"weapon":"Serpent Spine","atkPct":0,"dmgPct":0.3,"critRate":0,"critDmg":0,"em":0,"er":0,"fonte_info":"planilha Mavuika_Iansan_Combo2, aba \"Armas (efeitos)\". R1, 5 stacks."},
+  {"weapon":"Beacon of the Reed Sea","atkPct":0.4,"dmgPct":0,"critRate":0,"critDmg":0,"em":0,"er":0,"fonte_info":"planilha Mavuika_Iansan_Combo2, aba \"Armas (efeitos)\". R1: 20% + 20%."}
+]

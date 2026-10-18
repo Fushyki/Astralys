@@ -1,0 +1,4 @@
+[
+  {"name":"Lead Vocal (Vodyanitsa)","source":"Vodyanitsa","sourceStat":"HP","perPoint":0.14,"threshold":40000,"capPerHit":3500,"targets":["Skirk"],"elements":["Hydro","Cryo"],"hitTypes":["normal","charged","plunge","skill","burst"],"stacks":25,"active":true,"fonte_info":"planilha Mavuika_Iansan_Combo2, aba \"Dano fixo\". +140 por 1000 HP acima de 40k, máx. 3500. Alvo = personagem em campo."},
+  {"name":"Chorus (Vodyanitsa)","source":"Vodyanitsa","sourceStat":"HP","perPoint":0.14,"threshold":40000,"capPerHit":3500,"targets":["Furina","Escoffier"],"elements":["Hydro","Cryo"],"hitTypes":[],"stacks":10,"active":true,"fonte_info":"planilha Mavuika_Iansan_Combo2, aba \"Dano fixo\". Igual ao Lead Vocal, para quem está fora de campo (10 stacks no total)."}
+]

@@ -26,12 +26,21 @@ Comandos: `npm run dev`, `npm run build` (tsc + vite build), `npx tsc --noEmit`,
 API não oficial `https://api.lunaris.moe/data/` (descoberta lendo o bundle do site):
 `version.json`; `{ver}/charlist.json`, `weaponlist.json`, `artifactlist.json`; `{ver}/{lang}/char|weapon|artifact/{id}.json` (`lang` em minúsculas: `en`, `pt`). Multiplicadores 1–15 em texto (`"36.48% x2"` = 2 hits). Cache local em `data/raw/` (fora do git), poucos pedidos, não commitar dumps. Reserva: Project Amber, `genshin-db`.
 
+## Dados (Fase 1)
+- `npm run sync:data [-- --refresh] [-- --version=7.1.53]` baixa (cache em `data/raw/`, fora do git), interpreta, valida com Zod e escreve `src/data/generated/{characters,moves,weapons,artifacts,meta}.json`. Esquemas em `src/data/schema.ts`; parser em `scripts/lib/parse.ts`.
+- Golpe (`Move`): `scale.{atk,hp,def,em,flat}` = escala TOTAL nos níveis 1–15 (já somada sobre os hits, igual à planilha) e `hits` = nº de acertos (conta para stacks de dano fixo). `"a%/b%"` vira variantes (`variant`/`variants`; ex.: queda baixa/alta). `hitType` = normal | charged | plunge | skill | burst (arcos: `Aimed Shot` = charged).
+- Personagens: stats base só no nível 90 (o Lunaris só dá o máximo). O Viajante vem como `Aether|Lumine (Elemento)`: o Carregado do Aether e o da Lumine diferem de verdade.
+- 10 golpes de dano não são interpretados e aparecem no relatório do sync: os definidos como % do dano de outro ataque ("160% Normal Attack DMG": Venti, Yoimiya, Wriothesley, Razor, Wanderer), com dois elementos (Freminet) ou "% do ATK do personagem correspondente" (Nicole).
+- Efeitos numéricos: `src/effects/{characters,weapons,sets,flatDamage}.json` (esquema em `src/effects/schema.ts`). Semeados UMA vez por `scripts/seed-effects.ts` a partir da planilha (só 4 personagens, 7 armas, 7 sets, 2 buffs de dano fixo); agora editados à mão, sempre com `fonte_info`. O script recusa sobrescrever sem `--force`.
+- Testes: `tests/data/` confere os dados gerados contra as abas `L_Golpes`, `L_Personagens` e `L_Armas` da planilha (os 55 golpes batem nos 15 níveis) e valida as referências dos efeitos.
+- LEGADO: `src/data/characters.ts` e `weapons.ts` (escritos à mão) continuam porque a UI antiga (ER, Dano, Comparador) ainda depende deles. Saem na Fase 3, quando a UI for reescrita sobre `generated/`. O ER (`burst_cost`, partículas) ainda vem do legado; o Lunaris tem `burst.energyCost`/`particles` para o substituir.
+
 ## Segurança
 `.env` nunca no git (só `.env.example` com `VITE_API_URL`). Auth só e-mail+senha via JWT do backend; Supabase e login Google foram removidos (reintroduzir Google só com verificação de token no backend).
 
 ## Estado das fases
 - [x] Fase 0 — higiene e segurança (frontend + backend). Branches `v2/core` enviadas; PRs por abrir. Backend: ver `Astralys-BackEnd` (testes: `pytest tests`, deps em `requirements-dev.txt`). Pendente: colunas `schemaVersion/revision/patch/tags` + Alembic ficam para a Fase 3.
-- [ ] Fase 1 — pipeline de dados (Lunaris → JSON + Zod)
+- [x] Fase 1 — pipeline de dados (Lunaris → JSON + Zod). `npm run sync:data` gera `src/data/generated/` (136 personagens, 1786 golpes, 257 armas, 66 sets). Efeitos em `src/effects/` semeados da planilha. Ver "Dados" abaixo.
 - [ ] Fase 2 — motor de dano + testes de gabarito
 - [ ] Fases 3–6 — editor de rotação, vault/cards, comparadores, otimizador GOOD (plano próprio)
 

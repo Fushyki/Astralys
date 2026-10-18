@@ -1,0 +1,6 @@
+[
+  {"character":"Mavuika","atkPct":0.3,"dmgPct":0.4,"critRate":0,"critDmg":0,"em":0,"appliesToSelf":false,"fonte_info":"planilha Mavuika_Iansan_Combo2, aba \"Personagens (efeitos)\". A1 +30% ATK (Lunaris p1); A4 +40% DMG decaindo (use 'Ajuste DMG%' na Rotação)."},
+  {"character":"Citlali","atkPct":0,"dmgPct":0,"critRate":0,"critDmg":0,"em":0,"appliesToSelf":false,"resShred":{"value":0.2,"elements":["Pyro","Hydro"]},"fonte_info":"planilha Mavuika_Iansan_Combo2, aba \"Personagens (efeitos)\". Reduz RES Pyro/Hydro em 20%."},
+  {"character":"Iansan","atkPct":0,"dmgPct":0,"critRate":0,"critDmg":0,"em":0,"teamFlatAtk":{"perBaseAtk":0,"perTotalAtk":0.37,"cap":810},"appliesToSelf":false,"fonte_info":"planilha Mavuika_Iansan_Combo2, aba \"Personagens (efeitos)\". Supremo: ATK fixo = 37% do ATK dela, máx. 810 (sua planilha)."},
+  {"character":"Bennett","atkPct":0,"dmgPct":0,"critRate":0,"critDmg":0,"em":0,"teamFlatAtk":{"perBaseAtk":1.39,"perTotalAtk":0,"cap":0},"appliesToSelf":true,"fonte_info":"planilha Mavuika_Iansan_Combo2, aba \"Personagens (efeitos)\". Supremo: 139% do ATK base (nv 13 + C1, sua planilha)."}
+]

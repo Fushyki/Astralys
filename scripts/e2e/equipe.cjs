@@ -166,6 +166,9 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.waitForSelector('.ast-refine tbody tr', { timeout: 20000 });
   const refineRows = await page.$$eval('.ast-refine tbody tr', (r) => r.map((x) => x.textContent));
   check('tabela de refinamentos R1 a R5 da arma atual', refineRows.length === 5 && /R5.*atual/.test(refineRows[4]), refineRows.map((t) => t.slice(0, 12)).join(' | '));
+  await page.waitForSelector('.ast-cons tbody tr', { timeout: 20000 });
+  const consRows = await page.$$eval('.ast-cons tbody tr', (r) => r.map((x) => x.textContent));
+  check('tabela de constelações C0 a C6 do personagem selecionado', consRows.length === 7 && /C0.*atual/.test(consRows[0]), consRows.map((t) => t.slice(0, 8)).join(' | '));
   await field('Arma').locator('select').selectOption({ label: '5★ A Thousand Blazing Suns' }); await settle();
 
   // Constelação e buffs de passivas

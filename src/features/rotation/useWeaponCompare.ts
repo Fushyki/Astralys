@@ -46,6 +46,16 @@ export function useWeaponCompare(project: RotationProject, resolved: ResolvedPro
             });
           }
         }
+        for (const c of [0, 1, 2, 3, 4, 5, 6]) {
+          candidates.push({
+            weapon: ref.weapon,
+            constellation: c,
+            team: {
+              ...resolved.team,
+              members: resolved.team.members.map((m, i) => (i === member ? resolveMember({ ...ref, constellation: c || undefined }, data.game, data.effects, project.config.minRollsPerSubstat) : m)),
+            },
+          });
+        }
         client.current
           ?.request<WeaponCompareRow[]>({ type: 'weaponCompare', input: { member, candidates, actions: resolved.actions, flatEffects: resolved.flatEffects, ampCoefficient: resolved.ampCoefficient } })
           .then((rows) => !cancelled && setState({ rows, error: null }))

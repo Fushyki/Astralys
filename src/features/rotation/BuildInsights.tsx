@@ -70,11 +70,12 @@ export function WeaponCompare({ project, resolved, data, index }: { project: Rot
   const ref = project.members[index];
   const name = ref?.character ?? '';
   if (!ref) return null;
-  if (error) return <Panel title={`Armas de ${name}`} wide><p className="ast-error ast-full" role="alert">{error}</p></Panel>;
-  if (!rows) return <Panel title={`Armas de ${name}`} wide><Hint>Comparando as armas…</Hint></Panel>;
+  if (error) return <Panel title={`Armas e constelações de ${name}`} wide><p className="ast-error ast-full" role="alert">{error}</p></Panel>;
+  if (!rows) return <Panel title={`Armas e constelações de ${name}`} wide><Hint>Comparando as armas…</Hint></Panel>;
 
+  const conRows = rows.filter((r) => r.constellation !== undefined).sort((a, b) => a.constellation! - b.constellation!);
   const refRows = rows.filter((r) => r.refinement).sort((a, b) => a.refinement! - b.refinement!);
-  rows = rows.filter((r) => !r.refinement);
+  rows = rows.filter((r) => !r.refinement && r.constellation === undefined);
   const current = rows.find((r) => r.weapon === ref.weapon);
   const hasEffect = (w: string) => data.effects.weapons.some((e) => e.weapon === w);
   const rarity = (w: string) => data.game.weapons.find((x) => x.name === w)?.rarity ?? 0;
@@ -82,7 +83,7 @@ export function WeaponCompare({ project, resolved, data, index }: { project: Rot
   const shown = current && !list.includes(current) ? [...list, current] : list;
 
   return (
-    <Panel title={`Armas de ${name}`} wide>
+    <Panel title={`Armas e constelações de ${name}`} wide>
       <Hint>
         Dano médio da equipe se {name} usasse cada arma, com os substats reotimizados. Armas sem efeito cadastrado contam só ATK base e substat, então o valor delas é o mínimo possível.
       </Hint>
@@ -142,6 +143,33 @@ export function WeaponCompare({ project, resolved, data, index }: { project: Rot
             </tbody>
           </table>
           <p className="ast-hint">Quanto cada refino rende para a equipe, com os substats reotimizados. Serve para decidir se vale gastar recursos para refinar.</p>
+        </div>
+      )}
+      {conRows.length > 0 && (
+        <div className="ast-full">
+          <h3 className="ast-subtitle ast-caps">Constelações de {name}</h3>
+          <table className="ast-table ast-weapons ast-cons">
+            <thead><tr><th scope="col">Constelação</th><th scope="col">Dano da equipe</th><th scope="col">Contra C0</th><th scope="col">Contra a atual</th></tr></thead>
+            <tbody>
+              {conRows.map((r) => {
+                const cur = ref.constellation ?? 0;
+                const base = conRows[0].teamAvg;
+                const now = conRows.find((x) => x.constellation === cur)?.teamAvg ?? base;
+                const pct = (v: number, b: number) => `${v / b - 1 >= 0 ? '+' : ''}${formatDecimal((v / b - 1) * 100, 2)}%`;
+                return (
+                  <tr key={r.constellation} data-selected={r.constellation === cur} style={{ cursor: 'default' }}>
+                    <td>C{r.constellation}{r.constellation === cur ? <span className="ast-flag">atual</span> : null}</td>
+                    <td>{formatInt(r.teamAvg)}</td>
+                    <td>{r.constellation === 0 ? '—' : pct(r.teamAvg, base)}</td>
+                    <td>{r.constellation === cur ? '—' : pct(r.teamAvg, now)}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+          <p className="ast-hint">
+            Conta só o +3 de nível de talento (C3 e C5) e os buffs de passivas e constelações cadastrados. Os efeitos de dano próprios do kit (ex.: dano extra da C2) ainda NÃO entram, então o ganho real das constelações é maior que o mostrado.
+          </p>
         </div>
       )}
       {rows.length > SHOWN && (

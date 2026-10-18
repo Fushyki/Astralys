@@ -10,3 +10,4 @@ export * from './optimizer';
 export * from './compat/planilha';
 export * from './attribution';
 export * from './workerApi';
+export * from './analysis';

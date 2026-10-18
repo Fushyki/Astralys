@@ -308,3 +308,4 @@
 .ast-home .features p { margin: 0; color: var(--dim); font-size: .95rem }
 .ast-home .note { padding: 0 28px 24px; color: var(--dim); font-size: .85rem }
 .ast-btn.ghost { border-color: var(--edge); color: var(--txt) }
+.ast-subtitle { margin: 18px 0 4px; font-size: 1.05rem; color: var(--gold) }

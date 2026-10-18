@@ -146,6 +146,10 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   check('"Usar" troca a arma do build', newWeapon !== 'A Thousand Blazing Suns', newWeapon);
   await field('Arma').locator('select').selectOption('A Thousand Blazing Suns'); await settle();
 
+  // Dano das reações
+  const reactionRows = await page.$$eval('.ast-reactions tbody tr:not(.group)', (r) => r.map((x) => x.textContent));
+  check('tabela de dano das reações (transformativas, Lunares e Estelares)', reactionRows.length >= 15 && reactionRows.some((t) => /Sobrecarga/.test(t)) && reactionRows.some((t) => /Lunar-Carregado/.test(t)) && reactionRows.some((t) => /Estelar/.test(t)), `${reactionRows.length} linhas`);
+
   // Persistência da equipe
   await page.waitForTimeout(700);
   await page.reload({ waitUntil: 'networkidle' }); await page.waitForSelector('.ast-slot');

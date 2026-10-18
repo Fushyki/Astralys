@@ -11,5 +11,6 @@ caminho mais seguro e anotei aqui para você revisar. Nada foi mesclado no `main
 | 4 | Energia da Raiden para o time (+24 fixo no app antigo) | Removi esse atalho: o valor depende do jogo e eu não o confirmei. Dá para digitar "Energia fixa" em cada personagem | `energyModel.ts` |
 | 5 | Custo do Supremo do Flins | O app antigo tinha 60, o Lunaris tem 80; o app novo usa o do Lunaris | — |
 | 6 | Folga de 15% (`SAFETY_MARGIN`) sobre a recarga exata | Herdada do app antigo (chefe de alvo único); a tela usa a folga Baixa/Média/Alta (-10/0/+10%) como antes | `energy.ts` |
+| 7 | Crítico nas reações Lunares/Estelares | Saem **sem crítico** na tabela de reações: não confirmei de onde vêm a taxa e o dano crítico delas. Bônus de dano de reação de sets/armas também ainda não entram | `engine/reactionTable.ts` |
 
 (Novas entradas são acrescentadas abaixo conforme surgirem.)

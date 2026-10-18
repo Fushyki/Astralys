@@ -14,6 +14,7 @@ import { summarize, type Summary } from './summary';
 import { useAnalysis } from './useAnalysis';
 import { Inspector } from './Inspector';
 import { BuildEditor } from './BuildEditor';
+import { DamageTable } from './DamageTable';
 import { Palette } from './Palette';
 import { TeamBar } from './TeamBar';
 import { Timeline } from './Timeline';
@@ -329,6 +330,11 @@ export default function RotationPage() {
         {data && inSync && (
           <div className="ast-panels">
             <BuildEditor project={current} data={data} bundle={analysis.bundle} index={Math.min(selectedMember, current.members.length - 1)} />
+          </div>
+        )}
+        {data && inSync && (
+          <div className="ast-panels">
+            <DamageTable resolved={analysis.resolved} bundle={analysis.bundle} data={data} index={Math.min(selectedMember, current.members.length - 1)} />
           </div>
         )}
         <Kpis s={summary} />

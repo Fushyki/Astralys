@@ -30,7 +30,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
 
   const settle = () => page.waitForTimeout(500);
   const dps = () => page.$eval('.ast-kpi .v', (e) => e.textContent);
-  const rows = () => page.$$eval('.ast-table tbody tr', (r) => r.length);
+  const rows = () => page.$$eval('.ast-table:not(.ast-dmgtable) tbody tr', (r) => r.length);
   const slotNames = () => page.$$eval('.ast-slot-main .n', (e) => e.map((x) => x.textContent));
   const undo = async () => { await page.click('button:has-text("Desfazer")'); await settle(); };
   const field = (label) => page.locator(`label.ast-field:has(span:text-is("${label}"))`);
@@ -104,6 +104,19 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   const notice = await page.$$eval('.ast-notice-inline', (e) => e.map((x) => x.textContent));
   check('arma sem efeito cadastrado gera aviso claro', notice.length === 1 && /Sem efeito numérico cadastrado: arma Aquila Favonia/.test(notice[0]), notice[0]?.slice(0, 90));
   await page.screenshot({ path: path.join(OUT, 'equipe-nova.png'), fullPage: true });
+
+  // Tabela de dano do personagem selecionado
+  await page.click('.ast-slot-main:has-text("Mavuika")'); await settle();
+  const dmgTitle = await page.textContent('.ast-panel:has(.ast-dmgtable) > h2');
+  check('tabela de dano do personagem selecionado', dmgTitle === 'Tabela de dano de Mavuika', dmgTitle);
+  const firstAvg = async () => page.$eval('.ast-dmgtable tbody:nth-of-type(1) tr:nth-child(2) td:nth-child(4)', (e) => e.textContent);
+  const dmgBefore = await firstAvg();
+  await page.selectOption('select[aria-label="Reação da tabela de dano"]', 'melt'); await settle();
+  const dmgAfter = await firstAvg();
+  const num = (t) => Number(t.replace(/\./g, '').replace(',', '.'));
+  check('escolher Derreter aumenta o dano Pyro da tabela', num(dmgAfter) > num(dmgBefore), `${dmgBefore} → ${dmgAfter}`);
+  check('a tabela marca os golpes com reação', (await page.$$('.ast-dmgtable .ast-flag')).length > 0);
+  await page.selectOption('select[aria-label="Reação da tabela de dano"]', 'none'); await settle();
 
   // Persistência da equipe
   await page.waitForTimeout(700);

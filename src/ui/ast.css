@@ -42,6 +42,7 @@
 .ast-wide { grid-column: 1 / -1 }
 .ast-wide .body { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); column-gap: 32px }
 .ast-wide .ast-hint { grid-column: 1 / -1 }
+.ast-wide .body > .ast-full { grid-column: 1 / -1 }
 .ast-hint { font-size: .8rem; color: var(--dim); margin: 0 0 12px }
 .ast-row { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; align-items: baseline; margin-bottom: 12px; font-size: .9rem }
 .ast-row:last-child { margin-bottom: 0 }
@@ -209,3 +210,10 @@
 .ast-slot-main { column-gap: 12px !important; padding: 10px 14px 4px !important }
 .ast-slot { min-width: 220px }
 .ast-slot-actions { padding-left: 90px !important }
+
+/* ---------- Tabela de dano ---------- */
+.ast-dmgtable { min-width: 480px }
+.ast-dmgtable th:nth-child(-n+3), .ast-dmgtable td:nth-child(-n+3) { text-align: right }
+.ast-dmgtable th:first-child, .ast-dmgtable td:first-child { text-align: left }
+.ast-dmgtable .group th { text-align: left; background: var(--ink-3); color: var(--txt) }
+.ast-dmgtable .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 8px }

@@ -30,11 +30,11 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.waitForSelector('.ast-star');
 
   const dps = () => page.$eval('.ast-kpi .v', (e) => e.textContent);
-  const rows = () => page.$$eval('.ast-table tbody tr', (r) => r.length);
+  const rows = () => page.$$eval('.ast-table:not(.ast-dmgtable) tbody tr', (r) => r.length);
   const stars = () => page.$$eval('.ast-star', (r) => r.length);
   const settle = () => page.waitForTimeout(450);
   const undo = async () => { await page.click('button:has-text("Desfazer")'); await settle(); };
-  const timeOfRow = (label) => page.$$eval('.ast-table tbody tr', (trs, l) => { const tr = trs.find((t) => t.children[2].textContent.includes(l)); return tr ? tr.children[0].textContent : null; }, label);
+  const timeOfRow = (label) => page.$$eval('.ast-table:not(.ast-dmgtable) tbody tr', (trs, l) => { const tr = trs.find((t) => t.children[2].textContent.includes(l)); return tr ? tr.children[0].textContent : null; }, label);
 
   check('estrelas e linhas iniciais', (await stars()) === 24 && (await rows()) === 24, `${await stars()} estrelas, ${await rows()} linhas`);
   const dps0 = await dps();
@@ -58,7 +58,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await settle();
   const t1 = await timeOfRow('Supremo (200 FS)');
   check('arrastar muda o tempo do golpe', t0 === '7,4 s' && t1 !== t0, `${t0} → ${t1}`);
-  const selected = await page.$$eval('.ast-table tbody tr[data-selected="true"]', (r) => r.length);
+  const selected = await page.$$eval('.ast-table:not(.ast-dmgtable) tbody tr[data-selected="true"]', (r) => r.length);
   check('golpe arrastado fica selecionado', selected === 1);
 
   // 2) Desfazer com Ctrl+Z
@@ -121,8 +121,8 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   check('restaurar exemplo volta ao original', (await rows()) === 24 && (await dps()) === '216.600');
 
   // 8b) Realinhar: mantém a ordem, tira os espaços e desfaz num passo
-  const timesCol = () => page.$$eval('.ast-table tbody tr', (trs) => trs.map((t) => t.children[0].textContent));
-  const namesCol = () => page.$$eval('.ast-table tbody tr', (trs) => trs.map((t) => t.children[1].textContent + '|' + t.children[2].textContent));
+  const timesCol = () => page.$$eval('.ast-table:not(.ast-dmgtable) tbody tr', (trs) => trs.map((t) => t.children[0].textContent));
+  const namesCol = () => page.$$eval('.ast-table:not(.ast-dmgtable) tbody tr', (trs) => trs.map((t) => t.children[1].textContent + '|' + t.children[2].textContent));
   const namesBefore = await namesCol();
   const timesBefore = await timesCol();
   await page.click('button:has-text("Realinhar")'); await settle();

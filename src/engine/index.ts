@@ -13,3 +13,4 @@ export * from './workerApi';
 export * from './analysis';
 export * from './project';
 export * from './bundle';
+export * from './damageTable';

@@ -4,7 +4,7 @@
  * extreme energy generation clamping to 100.0% floor.
  */
 
-import { describe, it, expect } from '../testRunner';
+import { describe, it, expect } from 'vitest';
 import { safeCalculateTeamER as calculateTeamER } from '../helpers/referenceEngines';
 
 describe('Boundary 6 (B6): Particle ER Engine Boundary & Corner Cases', () => {

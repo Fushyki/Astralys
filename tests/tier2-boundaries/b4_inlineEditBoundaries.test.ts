@@ -3,7 +3,7 @@
  * Edge cases: Clamping out-of-range percentages, empty strings, unusual weapon refinements, zero rotation time.
  */
 
-import { describe, it, expect } from '../testRunner';
+import { describe, it, expect } from 'vitest';
 import { CardData, FIXTURE_CARD_SANDRONE } from '../fixtures/cardFixtures';
 
 function cloneCard(card: CardData): CardData {

@@ -4,7 +4,7 @@
  * Strictly checks "Astralys" branding throughout.
  */
 
-import { describe, it, expect } from '../testRunner';
+import { describe, it, expect } from 'vitest';
 import { safeCalculateTeamER as calculateTeamER } from '../helpers/referenceEngines';
 import { SCENARIO_3_AYAKA_FREEZE } from '../fixtures/referenceTeams';
 import { CardData } from '../fixtures/cardFixtures';

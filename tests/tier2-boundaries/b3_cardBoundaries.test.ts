@@ -4,7 +4,7 @@
  * extreme duration, zero DPR/DPS.
  */
 
-import { describe, it, expect } from '../testRunner';
+import { describe, it, expect } from 'vitest';
 import { CardData, FIXTURE_CARD_SANDRONE } from '../fixtures/cardFixtures';
 import { validateInfographicCard } from '../helpers/referenceEngines';
 

@@ -3,7 +3,7 @@
  * Edge cases: Empty workbooks, formula errors (#REF!, #DIV/0!), missing columns, zero damage, extreme numbers.
  */
 
-import { describe, it, expect } from '../testRunner';
+import { describe, it, expect } from 'vitest';
 import { SheetFixture } from '../fixtures/spreadsheetFixtures';
 import { normalizeNumber } from '../helpers/referenceEngines';
 

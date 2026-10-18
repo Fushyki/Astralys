@@ -4,7 +4,7 @@
  * Branding: strictly "Astralys".
  */
 
-import { describe, it, expect } from '../testRunner';
+import { describe, it, expect } from 'vitest';
 import {
   FIXTURE_LAYOUT_A_SANDRONE,
   FIXTURE_LAYOUT_B_FLINS,

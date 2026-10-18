@@ -4,7 +4,7 @@
  * Branding: strictly "Astralys".
  */
 
-import { describe, it, expect } from '../testRunner';
+import { describe, it, expect } from 'vitest';
 import { RAW_TABLE_STELLAR_FORTRESS } from '../fixtures/rawTableFixtures';
 import { parseRawRotationTable, validateInfographicCard } from '../helpers/referenceEngines';
 import { CardData } from '../fixtures/cardFixtures';

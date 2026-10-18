@@ -3,7 +3,7 @@
  * Requirement R2 / Acceptance: Push calculated ER targets straight into Card character equipment slots.
  */
 
-import { describe, it, expect } from '../testRunner';
+import { describe, it, expect } from 'vitest';
 import { safeCalculateTeamER as calculateTeamER } from '../helpers/referenceEngines';
 import { SCENARIO_2_RAIDEN_NATIONAL } from '../fixtures/referenceTeams';
 import { CardData } from '../fixtures/cardFixtures';

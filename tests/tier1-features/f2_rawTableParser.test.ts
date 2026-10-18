@@ -3,7 +3,7 @@
  * Requirement R1: Ingests pasted table text matching nj2k8acllnah1.png with comma decimals.
  */
 
-import { describe, it, expect } from '../testRunner';
+import { describe, it, expect } from 'vitest';
 import {
   RAW_TABLE_STELLAR_FORTRESS,
   RAW_TABLE_PIPE_DELIMITED,

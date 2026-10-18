@@ -4,7 +4,7 @@
  * null DOM element guard, error reporting.
  */
 
-import { describe, it, expect } from '../testRunner';
+import { describe, it, expect } from 'vitest';
 import { generateCardExportFileName, buildExportOptions } from '../tier1-features/f5_exportService.test.ts';
 
 describe('Boundary 5 (B5): Export Service Boundary & Corner Cases', () => {

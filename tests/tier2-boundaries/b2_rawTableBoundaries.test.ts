@@ -3,7 +3,7 @@
  * Edge cases: Empty text, missing refinements, unstandardized delimiters, missing constellations, non-100% sums.
  */
 
-import { describe, it, expect } from '../testRunner';
+import { describe, it, expect } from 'vitest';
 import { parseRawRotationTable } from '../helpers/referenceEngines';
 
 describe('Boundary 2 (B2): Raw Table Parser Boundary & Corner Cases', () => {

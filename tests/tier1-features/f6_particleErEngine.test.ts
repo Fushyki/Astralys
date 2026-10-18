@@ -4,7 +4,7 @@
  * white particle absorption (2.0/1.2), ER needed %.
  */
 
-import { describe, it, expect } from '../testRunner';
+import { describe, it, expect } from 'vitest';
 import { safeCalculateTeamER as calculateTeamER } from '../helpers/referenceEngines';
 import { calculateTeamER as rawCalculateTeamER } from '../../src/engines/erEngine';
 import { CHARACTERS_DATABASE, getCharacterERData } from '../../src/data/characters';

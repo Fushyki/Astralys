@@ -4,7 +4,7 @@
  * unselected slot, empty presets list.
  */
 
-import { describe, it, expect } from '../testRunner';
+import { describe, it, expect } from 'vitest';
 import { getCharacterERData } from '../../src/data/characters';
 import { safeCalculateTeamER as calculateTeamER } from '../helpers/referenceEngines';
 

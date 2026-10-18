@@ -4,7 +4,7 @@
  * rapid view toggling, responsive layout classes.
  */
 
-import { describe, it, expect } from '../testRunner';
+import { describe, it, expect } from 'vitest';
 
 export function resolveValidTab(tab: string): 'landing' | 'er' | 'damage' | 'tierlist' {
   const validTabs = ['landing', 'er', 'damage', 'tierlist'];

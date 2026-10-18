@@ -5,7 +5,7 @@
  * Branding: strictly "Astralys" / "ASTRALYS".
  */
 
-import { describe, it, expect } from '../testRunner';
+import { describe, it, expect } from 'vitest';
 import { FIXTURE_CARD_SANDRONE, FIXTURE_CARD_WRIOTHESLEY } from '../fixtures/cardFixtures';
 import { validateInfographicCard } from '../helpers/referenceEngines';
 

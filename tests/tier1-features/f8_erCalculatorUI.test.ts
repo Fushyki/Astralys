@@ -4,7 +4,7 @@
  * preset teams, local storage save/load, JSON backup import/export.
  */
 
-import { describe, it, expect } from '../testRunner';
+import { describe, it, expect } from 'vitest';
 import { ER_POPULAR_PRESETS as PRESET_TEAMS } from '../../src/data/presets';
 import { safeCalculateTeamER as calculateTeamER } from '../helpers/referenceEngines';
 import { SavedTeam } from '../../src/types/er';

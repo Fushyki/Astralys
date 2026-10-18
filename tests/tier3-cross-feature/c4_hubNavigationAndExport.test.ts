@@ -4,7 +4,7 @@
  * Branding: strictly "Astralys".
  */
 
-import { describe, it, expect } from '../testRunner';
+import { describe, it, expect } from 'vitest';
 import { FIXTURE_CARD_SANDRONE } from '../fixtures/cardFixtures';
 import { generateCardExportFileName, buildExportOptions } from '../tier1-features/f5_exportService.test.ts';
 import { validateInfographicCard } from '../helpers/referenceEngines';

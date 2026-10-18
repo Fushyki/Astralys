@@ -3,7 +3,7 @@
  * Requirement R2 / Acceptance: Direct action sends calculated ER requirements straight into Infographic Card.
  */
 
-import { describe, it, expect } from '../testRunner';
+import { describe, it, expect } from 'vitest';
 import { safeCalculateTeamER as calculateTeamER } from '../helpers/referenceEngines';
 import { SCENARIO_1_MAVUIKA } from '../fixtures/referenceTeams';
 import { FIXTURE_CARD_SANDRONE, CardData } from '../fixtures/cardFixtures';

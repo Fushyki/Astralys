@@ -5,7 +5,7 @@
  * and time spent fields.
  */
 
-import { describe, it, expect } from '../testRunner';
+import { describe, it, expect } from 'vitest';
 import { FIXTURE_LAYOUT_B_FLINS } from '../fixtures/spreadsheetFixtures';
 import { convertSpreadsheetToCard } from '../tier3-cross-feature/c1_spreadsheetToCard.test.ts';
 import { validateInfographicCard } from '../helpers/referenceEngines';

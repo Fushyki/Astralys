@@ -4,7 +4,7 @@
  * burst disabled toggle, +15% boss margin.
  */
 
-import { describe, it, expect } from '../testRunner';
+import { describe, it, expect } from 'vitest';
 import { safeCalculateTeamER as calculateTeamER } from '../helpers/referenceEngines';
 import { SCENARIO_1_MAVUIKA, SCENARIO_2_RAIDEN_NATIONAL } from '../fixtures/referenceTeams';
 

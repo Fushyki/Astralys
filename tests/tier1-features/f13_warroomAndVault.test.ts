@@ -2,7 +2,7 @@
  * Feature 13: Combat War Room, Interactive Timeline & Astralys Vault Tests (Tier 1)
  */
 
-import { describe, it, expect } from '../testRunner';
+import { describe, it, expect } from 'vitest';
 import { generateTimelineFromDamageResult, calculateBuffCoverageEfficiency, getCharacterMoveOptions } from '../../src/engines/timelineEngine';
 import { generateScenariosFromCalculation } from '../../src/engines/scenarioEngine';
 import { DEFAULT_CALCULATION_PROJECTS } from '../../src/data/defaultProjects';

@@ -3,7 +3,7 @@
  * Requirement R1 / Acceptance: Real-time interactive text and number tweaking on the card without re-parsing.
  */
 
-import { describe, it, expect } from '../testRunner';
+import { describe, it, expect } from 'vitest';
 import { FIXTURE_CARD_SANDRONE, CardData } from '../fixtures/cardFixtures';
 
 function cloneCard(card: CardData): CardData {

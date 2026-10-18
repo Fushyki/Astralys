@@ -4,7 +4,7 @@
  * repeated transfers, preserving custom equipment notes.
  */
 
-import { describe, it, expect } from '../testRunner';
+import { describe, it, expect } from 'vitest';
 import { CardData, FIXTURE_CARD_SANDRONE } from '../fixtures/cardFixtures';
 import { ERTransferPayload, applyERTransferToCard } from '../tier1-features/f9_erTransfer.test.ts';
 

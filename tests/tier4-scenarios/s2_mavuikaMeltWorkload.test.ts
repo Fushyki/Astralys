@@ -5,7 +5,7 @@
  * zero-cost burst toggle, Flat energy, and boss margin.
  */
 
-import { describe, it, expect } from '../testRunner';
+import { describe, it, expect } from 'vitest';
 import { safeCalculateTeamER as calculateTeamER } from '../helpers/referenceEngines';
 import { SCENARIO_1_MAVUIKA } from '../fixtures/referenceTeams';
 

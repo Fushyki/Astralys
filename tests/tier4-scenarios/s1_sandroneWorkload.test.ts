@@ -5,7 +5,7 @@
  * validating damage percentages, and rendering into 4-section Infographic Card.
  */
 
-import { describe, it, expect } from '../testRunner';
+import { describe, it, expect } from 'vitest';
 import { FIXTURE_LAYOUT_A_SANDRONE } from '../fixtures/spreadsheetFixtures';
 import { convertSpreadsheetToCard } from '../tier3-cross-feature/c1_spreadsheetToCard.test.ts';
 import { validateInfographicCard } from '../helpers/referenceEngines';

@@ -4,7 +4,7 @@
  * duplicate characters, extreme rotation periods.
  */
 
-import { describe, it, expect } from '../testRunner';
+import { describe, it, expect } from 'vitest';
 import { safeCalculateTeamER as calculateTeamER } from '../helpers/referenceEngines';
 
 describe('Boundary 7 (B7): ER Special Mechanics Boundary & Corner Cases', () => {

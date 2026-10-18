@@ -4,7 +4,7 @@
  * Exercises raw table text ingestion, comma decimal parsing, and card generation.
  */
 
-import { describe, it, expect } from '../testRunner';
+import { describe, it, expect } from 'vitest';
 import { RAW_TABLE_STELLAR_FORTRESS } from '../fixtures/rawTableFixtures';
 import { convertRawTableToCard } from '../tier3-cross-feature/c2_rawTableToCard.test.ts';
 import { validateInfographicCard } from '../helpers/referenceEngines';

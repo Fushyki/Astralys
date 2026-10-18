@@ -4,7 +4,7 @@
  * and copy-to-clipboard functionality.
  */
 
-import { describe, it, expect } from '../testRunner';
+import { describe, it, expect } from 'vitest';
 import { FIXTURE_CARD_SANDRONE } from '../fixtures/cardFixtures';
 
 export interface ExportOptions {

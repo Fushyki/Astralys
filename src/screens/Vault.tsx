@@ -5,13 +5,12 @@ import { AppHeader } from '../app/AppHeader';
 import '../design/design.css';
 import { elementColor } from '../design/elements';
 import { CharacterAvatar, Chip, StackedBar } from '../design/primitives';
-import { compact } from '../features/card/RotationCard';
 import { useGameData } from '../features/rotation/data';
 import { downloadProject, importJson, importXlsx, type ImportResult } from '../features/rotation/importFile';
 import { SAMPLE_ID, cloneProject, deleteStoredProject, listProjects, loadProject, saveProject, sampleForApp } from '../features/rotation/persistence';
 import { useProjectStats } from '../features/rotation/useProjectStats';
 import { NO_FILTERS, filterProjects, type VaultFilters } from '../features/vault/vaultModel';
-import { formatDecimal, formatInt, formatPercent } from '../ui/format';
+import { compact, formatDecimal, formatInt, formatPercent } from '../ui/format';
 import './vault.css';
 
 const ELEMENTS = ['Pyro', 'Hydro', 'Anemo', 'Electro', 'Dendro', 'Cryo', 'Geo'];

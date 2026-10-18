@@ -1,0 +1,11 @@
+/* Tela Card: formulário à esquerda, prévia escalada à direita. */
+.cd-layout { display: grid; grid-template-columns: 340px minmax(0, 1fr); gap: 20px; align-items: start; }
+.cd-form { display: flex; flex-direction: column; gap: 16px; }
+.cd-form .note { margin: 0; font-size: 13px; color: var(--muted); }
+.cd-accents { display: flex; gap: 10px; }
+.cd-swatch { width: 44px; height: 44px; border-radius: 50%; border: 3px solid transparent; cursor: pointer; }
+.cd-swatch[aria-pressed="true"] { border-color: var(--text); }
+.cd-acts { display: flex; flex-wrap: wrap; gap: 10px; }
+.cd-view { min-width: 0; display: flex; justify-content: center; }
+.cd-view .pc-box { max-width: 720px; }
+@media (max-width: 1000px) { .cd-layout { grid-template-columns: minmax(0, 1fr); } }

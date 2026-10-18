@@ -14,3 +14,10 @@ export const formatPercent = (fraction: number, digits = 1): string => `${format
 
 /** Cor de cada elemento no tema escuro do editor. */
 export const ELEMENT_COLOR: Record<string, string> = ELEMENT_COLORS;
+
+/** 216599 → "216,6k"; 3790496 → "3,79M". */
+export function compact(n: number): string {
+  if (n >= 1e6) return `${formatDecimal(n / 1e6, 2)}M`;
+  if (n >= 1e3) return `${formatDecimal(n / 1e3, 1)}k`;
+  return formatDecimal(n, 0);
+}

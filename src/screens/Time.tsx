@@ -36,7 +36,7 @@ export default function Time() {
         </div>
         <div className="actions">
           <Link className="dz-btn" to={`/comparar?a=${v.id}`}>Comparar com outro time</Link>
-          <Link className="dz-btn gold" to={`/rotacao/${v.id}/card`}>Gerar card</Link>
+          <Link className="dz-btn gold" to={`/card/${v.id}`}>Gerar card</Link>
         </div>
       </section>
 

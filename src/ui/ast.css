@@ -319,3 +319,10 @@
 .ast-cmp td.down { color: var(--bad) }
 .ast-table.ast-cmp th:nth-child(-n+3), .ast-table.ast-cmp td:nth-child(-n+3) { text-align: right }
 .ast-table.ast-cmp th:first-child, .ast-table.ast-cmp td:first-child { text-align: left }
+
+/* ---------- Inventário GOOD ---------- */
+.ast-good { display: flex; flex-direction: column; gap: 10px }
+.ast-good .acts { display: flex; flex-wrap: wrap; gap: 8px; align-items: center }
+.ast-good .summary { margin: 0; color: var(--dim); font-size: .9rem }
+.ast-good .notes { margin: 0; padding-left: 18px; color: var(--dim); font-size: .85rem; display: grid; gap: 2px }
+.ast-good .notes li:first-child { color: var(--good) }

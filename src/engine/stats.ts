@@ -126,6 +126,8 @@ export interface MemberInput {
   primarySet?: SetSelection;
   /** Se informado, vira 2+2 (só os bônus de 2 peças valem). */
   secondarySet?: SetSelection;
+  /** false = só 2 peças do set principal (sem o bônus de 4 peças e sem segundo set). Padrão: true. */
+  fourPiece?: boolean;
   artifacts: ArtifactConfig;
   talents: { normal: number; skill: number; burst: number };
   /** ER mínimo desejado (1 = 100%). */
@@ -141,7 +143,7 @@ export interface MemberInput {
   manualRolls?: Rolls;
 }
 
-export const fourPieceActive = (m: MemberInput) => !!m.primarySet && !m.secondarySet;
+export const fourPieceActive = (m: MemberInput) => !!m.primarySet && !m.secondarySet && m.fourPiece !== false;
 
 // ---------- Rolls ----------
 

@@ -82,10 +82,11 @@ export const useAutoRolls = (project: RotationProject, index: number): RotationP
   return touch({ ...project, members: project.members.map((x, i) => (i === index ? rest : x)) });
 };
 
+/** Aceita rolls fracionários (duas casas): o inventário GOOD traz somas reais de substats, que não são inteiras. */
 export function setManualRoll(project: RotationProject, index: number, substat: Substat, value: number): RotationProject {
   const m = project.members[index];
   if (!m?.manualRolls) return project;
-  const v = Math.max(0, Math.min(60, Math.round(Number.isFinite(value) ? value : 0)));
+  const v = Math.max(0, Math.min(60, Math.round((Number.isFinite(value) ? value : 0) * 100) / 100));
   return updateMember(project, index, { manualRolls: { ...m.manualRolls, [substat]: v } });
 }
 

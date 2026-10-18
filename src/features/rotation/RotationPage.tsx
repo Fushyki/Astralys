@@ -15,6 +15,7 @@ import { useAnalysis } from './useAnalysis';
 import { Inspector } from './Inspector';
 import { BuildEditor } from './BuildEditor';
 import { GainHeatmap, WeaponCompare } from './BuildInsights';
+import { GoodPanel } from '../good/GoodPanel';
 import { CritOptimizer } from './CritOptimizer';
 import { DamageTable } from './DamageTable';
 import { Palette } from './Palette';
@@ -339,6 +340,7 @@ export default function RotationPage() {
         )}
         {data && inSync && (
           <div className="ast-panels">
+            <GoodPanel data={data} name={current.members[Math.min(selectedMember, current.members.length - 1)].character} index={Math.min(selectedMember, current.members.length - 1)} />
             <CritOptimizer project={current} resolved={analysis.resolved} bundle={analysis.bundle} index={Math.min(selectedMember, current.members.length - 1)} />
             <GainHeatmap project={current} bundle={analysis.bundle} />
             <WeaponCompare project={current} resolved={analysis.resolved} data={data} index={Math.min(selectedMember, current.members.length - 1)} />

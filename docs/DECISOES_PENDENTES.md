@@ -12,5 +12,7 @@ caminho mais seguro e anotei aqui para você revisar. Nada foi mesclado no `main
 | 5 | Custo do Supremo do Flins | O app antigo tinha 60, o Lunaris tem 80; o app novo usa o do Lunaris | — |
 | 6 | Folga de 15% (`SAFETY_MARGIN`) sobre a recarga exata | Herdada do app antigo (chefe de alvo único); a tela usa a folga Baixa/Média/Alta (-10/0/+10%) como antes | `energy.ts` |
 | 7 | Crítico nas reações Lunares/Estelares | Saem **sem crítico** na tabela de reações: não confirmei de onde vêm a taxa e o dano crítico delas. Bônus de dano de reação de sets/armas também ainda não entram | `engine/reactionTable.ts` |
+| 8 | Formato GOOD | Implementei pelo que conheço do formato do Genshin Optimizer (chaves como `critRate_`, `atk_`, `eleMas`, `enerRech_`; nomes em PascalCase). **Não testei com um arquivo exportado de verdade**: se o seu export falhar, mande o arquivo (sem dados pessoais) para eu ajustar | `src/features/good/goodImport.ts` |
+| 9 | Rolls fracionários no import | O build real vira rolls = soma dos substats ÷ valor médio do roll (ex.: 7,18 rolls de Taxa Crítica). Reproduz exatamente os stats, mas o motor assume peças e arma no nível máximo e não aplica constelações/refinamento | `goodImport.ts` |
 
 (Novas entradas são acrescentadas abaixo conforme surgirem.)

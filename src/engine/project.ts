@@ -48,13 +48,15 @@ export const MemberRefSchema = z.object({
   weapon: z.string().min(1),
   primarySet: z.string().min(1).optional(),
   secondarySet: z.string().min(1).optional(),
+  /** false = só 2 peças do set principal (sem o bônus de 4 peças). Padrão: 4 peças quando não há segundo set. */
+  fourPiece: z.boolean().optional(),
   artifacts: ArtifactConfigSchema,
   talents: z.object({ normal: TalentLevel, skill: TalentLevel, burst: TalentLevel }),
   minER: z.number().min(0).optional(),
   totalRolls: z.number().int().min(0).optional(),
   forcedCritRolls: z.number().int().min(0).optional(),
   /** Rolls totais por substat definidos à mão (os que faltam valem o mínimo). Ausente = otimizar. */
-  manualRolls: z.record(z.enum(SUBSTATS), z.number().int().min(0).max(60)).optional(),
+  manualRolls: z.record(z.enum(SUBSTATS), z.number().min(0).max(60)).optional(),
 });
 export type MemberRef = z.infer<typeof MemberRefSchema>;
 
@@ -260,6 +262,7 @@ export function resolveMember(ref: MemberRef, data: GameData, effects: EffectsDa
     weaponEffect: effects.weapons.find((w) => w.weapon === weapon.name),
     primarySet: setOf(ref.primarySet),
     secondarySet: setOf(ref.secondarySet),
+    fourPiece: ref.fourPiece,
     artifacts: ref.artifacts,
     talents: ref.talents,
     minER: ref.minER,

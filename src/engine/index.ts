@@ -11,3 +11,5 @@ export * from './compat/planilha';
 export * from './attribution';
 export * from './workerApi';
 export * from './analysis';
+export * from './project';
+export * from './bundle';

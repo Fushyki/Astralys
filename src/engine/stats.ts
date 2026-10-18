@@ -237,7 +237,7 @@ export function staticSources(m: MemberInput, member = 0): StatSource[] {
 
   const ce = m.characterEffect;
   if (ce) {
-    add('character', `${m.character.name}: passivas`, 'character',
+    add('character', 'Passivas', 'character',
       { atkPct: ce.atkPct, dmgBonus: ce.dmgPct, critRate: ce.critRate, critDmg: ce.critDmg, em: ce.em });
   }
 

@@ -12,14 +12,17 @@
     "sync:data": "tsx scripts/sync-data.ts"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.104.4",
     "clsx": "^2.1.1",
     "html-to-image": "^1.11.11",
     "lucide-react": "^0.453.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-router-dom": "^6.30.6",
     "tailwind-merge": "^2.5.4",
     "xlsx": "^0.18.5",
-    "zod": "^3.25.76"
+    "zod": "^3.25.76",
+    "zustand": "^4.5.7"
   },
   "devDependencies": {
     "@types/node": "^22.7.5",

@@ -51,6 +51,17 @@ API não oficial `https://api.lunaris.moe/data/` (descoberta lendo o bundle do s
 - [x] Fase 0 — higiene e segurança (frontend + backend). Branches `v2/core` enviadas; PRs por abrir. Backend: ver `Astralys-BackEnd` (testes: `pytest tests`, deps em `requirements-dev.txt`). Pendente: colunas `schemaVersion/revision/patch/tags` + Alembic ficam para a Fase 3.
 - [x] Fase 1 — pipeline de dados (Lunaris → JSON + Zod). `npm run sync:data` gera `src/data/generated/` (136 personagens, 1786 golpes, 257 armas, 66 sets). Efeitos em `src/effects/` semeados da planilha. Ver "Dados" abaixo.
 - [x] Fase 2 — motor de dano + gabarito. `src/engine/` cobre dano direto, amplificadoras, catalisadoras, transformativas, Lunares e Estelares; reproduz a planilha (DPR 3 790 496,07 / DPS 216 599,78) com tolerância 1e-9. Ver "Motor" abaixo.
-- [ ] Fases 3–6 — editor de rotação, vault/cards, comparadores, otimizador GOOD (plano próprio)
+- [ ] Fase 3 — editor de rotação, em partes:
+  - [x] 3a base: React Router (`/rotacao/:id`, a interface antiga fica em `*`), Zustand (`features/rotation/store.ts`, com desfazer/refazer), TanStack Query (`data.ts`, dados do jogo em import dinâmico), formato de projeto salvo `RotationProject` (`engine/project.ts`, Zod, versão 1), persistência local (`persistence.ts`), Web Worker (`engineClient.ts`, `useAnalysis.ts`) e a página `/rotacao` com KPIs, painéis e lista de ações. Projeto de exemplo: `features/rotation/sample/mavuika-iansan.json` (gerado por `scripts/make-sample-project.ts`).
+  - [ ] 3b linha do tempo em SVG (estrelas por golpe, faixas de buff, arrastar/redimensionar, janelas de buff → etiquetas)
+  - [ ] 3c painéis de build (cascata, Crit Value, ganho por substat, comparação de armas, custo-benefício)
+  - [ ] 3d importar a planilha .xlsx no navegador, Vault, remover a interface antiga e `characters.ts`/`weapons.ts`
+- [ ] Fases 4–6 — vault/cards, comparadores, otimizador GOOD (plano próprio)
+
+## Interface (Fase 3)
+- Identidade visual aprovada: céu índigo com estrelas e filetes dourados (carta celeste) + cartões retangulares com títulos em CAIXA ALTA condensada (mesa de mixagem). Barlow Condensed (títulos, números) e Barlow (texto). Sem itálico. Tema em `src/ui/ast.css` escopado em `.ast-app`; componentes em `src/ui/components.tsx`. Maquete de referência publicada como artefato (conceitos do Astralys).
+- Cada KPI tem nome, valor, unidade e uma frase explicando o cálculo. Buffs sem origem conhecida da planilha aparecem sempre, marcados "a confirmar".
+- A lógica de tela é pura e testada: `projectOps.ts` (edição), `summary.ts` (números da tela). O estado só orquestra histórico (100 passos) e seleção.
+- Para ver a página: `npm run build && npx vite preview`, abrir `/rotacao`. Teste de fumo com Edge headless: `playwright-core` com `channel: 'msedge'` (o MCP do Playwright não conecta nesta máquina).
 
 Plano completo: `C:\Users\dabiv\.claude\plans\hashed-nibbling-island.md`. Strix (pentest) só no fim, em `localhost`, com um LLM que não seja o Claude.

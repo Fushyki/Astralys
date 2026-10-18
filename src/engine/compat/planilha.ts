@@ -8,34 +8,24 @@
  *  - coeficiente de EM das amplificadoras = 2,78 (use PLANILHA_AMP_COEFFICIENT).
  */
 import type { WorkBook, WorkSheet } from 'xlsx';
-import type { ArtifactSet, Character, Move, Talent, Weapon } from '../../data/schema';
-import type {
-  CharacterEffect,
-  FlatDamageEffect,
-  SetEffect,
-  WeaponEffect,
-} from '../../effects/schema';
+import type { Talent } from '../../data/schema';
+import type { FlatDamageEffect } from '../../effects/schema';
 import { AMP_EM_COEFFICIENT_SHEET } from '../constants/reactions';
 import type { Rarity, PieceSlot } from '../artifacts';
 import type { ExtraScale, ReactionChoice, ResolvedMove, RotationAction } from '../rotation';
 import type { MemberInput, SetSelection } from '../stats';
+import {
+  PROJECT_SCHEMA_VERSION,
+  indexMoves,
+  resolveMove,
+  type EffectsData,
+  type GameData,
+  type MemberRef,
+  type RotationProject,
+} from '../project';
 import { characterTag, gearTag, labelTag, type ExtraBuff, type GlobalConfig, type TeamInput } from '../team';
 
 export const PLANILHA_AMP_COEFFICIENT = AMP_EM_COEFFICIENT_SHEET;
-
-export interface GameData {
-  characters: Character[];
-  moves: Move[];
-  weapons: Weapon[];
-  artifacts: ArtifactSet[];
-}
-
-export interface EffectsData {
-  characters: CharacterEffect[];
-  weapons: WeaponEffect[];
-  sets: SetEffect[];
-  flatDamage: FlatDamageEffect[];
-}
 
 export interface PlanilhaImport {
   team: TeamInput;
@@ -201,26 +191,14 @@ export function importPlanilha(wb: WorkBook, data: GameData, effects: EffectsDat
     });
   }
 
+  const moveIndex = indexMoves(data.moves);
   const resolve = (displayName: string): ResolvedMove => {
     const extra = extraMoves.get(displayName);
     const baseName = extra ? extra.base : displayName;
     const m = /^(.+?) - (Normal|Habilidade|Supremo): (.+)$/.exec(baseName);
     if (!m) throw new Error(`Não consegui interpretar o golpe "${baseName}" (esperado "Personagem - Talento: Rótulo")`);
     const [, character, talentPt, label] = m;
-    const talent = TALENT_BY_PT[talentPt];
-    const move = data.moves.find((x) => x.character === character && x.talent === talent && x.label === label && x.variant === 0);
-    if (!move) throw new Error(`Golpe "${baseName}" não existe nos dados do Lunaris`);
-    return {
-      id: move.id,
-      character,
-      talent,
-      hitType: move.hitType,
-      label: move.label,
-      displayName,
-      hits: move.hits,
-      scale: move.scale,
-      extra: extra?.scale,
-    };
+    return resolveMove(moveIndex, { character, talent: TALENT_BY_PT[talentPt], label, variant: 0 }, displayName, extra?.scale);
   };
 
   // ---- Rotação ----
@@ -264,5 +242,59 @@ export function importPlanilha(wb: WorkBook, data: GameData, effects: EffectsDat
     flatEffects: effects.flatDamage,
     profiles,
     warnings,
+  };
+}
+
+
+export interface ProjectFromPlanilhaOptions {
+  id: string;
+  name: string;
+  gameVersion: string;
+  /** Instante (s) de cada ação. Padrão: 1 s entre ações, na ordem da planilha. */
+  timeOf?: (action: RotationAction, index: number) => number;
+  now?: string;
+}
+
+/** Converte o que foi importado da planilha num `RotationProject` salvo (modo compat "planilha"). */
+export function projectFromPlanilha(imported: PlanilhaImport, options: ProjectFromPlanilhaOptions): RotationProject {
+  const now = options.now ?? new Date().toISOString();
+  const { team } = imported;
+  const members: MemberRef[] = team.members.map((m) => ({
+    character: m.character.name,
+    weapon: m.weapon.name,
+    primarySet: m.primarySet?.name,
+    secondarySet: m.secondarySet?.name,
+    artifacts: m.artifacts,
+    talents: m.talents,
+    minER: m.minER || undefined,
+    totalRolls: m.totalRolls,
+    forcedCritRolls: m.forcedCritRolls,
+  }));
+
+  const hasExtra = (x?: ExtraScale) => !!x && Object.values(x).some((v) => v);
+  return {
+    schemaVersion: PROJECT_SCHEMA_VERSION,
+    id: options.id,
+    name: options.name,
+    gameVersion: options.gameVersion,
+    compat: 'planilha',
+    config: { ...team.config },
+    members,
+    extras: team.extras.map((e) => ({ ...e })),
+    actions: imported.actions.map((a, i) => ({
+      id: a.id,
+      member: a.member,
+      move: { character: a.move.character, talent: a.move.talent, label: a.move.label, variant: 0 },
+      displayName: a.move.displayName,
+      extraScale: hasExtra(a.move.extra) ? a.move.extra : undefined,
+      executions: a.executions,
+      reaction: a.reaction,
+      activeTags: [...a.activeTags],
+      dmgAdjust: a.dmgAdjust,
+      time: options.timeOf ? options.timeOf(a, i) : i,
+      note: a.note,
+    })),
+    profiles: imported.profiles,
+    meta: { tags: [], createdAt: now, updatedAt: now },
   };
 }

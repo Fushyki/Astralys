@@ -119,4 +119,23 @@ describe('buffs de personagem no motor', () => {
     const a = assembleTeam(r.team);
     expect(a.buffs.some((b) => b.id.startsWith('cbuff-'))).toBe(false);
   });
+
+  it('ressonância Hydro soma 25% de HP, Cryo 15% de Taxa Crítica, Dendro 50 de Maestria, Geo tira 20% da RES Geo', () => {
+    const none = assemble(team(['Hu Tao', 'Xingqiu', 'Albedo', 'Ganyu'], 0)); // sem par de elemento repetido além de...
+    const hydro = assemble(team(['Xingqiu', 'Yelan', 'Hu Tao', 'Albedo'], 0));
+    const cryo = assemble(team(['Ganyu', 'Kamisato Ayaka', 'Hu Tao', 'Albedo'], 0));
+    const dendro = assemble(team(['Alhaitham', 'Kinich', 'Hu Tao', 'Albedo'], 0));
+    const geo = assemble(team(['Albedo', 'Chiori', 'Hu Tao', 'Xingqiu'], 0));
+    // o mesmo personagem sem o par: compara com o efeito desligado
+    const off = (p: RotationProject, id: string) => assembleTeam(resolveProject(p, game, effects).team, { disabled: new Set([id]) });
+    const pHydro = team(['Xingqiu', 'Yelan', 'Hu Tao', 'Albedo'], 0);
+    expect(hydro.statics[0].hpPct - off(pHydro, 'resonance-hydro').statics[0].hpPct).toBeCloseTo(0.25, 9);
+    const pCryo = team(['Ganyu', 'Kamisato Ayaka', 'Hu Tao', 'Albedo'], 0);
+    expect(cryo.statics[0].critRate - off(pCryo, 'resonance-cryo').statics[0].critRate).toBeCloseTo(0.15, 9);
+    const pDendro = team(['Alhaitham', 'Kinich', 'Hu Tao', 'Albedo'], 0);
+    expect(dendro.statics[1].em - off(pDendro, 'resonance-dendro').statics[1].em).toBe(50);
+    const pGeo = team(['Albedo', 'Chiori', 'Hu Tao', 'Xingqiu'], 0);
+    expect(off(pGeo, 'resonance-geo').enemyRes.Geo! - geo.enemyRes.Geo!).toBeCloseTo(0.2, 9);
+    expect(none.statics[0].hpPct).toBeCloseTo(off(team(['Hu Tao', 'Xingqiu', 'Albedo', 'Ganyu'], 0), 'resonance-hydro').statics[0].hpPct, 9);
+  });
 });

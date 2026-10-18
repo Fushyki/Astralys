@@ -11,20 +11,23 @@ export interface ResonanceInfo {
   text: string;
 }
 
-/**
- * Cada elemento com 2 ou mais personagens dá ressonância. Só a de Pyro (+25% ATK) tem efeito numérico confirmado
- * na planilha de referência; as outras são listadas como "ainda não calculadas" em vez de inventar valores.
- */
+const RESONANCE_TEXT: Record<Element, { applied: boolean; text: string }> = {
+  Pyro: { applied: true, text: '+25% de ATK para toda a equipe, já aplicado' },
+  Hydro: { applied: true, text: '+25% de HP máximo para toda a equipe, já aplicado' },
+  Cryo: { applied: true, text: '+15% de Taxa Crítica (contra inimigos sob Cryo, assumido sempre), já aplicado' },
+  Dendro: { applied: true, text: '+50 de Maestria Elemental, já aplicado (os bônus depois de reações não entram)' },
+  Geo: { applied: true, text: '-20% de RES Geo do inimigo, já aplicado (o +15% de DMG com escudo não entra)' },
+  Electro: { applied: false, text: 'não muda stats (só recupera energia), então não afeta o dano' },
+  Anemo: { applied: false, text: 'não muda stats (estamina, velocidade e recarga de habilidade), então não afeta o dano' },
+};
+
+/** Cada elemento com 2 ou mais personagens dá ressonância; o texto diz o que o motor calcula. */
 export function resonanceOf(elements: Element[]): ResonanceInfo[] {
   const count = new Map<Element, number>();
   for (const e of elements) count.set(e, (count.get(e) ?? 0) + 1);
   return [...count.entries()]
     .filter(([, n]) => n >= 2)
-    .map(([element]) => ({
-      element,
-      applied: element === 'Pyro',
-      text: element === 'Pyro' ? '+25% de ATK para toda a equipe, já aplicado' : 'o efeito ainda não é calculado pelo motor',
-    }));
+    .map(([element]) => ({ element, ...RESONANCE_TEXT[element] }));
 }
 
 export interface EffectCoverage {

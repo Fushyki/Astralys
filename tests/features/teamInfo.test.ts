@@ -24,11 +24,15 @@ describe('ressonância', () => {
     expect(r[0].text).toMatch(/25%/);
   });
 
-  it('outros elementos aparecem como "ainda não calculado", sem inventar valor', () => {
-    const r = resonanceOf(['Hydro', 'Hydro', 'Cryo', 'Geo']);
-    expect(r[0]).toMatchObject({ element: 'Hydro', applied: false });
-    expect(r[0].text).toMatch(/ainda não/);
-    expect(r[0].text).not.toMatch(/\d+%/);
+  it('Hydro, Cryo, Dendro e Geo também são calculadas; Electro e Anemo não mudam stats', () => {
+    const r = resonanceOf(['Hydro', 'Hydro', 'Cryo', 'Cryo', 'Dendro', 'Dendro', 'Geo', 'Geo', 'Electro', 'Electro', 'Anemo', 'Anemo']);
+    const by = Object.fromEntries(r.map((x) => [x.element, x]));
+    for (const el of ['Hydro', 'Cryo', 'Dendro', 'Geo']) expect(by[el].applied, el).toBe(true);
+    for (const el of ['Electro', 'Anemo']) expect(by[el].applied, el).toBe(false);
+    expect(by.Hydro.text).toMatch(/25%.*HP/);
+    expect(by.Cryo.text).toMatch(/15%.*Taxa Crítica/);
+    expect(by.Dendro.text).toMatch(/50.*Maestria/);
+    expect(by.Geo.text).toMatch(/20%.*RES Geo/);
   });
 
   it('4 elementos diferentes ou 1 de cada: nenhuma ressonância', () => {

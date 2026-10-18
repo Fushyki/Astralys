@@ -232,6 +232,7 @@ export type StatSourceKind =
   | 'character'
   | 'weapon'
   | 'main-stat'
+  | 'resonance'
   | 'extra';
 
 /** Um bônus estático e de onde ele vem. A soma de todas as fontes de um membro é o seu bloco estático. */

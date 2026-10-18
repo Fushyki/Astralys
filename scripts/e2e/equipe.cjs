@@ -100,9 +100,9 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.click('.ast-pick:has-text("Kamisato Ayaka")'); await settle();
   check('adicionar a Ayaka seleciona o build dela', (await slotNames()).length === 4 && (await page.textContent('.ast-panel.ast-wide > h2')) === 'Build de Kamisato Ayaka');
   check('com a arma por defeito (Absolution, com efeito) não há aviso', (await page.$$('.ast-notice-inline')).length === 0);
-  await field('Arma').locator('select').selectOption({ label: '5★ Aquila Favonia (sem efeito)' }); await settle();
+  await field('Arma').locator('select').selectOption({ label: '2★ Dull Blade (sem efeito)' }); await settle();
   const notice = await page.$$eval('.ast-notice-inline', (e) => e.map((x) => x.textContent));
-  check('arma sem efeito cadastrado gera aviso claro', notice.length === 1 && /Sem efeito numérico cadastrado: arma Aquila Favonia/.test(notice[0]), notice[0]?.slice(0, 90));
+  check('arma sem efeito cadastrado gera aviso claro', notice.length === 1 && /Sem efeito numérico cadastrado: arma Dull Blade/.test(notice[0]), notice[0]?.slice(0, 90));
   await page.screenshot({ path: path.join(OUT, 'equipe-nova.png'), fullPage: true });
 
   // Tabela de dano do personagem selecionado
@@ -149,6 +149,21 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   // Dano das reações
   const reactionRows = await page.$$eval('.ast-reactions tbody tr:not(.group)', (r) => r.map((x) => x.textContent));
   check('tabela de dano das reações (transformativas, Lunares e Estelares)', reactionRows.length >= 15 && reactionRows.some((t) => /Sobrecarga/.test(t)) && reactionRows.some((t) => /Lunar-Carregado/.test(t)) && reactionRows.some((t) => /Estelar/.test(t)), `${reactionRows.length} linhas`);
+
+  // Refinamento e suposições dos efeitos
+  await page.click('.ast-slot-main:has-text("Mavuika")'); await settle();
+  const critOf = async () => Number((await page.$$eval('.ast-statbox dl div', (rows) => rows.find((r) => /Taxa Cr/.test(r.textContent))?.querySelector('dd')?.textContent ?? '0')).replace('%', '').replace(',', '.'));
+  check('arma sem tabela por refinamento não mostra o seletor de refino', (await page.locator('label.ast-field:has(span:text-is("Refino"))').count()) === 0);
+  await field('Arma').locator('select').selectOption({ label: '4★ Royal Greatsword' }); await settle();
+  check('arma com tabela por refinamento mostra o seletor de refino', (await page.locator('label.ast-field:has(span:text-is("Refino"))').count()) === 1);
+  const crit1 = await critOf();
+  await field('Refino').locator('select').selectOption('5'); await settle();
+  const crit5 = await critOf();
+  // o otimizador reajusta os substats quando o refino muda, então o ganho visível fica entre 20 e 40 pontos
+  check('subir o refino de R1 para R5 sobe a Taxa Crítica (Royal)', crit5 - crit1 > 20, `${crit1}% → ${crit5}%`);
+  const assume = await page.textContent('.ast-assume');
+  check('mostra o que está assumido nos efeitos', /Royal Greatsword/.test(assume) && /Melhor caso/.test(assume));
+  await field('Arma').locator('select').selectOption({ label: '5★ A Thousand Blazing Suns' }); await settle();
 
   // Persistência da equipe
   await page.waitForTimeout(700);

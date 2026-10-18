@@ -53,6 +53,7 @@ describe('importação do inventário GOOD', () => {
 
   it('arma, set de 4 peças e main stats', () => {
     expect(build.patch.weapon).toBe('A Thousand Blazing Suns');
+    expect(build.patch.refinement).toBe(1);
     expect(build.patch.primarySet).toBe('Obsidian Codex');
     expect(build.patch.secondarySet).toBeUndefined();
     expect(build.patch.artifacts).toMatchObject({ sands: 'EM', goblet: 'DMG%', circlet: 'CD' });

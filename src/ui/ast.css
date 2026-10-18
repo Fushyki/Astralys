@@ -326,3 +326,8 @@
 .ast-good .summary { margin: 0; color: var(--dim); font-size: .9rem }
 .ast-good .notes { margin: 0; padding-left: 18px; color: var(--dim); font-size: .85rem; display: grid; gap: 2px }
 .ast-good .notes li:first-child { color: var(--good) }
+
+/* ---------- Suposições dos efeitos ---------- */
+.ast-assume { border: 1px solid var(--edge); background: var(--ink-3); padding: 6px 10px; font-size: .85rem; color: var(--dim) }
+.ast-assume summary { cursor: pointer; color: var(--txt) }
+.ast-assume ul { margin: 6px 0 2px; padding-left: 18px; display: grid; gap: 4px }

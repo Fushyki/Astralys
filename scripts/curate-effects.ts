@@ -13,9 +13,10 @@
  */
 import { readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
-import { SetEffectSchema, type SetEffect } from '../src/effects/schema';
+import { SetEffectSchema, WeaponEffectSchema, type SetEffect, type WeaponEffect, type WeaponStats } from '../src/effects/schema';
 import { FOUR_PIECE, type Val } from './curation/sets';
 import { parseTwoPiece } from './lib/twoPiece';
+import { WEAPONS, type Sum } from './curation/weapons';
 
 const root = process.cwd();
 const read = <T>(rel: string): T => JSON.parse(readFileSync(path.join(root, rel), 'utf8'));
@@ -86,3 +87,63 @@ function buildSets(): SetEffect[] {
 const sets = buildSets();
 write('src/effects/sets.json', sets);
 console.log(`sets.json: ${sets.length} sets (${sets.filter((s) => s.fourPiece).length} com 4 peças, ${sets.filter((s) => s.twoPiece).length} com 2 peças)`);
+
+// ---------- Armas ----------
+
+interface RawWeapon {
+  name: string;
+  rarity: number;
+  passive: { refinements: Bonus[] } | null;
+}
+
+const sumOf = (v: Sum | undefined, params: number[], where: string): number =>
+  v === undefined ? 0 : round(((Array.isArray(v) ? v : [v]) as Val[]).reduce((acc: number, x: Val) => acc + valueOf(x, params, where), 0));
+
+function buildWeapons(): WeaponEffect[] {
+  const raw = read<RawWeapon[]>('src/data/generated/weapons.json');
+  const existing = read<WeaponEffect[]>('src/effects/weapons.json');
+  const keep = new Map(existing.map((e) => [e.weapon, e]));
+  const out: WeaponEffect[] = [...existing];
+  const errors: string[] = [];
+  const source = `Lunaris ${meta.gameVersion} (descrição e parâmetros por refinamento)`;
+
+  for (const [name, cur] of Object.entries(WEAPONS)) {
+    if (keep.has(name)) continue; // já veio da planilha de referência: não sobrescrever
+    const w = raw.find((x) => x.name === name);
+    if (!w?.passive || w.passive.refinements.length !== 5) {
+      errors.push(`${name}: arma ou passiva não existe no Lunaris`);
+      continue;
+    }
+    if (!w.passive.refinements[0].description.includes(cur.expect)) {
+      errors.push(`${name}: a descrição do R1 não contém "${cur.expect}" (o Lunaris mudou?)`);
+      continue;
+    }
+    const at = (r: number): WeaponStats => {
+      const params = w.passive!.refinements[r].params;
+      const where = `${name} R${r + 1}`;
+      const t = cur.team;
+      return {
+        atkPct: sumOf(cur.atkPct, params, where), dmgPct: sumOf(cur.dmgPct, params, where),
+        critRate: sumOf(cur.critRate, params, where), critDmg: sumOf(cur.critDmg, params, where),
+        em: sumOf(cur.em, params, where), er: sumOf(cur.er, params, where),
+        hpPct: sumOf(cur.hpPct, params, where), defPct: sumOf(cur.defPct, params, where),
+        dmgPctByType: Object.fromEntries(Object.entries(cur.byType ?? {}).map(([k, x]) => [k, sumOf(x, params, where)])),
+        ...(t ? { team: { atkPct: sumOf(t.atkPct, params, where), dmgPct: sumOf(t.dmgPct, params, where), em: sumOf(t.em, params, where) } } : {}),
+      };
+    };
+    const refinements = [0, 1, 2, 3, 4].map(at);
+    out.push(WeaponEffectSchema.parse({
+      weapon: name,
+      ...refinements[0],
+      refinements,
+      note: cur.note,
+      fonte_info: `${source}; curadoria em scripts/curation/weapons.ts.`,
+    }));
+  }
+  if (errors.length) throw new Error(['Curadoria de armas com problemas:', ...errors].join('\n  '));
+  return out;
+}
+
+const weapons = buildWeapons();
+write('src/effects/weapons.json', weapons);
+console.log(`weapons.json: ${weapons.length} armas (${weapons.filter((w) => w.refinements).length} com tabela por refinamento)`);

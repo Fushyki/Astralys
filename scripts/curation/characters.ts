@@ -10,7 +10,7 @@ import type { Element } from '../../src/data/schema';
 import type { ConvertTarget } from '../../src/effects/schema';
 import type { Val } from './sets';
 
-export type Src = 'p1' | 'p2' | 'p3' | 'const1' | 'const2' | 'const3' | 'const4' | 'const5' | 'const6';
+export type Src = 'kit' | 'p1' | 'p2' | 'p3' | 'const1' | 'const2' | 'const3' | 'const4' | 'const5' | 'const6';
 
 export interface BuffCuration {
   id: string;
@@ -22,15 +22,26 @@ export interface BuffCuration {
   stats?: {
     atkPct?: Val; dmgPct?: Val; critRate?: Val; critDmg?: Val; em?: Val; hpPct?: Val; defPct?: Val;
     byType?: Partial<Record<'normal' | 'charged' | 'plunge' | 'skill' | 'burst', Val>>;
+    critRateByType?: Partial<Record<'normal' | 'charged' | 'plunge' | 'skill' | 'burst', Val>>;
+    critDmgByType?: Partial<Record<'normal' | 'charged' | 'plunge' | 'skill' | 'burst', Val>>;
   };
   resShred?: { value: Val; elements: Element[] };
+  /**
+   * Efeito do kit (habilidade ou supremo) que cresce com o nível do talento: `src: 'kit'`, os valores em `stats`,
+   * `resShred` ou `convert` valem 1 e são multiplicados pela linha `key` da tabela de multiplicadores do Lunaris.
+   */
+  kit?: { talent: 'normal' | 'skill' | 'burst'; key?: string };
+  /** Regras de composição do time (ver `BuffTeamRulesSchema`); `scale.table` vem de parâmetros do Lunaris. */
+  team?: { only?: Element[]; eachOf?: Element[]; scale?: { of: 'distinct' | Element[]; table: Val[] } };
   /** Bônus que depende de um stat da fonte (ver `BuffConvertSchema`). Substitui `stats`. */
   convert?: {
-    from: 'atk' | 'hp' | 'def' | 'em' | 'er';
+    from: 'atk' | 'baseAtk' | 'hp' | 'def' | 'em' | 'er';
     source?: 'self' | 'highestEm';
     perPoint: Val;
     threshold?: Val;
     cap?: Val;
+    /** Teto em múltiplos do ATK base da fonte (Hu Tao: 4). */
+    capBaseAtk?: number;
     to: ConvertTarget[];
   };
   expect: string;

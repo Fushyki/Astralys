@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { analyzeProject, assembleTeam, resolveProject, type EffectsData, type GameData } from '../../src/engine';
+import { activeTeamDelta, analyzeProject, applyTeamRules, assembleTeam, finalStats, minimumRolls, resolveProject, type EffectsData, type GameData } from '../../src/engine';
 import type { CharacterBuff } from '../../src/effects/schema';
 import { sampleProject } from '../../src/features/rotation/persistence';
 
@@ -82,5 +82,23 @@ describe('conversões de stat', () => {
     const item = bundle.attribution.items.find((i) => i.id.endsWith('-teste'));
     expect(item).toBeDefined();
     expect(item!.contribution).toBeGreaterThan(0);
+  });
+});
+
+describe('Paramita da Hu Tao (kit com nível e teto em ATK base)', () => {
+  it('ATK fixo = % do HP pelo nível, limitado a 400% do ATK base', () => {
+    const huTao = effects.characters.find((c) => c.character === 'Hu Tao')!;
+    const paramita = huTao.buffs.find((b) => b.id === 'paramita')!;
+    const m0 = base.team.members[0];
+    const members = applyTeamRules([{ ...m0, characterEffect: { ...m0.characterEffect!, buffs: [paramita] } }, ...base.team.members.slice(1)]);
+    const team = { ...base.team, members };
+    const a = assembleTeam(team);
+    const buff = a.buffs.find((b) => b.id.endsWith('-paramita'))!;
+    expect(buff.derived).toBe(true);
+    const level = m0.talents.skill;
+    const hp = finalStats(members[0], a.statics[0], minimumRolls(team.config.minRollsPerSubstat), activeTeamDelta(a.buffs.filter((b) => !b.derived), m0.character.name, 'all'), a.resonanceAtkPct).hp;
+    const baseAtk = m0.character.baseAtk + m0.weapon.baseAtk;
+    const expected = Math.min(hp * paramita.level!.table[level - 1], 4 * baseAtk);
+    expect(buff.delta.atkFlat).toBeCloseTo(expected, 3);
   });
 });

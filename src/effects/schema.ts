@@ -32,6 +32,9 @@ const BuffStatsSchema = z.object({
   hpPct: frac,
   defPct: frac,
   dmgPctByType: z.record(HitTypeSchema, z.number()).default({}),
+  /** Taxa e Dano Crítico só para certos tipos de golpe. */
+  critRateByType: z.record(HitTypeSchema, z.number()).default({}),
+  critDmgByType: z.record(HitTypeSchema, z.number()).default({}),
 });
 export type BuffStats = z.infer<typeof BuffStatsSchema>;
 
@@ -45,15 +48,34 @@ export type ConvertTarget = z.infer<typeof ConvertTargetSchema>;
  * `source: 'highestEm'`, o membro com mais Maestria. Recarga entra como multiplicador (1,5 = 150%).
  */
 export const BuffConvertSchema = z.object({
-  from: z.enum(['atk', 'hp', 'def', 'em', 'er']),
+  /** 'baseAtk' = ATK base do personagem + arma (ex.: ATK que a Kujou Sara dá). */
+  from: z.enum(['atk', 'baseAtk', 'hp', 'def', 'em', 'er']),
   source: z.enum(['self', 'highestEm']).default('self'),
   perPoint: z.number(),
   threshold: z.number().default(0),
   /** Teto do valor convertido (sem teto = omitido). */
   cap: z.number().optional(),
+  /** Teto em múltiplos do ATK base da fonte (ex.: Hu Tao, 4 = 400%). */
+  capBaseAtk: z.number().optional(),
   to: z.array(ConvertTargetSchema).min(1),
 });
 export type BuffConvert = z.infer<typeof BuffConvertSchema>;
+
+/**
+ * Regras de composição do time (resolvidas ao montar o projeto): `only` = todos os membros precisam ser destes
+ * elementos; `eachOf` = ao menos um de cada; `scale` multiplica os valores do buff por `table[n - 1]`, onde n é
+ * quantos elementos diferentes há no time (`of: 'distinct'`) ou quantos membros são dos elementos listados.
+ */
+export const BuffTeamRulesSchema = z.object({
+  only: z.array(ElementSchema).optional(),
+  eachOf: z.array(ElementSchema).optional(),
+  scale: z.object({ of: z.union([z.literal('distinct'), z.array(ElementSchema).min(1)]), table: z.array(z.number()).min(1) }).optional(),
+});
+export type BuffTeamRules = z.infer<typeof BuffTeamRulesSchema>;
+
+/** Buff de habilidade (e não de passiva): os valores são multiplicados por `table[nível do talento - 1]`. */
+export const BuffLevelSchema = z.object({ talent: z.enum(['normal', 'skill', 'burst']), table: z.array(z.number()).length(15) });
+export type BuffLevel = z.infer<typeof BuffLevelSchema>;
 
 /**
  * Um buff de passiva ou constelação. Vale a partir de `minConstellation`. `timed` buffs viram uma faixa na linha do
@@ -71,6 +93,10 @@ export const CharacterBuffSchema = z.object({
   stats: BuffStatsSchema.optional(),
   /** Bônus que depende de um stat da fonte (no lugar de `stats`). Os `timed: false` valem o tempo todo. */
   convert: BuffConvertSchema.optional(),
+  /** Só vale (ou vale mais) conforme a composição do time. */
+  team: BuffTeamRulesSchema.optional(),
+  /** Efeito do kit que cresce com o nível do talento. */
+  level: BuffLevelSchema.optional(),
   /** Redução de RES do inimigo (vale o tempo todo). */
   resShred: z.object({ value: z.number(), elements: z.array(ElementSchema).min(1) }).optional(),
   /** O que foi assumido e o que não entra. */
@@ -192,6 +218,8 @@ export const FlatDamageEffectSchema = z.object({
   hitTypes: z.array(HitTypeSchema),
   /** Quantos hits consomem o buff (undefined = ilimitado). Consumidos pelos primeiros hits elegíveis. */
   stacks: z.number().int().positive().optional(),
+  /** Efeito do kit: `perPoint` é multiplicado por `table[nível do talento da fonte - 1]` ao montar o projeto. */
+  level: BuffLevelSchema.optional(),
   active: z.boolean(),
   fonte_info: FonteInfo,
 });

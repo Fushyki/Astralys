@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import characters from '../../src/effects/characters.json';
 import generated from '../../src/data/generated/characters.json';
 
-type Buff = { id: string; label: string; stats?: Record<string, unknown>; resShred?: { value: number; elements: string[] } };
+type Buff = { id: string; label: string; stats?: Record<string, unknown>; resShred?: { value: number; elements: string[] }; team?: { scale?: { table: number[] } }; level?: { talent: string; table: number[] }; convert?: { perPoint: number; capBaseAtk?: number } };
 
 const withBuffs = (characters as { character: string; buffs?: Buff[] }[]).filter((c) => c.buffs?.length);
 
@@ -19,11 +19,23 @@ describe('passivas e constelações curadas', () => {
       expect(new Set(ids).size, `${c.character}: ids repetidos`).toBe(ids.length);
       for (const b of c.buffs!) {
         for (const [k, v] of Object.entries(b.stats ?? {})) {
-          if (typeof v === 'number') expect(Math.abs(v), `${c.character} ${b.id} ${k}`).toBeLessThanOrEqual(k === 'em' ? 400 : 2);
+          if (typeof v === 'number') expect(Math.abs(v) * (b.level ? Math.max(...b.level.table) : 1), `${c.character} ${b.id} ${k}`).toBeLessThanOrEqual(k === 'em' ? 400 : 2);
         }
-        if (b.resShred) expect(b.resShred.value, `${c.character} ${b.id}`).toBeLessThanOrEqual(0.55);
+        // Com `team.scale` o valor guardado é 1 e a tabela traz os números de verdade.
+        const shred = b.resShred && b.resShred.value * (b.team?.scale ? Math.max(...b.team.scale.table) : 1) * (b.level ? Math.max(...b.level.table) : 1);
+        if (shred !== undefined) expect(shred, `${c.character} ${b.id}`).toBeLessThanOrEqual(0.55);
       }
     }
+  });
+
+  it('efeitos do kit trazem a tabela de 15 níveis do Lunaris', () => {
+    const find = (n: string, id: string) => (characters as { character: string; buffs?: Buff[] }[]).find((c) => c.character === n)!.buffs!.find((b) => b.id === id)!;
+    const paramita = find('Hu Tao', 'paramita');
+    expect(paramita.level!.talent).toBe('skill');
+    expect(paramita.level!.table[0]).toBeCloseTo(0.0384, 6);
+    expect(paramita.level!.table[9]).toBeCloseTo(0.0626, 6);
+    expect(paramita.convert!.capBaseAtk).toBe(4);
+    expect(find('Xiao', 'burst').level!.table[14]).toBeGreaterThan(find('Xiao', 'burst').level!.table[0]);
   });
 
   it('Xiao A1 usa o teto de 25% e Yoimiya A1 usa 10 stacks de 2%', () => {

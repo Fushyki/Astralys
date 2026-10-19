@@ -22,12 +22,12 @@ import { CHARACTERS_2 } from './curation/characters2';
 import { CHARACTERS_3 } from './curation/characters3';
 import { CHARACTERS_4 } from './curation/characters4';
 import { CHARACTERS_5 } from './curation/characters5';
-import { CHARACTERS_6 } from './curation/characters6';
+import { CHARACTERS_6, CHARACTERS_7, CHARACTERS_8, CHARACTERS_9, CHARACTERS_10 } from './curation/characters6';
 import type { BuffCuration } from './curation/characters';
 
 /** Junta os lotes: o mesmo personagem pode aparecer em mais de um e as listas se somam. */
 const CHARACTER_BUFFS: Record<string, BuffCuration[]> = {};
-for (const batch of [CHARACTERS_1, CHARACTERS_2, CHARACTERS_3, CHARACTERS_4, CHARACTERS_5, CHARACTERS_6]) {
+for (const batch of [CHARACTERS_1, CHARACTERS_2, CHARACTERS_3, CHARACTERS_4, CHARACTERS_5, CHARACTERS_6, CHARACTERS_7, CHARACTERS_8, CHARACTERS_9, CHARACTERS_10]) {
   for (const [name, list] of Object.entries(batch)) CHARACTER_BUFFS[name] = [...(CHARACTER_BUFFS[name] ?? []), ...list];
 }
 
@@ -169,7 +169,16 @@ console.log(`weapons.json: ${weapons.length} armas (${weapons.filter((w) => w.re
 interface RawChar {
   passives?: Record<string, { description: string; params: number[] }>;
   constellations?: Record<string, { description: string; params: number[] }>;
+  skills?: Record<string, { description: string; multipliers?: Record<string, string[]> }>;
 }
+
+const SKILL_KEY = { normal: 'normalattack', skill: 'elementalskill', burst: 'elementalburst' } as const;
+/** "3.84% Max HP" -> 0.0384 */
+const percentOf = (text: string): number => {
+  const m = /^\s*(-?\d+(?:\.\d+)?)\s*%/.exec(text);
+  if (!m) throw new Error(`valor sem porcentagem: "${text}"`);
+  return round(Number(m[1]) / 100);
+};
 
 function buildCharacters(): CharacterEffect[] {
   const existing = handMade(read<CharacterEffect[]>('src/effects/characters.json'));
@@ -198,8 +207,16 @@ function buildCharacters(): CharacterEffect[] {
     }
     const buffs = list.map((b) => {
       const isConst = b.src.startsWith('const');
-      const node = (isConst ? raw.constellations : raw.passives)?.[b.src];
+      const kitNode = b.kit ? raw.skills?.[SKILL_KEY[b.kit.talent]] : undefined;
+      if (b.kit && !kitNode) throw new Error(`${name} ${b.id}: o talento ${b.kit.talent} não existe`);
+      const node = b.kit ? { description: kitNode!.description, params: [] as number[] } : (isConst ? raw.constellations : raw.passives)?.[b.src];
       if (!node) throw new Error(`${name} ${b.id}: ${b.src} não existe`);
+      let levelTable: number[] | undefined;
+      if (b.kit?.key) {
+        const row = kitNode!.multipliers?.[b.kit.key];
+        if (!row || row.length !== 15) throw new Error(`${name} ${b.id}: a linha "${b.kit.key}" não existe ou não tem 15 níveis`);
+        levelTable = row.map(percentOf);
+      }
       if (!strip(node.description).includes(b.expect)) {
         errors.push(`${name} ${b.id}: a descrição de ${b.src} não contém "${b.expect}" (o Lunaris mudou?)`);
       }
@@ -209,6 +226,7 @@ function buildCharacters(): CharacterEffect[] {
         id: b.id,
         label: b.label,
         minConstellation: isConst ? Number(b.src.slice(5)) : 0,
+        ...(levelTable ? { level: { talent: b.kit!.talent, table: levelTable } } : {}),
         scope: b.scope,
         timed: b.timed,
         ...(b.forElements ? { forElements: b.forElements } : {}),
@@ -218,6 +236,17 @@ function buildCharacters(): CharacterEffect[] {
                 atkPct: v(s.atkPct), dmgPct: v(s.dmgPct), critRate: v(s.critRate), critDmg: v(s.critDmg), em: v(s.em),
                 er: 0, hpPct: v(s.hpPct), defPct: v(s.defPct),
                 dmgPctByType: Object.fromEntries(Object.entries(s.byType ?? {}).map(([k, x]) => [k, v(x)])),
+                critRateByType: Object.fromEntries(Object.entries(s.critRateByType ?? {}).map(([k, x]) => [k, v(x)])),
+                critDmgByType: Object.fromEntries(Object.entries(s.critDmgByType ?? {}).map(([k, x]) => [k, v(x)])),
+              },
+            }
+          : {}),
+        ...(b.team
+          ? {
+              team: {
+                ...(b.team.only ? { only: b.team.only } : {}),
+                ...(b.team.eachOf ? { eachOf: b.team.eachOf } : {}),
+                ...(b.team.scale ? { scale: { of: b.team.scale.of, table: b.team.scale.table.map((x) => v(x)) } } : {}),
               },
             }
           : {}),
@@ -229,6 +258,7 @@ function buildCharacters(): CharacterEffect[] {
                 perPoint: v(b.convert.perPoint),
                 threshold: v(b.convert.threshold),
                 ...(b.convert.cap !== undefined ? { cap: v(b.convert.cap) } : {}),
+                ...(b.convert.capBaseAtk !== undefined ? { capBaseAtk: b.convert.capBaseAtk } : {}),
                 to: b.convert.to,
               },
             }

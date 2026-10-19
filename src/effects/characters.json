@@ -80,7 +80,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "ATK da equipe (menos a Raiden) por 10 s depois do Supremo: ligue nas janelas."
       },
@@ -128,7 +130,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "ATK ao pegar a pimenta (10 s): ligue nas janelas."
       },
@@ -164,7 +168,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+15% de DMG Pyro durante o Pyronado: ligue nas janelas. Só personagens Pyro recebem."
       }
@@ -195,7 +201,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "Assume o máximo de +50% de DMG do personagem ativo (cresce 3,5% por segundo): ligue nas janelas."
       },
@@ -214,7 +222,9 @@
           "er": 0,
           "hpPct": 0.4,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "Assume 4 inimigos marcados (+40% de HP máximo) por 25 s: ligue nas janelas."
       }
@@ -245,7 +255,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+12% de Taxa Crítica da equipe (menos a Hu Tao) por 8 s depois do Paramita: ligue nas janelas."
       },
@@ -264,7 +276,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+33% de DMG Pyro com HP a 50% ou menos: ligue nas janelas."
       },
@@ -283,9 +297,49 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+12% de Taxa Crítica da equipe por 15 s depois de derrotar inimigo com Blood Blossom: ligue nas janelas."
+      },
+      {
+        "id": "paramita",
+        "label": "Hu Tao: Paramita",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "convert": {
+          "from": "hp",
+          "source": "self",
+          "perPoint": 1,
+          "threshold": 0,
+          "capBaseAtk": 4,
+          "to": [
+            "atkFlat"
+          ]
+        },
+        "level": {
+          "talent": "skill",
+          "table": [
+            0.0384,
+            0.0407,
+            0.043,
+            0.046,
+            0.0483,
+            0.0506,
+            0.0536,
+            0.0566,
+            0.0596,
+            0.0626,
+            0.0655,
+            0.0685,
+            0.0715,
+            0.0745,
+            0.0775
+          ]
+        },
+        "note": "ATK fixo = % do HP máximo (pelo nível da habilidade), limitado a 400% do ATK base, por 9 s: ligue nas janelas. O HP é o total do build, sem a perda de HP da ativação."
       }
     ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -314,7 +368,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+20% de Taxa Crítica nas flechas seguintes (5 s): ligue nas janelas."
       },
@@ -336,7 +392,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+20% de DMG Cryo dentro do Celestial Shower: ligue nas janelas. Só personagens Cryo recebem."
       },
@@ -384,7 +442,9 @@
           "dmgPctByType": {
             "normal": 0.3,
             "charged": 0.3
-          }
+          },
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+30% de DMG de Normal/Carregado por 6 s depois da habilidade: ligue nas janelas."
       },
@@ -403,7 +463,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+18% de DMG Cryo por 10 s depois do Senho: ligue nas janelas."
       }
@@ -434,7 +496,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+20% de DMG Hydro, sempre."
       },
@@ -479,7 +543,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+125 de Maestria da equipe por 10 s depois do Supremo: ligue nas janelas."
       }
@@ -510,7 +576,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+20% de DMG Pyro durante a infusão do Supremo: ligue nas janelas."
       },
@@ -529,7 +597,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+15% de DMG contra inimigos com mais de 50% de HP: ligue nas janelas."
       },
@@ -548,7 +618,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "Assume 3 stacks de +10% de ATK (ao levar dano): ligue nas janelas."
       }
@@ -579,7 +651,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+60% de ATK por 12 s depois das faíscas: ligue nas janelas."
       }
@@ -613,7 +687,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+20% de DMG Electro por 5 s depois dos raios das Sakuras: ligue nas janelas. Só personagens Electro recebem."
       },
@@ -661,9 +737,45 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+30% de DMG Físico (vale para todo o dano dela) por 6 s por stack gasto: ligue nas janelas."
+      },
+      {
+        "id": "skill",
+        "label": "Eula: Lacerar (RES)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "level": {
+          "talent": "skill",
+          "table": [
+            0.16,
+            0.17,
+            0.18,
+            0.19,
+            0.2,
+            0.21,
+            0.22,
+            0.23,
+            0.24,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25
+          ]
+        },
+        "resShred": {
+          "value": 1,
+          "elements": [
+            "Cryo"
+          ]
+        },
+        "note": "Assume a redução de RES Cryo da versão segurada da habilidade sempre ativa (a Física não entra)."
       }
     ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -692,7 +804,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "Assume 4 stacks de +50 de Maestria: ligue nas janelas."
       }
@@ -723,9 +837,67 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0.25,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+25% de DEF da equipe por 12 s depois da habilidade: ligue nas janelas. Só importa para quem escala com DEF."
+      },
+      {
+        "id": "skill",
+        "label": "Gorou: Estandarte (Geo)",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "forElements": [
+          "Geo"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 1,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
+        },
+        "team": {
+          "scale": {
+            "of": [
+              "Geo"
+            ],
+            "table": [
+              0,
+              0,
+              1
+            ]
+          }
+        },
+        "level": {
+          "talent": "skill",
+          "table": [
+            0.15,
+            0.15,
+            0.15,
+            0.15,
+            0.15,
+            0.15,
+            0.15,
+            0.15,
+            0.15,
+            0.15,
+            0.15,
+            0.15,
+            0.15,
+            0.15,
+            0.15
+          ]
+        },
+        "note": "+15% de DMG Geo com 3 personagens Geo no time (o Gorou conta): ligue nas janelas. Os bônus de DEF e de resistência a interrupção não entram."
       }
     ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -757,7 +929,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+15% de DMG Cryo para o personagem ativo no campo: ligue nas janelas. Só personagens Cryo recebem."
       },
@@ -779,7 +953,9 @@
           "dmgPctByType": {
             "skill": 0.15,
             "burst": 0.15
-          }
+          },
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+15% de DMG de habilidade e Supremo por 10 s (versão \"toque\"): ligue nas janelas. A versão \"segurar\" NÃO está modelada."
       },
@@ -801,9 +977,45 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+15% de Dano Crítico Cryo no campo dela: ligue nas janelas."
+      },
+      {
+        "id": "burst",
+        "label": "Shenhe: Campo (RES)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "level": {
+          "talent": "burst",
+          "table": [
+            0.06,
+            0.07,
+            0.08,
+            0.09,
+            0.1,
+            0.11,
+            0.12,
+            0.13,
+            0.14,
+            0.15,
+            0.15,
+            0.15,
+            0.15,
+            0.15,
+            0.15
+          ]
+        },
+        "resShred": {
+          "value": 1,
+          "elements": [
+            "Cryo"
+          ]
+        },
+        "note": "Assume a redução de RES Cryo do campo do Supremo sempre ativa (a Física não entra)."
       }
     ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -834,7 +1046,9 @@
           "defPct": 0,
           "dmgPctByType": {
             "normal": 0.15
-          }
+          },
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+15% de DMG de Ataque Normal da equipe por 12 s: ligue nas janelas."
       }
@@ -869,7 +1083,9 @@
             "normal": 0.15,
             "charged": 0.15,
             "plunge": 0.15
-          }
+          },
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+15% de DMG de Normal/Carregado/Imersivo por 6 s: ligue nas janelas."
       }
@@ -962,7 +1178,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "Assume HP alto: o teto de +30% de DMG Hydro, sempre."
       }
@@ -993,7 +1211,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "Assume 5 stacks de +6% de ATK (variação de HP): ligue nas janelas."
       }
@@ -1024,7 +1244,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "Assume inimigo sob Pyro (+60% de DMG). Os +20% por outro personagem Pyro NÃO entram."
       },
@@ -1043,7 +1265,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "Assume 3 stacks de +20% de Dano Crítico: ligue nas janelas."
       },
@@ -1088,7 +1312,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+10% de Taxa Crítica e +70% de Dano Crítico por 12 s depois da habilidade: ligue nas janelas."
       }
@@ -1171,7 +1397,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+20% de DMG Geo por 20 s depois de um construto Geo: ligue nas janelas."
       }
@@ -1204,7 +1432,9 @@
           "defPct": 0,
           "dmgPctByType": {
             "skill": 0.4
-          }
+          },
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+40% de DMG da habilidade (Gale Blade) depois de segurar por mais de 1 s: ligue nas janelas."
       },
@@ -1252,7 +1482,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+15% de DMG Hydro do personagem em campo durante a habilidade: ligue nas janelas. Só personagens Hydro recebem."
       }
@@ -1283,7 +1515,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+10% de DMG por 8 s depois de pegar partícula: ligue nas janelas."
       },
@@ -1302,7 +1536,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+10% de Taxa Crítica contra inimigos com menos de 30% de HP: ligue nas janelas."
       },
@@ -1321,7 +1557,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+10% de Taxa e +50% de Dano Crítico por 15 s depois de consumir Sigilos: ligue nas janelas."
       }
@@ -1352,7 +1590,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+15% de ATK por 10 s depois de acertar ponto fraco com tiro mirado: ligue nas janelas."
       },
@@ -1371,7 +1611,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+15% de ATK da equipe por 10 s depois da Chuva de Fogo: ligue nas janelas."
       }
@@ -1419,7 +1661,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+25% de DMG Anemo por 10 s depois da habilidade ou do Supremo: ligue nas janelas."
       },
@@ -1452,7 +1696,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+100% de Dano Crítico contra alvos atingidos pelo Supremo: ligue nas janelas."
       }
@@ -1486,7 +1732,9 @@
           "dmgPctByType": {
             "normal": 0.15,
             "charged": 0.15
-          }
+          },
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+15% de DMG de Normal/Carregado por 10 s depois de contra-atacar no tempo certo: ligue nas janelas."
       },
@@ -1531,7 +1779,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "Assume o teto de +25% de DMG (cresce 5% a cada 3 s do Supremo): ligue nas janelas."
       },
@@ -1552,9 +1802,56 @@
           "defPct": 0,
           "dmgPctByType": {
             "skill": 0.45
-          }
+          },
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "Assume 3 stacks (+45% de DMG da habilidade): ligue nas janelas."
+      },
+      {
+        "id": "burst",
+        "label": "Xiao: Máscara Yaksha",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {
+            "normal": 1,
+            "charged": 1,
+            "plunge": 1
+          },
+          "critRateByType": {},
+          "critDmgByType": {}
+        },
+        "level": {
+          "talent": "burst",
+          "table": [
+            0.5845,
+            0.6195,
+            0.6545,
+            0.7,
+            0.735,
+            0.77,
+            0.8155,
+            0.861,
+            0.9065,
+            0.952,
+            0.9975,
+            1.043,
+            1.0885,
+            1.134,
+            1.1795
+          ]
+        },
+        "note": "DMG de Normal/Carregado/Plunging pelo nível do Supremo, durante a máscara: ligue nas janelas."
       }
     ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -1586,7 +1883,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+12% de DMG Geo por 10 s depois de atravessar a Tela de Jade: ligue nas janelas. Só personagens Geo recebem."
       }
@@ -1619,7 +1918,9 @@
           "defPct": 0,
           "dmgPctByType": {
             "charged": 0.15
-          }
+          },
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+15% de DMG de Ataque Carregado, sempre."
       },
@@ -1639,6 +1940,43 @@
           ]
         },
         "note": "+50% da DEF dela como ATK fixo durante o Supremo: ligue nas janelas."
+      },
+      {
+        "id": "burst",
+        "label": "Noelle: Varredura",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "convert": {
+          "from": "def",
+          "source": "self",
+          "perPoint": 1,
+          "threshold": 0,
+          "to": [
+            "atkFlat"
+          ]
+        },
+        "level": {
+          "talent": "burst",
+          "table": [
+            0.4,
+            0.43,
+            0.46,
+            0.5,
+            0.53,
+            0.56,
+            0.6,
+            0.64,
+            0.68,
+            0.72,
+            0.76,
+            0.8,
+            0.85,
+            0.9,
+            0.95
+          ]
+        },
+        "note": "ATK fixo = % da DEF pelo nível do Supremo: ligue nas janelas."
       }
     ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -1670,7 +2008,9 @@
           "dmgPctByType": {
             "normal": 0.15,
             "charged": 0.15
-          }
+          },
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "Assume o inimigo sempre sob Cryo (+15% de DMG de Normal/Carregado). Vale para a Qiqi, não para a equipe."
       }
@@ -1717,7 +2057,9 @@
           "defPct": 0,
           "dmgPctByType": {
             "burst": 0.15
-          }
+          },
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+15% de DMG do Supremo contra inimigos com menos HP% que ele: ligue nas janelas."
       }
@@ -1750,7 +2092,9 @@
           "defPct": 0,
           "dmgPctByType": {
             "skill": 0.15
-          }
+          },
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+15% de DMG da habilidade, sempre."
       },
@@ -1769,7 +2113,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+200 de Maestria da equipe dentro do campo com HP acima de 50%: ligue nas janelas."
       }
@@ -1800,7 +2146,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+80 de Maestria da equipe por 12 s depois do Ataque Carregado da Mona: ligue nas janelas."
       },
@@ -1819,7 +2167,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+15% de Taxa Crítica da equipe contra inimigos com Presságio: ligue nas janelas."
       },
@@ -1840,7 +2190,9 @@
           "defPct": 0,
           "dmgPctByType": {
             "charged": 1.8
-          }
+          },
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "Assume o teto de +180% de DMG do próximo Ataque Carregado: ligue nas janelas. Os 200% extras contra Presságio não entram."
       },
@@ -1860,6 +2212,47 @@
           ]
         },
         "note": "DMG Hydro = 20% da Recarga total (ex.: 200% de Recarga dá +40%), sempre."
+      },
+      {
+        "id": "burst",
+        "label": "Mona: Presságio",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 1,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
+        },
+        "level": {
+          "talent": "burst",
+          "table": [
+            0.42,
+            0.44,
+            0.46,
+            0.48,
+            0.5,
+            0.52,
+            0.54,
+            0.56,
+            0.58,
+            0.6,
+            0.6,
+            0.6,
+            0.6,
+            0.6,
+            0.6
+          ]
+        },
+        "note": "DMG da equipe contra inimigos com Presságio, pelo nível do Supremo (o aumento do golpe que o aplica não entra): ligue nas janelas."
       }
     ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -1888,7 +2281,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+15% de Taxa Crítica por 8 s depois da habilidade: ligue nas janelas. Os +15% de Recarga não entram."
       },
@@ -1907,7 +2302,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+25% de ATK por 10 s depois de uma reação com Electro: ligue nas janelas."
       },
@@ -1926,7 +2323,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "Assume 4 efeitos independentes ativos (+24% de DMG Electro): ligue nas janelas."
       }
@@ -1957,7 +2356,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+50 de Maestria dos demais com o elemento absorvido pelo Espalhar: ligue nas janelas em que o elemento bate. A parte de 20% da Maestria da Sucrose (A4) ainda não entra."
       },
@@ -1976,7 +2377,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+20% de DMG do elemento absorvido durante o Supremo: ligue nas janelas em que o elemento bate com o de quem ataca."
       },
@@ -2024,7 +2427,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+12% de Taxa Crítica por 5 s depois de acertar pelas costas: ligue nas janelas."
       },
@@ -2043,7 +2448,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "Assume o teto de +15% de Taxa Crítica dos demais por 10 s depois do Supremo (o valor real é 15% da Taxa da Rosaria): ligue nas janelas."
       },
@@ -2064,7 +2471,9 @@
           "defPct": 0,
           "dmgPctByType": {
             "normal": 0.1
-          }
+          },
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+10% de DMG de Normal por 4 s depois de um acerto crítico: ligue nas janelas."
       }
@@ -2095,7 +2504,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "Assume 10 stacks (+20% de DMG Pyro) durante o Niwabi: ligue nas janelas."
       },
@@ -2114,7 +2525,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+10% de ATK da equipe por 15 s mais 1% por stack da A1; assume 10 stacks (+20%): ligue nas janelas."
       },
@@ -2133,7 +2546,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+20% de ATK por 20 s depois de derrotar inimigo sob a Marca Dourada: ligue nas janelas."
       },
@@ -2152,7 +2567,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+25% de DMG Pyro por 6 s depois de um acerto crítico Pyro: ligue nas janelas."
       }
@@ -2183,7 +2600,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+40% de DMG Hydro por 4 s quando Normal/Carregado curam alguém com 80% de HP ou mais: ligue nas janelas."
       }
@@ -2217,9 +2636,48 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+60% de Dano Crítico Electro de quem recebeu o bônus de ATK do Tengu: ligue nas janelas. O bônus de ATK em si depende do ATK base da Sara e não entra."
+      },
+      {
+        "id": "skill",
+        "label": "Sara: Tengu Juurai",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "convert": {
+          "from": "baseAtk",
+          "source": "self",
+          "perPoint": 1,
+          "threshold": 0,
+          "to": [
+            "atkFlat"
+          ]
+        },
+        "level": {
+          "talent": "skill",
+          "table": [
+            0.4296,
+            0.4618,
+            0.494,
+            0.537,
+            0.5692,
+            0.6014,
+            0.6444,
+            0.6874,
+            0.7303,
+            0.7733,
+            0.8162,
+            0.8592,
+            0.9129,
+            0.9666,
+            1.0203
+          ]
+        },
+        "note": "ATK fixo = % do ATK base dela (pelo nível da habilidade) para o personagem em campo: ligue nas janelas."
       }
     ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -2248,9 +2706,71 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0.2,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+20% de ATK e +20% de DEF da equipe por 10 s depois do Supremo: ligue nas janelas."
+      },
+      {
+        "id": "burst",
+        "label": "Itto: Rei Oni",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "convert": {
+          "from": "def",
+          "source": "self",
+          "perPoint": 1,
+          "threshold": 0,
+          "to": [
+            "atkFlat"
+          ]
+        },
+        "level": {
+          "talent": "burst",
+          "table": [
+            0.576,
+            0.6192,
+            0.6624,
+            0.72,
+            0.7632,
+            0.8064,
+            0.864,
+            0.9216,
+            0.9792,
+            1.0368,
+            1.0944,
+            1.152,
+            1.224,
+            1.296,
+            1.368
+          ]
+        },
+        "note": "ATK fixo = % da DEF pelo nível do Supremo, durante o Rei Oni: ligue nas janelas. A queda de 20% de RES dele não entra."
+      },
+      {
+        "id": "c6",
+        "label": "Itto C6",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {
+            "charged": 0.7
+          }
+        },
+        "note": "+70% de Dano Crítico de Ataque Carregado, sempre."
       }
     ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -2279,7 +2799,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+80 de Maestria dos demais por 10 s depois do Golpe: ligue nas janelas."
       }
@@ -2310,7 +2832,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+12% de DMG elemental da equipe por 15 s depois da habilidade ou Supremo: ligue nas janelas."
       }
@@ -2341,7 +2865,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+16% de ATK por 10 s depois do efeito Coil: ligue nas janelas."
       },
@@ -2360,7 +2886,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+8% de ATK dos demais por 10 s: ligue nas janelas."
       },
@@ -2379,7 +2907,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "Assume o teto de +35% de DMG Cryo (3,5% por segundo no estado Gelo Veloz): ligue nas janelas."
       }
@@ -2412,9 +2942,54 @@
           "defPct": 0,
           "dmgPctByType": {
             "skill": 0.4
-          }
+          },
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+40% de DMG da habilidade contra inimigos com 50% de HP ou menos: ligue nas janelas."
+      },
+      {
+        "id": "burst",
+        "label": "Ayato: Jardim de Pureza",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {
+            "normal": 1
+          },
+          "critRateByType": {},
+          "critDmgByType": {}
+        },
+        "level": {
+          "talent": "burst",
+          "table": [
+            0.11,
+            0.12,
+            0.13,
+            0.14,
+            0.15,
+            0.16,
+            0.17,
+            0.18,
+            0.19,
+            0.2,
+            0.2,
+            0.2,
+            0.2,
+            0.2,
+            0.2
+          ]
+        },
+        "note": "DMG de Ataque Normal de quem está no jardim, pelo nível do Supremo: ligue nas janelas."
       }
     ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -2443,7 +3018,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+60 de Maestria dos demais por 12 s depois do Supremo: ligue nas janelas."
       }
@@ -2474,7 +3051,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+50 de Maestria por 4 s depois de uma Flecha de Guirlanda: ligue nas janelas."
       },
@@ -2493,7 +3072,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+20% de DMG Dendro com inimigos dentro do campo da Mina: ligue nas janelas."
       },
@@ -2512,7 +3093,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+60 de Maestria da equipe por 8 s depois do Supremo: ligue nas janelas. Os +60 extras por reação não entram."
       },
@@ -2533,6 +3116,29 @@
           ]
         },
         "note": "+0,06% de DMG de Ataque Carregado por ponto de Maestria, teto de 60%, sempre. O Tanglevine Shaft (Supremo) não entra."
+      },
+      {
+        "id": "c1",
+        "label": "Tighnari C1",
+        "minConstellation": 1,
+        "scope": "self",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {
+            "charged": 0.15
+          },
+          "critDmgByType": {}
+        },
+        "note": "+15% de Taxa Crítica de Ataque Carregado, sempre."
       }
     ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -2563,7 +3169,9 @@
           "defPct": 0,
           "dmgPctByType": {
             "skill": 0.35
-          }
+          },
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+35% de DMG da habilidade com o Julgamento ativo: ligue nas janelas. Os 3 raios extras não entram."
       },
@@ -2582,7 +3190,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "Assume 5 stacks (+50% de DMG Electro) por 4 s depois de acertos Normais: ligue nas janelas."
       }
@@ -2613,7 +3223,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "Assume 1 inimigo marcado pelas Sementes (+100 de Maestria): ligue nas janelas."
       },
@@ -2662,7 +3274,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+30% de ATK no estado Windfavored se a habilidade tocou Pyro: ligue nas janelas."
       },
@@ -2681,7 +3295,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+20% de Taxa Crítica no estado Windfavored se a habilidade tocou Cryo: ligue nas janelas."
       }
@@ -2715,9 +3331,89 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+40% de Dano Crítico Anemo de quem está sob o Benefício do Vento: ligue nas janelas. Só personagens Anemo recebem."
+      },
+      {
+        "id": "burst",
+        "label": "Faruzan: Benefício do Vento",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "forElements": [
+          "Anemo"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 1,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
+        },
+        "level": {
+          "talent": "burst",
+          "table": [
+            0.18,
+            0.1935,
+            0.207,
+            0.225,
+            0.2385,
+            0.252,
+            0.27,
+            0.288,
+            0.306,
+            0.324,
+            0.342,
+            0.36,
+            0.3825,
+            0.405,
+            0.4275
+          ]
+        },
+        "note": "DMG Anemo da equipe pelo nível do Supremo: ligue nas janelas. Só personagens Anemo recebem."
+      },
+      {
+        "id": "burst-res",
+        "label": "Faruzan: Pulso (RES)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "level": {
+          "talent": "burst",
+          "table": [
+            0.3,
+            0.3,
+            0.3,
+            0.3,
+            0.3,
+            0.3,
+            0.3,
+            0.3,
+            0.3,
+            0.3,
+            0.3,
+            0.3,
+            0.3,
+            0.3,
+            0.3
+          ]
+        },
+        "resShred": {
+          "value": 1,
+          "elements": [
+            "Anemo"
+          ]
+        },
+        "note": "Assume a redução de RES Anemo do Supremo sempre ativa."
       }
     ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -2749,7 +3445,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+15% de DMG Dendro por 8 s depois da explosão dos rabanetes: ligue nas janelas. Só personagens Dendro recebem."
       }
@@ -2780,7 +3478,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "Assume 4 stacks (+100 de Maestria) durante o Painted Dome: ligue nas janelas."
       }
@@ -2811,7 +3511,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+25% de DMG Dendro com o personagem em campo acima de 50% de HP (assumido sempre)."
       },
@@ -2830,7 +3532,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+80 de Maestria da equipe por 15 s depois do Supremo: ligue nas janelas."
       }
@@ -2864,9 +3568,43 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+20% de DMG Anemo por 6 s depois do Enigma Thrust: ligue nas janelas."
+      },
+      {
+        "id": "a1",
+        "label": "Lynette A1",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 1,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
+        },
+        "team": {
+          "scale": {
+            "of": "distinct",
+            "table": [
+              0.08,
+              0.12,
+              0.16,
+              0.2
+            ]
+          }
+        },
+        "note": "+8/12/16/20% de ATK da equipe conforme o nº de elementos diferentes no time, por 10 s depois da habilidade: ligue nas janelas."
       }
     ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -2895,7 +3633,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "Assume 2 stacks (+18% de ATK): ligue nas janelas."
       },
@@ -2914,9 +3654,34 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "Assume 3 stacks (+36% de Dano Crítico): ligue nas janelas."
+      },
+      {
+        "id": "c1",
+        "label": "Freminet C1",
+        "minConstellation": 1,
+        "scope": "self",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {
+            "skill": 0.15
+          },
+          "critDmgByType": {}
+        },
+        "note": "+15% de Taxa Crítica do Shattering Pressure (habilidade), sempre."
       }
     ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -2949,7 +3714,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "Assume 3 stacks (+60% de DMG Pyro/Electro) por 8 s depois da cura: ligue nas janelas. Só personagens Pyro/Electro recebem."
       },
@@ -2974,6 +3741,31 @@
           ]
         },
         "note": "+1% de ATK por 1.000 de HP máximo dela (teto de 40%) para os Pyro e Electro por 30 s: ligue nas janelas."
+      },
+      {
+        "id": "a1",
+        "label": "Chevreuse A1",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "team": {
+          "only": [
+            "Pyro",
+            "Electro"
+          ],
+          "eachOf": [
+            "Pyro",
+            "Electro"
+          ]
+        },
+        "resShred": {
+          "value": 0.4,
+          "elements": [
+            "Pyro",
+            "Electro"
+          ]
+        },
+        "note": "Só com time de Pyro e Electro (ao menos um de cada). Assume a redução de RES Pyro e Electro (6 s, depois de Sobrecarregar) sempre ativa."
       }
     ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -3004,7 +3796,9 @@
           "defPct": 0,
           "dmgPctByType": {
             "plunge": 0.2
-          }
+          },
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+20% de DMG do Plunging da habilidade com HP de 50% ou mais: ligue nas janelas."
       },
@@ -3023,9 +3817,36 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+20% de ATK por 5 s depois de cura com overflow: ligue nas janelas."
+      },
+      {
+        "id": "c6",
+        "label": "Gaming C6",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {
+            "plunge": 0.2
+          },
+          "critDmgByType": {
+            "plunge": 0.4
+          }
+        },
+        "note": "+20% de Taxa e +40% de Dano Crítico do Plunging da habilidade, sempre."
       }
     ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -3054,9 +3875,34 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+20% de ATK por 15 s depois do Skyladder: ligue nas janelas."
+      },
+      {
+        "id": "a1",
+        "label": "Xianyun A1",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {
+            "plunge": 0.1
+          },
+          "critDmgByType": {}
+        },
+        "note": "Assume 4 stacks (+10% de Taxa Crítica de Plunging da equipe) por 20 s: ligue nas janelas."
       }
     ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -3088,7 +3934,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+8% de DMG Hydro por 18 s depois da habilidade: ligue nas janelas. O dano fixo por Convalescência não entra."
       }
@@ -3119,9 +3967,38 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+40% de DMG Pyro em combate, sempre."
+      },
+      {
+        "id": "c6",
+        "label": "Arlecchino C6",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {
+            "normal": 0.1,
+            "burst": 0.1
+          },
+          "critDmgByType": {
+            "normal": 0.7,
+            "burst": 0.7
+          }
+        },
+        "note": "+10% de Taxa e +70% de Dano Crítico de Normal e Supremo por 20 s depois do All Is Ash: ligue nas janelas."
       }
     ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -3150,7 +4027,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "Assume 2 stacks (+30% de DMG Electro): ligue nas janelas."
       },
@@ -3169,7 +4048,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+80 de Maestria da equipe por 10 s (acertando 2 ou mais inimigos): ligue nas janelas."
       }
@@ -3202,7 +4083,9 @@
           "defPct": 0,
           "dmgPctByType": {
             "skill": 0.2
-          }
+          },
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+20% de DMG da habilidade, sempre. O Cleardew Cologne da A1 não entra."
       },
@@ -3250,7 +4133,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+20% de DMG Geo por 12 s depois de um Nightsoul Burst: ligue nas janelas."
       }
@@ -3283,7 +4168,9 @@
           "defPct": 0,
           "dmgPctByType": {
             "burst": 0.75
-          }
+          },
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+75% de DMG do Supremo, sempre."
       }
@@ -3317,7 +4204,9 @@
           "dmgPctByType": {
             "normal": 0.3,
             "plunge": 0.3
-          }
+          },
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+30% de DMG de Normal/Plunging com menos de 2 Amostras alteradas no Nightsoul: ligue nas janelas."
       },
@@ -3339,7 +4228,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+50% de DMG para personagens Geo com a Amostra Geo ativa: ligue nas janelas."
       },
@@ -3361,7 +4252,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+45% de ATK para personagens Pyro com a Amostra Pyro ativa: ligue nas janelas."
       },
@@ -3383,7 +4276,9 @@
           "er": 0,
           "hpPct": 0.45,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+45% de HP máximo para personagens Hydro com a Amostra Hydro ativa: ligue nas janelas."
       },
@@ -3405,7 +4300,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+60% de Dano Crítico para personagens Cryo com a Amostra Cryo ativa: ligue nas janelas."
       }
@@ -3439,7 +4336,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+8% de DMG Electro por 9 s depois do Supremo (1 inimigo atingido): ligue nas janelas. Cada inimigo extra soma +8% até 32%."
       },
@@ -3458,7 +4357,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "Assume 3 stacks (+30% de ATK do personagem em campo): ligue nas janelas."
       }
@@ -3489,7 +4390,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+60 de Maestria da equipe por 12 s depois do Supremo: ligue nas janelas."
       }
@@ -3520,7 +4423,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+100 de Maestria por 4 s quando aliados acertam com outro elemento: ligue nas janelas."
       },
@@ -3569,7 +4474,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "Assume 2 stacks (+70% de ATK) depois de Nightsoul Burst: ligue nas janelas."
       },
@@ -3590,9 +4497,38 @@
           "defPct": 0,
           "dmgPctByType": {
             "burst": 1
-          }
+          },
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+100% de DMG do Supremo com Fiery Passion ou Apex Drive ativo: ligue nas janelas."
+      },
+      {
+        "id": "c6",
+        "label": "Varesa C6",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {
+            "plunge": 0.1,
+            "burst": 0.1
+          },
+          "critDmgByType": {
+            "plunge": 1,
+            "burst": 1
+          }
+        },
+        "note": "+10% de Taxa e +100% de Dano Crítico de Plunging e Supremo, sempre."
       }
     ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -3621,7 +4557,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+80 de Maestria por 10 s depois de um Nightsoul Burst: ligue nas janelas."
       },
@@ -3640,7 +4578,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+100 de Maestria por 15 s depois do Supremo: ligue nas janelas."
       }
@@ -3671,7 +4611,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+70% de ATK por 12,5 s depois do Havoc: Extinction no modo Sete Fases: ligue nas janelas."
       }
@@ -3702,7 +4644,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+20% de ATK, sempre. O aumento da Maestria por ATK não entra."
       }
@@ -3733,7 +4677,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+80 de Maestria dela e do personagem em campo por 15 s depois da habilidade ou Supremo: ligue nas janelas."
       }
@@ -3764,7 +4710,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+100 de Maestria por 8 s com 3 stacks de Véu da Falsidade (Ascendant Gleam): ligue nas janelas."
       },
@@ -3826,7 +4774,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+50% de DMG Pyro por 6 s depois de uma reação: ligue nas janelas. O bônus do elemento da reação não entra."
       },
@@ -3847,7 +4797,9 @@
           "defPct": 0,
           "dmgPctByType": {
             "burst": 0.4
-          }
+          },
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+40% de DMG do Supremo, sempre."
       }
@@ -3878,7 +4830,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+100 de Maestria do personagem curado (HP acima de 70%) por 6 s: ligue nas janelas."
       }
@@ -3909,7 +4863,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "Assume 3 stacks (+15% de Taxa Crítica) por 10 s: ligue nas janelas."
       }
@@ -3943,7 +4899,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+5% de Taxa e +10% de Dano Crítico Geo dos demais por 20 s depois da habilidade ou Supremo: ligue nas janelas. Só personagens Geo recebem."
       },
@@ -3965,7 +4923,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "A C6 troca o bônus da A1 por +10% de Taxa e +30% de Dano Crítico; este buff soma só a diferença (+5% e +20%) sobre o da A1. Ligue nas mesmas janelas."
       }
@@ -3999,7 +4959,9 @@
           "dmgPctByType": {
             "normal": 0.3,
             "charged": 0.3
-          }
+          },
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "Assume 4 stacks (+30% de DMG de Normal/Carregado): ligue nas janelas."
       },
@@ -4021,7 +4983,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+20% de DMG Anemo por 10 s depois de um Espalhar: ligue nas janelas. O bônus do elemento absorvido não entra."
       },
@@ -4040,7 +5004,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "Assume 4 stacks de Azure Fang's Oath (+80% de Dano Crítico): ligue nas janelas."
       }
@@ -4071,7 +5037,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+15% de ATK por 8 s depois de aliado causar reação Cryo: ligue nas janelas."
       },
@@ -4090,7 +5058,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+15% de ATK do aliado que causou a reação Cryo por 8 s: ligue nas janelas."
       },
@@ -4109,7 +5079,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+200 de Maestria dos demais por 8 s depois do golpe da Lâmina do Mal: ligue nas janelas."
       }
@@ -4166,7 +5138,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+10% de Taxa Crítica da equipe dentro do raio de Wake of Earth: ligue nas janelas."
       }
@@ -4223,7 +5197,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "Assume 10 níveis de Luz de Lótus (+60 de Maestria) dentro da área da Lâmpada: ligue nas janelas."
       },
@@ -4245,7 +5221,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+12% de DMG Dendro do personagem sob a Luz de Lótus: ligue nas janelas. O bônus extra do elemento transfigurado não entra."
       }
@@ -4276,7 +5254,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+6% de DMG do personagem em campo com o Limiar ativo: ligue nas janelas. Os +9% extras com Bênção Nightsoul não entram."
       },
@@ -4298,7 +5278,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+20% de DMG Pyro por 9 s depois do Supremo: ligue nas janelas."
       }
@@ -4355,7 +5337,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+10% de Taxa Crítica da equipe dentro do raio de Wake of Earth: ligue nas janelas."
       }
@@ -4412,7 +5396,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "Assume 10 níveis de Luz de Lótus (+60 de Maestria) dentro da área da Lâmpada: ligue nas janelas."
       },
@@ -4434,7 +5420,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+12% de DMG Dendro do personagem sob a Luz de Lótus: ligue nas janelas. O bônus extra do elemento transfigurado não entra."
       }
@@ -4465,7 +5453,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+6% de DMG do personagem em campo com o Limiar ativo: ligue nas janelas. Os +9% extras com Bênção Nightsoul não entram."
       },
@@ -4487,7 +5477,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+20% de DMG Pyro por 9 s depois do Supremo: ligue nas janelas."
       }
@@ -4536,7 +5528,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+40% de Dano Crítico de Hydro e Geo por 8 s depois do Moondrift Harmony: ligue nas janelas."
       }
@@ -4567,7 +5561,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "Assume o teto de +40% de ATK durante o Supremo: ligue nas janelas."
       }
@@ -4598,7 +5594,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+40% de Dano Crítico do personagem em campo com o Núcleo de Detecção presente: ligue nas janelas."
       },
@@ -4632,7 +5630,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+123 de Maestria da equipe com o Núcleo em Estado Estável: ligue nas janelas. No estado Sobrecarregado seria +234 só para o personagem em campo."
       }
@@ -4663,7 +5663,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+100 de Maestria da equipe por 18 s depois da habilidade: ligue nas janelas."
       }
@@ -4712,7 +5714,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+50% de Dano Crítico Hydro/Cryo por 5 s: ligue nas janelas. Até a C5 vale só para o personagem em campo; a C6 estende a todos."
       },
@@ -4735,9 +5739,46 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+60% de DMG Hydro/Cryo da equipe enquanto a Canção das Eras Passadas estiver ativa: ligue nas janelas."
+      },
+      {
+        "id": "skill",
+        "label": "Vodyanitsa: Canção (RES)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "level": {
+          "talent": "skill",
+          "table": [
+            0.165,
+            0.18,
+            0.195,
+            0.21,
+            0.225,
+            0.24,
+            0.255,
+            0.27,
+            0.285,
+            0.3,
+            0.318,
+            0.336,
+            0.354,
+            0.372,
+            0.39
+          ]
+        },
+        "resShred": {
+          "value": 1,
+          "elements": [
+            "Hydro",
+            "Cryo"
+          ]
+        },
+        "note": "Assume a redução de RES Hydro e Cryo sempre ativa."
       }
     ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -4766,7 +5807,9 @@
           "er": 0,
           "hpPct": 0,
           "defPct": 0,
-          "dmgPctByType": {}
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
         },
         "note": "+40% de ATK com o máximo de stacks de Ação Disciplinar (modo Armed for Action): ligue nas janelas."
       }
@@ -4817,6 +5860,301 @@
           ]
         },
         "note": "+0,2% de DMG de Normal/Carregado/Plunging por ponto de Maestria, por 5 s depois da habilidade ou Supremo: ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Escoffier",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "a4",
+        "label": "Escoffier A4",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "team": {
+          "scale": {
+            "of": [
+              "Hydro",
+              "Cryo"
+            ],
+            "table": [
+              0.05,
+              0.1,
+              0.15,
+              0.55
+            ]
+          }
+        },
+        "resShred": {
+          "value": 1,
+          "elements": [
+            "Hydro",
+            "Cryo"
+          ]
+        },
+        "note": "Redução de RES Hydro e Cryo de 5/10/15/55% conforme o nº de Hydro e Cryo no time (a Escoffier conta), sempre ativa."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Yanfei",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "burst",
+        "label": "Yanfei: Brilho",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {
+            "charged": 1
+          },
+          "critRateByType": {},
+          "critDmgByType": {}
+        },
+        "level": {
+          "talent": "burst",
+          "table": [
+            0.334,
+            0.354,
+            0.374,
+            0.4,
+            0.42,
+            0.44,
+            0.466,
+            0.492,
+            0.518,
+            0.544,
+            0.57,
+            0.596,
+            0.622,
+            0.648,
+            0.674
+          ]
+        },
+        "note": "DMG de Ataque Carregado pelo nível do Supremo, enquanto o Brilho durar: ligue nas janelas."
+      },
+      {
+        "id": "c2",
+        "label": "Yanfei C2",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {
+            "charged": 0.2
+          },
+          "critDmgByType": {}
+        },
+        "note": "+20% de Taxa Crítica de Carregado contra inimigos com menos de 50% de HP: ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Candace",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "burst",
+        "label": "Candace: Prece da Coroa",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {
+            "normal": 1
+          },
+          "critRateByType": {},
+          "critDmgByType": {}
+        },
+        "level": {
+          "talent": "burst",
+          "table": [
+            0.2,
+            0.2,
+            0.2,
+            0.2,
+            0.2,
+            0.2,
+            0.2,
+            0.2,
+            0.2,
+            0.2,
+            0.2,
+            0.2,
+            0.2,
+            0.2,
+            0.2
+          ]
+        },
+        "note": "DMG de Ataque Normal elemental pelo nível do Supremo: ligue nas janelas (vale para quem tem a infusão Hydro)."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Zhongli",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "shield",
+        "label": "Zhongli: Escudo de Jade",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "resShred": {
+          "value": 0.2,
+          "elements": [
+            "Pyro",
+            "Hydro",
+            "Anemo",
+            "Electro",
+            "Dendro",
+            "Cryo",
+            "Geo"
+          ]
+        },
+        "note": "Assume a redução de 20% de RES elemental (com o Escudo de Jade ativo) sempre ativa. A de RES Física não entra."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Furina",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "burst",
+        "label": "Furina: Fanfarra",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 300,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {}
+        },
+        "level": {
+          "talent": "burst",
+          "table": [
+            0.0007,
+            0.0009,
+            0.0011,
+            0.0013,
+            0.0015,
+            0.0017,
+            0.0019,
+            0.0021,
+            0.0023,
+            0.0025,
+            0.0027,
+            0.0029,
+            0.0031,
+            0.0033,
+            0.0035
+          ]
+        },
+        "note": "Assume o máximo de 300 pontos de Fanfarra (DMG da equipe = 300 × a razão do nível do Supremo): ligue nas janelas. A Fanfarra real depende das variações de HP do time."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Kaeya",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "c1",
+        "label": "Kaeya C1",
+        "minConstellation": 1,
+        "scope": "self",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {
+            "normal": 0.15,
+            "charged": 0.15
+          },
+          "critDmgByType": {}
+        },
+        "note": "+15% de Taxa Crítica de Normal/Carregado contra inimigos sob Cryo (assumido sempre)."
       }
     ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."

@@ -9,7 +9,11 @@ import { useGameData } from '../features/rotation/data';
 import { downloadProject, importJson, importXlsx, type ImportResult } from '../features/rotation/importFile';
 import { SAMPLE_ID, cloneProject, deleteStoredProject, listProjects, loadProject, saveProject, sampleForApp } from '../features/rotation/persistence';
 import { useProjectStats } from '../features/rotation/useProjectStats';
-import { NO_FILTERS, filterProjects, type VaultFilters } from '../features/vault/vaultModel';
+import { deleteRemote } from '../online/api';
+import { ONLINE_ENABLED } from '../online/config';
+import { useSession } from '../online/session';
+import { summaryText, syncNow } from '../online/syncNow';
+import { NO_FILTERS, NO_PATCH, filterProjects, patchesOf, type VaultFilters } from '../features/vault/vaultModel';
 import { compact, formatDecimal, formatInt, formatPercent } from '../ui/format';
 import './vault.css';
 
@@ -40,6 +44,8 @@ export default function Vault() {
 
   const visible = useMemo(() => filterProjects(items, filters, elementOf), [items, filters, characters]);
   const allCharacters = useMemo(() => [...new Set(items.flatMap((p) => p.members))].sort(), [items]);
+  const patches = useMemo(() => patchesOf(items), [items]);
+  const hasUnversioned = items.some((p) => !p.gameVersion);
   const set = (patch: Partial<VaultFilters>) => setFilters((f) => ({ ...f, ...patch }));
 
   const edit = (id: string, fn: (p: NonNullable<ReturnType<typeof loadProject>>) => ReturnType<typeof loadProject>) => {
@@ -55,8 +61,54 @@ export default function Vault() {
     const trimmed = name.trim();
     if (trimmed) edit(id, (p) => (trimmed === p.name ? null : { ...p, name: trimmed, meta: { ...p.meta, updatedAt: new Date().toISOString() } }));
   };
+  const token = useSession((st) => st.token);
+  const [syncing, setSyncing] = useState(false);
+  const sync = async () => {
+    if (!token) return;
+    setSyncing(true);
+    setError(null);
+    setNotes([]);
+    try {
+      const r = await syncNow(token);
+      setNotes([summaryText(r)]);
+      refresh();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Não foi possível sincronizar.');
+    } finally {
+      setSyncing(false);
+    }
+  };
+  const [shareMsg, setShareMsg] = useState<string | null>(null);
+  const toggleShare = async (id: string) => {
+    const current = loadProject(id);
+    if (!current || !token) return;
+    const next = !current.meta.shared;
+    edit(id, (p) => ({ ...p, meta: { ...p.meta, shared: next, updatedAt: new Date().toISOString() } }));
+    setError(null);
+    setShareMsg(null);
+    try {
+      await syncNow(token);
+      if (next) {
+        const link = `${window.location.origin}/p/${id}`;
+        let copied = false;
+        try {
+          await navigator.clipboard.writeText(link);
+          copied = true;
+        } catch {
+          /* sem permissão da área de transferência: o link aparece na tela */
+        }
+        setShareMsg(`${copied ? 'Link copiado' : 'Link do time'}: ${link}`);
+      } else {
+        setShareMsg('Compartilhamento desligado: o link deixou de funcionar.');
+      }
+    } catch (e) {
+      edit(id, (p) => ({ ...p, meta: { ...p.meta, shared: !next } }));
+      setError(e instanceof Error ? e.message : 'Não foi possível atualizar o compartilhamento.');
+    }
+  };
   const remove = (id: string) => {
     deleteStoredProject(id);
+    if (token) void deleteRemote(token, id).catch(() => undefined);
     setConfirmDelete(null);
     refresh();
   };
@@ -81,12 +133,12 @@ export default function Vault() {
   };
 
   const createNew = () => {
-    const copy = cloneProject(sampleForApp(), 'Novo time');
+    const copy = { ...cloneProject(sampleForApp(), 'Novo time'), gameVersion: data?.meta.gameVersion ?? '' };
     saveProject(copy);
     navigate(`/projeto/${copy.id}`);
   };
 
-  const filtered = filters.query || filters.character || filters.element || filters.favoritesOnly;
+  const filtered = filters.query || filters.character || filters.element || filters.favoritesOnly || filters.patch;
 
   return (
     <div className="dz">
@@ -95,11 +147,14 @@ export default function Vault() {
         <section className="dz-pagehead">
           <div className="titles">
             <h1 className="h1">Vault</h1>
-            <span className="muted">{items.length} {items.length === 1 ? 'time' : 'times'} salvos neste navegador. Nada sai do seu navegador.</span>
+            <span className="muted">{items.length} {items.length === 1 ? 'time salvo' : 'times salvos'} neste navegador. {token ? 'Use "Sincronizar com a conta" para guardá-los também online.' : 'Nada sai do seu navegador.'}</span>
           </div>
           <div className="actions">
             <button type="button" className="dz-btn" disabled={busy || !data} onClick={() => xlsxInput.current?.click()} title="Importa a planilha de theorycraft (abas Time e Rotação)">Importar planilha .xlsx</button>
             <button type="button" className="dz-btn" disabled={busy} onClick={() => jsonInput.current?.click()} title="Abre um projeto exportado pelo Astralys">Importar projeto .json</button>
+            {ONLINE_ENABLED && (token
+              ? <button type="button" className="dz-btn" disabled={syncing} onClick={() => void sync()} title="Envia os times mais novos para a conta e baixa os que só existem nela">{syncing ? 'Sincronizando…' : 'Sincronizar com a conta'}</button>
+              : <Link to="/entrar" className="dz-btn" title="Guarde seus times fora deste navegador">Entrar para sincronizar</Link>)}
             <button type="button" className="dz-btn gold" onClick={createNew}>Novo time</button>
             <input ref={xlsxInput} type="file" accept=".xlsx,.xlsm" hidden aria-label="Escolher planilha" onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ''; if (f && data) void run(() => importXlsx(f, data)); }} />
             <input ref={jsonInput} type="file" accept=".json,application/json" hidden aria-label="Escolher projeto" onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ''; if (f) void run(() => importJson(f)); }} />
@@ -107,6 +162,7 @@ export default function Vault() {
         </section>
 
         {error && <p className="dz-error" role="alert">{error}</p>}
+        {shareMsg && <p className="dz-error vt-share" role="status">{shareMsg}</p>}
         {notes.length > 0 && <div className="dz-error vt-notes" role="status">{notes.map((n, i) => <p key={i}>{n}</p>)}</div>}
 
         <section className="vt-filters" aria-label="Filtros">
@@ -119,6 +175,13 @@ export default function Vault() {
             <option value="">Todos os elementos</option>
             {ELEMENTS.map((el) => <option key={el} value={el}>{el}</option>)}
           </select>
+          {(patches.length > 0 || hasUnversioned) && (
+            <select className="dz-input" aria-label="Patch" value={filters.patch} onChange={(e) => set({ patch: e.target.value })}>
+              <option value="">Todos os patches</option>
+              {patches.map((v) => <option key={v} value={v}>Patch {v}</option>)}
+              {hasUnversioned && <option value={NO_PATCH}>Sem patch registrado</option>}
+            </select>
+          )}
           <button type="button" className="dz-btn" aria-pressed={filters.favoritesOnly} onClick={() => set({ favoritesOnly: !filters.favoritesOnly })}>★ Favoritos</button>
           {filtered && <button type="button" className="dz-link" onClick={() => setFilters(NO_FILTERS)}>Limpar filtros</button>}
         </section>
@@ -171,6 +234,7 @@ export default function Vault() {
                     <div className="vt-meta">
                       <Chip>{formatInt(p.actions)} golpes</Chip>
                       {p.isSample && <Chip tone="#e9c46a">exemplo</Chip>}
+                      {p.shared && <Chip tone="#7dd3a8">compartilhado</Chip>}
                       {p.updatedAt && <span className="muted small">{when(p.updatedAt)}</span>}
                     </div>
                     <div className="acts">
@@ -178,6 +242,7 @@ export default function Vault() {
                       <div className="small-acts">
                         <Link className="dz-link" to={`/card/${p.id}`}>Card</Link>
                         <Link className="dz-link" to={`/comparar?a=${p.id}`}>Comparar</Link>
+                        {token && !p.isSample && <button type="button" className="dz-link" onClick={() => void toggleShare(p.id)}>{p.shared ? 'Parar de compartilhar' : 'Compartilhar'}</button>}
                         <button type="button" className="dz-link" onClick={() => duplicate(p.id)}>Duplicar</button>
                         <button type="button" className="dz-link" onClick={() => setRenaming(p.id)}>Renomear</button>
                         <button type="button" className="dz-link" onClick={() => { const full = loadProject(p.id); if (full) downloadProject(full); }}>Exportar</button>

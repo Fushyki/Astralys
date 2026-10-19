@@ -30,3 +30,4 @@ data/raw/
 
 # Capturas do teste e2e
 scripts/e2e/out/
+dist-conta/

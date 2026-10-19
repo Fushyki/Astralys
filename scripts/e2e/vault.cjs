@@ -58,6 +58,11 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.click('button:has-text("Favoritos")');
   check('só favoritos mostra 1', (await cards().count()) === 1);
   await page.click('button:has-text("Favoritos")');
+  const patchOptions = await page.locator('select[aria-label="Patch"] option').allTextContents();
+  check('o filtro de patch lista a versão dos times', patchOptions.some((t) => /^Patch [0-9]/.test(t)), patchOptions.join(' | '));
+  await page.selectOption('select[aria-label="Patch"]', { index: 1 });
+  check('filtrar pelo patch atual mantém os dois times', (await cards().count()) === 2);
+  await page.click('button:has-text("Limpar filtros")');
 
   // Duplicar, renomear, apagar
   await cards().first().locator('button:has-text("Duplicar")').click(); await settle();

@@ -176,6 +176,9 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
     const scale = scaleAt(move, level);
     const base = stats.atk * scale.atk + stats.em * scale.em + stats.hp * scale.hp + stats.def * scale.def + scale.flat;
 
+    const critRate = stats.critRate + (stats.critRateByType?.[move.hitType] ?? 0);
+    const critDmg = stats.critDmg + (stats.critDmgByType?.[move.hitType] ?? 0);
+
     const reactionBonus =
       action.reaction === 'melt' ? stats.meltBonus : action.reaction === 'vaporize' ? stats.vaporizeBonus : 0;
 
@@ -185,8 +188,8 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
       executions: action.executions,
       flatDamage,
       dmgBonus: stats.dmgBonus + stats.dmgByType[move.hitType] + action.dmgAdjust,
-      critRate: stats.critRate,
-      critDmg: stats.critDmg,
+      critRate,
+      critDmg,
       critMode: 'hit',
       characterLevel: config.characterLevel,
       em: stats.em,
@@ -209,8 +212,8 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
       flatDamage,
       breakdown,
       noCrit,
-      crit: noCrit * critFactor('crit', stats.critRate, stats.critDmg),
-      avg: noCrit * critFactor('avg', stats.critRate, stats.critDmg),
+      crit: noCrit * critFactor('crit', critRate, critDmg),
+      avg: noCrit * critFactor('avg', critRate, critDmg),
     };
   });
 

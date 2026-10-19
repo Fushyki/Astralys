@@ -155,6 +155,8 @@ export const RotationProjectSchema = z
         tags: z.array(z.string()).default([]),
         /** Marcado no Vault como favorito ("Salvar no Vault"). */
         favorite: z.boolean().optional(),
+        /** Compartilhado por link público na conta online (o servidor guarda `is_public`). */
+        shared: z.boolean().optional(),
         /** Textos e cor do card (título, selo, etiqueta de versão, apelido do autor e cor de destaque). */
         card: z.object({ title: z.string().max(60), badge: z.string().max(40), tag: z.string().max(40), nick: z.string().max(30), accent: z.string().regex(/^#[0-9a-fA-F]{6}$/) }).partial().optional(),
         /** Calculadora de recarga: partículas de inimigos e a configuração de cada personagem (pelo nome). */
@@ -313,9 +315,58 @@ export interface ResolvedProject {
   ampCoefficient: number | undefined;
 }
 
+/**
+ * Aplica as regras de composição (`CharacterBuff.team`) e o nível do talento (`CharacterBuff.level`): tira os
+ * buffs que o time não cumpre e multiplica os que escalam pela quantidade de elementos ou pelo nível. Devolve cópias; os dados de efeitos não são alterados.
+ */
+export function applyTeamRules(members: MemberInput[]): MemberInput[] {
+  const elements = members.map((m) => m.character.element);
+  return members.map((m) => {
+    const buffs = m.characterEffect?.buffs;
+    if (!buffs?.some((b) => b.team || b.level)) return m;
+    const next = buffs.flatMap((b) => {
+      const t = b.team;
+      if (t?.only && !elements.every((e) => t.only!.includes(e))) return [];
+      if (t?.eachOf && !t.eachOf.every((e) => elements.includes(e))) return [];
+      let k = 1;
+      if (t?.scale) {
+        const n = t.scale.of === 'distinct' ? new Set(elements).size : elements.filter((e) => (t.scale!.of as string[]).includes(e)).length;
+        k *= n >= 1 ? t.scale.table[Math.min(n, t.scale.table.length) - 1] : 0;
+      }
+      if (b.level) k *= b.level.table[Math.min(15, Math.max(1, Math.round(m.talents[b.level.talent]))) - 1] ?? 0;
+      if (!k) return [];
+      if (k === 1) return [b];
+      const stats = b.stats && {
+        ...b.stats,
+        atkPct: b.stats.atkPct * k, dmgPct: b.stats.dmgPct * k, critRate: b.stats.critRate * k, critDmg: b.stats.critDmg * k,
+        em: b.stats.em * k, er: b.stats.er * k, hpPct: b.stats.hpPct * k, defPct: b.stats.defPct * k,
+        dmgPctByType: Object.fromEntries(Object.entries(b.stats.dmgPctByType ?? {}).map(([h, x]) => [h, x * k])),
+      };
+      return [{
+        ...b,
+        stats,
+        ...(b.resShred ? { resShred: { ...b.resShred, value: b.resShred.value * k } } : {}),
+        ...(b.convert ? { convert: { ...b.convert, perPoint: b.convert.perPoint * k } } : {}),
+      }];
+    });
+    return { ...m, characterEffect: { ...m.characterEffect!, buffs: next } };
+  });
+}
+
+/** Aplica o nível do talento da fonte ao coeficiente dos efeitos de dano fixo do kit (`FlatDamageEffect.level`). */
+export function applyFlatLevels(flat: FlatDamageEffect[], members: MemberInput[]): FlatDamageEffect[] {
+  return flat.map((e) => {
+    if (!e.level) return e;
+    const source = members.find((m) => m.character.name === e.source);
+    if (!source) return e;
+    const k = e.level.table[Math.min(15, Math.max(1, Math.round(source.talents[e.level.talent]))) - 1] ?? 0;
+    return { ...e, perPoint: e.perPoint * k, ...(e.capPerHit !== undefined ? { capPerHit: e.capPerHit * k } : {}) };
+  });
+}
+
 /** Transforma o projeto salvo nas entradas do motor. Lança ProjectResolveError se algo não existir nos dados. */
 export function resolveProject(project: RotationProject, data: GameData, effects: EffectsData): ResolvedProject {
-  const members = project.members.map((m) => resolveMember(m, data, effects, project.config.minRollsPerSubstat));
+  const members = applyTeamRules(project.members.map((m) => resolveMember(m, data, effects, project.config.minRollsPerSubstat)));
   const moves = indexMoves(data.moves);
   const config: GlobalConfig = { ...project.config };
 
@@ -340,7 +391,7 @@ export function resolveProject(project: RotationProject, data: GameData, effects
   return {
     team: { members, extras: project.extras, config, disabled: project.disabled },
     actions,
-    flatEffects: effects.flatDamage,
+    flatEffects: applyFlatLevels(effects.flatDamage, members),
     ampCoefficient: project.compat === 'planilha' ? AMP_EM_COEFFICIENT_SHEET : undefined,
   };
 }

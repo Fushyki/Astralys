@@ -59,6 +59,10 @@ export interface ProjectSummary {
   updatedAt: string;
   isSample: boolean;
   favorite: boolean;
+  /** Compartilhado por link público. */
+  shared: boolean;
+  /** Versão do jogo (patch) com que o time foi montado; vazia se não se sabe. */
+  gameVersion: string;
 }
 
 export const summarize = (p: RotationProject): ProjectSummary => ({
@@ -69,6 +73,8 @@ export const summarize = (p: RotationProject): ProjectSummary => ({
   updatedAt: p.meta.updatedAt,
   isSample: p.id === SAMPLE_ID,
   favorite: !!p.meta.favorite,
+  shared: !!p.meta.shared,
+  gameVersion: p.gameVersion ?? '',
 });
 
 /** Projetos salvos neste navegador, do mais recente ao mais antigo; o exemplo entra se ainda não foi editado. */
@@ -86,6 +92,22 @@ export function listProjects(): ProjectSummary[] {
   }
   if (!out.some((p) => p.id === SAMPLE_ID)) out.push(summarize(sampleForApp()));
   return out.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+}
+
+/** Os projetos realmente salvos neste navegador (sem o exemplo embutido). */
+export function listStoredProjects(): RotationProject[] {
+  const out: RotationProject[] = [];
+  try {
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (!key?.startsWith(PREFIX)) continue;
+      const p = loadStoredProject(key.slice(PREFIX.length));
+      if (p) out.push(p);
+    }
+  } catch {
+    /* sem armazenamento: nada a listar */
+  }
+  return out;
 }
 
 export const newProjectId = (): string =>

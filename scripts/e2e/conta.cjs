@@ -85,8 +85,36 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await settle();
   check('sincronizar de novo não muda nada', /Tudo já estava sincronizado/.test(await page.textContent('.vt-notes')));
 
-  // Apagar remove também da conta
+  // Compartilhar por link público
   const novo = cards().filter({ hasText: 'Novo time' }).first();
+  check('o exemplo não tem "Compartilhar"', (await cards().filter({ hasText: 'exemplo' }).locator('button:has-text("Compartilhar")').count()) === 0);
+  await novo.locator('button:has-text("Compartilhar")').click();
+  await page.waitForSelector('.vt-share');
+  const shareText = (await page.textContent('.vt-share')).trim();
+  const link = (shareText.match(/https?:\/\/\S+\/p\/\S+/) || [''])[0];
+  check('compartilhar mostra o link', new RegExp('/p/[0-9a-f-]{36}$').test(link), shareText);
+  check('o cartão mostra "compartilhado"', (await novo.locator('text=compartilhado').count()) === 1);
+  const publicId = link.split('/p/')[1];
+  const open = await fetch(`${API}/astralys/publicos/${publicId}`);
+  check('o servidor abre o link sem login', open.status === 200);
+  const viewer = await (await browser.newContext({ viewport: { width: 1440, height: 1000 } })).newPage();
+  await viewer.goto(link.replace(new RegExp('^https?://[^/]+'), BASE), { waitUntil: 'networkidle' });
+  await viewer.waitForSelector('[data-testid="pub-dps"]', { timeout: 30000 });
+  check('quem abre o link vê o time e os números', /Novo time/.test(await viewer.textContent('h1')) && /[0-9]/.test(await viewer.textContent('[data-testid="pub-dps"]')), (await viewer.textContent('.pb-kp')).trim());
+  await viewer.screenshot({ path: path.join(OUT, 'conta-publico.png'), fullPage: true });
+  await viewer.click('button:has-text("Abrir no meu Vault")');
+  await viewer.waitForURL('**/projeto/**');
+  check('"Abrir no meu Vault" cria uma cópia editável', !viewer.url().endsWith(publicId));
+  await novo.locator('button:has-text("Parar de compartilhar")').click();
+  await page.waitForFunction(() => /desligado/.test(document.querySelector('.vt-share')?.textContent ?? ''));
+  const closed = await fetch(`${API}/astralys/publicos/${publicId}`);
+  check('parar de compartilhar fecha o link', closed.status === 404);
+  await viewer.goto(link.replace(new RegExp('^https?://[^/]+'), BASE), { waitUntil: 'networkidle' });
+  await viewer.waitForSelector('.pb-empty');
+  check('o link fechado mostra "Time não encontrado"', /Time não encontrado/.test(await viewer.textContent('.pb-empty')));
+  await viewer.context().close();
+
+  // Apagar remove também da conta
   await novo.locator('button:has-text("Apagar")').click();
   await novo.locator('button:has-text("Sim")').click();
   await settle();

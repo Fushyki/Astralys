@@ -59,6 +59,8 @@ export interface ProjectSummary {
   updatedAt: string;
   isSample: boolean;
   favorite: boolean;
+  /** Compartilhado por link público. */
+  shared: boolean;
   /** Versão do jogo (patch) com que o time foi montado; vazia se não se sabe. */
   gameVersion: string;
 }
@@ -71,6 +73,7 @@ export const summarize = (p: RotationProject): ProjectSummary => ({
   updatedAt: p.meta.updatedAt,
   isSample: p.id === SAMPLE_ID,
   favorite: !!p.meta.favorite,
+  shared: !!p.meta.shared,
   gameVersion: p.gameVersion ?? '',
 });
 

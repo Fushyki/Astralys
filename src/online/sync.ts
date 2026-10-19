@@ -3,6 +3,7 @@
  * (`meta.updatedAt`); empate não faz nada. Função pura, testada.
  */
 import { parseProject, type RotationProject } from '../engine';
+import { SAMPLE_ID } from '../features/rotation/persistence';
 import type { RemoteProject } from './api';
 
 export interface SyncPlan {
@@ -18,7 +19,10 @@ export interface SyncPlan {
 
 const stamp = (p: RotationProject) => p.meta.updatedAt;
 
-export function planSync(local: RotationProject[], remote: RemoteProject[]): SyncPlan {
+/** O exemplo embutido tem o mesmo id para todo mundo: nunca vai nem vem da conta. */
+export function planSync(allLocal: RotationProject[], allRemote: RemoteProject[]): SyncPlan {
+  const local = allLocal.filter((p) => p.id !== SAMPLE_ID);
+  const remote = allRemote.filter((r) => r.id !== SAMPLE_ID);
   const remoteById = new Map<string, RotationProject>();
   let unreadable = 0;
   for (const r of remote) {

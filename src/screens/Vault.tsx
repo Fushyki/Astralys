@@ -78,6 +78,34 @@ export default function Vault() {
       setSyncing(false);
     }
   };
+  const [shareMsg, setShareMsg] = useState<string | null>(null);
+  const toggleShare = async (id: string) => {
+    const current = loadProject(id);
+    if (!current || !token) return;
+    const next = !current.meta.shared;
+    edit(id, (p) => ({ ...p, meta: { ...p.meta, shared: next, updatedAt: new Date().toISOString() } }));
+    setError(null);
+    setShareMsg(null);
+    try {
+      await syncNow(token);
+      if (next) {
+        const link = `${window.location.origin}/p/${id}`;
+        let copied = false;
+        try {
+          await navigator.clipboard.writeText(link);
+          copied = true;
+        } catch {
+          /* sem permissão da área de transferência: o link aparece na tela */
+        }
+        setShareMsg(`${copied ? 'Link copiado' : 'Link do time'}: ${link}`);
+      } else {
+        setShareMsg('Compartilhamento desligado: o link deixou de funcionar.');
+      }
+    } catch (e) {
+      edit(id, (p) => ({ ...p, meta: { ...p.meta, shared: !next } }));
+      setError(e instanceof Error ? e.message : 'Não foi possível atualizar o compartilhamento.');
+    }
+  };
   const remove = (id: string) => {
     deleteStoredProject(id);
     if (token) void deleteRemote(token, id).catch(() => undefined);
@@ -134,6 +162,7 @@ export default function Vault() {
         </section>
 
         {error && <p className="dz-error" role="alert">{error}</p>}
+        {shareMsg && <p className="dz-error vt-share" role="status">{shareMsg}</p>}
         {notes.length > 0 && <div className="dz-error vt-notes" role="status">{notes.map((n, i) => <p key={i}>{n}</p>)}</div>}
 
         <section className="vt-filters" aria-label="Filtros">
@@ -205,6 +234,7 @@ export default function Vault() {
                     <div className="vt-meta">
                       <Chip>{formatInt(p.actions)} golpes</Chip>
                       {p.isSample && <Chip tone="#e9c46a">exemplo</Chip>}
+                      {p.shared && <Chip tone="#7dd3a8">compartilhado</Chip>}
                       {p.updatedAt && <span className="muted small">{when(p.updatedAt)}</span>}
                     </div>
                     <div className="acts">
@@ -212,6 +242,7 @@ export default function Vault() {
                       <div className="small-acts">
                         <Link className="dz-link" to={`/card/${p.id}`}>Card</Link>
                         <Link className="dz-link" to={`/comparar?a=${p.id}`}>Comparar</Link>
+                        {token && !p.isSample && <button type="button" className="dz-link" onClick={() => void toggleShare(p.id)}>{p.shared ? 'Parar de compartilhar' : 'Compartilhar'}</button>}
                         <button type="button" className="dz-link" onClick={() => duplicate(p.id)}>Duplicar</button>
                         <button type="button" className="dz-link" onClick={() => setRenaming(p.id)}>Renomear</button>
                         <button type="button" className="dz-link" onClick={() => { const full = loadProject(p.id); if (full) downloadProject(full); }}>Exportar</button>

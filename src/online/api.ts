@@ -27,6 +27,16 @@ export interface RemoteProject {
   atualizado_em: string;
 }
 
+/** O que o link público devolve (sem login). */
+export interface PublicProject {
+  id: string;
+  nome: string;
+  character_name: string;
+  author: string;
+  dados: unknown;
+  atualizado_em: string;
+}
+
 export class ApiError extends Error {
   readonly status: number;
   constructor(message: string, status: number) {
@@ -86,6 +96,8 @@ export const logout = (token: string) => call<{ mensagem: string }>('/auth/logou
 
 export const me = (token: string) => call<Usuario>('/usuarios/me', { token });
 
+export const getPublic = (id: string) => call<PublicProject>(`/astralys/publicos/${encodeURIComponent(id)}`);
+
 export const listRemote = (token: string) => call<RemoteProject[]>('/astralys/projetos', { token });
 
 export const deleteRemote = (token: string, id: string) =>
@@ -100,7 +112,7 @@ export function toRemote(p: RotationProject) {
     role: 'Time',
     version: (p.gameVersion || '1.0').slice(0, 20),
     dados: p as unknown as Record<string, unknown>,
-    is_public: false,
+    is_public: !!p.meta.shared,
   };
 }
 

@@ -1,0 +1,11 @@
+/* Tela do link público (/p/:id). */
+.pb-empty { display: flex; flex-direction: column; gap: 12px; align-items: flex-start; }
+.pb-empty p { margin: 0; }
+.pb-team { display: flex; flex-direction: column; gap: 18px; }
+.pb-faces { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 16px; }
+.pb-member { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; min-width: 0; overflow-wrap: anywhere; }
+.pb-member b { font-family: var(--font-display); font-size: 20px; }
+.pb-kp { display: flex; gap: 20px; flex-wrap: wrap; font-size: 15px; color: var(--text-2); }
+.pb-kp b { color: var(--gold-soft); font-size: 22px; }
+.pb-meta { display: flex; gap: 8px; flex-wrap: wrap; }
+.vt-share { word-break: break-all; }

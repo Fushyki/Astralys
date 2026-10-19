@@ -18,6 +18,7 @@ const Comparar = lazy(() => import('./screens/Comparar'));
 const Inicio = lazy(() => import('./screens/Inicio'));
 const Card = lazy(() => import('./screens/Card'));
 const Entrar = lazy(() => import('./screens/Entrar'));
+const Publico = lazy(() => import('./screens/Publico'));
 
 /** Rotas da versão anterior: mandam para as telas novas. */
 const To = ({ to }: { to: (id: string) => string }) => {
@@ -58,6 +59,7 @@ ReactDOM.createRoot(rootElement).render(
             <Route path="time" element={<Suspense fallback={null}><Time /></Suspense>} />
           </Route>
           <Route path="/card/:id" element={<Suspense fallback={null}><Card /></Suspense>} />
+          <Route path="/p/:id" element={<Suspense fallback={null}><Publico /></Suspense>} />
           <Route path="/entrar" element={<Suspense fallback={null}><Entrar /></Suspense>} />
           <Route path="/vault" element={<Suspense fallback={null}><Vault /></Suspense>} />
           <Route path="/recarga" element={<Suspense fallback={null}><RecargaLivre /></Suspense>} />

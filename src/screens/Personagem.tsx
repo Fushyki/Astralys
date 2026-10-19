@@ -6,7 +6,7 @@ import { formatPercent } from '../ui/format';
 import { useRotationStore } from '../features/rotation/store';
 import { BuildStrip } from './personagem/BuildStrip';
 import { CharacterCard, SubstatsPanel } from './personagem/LeftColumn';
-import { Attributes, DamageTablePanel, ReactionsPanel, ReceivedBuffsPanel, TopHitsPanel } from './personagem/MainColumn';
+import { Attributes, DamageTablePanel, ReactionsPanel, ReceivedBuffsPanel } from './personagem/MainColumn';
 import { ToolsPanel, type ToolTab } from './personagem/ToolsPanel';
 import './personagem.css';
 
@@ -87,7 +87,6 @@ export default function Personagem() {
               <div className="pc-row a">
                 <Attributes v={v} index={index} />
                 <div className="pc-col">
-                  <TopHitsPanel v={v} index={index} onMore={() => goView('avancado')} />
                   <SubstatsPanel memberRef={ref} index={index} bundle={v.bundle} onGood={goToGood} />
                 </div>
               </div>

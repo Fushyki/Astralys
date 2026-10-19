@@ -40,7 +40,7 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
   const views = await page.$$eval('.pc-views button', (b) => b.map((x) => x.textContent));
   check('o personagem tem 2 abas: Resumo e build, e Avançado', views.join() === 'Resumo e build,Avançado', views.join());
   check('abre no Resumo, com uma frase que explica a aba', (await page.getAttribute('.pc-views button:has-text("Resumo e build")', 'aria-selected')) === 'true' && /build \(arma, artefatos e substats\)/.test(await page.textContent('.pc-hint')));
-  check('o Resumo mostra os 5 maiores golpes e não a tabela inteira', (await page.locator('.dz-panel:has(h2:text-is("Maiores golpes")) tbody tr').count()) === 5 && (await page.locator('.dz-panel:has(h2:text-is("Tabela de dano"))').count()) === 0);
+  check('o Resumo não tem o bloco "Maiores golpes" nem a tabela inteira', (await page.locator('.dz-panel:has(h2:text-is("Maiores golpes"))').count()) === 0 && (await page.locator('.dz-panel:has(h2:text-is("Tabela de dano"))').count()) === 0);
   check('Resumo e build na mesma página: faixa de build, substats e atributos', (await page.locator('.pc-weapon').count()) === 1 && (await page.locator('.pc-rolls').count()) === 1 && (await page.locator('.dz-panel:has(h2:text-is("Atributos"))').count()) === 1);
   check('as ferramentas ficam só no Avançado', (await page.locator('.dz-panel:has(h2:text-is("Ferramentas"))').count()) === 0);
 

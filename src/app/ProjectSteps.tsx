@@ -16,7 +16,7 @@ export function stepsFor(id: string, firstMember: string): StepInfo[] {
   const personagens = `${base}/personagem/${encodeURIComponent(firstMember)}`;
   return [
     { n: 1, title: 'Equipe', hint: 'Confira o time e o dano que cada personagem faz.', next: { label: 'Ajustar os personagens', to: personagens } },
-    { n: 2, title: 'Personagens', hint: 'Ajuste a arma, os artefatos e os substats de cada um (aba Build).', prev: { label: 'Equipe', to: base }, next: { label: 'Montar a rotação', to: `${base}/rotacao` } },
+    { n: 2, title: 'Personagens', hint: 'Ajuste a arma, os artefatos e os substats de cada um.', prev: { label: 'Equipe', to: base }, next: { label: 'Montar a rotação', to: `${base}/rotacao` } },
     { n: 3, title: 'Rotação', hint: 'Coloque os golpes na linha do tempo e ligue os buffs nas janelas em que valem.', prev: { label: 'Personagens', to: personagens }, next: { label: 'Ver o resultado', to: `${base}/time` } },
     { n: 4, title: 'Resultado', hint: 'Pronto! Veja de onde vem o dano e gere o Card para compartilhar.', prev: { label: 'Rotação', to: `${base}/rotacao` }, next: { label: 'Gerar o Card', to: `/card/${id}` } },
   ];

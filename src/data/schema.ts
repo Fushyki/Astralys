@@ -108,6 +108,8 @@ export type Move = z.infer<typeof MoveSchema>;
 
 export const WeaponRefinementSchema = z.object({
   description: z.string(),
+  /** Texto em português (Lunaris `pt`), quando existe. */
+  descriptionPt: z.string().optional(),
   params: z.array(z.number()),
 });
 
@@ -120,9 +122,12 @@ export const WeaponSchema = z.object({
   /** ATK base no nível máximo informado pelo `weaponlist` do Lunaris. */
   baseAtk: z.number().positive(),
   substat: StatValueSchema.nullable(),
+  /** Nome do arquivo do ícone (assets/weaponicon/<icon>.webp no Lunaris). */
+  icon: z.string().optional(),
   passive: z
     .object({
       name: z.string(),
+      namePt: z.string().optional(),
       /** Índices 0..4 = R1..R5. */
       refinements: z.array(WeaponRefinementSchema).length(5),
     })
@@ -134,6 +139,8 @@ export type Weapon = z.infer<typeof WeaponSchema>;
 
 export const SetBonusSchema = z.object({
   description: z.string(),
+  /** Texto em português (Lunaris `pt`), quando existe. */
+  descriptionPt: z.string().optional(),
   params: z.array(z.number()),
 });
 

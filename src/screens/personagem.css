@@ -109,3 +109,50 @@
 .pc-hint { margin: -4px 0 0; color: var(--muted); font-size: 15px; }
 .pc-next { margin: 0; color: var(--text-2); font-size: 15px; }
 .pc-substats { max-width: 640px; }
+.pc-col { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+
+/* equipamento: arma e 5 artefatos como cards com imagem (rarity 5 = dourado, 4 = roxo) */
+.pc-gear { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 1100px) { .pc-gear { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 520px) { .pc-gear { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.gear-tile { position: relative; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 12px 8px 12px; border: 1px solid var(--border-ctl); border-radius: 14px; color: var(--text); font: inherit; text-align: center; cursor: pointer; min-width: 0; overflow-wrap: anywhere; background: linear-gradient(180deg, #4a3a73 0%, #1a1f3d 60%); }
+.gear-tile[data-rarity="5"] { background: linear-gradient(180deg, #7a5a2b 0%, #2a2418 62%); border-color: #5a4524; }
+.gear-tile:hover { border-color: var(--gold); }
+.gear-tile .art { width: 76px; height: 76px; display: grid; place-items: center; }
+.gear-tile .art img, .pc-pcard .art img { width: 100%; height: 100%; object-fit: contain; }
+.gear-tile .ph, .pc-pcard .ph { font-family: var(--font-display); font-size: 34px; color: var(--gold); }
+.gear-tile .lv { position: absolute; top: 8px; left: 8px; font-size: 12px; padding: 1px 8px; border-radius: 999px; background: rgba(10, 14, 28, .75); }
+.gear-tile .rf { position: absolute; top: 8px; right: 8px; font-size: 12px; padding: 1px 8px; border-radius: 999px; background: var(--gold); color: var(--on-gold); font-weight: 700; }
+.gear-tile .n { font-family: var(--font-display); font-weight: 600; font-size: 16px; line-height: 1.15; margin-top: 4px; }
+.gear-tile .sub, .gear-tile .main { font-size: 12px; color: var(--text-2); }
+.gear-tile .val { font-weight: 700; font-size: 18px; color: var(--gold-soft); }
+.pc-weapon.gear-tile, .pc-piece.gear-tile { min-height: 0; flex-direction: column; gap: 2px; padding: 12px 8px; }
+
+/* passivas: arma e bônus de set, com o texto do jogo em português */
+.pc-passives { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 14px; }
+@media (max-width: 900px) { .pc-passives { grid-template-columns: minmax(0, 1fr); } }
+.pc-pcard { background: var(--bg-header); border: 1px solid var(--border); border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.pc-pcard header { display: flex; gap: 12px; align-items: center; }
+.pc-pcard header > div { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.pc-pcard h3 { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 20px; line-height: 1.1; color: var(--gold-soft); overflow-wrap: anywhere; }
+.pc-pcard .art.sm { width: 44px; height: 44px; flex: none; display: grid; place-items: center; }
+.pc-pcard p { margin: 0; font-size: 14px; line-height: 1.45; color: var(--text-2); }
+.pc-ptext { display: flex; flex-direction: column; gap: 4px; align-items: flex-start; }
+.pc-ptext p.clamp { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.pc-bonus { display: flex; flex-direction: column; gap: 6px; padding-top: 10px; border-top: 1px solid var(--border); }
+.pc-bonus .head { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+.pc-bonus .pcs { display: inline-block; min-width: 64px; font-family: var(--font-display); font-weight: 700; color: var(--gold); }
+.pc-bonus .four { display: flex; gap: 6px; align-items: flex-start; flex-wrap: wrap; font-size: 14px; }
+.pc-bonus .four .pc-ptext { flex: 1 1 200px; }
+.dz-chip.ok { color: #7dd3a8; border-color: #25563f; background: #11261f; }
+
+/* refino R1..R5 na passiva da arma */
+.pc-refine { display: flex; gap: 4px; flex: none; }
+.pc-refine button { min-width: 34px; min-height: 34px; border-radius: 8px; border: 1px solid var(--border-ctl); background: var(--bg-header); color: var(--muted); font-family: var(--font-display); font-weight: 700; font-size: 14px; cursor: pointer; }
+.pc-refine button[aria-pressed="true"] { background: var(--gold); border-color: var(--gold); color: var(--on-gold); }
+.pc-pcard header { flex-wrap: wrap; }
+
+/* substats à mão em duas colunas, sem campos gigantes */
+.pc-rolls .r:has(.dz-field) { grid-template-columns: 78px minmax(0, 1fr); }
+@media (min-width: 900px) { .pc-substats .pc-rolls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 18px; } }
+.pc-pcard h3 small, .pc-bonus .head small { font-family: var(--font-body); font-weight: 400; font-size: 13px; color: var(--muted); letter-spacing: 0; }

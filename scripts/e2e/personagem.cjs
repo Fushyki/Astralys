@@ -33,14 +33,16 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
   await page.evaluate(() => localStorage.clear());
   await page.reload({ waitUntil: 'networkidle' });
   await page.waitForSelector('.pc-hint');
-  const view = async (name) => { await page.click(`.pc-views button:has-text("${name}")`); await page.waitForTimeout(250); };
+  // Resumo e build são a mesma aba; os nomes antigos continuam valendo nos passos abaixo.
+  const view = async (name) => { const tab = /^(Resumo|Build)$/.test(name) ? 'Resumo e build' : name; await page.click(`.pc-views button:has-text("${tab}")`); await page.waitForTimeout(250); };
 
-  // Três abas: Resumo (padrão), Build e Avançado
+  // Duas abas: Resumo e build (padrão) e Avançado
   const views = await page.$$eval('.pc-views button', (b) => b.map((x) => x.textContent));
-  check('o personagem tem 3 abas: Resumo, Build e Avançado', views.join() === 'Resumo,Build,Avançado', views.join());
-  check('abre no Resumo, com uma frase que explica a aba', (await page.getAttribute('.pc-views button:has-text("Resumo")', 'aria-selected')) === 'true' && /visão rápida/.test(await page.textContent('.pc-hint')));
+  check('o personagem tem 2 abas: Resumo e build, e Avançado', views.join() === 'Resumo e build,Avançado', views.join());
+  check('abre no Resumo, com uma frase que explica a aba', (await page.getAttribute('.pc-views button:has-text("Resumo e build")', 'aria-selected')) === 'true' && /build \(arma, artefatos e substats\)/.test(await page.textContent('.pc-hint')));
   check('o Resumo mostra os 5 maiores golpes e não a tabela inteira', (await page.locator('.dz-panel:has(h2:text-is("Maiores golpes")) tbody tr').count()) === 5 && (await page.locator('.dz-panel:has(h2:text-is("Tabela de dano"))').count()) === 0);
-  check('o Resumo não mostra os campos de substats nem as ferramentas', (await page.locator('.pc-rolls').count()) === 0 && (await page.locator('.dz-panel:has(h2:text-is("Ferramentas"))').count()) === 0);
+  check('Resumo e build na mesma página: faixa de build, substats e atributos', (await page.locator('.pc-weapon').count()) === 1 && (await page.locator('.pc-rolls').count()) === 1 && (await page.locator('.dz-panel:has(h2:text-is("Atributos"))').count()) === 1);
+  check('as ferramentas ficam só no Avançado', (await page.locator('.dz-panel:has(h2:text-is("Ferramentas"))').count()) === 0);
 
   // Abas e cabeçalho
   const tabs = await page.$$eval('.pc-tabs a', (a) => a.map((x) => x.textContent));
@@ -108,14 +110,59 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
   await view('Build');
 
   // Editor de build
-  await page.click('.pc-weapon'); await page.waitForSelector('.dz-dialog');
-  await page.locator('.dz-dialog label.dz-field:has(span:text-is("Arma")) select').selectOption({ label: '4★ Royal Greatsword' }); await settle();
-  check('o editor mostra o seletor de refino para armas com tabela', (await page.locator('.dz-dialog label.dz-field:has(span:text-is("Refino"))').count()) === 1);
-  check('o editor mostra o que está assumido', /Melhor caso/.test(await page.textContent('.pc-assume')));
-  await page.locator('.dz-dialog label.dz-field:has(span:text-is("Arma")) select').selectOption('A Thousand Blazing Suns'); await settle();
+  await page.click('.dz-panel:has(h2:text-is("Equipamento")) button:has-text("Editar build")'); await page.waitForSelector('.dz-dialog');
+  check('o editor só traz os atributos das peças (arma e set têm seletores próprios)', (await page.locator('.dz-dialog label.dz-field:has(span:text-is("Arma"))').count()) === 0 && (await page.locator('.dz-dialog label.dz-field:has(span:text-is("Areia"))').count()) >= 1);
   await page.keyboard.press('Escape');
   check('Esc fecha o editor', (await page.locator('.dz-dialog').count()) === 0);
   check('a faixa de build mostra a arma e as 5 peças', (await page.$$('.pc-piece')).length === 5 && /A Thousand Blazing Suns/.test(await page.textContent('.pc-weapon')));
+
+  // Equipamento com imagens e passivas em português
+  check('as peças e a arma têm imagem', (await page.locator('.pc-gear .art img').count()) >= 5, String(await page.locator('.pc-gear .art img').count()));
+  const passive = await page.textContent('.pc-pcard[aria-label="Passiva da arma"]');
+  check('a passiva da arma aparece em português, com o nome', /Brilho Escaldante/.test(passive) && /No cálculo/.test(passive), passive.replace(/\s+/g, ' ').slice(0, 110));
+  const setCard = await page.textContent('.pc-pcard[aria-label="Bônus dos sets"]');
+  check('os bônus do set (2 e 4 peças) aparecem em português', /2 peças/.test(setCard) && /4 peças/.test(setCard) && /Obsidian Codex/.test(setCard));
+  const r1 = await page.textContent('.pc-pcard[aria-label="Passiva da arma"] p');
+  await page.click('.pc-refine button:has-text("R5")'); await settle();
+  check('o refino R5 muda o texto da passiva e marca o R5', (await page.textContent('.pc-pcard[aria-label="Passiva da arma"] p')) !== r1 && (await page.getAttribute('.pc-refine button:has-text("R5")', 'aria-pressed')) === 'true');
+  await page.click('.pc-refine button:has-text("R1")'); await settle();
+
+  // Trocar arma: grade com imagens, filtro por raridade e busca
+  await page.click('.pc-weapon'); await page.waitForSelector('.dz-dialog .wcard');
+  check('o seletor de armas é uma grade de cards com imagem', (await page.locator('.dz-dialog .wcard').count()) > 10 && (await page.locator('.dz-dialog .wcard img').count()) > 5);
+  check('a arma atual vem marcada como Equipada', (await page.locator('.dz-dialog .wcard[data-current="true"]').count()) === 1);
+  await page.click('.dz-dialog .dz-seg button:has-text("4★")'); await settle();
+  const only5 = await page.locator('.dz-dialog .wcard[data-rarity="4"]').count();
+  check('desligar 4★ some com as armas de 4 estrelas', only5 === 0);
+  const before = await page.locator('.dz-dialog .wcard').count();
+  await page.fill('.dz-dialog input[type="search"]', 'Wolf'); await settle();
+  check('a busca filtra as armas pelo nome', (await page.locator('.dz-dialog .wcard').count()) < before && (await page.locator('.dz-dialog .wcard').count()) >= 1);
+  await page.keyboard.press('Escape');
+  check('Esc fecha o seletor de armas', (await page.locator('.dz-dialog').count()) === 0);
+  await page.click('.pc-weapon'); await page.waitForSelector('.dz-dialog .wcard');
+  await page.fill('.dz-dialog input[type="search"]', 'Royal Greatsword'); await settle();
+  await page.click('.dz-dialog .wcard:has-text("Royal Greatsword")'); await settle();
+  check('escolher uma arma troca a arma e fecha o seletor', /Royal Greatsword/.test(await page.textContent('.pc-weapon')) && (await page.locator('.dz-dialog').count()) === 0);
+  await page.keyboard.press('Control+z'); await settle();
+  check('Ctrl+Z devolve a arma anterior', /A Thousand Blazing Suns/.test(await page.textContent('.pc-weapon')));
+
+  // Trocar set: grade com imagem e o bônus de 2 peças
+  await page.click('.pc-pcard[aria-label="Bônus dos sets"] button:has-text("Trocar set")'); await page.waitForSelector('.dz-dialog .scard');
+  check('o seletor de sets é uma grade de cards com imagem e bônus', (await page.locator('.dz-dialog .scard').count()) > 10 && (await page.locator('.dz-dialog .scard img').count()) > 5 && /2 peças/.test(await page.textContent('.dz-dialog .scard')));
+  check('o set atual vem marcado como Em uso', (await page.locator('.dz-dialog .scard[data-current="true"]').count()) === 1);
+  await page.fill('.dz-dialog input[type="search"]', 'Noblesse'); await settle();
+  check('a busca filtra os sets', (await page.locator('.dz-dialog .scard').count()) === 1);
+  await page.click('.dz-dialog .scard'); await settle();
+  const setText = await page.textContent('.pc-pcard[aria-label="Bônus dos sets"]');
+  check('escolher o set troca o bônus mostrado (4 peças)', /Noblesse Oblige/.test(setText) && /4 peças/.test(setText) && (await page.locator('.dz-dialog').count()) === 0, setText.replace(/\s+/g, ' ').slice(0, 90));
+  await page.click('.pc-pcard[aria-label="Bônus dos sets"] button:has-text("Trocar set")'); await page.waitForSelector('.dz-dialog .scard');
+  await page.click('.dz-dialog .dz-seg button:has-text("2 + 2")');
+  await page.fill('.dz-dialog input[type="search"]', 'Noblesse'); await settle(); await page.click('.dz-dialog .scard');
+  await page.fill('.dz-dialog input[type="search"]', 'Instructor'); await settle(); await page.click('.dz-dialog .scard'); await settle();
+  check('2 + 2: dois sets com o bônus de 2 peças de cada', /2 \+ 2 peças/.test(await page.textContent('.pc-pcard[aria-label="Bônus dos sets"]')));
+  await page.keyboard.press('Control+z'); await settle();
+  await page.keyboard.press('Control+z'); await settle();
+  check('Ctrl+Z devolve o set original', /Obsidian Codex/.test(await page.textContent('.pc-pcard[aria-label="Bônus dos sets"]')));
 
   // Ferramentas: otimizador (aba Avançado)
   await view('Avançado');

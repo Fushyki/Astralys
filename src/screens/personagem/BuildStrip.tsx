@@ -5,8 +5,11 @@
 import { useEffect, useState } from 'react';
 import { NumberInput, SelectField } from '../../design/fields';
 import { Panel } from '../../design/primitives';
+import { cleanText, pieceIconUrl, weaponIconUrl } from '../../design/images';
 import { FLOWER_HP, MAIN_STAT_VALUES, PLUME_ATK, PIECE_SLOTS, type MemberRef, type PieceSlot } from '../../engine';
 import { weaponsFor } from '../../features/rotation/teamOps';
+import { WeaponPickerDialog } from './WeaponPicker';
+import { SetPickerDialog } from './SetPicker';
 import { useRotationStore } from '../../features/rotation/store';
 import { effectCoverage, missingEffects } from '../../features/rotation/teamInfo';
 import type { LoadedData } from '../../features/rotation/data';
@@ -31,39 +34,131 @@ function mainValue(slot: PieceSlot, ref: MemberRef): { label: string; value: str
   return { label: STAT_LABEL[stat] ?? stat, value: pct ? `${formatDecimal(v * 100, 1)}%` : formatInt(v) };
 }
 
+/** Texto de passiva com no máximo 3 linhas; "ler tudo" abre o resto. */
+function Passive({ text }: { text: string }) {
+  const [more, setMore] = useState(false);
+  if (!text) return <p className="muted small">Sem descrição.</p>;
+  return (
+    <div className="pc-ptext">
+      <p className={more ? '' : 'clamp'}>{text}</p>
+      {text.length > 150 && (
+        <button type="button" className="dz-link" onClick={() => setMore((m) => !m)}>{more ? 'Mostrar menos' : 'Ler tudo'}</button>
+      )}
+    </div>
+  );
+}
+
+function Img({ src, fallback }: { src: string | undefined; fallback: string }) {
+  const [failed, setFailed] = useState(false);
+  return src && !failed ? <img src={src} alt="" loading="lazy" crossOrigin="anonymous" onError={() => setFailed(true)} /> : <b className="ph" aria-hidden="true">{fallback}</b>;
+}
+
 export function BuildStrip({ data, index, member: memberRef }: { data: LoadedData; index: number; member: MemberRef }) {
   const [open, setOpen] = useState(false);
+  const [pickWeapon, setPickWeapon] = useState(false);
+  const [pickSet, setPickSet] = useState(false);
+  const update = useRotationStore((st) => st.updateMember);
   const character = data.game.characters.find((c) => c.name === memberRef.character);
   const weapon = data.game.weapons.find((w) => w.name === memberRef.weapon);
-  const refine = memberRef.refinement ?? 1;
+  const refine = Math.min(5, Math.max(1, memberRef.refinement ?? 1));
   const substat = weapon?.substat ? `${weapon.substat.stat} ${formatDecimal(weapon.substat.value < 1 ? weapon.substat.value * 100 : weapon.substat.value, 1)}${weapon.substat.value < 1 ? '%' : ''}` : '';
+  const sets = [memberRef.primarySet, memberRef.secondarySet]
+    .filter((n): n is string => !!n)
+    .map((n) => data.game.artifacts.find((x) => x.name === n))
+    .filter((x): x is NonNullable<typeof x> => !!x);
+  const fourPiece = !!memberRef.primarySet && !memberRef.secondarySet && memberRef.fourPiece !== false;
+  const weaponEffect = data.effects.weapons.some((e) => e.weapon === memberRef.weapon);
+  const setEffect = (name: string) => data.effects.sets.some((e) => e.set === name && (e.twoPiece || e.fourPiece));
+  // Com dois sets (2+2), a 1ª, 2ª e 5ª peça ilustram o principal; as outras, o segundo.
+  const setFor = (i: number) => (sets.length === 2 && (i === 2 || i === 3) ? sets[1] : sets[0]);
 
   return (
-    <Panel>
-      <div className="pc-strip">
-        <button type="button" className="pc-weapon" onClick={() => setOpen(true)} aria-label={`Editar a arma ${memberRef.weapon}`}>
-          <span className="rar">{weapon?.rarity ?? '?'}★</span>
-          <span className="info">
-            <span className="n">{memberRef.weapon}</span>
-            <span className="num sub">Nv 90 · R{refine}{weapon ? ` · ATK ${formatInt(weapon.baseAtk)}` : ''}{substat ? ` · ${substat}` : ''}</span>
-          </span>
+    <Panel title="Equipamento" aside={<button type="button" className="dz-btn sm" onClick={() => setOpen(true)}>Editar build</button>}>
+      <div className="pc-gear">
+        <button type="button" className="pc-weapon gear-tile" data-rarity={weapon?.rarity ?? 5} onClick={() => setPickWeapon(true)} aria-label={`Trocar a arma ${memberRef.weapon}`}>
+          <span className="art"><Img src={weapon?.icon ? weaponIconUrl(weapon.icon) : undefined} fallback="⚔" /></span>
+          <span className="lv num">Nv 90</span>
+          <span className="rf num">R{refine}</span>
+          <span className="n">{memberRef.weapon}</span>
+          <span className="num sub">{weapon ? `ATK ${formatInt(weapon.baseAtk)}` : ''}{substat ? ` · ${substat}` : ''}</span>
         </button>
-        {PIECE_SLOTS.map((slot) => {
+        {PIECE_SLOTS.map((slot, i) => {
           const m = mainValue(slot, memberRef);
+          const set = setFor(i);
           return (
-            <button type="button" key={slot} className="pc-piece" onClick={() => setOpen(true)} aria-label={`Editar ${SLOT_LABEL[slot]}`}>
-              <span className="lbl">{SLOT_LABEL[slot]} · {memberRef.artifacts.rarity[slot]}★</span>
+            <button type="button" key={slot} className="pc-piece gear-tile" data-rarity={memberRef.artifacts.rarity[slot]} onClick={() => setOpen(true)} aria-label={`Editar ${SLOT_LABEL[slot]}`}>
+              <span className="art"><Img src={set ? pieceIconUrl(set.id, slot) : undefined} fallback={SLOT_LABEL[slot].charAt(0)} /></span>
+              <span className="lv num">+{memberRef.artifacts.rarity[slot] === 5 ? 20 : 16}</span>
+              <span className="n">{SLOT_LABEL[slot]}</span>
               <span className="main">{m.label}</span>
               <span className="num val">{m.value}</span>
             </button>
           );
         })}
       </div>
-      <div className="pc-sets">
-        <span className="muted">Sets: </span>
-        {memberRef.primarySet ? <b>{memberRef.primarySet}{memberRef.secondarySet ? ` + ${memberRef.secondarySet}` : memberRef.fourPiece === false ? ' (2 peças)' : ' (4 peças)'}</b> : <b>nenhum</b>}
-        <button type="button" className="dz-link" style={{ marginLeft: 12 }} onClick={() => setOpen(true)}>Editar build</button>
+
+      <div className="pc-passives">
+        <section className="pc-pcard" aria-label="Passiva da arma">
+          <header>
+            <span className="art sm"><Img src={weapon?.icon ? weaponIconUrl(weapon.icon) : undefined} fallback="⚔" /></span>
+            <div>
+              <h3>{weapon?.passive?.name ?? 'Passiva da arma'}{weapon?.passive?.namePt && weapon.passive.namePt !== weapon.passive.name ? <small> · {weapon.passive.namePt}</small> : null}</h3>
+              <span className="muted small">{memberRef.weapon}</span>
+            </div>
+            <div className="pc-refine" role="group" aria-label="Refino da arma">
+              {[1, 2, 3, 4, 5].map((r) => (
+                <button key={r} type="button" aria-pressed={refine === r} onClick={() => update(index, { refinement: r === 1 ? undefined : r })}>R{r}</button>
+              ))}
+            </div>
+            <span className={`dz-chip ${weaponEffect ? 'ok' : 'warn'}`} title={weaponEffect ? 'O efeito numérico desta arma entra no cálculo' : 'O efeito desta arma ainda não entra no cálculo; só ATK base e substat contam'}>
+              {weaponEffect ? 'No cálculo' : 'Ainda fora do cálculo'}
+            </span>
+          </header>
+          <Passive text={cleanText(weapon?.passive?.refinements[refine - 1]?.descriptionPt ?? weapon?.passive?.refinements[refine - 1]?.description)} />
+        </section>
+
+        <section className="pc-pcard" aria-label="Bônus dos sets">
+          <header>
+            <span className="art sm"><Img src={sets[0] ? pieceIconUrl(sets[0].id, 'flower') : undefined} fallback="◆" /></span>
+            <div>
+              <h3>{sets.length ? sets.map((x) => x.name).join(' + ') : 'Sem set'}</h3>
+              <span className="muted small">{sets.length === 2 ? '2 + 2 peças' : fourPiece ? '4 peças' : sets.length ? '2 peças' : 'Nenhum set escolhido'}</span>
+            </div>
+            <button type="button" className="dz-btn sm" onClick={() => setPickSet(true)}>Trocar set</button>
+          </header>
+          {sets.length === 0 && <p className="muted small">Sem bônus de set.</p>}
+          {sets.map((x) => (
+            <div className="pc-bonus" key={x.id}>
+              <div className="head">
+                <b>{x.name}{x.namePt && x.namePt !== x.name ? <small> · {x.namePt}</small> : null}</b>
+                <span className={`dz-chip ${setEffect(x.name) ? 'ok' : 'warn'}`}>{setEffect(x.name) ? 'No cálculo' : 'Ainda fora do cálculo'}</span>
+              </div>
+              {x.bonuses.twoPiece && <p><span className="pcs">2 peças</span> {cleanText(x.bonuses.twoPiece.descriptionPt ?? x.bonuses.twoPiece.description)}</p>}
+              {fourPiece && x.bonuses.fourPiece && (
+                <div className="four"><span className="pcs">4 peças</span> <Passive text={cleanText(x.bonuses.fourPiece.descriptionPt ?? x.bonuses.fourPiece.description)} /></div>
+              )}
+            </div>
+          ))}
+        </section>
       </div>
+      {pickWeapon && character && (
+        <WeaponPickerDialog
+          weapons={weaponsFor(character, data.game.weapons)}
+          current={memberRef.weapon}
+          withEffect={new Set(data.effects.weapons.map((e) => e.weapon))}
+          onPick={(name) => { update(index, { weapon: name }); setPickWeapon(false); }}
+          onClose={() => setPickWeapon(false)}
+        />
+      )}
+      {pickSet && (
+        <SetPickerDialog
+          sets={data.game.artifacts}
+          current={{ primarySet: memberRef.primarySet, secondarySet: memberRef.secondarySet }}
+          withEffect={new Set(data.effects.sets.filter((e) => e.twoPiece || e.fourPiece).map((e) => e.set))}
+          onPick={(c) => { update(index, { primarySet: c.primarySet, secondarySet: c.secondarySet, fourPiece: c.fourPiece }); setPickSet(false); }}
+          onClose={() => setPickSet(false)}
+        />
+      )}
       {open && character && <BuildDialog data={data} index={index} memberRef={memberRef} onClose={() => setOpen(false)} />}
     </Panel>
   );
@@ -97,26 +192,7 @@ function BuildDialog({ data, index, memberRef, onClose }: { data: LoadedData; in
           <button type="button" className="dz-btn sm" onClick={onClose}>Fechar</button>
         </header>
         <div className="pc-dialog-body">
-          <div className="pc-form two">
-            <SelectField
-              label="Arma"
-              value={memberRef.weapon}
-              onChange={(v) => update(index, { weapon: v })}
-              options={weapons.map((w) => ({ value: w.name, label: `${w.rarity}★ ${w.name}${data.effects.weapons.some((e) => e.weapon === w.name) ? '' : ' (sem efeito)'}` }))}
-            />
-            {weaponEffect?.refinements ? (
-              <SelectField label="Refino" value={String(memberRef.refinement ?? 1)} onChange={(v) => update(index, { refinement: Number(v) })} options={[1, 2, 3, 4, 5].map((r) => ({ value: String(r), label: `R${r}` }))} />
-            ) : (
-              <span />
-            )}
-            <SelectField label="Set principal" value={memberRef.primarySet ?? ''} onChange={(v) => update(index, { primarySet: v || undefined, ...(v ? {} : { secondarySet: undefined }) })} options={setOptions} />
-            <SelectField
-              label="Segundo set (2+2)"
-              value={memberRef.secondarySet ?? ''}
-              onChange={(v) => update(index, { secondarySet: v || undefined })}
-              options={memberRef.primarySet ? setOptions : [{ value: '', label: 'Escolha o principal' }]}
-            />
-          </div>
+          <p className="muted small">A arma e o set têm seletores próprios: clique na arma ou em <b>Trocar set</b>. Aqui ficam os atributos principais das peças.</p>
           <div className="pc-form three">
             <SelectField label="Areia" value={memberRef.artifacts.sands} onChange={(v) => setArtifacts({ sands: v })} options={mainOptions('sands')} />
             <SelectField label="Cálice" value={memberRef.artifacts.goblet} onChange={(v) => setArtifacts({ goblet: v })} options={mainOptions('goblet')} />

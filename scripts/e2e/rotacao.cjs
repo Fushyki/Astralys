@@ -125,6 +125,16 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.'));
   check('realinhar deixa os golpes seguidos a partir de 0 s (0, 0,5, 1…)', times.slice(0, 3).join() === '0,0.5,1' && times[23] === 11.5, times.slice(0, 4).join(',') + ' … ' + times[23]);
   await page.keyboard.press('Control+z'); await settle();
 
+  // Apertar a linha: um clique, sem abrir as configurações
+  const tighten = page.locator('.dz-pagehead button:has-text("Apertar a linha")');
+  check('o botão "Apertar a linha" está no topo da rotação', (await tighten.count()) === 1 && !(await tighten.isDisabled()));
+  await tighten.click(); await settle();
+  const tight = (await hitTimes()).sort((a, b) => a - b);
+  check('apertar a linha tira os espaços (0, 0,5, 1… até 11,5 s)', tight.slice(0, 3).join() === '0,0.5,1' && tight[23] === 11.5, tight.slice(0, 4).join(',') + ' … ' + tight[23]);
+  check('com a linha já apertada o botão fica desligado', await tighten.isDisabled());
+  await page.keyboard.press('Control+z'); await settle();
+  check('Ctrl+Z desfaz o aperto e o botão volta a funcionar', !(await tighten.isDisabled()) && (await hitTimes()).sort((a, b) => a - b)[23] > 11.5);
+
   // Persistência e restaurar
   await page.waitForTimeout(700);
   await page.reload({ waitUntil: 'networkidle' }); await page.waitForSelector('.rt-hit');

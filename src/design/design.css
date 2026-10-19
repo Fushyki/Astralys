@@ -122,7 +122,7 @@ body { font-family: var(--font-body); font-size: 15px; line-height: 1.5; -webkit
 
 /* ---- Diálogo ---- */
 .dz-modal { position: fixed; inset: 0; z-index: 50; background: rgba(5, 8, 18, .72); display: grid; place-items: center; padding: 16px; }
-.dz-dialog { width: min(760px, 100%); max-height: 88vh; display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--border-ctl); border-radius: var(--radius-panel); overflow: hidden; }
+.dz-dialog { width: min(760px, 100%); height: min(640px, 88vh); max-height: 88vh; display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--border-ctl); border-radius: var(--radius-panel); overflow: hidden; }
 .dz-dialog > header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--border); }
 .dz-dialog .note { color: var(--muted); font-size: 13px; margin: 0; padding: 12px 20px 0; }
 .dz-dialog .tools { display: flex; flex-direction: column; gap: 10px; padding: 14px 20px; }
@@ -161,3 +161,36 @@ body { font-family: var(--font-body); font-size: 15px; line-height: 1.5; -webkit
 .dz-stepbar .txt { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .dz-stepbar .txt > span:last-child { color: var(--text-2); font-size: 15px; }
 .dz-stepbar .acts { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* seletor de armas em grade */
+.dz-dialog.wide { width: min(1040px, 100%); }
+.dz-dialog .grid.weapons { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; align-content: start; flex: 1; min-height: 0; }
+.dz-dialog .wcard { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 12px 10px; border-radius: 14px; border: 1px solid var(--border-ctl); color: var(--text); font: inherit; text-align: center; cursor: pointer; background: linear-gradient(180deg, #4a3a73 0%, #1a1f3d 62%); }
+.dz-dialog .wcard[data-rarity="5"] { background: linear-gradient(180deg, #7a5a2b 0%, #2a2418 64%); border-color: #5a4524; }
+.dz-dialog .wcard[data-rarity="3"] { background: linear-gradient(180deg, #2f5b8a 0%, #17233a 64%); }
+.dz-dialog .wcard[data-rarity="2"], .dz-dialog .wcard[data-rarity="1"] { background: linear-gradient(180deg, #3f4a63 0%, #1a1f3d 64%); }
+.dz-dialog .wcard:hover { border-color: var(--gold); }
+.dz-dialog .wcard[data-current="true"] { box-shadow: 0 0 0 2px var(--gold); }
+.dz-dialog .wcard .art { width: 84px; height: 84px; display: grid; place-items: center; }
+.dz-dialog .wcard .art img { width: 100%; height: 100%; object-fit: contain; }
+.dz-dialog .wcard .ph { font-size: 36px; color: var(--gold); }
+.dz-dialog .wcard .n { font-family: var(--font-display); font-weight: 600; font-size: 17px; line-height: 1.15; overflow-wrap: anywhere; }
+.dz-dialog .wcard .sub { font-size: 13px; color: var(--text-2); }
+.dz-dialog .wcard .tags { display: flex; gap: 4px; flex-wrap: wrap; justify-content: center; min-height: 22px; }
+.dz-dialog .tools .small { margin: 0; }
+
+/* seletor de sets em grade */
+.dz-dialog .grid.sets { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; align-content: start; flex: 1; min-height: 0; }
+.dz-dialog .scard { display: grid; grid-template-columns: 64px minmax(0, 1fr); column-gap: 12px; row-gap: 4px; align-items: start; padding: 12px; border-radius: 14px; border: 1px solid var(--border-ctl); color: var(--text); font: inherit; text-align: left; cursor: pointer; background: linear-gradient(135deg, #4a3a73 0%, #1a1f3d 70%); }
+.dz-dialog .scard[data-rarity="5"] { background: linear-gradient(135deg, #7a5a2b 0%, #2a2418 72%); border-color: #5a4524; }
+.dz-dialog .scard:hover { border-color: var(--gold); }
+.dz-dialog .scard[data-current="true"], .dz-dialog .scard[data-first="true"] { box-shadow: 0 0 0 2px var(--gold); }
+.dz-dialog .scard .art { grid-row: 1 / span 3; width: 64px; height: 64px; display: grid; place-items: center; }
+.dz-dialog .scard .art img { width: 100%; height: 100%; object-fit: contain; }
+.dz-dialog .scard .ph { font-size: 30px; color: var(--gold); }
+.dz-dialog .scard .n { font-family: var(--font-display); font-weight: 600; font-size: 18px; line-height: 1.15; overflow-wrap: anywhere; }
+.dz-dialog .scard .b { font-size: 13px; line-height: 1.4; color: var(--text-2); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.dz-dialog .scard .b b { color: var(--gold); font-family: var(--font-display); }
+.dz-dialog .scard .tags { display: flex; gap: 4px; flex-wrap: wrap; min-height: 22px; }
+.dz-dialog .tools .row-acts { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.dz-dialog .wcard .n small, .dz-dialog .scard .n small { display: block; font-family: var(--font-body); font-weight: 400; font-size: 12px; color: var(--muted); letter-spacing: 0; }

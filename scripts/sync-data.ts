@@ -55,6 +55,7 @@ interface RawCharListEntry {
 interface RawWeaponListEntry {
   enName: string;
   ptName: string;
+  weaponIcon?: string;
   weaponType: string;
   qualityType: string;
   ascensionStats: AscensionStats;
@@ -339,9 +340,17 @@ async function main() {
       tick();
     }
   });
+  const weaponDetailsPt = await mapLimit(weaponIds, CONCURRENCY, async (id) => {
+    try {
+      return await fetchJson<RawWeaponDetail>(`${version}/pt/weapon/${id}.json`, opts);
+    } catch {
+      return null;
+    }
+  });
   const weapons: Weapon[] = weaponIds.flatMap((id, i) => {
     const e = weaponList[id];
     const detail = weaponDetails[i];
+    const pt = weaponDetailsPt[i]?.passive;
     if (!detail) {
       warnings.push(`Arma ignorada (sem detalhe): ${e.enName} (${id})`);
       return [];
@@ -357,12 +366,15 @@ async function main() {
         rarity: QUALITY[e.qualityType],
         baseAtk: atk,
         substat: ascension,
+        ...(e.weaponIcon ? { icon: e.weaponIcon } : {}),
         passive:
           p && Object.keys(p.refinements).length === 5
             ? {
                 name: p.name,
+                ...(pt?.name ? { namePt: pt.name } : {}),
                 refinements: ['1', '2', '3', '4', '5'].map((r) => ({
                   description: p.refinements[r].description,
+                  ...(pt?.refinements?.[r]?.description ? { descriptionPt: pt.refinements[r].description } : {}),
                   params: p.refinements[r].params ?? [],
                 })),
               }
@@ -382,14 +394,22 @@ async function main() {
       tick();
     }
   });
+  const setDetailsPt = await mapLimit(setIds, CONCURRENCY, async (id) => {
+    try {
+      return await fetchJson<RawArtifactDetail>(`${version}/pt/artifact/${id}.json`, opts);
+    } catch {
+      return null;
+    }
+  });
   const artifactSets: ArtifactSet[] = setIds.flatMap((id, i) => {
     const e = artifactList[id];
     const b = setDetails[i]?.info.setBonuses;
+    const bPt = setDetailsPt[i]?.info.setBonuses;
     if (!b) {
       warnings.push(`Set ignorado (sem bônus): ${e.enName} (${id})`);
       return [];
     }
-    const bonus = (k: string) => (b[k] ? { description: b[k].description, params: b[k].params ?? [] } : undefined);
+    const bonus = (k: string) => (b[k] ? { description: b[k].description, ...(bPt?.[k]?.description ? { descriptionPt: bPt[k].description } : {}), params: b[k].params ?? [] } : undefined);
     return [
       ArtifactSetSchema.parse({
         id: Number(id),

@@ -23,6 +23,20 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   page.on('pageerror', (e) => problems.push(`pageerror: ${e.message.slice(0, 200)}`));
   const settle = () => page.waitForTimeout(500);
   const cards = () => page.locator('.vt-card');
+  // "Novo time" abre o passo a passo: escolhe a Citlali, mantém o build padrão e a rotação básica.
+  const createTeam = async (name) => {
+    await page.click('button:has-text("Novo time")');
+    await page.waitForURL('**/novo');
+    await page.click('button[aria-label="Escolher o personagem 1"]');
+    await page.waitForSelector('.dz-dialog');
+    await page.fill('.dz-dialog input[type="search"]', 'Citlali');
+    await page.click('.dz-dialog .pick:has(.n:text-is("Citlali"))');
+    await page.fill('.nt-name input', name);
+    await page.click('button:has-text("Continuar")');
+    await page.click('button:has-text("Continuar")');
+    await page.click('button:has-text("Criar o time")');
+    await page.waitForURL(/\/projeto\/(?!exemplo)[^/]+$/);
+  };
   // O Vault só mostra os cards: as ações ficam nos menus (⋯ de cada card e "Importar e sincronizar" no topo).
   const openCardMenu = (card) => card.locator('button[aria-haspopup="menu"]').click();
   const pickCard = async (card, item) => { await openCardMenu(card); await card.getByRole('menuitem', { name: item, exact: true }).click(); };
@@ -43,8 +57,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   check('o card cabe na largura do cartão (miniatura escalada)', await page.evaluate(() => { const c = document.querySelector('.vt-card'); const p = document.querySelector('.vt-card .pc-box'); return !!c && !!p && p.getBoundingClientRect().width <= c.getBoundingClientRect().width + 1; }));
 
   // Novo time -> editor -> volta
-  await page.click('button:has-text("Novo time")');
-  await page.waitForURL('**/projeto/**');
+  await createTeam('Novo time');
   check('"Novo time" abre o projeto novo', /\/projeto\/[^/]+$/.test(page.url()) && !page.url().endsWith('/exemplo'));
   await page.waitForSelector('.dz-pagehead');
   await page.click('.dz-header button:has-text("Salvar no Vault")');

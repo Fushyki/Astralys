@@ -4,3 +4,11 @@
 .in-hero .actions { display: flex; flex-wrap: wrap; gap: 10px; }
 .in-features { list-style: none; margin: 0; padding: 0; }
 .in-features p { margin: 8px 0 0; color: var(--text-2); font-size: 14px; line-height: 1.5; }
+
+.in-paths { display: flex; flex-direction: column; gap: 14px; }
+.in-path-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+.in-path { display: flex; flex-direction: column; gap: 8px; min-height: 130px; padding: 20px; border: 1px solid var(--border); border-top: 4px solid var(--gold); border-radius: 16px; background: var(--surface); color: var(--text); text-decoration: none; }
+.in-path:hover { border-color: var(--gold); }
+.in-path b { font-family: var(--font-display); font-size: 26px; line-height: 1.1; }
+.in-path span { color: var(--muted); font-size: 15px; line-height: 1.4; }
+.in-paths p { margin: 0; }

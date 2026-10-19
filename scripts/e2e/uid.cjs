@@ -33,7 +33,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
     return route.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: VITRINE });
   });
 
-  await page.goto(`${BASE}/projeto/exemplo/personagem/Bennett`, { waitUntil: 'networkidle' });
+  await page.goto(`${BASE}/projeto/exemplo/personagem/Bennett?aba=build`, { waitUntil: 'networkidle' });
   await page.evaluate(() => localStorage.clear());
   await page.reload({ waitUntil: 'networkidle' });
   await page.waitForSelector('.pc-weapon');
@@ -61,12 +61,35 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   check('o servidor recebeu o UID certo', asked.includes('100000001'));
 
   await page.click('button:has-text("Aplicar o build de Bennett")'); await settle();
+  await page.click('.pc-views button:has-text("Build")'); await settle();
   check('o build real foi aplicado (arma Freedom-Sworn)', /Freedom-Sworn/.test(await page.textContent('.pc-weapon')), (await page.textContent('.pc-weapon')).trim().slice(0, 60));
   check('o set muda para Noblesse Oblige', /Noblesse Oblige/.test(await page.textContent('.pc-good, body')));
 
   await page.reload({ waitUntil: 'networkidle' });
-  await page.click('.dz-panel:has(h2:text-is("Substats (rolls)")) button:has-text("Usar o inventário GOOD")'); await settle();
+  await page.click('.pc-views button:has-text("Avançado")'); await settle();
+  await page.click('.dz-seg[aria-label="Ferramenta"] button:has-text("Inventário GOOD")'); await settle();
   check('o UID fica lembrado', (await page.inputValue('input[aria-label="UID do jogo"]')) === '100000001');
+
+  // Montar um time: o passo 2 importa o build real pelo UID
+  await page.goto(`${BASE}/`, { waitUntil: 'networkidle' });
+  check('o início oferece "Importar o meu build" quando há servidor', (await page.locator('.in-path:has-text("Importar o meu build")').count()) === 1);
+  await page.click('.in-path:has-text("Importar o meu build")');
+  await page.waitForURL('**/novo?origem=uid');
+  await page.click('button[aria-label="Escolher o personagem 1"]');
+  await page.waitForSelector('.dz-dialog');
+  await page.fill('.dz-dialog input[type="search"]', 'Bennett');
+  await page.click('.dz-dialog .pick:has(.n:text-is("Bennett"))');
+  await page.click('button:has-text("Continuar")');
+  check('vindo de "Importar o meu build" a origem UID já vem marcada', await page.isChecked('input[name="source"] >> nth=1'));
+  await page.fill('input[aria-label="UID do jogo"]', '100000001');
+  await page.click('.nt-uid button:has-text("Buscar")');
+  await page.waitForSelector('.nt-uid .note');
+  check('o passo 2 diz de quem veio o build real', /Build real importado de: Bennett/.test(await page.textContent('.nt-uid .note')), (await page.textContent('.nt-uid .note')).trim());
+  await page.click('button:has-text("Continuar")');
+  await page.click('button:has-text("Criar o time")');
+  await page.waitForURL(/\/projeto\/(?!exemplo)[^/]+$/);
+  await page.waitForSelector('.eq-card');
+  check('o time nasce com a arma real da vitrine (Freedom-Sworn)', /Freedom-Sworn/.test(await page.textContent('.eq-card')), (await page.textContent('.eq-card')).replace(/\s+/g, ' ').slice(0, 120));
 
   await page.screenshot({ path: path.join(OUT, 'uid-personagem.png'), fullPage: true });
   await page.setViewportSize({ width: 390, height: 900 }); await page.waitForTimeout(400);

@@ -24,9 +24,9 @@ O motor reproduz uma planilha de theorycraft de referência com precisão total 
 
 ## Como usar (5 passos)
 
-1. **Abra o [Vault](https://astralys.vercel.app/vault)** e clique em **Novo time** (ou abra o exemplo, que já vem pronto).
+1. **Na [página inicial](https://astralys.vercel.app)** clique em **Montar um time** e siga os 3 passos: escolha os personagens, o build (padrão ou importado do seu UID) e como a rotação começa. Se preferir só olhar, abra o time de exemplo.
 2. **Equipe:** veja os 4 personagens, o dano de cada um e o que cada um dá ao time.
-3. **Personagens:** ajuste constelação, talentos, arma, artefatos e substats. Em *Ferramentas*, importe seu build real pelo **UID do jogo** ou pelo arquivo do Genshin Optimizer.
+3. **Personagens:** a tela abre no **Resumo**. Em **Build** troque arma, artefatos e substats; em **Avançado** estão a tabela de dano completa, os buffs e as ferramentas (importar seu build pelo UID do jogo ou pelo arquivo do Genshin Optimizer).
 4. **Rotação e buffs:** arraste os golpes na linha do tempo e ligue os buffs nas janelas em que valem.
 5. **Dano do time:** leia o resultado (DPS, dano por personagem, reações) e gere o **Card** para compartilhar.
 

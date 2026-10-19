@@ -26,6 +26,20 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   page.on('pageerror', (e) => problems.push(`pageerror: ${e.message.slice(0, 200)}`));
   const settle = () => page.waitForTimeout(600);
   const cards = () => page.locator('.vt-card');
+  // "Novo time" abre o passo a passo: escolhe a Citlali, mantém o build padrão e a rotação básica.
+  const createTeam = async (name) => {
+    await page.click('button:has-text("Novo time")');
+    await page.waitForURL('**/novo');
+    await page.click('button[aria-label="Escolher o personagem 1"]');
+    await page.waitForSelector('.dz-dialog');
+    await page.fill('.dz-dialog input[type="search"]', 'Citlali');
+    await page.click('.dz-dialog .pick:has(.n:text-is("Citlali"))');
+    await page.fill('.nt-name input', name);
+    await page.click('button:has-text("Continuar")');
+    await page.click('button:has-text("Continuar")');
+    await page.click('button:has-text("Criar o time")');
+    await page.waitForURL(/\/projeto\/(?!exemplo)[^/]+$/);
+  };
   // O Vault só mostra os cards: as ações ficam nos menus (⋯ de cada card e "Importar e sincronizar" no topo).
   const openCardMenu = (card) => card.locator('button[aria-haspopup="menu"]').click();
   const pickCard = async (card, item) => { await openCardMenu(card); await card.getByRole('menuitem', { name: item, exact: true }).click(); };
@@ -68,8 +82,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.keyboard.press('Escape');
 
   // Novo time + sincronizar (sobe o time novo; o exemplo não é salvo)
-  await page.click('button:has-text("Novo time")');
-  await page.waitForURL('**/projeto/**');
+  await createTeam('Novo time');
   await page.waitForSelector('.dz-pagehead');
   await page.goto(`${BASE}/vault`, { waitUntil: 'networkidle' });
   await page.waitForSelector('.vt-card');

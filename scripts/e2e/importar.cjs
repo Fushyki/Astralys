@@ -33,9 +33,9 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   // Home
   await page.goto(`${BASE}/`, { waitUntil: 'networkidle' });
   check('a home apresenta as 4 funções', (await page.locator('.in-features li').count()) === 4);
-  await page.click('.in-hero a:has-text("Ir ao Vault")');
+  await page.click('.in-path:has-text("Abrir um time salvo")');
   await page.waitForSelector('.vt-card');
-  check('"Ir ao Vault" abre o Vault', page.url().endsWith('/vault'));
+  check('"Abrir um time salvo" abre o Vault', page.url().endsWith('/vault'));
   await page.goto(`${BASE}/endereco-que-nao-existe`, { waitUntil: 'networkidle' });
   check('endereço desconhecido volta para a home', page.url() === `${BASE}/`, page.url());
 

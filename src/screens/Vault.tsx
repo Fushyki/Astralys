@@ -129,11 +129,7 @@ export default function Vault() {
     }
   };
 
-  const createNew = () => {
-    const copy = { ...cloneProject(sampleForApp(), 'Novo time'), gameVersion: data?.meta.gameVersion ?? '' };
-    saveProject(copy);
-    navigate(`/projeto/${copy.id}`);
-  };
+  const createNew = () => navigate('/novo');
 
   const filtered = filters.query || filters.character || filters.element || filters.favoritesOnly || filters.patch;
 

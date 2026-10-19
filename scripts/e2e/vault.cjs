@@ -23,6 +23,11 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   page.on('pageerror', (e) => problems.push(`pageerror: ${e.message.slice(0, 200)}`));
   const settle = () => page.waitForTimeout(500);
   const cards = () => page.locator('.vt-card');
+  // O Vault só mostra os cards: as ações ficam nos menus (⋯ de cada card e "Importar e sincronizar" no topo).
+  const openCardMenu = (card) => card.locator('button[aria-haspopup="menu"]').click();
+  const pickCard = async (card, item) => { await openCardMenu(card); await card.getByRole('menuitem', { name: item, exact: true }).click(); };
+  const openHeaderMenu = () => page.click('.dz-pagehead button[aria-haspopup="menu"]');
+  const pickHeader = async (item) => { await openHeaderMenu(); await page.getByRole('menuitem', { name: item, exact: true }).click(); };
 
   await page.goto(`${BASE}/vault`, { waitUntil: 'networkidle' });
   await page.evaluate(() => localStorage.clear());
@@ -30,7 +35,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.waitForSelector('.vt-card');
 
   check('a aba Vault está ativa', (await page.locator('.dz-nav a[aria-current="page"]').textContent()).includes('Vault'));
-  check('começa só com o exemplo', (await cards().count()) === 1 && (await cards().first().textContent()).includes('exemplo'));
+  check('começa só com o exemplo', (await cards().count()) === 1 && /Exemplo/.test(await cards().first().getAttribute('data-name')));
   await page.waitForSelector('.vt-card .pc', { timeout: 30000 });
   const poster = (await page.textContent('.vt-card .pc')).replace(/\s+/g, ' ');
   check('o cartão é o card do time (DPS 216.600 e dano 3,79 mi)', /216\.600/.test(poster) && /3,79\s*mi/.test(poster), poster.slice(0, 120));
@@ -66,12 +71,20 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   check('filtrar pelo patch atual mantém os dois times', (await cards().count()) === 2);
   await page.click('button:has-text("Limpar filtros")');
 
+  check('o cartão não tem botões soltos, só o card, o favorito e o menu', (await cards().first().locator('button').count()) === 2 && (await cards().first().locator('a').count()) === 1);
+  check('o título aparece uma vez só (dentro do card)', (await cards().first().locator('h1').count()) === 1);
+  await openHeaderMenu();
+  check('o menu do topo reúne importar e sincronizar', (await page.getByRole('menuitem').count()) >= 2);
+  await page.keyboard.press('Escape');
+  check('Esc fecha o menu', (await page.getByRole('menuitem').count()) === 0);
+
   // Duplicar, renomear, apagar
-  await cards().first().locator('button:has-text("Duplicar")').click(); await settle();
+  await pickCard(cards().first(), 'Duplicar'); await settle();
   check('duplicar cria outro cartão', (await cards().count()) === 3);
   const before = await cards().count();
-  await cards().first().locator('button:has-text("Apagar")').click();
-  await cards().first().locator('button:has-text("Sim")').click(); await settle();
+  await openCardMenu(cards().first());
+  await cards().first().getByRole('menuitem', { name: 'Apagar', exact: true }).click();
+  await cards().first().getByRole('menuitem', { name: 'Sim', exact: true }).click(); await settle();
   check('apagar remove o cartão', (await cards().count()) === before - 1);
 
   await page.screenshot({ path: path.join(OUT, 'r-vault.png'), fullPage: true });

@@ -4,25 +4,21 @@ import { Link, useNavigate } from 'react-router-dom';
 import { AppHeader } from '../app/AppHeader';
 import '../design/design.css';
 import { elementColor } from '../design/elements';
-import { CharacterAvatar, Chip } from '../design/primitives';
+import { CharacterAvatar } from '../design/primitives';
 import { useGameData } from '../features/rotation/data';
 import { downloadProject, importJson, importXlsx, type ImportResult } from '../features/rotation/importFile';
 import { SAMPLE_ID, cloneProject, deleteStoredProject, listProjects, loadProject, saveProject, sampleForApp } from '../features/rotation/persistence';
 import { useProjectCards } from '../features/rotation/useProjectCards';
+import { Menu } from '../design/Menu';
 import { PosterCard, ScaledPoster } from './card/PosterCard';
 import { deleteRemote } from '../online/api';
 import { ONLINE_ENABLED } from '../online/config';
 import { useSession } from '../online/session';
 import { summaryText, syncNow } from '../online/syncNow';
 import { NO_FILTERS, NO_PATCH, filterProjects, patchesOf, type VaultFilters } from '../features/vault/vaultModel';
-import { formatInt } from '../ui/format';
 import './vault.css';
 
 const ELEMENTS = ['Pyro', 'Hydro', 'Anemo', 'Electro', 'Dendro', 'Cryo', 'Geo'];
-const when = (iso: string) => {
-  const d = new Date(iso);
-  return Number.isNaN(d.getTime()) ? '' : d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
-};
 
 export default function Vault() {
   const navigate = useNavigate();
@@ -151,11 +147,17 @@ export default function Vault() {
             <span className="muted">{items.length} {items.length === 1 ? 'time salvo' : 'times salvos'} neste navegador. {token ? 'Use "Sincronizar com a conta" para guardá-los também online.' : 'Nada sai do seu navegador.'}</span>
           </div>
           <div className="actions">
-            <button type="button" className="dz-btn" disabled={busy || !data} onClick={() => xlsxInput.current?.click()} title="Importa a planilha de theorycraft (abas Time e Rotação)">Importar planilha .xlsx</button>
-            <button type="button" className="dz-btn" disabled={busy} onClick={() => jsonInput.current?.click()} title="Abre um projeto exportado pelo Astralys">Importar projeto .json</button>
-            {ONLINE_ENABLED && (token
-              ? <button type="button" className="dz-btn" disabled={syncing} onClick={() => void sync()} title="Envia os times mais novos para a conta e baixa os que só existem nela">{syncing ? 'Sincronizando…' : 'Sincronizar com a conta'}</button>
-              : <Link to="/entrar" className="dz-btn" title="Guarde seus times fora deste navegador">Entrar para sincronizar</Link>)}
+            <Menu label="Importar e sincronizar ▾" ariaLabel="Importar e sincronizar">
+              {(close) => (
+                <>
+                  <button type="button" role="menuitem" className="dz-menu-item" disabled={busy || !data} onClick={() => { close(); xlsxInput.current?.click(); }} title="Importa a planilha de theorycraft (abas Time e Rotação)">Importar planilha .xlsx</button>
+                  <button type="button" role="menuitem" className="dz-menu-item" disabled={busy} onClick={() => { close(); jsonInput.current?.click(); }} title="Abre um projeto exportado pelo Astralys">Importar projeto .json</button>
+                  {ONLINE_ENABLED && (token
+                    ? <button type="button" role="menuitem" className="dz-menu-item" disabled={syncing} onClick={() => { close(); void sync(); }} title="Envia os times mais novos para a conta e baixa os que só existem nela">{syncing ? 'Sincronizando…' : 'Sincronizar com a conta'}</button>
+                    : <Link to="/entrar" role="menuitem" className="dz-menu-item" onClick={close} title="Guarde seus times fora deste navegador">Entrar para sincronizar</Link>)}
+                </>
+              )}
+            </Menu>
             <button type="button" className="dz-btn gold" onClick={createNew}>Novo time</button>
             <input ref={xlsxInput} type="file" accept=".xlsx,.xlsm" hidden aria-label="Escolher planilha" onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ''; if (f && data) void run(() => importXlsx(f, data)); }} />
             <input ref={jsonInput} type="file" accept=".json,application/json" hidden aria-label="Escolher projeto" onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ''; if (f) void run(() => importJson(f)); }} />
@@ -198,7 +200,7 @@ export default function Vault() {
               const model = cards[p.id];
               const lead = p.members[0] ? elementColor(elementOf(p.members[0])) : '#e9c46a';
               return (
-                <li key={p.id} className="vt-card" data-id={p.id} style={{ ['--c' as string]: lead }}>
+                <li key={p.id} className="vt-card" data-id={p.id} data-name={p.name} style={{ ['--c' as string]: lead }}>
                   <Link className="vt-poster" to={`/projeto/${p.id}`} aria-label={`Abrir ${p.name}`}>
                     {model && model !== 'error' ? (
                       <ScaledPoster format="portrait"><PosterCard model={model} format="portrait" /></ScaledPoster>
@@ -211,49 +213,44 @@ export default function Vault() {
                       </div>
                     )}
                   </Link>
-                  <div className="vt-foot">
-                    <div className="vt-title">
-                      {renaming === p.id ? (
-                        <input
-                          className="dz-input"
-                          autoFocus
-                          defaultValue={p.name}
-                          aria-label="Novo nome do time"
-                          onBlur={(e) => rename(p.id, e.target.value)}
-                          onKeyDown={(e) => { if (e.key === 'Enter') e.currentTarget.blur(); if (e.key === 'Escape') setRenaming(null); }}
-                        />
-                      ) : (
-                        <Link className="name" to={`/projeto/${p.id}`}>{p.name}</Link>
-                      )}
-                      <button type="button" className="vt-fav" aria-pressed={p.favorite} aria-label={p.favorite ? `Tirar ${p.name} dos favoritos` : `Favoritar ${p.name}`} onClick={() => toggleFavorite(p.id)}>★</button>
-                    </div>
-                    <div className="vt-meta">
-                      <Chip>{formatInt(p.actions)} golpes</Chip>
-                      {p.isSample && <Chip tone="#e9c46a">exemplo</Chip>}
-                      {p.shared && <Chip tone="#7dd3a8">compartilhado</Chip>}
-                      {p.updatedAt && <span className="muted small">{when(p.updatedAt)}</span>}
-                    </div>
-                    <div className="acts">
-                      <Link className="dz-btn" to={`/projeto/${p.id}`}>Abrir</Link>
-                      <div className="small-acts">
-                        <Link className="dz-link" to={`/card/${p.id}`}>Card</Link>
-                        <Link className="dz-link" to={`/comparar?a=${p.id}`}>Comparar</Link>
-                        {token && !p.isSample && <button type="button" className="dz-link" onClick={() => void toggleShare(p.id)}>{p.shared ? 'Parar de compartilhar' : 'Compartilhar'}</button>}
-                        <button type="button" className="dz-link" onClick={() => duplicate(p.id)}>Duplicar</button>
-                        <button type="button" className="dz-link" onClick={() => setRenaming(p.id)}>Renomear</button>
-                        <button type="button" className="dz-link" onClick={() => { const full = loadProject(p.id); if (full) downloadProject(full); }}>Exportar</button>
-                        {confirmDelete === p.id ? (
+                  <div className="vt-over">
+                    {p.shared && <span className="vt-tag" title="Tem link público">compartilhado</span>}
+                    <button type="button" className="dz-iconbtn vt-fav" aria-pressed={p.favorite} aria-label={p.favorite ? `Tirar ${p.name} dos favoritos` : `Favoritar ${p.name}`} onClick={() => toggleFavorite(p.id)}>★</button>
+                    <Menu label="⋯" ariaLabel={`Opções de ${p.name}`} className="dz-iconbtn">
+                      {(close) =>
+                        confirmDelete === p.id ? (
                           <>
-                            <span className="warn">{p.id === SAMPLE_ID ? 'Voltar ao exemplo original?' : 'Apagar de vez?'}</span>
-                            <button type="button" className="dz-link" onClick={() => remove(p.id)}>Sim</button>
-                            <button type="button" className="dz-link" onClick={() => setConfirmDelete(null)}>Não</button>
+                            <span className="dz-menu-note">{p.id === SAMPLE_ID ? 'Voltar ao exemplo original?' : 'Apagar de vez?'}</span>
+                            <button type="button" role="menuitem" className="dz-menu-item danger" onClick={() => { close(); remove(p.id); }}>Sim</button>
+                            <button type="button" role="menuitem" className="dz-menu-item" onClick={() => setConfirmDelete(null)}>Não</button>
                           </>
                         ) : (
-                          <button type="button" className="dz-link" onClick={() => setConfirmDelete(p.id)}>{p.id === SAMPLE_ID ? 'Restaurar' : 'Apagar'}</button>
-                        )}
-                      </div>
-                    </div>
+                          <>
+                            <Link role="menuitem" className="dz-menu-item" to={`/projeto/${p.id}`} onClick={close}>Abrir</Link>
+                            <Link role="menuitem" className="dz-menu-item" to={`/card/${p.id}`} onClick={close}>Editar o card</Link>
+                            <Link role="menuitem" className="dz-menu-item" to={`/comparar?a=${p.id}`} onClick={close}>Comparar</Link>
+                            {token && !p.isSample && <button type="button" role="menuitem" className="dz-menu-item" onClick={() => { close(); void toggleShare(p.id); }}>{p.shared ? 'Parar de compartilhar' : 'Compartilhar'}</button>}
+                            <button type="button" role="menuitem" className="dz-menu-item" onClick={() => { close(); duplicate(p.id); }}>Duplicar</button>
+                            <button type="button" role="menuitem" className="dz-menu-item" onClick={() => { close(); setRenaming(p.id); }}>Renomear</button>
+                            <button type="button" role="menuitem" className="dz-menu-item" onClick={() => { close(); const full = loadProject(p.id); if (full) downloadProject(full); }}>Exportar</button>
+                            <button type="button" role="menuitem" className="dz-menu-item danger" onClick={() => setConfirmDelete(p.id)}>{p.id === SAMPLE_ID ? 'Restaurar' : 'Apagar'}</button>
+                          </>
+                        )
+                      }
+                    </Menu>
                   </div>
+                  {renaming === p.id && (
+                    <div className="vt-rename">
+                      <input
+                        className="dz-input"
+                        autoFocus
+                        defaultValue={p.name}
+                        aria-label="Novo nome do time"
+                        onBlur={(e) => rename(p.id, e.target.value)}
+                        onKeyDown={(e) => { if (e.key === 'Enter') e.currentTarget.blur(); if (e.key === 'Escape') setRenaming(null); }}
+                      />
+                    </div>
+                  )}
                 </li>
               );
             })}

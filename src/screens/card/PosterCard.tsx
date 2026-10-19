@@ -3,6 +3,7 @@
  * Tudo vem do projeto analisado; o que a tela mostra é escalado por CSS (`ScaledCard`), a imagem exportada tem o tamanho real.
  */
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
+import { faceIconUrl } from '../../design/primitives';
 import type { CardModel } from '../../features/card/cardModel';
 import { compact, formatDecimal, formatPercent } from '../../ui/format';
 import './card.css';
@@ -15,14 +16,13 @@ export const POSTER_SIZE: Record<PosterFormat, { w: number; h: number }> = {
 };
 export const POSTER_LABEL: Record<PosterFormat, string> = { portrait: '4:5', wide: '16:9', tall: '9:16' };
 
-const IMAGE_BASE = 'https://api.lunaris.moe/data/assets/gachaicon';
 const css = (vars: Record<string, string | number>): CSSProperties => vars as CSSProperties;
 
 function Face({ name, icon, color }: { name: string; icon?: string; color: string }) {
   const [failed, setFailed] = useState(false);
   return (
     <span className="pc-face" style={css({ '--c': color })}>
-      {icon && !failed ? <img src={`${IMAGE_BASE}/${icon}.webp`} alt="" crossOrigin="anonymous" onError={() => setFailed(true)} /> : <b>{name.charAt(0)}</b>}
+      {icon && !failed ? <img src={faceIconUrl(icon)} alt="" crossOrigin="anonymous" onError={() => setFailed(true)} /> : <b>{name.charAt(0)}</b>}
     </span>
   );
 }

@@ -40,6 +40,9 @@ function ownerOf(b: TeamBuff): number | null {
   return m ? Number(m[1]) : null;
 }
 
+/** "Pyro/Cryo"; com 6 ou mais elementos vira "elemental" (ex.: Escudo de Jade do Zhongli). */
+const resElements = (els: readonly string[]): string => (els.length >= 6 ? 'elemental' : els.join('/'));
+
 /** O que cada membro dá ao time: buffs de arma/set/personagem em janela e a redução de RES do inimigo. */
 export function givenBuffs(resolved: ResolvedProject): string[][] {
   const team = resolved.team;
@@ -53,14 +56,14 @@ export function givenBuffs(resolved: ResolvedProject): string[][] {
   }
   team.members.forEach((m, i) => {
     const shred = m.characterEffect?.resShred;
-    if (shred && shred.value > 0) out[i].push(`RES ${shred.elements.join('/')} −${formatDecimal(shred.value * 100, 0)}%`);
+    if (shred && shred.value > 0) out[i].push(`RES ${resElements(shred.elements)} −${formatDecimal(shred.value * 100, 0)}%`);
     const active = (m.characterEffect?.buffs ?? []).filter((b) => (m.constellation ?? 0) >= (b.minConstellation ?? 0));
     for (const b of active) {
-      if (b.resShred && b.resShred.value > 0) out[i].push(`RES ${b.resShred.elements.join('/')} −${formatDecimal(b.resShred.value * 100, 0)}%`);
+      if (b.resShred && b.resShred.value > 0) out[i].push(`RES ${resElements(b.resShred.elements)} −${formatDecimal(b.resShred.value * 100, 0)}%`);
     }
     const fourPiece = m.primarySet?.effect?.fourPiece;
     if (fourPiece?.resShred && !m.secondarySet && m.fourPiece !== false) {
-      out[i].push(`RES ${fourPiece.resShred.elements.join('/')} −${formatDecimal(fourPiece.resShred.value * 100, 0)}%`);
+      out[i].push(`RES ${resElements(fourPiece.resShred.elements)} −${formatDecimal(fourPiece.resShred.value * 100, 0)}%`);
     }
   });
   return out.map((list) => [...new Set(list)]);

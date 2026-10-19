@@ -2,6 +2,7 @@
 import { Link } from 'react-router-dom';
 import { AppHeader } from '../app/AppHeader';
 import '../design/design.css';
+import { ONLINE_ENABLED } from '../online/config';
 import './inicio.css';
 
 const FEATURES = [
@@ -19,11 +20,32 @@ export default function Inicio() {
         <section className="in-hero">
           <h1 className="h1">Theorycraft que mostra de onde vem cada número</h1>
           <p className="lead">Equipes, rotações, builds e recarga de energia de Genshin Impact, com dados do Lunaris. Tudo fica salvo no seu navegador.</p>
-          <div className="actions">
-            <Link className="dz-btn gold" to="/projeto/exemplo">Abrir o exemplo</Link>
-            <Link className="dz-btn" to="/vault">Ir ao Vault</Link>
-            <Link className="dz-btn" to="/recarga">Calcular recarga</Link>
-          </div>
+        </section>
+        <section className="in-paths" aria-label="Por onde começar">
+          <h2 className="h2">O que você quer fazer?</h2>
+          <ul className="in-path-list">
+            <li>
+              <Link className="in-path" to="/novo">
+                <b>Montar um time</b>
+                <span>Escolha os personagens e veja o dano em 3 passos.</span>
+              </Link>
+            </li>
+            {ONLINE_ENABLED && (
+              <li>
+                <Link className="in-path" to="/novo?origem=uid">
+                  <b>Importar o meu build</b>
+                  <span>Use o UID do jogo para trazer arma e artefatos reais.</span>
+                </Link>
+              </li>
+            )}
+            <li>
+              <Link className="in-path" to="/vault">
+                <b>Abrir um time salvo</b>
+                <span>Seus times ficam no Vault, cada um como um card.</span>
+              </Link>
+            </li>
+          </ul>
+          <p className="muted small">Quer só olhar como funciona? <Link to="/projeto/exemplo">Abra o time de exemplo</Link>. Para recarga de energia sem montar um time, use a <Link to="/recarga">calculadora de recarga</Link>.</p>
         </section>
         <ul className="dz-grid c4 in-features">
           {FEATURES.map((f) => (

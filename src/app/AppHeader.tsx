@@ -2,6 +2,7 @@
 import { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import '../design/design.css';
+import { Menu } from '../design/Menu';
 import { ONLINE_ENABLED } from '../online/config';
 import { useSession } from '../online/session';
 
@@ -43,14 +44,18 @@ function Account() {
 export function AppHeader({ projectId, memberName, favorite, onToggleFavorite }: AppHeaderProps) {
   const { pathname } = useLocation();
   const base = projectId ? `/projeto/${projectId}` : '';
-  const tabs: { to: string; label: string; on: boolean }[] = projectId
+  const personagens = `${base}/personagem/${encodeURIComponent(memberName ?? '')}`;
+  const onArmas = pathname.startsWith(`${base}/armas`);
+  const onRecarga = pathname.startsWith(`${base}/recarga`);
+  const tabs: { to: string; label: string; on: boolean; n?: number }[] = projectId
     ? [
-        { to: base, label: 'Equipe', on: pathname === base },
-        { to: `${base}/personagem/${encodeURIComponent(memberName ?? '')}`, label: 'Personagens', on: pathname.startsWith(`${base}/personagem`) },
-        { to: `${base}/rotacao`, label: 'Rotação e buffs', on: pathname.startsWith(`${base}/rotacao`) },
-        { to: `${base}/time`, label: 'Dano do time', on: pathname.startsWith(`${base}/time`) },
-        { to: `${base}/armas`, label: 'Armas e constelações', on: pathname.startsWith(`${base}/armas`) },
-        { to: `${base}/recarga`, label: 'Recarga', on: pathname.startsWith(`${base}/recarga`) },
+        { to: base, label: 'Equipe', on: pathname === base, n: 1 },
+        { to: personagens, label: 'Personagens', on: pathname.startsWith(`${base}/personagem`), n: 2 },
+        { to: `${base}/rotacao`, label: 'Rotação e buffs', on: pathname.startsWith(`${base}/rotacao`), n: 3 },
+        { to: `${base}/time`, label: 'Dano do time', on: pathname.startsWith(`${base}/time`), n: 4 },
+        // Telas de apoio ganham uma aba só enquanto você está nelas; o resto fica no menu "Mais".
+        ...(onArmas ? [{ to: `${base}/armas`, label: 'Armas e constelações', on: true }] : []),
+        ...(onRecarga ? [{ to: `${base}/recarga`, label: 'Recarga', on: true }] : []),
         { to: '/vault', label: 'Vault', on: false },
       ]
     : [
@@ -67,10 +72,23 @@ export function AppHeader({ projectId, memberName, favorite, onToggleFavorite }:
       <nav className="dz-nav" aria-label="Navegação principal">
         {tabs.map((t) => (
           <Link key={t.label} to={t.to} aria-current={t.on ? 'page' : undefined}>
+            {t.n ? <span className="step-n" aria-hidden="true">{t.n}</span> : null}
             {t.label}
           </Link>
         ))}
       </nav>
+      {projectId && (
+        <Menu label="Mais ▾" ariaLabel="Mais telas do projeto" className="dz-navbtn" align="left">
+          {(close) => (
+            <>
+              <Link role="menuitem" className="dz-menu-item" to={`${base}/armas`} onClick={close}>Armas e constelações</Link>
+              <Link role="menuitem" className="dz-menu-item" to={`${base}/recarga`} onClick={close}>Recarga de energia</Link>
+              <Link role="menuitem" className="dz-menu-item" to={`/comparar?a=${projectId}`} onClick={close}>Comparar com outro time</Link>
+              <Link role="menuitem" className="dz-menu-item" to={`/card/${projectId}`} onClick={close}>Card para compartilhar</Link>
+            </>
+          )}
+        </Menu>
+      )}
       {projectId && onToggleFavorite && (
         <button type="button" className="dz-btn" onClick={onToggleFavorite} aria-pressed={favorite}>
           {favorite ? 'Salvo no Vault' : 'Salvar no Vault'}

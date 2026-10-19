@@ -52,14 +52,17 @@ export function Segmented<T extends string>({ value, options, onChange, label }:
   );
 }
 
-const IMAGE_BASE = 'https://api.lunaris.moe/data/assets/gachaicon';
+const IMAGE_BASE = 'https://api.lunaris.moe/data/assets/avataricon';
+
+/** O Lunaris traz o ícone de gacha (faixa 320x1024); o ícone quadrado do rosto tem o mesmo nome sem "Gacha_". */
+export const faceIconUrl = (icon: string) => `${IMAGE_BASE}/${icon.replace('UI_Gacha_AvatarIcon_', 'UI_AvatarIcon_')}.webp`;
 
 /** Retrato do Lunaris; sem imagem (ou se falhar) mostra a inicial na cor do elemento. */
 export function CharacterAvatar({ name, icon, color, size = 64 }: { name: string; icon?: string; color: string; size?: number }) {
   const [failed, setFailed] = useState(false);
   return (
     <span className="dz-avatar" style={css({ '--c': color, '--s': `${size}px` })} aria-hidden="true">
-      {icon && !failed ? <img src={`${IMAGE_BASE}/${icon}.webp`} alt="" loading="lazy" crossOrigin="anonymous" onError={() => setFailed(true)} /> : name.charAt(0)}
+      {icon && !failed ? <img src={faceIconUrl(icon)} alt="" loading="lazy" crossOrigin="anonymous" onError={() => setFailed(true)} /> : name.charAt(0)}
     </span>
   );
 }

@@ -7,6 +7,7 @@ import {
   REACTION_LABEL,
   characterReactions,
   moveGroups,
+  topHits,
   reactionOptions,
   receivedBuffs,
 } from '../../features/character/characterModel';
@@ -60,18 +61,43 @@ export function Attributes({ v, index }: { v: ProjectView; index: number }) {
   );
 }
 
+/** Golpes do kit do personagem com o build e os buffs atuais, para a reação escolhida. */
+function useDamageGroups(v: ProjectView, index: number, reaction: ReactionChoice) {
+  const ref = v.project.members[index];
+  const member = v.resolved.team.members[index];
+  const assembly = useMemo(() => assembleTeam(v.resolved.team, { rolls: v.bundle.optimization.rolls }), [v.resolved.team, v.bundle.optimization.rolls]);
+  return useMemo(() => {
+    const rows = damageTable({ team: v.resolved.team, assembly, rolls: v.bundle.optimization.rolls, member: index, moves: v.data.game.moves, reaction, ampCoefficient: v.resolved.ampCoefficient });
+    return moveGroups(rows, effectiveTalents(ref.talents, ref.constellation, member.character));
+  }, [v.resolved, v.bundle, v.data.game.moves, assembly, index, reaction, ref, member.character]);
+}
+
+/** Os 5 golpes que mais dão dano: a leitura rápida da tabela completa (aba Avançado). */
+export function TopHitsPanel({ v, index, onMore }: { v: ProjectView; index: number; onMore: () => void }) {
+  const groups = useDamageGroups(v, index, 'none');
+  const hits = topHits(groups, 5);
+  return (
+    <Panel title="Maiores golpes" aside={<button type="button" className="dz-link" onClick={onMore}>Ver a tabela completa</button>}>
+      <table className="dz-table pc-dmg">
+        <thead><tr><th scope="col">Golpe</th><th scope="col">Dano médio</th></tr></thead>
+        <tbody>
+          {hits.map((l) => (
+            <tr key={l.id}><td>{l.name}{l.hits > 1 ? <span className="muted"> · {l.hits}×</span> : null}</td><td className="avg">{formatInt(l.avg)}</td></tr>
+          ))}
+        </tbody>
+      </table>
+      <p className="note">Uma execução de cada golpe, com o build e os buffs atuais.</p>
+    </Panel>
+  );
+}
+
 export function DamageTablePanel({ v, index }: { v: ProjectView; index: number }) {
   const [reaction, setReaction] = useState<ReactionChoice>('none');
-  const ref = v.project.members[index];
   const member = v.resolved.team.members[index];
   const teamElements = v.resolved.team.members.map((m) => m.character.element);
   const options = reactionOptions(member.character.element, teamElements);
   const active = options.includes(reaction) ? reaction : 'none';
-  const assembly = useMemo(() => assembleTeam(v.resolved.team, { rolls: v.bundle.optimization.rolls }), [v.resolved.team, v.bundle.optimization.rolls]);
-  const groups = useMemo(() => {
-    const rows = damageTable({ team: v.resolved.team, assembly, rolls: v.bundle.optimization.rolls, member: index, moves: v.data.game.moves, reaction: active, ampCoefficient: v.resolved.ampCoefficient });
-    return moveGroups(rows, effectiveTalents(ref.talents, ref.constellation, member.character));
-  }, [v.resolved, v.bundle, v.data.game.moves, assembly, index, active, ref, member.character]);
+  const groups = useDamageGroups(v, index, active);
 
   return (
     <Panel

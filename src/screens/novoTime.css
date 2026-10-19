@@ -1,0 +1,35 @@
+/* Montar um time (/novo): passos, vagas dos personagens e escolhas. */
+.nt-page { max-width: 960px; }
+.nt-steps { list-style: none; margin: 0; padding: 0; display: flex; gap: 8px; flex-wrap: wrap; }
+.nt-steps li { display: flex; align-items: center; gap: 10px; padding: 8px 16px 8px 8px; border: 1px solid var(--border); border-radius: 999px; color: var(--muted); font-family: var(--font-display); font-weight: 600; font-size: 17px; letter-spacing: .04em; }
+.nt-steps .n { display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--bg-header); font-size: 15px; }
+.nt-steps li[aria-current="step"] { color: var(--text); border-color: var(--gold); }
+.nt-steps li[aria-current="step"] .n { background: var(--gold); color: var(--on-gold); }
+.nt-steps li[data-done="true"] { color: var(--text-2); }
+.nt-steps li[data-done="true"] .n { background: #1f3a30; color: #7dd3a8; }
+
+.nt-panel { display: flex; flex-direction: column; gap: 16px; }
+.nt-panel p { margin: 0; }
+.nt-slots { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 720px) { .nt-slots { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.nt-slot { min-height: 190px; border: 1px dashed var(--border-strong, #2e3966); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding: 12px; text-align: center; min-width: 0; overflow-wrap: anywhere; }
+.nt-slot[data-filled="true"] { border-style: solid; background: var(--bg-header); }
+.nt-slot b { font-family: var(--font-display); font-size: 22px; line-height: 1.1; }
+.nt-slot-acts { display: flex; gap: 12px; font-size: 13px; }
+.nt-add { width: 100%; min-height: 150px; border: 0; background: none; color: var(--muted); cursor: pointer; font: inherit; font-size: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; }
+.nt-add span { font-size: 40px; line-height: 1; color: var(--gold); }
+.nt-add:hover:not(:disabled) { color: var(--text); }
+.nt-add:disabled { opacity: .4; cursor: default; }
+.nt-name { max-width: 460px; }
+
+.nt-choices { display: flex; flex-direction: column; gap: 10px; }
+.nt-choice { display: flex; gap: 14px; align-items: flex-start; padding: 14px 16px; border: 1px solid var(--border); border-radius: 12px; cursor: pointer; }
+.nt-choice[data-on="true"] { border-color: var(--gold); background: var(--bg-header); }
+.nt-choice[data-disabled="true"] { opacity: .55; cursor: default; }
+.nt-choice input { margin-top: 4px; accent-color: var(--gold); width: 18px; height: 18px; }
+.nt-choice span { display: flex; flex-direction: column; gap: 4px; }
+.nt-choice small { color: var(--muted); font-size: 14px; line-height: 1.4; }
+.nt-uid { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.nt-uid .dz-input { max-width: 260px; }
+.nt-uid .note, .nt-uid .small { flex-basis: 100%; }
+.nt-nav { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }

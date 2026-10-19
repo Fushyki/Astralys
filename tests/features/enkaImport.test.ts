@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import type { GameData } from '../../src/engine';
-import { enkaToGood, mergeGood, type EnkaResponse } from '../../src/features/enka/enkaImport';
+import { applyGoodToMembers, enkaToGood, mergeGood, type EnkaResponse } from '../../src/features/enka/enkaImport';
 import { buildFromGood } from '../../src/features/good/goodImport';
 
 const root = path.resolve(__dirname, '../..');
@@ -67,6 +67,15 @@ describe('vitrine do Enka (a fonte do akasha.cv) como inventário GOOD', () => {
 
   it('vitrine vazia explica como ativar no jogo', () => {
     expect(enkaToGood({ avatarInfoList: [] }, game).notes[0]).toMatch(/vitrine/i);
+  });
+
+  it('aplica os builds da vitrine ao time e separa quem não está nela', () => {
+    const base = (n: string) => ({ character: n, weapon: 'x', artifacts: { rarity: { flower: 5 as const, plume: 5 as const, sands: 5 as const, goblet: 5 as const, circlet: 5 as const }, sands: 'ATK%', goblet: 'DMG%', circlet: 'CR' }, talents: { normal: 1, skill: 1, burst: 1 } });
+    const out = applyGoodToMembers([base('Amber'), base('Citlali')], r.good, game);
+    expect(out.applied).toEqual(['Amber']);
+    expect(out.missing).toEqual(['Citlali']);
+    expect(out.members[0]).toMatchObject({ weapon: 'Skyward Harp', refinement: 2, constellation: 6, primarySet: 'Bloodstained Chivalry' });
+    expect(out.members[1]).toEqual(base('Citlali'));
   });
 
   it('juntar à vitrine troca só os personagens dela e mantém o resto do inventário', () => {

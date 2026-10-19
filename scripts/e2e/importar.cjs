@@ -23,15 +23,19 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   page.on('console', (m) => { if (['error', 'warning'].includes(m.type()) && !/404/.test(m.text())) problems.push(`console.${m.type()}: ${m.text().slice(0, 200)}`); });
   page.on('pageerror', (e) => problems.push(`pageerror: ${e.message.slice(0, 200)}`));
   const settle = () => page.waitForTimeout(500);
-  const names = () => page.$$eval('.vt-card .name', (e) => e.map((x) => x.textContent));
+  const names = () => page.$$eval('.vt-card', (e) => e.map((x) => x.getAttribute('data-name')));
+  // O Vault só mostra os cards: as ações ficam nos menus (⋯ de cada card e "Importar e sincronizar" no topo).
+  const openCardMenu = (card) => card.locator('button[aria-haspopup="menu"]').click();
+  const pickCard = async (card, item) => { await openCardMenu(card); await card.getByRole('menuitem', { name: item, exact: true }).click(); };
+
   const dps = () => page.waitForSelector('[data-testid="team-dps"]', { timeout: 30000 }).then(() => page.textContent('[data-testid="team-dps"]'));
 
   // Home
   await page.goto(`${BASE}/`, { waitUntil: 'networkidle' });
   check('a home apresenta as 4 funções', (await page.locator('.in-features li').count()) === 4);
-  await page.click('.in-hero a:has-text("Ir ao Vault")');
+  await page.click('.in-path:has-text("Abrir um time salvo")');
   await page.waitForSelector('.vt-card');
-  check('"Ir ao Vault" abre o Vault', page.url().endsWith('/vault'));
+  check('"Abrir um time salvo" abre o Vault', page.url().endsWith('/vault'));
   await page.goto(`${BASE}/endereco-que-nao-existe`, { waitUntil: 'networkidle' });
   check('endereço desconhecido volta para a home', page.url() === `${BASE}/`, page.url());
 
@@ -59,11 +63,11 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   check('o projeto importado aparece no Vault', (await names()).length === 2, (await names()).join(' | '));
 
   // Renomear + exportar + reimportar
-  await page.click('.vt-card:has-text("Mavuika_Iansan_Combo2") button:has-text("Renomear")');
+  await pickCard(page.locator('.vt-card[data-name="Mavuika_Iansan_Combo2"]'), 'Renomear');
   await page.fill('input[aria-label="Novo nome do time"]', 'Minha rotação');
   await page.keyboard.press('Enter'); await settle();
   check('renomear', (await names()).includes('Minha rotação'), (await names()).join(' | '));
-  const [download] = await Promise.all([page.waitForEvent('download'), page.click('.vt-card:has-text("Minha rotação") button:has-text("Exportar")')]);
+  const [download] = await Promise.all([page.waitForEvent('download'), pickCard(page.locator('.vt-card[data-name="Minha rotação"]'), 'Exportar')]);
   const file = path.join(OUT, 'exportado.json');
   await download.saveAs(file);
   check('exportar baixa um .astralys.json', /\.astralys\.json$/.test(download.suggestedFilename()), download.suggestedFilename());

@@ -32,7 +32,15 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
   await page.goto(`${BASE}/projeto/exemplo/personagem/Mavuika`, { waitUntil: 'networkidle' });
   await page.evaluate(() => localStorage.clear());
   await page.reload({ waitUntil: 'networkidle' });
-  await page.waitForSelector('.pc-dmg');
+  await page.waitForSelector('.pc-hint');
+  const view = async (name) => { await page.click(`.pc-views button:has-text("${name}")`); await page.waitForTimeout(250); };
+
+  // Três abas: Resumo (padrão), Build e Avançado
+  const views = await page.$$eval('.pc-views button', (b) => b.map((x) => x.textContent));
+  check('o personagem tem 3 abas: Resumo, Build e Avançado', views.join() === 'Resumo,Build,Avançado', views.join());
+  check('abre no Resumo, com uma frase que explica a aba', (await page.getAttribute('.pc-views button:has-text("Resumo")', 'aria-selected')) === 'true' && /visão rápida/.test(await page.textContent('.pc-hint')));
+  check('o Resumo mostra os 5 maiores golpes e não a tabela inteira', (await page.locator('.dz-panel:has(h2:text-is("Maiores golpes")) tbody tr').count()) === 5 && (await page.locator('.dz-panel:has(h2:text-is("Tabela de dano"))').count()) === 0);
+  check('o Resumo não mostra os campos de substats nem as ferramentas', (await page.locator('.pc-rolls').count()) === 0 && (await page.locator('.dz-panel:has(h2:text-is("Ferramentas"))').count()) === 0);
 
   // Abas e cabeçalho
   const tabs = await page.$$eval('.pc-tabs a', (a) => a.map((x) => x.textContent));
@@ -44,7 +52,10 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
   check('atributos finais do gabarito (ATK 5.791, EM 424, Taxa 98,9%, Dano 231,8%)', /5\.791/.test(attrs) && /424/.test(attrs) && /98,9%/.test(attrs) && /231,8%/.test(attrs));
   check('mostra o valor base ao lado do ATK', /1\.100 base/.test(attrs));
 
-  // Tabela de dano: sem nomes repetidos, reação filtrada
+  // Tabela de dano (aba Avançado): sem nomes repetidos, reação filtrada
+  await view('Avançado');
+  await page.waitForSelector('.pc-dmg');
+  check('a aba escolhida vai para o endereço (?aba=avancado)', /aba=avancado/.test(page.url()));
   const names = await page.$$eval('.pc-dmg tbody tr:not(.grp) td:first-child', (e) => e.map((x) => x.textContent.replace(/\s*·\s*\d+×$/, '').trim()));
   check('a tabela não tem nomes repetidos dentro do mesmo grupo', new Set(names).size >= names.length - 1, `${names.length} golpes`);
   check('as quedas viram "Queda (baixa altitude)" e "Queda (alta altitude)"', names.includes('Queda (baixa altitude)') && names.includes('Queda (alta altitude)'));
@@ -82,14 +93,19 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
   check('subir o nível da habilidade para 13', /10\/13\/10/.test(await eff()), await eff());
   await page.keyboard.press('Control+z'); await settle();
 
-  // Rolls manuais
+  // Rolls manuais (aba Build)
+  await view('Build');
   check('modo Otimizar mostra o orçamento de rolls (40 de 40)', /40 de 40 rolls · 20 fixos em crítico/.test(await page.locator('.dz-panel:has(h2:text-is("Substats (rolls)"))').textContent()));
   await page.click('.dz-seg[aria-label="Modo dos substats"] button:has-text("À mão")'); await settle();
   await field('Taxa crít. (máx. 30)').locator('input').fill('10'); await field('Taxa crít. (máx. 30)').locator('input').blur(); await settle();
+  await view('Resumo');
   const crit = await page.locator('.dz-panel:has(h2:text-is("Atributos"))').textContent();
+  await view('Build');
   check('editar rolls à mão muda a Taxa crítica', !/98,9%/.test(crit), crit.match(/Taxa crítica\s*[\d,]+%/)?.[0]);
   await page.click('.dz-seg[aria-label="Modo dos substats"] button:has-text("Otimizar")'); await settle();
+  await view('Resumo');
   check('voltar ao Otimizar restaura os 98,9%', /98,9%/.test(await page.locator('.dz-panel:has(h2:text-is("Atributos"))').textContent()));
+  await view('Build');
 
   // Editor de build
   await page.click('.pc-weapon'); await page.waitForSelector('.dz-dialog');
@@ -101,13 +117,16 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
   check('Esc fecha o editor', (await page.locator('.dz-dialog').count()) === 0);
   check('a faixa de build mostra a arma e as 5 peças', (await page.$$('.pc-piece')).length === 5 && /A Thousand Blazing Suns/.test(await page.textContent('.pc-weapon')));
 
-  // Ferramentas: otimizador
+  // Ferramentas: otimizador (aba Avançado)
+  await view('Avançado');
   const optStart = await page.textContent('[data-testid="opt-rolls"]');
   await page.$eval('.pc-slider input', (el) => { const set = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set; set.call(el, '0'); el.dispatchEvent(new Event('input', { bubbles: true })); });
   await page.waitForTimeout(300);
   check('o controle do otimizador muda a distribuição mostrada', (await page.textContent('[data-testid="opt-rolls"]')) !== optStart && /-/.test(await page.textContent('[data-testid="opt-vs-current"]')));
   await page.click('button:has-text("Usar 4 rolls em crítico")'); await settle();
+  await view('Build');
   check('aplicar fixa os rolls em crítico do build', /4 fixos em crítico/.test(await page.locator('.dz-panel:has(h2:text-is("Substats (rolls)"))').textContent()));
+  await view('Avançado');
   await page.keyboard.press('Control+z'); await settle();
 
   // Ferramentas: +1 roll
@@ -116,12 +135,17 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
   check('valor de +1 roll mostra Dano crítico como o mais valioso', /Dano Crítico.*\+1,[89]\d%/.test(roll), roll.match(/Dano Crítico[^A-Z]*/)?.[0]);
 
   // Inventário GOOD (pela ligação do painel de substats)
-  await page.click('.dz-panel:has(h2:text-is("Substats (rolls)")) button:has-text("Usar o inventário GOOD")'); await page.waitForTimeout(500);
+  await view('Build');
+  await page.click('.dz-panel:has(h2:text-is("Substats (rolls)")) button:has-text("Usar o inventário GOOD")'); await page.waitForTimeout(800);
+  check('o link do Build leva à aba Avançado', (await page.getAttribute('.pc-views button:has-text("Avançado")', 'aria-selected')) === 'true');
   check('o link abre a ferramenta Inventário GOOD', (await page.getAttribute('.dz-seg[aria-label="Ferramenta"] button:has-text("Inventário GOOD")', 'aria-pressed')) === 'true');
   await page.setInputFiles('input[aria-label="Escolher inventário GOOD"]', FIXTURE); await settle();
   check('importar mostra o resumo do inventário', /1 personagens, 1 armas e 8 artefatos/.test(await page.textContent('.pc-good .summary')));
   await page.click('.pc-good button:has-text("Aplicar o build de Mavuika")'); await page.waitForTimeout(1500);
-  check('aplicar o build do inventário avisa e passa ao modo manual', /Build de Mavuika aplicado/.test(await page.textContent('.pc-notes')) && (await page.getAttribute('.dz-seg[aria-label="Modo dos substats"] button:has-text("À mão")', 'aria-pressed')) === 'true');
+  const appliedNote = /Build de Mavuika aplicado/.test(await page.textContent('.pc-notes'));
+  await view('Build');
+  check('aplicar o build do inventário avisa e passa ao modo manual', appliedNote && (await page.getAttribute('.dz-seg[aria-label="Modo dos substats"] button:has-text("À mão")', 'aria-pressed')) === 'true');
+  await view('Avançado');
   check('os níveis de talento vêm do inventário (9/8/7)', /9\/8\/7/.test(await eff()), await eff());
   await page.click('.pc-good button:has-text("Buscar o melhor build de Mavuika")');
   await page.waitForSelector('.pc-found', { timeout: 30000 });

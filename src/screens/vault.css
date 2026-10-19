@@ -15,17 +15,13 @@
 .vt-wait { aspect-ratio: 4 / 5; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; line-height: 1.4; background: #0a0e1c; padding: 16px; text-align: center; }
 .vt-faces { display: flex; gap: 8px; }
 
-.vt-foot { display: flex; flex-direction: column; gap: 10px; padding: 14px 16px 16px; border-top: 1px solid var(--border); }
-.vt-title { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
-.vt-card .name { font-family: var(--font-display); font-weight: 700; font-size: 22px; line-height: 1.1; color: var(--text); text-decoration: none; overflow-wrap: anywhere; }
-.vt-card .name:hover { color: var(--gold); }
-.vt-fav { background: none; border: 0; color: var(--muted); font-size: 22px; cursor: pointer; min-width: 44px; min-height: 44px; margin: -10px -10px 0 0; }
+.vt-card { position: relative; }
+/* Só o card: favorito e opções ficam sobre o canto, e o menu reúne as ações. */
+.vt-over { position: absolute; top: 10px; right: 10px; display: flex; align-items: center; gap: 8px; z-index: 2; }
+.vt-over .dz-iconbtn { background: rgba(10, 14, 28, .72); backdrop-filter: blur(4px); }
+.vt-tag { font-size: 12px; padding: 4px 10px; border-radius: 999px; color: #7dd3a8; background: rgba(10, 14, 28, .72); border: 1px solid #25563f; }
 .vt-fav[aria-pressed="true"] { color: var(--gold); }
-.vt-meta { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-.vt-card .acts { display: flex; flex-direction: column; gap: 10px; }
-.vt-card .acts > .dz-btn { justify-content: center; }
-.vt-card .small-acts { display: flex; flex-wrap: wrap; gap: 4px 14px; row-gap: 4px; font-size: 13px; }
-.vt-card .small { font-size: 13px; }
 .vt-card .warn { color: var(--warn); }
+.vt-rename { position: absolute; left: 10px; right: 10px; bottom: 10px; z-index: 2; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 8px; }
 .vt-empty { text-align: center; }
 .vt-notes p { margin: 2px 0; }

@@ -6,8 +6,8 @@
  * `setId` do artefato = id do set. O Viajante não é importado (os ids dele variam por elemento).
  */
 import type { Good, GoodArtifact } from '../good/goodImport';
-import { norm } from '../good/goodImport';
-import type { GameData } from '../../engine';
+import { buildFromGood, norm } from '../good/goodImport';
+import type { GameData, MemberRef } from '../../engine';
 import skillOrder from './skillOrder.json';
 
 export interface EnkaResponse {
@@ -163,4 +163,24 @@ export function mergeGood(base: Good | null, incoming: Good): Good {
     weapons: [...base.weapons.filter((w) => !replaced.has(norm(w.location))), ...incoming.weapons],
     artifacts: [...base.artifacts.filter((a) => !replaced.has(norm(a.location))), ...incoming.artifacts],
   };
+}
+
+/** Aplica ao time os builds reais da vitrine (quem não está nela fica como estava). */
+export function applyGoodToMembers(
+  members: MemberRef[],
+  good: Good,
+  game: Pick<GameData, 'characters' | 'weapons' | 'artifacts'>,
+): { members: MemberRef[]; applied: string[]; missing: string[] } {
+  const applied: string[] = [];
+  const missing: string[] = [];
+  const next = members.map((m) => {
+    if (!good.characters.some((c) => norm(c.key) === norm(m.character))) {
+      missing.push(m.character);
+      return m;
+    }
+    const { patch } = buildFromGood(good, m.character, game);
+    applied.push(m.character);
+    return { ...m, ...patch };
+  });
+  return { members: next, applied, missing };
 }

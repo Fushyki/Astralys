@@ -1,20 +1,30 @@
 /** Calculadora do personagem (/projeto/:id/personagem/:nome): build, atributos, tabela de dano, reações e buffs. */
 import { useEffect, useRef, useState } from 'react';
-import { Link, Navigate, useParams } from 'react-router-dom';
+import { Link, Navigate, useParams, useSearchParams } from 'react-router-dom';
 import { useProjectView } from '../app/ProjectContext';
 import { formatPercent } from '../ui/format';
 import { useRotationStore } from '../features/rotation/store';
 import { BuildStrip } from './personagem/BuildStrip';
 import { CharacterCard, SubstatsPanel } from './personagem/LeftColumn';
-import { Attributes, DamageTablePanel, ReactionsPanel, ReceivedBuffsPanel } from './personagem/MainColumn';
+import { Attributes, DamageTablePanel, ReactionsPanel, ReceivedBuffsPanel, TopHitsPanel } from './personagem/MainColumn';
 import { ToolsPanel, type ToolTab } from './personagem/ToolsPanel';
 import './personagem.css';
+
+type View = 'resumo' | 'build' | 'avancado';
+const VIEWS: { id: View; label: string; hint: string }[] = [
+  { id: 'resumo', label: 'Resumo', hint: 'A visão rápida: quanto este personagem rende e os golpes que mais pesam.' },
+  { id: 'build', label: 'Build', hint: 'Troque a arma, os artefatos e os substats.' },
+  { id: 'avancado', label: 'Avançado', hint: 'Tabela de dano completa, reações, buffs recebidos e ferramentas (crítico, inventário GOOD).' },
+];
 
 export default function Personagem() {
   const v = useProjectView();
   const { nome = '' } = useParams();
   const selectMember = useRotationStore((s) => s.selectMember);
   const [tool, setTool] = useState<ToolTab>('optimizer');
+  const [params, setParams] = useSearchParams();
+  const view: View = VIEWS.some((x) => x.id === params.get('aba')) ? (params.get('aba') as View) : 'resumo';
+  const goView = (next: View) => setParams(next === 'resumo' ? {} : { aba: next }, { replace: true });
   const toolsRef = useRef<HTMLDivElement>(null);
 
   const name = decodeURIComponent(nome);
@@ -35,7 +45,8 @@ export default function Personagem() {
   const share = v.summary.members[index]?.fraction ?? 0;
   const goToGood = () => {
     setTool('good');
-    toolsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    goView('avancado');
+    setTimeout(() => toolsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60);
   };
 
   return (
@@ -47,7 +58,7 @@ export default function Personagem() {
               key={m.character}
               role="tab"
               aria-selected={i === index}
-              to={`/projeto/${v.id}/personagem/${encodeURIComponent(m.character)}`}
+              to={`/projeto/${v.id}/personagem/${encodeURIComponent(m.character)}${view === 'resumo' ? '' : `?aba=${view}`}`}
               style={{ ['--c' as string]: v.colors[i] }}
             >
               <i />
@@ -61,22 +72,50 @@ export default function Personagem() {
       <main className="pc-page">
         <aside className="pc-aside">
           <CharacterCard character={character} memberRef={ref} index={index} color={v.colors[index]} level={v.project.config.characterLevel} share={share} />
-          <SubstatsPanel memberRef={ref} index={index} bundle={v.bundle} onGood={goToGood} />
         </aside>
 
         <div className="pc-main">
-          <BuildStrip data={v.data} index={index} member={ref} />
-          <div className="pc-row a">
-            <Attributes v={v} index={index} />
-            <DamageTablePanel v={v} index={index} />
+          <div className="pc-views" role="tablist" aria-label="O que ver neste personagem">
+            {VIEWS.map((x) => (
+              <button key={x.id} type="button" role="tab" aria-selected={view === x.id} onClick={() => goView(x.id)}>{x.label}</button>
+            ))}
           </div>
-          <div className="pc-row b">
-            <ReactionsPanel v={v} index={index} />
-            <ReceivedBuffsPanel v={v} index={index} />
-          </div>
-          <div ref={toolsRef}>
-            <ToolsPanel v={v} index={index} tab={tool} onTab={setTool} />
-          </div>
+          <p className="pc-hint">{VIEWS.find((x) => x.id === view)!.hint}</p>
+
+          {view === 'resumo' && (
+            <>
+              <div className="pc-row a">
+                <Attributes v={v} index={index} />
+                <TopHitsPanel v={v} index={index} onMore={() => goView('avancado')} />
+              </div>
+              <p className="pc-next">
+                Quer mudar o build? Abra <button type="button" className="dz-link" onClick={() => goView('build')}>Build</button>.
+                Quer ver todos os golpes, buffs e reações? Abra <button type="button" className="dz-link" onClick={() => goView('avancado')}>Avançado</button>.
+              </p>
+            </>
+          )}
+
+          {view === 'build' && (
+            <>
+              <BuildStrip data={v.data} index={index} member={ref} />
+              <div className="pc-substats">
+                <SubstatsPanel memberRef={ref} index={index} bundle={v.bundle} onGood={goToGood} />
+              </div>
+            </>
+          )}
+
+          {view === 'avancado' && (
+            <>
+              <DamageTablePanel v={v} index={index} />
+              <div className="pc-row b">
+                <ReactionsPanel v={v} index={index} />
+                <ReceivedBuffsPanel v={v} index={index} />
+              </div>
+              <div ref={toolsRef}>
+                <ToolsPanel v={v} index={index} tab={tool} onTab={setTool} />
+              </div>
+            </>
+          )}
         </div>
       </main>
     </>

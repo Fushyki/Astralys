@@ -55,7 +55,8 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   check('abre o otimizador do Mavuika dentro do time', /\/projeto\/exemplo\/otimizador\/Mavuika/.test(page.url()));
   check('os 4 retratos do time escolhem quem otimizar', (await page.locator('.ot-team .ot-member').count()) === 4 && (await page.getAttribute('.ot-member:has(.n:text-is("Mavuika"))', 'aria-selected')) === 'true');
   check('a faixa do time tem 3 telas: Equipe, Rotação e buffs, Dano do time', (await page.$$eval('.dz-subnav nav a', (a) => a.map((x) => x.textContent.replace(/^\d/, '').trim()))).join('|') === 'Equipe|Rotação e buffs|Dano do time');
-  check('o foco da build tem 4 opções', (await page.locator('.ot-focus button').count()) === 4);
+  check('"O que otimizar" tem 3 escolhas: Dano, Buff e Stat', (await page.locator('.ot-goals button').count()) === 3 && (await page.getAttribute('.ot-goals button:has-text("Dano")', 'aria-pressed')) === 'true');
+  check('em Dano há 3 alvos: rotação do time, só dele e um golpe do kit', (await page.$$eval('.ot-sub .ot-focus button', (b) => b.map((x) => x.textContent.trim()))).join('|') === 'Rotação do time|Só Mavuika|Um golpe do kit');
   const prev = await page.textContent('.ot-go .muted');
   check('mostra quantas peças entram por posição', /40 peças entram \(8 \/ 8 \/ 8 \/ 8 \/ 8/.test(prev), prev);
 
@@ -84,14 +85,45 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
 
   // ---- Foco num stat ----
   await page.fill('input[aria-label="Recarga mínima"]', '');
-  await page.click('.ot-focus button:has-text("Um stat")');
+  await page.click('.ot-goals button:has-text("Stat")');
   await page.click('.ot-chip:has-text("Maestria")');
   await page.click('.ot-go .dz-btn.gold');
   await page.waitForSelector('.ot-build:not([data-now="true"])', { timeout: 120000 });
   const em = await page.$$eval('.ot-build:not([data-now="true"]) .val b', (b) => b.map((x) => Number(x.textContent.replace(/\./g, ''))));
   check('foco em Maestria: o melhor build tem a maior Maestria', em.length > 0 && em[0] >= Math.max(...em), em.join(' > '));
 
+  // ---- Um golpe do kit, com e sem reação ----
+  await page.click('.ot-goals button:has-text("Dano")');
+  await page.click('.ot-sub .ot-focus button:has-text("Um golpe do kit")');
+  const moves = await page.$$eval('select[aria-label="Golpe do kit"] option', (o) => o.length);
+  check('o golpe do kit vem de uma lista com todos os golpes do personagem', moves >= 10, String(moves));
+  const reacts = await page.$$eval('.ot-chip[aria-pressed]', (b) => b.map((x) => x.textContent.trim()).filter((t) => /Sem reação|Derreter|Vaporizar/.test(t)));
+  check('a reação é escolhida: sem reação e Derreter (time com Cryo)', reacts.includes('Sem reação') && reacts.includes('Derreter'), reacts.join(','));
+  const crits = await page.$$eval('.ot-chip', (b) => b.map((x) => x.textContent.trim()).filter((t) => /crítico|Média/i.test(t)));
+  check('o tipo de crítico é escolhido', crits.includes('Média com crítico') && crits.includes('Sempre crítico') && crits.includes('Sem crítico'), crits.join(','));
+  await page.click('.ot-chip:has-text("Sem reação")');
+  await page.click('.ot-go .dz-btn.gold');
+  await page.waitForSelector('.ot-build:not([data-now="true"])', { timeout: 120000 });
+  const semReacao = Number((await page.textContent('.ot-build:not([data-now="true"]) .val b')).replace(/\./g, ''));
+  await page.click('.ot-chip:has-text("Derreter")');
+  await page.click('.ot-go .dz-btn.gold');
+  await page.waitForSelector('.ot-build:not([data-now="true"])', { timeout: 120000 });
+  await page.waitForTimeout(400);
+  const comDerreter = Number((await page.textContent('.ot-build:not([data-now="true"]) .val b')).replace(/\./g, ''));
+  check('o mesmo golpe vale mais com Derreter do que sem reação', comDerreter > semReacao, `${semReacao} < ${comDerreter}`);
+  check('o resultado diz qual golpe e qual reação foram otimizados', /Derreter/.test(await page.textContent('.ot-build .val small')), await page.textContent('.ot-build .val small'));
+
+  // ---- Buff de suporte (Bennett: ATK fixo que ele dá ao time) ----
+  await page.goto(`${BASE}/projeto/exemplo/otimizador/Bennett`, { waitUntil: 'networkidle' });
+  await page.click('.ot-goals button:has-text("Buff")');
+  check('Buff lista o que o Bennett dá ao time e cresce com o ATK dele', /ATK fixo/.test(await page.textContent('.ot-buffs')), (await page.textContent('.ot-buffs')).slice(0, 80));
+  await page.click('.ot-go .dz-btn.gold');
+  await page.waitForSelector('.ot-build:not([data-now="true"])', { timeout: 120000 });
+  const buffVals = await page.$$eval('.ot-build:not([data-now="true"]) .val b', (b) => b.map((x) => Number(x.textContent.replace(/\./g, ''))));
+  check('o melhor build é o que dá o maior valor do buff', buffVals.length > 0 && buffVals[0] >= Math.max(...buffVals) && buffVals[0] > 0, buffVals.join(' > '));
+
   // ---- Equipe: clicar no retrato troca o personagem ----
+  await page.goto(`${BASE}/projeto/exemplo`, { waitUntil: 'networkidle' });
   await page.goto(`${BASE}/projeto/exemplo`, { waitUntil: 'networkidle' });
   await page.locator('.eq-card button.who').nth(1).click();
   await page.waitForSelector('.dz-dialog');

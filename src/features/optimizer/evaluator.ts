@@ -21,7 +21,9 @@ import {
   type GameData,
   type MemberInput,
   type MemberRef,
+  type ReactionChoice,
   type ResolvedProject,
+  type RotationAction,
   type Rolls,
 } from '../../engine';
 import type { Evaluate, SetConfig } from './solver';
@@ -29,10 +31,27 @@ import { vecToDelta, type Vec } from './vector';
 
 /** O que se maximiza. */
 export type Objective =
+  /** Dano médio de toda a rotação do time (inclui os buffs que este personagem dá aos outros). */
   | { kind: 'team' }
+  /** Dano médio só deste personagem na rotação. */
   | { kind: 'member' }
+  /** Um golpe da rotação (índice em `actions`). */
   | { kind: 'action'; index: number }
+  /** Um golpe do kit, avaliado sozinho com todos os buffs do time, com a reação e o tipo de crítico escolhidos. */
+  | { kind: 'move'; moveId: string; reaction: ReactionChoice; crit: 'avg' | 'crit' | 'noCrit' }
+  /** O valor de um buff que este personagem dá e que depende dos stats dele (id do buff como montado pelo time). */
+  | { kind: 'buff'; buffId: string }
   | { kind: 'stat'; stat: 'hp' | 'atk' | 'def' | 'em' | 'er' };
+
+/** Tamanho de um buff: soma dos números do ajuste (cada buff cobre um só tipo de unidade). */
+export function buffMagnitude(delta: Record<string, unknown>): number {
+  let total = 0;
+  for (const v of Object.values(delta)) {
+    if (typeof v === 'number') total += v;
+    else if (v && typeof v === 'object') for (const x of Object.values(v as Record<string, number>)) total += typeof x === 'number' ? x : 0;
+  }
+  return total;
+}
 
 /** Mínimos nos stats finais do personagem (Recarga em fração: 1,2 = 120%; Taxa e Dano Crítico em fração, com os 5% e 50% base). */
 export interface Constraints {
@@ -127,9 +146,27 @@ export function createEvaluator(input: EvaluatorInput): Evaluator {
       resolved.actions,
     );
 
+  /** Um golpe do kit sozinho, com todas as etiquetas de buff ligadas (como a tabela de dano do personagem). */
+  const moveValue = (r: ReturnType<typeof run>, o: Extract<Objective, { kind: 'move' }>): number => {
+    const move = game.moves.find((m) => m.id === o.moveId);
+    if (!move) return 0;
+    const action: RotationAction = {
+      id: move.id, member,
+      move: { id: move.id, character: move.character, talent: move.talent, hitType: move.hitType, label: move.label, displayName: move.label, hits: move.hits, scale: move.scale },
+      executions: 1, reaction: o.reaction, activeTags: [...new Set(r.assembly.buffs.map((b) => b.tag))], dmgAdjust: 0,
+    };
+    const res = evaluateRotation({ members: r.members, assembly: r.assembly, config: r.team.config, rolls, ampCoefficient: resolved.ampCoefficient }, [action]).actions[0];
+    return o.crit === 'crit' ? res.crit : o.crit === 'noCrit' ? res.noCrit : res.avg;
+  };
+
   const valueOf = (r: ReturnType<typeof run>): number => {
     const o = input.objective;
     if (o.kind === 'stat') return { hp: r.stats.hp, atk: r.stats.atk, def: r.stats.def, em: r.stats.em, er: r.stats.er }[o.stat];
+    if (o.kind === 'move') return moveValue(r, o);
+    if (o.kind === 'buff') {
+      const b = r.assembly.buffs.find((x) => x.id === o.buffId);
+      return b ? buffMagnitude(b.delta as Record<string, unknown>) : 0;
+    }
     const result = rotation(r);
     if (o.kind === 'team') return result.totals.avg;
     if (o.kind === 'member') return result.members[member].avg;

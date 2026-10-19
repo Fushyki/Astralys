@@ -9,7 +9,7 @@ import { critFactor, type CritMode } from './formulas';
 import { optimizeTeam, type OptimizerContext, type TeamOptimization } from './optimizer';
 import { evaluateRotation, type ActionResult, type RotationContext, type RotationResult } from './rotation';
 import { maxRollsFor, type FinalStats, type MemberInput } from './stats';
-import { assembleTeam, type TeamInput } from './team';
+import { assembleTeam, type TeamAssembly, type TeamInput } from './team';
 import type { FlatDamageEffect } from '../effects/schema';
 
 // ---------- Dano por fonte e participação de reações ----------
@@ -167,6 +167,25 @@ export interface VariantResult {
   optimization: TeamOptimization;
 }
 
+/**
+ * Monta a equipe e otimiza os substats. Com conversões de stat (Kazuha, Raiden...), o valor delas depende dos rolls:
+ * monta de novo com os rolls achados e otimiza outra vez (duas rodadas bastam, o efeito é de segunda ordem).
+ */
+export function optimizeAssembled(team: TeamInput, ctx: Omit<OptimizerContext, 'assembly' | 'members' | 'config'>): { assembly: TeamAssembly; optimization: TeamOptimization } {
+  const run = (assembly: TeamAssembly) => optimizeTeam({ ...ctx, members: team.members, config: team.config, assembly });
+  let assembly = assembleTeam(team);
+  let optimization = run(assembly);
+  if (assembly.hasDerived) {
+    for (let pass = 0; pass < 2; pass++) {
+      assembly = assembleTeam(team, { rolls: optimization.rolls });
+      optimization = run(assembly);
+    }
+    // O resultado final usa conversões calculadas com os rolls que ele mesmo escolheu.
+    assembly = assembleTeam(team, { rolls: optimization.rolls });
+  }
+  return { assembly, optimization };
+}
+
 export interface VariantInput {
   team: TeamInput;
   actions: OptimizerContext['actions'];
@@ -179,14 +198,7 @@ export function compareVariants(input: VariantInput, member: number, variants: V
   const results = variants.map((v) => {
     const members = input.team.members.map((m, i) => (i === member ? v.apply(m) : m));
     const team: TeamInput = { ...input.team, members };
-    const optimization = optimizeTeam({
-      members,
-      assembly: assembleTeam(team),
-      config: team.config,
-      actions: input.actions,
-      flatEffects: input.flatEffects,
-      ampCoefficient: input.ampCoefficient,
-    });
+    const { optimization } = optimizeAssembled(team, { actions: input.actions, flatEffects: input.flatEffects, ampCoefficient: input.ampCoefficient });
     return { label: v.label, dps: optimization.result.totals.dps, avg: optimization.result.totals.avg, relative: 0, optimization };
   });
   const ref = results[referenceIndex]?.dps ?? 0;

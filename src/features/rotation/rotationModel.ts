@@ -114,11 +114,11 @@ export function coveringBuffs(project: RotationProject, resolved: ResolvedProjec
   const team = resolved.team;
   const member = team.members[result.action.member]?.character.name;
   const active = new Set(result.action.activeTags);
-  const assembly = assembleTeam(team);
-  const candidates = assembly.buffs.filter((b) => active.has(b.tag) && (b.targets === 'all' || b.targets.includes(member)));
+  const assembly = assembleTeam(team, { rolls: bundle.optimization.rolls });
+  const candidates = assembly.buffs.filter((b) => (b.always || active.has(b.tag)) && (b.targets === 'all' || b.targets.includes(member)));
   const run = (extra: string[]) => {
     const disabled = [...(team.disabled ?? []), ...extra];
-    const a = assembleTeam({ ...team, disabled });
+    const a = assembleTeam({ ...team, disabled }, { rolls: bundle.optimization.rolls });
     const r = evaluateRotation(
       { members: team.members, assembly: a, config: team.config, rolls: bundle.optimization.rolls, flatEffects: resolved.flatEffects, ampCoefficient: resolved.ampCoefficient },
       resolved.actions,

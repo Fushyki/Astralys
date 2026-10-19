@@ -22,8 +22,14 @@ import { CHARACTERS_2 } from './curation/characters2';
 import { CHARACTERS_3 } from './curation/characters3';
 import { CHARACTERS_4 } from './curation/characters4';
 import { CHARACTERS_5 } from './curation/characters5';
+import { CHARACTERS_6 } from './curation/characters6';
+import type { BuffCuration } from './curation/characters';
 
-const CHARACTER_BUFFS = { ...CHARACTERS_1, ...CHARACTERS_2, ...CHARACTERS_3, ...CHARACTERS_4, ...CHARACTERS_5 };
+/** Junta os lotes: o mesmo personagem pode aparecer em mais de um e as listas se somam. */
+const CHARACTER_BUFFS: Record<string, BuffCuration[]> = {};
+for (const batch of [CHARACTERS_1, CHARACTERS_2, CHARACTERS_3, CHARACTERS_4, CHARACTERS_5, CHARACTERS_6]) {
+  for (const [name, list] of Object.entries(batch)) CHARACTER_BUFFS[name] = [...(CHARACTER_BUFFS[name] ?? []), ...list];
+}
 
 const root = process.cwd();
 const read = <T>(rel: string): T => JSON.parse(readFileSync(path.join(root, rel), 'utf8'));
@@ -212,6 +218,18 @@ function buildCharacters(): CharacterEffect[] {
                 atkPct: v(s.atkPct), dmgPct: v(s.dmgPct), critRate: v(s.critRate), critDmg: v(s.critDmg), em: v(s.em),
                 er: 0, hpPct: v(s.hpPct), defPct: v(s.defPct),
                 dmgPctByType: Object.fromEntries(Object.entries(s.byType ?? {}).map(([k, x]) => [k, v(x)])),
+              },
+            }
+          : {}),
+        ...(b.convert
+          ? {
+              convert: {
+                from: b.convert.from,
+                source: b.convert.source ?? 'self',
+                perPoint: v(b.convert.perPoint),
+                threshold: v(b.convert.threshold),
+                ...(b.convert.cap !== undefined ? { cap: v(b.convert.cap) } : {}),
+                to: b.convert.to,
               },
             }
           : {}),

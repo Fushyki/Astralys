@@ -20,6 +20,7 @@ export function buffLanes(team: TeamInput): BuffLane[] {
 
   const byTag = new Map<string, { descriptions: string[] }>();
   for (const b of buffs) {
+    if (b.always) continue;
     const entry = byTag.get(b.tag) ?? { descriptions: [] };
     if (b.description) entry.descriptions.push(b.description);
     byTag.set(b.tag, entry);

@@ -35,6 +35,26 @@ const BuffStatsSchema = z.object({
 });
 export type BuffStats = z.infer<typeof BuffStatsSchema>;
 
+/** Stats que uma conversão pode alimentar (fixos ou em fração). */
+export const ConvertTargetSchema = z.enum(['atkFlat', 'hpFlat', 'defFlat', 'atkPct', 'hpPct', 'defPct', 'em', 'dmgPct', 'critRate', 'critDmg', 'normal', 'charged', 'plunge', 'skill', 'burst']);
+export type ConvertTarget = z.infer<typeof ConvertTargetSchema>;
+
+/**
+ * Conversão de stat: o buff vale `perPoint × (stat da fonte − threshold)`, limitado por `cap`, e vai para todos os
+ * alvos de `to` (ex.: Kazuha A4, 0,04% de DMG elemental por ponto de Maestria). A fonte é o dono do buff ou, com
+ * `source: 'highestEm'`, o membro com mais Maestria. Recarga entra como multiplicador (1,5 = 150%).
+ */
+export const BuffConvertSchema = z.object({
+  from: z.enum(['atk', 'hp', 'def', 'em', 'er']),
+  source: z.enum(['self', 'highestEm']).default('self'),
+  perPoint: z.number(),
+  threshold: z.number().default(0),
+  /** Teto do valor convertido (sem teto = omitido). */
+  cap: z.number().optional(),
+  to: z.array(ConvertTargetSchema).min(1),
+});
+export type BuffConvert = z.infer<typeof BuffConvertSchema>;
+
 /**
  * Um buff de passiva ou constelação. Vale a partir de `minConstellation`. `timed` buffs viram uma faixa na linha do
  * tempo (só valem nas janelas em que você os liga); sem `timed`, só o próprio personagem (`self`) ganha, o tempo todo.
@@ -49,6 +69,8 @@ export const CharacterBuffSchema = z.object({
   /** Só personagens destes elementos recebem (ex.: "+15% de DMG Pyro" para a equipe). */
   forElements: z.array(ElementSchema).optional(),
   stats: BuffStatsSchema.optional(),
+  /** Bônus que depende de um stat da fonte (no lugar de `stats`). Os `timed: false` valem o tempo todo. */
+  convert: BuffConvertSchema.optional(),
   /** Redução de RES do inimigo (vale o tempo todo). */
   resShred: z.object({ value: z.number(), elements: z.array(ElementSchema).min(1) }).optional(),
   /** O que foi assumido e o que não entra. */

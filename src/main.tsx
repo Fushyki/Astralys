@@ -21,7 +21,6 @@ const Entrar = lazy(() => import('./screens/Entrar'));
 const NovoTime = lazy(() => import('./screens/NovoTime'));
 const Publico = lazy(() => import('./screens/Publico'));
 const Otimizador = lazy(() => import('./screens/Otimizador'));
-const OtimizadorEscolha = lazy(() => import('./screens/OtimizadorEscolha'));
 const Inventario = lazy(() => import('./screens/Inventario'));
 const Personagens = lazy(() => import('./screens/Personagens'));
 
@@ -72,7 +71,7 @@ ReactDOM.createRoot(rootElement).render(
           <Route path="/times" element={<Navigate to="/vault" replace />} />
           <Route path="/inventario" element={<Suspense fallback={null}><Inventario /></Suspense>} />
           <Route path="/personagens" element={<Suspense fallback={null}><Personagens /></Suspense>} />
-          <Route path="/otimizador" element={<Suspense fallback={null}><OtimizadorEscolha /></Suspense>} />
+          <Route path="/otimizador" element={<Navigate to="/personagens" replace />} />
           <Route path="/recarga" element={<Suspense fallback={null}><RecargaLivre /></Suspense>} />
           <Route path="/" element={<Suspense fallback={null}><Inicio /></Suspense>} />
           <Route path="*" element={<Navigate to="/" replace />} />

@@ -8,11 +8,13 @@ import { BuildStrip } from './personagem/BuildStrip';
 import { CharacterCard, SubstatsPanel } from './personagem/LeftColumn';
 import { Attributes, DamageTablePanel, ReactionsPanel, ReceivedBuffsPanel } from './personagem/MainColumn';
 import { ToolsPanel, type ToolTab } from './personagem/ToolsPanel';
+import { OtimizadorPanel } from './Otimizador';
 import './personagem.css';
 
-type View = 'resumo' | 'avancado';
+type View = 'resumo' | 'avancado' | 'otimizar';
 const VIEWS: { id: View; label: string; hint: string }[] = [
   { id: 'resumo', label: 'Resumo e build', hint: 'Quanto este personagem rende, os golpes que mais pesam e o build (arma, artefatos e substats).' },
+  { id: 'otimizar', label: 'Otimizar', hint: 'Os melhores artefatos do seu inventário para este personagem: escolha o que otimizar (dano, um golpe, um buff ou um stat) e o programa busca o melhor build.' },
   { id: 'avancado', label: 'Avançado', hint: 'Tabela de dano completa, reações, buffs recebidos e ferramentas (crítico, inventário GOOD).' },
 ];
 
@@ -95,6 +97,7 @@ export default function Personagem() {
               </p>
             </>
           )}
+          {view === 'otimizar' && <OtimizadorPanel index={index} />}
           {view === 'avancado' && (
             <>
               <DamageTablePanel v={v} index={index} />

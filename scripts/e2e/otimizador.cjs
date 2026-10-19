@@ -29,7 +29,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
 
   // ---- Menu ----
   const nav = await page.$$eval('.dz-nav > a, .dz-header .dz-navbtn', (a) => a.map((x) => x.textContent.trim()));
-  check('o menu é Times · Personagens · Inventário · Otimizador · Ferramentas', nav.join('|') === 'Times|Personagens|Inventário|Otimizador|Ferramentas ▾', nav.join('|'));
+  check('o menu é Times · Personagens · Inventário · Ferramentas (otimizar é individual: fica no personagem)', nav.join('|') === 'Times|Personagens|Inventário|Ferramentas ▾', nav.join('|'));
   check('Inventário está marcado', (await page.getAttribute('.dz-nav a:has-text("Inventário")', 'aria-current')) === 'page');
 
   // ---- Inventário ----
@@ -46,18 +46,19 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   check('filtrar por set reduz a lista', (await page.locator('.inv-grid .piece').count()) < 40);
   await page.screenshot({ path: path.join(OUT, 'inventario.png') });
 
-  // ---- Otimizador: escolha do time ----
-  await page.click('.dz-nav a:has-text("Otimizador")');
-  await page.waitForSelector('.oe-team');
-  check('a entrada do otimizador lista os times com retratos clicáveis', (await page.locator('.oe-team .ot-member').count()) >= 4);
-  await page.click('.oe-team .ot-member:has(.n:text-is("Mavuika"))');
+  // ---- Otimizar: aba dentro do personagem ----
+  await page.goto(`${BASE}/projeto/exemplo/personagem/Mavuika`, { waitUntil: 'networkidle' });
+  check('a página do personagem tem a aba Otimizar', (await page.$$eval('.pc-views button', (b) => b.map((x) => x.textContent))).includes('Otimizar'));
+  check('não existe mais botão "Otimizar artefatos" no Equipamento', (await page.locator('a:has-text("Otimizar artefatos")').count()) === 0);
+  await page.click('.pc-views button:has-text("Otimizar")');
   await page.waitForSelector('.ot-grid');
-  check('abre o otimizador do Mavuika dentro do time', /\/projeto\/exemplo\/otimizador\/Mavuika/.test(page.url()));
-  check('os 4 retratos do time escolhem quem otimizar', (await page.locator('.ot-team .ot-member').count()) === 4 && (await page.getAttribute('.ot-member:has(.n:text-is("Mavuika"))', 'aria-selected')) === 'true');
+  check('abre o otimizador do Mavuika dentro da página dele', /aba=otimizar/.test(page.url()) && /Mavuika/.test(await page.textContent('.pc-tabs [aria-selected="true"]')));
   check('a faixa do time tem 3 telas: Equipe, Rotação e buffs, Dano do time', (await page.$$eval('.dz-subnav nav a', (a) => a.map((x) => x.textContent.replace(/^\d/, '').trim()))).join('|') === 'Equipe|Rotação e buffs|Dano do time');
   check('"O que otimizar" tem 3 escolhas: Dano, Buff e Stat', (await page.locator('.ot-goals button').count()) === 3 && (await page.getAttribute('.ot-goals button:has-text("Dano")', 'aria-pressed')) === 'true');
   check('em Dano há 3 alvos: rotação do time, só dele e um golpe do kit', (await page.$$eval('.ot-sub .ot-focus button', (b) => b.map((x) => x.textContent.trim()))).join('|') === 'Rotação do time|Só Mavuika|Um golpe do kit');
   const prev = await page.textContent('.ot-go .muted');
+  check('a rota antiga /otimizador/:nome leva à aba do personagem', await (async () => { await page.goto(`${BASE}/projeto/exemplo/otimizador/Mavuika`, { waitUntil: 'networkidle' }); return /personagem\/Mavuika\?aba=otimizar/.test(page.url()); })());
+  await page.waitForSelector('.ot-grid');
   check('mostra quantas peças entram por posição', /40 peças entram \(8 \/ 8 \/ 8 \/ 8 \/ 8/.test(prev), prev);
 
   // ---- Otimizar (dano do time) ----
@@ -74,6 +75,24 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   // ---- Equipar ----
   await page.locator('.ot-build:not([data-now="true"])').first().locator('button:has-text("Equipar")').click();
   check('Equipar marca o build como equipado', (await page.locator('.ot-build button:has-text("Equipado")').count()) === 1);
+  await page.click('.pc-views button:has-text("Resumo e build")');
+  await page.waitForSelector('.pc-gear');
+  check('depois de Equipar, o Equipamento mostra as 5 peças reais do inventário', (await page.locator('.pc-piece.real').count()) === 5 && (await page.locator('.pc-piece.real.empty').count()) === 0);
+  check('com peças reais os substats mostram a soma exata das peças', /Soma exata dos substats das 5 peças/.test(await page.textContent('.pc-rolls + span, .dz-panel:has(h2:text-is("Substats das peças"))')));
+  await page.locator('.pc-piece.real').nth(2).click();
+  await page.waitForSelector('.dz-dialog .pp-tile');
+  check('tocar numa peça abre o inventário com as peças da posição (Areia)', /Areia do inventário/.test(await page.textContent('.dz-dialog')) && (await page.locator('.dz-dialog .pp-tile').count()) === 8);
+  await page.locator('.dz-dialog .pp-tile').nth(3).click();
+  await page.waitForTimeout(500);
+  check('escolher outra peça troca só aquela posição', (await page.locator('.pc-piece.real').count()) === 5 && (await page.locator('.dz-dialog').count()) === 0);
+  await page.locator('.pc-piece.real').nth(0).click();
+  await page.waitForSelector('.dz-dialog .pp-tile');
+  await page.click('.dz-dialog button:has-text("Deixar sem peça")');
+  check('"Deixar sem peça" esvazia a posição', (await page.locator('.pc-piece.real.empty').count()) === 1);
+  await page.click('button:has-text("Voltar ao build genérico")');
+  check('"Voltar ao build genérico" volta aos rolls e main stats', (await page.locator('.pc-piece.real').count()) === 0 && (await page.locator('.pc-rolls').count()) === 1);
+  await page.click('.pc-views button:has-text("Otimizar")');
+  await page.waitForSelector('.ot-grid');
 
   // ---- Restrição de Recarga ----
   await page.fill('input[aria-label="Recarga mínima"]', '125');
@@ -114,7 +133,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   check('o resultado diz qual golpe e qual reação foram otimizados', /Derreter/.test(await page.textContent('.ot-build .val small')), await page.textContent('.ot-build .val small'));
 
   // ---- Buff de suporte (Bennett: ATK fixo que ele dá ao time) ----
-  await page.goto(`${BASE}/projeto/exemplo/otimizador/Bennett`, { waitUntil: 'networkidle' });
+  await page.goto(`${BASE}/projeto/exemplo/personagem/Bennett?aba=otimizar`, { waitUntil: 'networkidle' });
   await page.click('.ot-goals button:has-text("Buff")');
   check('Buff lista o que o Bennett dá ao time e cresce com o ATK dele', /ATK fixo/.test(await page.textContent('.ot-buffs')), (await page.textContent('.ot-buffs')).slice(0, 80));
   await page.click('.ot-go .dz-btn.gold');
@@ -132,9 +151,9 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   check('o cartão tem "Ajustar build" e não tem mais "Otimizar artefatos"', (await page.locator('.eq-card a:has-text("Ajustar build")').count()) === 4 && (await page.locator('.eq-card a:has-text("Otimizar artefatos")').count()) === 0);
   await page.click('.eq-card:has(.name:text-is("Citlali")) a:has-text("Ajustar build")');
   await page.waitForSelector('.pc-gear');
-  await page.click('a:has-text("Otimizar artefatos")');
+  await page.click('.pc-views button:has-text("Otimizar")');
   await page.waitForSelector('.ot-grid');
-  check('"Otimizar artefatos" fica dentro do ajuste de build e abre o otimizador do personagem', /\/otimizador\/Citlali/.test(page.url()));
+  check('a aba Otimizar da Citlali abre o otimizador dela (individual)', /personagem\/Citlali/.test(page.url()) && /aba=otimizar/.test(page.url()));
   await page.goto(`${BASE}/projeto/exemplo`, { waitUntil: 'networkidle' });
   check('a barra de passos tem 3 passos', /Passo 1 de 3/.test(await page.textContent('.dz-stepbar')));
 
@@ -155,7 +174,8 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
 
   // ---- celular ----
   await page.setViewportSize({ width: 390, height: 800 });
-  await page.goto(`${BASE}/projeto/exemplo/otimizador/Mavuika`, { waitUntil: 'networkidle' });
+  await page.goto(`${BASE}/projeto/exemplo/personagem/Mavuika?aba=otimizar`, { waitUntil: 'networkidle' });
+  await page.waitForSelector('.ot-grid');
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1);
   check('celular sem rolagem horizontal no otimizador', !overflow);
   await page.screenshot({ path: path.join(OUT, 'otimizador-cel.png') });

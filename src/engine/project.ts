@@ -8,7 +8,8 @@ import type { ArtifactSet, Character, Move, Talent, Weapon } from '../data/schem
 import { planilhaEffect } from './compat/planilha';
 import { activeCharacterBuffs } from './stats';
 import { weaponStatsAt, type CharacterBuff, type CharacterEffect, type FlatDamageEffect, type SetEffect, type WeaponEffect, type WeaponFlat } from '../effects/schema';
-import { SUBSTATS, type Rolls } from './artifacts';
+import { SUBSTATS, zeroRolls, type Rolls } from './artifacts';
+import { RealPieceSchema, buildFromPieces } from './pieces';
 import { AMP_EM_COEFFICIENT_SHEET } from './constants/reactions';
 import type { ExtraScale, ReactionChoice, ResolvedMove, RotationAction } from './rotation';
 import type { MemberInput } from './stats';
@@ -64,6 +65,11 @@ export const MemberRefSchema = z.object({
   forcedCritRolls: z.number().int().min(0).optional(),
   /** Rolls totais por substat definidos à mão (os que faltam valem o mínimo). Ausente = otimizar. */
   manualRolls: z.record(z.enum(SUBSTATS), z.number().min(0).max(60)).optional(),
+  /**
+   * Artefatos reais (do inventário) usados por este personagem. Quando presentes, valem no lugar de main stats e rolls: o
+   * motor soma os stats exatos das peças, e o bônus de set vem das peças (as posições sem peça não contam).
+   */
+  pieces: z.array(RealPieceSchema).max(5).optional(),
 });
 export type MemberRef = z.infer<typeof MemberRefSchema>;
 
@@ -321,9 +327,11 @@ export function resolveMember(ref: MemberRef, data: GameData, effects: EffectsDa
   const weapon = byName(data.weapons, ref.weapon, 'Arma');
   const character = byName(data.characters, ref.character, 'Personagem');
   const weaponEffect = effects.weapons.find((w) => w.weapon === weapon.name);
-  const primarySet = setOf(ref.primarySet);
-  const secondarySet = setOf(ref.secondarySet);
-  const gear = gearBuffs({ weapon, weaponEffect, refinement: ref.refinement, primarySet, secondarySet, fourPiece: ref.fourPiece });
+  const real = ref.pieces?.length ? buildFromPieces(ref.pieces, character.element, data.artifacts.map((a) => a.name)) : undefined;
+  const primarySet = setOf(real ? real.primarySet : ref.primarySet);
+  const secondarySet = setOf(real ? real.secondarySet : ref.secondarySet);
+  const fourPiece = real ? real.fourPiece : ref.fourPiece;
+  const gear = gearBuffs({ weapon, weaponEffect, refinement: ref.refinement, primarySet, secondarySet, fourPiece });
   const own = effects.characters.find((c) => c.character === ref.character);
   const characterEffect: CharacterEffect | undefined = gear.length
     ? {
@@ -338,7 +346,7 @@ export function resolveMember(ref: MemberRef, data: GameData, effects: EffectsDa
     weaponEffect,
     primarySet,
     secondarySet,
-    fourPiece: ref.fourPiece,
+    fourPiece,
     refinement: ref.refinement,
     artifacts: ref.artifacts,
     talents: effectiveTalents(ref.talents, ref.constellation, character),
@@ -346,7 +354,9 @@ export function resolveMember(ref: MemberRef, data: GameData, effects: EffectsDa
     minER: ref.minER,
     totalRolls: ref.totalRolls,
     forcedCritRolls: ref.forcedCritRolls,
-    manualRolls: ref.manualRolls ? manualToRolls(ref.manualRolls, minRolls) : undefined,
+    // Com peças reais os rolls não existem (a soma exata está em externalStats) e o otimizador de substats não mexe no membro.
+    manualRolls: real ? zeroRolls() : ref.manualRolls ? manualToRolls(ref.manualRolls, minRolls) : undefined,
+    ...(real ? { externalStats: real.stats } : {}),
   };
 }
 

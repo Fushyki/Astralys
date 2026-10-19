@@ -38,7 +38,7 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
 
   // Duas abas: Resumo e build (padrão) e Avançado
   const views = await page.$$eval('.pc-views button', (b) => b.map((x) => x.textContent));
-  check('o personagem tem 2 abas: Resumo e build, e Avançado', views.join() === 'Resumo e build,Avançado', views.join());
+  check('o personagem tem 3 abas: Resumo e build, Otimizar e Avançado', views.join() === 'Resumo e build,Otimizar,Avançado', views.join());
   check('abre no Resumo, com uma frase que explica a aba', (await page.getAttribute('.pc-views button:has-text("Resumo e build")', 'aria-selected')) === 'true' && /build \(arma, artefatos e substats\)/.test(await page.textContent('.pc-hint')));
   check('o Resumo não tem o bloco "Maiores golpes" nem a tabela inteira', (await page.locator('.dz-panel:has(h2:text-is("Maiores golpes"))').count()) === 0 && (await page.locator('.dz-panel:has(h2:text-is("Tabela de dano"))').count()) === 0);
   check('Resumo e build na mesma página: faixa de build, substats e atributos', (await page.locator('.pc-weapon').count()) === 1 && (await page.locator('.pc-rolls').count()) === 1 && (await page.locator('.dz-panel:has(h2:text-is("Atributos"))').count()) === 1);
@@ -99,7 +99,9 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
   await view('Build');
   check('modo Otimizar mostra o orçamento de rolls (40 de 40)', /40 de 40 rolls · 20 fixos em crítico/.test(await page.locator('.dz-panel:has(h2:text-is("Substats (rolls)"))').textContent()));
   await page.click('.dz-seg[aria-label="Modo dos substats"] button:has-text("À mão")'); await settle();
-  await field('Taxa crít. (máx. 30)').locator('input').fill('10'); await field('Taxa crít. (máx. 30)').locator('input').blur(); await settle();
+  check('o modo à mão mostra os valores brutos (em %) por padrão', (await field('Taxa crít. (valor total em %)').count()) === 1);
+  await field('Taxa crít. (valor total em %)').locator('input').fill('33'); await field('Taxa crít. (valor total em %)').locator('input').blur(); await settle();
+  check('33% de Taxa Crítica vira 10 rolls (33 ÷ 3,3)', (await page.click('.dz-seg[aria-label="Unidade dos substats"] button:has-text("Rolls")'), await field('Taxa crít. (máx. 30)').locator('input').inputValue()) === '10');
   await view('Resumo');
   const crit = await page.locator('.dz-panel:has(h2:text-is("Atributos"))').textContent();
   await view('Build');

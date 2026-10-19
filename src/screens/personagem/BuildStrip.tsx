@@ -3,11 +3,14 @@
  * (arma, refinamento, sets, main stats, raridades e ER mínimo).
  */
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { loadGood } from '../../features/good/goodStore';
+import { norm, type GoodArtifact } from '../../features/good/goodImport';
+import { MAIN_LABEL, formatMain } from '../../features/good/labels';
+import { PiecePickerDialog } from './PiecePicker';
 import { NumberInput, SelectField } from '../../design/fields';
 import { Panel } from '../../design/primitives';
 import { cleanText, pieceIconUrl, weaponIconUrl } from '../../design/images';
-import { FLOWER_HP, MAIN_STAT_VALUES, PLUME_ATK, PIECE_SLOTS, type MemberRef, type PieceSlot } from '../../engine';
+import { FLOWER_HP, MAIN_STAT_VALUES, PLUME_ATK, PIECE_SLOTS, buildFromPieces, mainStatOf, type MemberRef, type PieceSlot, type RealPiece } from '../../engine';
 import { weaponsFor } from '../../features/rotation/teamOps';
 import { WeaponPickerDialog } from './WeaponPicker';
 import { SetPickerDialog } from './SetPicker';
@@ -58,16 +61,33 @@ export function BuildStrip({ data, index, member: memberRef, projectId }: { data
   const [open, setOpen] = useState(false);
   const [pickWeapon, setPickWeapon] = useState(false);
   const [pickSet, setPickSet] = useState(false);
+  const [pickPiece, setPickPiece] = useState<PieceSlot | null>(null);
   const update = useRotationStore((st) => st.updateMember);
   const character = data.game.characters.find((c) => c.name === memberRef.character);
   const weapon = data.game.weapons.find((w) => w.name === memberRef.weapon);
   const refine = Math.min(5, Math.max(1, memberRef.refinement ?? 1));
   const substat = weapon?.substat ? `${weapon.substat.stat} ${formatDecimal(weapon.substat.value < 1 ? weapon.substat.value * 100 : weapon.substat.value, 1)}${weapon.substat.value < 1 ? '%' : ''}` : '';
-  const sets = [memberRef.primarySet, memberRef.secondarySet]
+  const real = memberRef.pieces?.length ? buildFromPieces(memberRef.pieces, character?.element ?? 'Pyro', data.game.artifacts.map((a) => a.name)) : undefined;
+  const good = loadGood();
+  const goodKey = good?.characters.find((c) => norm(c.key) === norm(memberRef.character))?.key ?? memberRef.character;
+  /** As 5 peças que o personagem tem equipadas no inventário (se tiver todas). */
+  const inventoryPieces: GoodArtifact[] | null = (() => {
+    const mine = (good?.artifacts ?? []).filter((a) => norm(a.location) === norm(goodKey));
+    const by = Object.fromEntries(mine.map((a) => [a.slotKey, a]));
+    return PIECE_SLOTS.every((sl) => by[sl]) ? PIECE_SLOTS.map((sl) => by[sl]) : null;
+  })();
+  const setPiece = (slot: PieceSlot, piece: RealPiece | null) => {
+    // a primeira peça real parte das que ele já usa no inventário (se tiver), para não zerar as outras posições
+    const base: RealPiece[] = memberRef.pieces ?? (inventoryPieces ?? []);
+    const next = [...base.filter((p) => p.slotKey !== slot), ...(piece ? [piece] : [])];
+    update(index, { pieces: next.length ? next : undefined });
+    setPickPiece(null);
+  };
+  const sets = [real ? real.primarySet : memberRef.primarySet, real ? real.secondarySet : memberRef.secondarySet]
     .filter((n): n is string => !!n)
     .map((n) => data.game.artifacts.find((x) => x.name === n))
     .filter((x): x is NonNullable<typeof x> => !!x);
-  const fourPiece = !!memberRef.primarySet && !memberRef.secondarySet && memberRef.fourPiece !== false;
+  const fourPiece = real ? !!real.primarySet && !real.secondarySet && real.fourPiece !== false : !!memberRef.primarySet && !memberRef.secondarySet && memberRef.fourPiece !== false;
   const weaponFx = data.effects.weapons.find((e) => e.weapon === memberRef.weapon);
   const weaponStatus = effectStatus(weaponFx);
   const setFx = (name: string) => data.effects.sets.find((e) => e.set === name);
@@ -79,7 +99,11 @@ export function BuildStrip({ data, index, member: memberRef, projectId }: { data
       title="Equipamento"
       aside={
         <span className="pc-gearacts">
-          <Link className="dz-btn sm gold" to={`/projeto/${projectId}/otimizador/${encodeURIComponent(memberRef.character)}`}>Otimizar artefatos</Link>
+          {memberRef.pieces ? (
+            <button type="button" className="dz-btn sm" onClick={() => update(index, { pieces: undefined })} title="Volta ao build genérico (rolls e main stats)">Voltar ao build genérico</button>
+          ) : inventoryPieces ? (
+            <button type="button" className="dz-btn sm" onClick={() => update(index, { pieces: inventoryPieces })} title="Usa as 5 peças que ele tem equipadas no inventário importado">Usar as peças dele do inventário</button>
+          ) : null}
           <button type="button" className="dz-btn sm" onClick={() => setOpen(true)}>Editar build</button>
         </span>
       }
@@ -93,10 +117,24 @@ export function BuildStrip({ data, index, member: memberRef, projectId }: { data
           <span className="num sub">{weapon ? `ATK ${formatInt(weapon.baseAtk)}` : ''}{substat ? ` · ${substat}` : ''}</span>
         </button>
         {PIECE_SLOTS.map((slot, i) => {
+          const piece = memberRef.pieces?.find((p) => p.slotKey === slot);
+          if (memberRef.pieces) {
+            const pset = piece ? data.game.artifacts.find((x) => norm(x.name) === norm(piece.setKey)) : undefined;
+            const main = piece ? mainStatOf(piece) : null;
+            return (
+              <button type="button" key={slot} className={`pc-piece gear-tile real${piece ? '' : ' empty'}`} data-rarity={piece?.rarity ?? 4} onClick={() => setPickPiece(slot)} aria-label={`${SLOT_LABEL[slot]}: ${piece ? (pset?.name ?? piece.setKey) : 'sem peça'}. Tocar para escolher do inventário`}>
+                <span className="art"><Img src={pset ? pieceIconUrl(pset.id, slot) : undefined} fallback={piece ? '◆' : '+'} /></span>
+                {piece && <span className="lv num">+{piece.level ?? 20}</span>}
+                <span className="n">{SLOT_LABEL[slot]}</span>
+                <span className="main">{piece && main ? (MAIN_LABEL[main.key] ?? main.key) : 'Sem peça'}</span>
+                <span className="num val">{piece && main ? formatMain(main.key, main.value) : ''}</span>
+              </button>
+            );
+          }
           const m = mainValue(slot, memberRef);
           const set = setFor(i);
           return (
-            <button type="button" key={slot} className="pc-piece gear-tile" data-rarity={memberRef.artifacts.rarity[slot]} onClick={() => setOpen(true)} aria-label={`Editar ${SLOT_LABEL[slot]}`}>
+            <button type="button" key={slot} className="pc-piece gear-tile" data-rarity={memberRef.artifacts.rarity[slot]} onClick={() => setPickPiece(slot)} aria-label={`${SLOT_LABEL[slot]}: tocar para escolher uma peça do inventário`}>
               <span className="art"><Img src={set ? pieceIconUrl(set.id, slot) : undefined} fallback={SLOT_LABEL[slot].charAt(0)} /></span>
               <span className="lv num">+{memberRef.artifacts.rarity[slot] === 5 ? 20 : 16}</span>
               <span className="n">{SLOT_LABEL[slot]}</span>
@@ -134,7 +172,7 @@ export function BuildStrip({ data, index, member: memberRef, projectId }: { data
               <h3>{sets.length ? sets.map((x) => x.name).join(' + ') : 'Sem set'}</h3>
               <span className="muted small">{sets.length === 2 ? '2 + 2 peças' : fourPiece ? '4 peças' : sets.length ? '2 peças' : 'Nenhum set escolhido'}</span>
             </div>
-            <button type="button" className="dz-btn sm" onClick={() => setPickSet(true)}>Trocar set</button>
+            {!memberRef.pieces && <button type="button" className="dz-btn sm" onClick={() => setPickSet(true)}>Trocar set</button>}
           </header>
           {sets.length === 0 && <p className="muted small">Sem bônus de set.</p>}
           {sets.map((x) => (
@@ -158,6 +196,18 @@ export function BuildStrip({ data, index, member: memberRef, projectId }: { data
           status={(name) => effectStatus(data.effects.weapons.find((e) => e.weapon === name))}
           onPick={(name) => { update(index, { weapon: name }); setPickWeapon(false); }}
           onClose={() => setPickWeapon(false)}
+        />
+      )}
+      {pickPiece && (
+        <PiecePickerDialog
+          slot={pickPiece}
+          good={good}
+          sets={data.game.artifacts}
+          characterKey={goodKey}
+          current={memberRef.pieces?.find((p) => p.slotKey === pickPiece)}
+          onPick={(p) => setPiece(pickPiece, p)}
+          onClear={() => setPiece(pickPiece, null)}
+          onClose={() => setPickPiece(null)}
         />
       )}
       {pickSet && (

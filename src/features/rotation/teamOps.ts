@@ -86,7 +86,7 @@ export const useAutoRolls = (project: RotationProject, index: number): RotationP
 export function setManualRoll(project: RotationProject, index: number, substat: Substat, value: number): RotationProject {
   const m = project.members[index];
   if (!m?.manualRolls) return project;
-  const v = Math.max(0, Math.min(60, Math.round((Number.isFinite(value) ? value : 0) * 100) / 100));
+  const v = Math.max(0, Math.min(60, Math.round((Number.isFinite(value) ? value : 0) * 10000) / 10000));
   return updateMember(project, index, { manualRolls: { ...m.manualRolls, [substat]: v } });
 }
 

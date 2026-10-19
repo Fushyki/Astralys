@@ -1,8 +1,11 @@
-/** Otimizador de artefatos (/projeto/:id/otimizador/:nome?): os melhores conjuntos do inventário GOOD para um personagem do time. */
+/**
+ * Otimizador de artefatos, como aba "Otimizar" da página do personagem (/projeto/:id/personagem/:nome?aba=otimizar):
+ * a otimização é individual de cada personagem. A rota antiga /projeto/:id/otimizador/:nome? redireciona para lá.
+ */
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
+import { Link, Navigate, useParams } from 'react-router-dom';
 import { useProjectView } from '../app/ProjectContext';
-import { CharacterAvatar, Chip, Panel, Segmented } from '../design/primitives';
+import { Chip, Panel } from '../design/primitives';
 import { pieceIconUrl } from '../design/images';
 import { norm, type Good, type GoodArtifact } from '../features/good/goodImport';
 import { loadGood } from '../features/good/goodStore';
@@ -81,13 +84,17 @@ function Img({ src, fallback }: { src?: string; fallback: string }) {
   return src && !failed ? <img src={src} alt="" loading="lazy" crossOrigin="anonymous" onError={() => setFailed(true)} /> : <b className="ph" aria-hidden="true">{fallback}</b>;
 }
 
+/** Rota antiga: manda para a aba Otimizar do personagem. */
 export default function Otimizador() {
   const v = useProjectView();
   const { nome } = useParams();
-  const navigate = useNavigate();
+  return <Navigate to={`/projeto/${v.id}/personagem/${encodeURIComponent(nome ?? v.project.members[0].character)}?aba=otimizar`} replace />;
+}
+
+export function OtimizadorPanel({ index }: { index: number }) {
+  const v = useProjectView();
   const update = useRotationStore((s) => s.updateMember);
-  const { project, data, colors } = v;
-  const index = Math.max(0, project.members.findIndex((m) => m.character === nome));
+  const { project, data } = v;
   const ref = project.members[index];
   const character = data.game.characters.find((c) => c.name === ref?.character);
 
@@ -135,7 +142,7 @@ export default function Otimizador() {
     return [...counts.entries()].sort((a, b) => b[1] - a[1]);
   };
 
-  if (!ref) return <Navigate to={`/projeto/${v.id}`} replace />;
+  if (!ref) return null;
 
   const moves = data.game.moves.filter((m) => m.character === ref.character);
   const moveChosen = moves.find((m) => m.id === ui.moveId) ?? moves.find((m) => m.talent === 'burst') ?? moves[0];
@@ -200,7 +207,8 @@ export default function Otimizador() {
   const stop = () => job.current?.stop();
 
   const equip = (b: OptimizedBuild) => {
-    update(index, { artifacts: b.loadout.artifacts, primarySet: b.loadout.primarySet, secondarySet: b.loadout.secondarySet, fourPiece: b.loadout.fourPiece, manualRolls: b.loadout.manualRolls });
+    // Equipar põe as 5 peças reais no personagem: o dano calculado é exatamente o mostrado aqui.
+    update(index, { pieces: b.pieces.map((p) => ({ ...p })) });
     setEquippedKey(b.key);
   };
 
@@ -213,27 +221,7 @@ export default function Otimizador() {
   const base = result?.equipped?.report.value;
 
   return (
-    <main className="dz-page ot">
-      <section className="dz-pagehead">
-        <div className="titles">
-          <span className="lbl">Otimizador de artefatos · {project.name}</span>
-          <h1 className="h1">Os melhores artefatos de {ref.character}</h1>
-          <span className="muted">Busca exata no seu inventário: testa as combinações que importam e descarta só o que não pode vencer.</span>
-        </div>
-      </section>
-
-      <div className="ot-team" role="tablist" aria-label="Quem otimizar">
-        {project.members.map((m, i) => {
-          const c = data.game.characters.find((x) => x.name === m.character);
-          return (
-            <button key={m.character} type="button" role="tab" aria-selected={i === index} className="ot-member" style={{ ['--c' as string]: colors[i] }} onClick={() => navigate(`/projeto/${v.id}/otimizador/${encodeURIComponent(m.character)}`)}>
-              <CharacterAvatar name={m.character} icon={c?.icon} color={colors[i]} size={56} />
-              <span className="n">{m.character}</span>
-            </button>
-          );
-        })}
-      </div>
-
+    <div className="ot">
       {!good ? (
         <Panel title="Inventário">
           <div className="ot-empty">
@@ -414,7 +402,7 @@ export default function Otimizador() {
           </div>
         </div>
       )}
-    </main>
+    </div>
   );
 }
 

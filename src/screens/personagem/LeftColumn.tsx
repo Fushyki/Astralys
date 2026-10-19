@@ -1,7 +1,9 @@
 /** Coluna esquerda da calculadora: card do personagem (constelação e talentos) e o painel de substats (rolls). */
+import { useState } from 'react';
 import { NumberInput } from '../../design/fields';
 import { CharacterAvatar, Panel, Segmented } from '../../design/primitives';
-import { SUBSTATS, defaultTotalRolls, effectiveTalents, maxRollsFor, type AnalysisBundle, type MemberRef, type Substat } from '../../engine';
+import { SUBSTATS, defaultTotalRolls, effectiveTalents, maxRollsFor, rollValues, type AnalysisBundle, type MemberRef, type Substat } from '../../engine';
+import { SUB_LABEL, formatSub } from '../../features/good/labels';
 import type { Character } from '../../data/schema';
 import { useRotationStore } from '../../features/rotation/store';
 import { formatInt, formatPercent } from '../../ui/format';
@@ -50,13 +52,40 @@ export function CharacterCard({ character, memberRef, index, color, level, share
   );
 }
 
+/** Substats em % guardam fração (0,33 = 33%); os valores brutos aparecem como o jogo mostra (33,0%). */
+const PCT_SUBSTAT = new Set<Substat>(['CR', 'CD', 'ATK%', 'ER', 'HP%', 'DEF%']);
+const GOOD_OF: Record<Substat, string> = { CR: 'critRate_', CD: 'critDMG_', 'ATK%': 'atk_', EM: 'eleMas', ER: 'enerRech_', ATK: 'atk', 'HP%': 'hp_', HP: 'hp', 'DEF%': 'def_', DEF: 'def' };
+
 export function SubstatsPanel({ memberRef, index, bundle, onGood }: { memberRef: MemberRef; index: number; bundle: AnalysisBundle; onGood: () => void }) {
   const update = useRotationStore((s) => s.updateMember);
   const useManual = useRotationStore((s) => s.useManualRolls);
   const useAuto = useRotationStore((s) => s.useAutoRolls);
   const setRoll = useRotationStore((s) => s.setManualRoll);
+  const [unit, setUnit] = useState<'rolls' | 'valores'>('valores');
   const rolls = bundle.optimization.rolls[index];
   if (!rolls) return <Panel title="Substats (rolls)"><p className="note">Calculando…</p></Panel>;
+
+  // Com peças reais do inventário não há rolls: os substats são a soma exata das 5 peças.
+  if (memberRef.pieces) {
+    const sums = new Map<string, number>();
+    for (const p of memberRef.pieces) for (const sub of p.substats) sums.set(sub.key, (sums.get(sub.key) ?? 0) + sub.value);
+    const rows = SUBSTATS.filter((k) => (sums.get(GOOD_OF[k]) ?? 0) > 0);
+    return (
+      <Panel title="Substats das peças">
+        <div className="pc-rolls">
+          {rows.map((k) => (
+            <div className="r" key={k}>
+              <span className="k">{SUB_LABEL[GOOD_OF[k]] ?? k}</span>
+              <span className="num n">{formatSub(GOOD_OF[k], sums.get(GOOD_OF[k]) ?? 0)}</span>
+            </div>
+          ))}
+        </div>
+        <span className="muted small">Soma exata dos substats das {memberRef.pieces.length} peças do inventário. Para mudar, troque as peças ou volte ao build genérico.</span>
+      </Panel>
+    );
+  }
+  const perRoll = rollValues(memberRef.artifacts);
+  const factor = (k: Substat) => (PCT_SUBSTAT.has(k) ? 100 : 1);
 
   const manual = !!memberRef.manualRolls;
   const used = Math.round(SUBSTATS.reduce((s, k) => s + rolls[k], 0) * 100) / 100;
@@ -75,6 +104,17 @@ export function SubstatsPanel({ memberRef, index, bundle, onGood }: { memberRef:
         ]}
         onChange={(v) => (v === 'manual' ? useManual(index, rolls) : useAuto(index))}
       />
+      {manual && (
+        <Segmented
+          label="Unidade dos substats"
+          value={unit}
+          options={[
+            { value: 'valores', label: 'Valores' },
+            { value: 'rolls', label: 'Rolls' },
+          ]}
+          onChange={setUnit}
+        />
+      )}
       <button type="button" className="dz-link" style={{ alignSelf: 'flex-start' }} onClick={onGood}>Usar o inventário GOOD</button>
       <div className="pc-rolls">
         {SUBSTATS.filter((s) => manual || rolls[s] > 0).map((s) => {
@@ -82,7 +122,16 @@ export function SubstatsPanel({ memberRef, index, bundle, onGood }: { memberRef:
           return (
             <div className="r" key={s}>
               <span className="k">{SUBSTAT_LABEL[s]}</span>
-              {manual ? (
+              {manual && unit === 'valores' ? (
+                <NumberInput
+                  label={`${SUBSTAT_LABEL[s]} (valor total${PCT_SUBSTAT.has(s) ? ' em %' : ''})`}
+                  value={Math.round((memberRef.manualRolls![s] ?? rolls[s]) * perRoll[s] * factor(s) * 100) / 100}
+                  min={0}
+                  step={PCT_SUBSTAT.has(s) ? 0.1 : s === 'EM' ? 1 : 10}
+                  invalid={rolls[s] > cap}
+                  onCommit={(v) => setRoll(index, s, v / factor(s) / perRoll[s])}
+                />
+              ) : manual ? (
                 <NumberInput label={`${SUBSTAT_LABEL[s]} (máx. ${cap})`} value={memberRef.manualRolls![s] ?? rolls[s]} min={0} max={cap} step={1} invalid={rolls[s] > cap} onCommit={(v) => setRoll(index, s, v)} />
               ) : (
                 <>

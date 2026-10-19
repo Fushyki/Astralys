@@ -207,3 +207,25 @@ function inventoryFor(character: string) {
   const g = inventory(4);
   return { ...g, characters: [{ key: character }] };
 }
+
+describe('peças reais no personagem (MemberRef.pieces)', () => {
+  it('o build com as 5 peças reais dá EXATAMENTE o dano que o otimizador mostrou (inclusive cálice de outro elemento)', () => {
+    const good = inventory(4);
+    const r = runOptimizer({ ...base, good, characterKey: 'Mavuika', config: { ...DEFAULT_CONFIG, topN: 1 } });
+    const top = r.builds[0];
+    const patched = { ...project, members: project.members.map((m, i) => (i === 0 ? { ...m, pieces: top.pieces } : m)) };
+    const rp = resolveProject(patched, game, effects);
+    const b = analyzeProject({ team: rp.team, actions: rp.actions, flatEffects: rp.flatEffects, ampCoefficient: rp.ampCoefficient });
+    expect(b.optimization.result.totals.avg).toBeCloseTo(top.report.teamAvg, 3);
+    expect(rp.team.members[0].primarySet?.name).toBe(top.config.primarySet);
+  });
+
+  it('com menos de 5 peças, as posições vazias não contam (sem ATK de pluma nem HP de flor)', () => {
+    const good = inventory(2);
+    const flower = good.artifacts.find((a) => a.slotKey === 'flower')!;
+    const one = resolveProject({ ...project, members: project.members.map((m, i) => (i === 0 ? { ...m, pieces: [flower] } : m)) }, game, effects);
+    const stats = one.team.members[0].externalStats!;
+    expect(stats.hpFlat).toBeGreaterThan(4000);
+    expect(stats.atkFlat ?? 0).toBeLessThan(100);
+  });
+});

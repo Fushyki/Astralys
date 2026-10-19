@@ -18,3 +18,4 @@ export * from './critSweep';
 export * from './weaponCompare';
 export * from './energy';
 export * from './reactionTable';
+export * from './pieces';

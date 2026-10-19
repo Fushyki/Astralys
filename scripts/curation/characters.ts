@@ -28,7 +28,7 @@ export interface BuffCuration {
    * Efeito do kit (habilidade ou supremo) que cresce com o nível do talento: `src: 'kit'`, os valores em `stats`,
    * `resShred` ou `convert` valem 1 e são multiplicados pela linha `key` da tabela de multiplicadores do Lunaris.
    */
-  kit?: { talent: 'normal' | 'skill' | 'burst'; key: string };
+  kit?: { talent: 'normal' | 'skill' | 'burst'; key?: string };
   /** Regras de composição do time (ver `BuffTeamRulesSchema`); `scale.table` vem de parâmetros do Lunaris. */
   team?: { only?: Element[]; eachOf?: Element[]; scale?: { of: 'distinct' | Element[]; table: Val[] } };
   /** Bônus que depende de um stat da fonte (ver `BuffConvertSchema`). Substitui `stats`. */

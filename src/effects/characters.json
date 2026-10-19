@@ -5527,5 +5527,88 @@
       }
     ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Zhongli",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "shield",
+        "label": "Zhongli: Escudo de Jade",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "resShred": {
+          "value": 0.2,
+          "elements": [
+            "Pyro",
+            "Hydro",
+            "Anemo",
+            "Electro",
+            "Dendro",
+            "Cryo",
+            "Geo"
+          ]
+        },
+        "note": "Assume a redução de 20% de RES elemental (com o Escudo de Jade ativo) sempre ativa. A de RES Física não entra."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Furina",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "burst",
+        "label": "Furina: Fanfarra",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 300,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "level": {
+          "talent": "burst",
+          "table": [
+            0.0007,
+            0.0009,
+            0.0011,
+            0.0013,
+            0.0015,
+            0.0017,
+            0.0019,
+            0.0021,
+            0.0023,
+            0.0025,
+            0.0027,
+            0.0029,
+            0.0031,
+            0.0033,
+            0.0035
+          ]
+        },
+        "note": "Assume o máximo de 300 pontos de Fanfarra (DMG da equipe = 300 × a razão do nível do Supremo): ligue nas janelas. A Fanfarra real depende das variações de HP do time."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   }
 ]

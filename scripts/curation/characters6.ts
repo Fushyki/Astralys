@@ -98,3 +98,13 @@ export const CHARACTERS_8: Record<string, BuffCuration[]> = {
     { id: 'skill', label: 'Gorou: Estandarte (Geo)', src: 'kit', kit: { talent: 'skill', key: 'Geo DMG Bonus' }, scope: 'team', timed: true, forElements: ['Geo'], stats: { dmgPct: { lit: 1 } }, team: { scale: { of: ['Geo'], table: [{ lit: 0 }, { lit: 0 }, { lit: 1 }] } }, expect: 'Adds "Crunch" - Geo DMG Bonus', note: '+15% de DMG Geo com 3 personagens Geo no time (o Gorou conta): ligue nas janelas. Os bônus de DEF e de resistência a interrupção não entram.' },
   ],
 };
+
+/** Kit sem tabela de nível (valor fixo no texto) e kit com Fanfare. */
+export const CHARACTERS_9: Record<string, BuffCuration[]> = {
+  Zhongli: [
+    { id: 'shield', label: 'Zhongli: Escudo de Jade', src: 'kit', kit: { talent: 'skill' }, scope: 'self', timed: false, resShred: { value: { lit: 0.2 }, elements: ['Pyro', 'Hydro', 'Anemo', 'Electro', 'Dendro', 'Cryo', 'Geo'] }, expect: 'will decrease the Elemental RES and Physical RES of opponents in a small AoE by 20%', note: 'Assume a redução de 20% de RES elemental (com o Escudo de Jade ativo) sempre ativa. A de RES Física não entra.' },
+  ],
+  Furina: [
+    { id: 'burst', label: 'Furina: Fanfarra', src: 'kit', kit: { talent: 'burst', key: 'Fanfare to DMG Increase Conversion Ratio' }, scope: 'team', timed: true, stats: { dmgPct: { lit: 300 } }, expect: 'Furina will increase the DMG dealt by and Incoming Healing Bonus of all nearby party members based on the amount of Fanfare', note: 'Assume o máximo de 300 pontos de Fanfarra (DMG da equipe = 300 × a razão do nível do Supremo): ligue nas janelas. A Fanfarra real depende das variações de HP do time.' },
+  ],
+};

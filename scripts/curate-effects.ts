@@ -22,12 +22,12 @@ import { CHARACTERS_2 } from './curation/characters2';
 import { CHARACTERS_3 } from './curation/characters3';
 import { CHARACTERS_4 } from './curation/characters4';
 import { CHARACTERS_5 } from './curation/characters5';
-import { CHARACTERS_6, CHARACTERS_7, CHARACTERS_8 } from './curation/characters6';
+import { CHARACTERS_6, CHARACTERS_7, CHARACTERS_8, CHARACTERS_9 } from './curation/characters6';
 import type { BuffCuration } from './curation/characters';
 
 /** Junta os lotes: o mesmo personagem pode aparecer em mais de um e as listas se somam. */
 const CHARACTER_BUFFS: Record<string, BuffCuration[]> = {};
-for (const batch of [CHARACTERS_1, CHARACTERS_2, CHARACTERS_3, CHARACTERS_4, CHARACTERS_5, CHARACTERS_6, CHARACTERS_7, CHARACTERS_8]) {
+for (const batch of [CHARACTERS_1, CHARACTERS_2, CHARACTERS_3, CHARACTERS_4, CHARACTERS_5, CHARACTERS_6, CHARACTERS_7, CHARACTERS_8, CHARACTERS_9]) {
   for (const [name, list] of Object.entries(batch)) CHARACTER_BUFFS[name] = [...(CHARACTER_BUFFS[name] ?? []), ...list];
 }
 
@@ -212,7 +212,7 @@ function buildCharacters(): CharacterEffect[] {
       const node = b.kit ? { description: kitNode!.description, params: [] as number[] } : (isConst ? raw.constellations : raw.passives)?.[b.src];
       if (!node) throw new Error(`${name} ${b.id}: ${b.src} não existe`);
       let levelTable: number[] | undefined;
-      if (b.kit) {
+      if (b.kit?.key) {
         const row = kitNode!.multipliers?.[b.kit.key];
         if (!row || row.length !== 15) throw new Error(`${name} ${b.id}: a linha "${b.kit.key}" não existe ou não tem 15 níveis`);
         levelTable = row.map(percentOf);

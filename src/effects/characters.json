@@ -1107,5 +1107,3491 @@
       }
     ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Jean",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "c1",
+        "label": "Jean C1",
+        "minConstellation": 1,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {
+            "skill": 0.4
+          }
+        },
+        "note": "+40% de DMG da habilidade (Gale Blade) depois de segurar por mais de 1 s: ligue nas janelas."
+      },
+      {
+        "id": "c4",
+        "label": "Jean C4",
+        "minConstellation": 4,
+        "scope": "self",
+        "timed": false,
+        "resShred": {
+          "value": 0.4,
+          "elements": [
+            "Anemo"
+          ]
+        },
+        "note": "Assume a redução de RES Anemo dentro do campo do Supremo sempre ativa."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Barbara",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "c2",
+        "label": "Barbara C2",
+        "minConstellation": 2,
+        "scope": "team",
+        "timed": true,
+        "forElements": [
+          "Hydro"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.15,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+15% de DMG Hydro do personagem em campo durante a habilidade: ligue nas janelas. Só personagens Hydro recebem."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Razor",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "c1",
+        "label": "Razor C1",
+        "minConstellation": 1,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.1,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+10% de DMG por 8 s depois de pegar partícula: ligue nas janelas."
+      },
+      {
+        "id": "c2",
+        "label": "Razor C2",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0.1,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+10% de Taxa Crítica contra inimigos com menos de 30% de HP: ligue nas janelas."
+      },
+      {
+        "id": "c6",
+        "label": "Razor C6",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0.1,
+          "critDmg": 0.5,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+10% de Taxa e +50% de Dano Crítico por 15 s depois de consumir Sigilos: ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Amber",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "a4",
+        "label": "Amber A4",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0.15,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+15% de ATK por 10 s depois de acertar ponto fraco com tiro mirado: ligue nas janelas."
+      },
+      {
+        "id": "c6",
+        "label": "Amber C6",
+        "minConstellation": 6,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0.15,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+15% de ATK da equipe por 10 s depois da Chuva de Fogo: ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Venti",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "c2",
+        "label": "Venti C2",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": false,
+        "resShred": {
+          "value": 0.24,
+          "elements": [
+            "Anemo"
+          ]
+        },
+        "note": "Assume a redução de RES Anemo (10 s) sempre ativa. A de RES Física não entra."
+      },
+      {
+        "id": "c4",
+        "label": "Venti C4",
+        "minConstellation": 4,
+        "scope": "team",
+        "timed": true,
+        "forElements": [
+          "Anemo"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.25,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+25% de DMG Anemo por 10 s depois da habilidade ou do Supremo: ligue nas janelas."
+      },
+      {
+        "id": "c6",
+        "label": "Venti C6",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": false,
+        "resShred": {
+          "value": 0.2,
+          "elements": [
+            "Anemo"
+          ]
+        },
+        "note": "Assume a redução de RES Anemo do Supremo sempre ativa (a do elemento absorvido não entra). Os +100% de Dano Crítico estão no buff Venti C6 (Dano Crítico)."
+      },
+      {
+        "id": "c6cd",
+        "label": "Venti C6 (Dano Crítico)",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 1,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+100% de Dano Crítico contra alvos atingidos pelo Supremo: ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Beidou",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "a4",
+        "label": "Beidou A4",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {
+            "normal": 0.15,
+            "charged": 0.15
+          }
+        },
+        "note": "+15% de DMG de Normal/Carregado por 10 s depois de contra-atacar no tempo certo: ligue nas janelas."
+      },
+      {
+        "id": "c6",
+        "label": "Beidou C6",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": false,
+        "resShred": {
+          "value": 0.15,
+          "elements": [
+            "Electro"
+          ]
+        },
+        "note": "Assume a redução de RES Electro durante o Supremo sempre ativa. Os efeitos de Radiância não entram."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Xiao",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "a1",
+        "label": "Xiao A1",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.25,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "Assume o teto de +25% de DMG (cresce 5% a cada 3 s do Supremo): ligue nas janelas."
+      },
+      {
+        "id": "a4",
+        "label": "Xiao A4",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {
+            "skill": 0.45
+          }
+        },
+        "note": "Assume 3 stacks (+45% de DMG da habilidade): ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Ningguang",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "a4",
+        "label": "Ningguang A4",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "forElements": [
+          "Geo"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.12,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+12% de DMG Geo por 10 s depois de atravessar a Tela de Jade: ligue nas janelas. Só personagens Geo recebem."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Noelle",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "c2",
+        "label": "Noelle C2",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {
+            "charged": 0.15
+          }
+        },
+        "note": "+15% de DMG de Ataque Carregado, sempre."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Qiqi",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "c2",
+        "label": "Qiqi C2",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {
+            "normal": 0.15,
+            "charged": 0.15
+          }
+        },
+        "note": "Assume o inimigo sempre sob Cryo (+15% de DMG de Normal/Carregado). Vale para a Qiqi, não para a equipe."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Chongyun",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "a4",
+        "label": "Chongyun A4",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "resShred": {
+          "value": 0.1,
+          "elements": [
+            "Cryo"
+          ]
+        },
+        "note": "Assume a redução de RES Cryo (8 s) sempre ativa."
+      },
+      {
+        "id": "c6",
+        "label": "Chongyun C6",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {
+            "burst": 0.15
+          }
+        },
+        "note": "+15% de DMG do Supremo contra inimigos com menos HP% que ele: ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Diona",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "c2",
+        "label": "Diona C2",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {
+            "skill": 0.15
+          }
+        },
+        "note": "+15% de DMG da habilidade, sempre."
+      },
+      {
+        "id": "c6",
+        "label": "Diona C6",
+        "minConstellation": 6,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 200,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+200 de Maestria da equipe dentro do campo com HP acima de 50%: ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Mona",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "c2",
+        "label": "Mona C2",
+        "minConstellation": 2,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 80,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+80 de Maestria da equipe por 12 s depois do Ataque Carregado da Mona: ligue nas janelas."
+      },
+      {
+        "id": "c4",
+        "label": "Mona C4",
+        "minConstellation": 4,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0.15,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+15% de Taxa Crítica da equipe contra inimigos com Presságio: ligue nas janelas."
+      },
+      {
+        "id": "c6",
+        "label": "Mona C6",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {
+            "charged": 1.8
+          }
+        },
+        "note": "Assume o teto de +180% de DMG do próximo Ataque Carregado: ligue nas janelas. Os 200% extras contra Presságio não entram."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Keqing",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "a4",
+        "label": "Keqing A4",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0.15,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+15% de Taxa Crítica por 8 s depois da habilidade: ligue nas janelas. Os +15% de Recarga não entram."
+      },
+      {
+        "id": "c4",
+        "label": "Keqing C4",
+        "minConstellation": 4,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0.25,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+25% de ATK por 10 s depois de uma reação com Electro: ligue nas janelas."
+      },
+      {
+        "id": "c6",
+        "label": "Keqing C6",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.24,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "Assume 4 efeitos independentes ativos (+24% de DMG Electro): ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Sucrose",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "a1",
+        "label": "Sucrose A1",
+        "minConstellation": 0,
+        "scope": "others",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 50,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+50 de Maestria dos demais com o elemento absorvido pelo Espalhar: ligue nas janelas em que o elemento bate. A parte de 20% da Maestria da Sucrose (A4) ainda não entra."
+      },
+      {
+        "id": "c6",
+        "label": "Sucrose C6",
+        "minConstellation": 6,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.2,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+20% de DMG do elemento absorvido durante o Supremo: ligue nas janelas em que o elemento bate com o de quem ataca."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Rosaria",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "a1",
+        "label": "Rosaria A1",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0.12,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+12% de Taxa Crítica por 5 s depois de acertar pelas costas: ligue nas janelas."
+      },
+      {
+        "id": "a4",
+        "label": "Rosaria A4",
+        "minConstellation": 0,
+        "scope": "others",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0.15,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "Assume o teto de +15% de Taxa Crítica dos demais por 10 s depois do Supremo (o valor real é 15% da Taxa da Rosaria): ligue nas janelas."
+      },
+      {
+        "id": "c1",
+        "label": "Rosaria C1",
+        "minConstellation": 1,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {
+            "normal": 0.1
+          }
+        },
+        "note": "+10% de DMG de Normal por 4 s depois de um acerto crítico: ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Yoimiya",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "a1",
+        "label": "Yoimiya A1",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.2,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "Assume 10 stacks (+20% de DMG Pyro) durante o Niwabi: ligue nas janelas."
+      },
+      {
+        "id": "a4",
+        "label": "Yoimiya A4",
+        "minConstellation": 0,
+        "scope": "others",
+        "timed": true,
+        "stats": {
+          "atkPct": 0.2,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+10% de ATK da equipe por 15 s mais 1% por stack da A1; assume 10 stacks (+20%): ligue nas janelas."
+      },
+      {
+        "id": "c1",
+        "label": "Yoimiya C1",
+        "minConstellation": 1,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0.2,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+20% de ATK por 20 s depois de derrotar inimigo sob a Marca Dourada: ligue nas janelas."
+      },
+      {
+        "id": "c2",
+        "label": "Yoimiya C2",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.25,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+25% de DMG Pyro por 6 s depois de um acerto crítico Pyro: ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Sangonomiya Kokomi",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "c6",
+        "label": "Kokomi C6",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.4,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+40% de DMG Hydro por 4 s quando Normal/Carregado curam alguém com 80% de HP ou mais: ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Kujou Sara",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "c6",
+        "label": "Sara C6",
+        "minConstellation": 6,
+        "scope": "team",
+        "timed": true,
+        "forElements": [
+          "Electro"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0.6,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+60% de Dano Crítico Electro de quem recebeu o bônus de ATK do Tengu: ligue nas janelas. O bônus de ATK em si depende do ATK base da Sara e não entra."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Arataki Itto",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "c4",
+        "label": "Itto C4",
+        "minConstellation": 4,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0.2,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0.2,
+          "dmgPctByType": {}
+        },
+        "note": "+20% de ATK e +20% de DEF da equipe por 10 s depois do Supremo: ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Shikanoin Heizou",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "a4",
+        "label": "Heizou A4",
+        "minConstellation": 0,
+        "scope": "others",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 80,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+80 de Maestria dos demais por 10 s depois do Golpe: ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Kirara",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "c6",
+        "label": "Kirara C6",
+        "minConstellation": 6,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.12,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+12% de DMG elemental da equipe por 15 s depois da habilidade ou Supremo: ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Aloy",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "a1",
+        "label": "Aloy A1 (própria)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0.16,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+16% de ATK por 10 s depois do efeito Coil: ligue nas janelas."
+      },
+      {
+        "id": "a1o",
+        "label": "Aloy A1 (equipe)",
+        "minConstellation": 0,
+        "scope": "others",
+        "timed": true,
+        "stats": {
+          "atkPct": 0.08,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+8% de ATK dos demais por 10 s: ligue nas janelas."
+      },
+      {
+        "id": "a4",
+        "label": "Aloy A4",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.35,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "Assume o teto de +35% de DMG Cryo (3,5% por segundo no estado Gelo Veloz): ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Kamisato Ayato",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "c1",
+        "label": "Ayato C1",
+        "minConstellation": 1,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {
+            "skill": 0.4
+          }
+        },
+        "note": "+40% de DMG da habilidade contra inimigos com 50% de HP ou menos: ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Collei",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "c4",
+        "label": "Collei C4",
+        "minConstellation": 4,
+        "scope": "others",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 60,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+60 de Maestria dos demais por 12 s depois do Supremo: ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Tighnari",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "a1",
+        "label": "Tighnari A1",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 50,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+50 de Maestria por 4 s depois de uma Flecha de Guirlanda: ligue nas janelas."
+      },
+      {
+        "id": "c2",
+        "label": "Tighnari C2",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.2,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+20% de DMG Dendro com inimigos dentro do campo da Mina: ligue nas janelas."
+      },
+      {
+        "id": "c4",
+        "label": "Tighnari C4",
+        "minConstellation": 4,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 60,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+60 de Maestria da equipe por 8 s depois do Supremo: ligue nas janelas. Os +60 extras por reação não entram."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Cyno",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "a1",
+        "label": "Cyno A1",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {
+            "skill": 0.35
+          }
+        },
+        "note": "+35% de DMG da habilidade com o Julgamento ativo: ligue nas janelas. Os 3 raios extras não entram."
+      },
+      {
+        "id": "c2",
+        "label": "Cyno C2",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.5,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "Assume 5 stacks (+50% de DMG Electro) por 4 s depois de acertos Normais: ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Nahida",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "c4",
+        "label": "Nahida C4",
+        "minConstellation": 4,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 100,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "Assume 1 inimigo marcado pelas Sementes (+100 de Maestria): ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Wanderer",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "a1pyro",
+        "label": "Wanderer A1 (Pyro)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0.3,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+30% de ATK no estado Windfavored se a habilidade tocou Pyro: ligue nas janelas."
+      },
+      {
+        "id": "a1cryo",
+        "label": "Wanderer A1 (Cryo)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0.2,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+20% de Taxa Crítica no estado Windfavored se a habilidade tocou Cryo: ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Faruzan",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "c6",
+        "label": "Faruzan C6",
+        "minConstellation": 6,
+        "scope": "team",
+        "timed": true,
+        "forElements": [
+          "Anemo"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0.4,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+40% de Dano Crítico Anemo de quem está sob o Benefício do Vento: ligue nas janelas. Só personagens Anemo recebem."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Yaoyao",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "c1",
+        "label": "Yaoyao C1",
+        "minConstellation": 1,
+        "scope": "team",
+        "timed": true,
+        "forElements": [
+          "Dendro"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.15,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+15% de DMG Dendro por 8 s depois da explosão dos rabanetes: ligue nas janelas. Só personagens Dendro recebem."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Kaveh",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "a4",
+        "label": "Kaveh A4",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 100,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "Assume 4 stacks (+100 de Maestria) durante o Painted Dome: ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Baizhu",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "a1",
+        "label": "Baizhu A1",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.25,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+25% de DMG Dendro com o personagem em campo acima de 50% de HP (assumido sempre)."
+      },
+      {
+        "id": "c4",
+        "label": "Baizhu C4",
+        "minConstellation": 4,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 80,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+80 de Maestria da equipe por 15 s depois do Supremo: ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Lynette",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "c6",
+        "label": "Lynette C6",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": true,
+        "forElements": [
+          "Anemo"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.2,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+20% de DMG Anemo por 6 s depois do Enigma Thrust: ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Freminet",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "c4",
+        "label": "Freminet C4",
+        "minConstellation": 4,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0.18,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "Assume 2 stacks (+18% de ATK): ligue nas janelas."
+      },
+      {
+        "id": "c6",
+        "label": "Freminet C6",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0.36,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "Assume 3 stacks (+36% de Dano Crítico): ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Chevreuse",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "c6",
+        "label": "Chevreuse C6",
+        "minConstellation": 6,
+        "scope": "team",
+        "timed": true,
+        "forElements": [
+          "Pyro",
+          "Electro"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.6,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "Assume 3 stacks (+60% de DMG Pyro/Electro) por 8 s depois da cura: ligue nas janelas. Só personagens Pyro/Electro recebem."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Gaming",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "a4",
+        "label": "Gaming A4",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {
+            "plunge": 0.2
+          }
+        },
+        "note": "+20% de DMG do Plunging da habilidade com HP de 50% ou mais: ligue nas janelas."
+      },
+      {
+        "id": "c2",
+        "label": "Gaming C2",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0.2,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+20% de ATK por 5 s depois de cura com overflow: ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Xianyun",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "c2",
+        "label": "Xianyun C2",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0.2,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+20% de ATK por 15 s depois do Skyladder: ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Sigewinne",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "a1",
+        "label": "Sigewinne A1",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "forElements": [
+          "Hydro"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.08,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+8% de DMG Hydro por 18 s depois da habilidade: ligue nas janelas. O dano fixo por Convalescência não entra."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Arlecchino",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "a4",
+        "label": "Arlecchino A4",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.4,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+40% de DMG Pyro em combate, sempre."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Sethos",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "c2",
+        "label": "Sethos C2",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.3,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "Assume 2 stacks (+30% de DMG Electro): ligue nas janelas."
+      },
+      {
+        "id": "c4",
+        "label": "Sethos C4",
+        "minConstellation": 4,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 80,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+80 de Maestria da equipe por 10 s (acertando 2 ou mais inimigos): ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Emilie",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "c1",
+        "label": "Emilie C1",
+        "minConstellation": 1,
+        "scope": "self",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {
+            "skill": 0.2
+          }
+        },
+        "note": "+20% de DMG da habilidade, sempre. O Cleardew Cologne da A1 não entra."
+      },
+      {
+        "id": "c2",
+        "label": "Emilie C2",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": false,
+        "resShred": {
+          "value": 0.3,
+          "elements": [
+            "Dendro"
+          ]
+        },
+        "note": "Assume a redução de RES Dendro (10 s) sempre ativa."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Kachina",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "a1",
+        "label": "Kachina A1",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "forElements": [
+          "Geo"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.2,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+20% de DMG Geo por 12 s depois de um Nightsoul Burst: ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Mualani",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "c4",
+        "label": "Mualani C4",
+        "minConstellation": 4,
+        "scope": "self",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {
+            "burst": 0.75
+          }
+        },
+        "note": "+75% de DMG do Supremo, sempre."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Xilonen",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "a1",
+        "label": "Xilonen A1",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {
+            "normal": 0.3,
+            "plunge": 0.3
+          }
+        },
+        "note": "+30% de DMG de Normal/Plunging com menos de 2 Amostras alteradas no Nightsoul: ligue nas janelas."
+      },
+      {
+        "id": "c2geo",
+        "label": "Xilonen C2 (Geo)",
+        "minConstellation": 2,
+        "scope": "team",
+        "timed": true,
+        "forElements": [
+          "Geo"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.5,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+50% de DMG para personagens Geo com a Amostra Geo ativa: ligue nas janelas."
+      },
+      {
+        "id": "c2pyro",
+        "label": "Xilonen C2 (Pyro)",
+        "minConstellation": 2,
+        "scope": "team",
+        "timed": true,
+        "forElements": [
+          "Pyro"
+        ],
+        "stats": {
+          "atkPct": 0.45,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+45% de ATK para personagens Pyro com a Amostra Pyro ativa: ligue nas janelas."
+      },
+      {
+        "id": "c2hydro",
+        "label": "Xilonen C2 (Hydro)",
+        "minConstellation": 2,
+        "scope": "team",
+        "timed": true,
+        "forElements": [
+          "Hydro"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0.45,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+45% de HP máximo para personagens Hydro com a Amostra Hydro ativa: ligue nas janelas."
+      },
+      {
+        "id": "c2cryo",
+        "label": "Xilonen C2 (Cryo)",
+        "minConstellation": 2,
+        "scope": "team",
+        "timed": true,
+        "forElements": [
+          "Cryo"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0.6,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+60% de Dano Crítico para personagens Cryo com a Amostra Cryo ativa: ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Ororon",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "c2",
+        "label": "Ororon C2",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": true,
+        "forElements": [
+          "Electro"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.08,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+8% de DMG Electro por 9 s depois do Supremo (1 inimigo atingido): ligue nas janelas. Cada inimigo extra soma +8% até 32%."
+      },
+      {
+        "id": "c6",
+        "label": "Ororon C6",
+        "minConstellation": 6,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0.3,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "Assume 3 stacks (+30% de ATK do personagem em campo): ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Lan Yan",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "c4",
+        "label": "Lan Yan C4",
+        "minConstellation": 4,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 60,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+60 de Maestria da equipe por 12 s depois do Supremo: ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Yumemizuki Mizuki",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "a4",
+        "label": "Mizuki A4",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 100,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+100 de Maestria por 4 s quando aliados acertam com outro elemento: ligue nas janelas."
+      },
+      {
+        "id": "c2",
+        "label": "Mizuki C2",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": false,
+        "resShred": {
+          "value": 0.2,
+          "elements": [
+            "Pyro",
+            "Hydro",
+            "Cryo",
+            "Electro",
+            "Anemo"
+          ]
+        },
+        "note": "Assume a redução de RES (Pyro, Hydro, Cryo, Electro e Anemo) durante o Dreamdrifter sempre ativa. O bônus de DMG por Maestria não entra."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Varesa",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "a4",
+        "label": "Varesa A4",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0.7,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "Assume 2 stacks (+70% de ATK) depois de Nightsoul Burst: ligue nas janelas."
+      },
+      {
+        "id": "c4",
+        "label": "Varesa C4",
+        "minConstellation": 4,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {
+            "burst": 1
+          }
+        },
+        "note": "+100% de DMG do Supremo com Fiery Passion ou Apex Drive ativo: ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Ifa",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "a4",
+        "label": "Ifa A4",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 80,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+80 de Maestria por 10 s depois de um Nightsoul Burst: ligue nas janelas."
+      },
+      {
+        "id": "c4",
+        "label": "Ifa C4",
+        "minConstellation": 4,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 100,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+100 de Maestria por 15 s depois do Supremo: ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Skirk",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "c2",
+        "label": "Skirk C2",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0.7,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+70% de ATK por 12,5 s depois do Havoc: Extinction no modo Sete Fases: ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Flins",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "c4",
+        "label": "Flins C4",
+        "minConstellation": 4,
+        "scope": "self",
+        "timed": false,
+        "stats": {
+          "atkPct": 0.2,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+20% de ATK, sempre. O aumento da Maestria por ATK não entra."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Aino",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "c1",
+        "label": "Aino C1",
+        "minConstellation": 1,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 80,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+80 de Maestria dela e do personagem em campo por 15 s depois da habilidade ou Supremo: ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Nefer",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "a1",
+        "label": "Nefer A1",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 100,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+100 de Maestria por 8 s com 3 stacks de Véu da Falsidade (Ascendant Gleam): ligue nas janelas."
+      },
+      {
+        "id": "c4",
+        "label": "Nefer C4",
+        "minConstellation": 4,
+        "scope": "self",
+        "timed": false,
+        "resShred": {
+          "value": 0.2,
+          "elements": [
+            "Dendro"
+          ]
+        },
+        "note": "Assume a redução de RES Dendro durante o Shadow Dance sempre ativa."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Durin",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "a1",
+        "label": "Durin A1",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "resShred": {
+          "value": 0.2,
+          "elements": [
+            "Pyro"
+          ]
+        },
+        "note": "Assume a redução de RES Pyro (forma Dragão da Chama Branca) sempre ativa. A do elemento da reação não entra."
+      },
+      {
+        "id": "c2",
+        "label": "Durin C2",
+        "minConstellation": 2,
+        "scope": "team",
+        "timed": true,
+        "forElements": [
+          "Pyro"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.5,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+50% de DMG Pyro por 6 s depois de uma reação: ligue nas janelas. O bônus do elemento da reação não entra."
+      },
+      {
+        "id": "c4",
+        "label": "Durin C4",
+        "minConstellation": 4,
+        "scope": "self",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {
+            "burst": 0.4
+          }
+        },
+        "note": "+40% de DMG do Supremo, sempre."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Jahoda",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "a4",
+        "label": "Jahoda A4",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 100,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+100 de Maestria do personagem curado (HP acima de 70%) por 6 s: ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Columbina",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "a1",
+        "label": "Columbina A1",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0.15,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "Assume 3 stacks (+15% de Taxa Crítica) por 10 s: ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Illuga",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "a1",
+        "label": "Illuga A1",
+        "minConstellation": 0,
+        "scope": "others",
+        "timed": true,
+        "forElements": [
+          "Geo"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0.05,
+          "critDmg": 0.1,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+5% de Taxa e +10% de Dano Crítico Geo dos demais por 20 s depois da habilidade ou Supremo: ligue nas janelas. Só personagens Geo recebem."
+      },
+      {
+        "id": "c6",
+        "label": "Illuga C6 (diferença)",
+        "minConstellation": 6,
+        "scope": "others",
+        "timed": true,
+        "forElements": [
+          "Geo"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0.05,
+          "critDmg": 0.2,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "A C6 troca o bônus da A1 por +10% de Taxa e +30% de Dano Crítico; este buff soma só a diferença (+5% e +20%) sobre o da A1. Ligue nas mesmas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Varka",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "a4",
+        "label": "Varka A4",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {
+            "normal": 0.3,
+            "charged": 0.3
+          }
+        },
+        "note": "Assume 4 stacks (+30% de DMG de Normal/Carregado): ligue nas janelas."
+      },
+      {
+        "id": "c4",
+        "label": "Varka C4",
+        "minConstellation": 4,
+        "scope": "team",
+        "timed": true,
+        "forElements": [
+          "Anemo"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.2,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+20% de DMG Anemo por 10 s depois de um Espalhar: ligue nas janelas. O bônus do elemento absorvido não entra."
+      },
+      {
+        "id": "c6",
+        "label": "Varka C6",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0.8,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "Assume 4 stacks de Azure Fang's Oath (+80% de Dano Crítico): ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Lohen",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "a4",
+        "label": "Lohen A4 (própria)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0.15,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+15% de ATK por 8 s depois de aliado causar reação Cryo: ligue nas janelas."
+      },
+      {
+        "id": "a4o",
+        "label": "Lohen A4 (aliado)",
+        "minConstellation": 0,
+        "scope": "others",
+        "timed": true,
+        "stats": {
+          "atkPct": 0.15,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+15% de ATK do aliado que causou a reação Cryo por 8 s: ligue nas janelas."
+      },
+      {
+        "id": "c2",
+        "label": "Lohen C2",
+        "minConstellation": 2,
+        "scope": "others",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 200,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+200 de Maestria dos demais por 8 s depois do golpe da Lâmina do Mal: ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Aether (Anemo)",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "c6",
+        "label": "Viajante C6",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": false,
+        "resShred": {
+          "value": 0.2,
+          "elements": [
+            "Anemo"
+          ]
+        },
+        "note": "Assume a redução de RES Anemo do Gust Surge sempre ativa. A do elemento absorvido não entra."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Aether (Geo)",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "c1",
+        "label": "Viajante C1",
+        "minConstellation": 1,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0.1,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+10% de Taxa Crítica da equipe dentro do raio de Wake of Earth: ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Aether (Electro)",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "c2",
+        "label": "Viajante C2",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": false,
+        "resShred": {
+          "value": 0.15,
+          "elements": [
+            "Electro"
+          ]
+        },
+        "note": "Assume a redução de RES Electro (8 s) sempre ativa."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Aether (Dendro)",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "a1",
+        "label": "Viajante A1",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 60,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "Assume 10 níveis de Luz de Lótus (+60 de Maestria) dentro da área da Lâmpada: ligue nas janelas."
+      },
+      {
+        "id": "c6",
+        "label": "Viajante C6",
+        "minConstellation": 6,
+        "scope": "team",
+        "timed": true,
+        "forElements": [
+          "Dendro"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.12,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+12% de DMG Dendro do personagem sob a Luz de Lótus: ligue nas janelas. O bônus extra do elemento transfigurado não entra."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Aether (Pyro)",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "c1",
+        "label": "Viajante C1",
+        "minConstellation": 1,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.06,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+6% de DMG do personagem em campo com o Limiar ativo: ligue nas janelas. Os +9% extras com Bênção Nightsoul não entram."
+      },
+      {
+        "id": "c4",
+        "label": "Viajante C4",
+        "minConstellation": 4,
+        "scope": "self",
+        "timed": true,
+        "forElements": [
+          "Pyro"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.2,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+20% de DMG Pyro por 9 s depois do Supremo: ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Lumine (Anemo)",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "c6",
+        "label": "Viajante C6",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": false,
+        "resShred": {
+          "value": 0.2,
+          "elements": [
+            "Anemo"
+          ]
+        },
+        "note": "Assume a redução de RES Anemo do Gust Surge sempre ativa. A do elemento absorvido não entra."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Lumine (Geo)",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "c1",
+        "label": "Viajante C1",
+        "minConstellation": 1,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0.1,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+10% de Taxa Crítica da equipe dentro do raio de Wake of Earth: ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Lumine (Electro)",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "c2",
+        "label": "Viajante C2",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": false,
+        "resShred": {
+          "value": 0.15,
+          "elements": [
+            "Electro"
+          ]
+        },
+        "note": "Assume a redução de RES Electro (8 s) sempre ativa."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Lumine (Dendro)",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "a1",
+        "label": "Viajante A1",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 60,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "Assume 10 níveis de Luz de Lótus (+60 de Maestria) dentro da área da Lâmpada: ligue nas janelas."
+      },
+      {
+        "id": "c6",
+        "label": "Viajante C6",
+        "minConstellation": 6,
+        "scope": "team",
+        "timed": true,
+        "forElements": [
+          "Dendro"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.12,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+12% de DMG Dendro do personagem sob a Luz de Lótus: ligue nas janelas. O bônus extra do elemento transfigurado não entra."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Lumine (Pyro)",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "c1",
+        "label": "Viajante C1",
+        "minConstellation": 1,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.06,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+6% de DMG do personagem em campo com o Limiar ativo: ligue nas janelas. Os +9% extras com Bênção Nightsoul não entram."
+      },
+      {
+        "id": "c4",
+        "label": "Viajante C4",
+        "minConstellation": 4,
+        "scope": "self",
+        "timed": true,
+        "forElements": [
+          "Pyro"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.2,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+20% de DMG Pyro por 9 s depois do Supremo: ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Linnea",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "a1",
+        "label": "Linnea A1",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "resShred": {
+          "value": 0.15,
+          "elements": [
+            "Geo"
+          ]
+        },
+        "note": "Assume a redução de RES Geo perto da Lumi sempre ativa. A redução extra do Moonsign Ascendant Gleam não entra."
+      },
+      {
+        "id": "c2",
+        "label": "Linnea C2",
+        "minConstellation": 2,
+        "scope": "team",
+        "timed": true,
+        "forElements": [
+          "Hydro",
+          "Geo"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0.4,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+40% de Dano Crítico de Hydro e Geo por 8 s depois do Moondrift Harmony: ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Prune",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "c2",
+        "label": "Prune C2",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0.4,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "Assume o teto de +40% de ATK durante o Supremo: ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Mitya",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "c1",
+        "label": "Mitya C1",
+        "minConstellation": 1,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0.4,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+40% de Dano Crítico do personagem em campo com o Núcleo de Detecção presente: ligue nas janelas."
+      },
+      {
+        "id": "c2res",
+        "label": "Mitya C2 (RES)",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": false,
+        "resShred": {
+          "value": 0.2,
+          "elements": [
+            "Cryo",
+            "Electro"
+          ]
+        },
+        "note": "Assume a redução de RES Cryo e Electro no Campo Polar sempre ativa."
+      },
+      {
+        "id": "c2em",
+        "label": "Mitya C2 (Maestria)",
+        "minConstellation": 2,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 123,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+123 de Maestria da equipe com o Núcleo em Estado Estável: ligue nas janelas. No estado Sobrecarregado seria +234 só para o personagem em campo."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Valeriy",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "c2",
+        "label": "Valeriy C2",
+        "minConstellation": 2,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 100,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+100 de Maestria da equipe por 18 s depois da habilidade: ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Vodyanitsa",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "a1",
+        "label": "Vodyanitsa A1",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "resShred": {
+          "value": 0.35,
+          "elements": [
+            "Anemo"
+          ]
+        },
+        "note": "Assume a redução de RES Anemo (6 s) sempre ativa."
+      },
+      {
+        "id": "c2",
+        "label": "Vodyanitsa C2",
+        "minConstellation": 2,
+        "scope": "team",
+        "timed": true,
+        "forElements": [
+          "Hydro",
+          "Cryo"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0.5,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+50% de Dano Crítico Hydro/Cryo por 5 s: ligue nas janelas. Até a C5 vale só para o personagem em campo; a C6 estende a todos."
+      },
+      {
+        "id": "c6",
+        "label": "Vodyanitsa C6",
+        "minConstellation": 6,
+        "scope": "team",
+        "timed": true,
+        "forElements": [
+          "Hydro",
+          "Cryo"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.6,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+60% de DMG Hydro/Cryo da equipe enquanto a Canção das Eras Passadas estiver ativa: ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Vesna",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "c2",
+        "label": "Vesna C2",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0.4,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "note": "+40% de ATK com o máximo de stacks de Ação Disciplinar (modo Armed for Action): ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   }
 ]

@@ -351,6 +351,17 @@ export function applyTeamRules(members: MemberInput[]): MemberInput[] {
   });
 }
 
+/** Aplica o nível do talento da fonte ao coeficiente dos efeitos de dano fixo do kit (`FlatDamageEffect.level`). */
+export function applyFlatLevels(flat: FlatDamageEffect[], members: MemberInput[]): FlatDamageEffect[] {
+  return flat.map((e) => {
+    if (!e.level) return e;
+    const source = members.find((m) => m.character.name === e.source);
+    if (!source) return e;
+    const k = e.level.table[Math.min(15, Math.max(1, Math.round(source.talents[e.level.talent]))) - 1] ?? 0;
+    return { ...e, perPoint: e.perPoint * k, ...(e.capPerHit !== undefined ? { capPerHit: e.capPerHit * k } : {}) };
+  });
+}
+
 /** Transforma o projeto salvo nas entradas do motor. Lança ProjectResolveError se algo não existir nos dados. */
 export function resolveProject(project: RotationProject, data: GameData, effects: EffectsData): ResolvedProject {
   const members = applyTeamRules(project.members.map((m) => resolveMember(m, data, effects, project.config.minRollsPerSubstat)));
@@ -378,7 +389,7 @@ export function resolveProject(project: RotationProject, data: GameData, effects
   return {
     team: { members, extras: project.extras, config, disabled: project.disabled },
     actions,
-    flatEffects: effects.flatDamage,
+    flatEffects: applyFlatLevels(effects.flatDamage, members),
     ampCoefficient: project.compat === 'planilha' ? AMP_EM_COEFFICIENT_SHEET : undefined,
   };
 }

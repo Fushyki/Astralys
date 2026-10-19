@@ -215,6 +215,8 @@ export const FlatDamageEffectSchema = z.object({
   hitTypes: z.array(HitTypeSchema),
   /** Quantos hits consomem o buff (undefined = ilimitado). Consumidos pelos primeiros hits elegíveis. */
   stacks: z.number().int().positive().optional(),
+  /** Efeito do kit: `perPoint` é multiplicado por `table[nível do talento da fonte - 1]` ao montar o projeto. */
+  level: BuffLevelSchema.optional(),
   active: z.boolean(),
   fonte_info: FonteInfo,
 });

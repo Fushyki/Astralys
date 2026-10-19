@@ -144,6 +144,8 @@ export const RotationProjectSchema = z
     actions: z.array(ActionSchema).default([]),
     /** Janelas de buff no tempo; dão as etiquetas das ações com `tagSource: 'windows'`. */
     buffWindows: z.array(BuffWindowSchema).default([]),
+    /** Ids de buffs/fontes desligados pelo usuário (checkbox em "Buffs recebidos"). */
+    disabled: z.array(z.string()).default([]),
     /** Perfis nomeados (conjuntos de etiquetas), úteis para aplicar rápido a várias ações. */
     profiles: z.record(z.array(z.string())).default({}),
     meta: z
@@ -151,8 +153,10 @@ export const RotationProjectSchema = z
         author: z.string().optional(),
         patch: z.string().optional(),
         tags: z.array(z.string()).default([]),
-        /** Textos do card infográfico (título, selo de investimento e etiqueta de versão). */
-        card: z.object({ title: z.string().max(60), badge: z.string().max(40), tag: z.string().max(40) }).partial().optional(),
+        /** Marcado no Vault como favorito ("Salvar no Vault"). */
+        favorite: z.boolean().optional(),
+        /** Textos e cor do card (título, selo, etiqueta de versão, apelido do autor e cor de destaque). */
+        card: z.object({ title: z.string().max(60), badge: z.string().max(40), tag: z.string().max(40), nick: z.string().max(30), accent: z.string().regex(/^#[0-9a-fA-F]{6}$/) }).partial().optional(),
         /** Calculadora de recarga: partículas de inimigos e a configuração de cada personagem (pelo nome). */
         energy: z
           .object({
@@ -334,7 +338,7 @@ export function resolveProject(project: RotationProject, data: GameData, effects
   });
 
   return {
-    team: { members, extras: project.extras, config },
+    team: { members, extras: project.extras, config, disabled: project.disabled },
     actions,
     flatEffects: effects.flatDamage,
     ampCoefficient: project.compat === 'planilha' ? AMP_EM_COEFFICIENT_SHEET : undefined,

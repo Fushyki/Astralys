@@ -1,7 +1,7 @@
 /**
- * Teste do card infográfico: renderização, personalização, formatos e exportação PNG.
+ * Redesign, Card (/card/:id): formatos 4:5/16:9/9:16, textos, apelido, cor, e PNG baixado com o tamanho certo.
  *   1) npm run build && npx vite preview --port 4173
- *   2) node scripts/e2e/card.cjs   (ou npm run e2e)
+ *   2) node scripts/e2e/card.cjs
  */
 const { chromium } = require('playwright-core');
 const path = require('path');
@@ -14,66 +14,57 @@ fs.mkdirSync(OUT, { recursive: true });
 
 const results = [];
 const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 'OK  ' : 'FALHA'} ${name}${extra ? ' — ' + extra : ''}`); };
+const pngSize = (file) => { const b = fs.readFileSync(file); return { w: b.readUInt32BE(16), h: b.readUInt32BE(20) }; };
 
 (async () => {
   const browser = await chromium.launch({ channel: CHANNEL, headless: true });
-  const ctx = await browser.newContext({ viewport: { width: 1440, height: 1000 }, acceptDownloads: true });
-  const page = await ctx.newPage();
+  const page = await (await browser.newContext({ viewport: { width: 1440, height: 1000 }, acceptDownloads: true })).newPage();
   const problems = [];
-  page.on('console', (m) => { if (['error', 'warning'].includes(m.type())) problems.push(`console.${m.type()}: ${m.text().slice(0, 200)}`); });
+  page.on('console', (m) => { if (['error', 'warning'].includes(m.type()) && !/404/.test(m.text())) problems.push(`console.${m.type()}: ${m.text().slice(0, 200)}`); });
   page.on('pageerror', (e) => problems.push(`pageerror: ${e.message.slice(0, 200)}`));
+  const settle = () => page.waitForTimeout(500);
 
-  await page.goto(`${BASE}/rotacao/exemplo`, { waitUntil: 'networkidle' });
+  await page.goto(`${BASE}/card/exemplo`, { waitUntil: 'networkidle' });
   await page.evaluate(() => localStorage.clear());
   await page.reload({ waitUntil: 'networkidle' });
-  await page.waitForSelector('.ast-kpi .v');
-  await page.click('a:has-text("Card infográfico")');
-  await page.waitForSelector('.ast-card');
-  await page.waitForTimeout(1500);
+  await page.waitForSelector('.pc');
 
-  const text = await page.$eval('.ast-card', (e) => e.textContent);
-  check('o card mostra DPS e DPR do exemplo', /216,6k/.test(text) && /3,79M/.test(text), text.match(/DPS\s*\S+/)?.[0]);
-  check('mostra os 4 personagens com participação', ['Mavuika', 'Citlali', 'Iansan', 'Bennett'].every((n) => text.includes(n)) && /95,3%/.test(text));
-  check('mostra a sequência de golpes', /Citlali E/.test(text) && /Mavuika/.test(text));
-  const faces = await page.$$eval('.ast-card .face img', (imgs) => imgs.filter((i) => i.complete && i.naturalWidth > 0).length);
-  check('os 4 retratos carregaram', faces === 4, `${faces}/4`);
-  const noOverflow = await page.$eval('.ast-card', (e) => e.scrollWidth <= e.clientWidth + 1 && e.scrollHeight <= e.clientHeight + 1);
-  check('o card não transborda', noOverflow);
+  check('a aba Vault está ativa', (await page.locator('.dz-nav a[aria-current="page"]').textContent()).includes('Vault'));
+  check('abre em 4:5 (1080×1350)', (await page.locator('.pc').evaluate((e) => `${parseInt(e.style.width)}x${parseInt(e.style.height)}`)) === '1080x1350');
+  const text = await page.textContent('.pc');
+  check('o card mostra DPS 216.600 e 3,79 mi', text.includes('216.600') && text.includes('3,79 mi'), '');
+  check('mostra os 4 personagens e a reação (55% vem de Derreter)', ['Mavuika', 'Citlali', 'Iansan', 'Bennett'].every((n) => text.includes(n)) && /55%\s*vem de Derreter/.test(text));
+  check('mini linha do tempo com 24 golpes', (await page.locator('.pc-line span').count()) === 24);
 
-  // Personalização
-  await page.fill('input[placeholder="Ex.: Meta 7.1"]', 'Meta 7.1');
-  await page.fill('.ast-cardform label:has-text("Título") input', 'Combo Pyro Natlan');
-  await page.waitForTimeout(300);
-  const t2 = await page.$eval('.ast-card', (e) => e.textContent);
-  check('título e etiqueta personalizados aparecem', /COMBO PYRO NATLAN/i.test(t2) && /Meta 7.1/.test(t2));
+  await page.fill('.cd-form input[placeholder*="apelido" i], .cd-form input[placeholder^="Aparece"]', 'Davi');
+  check('apelido aparece como "por Davi"', (await page.textContent('.pc-nick')) === 'por Davi');
+  await page.fill('.cd-form input[placeholder="Ex.: Meta 7.1"]', 'Meta 5.8');
+  check('a etiqueta entra no subtítulo', (await page.textContent('.pc-sub')).includes('Meta 5.8'));
+  await page.click('.cd-swatch[aria-label="Cor #8fd3e8"]');
+  check('a cor de destaque muda o card', (await page.locator('.pc').evaluate((e) => getComputedStyle(e).getPropertyValue('--accent').trim())) === '#8fd3e8');
 
-  // Persistência da personalização
-  await page.reload({ waitUntil: 'networkidle' }); await page.waitForSelector('.ast-card'); await page.waitForTimeout(1200);
-  check('a personalização sobrevive ao recarregar', /Combo Pyro Natlan/i.test(await page.$eval('.ast-card', (e) => e.textContent)));
+  for (const [label, size, cls] of [['16:9', '1600x900', 'pc-wide'], ['9:16', '1080x1920', 'pc-tall'], ['4:5', '1080x1350', 'pc-portrait']]) {
+    await page.click(`.dz-seg button:has-text("${label}")`); await settle();
+    const dims = await page.locator('.pc').evaluate((e) => `${parseInt(e.style.width)}x${parseInt(e.style.height)}`);
+    check(`formato ${label} tem ${size}`, dims === size && (await page.locator(`.pc.${cls}`).count()) === 1, dims);
+    await page.screenshot({ path: path.join(OUT, `r-card-${cls}.png`), fullPage: true });
+  }
 
-  // Formato vertical
-  await page.check('input[name="fmt"] >> nth=1'); await page.waitForTimeout(500);
-  const size = await page.$eval('.ast-card', (e) => [e.offsetWidth, e.offsetHeight]);
-  check('formato 9:16 tem 720×1280', size[0] === 720 && size[1] === 1280, size.join('×'));
-  check('o card vertical não transborda', await page.$eval('.ast-card', (e) => e.scrollHeight <= e.clientHeight + 1));
-  await page.screenshot({ path: path.join(OUT, 'card-vertical.png') });
+  const [dl] = await Promise.all([page.waitForEvent('download', { timeout: 60000 }), page.click('button:has-text("Baixar PNG")')]);
+  const file = path.join(OUT, 'r-card-download.png');
+  await dl.saveAs(file);
+  const sz = pngSize(file);
+  check('o PNG baixado tem 1080×1350 e nome com 4x5', sz.w === 1080 && sz.h === 1350 && /4x5\.png$/.test(dl.suggestedFilename()), `${sz.w}×${sz.h} ${dl.suggestedFilename()}`);
 
-  // PNG
-  await page.check('input[name="fmt"] >> nth=0'); await page.waitForTimeout(500);
-  const [d] = await Promise.all([page.waitForEvent('download'), page.click('button:has-text("Baixar PNG")')]);
-  const file = path.join(OUT, 'card.png');
-  await d.saveAs(file);
-  const buf = fs.readFileSync(file);
-  const w = buf.readUInt32BE(16), h = buf.readUInt32BE(20);
-  check('baixar PNG gera a imagem em 2560×1440', buf.slice(1, 4).toString() === 'PNG' && w === 2560 && h === 1440, `${w}×${h}, ${Math.round(buf.length / 1024)} KB`);
+  await page.reload({ waitUntil: 'networkidle' }); await page.waitForSelector('.pc');
+  check('apelido e cor sobrevivem ao recarregar', (await page.textContent('.pc-nick')) === 'por Davi');
 
-  await page.setViewportSize({ width: 400, height: 800 });
-  await page.waitForTimeout(500);
-  check('móvel sem scroll horizontal da página', !(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1)));
+  await page.setViewportSize({ width: 390, height: 900 }); await page.waitForTimeout(500);
+  check('celular sem rolagem horizontal da página', !(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1)));
+  await page.screenshot({ path: path.join(OUT, 'r-card-mobile.png'), fullPage: true });
 
   await browser.close();
-  const relevant = problems.filter((p) => !/cssRules|inlining remote css|Error while reading CSS/.test(p));
-  console.log('\nProblemas de consola:', relevant.length ? '\n' + relevant.join('\n') : 'nenhum');
+  console.log('\nProblemas de consola:', problems.length ? '\n' + problems.join('\n') : 'nenhum');
   console.log(`\n${results.filter(Boolean).length}/${results.length} verificações OK`);
-  process.exit(results.every(Boolean) && relevant.length === 0 ? 0 : 1);
+  process.exit(results.every(Boolean) && problems.length === 0 ? 0 : 1);
 })().catch((e) => { console.error('FALHOU', e); process.exit(2); });

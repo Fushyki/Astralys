@@ -4,6 +4,8 @@
  */
 import type { Character } from '../../data/schema';
 import type { AnalysisBundle, ResolvedProject, RotationProject } from '../../engine';
+import { memberColors } from '../../design/elements';
+import { mainReaction } from '../team/teamModel';
 
 export interface CardMember {
   name: string;
@@ -21,6 +23,18 @@ export interface CardMember {
   er: number;
   critRate: number;
   critDmg: number;
+  /** Cor do membro no card (variação escura para o segundo do mesmo elemento). */
+  color: string;
+}
+
+/** Um golpe na mini linha do tempo do card. */
+export interface CardHit {
+  /** Posição na rotação, de 0 a 1. */
+  at: number;
+  member: number;
+  /** Tamanho relativo ao maior golpe (0 a 1). */
+  weight: number;
+  burst: boolean;
 }
 
 export interface CardModel {
@@ -34,9 +48,17 @@ export interface CardModel {
   /** Sequência compacta, ex.: "Citlali E Q · Mavuika E CA×3 Q". */
   sequence: string;
   enemyLevel: number;
+  nick: string;
+  accent: string;
+  characterLevel: number;
+  /** Reação que mais rende dano (ex.: Derreter) e a fração do dano que ela responde. */
+  reaction: { name: string; fraction: number } | null;
+  timeline: CardHit[];
 }
 
 export const DEFAULT_BADGE = 'Theorycraft';
+export const DEFAULT_ACCENT = '#e9c46a';
+export const ACCENTS = ['#e9c46a', '#f08a5d', '#8fd3e8', '#c49cf2'];
 
 const MAIN_ABBR: Record<string, string> = {
   'ATK%': 'ATK', 'HP%': 'HP', 'DEF%': 'DEF', 'DMG%': 'DMG', Healing: 'HB', EM: 'EM', ER: 'ER', CR: 'CR', CD: 'CD',
@@ -80,6 +102,7 @@ export function buildCardModel(
   hitTypeOf: (a: RotationProject['actions'][number]) => keyof typeof HIT_LETTER,
 ): CardModel {
   const result = bundle.optimization.result;
+  const colors = memberColors(project.members.map((m) => characters.find((x) => x.name === m.character)?.element));
   const members: CardMember[] = project.members.map((m, i) => {
     const c = characters.find((x) => x.name === m.character);
     const stats = bundle.memberStats[i];
@@ -96,9 +119,18 @@ export function buildCardModel(
       er: stats?.er ?? 1,
       critRate: stats?.critRate ?? 0,
       critDmg: stats?.critDmg ?? 0,
+      color: colors[i],
     };
   });
   const card = project.meta.card ?? {};
+  const duration = Math.max(project.config.rotationDuration, 0.1);
+  const biggest = Math.max(1, ...result.actions.map((a) => a.avg));
+  const timeline: CardHit[] = result.actions.map((a) => ({
+    at: Math.min(1, Math.max(0, (a.action.time ?? 0) / duration)),
+    member: a.action.member,
+    weight: a.avg / biggest,
+    burst: a.action.move.hitType === 'burst',
+  }));
   return {
     title: card.title?.trim() || project.name,
     badge: card.badge?.trim() ?? DEFAULT_BADGE,
@@ -109,6 +141,11 @@ export function buildCardModel(
     duration: project.config.rotationDuration,
     sequence: sequenceText(project, hitTypeOf),
     enemyLevel: project.config.enemyLevel,
+    nick: card.nick?.trim() ?? '',
+    accent: card.accent ?? DEFAULT_ACCENT,
+    characterLevel: project.config.characterLevel,
+    reaction: mainReaction(bundle),
+    timeline,
   };
 }
 

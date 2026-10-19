@@ -1,0 +1,6 @@
+/* Página inicial. */
+.in-hero { display: flex; flex-direction: column; gap: 18px; max-width: 760px; padding-top: 24px; }
+.in-hero .lead { margin: 0; font-size: 18px; color: var(--text-2); line-height: 1.5; }
+.in-hero .actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.in-features { list-style: none; margin: 0; padding: 0; }
+.in-features p { margin: 8px 0 0; color: var(--text-2); font-size: 14px; line-height: 1.5; }

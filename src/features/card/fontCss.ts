@@ -3,7 +3,7 @@
  * do Google Fonts por causa do CORS, e sem isso a imagem exportada sairia com a fonte padrão do navegador.
  */
 const FONTS_URL =
-  'https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap';
+  'https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap';
 
 let cached: Promise<string> | null = null;
 

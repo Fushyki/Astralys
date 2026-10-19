@@ -70,3 +70,29 @@ describe('modelo do card infográfico', () => {
     expect(m.tag).toBe('');
   });
 });
+
+describe('modelo do card para compartilhar', () => {
+  const m = model();
+
+  it('mini linha do tempo: um ponto por golpe, de 0 a 1, com 4 Supremos marcados e o maior com peso 1', () => {
+    expect(m.timeline).toHaveLength(24);
+    expect(m.timeline.every((h) => h.at >= 0 && h.at <= 1 && h.weight > 0 && h.weight <= 1)).toBe(true);
+    expect(m.timeline.filter((h) => h.burst).length).toBeGreaterThanOrEqual(4);
+    expect(Math.max(...m.timeline.map((h) => h.weight))).toBe(1);
+  });
+
+  it('reação principal, cor de destaque padrão e cores por membro (o 2º Pyro é mais escuro)', () => {
+    expect(m.reaction?.name).toBe('Derreter');
+    expect(m.reaction?.fraction).toBeCloseTo(0.553, 2);
+    expect(m.accent).toBe('#e9c46a');
+    expect(m.nick).toBe('');
+    expect(m.members[0].color).toBe('#f08a5d');
+    expect(m.members[3].color).not.toBe(m.members[0].color);
+  });
+
+  it('apelido e cor vêm das preferências do projeto', () => {
+    const c = model((p) => { p.meta.card = { nick: ' Davi ', accent: '#8fd3e8' }; });
+    expect(c.nick).toBe('Davi');
+    expect(c.accent).toBe('#8fd3e8');
+  });
+});

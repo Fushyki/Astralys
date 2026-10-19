@@ -21,3 +21,20 @@ caminho mais seguro e anotei aqui para você revisar. Nada foi mesclado no `main
 | 14 | Busca de build no inventário | Heurística (subida por trocas), não exaustiva: ótima não é garantida; os outros personagens ficam com os rolls atuais (não são reotimizados). Se tiver um inventário grande real, teste e diga se os resultados fazem sentido | `src/features/good/loadoutSearch.ts` |
 
 (Novas entradas são acrescentadas abaixo conforme surgirem.)
+
+## Redesign (branch `v2/redesign`)
+
+| # | Decisão | O que fiz por enquanto | Onde mudar |
+|---|---------|------------------------|-----------|
+| 15 | Números dos mockups são ilustrativos | Nenhum número do mockup foi copiado: janelas de buff, curva acumulada, cascata do golpe e valor de cada buff vêm do motor (ex.: o Supremo da Mavuika tem base 79.724,66, não 79.403; a linha do tempo real tem 6 faixas de buff, não 7). O DPS 216.600 e o DPR 3.790.496 aparecem em todas as telas onde existem | — |
+| 16 | "Exportar GOOD" (mockup da Equipe) | GOOD é o formato de **inventário** do Genshin Optimizer; o Astralys só o importa. O botão exporta o projeto do Astralys (.astralys.json) e se chama "Exportar". Se quiser exportar um GOOD de verdade, é preciso definir o que entra (artefatos otimizados viram peças com rolls fracionários) | `screens/Equipe.tsx` |
+| 17 | "Reotimizar / Manter build" (mockup de Armas) | **Não implementei.** Não ficou claro o que "manter build" faz no motor (congelar os rolls calculados como manuais?). Hoje a comparação sempre reotimiza os substats para cada arma | `screens/Armas.tsx`, `useWeaponCompare.ts` |
+| 18 | Filtro por patch no Vault | Os projetos não guardam o patch do jogo; filtro por nome, personagem, elemento e favoritos | `features/vault/vaultModel.ts` |
+| 19 | "Salvar no Vault" | Todo projeto já vive no Vault; o botão marca como favorito (favoritos vêm primeiro) e leva ao Vault | `app/ProjectLayout.tsx` |
+| 20 | Recarga avulsa (`/recarga`) | Time próprio, sem projeto nem rotação, guardado em `astralys.recarga-livre` (não aparece no Vault). Dentro do projeto, "Preencher com a rotação" copia usos de habilidade e Supremo; "Usar como ER mínimo" grava no build | `screens/RecargaLivre.tsx`, `screens/Recarga.tsx` |
+| 21 | Desligar um buff na tela do personagem | Extensão do motor: `RotationProject.disabled` (ids de fontes) entra em `assembleTeam`. O gabarito da planilha não muda (lista vazia) | `engine/team.ts` |
+| 22 | Janelas de buff do exemplo | O exemplo abre com janelas (uma por trecho contínuo de golpes com a etiqueta) e reproduz exatamente 216.600 / 3.790.496. O projeto `sampleProject()` com etiquetas manuais continua nos testes | `projectOps.windowsFromProfiles` |
+| 23 | Card | 4:5 (1080×1350) é o padrão, 16:9 (1600×900) e 9:16 (1080×1920) mantidos. Cor de destaque limitada a 4 (dourado, Pyro, Cryo, Electro) e apelido guardado no projeto (`meta.card.nick`) | `screens/card/` |
+| 24 | Ícone do Viajante | O Lunaris não tem imagem dele (404 em `UI_Gacha_AvatarIcon_PlayerBoy/Girl`); o avatar cai na inicial | `design/primitives.tsx` |
+| 25 | Home | Não existe mockup da home; refiz com o mesmo visual (texto e 3 atalhos). Diga se quer outra coisa | `screens/Inicio.tsx` |
+| 26 | Tailwind | Não usei: CSS próprio com variáveis (`src/design`), como combinado | — |

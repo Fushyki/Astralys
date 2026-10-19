@@ -1,0 +1,9 @@
+/* Tela Comparar. */
+.cp-pick { display: flex; flex-wrap: wrap; gap: 16px; align-items: end; }
+.cp-pick .dz-field { width: 320px; max-width: 100%; }
+.cp-verdict { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 26px; color: var(--gold); }
+.cp-scroll { overflow-x: auto; }
+.cp-members { min-width: 760px; }
+.cp-members td.build { text-align: left; font-size: 13px; color: var(--text-2); }
+.chg.up { color: var(--ok, #9bdb5a); font-weight: 600; }
+.chg.down { color: var(--warn); font-weight: 600; }

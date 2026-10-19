@@ -115,21 +115,25 @@ describe('ações que seguem as janelas', () => {
 });
 
 describe('converter perfis em janelas', () => {
-  it('cria uma janela por etiqueta e passa todas as ações para o modo janelas', () => {
+  it('cria janelas por trecho de golpes seguidos e passa todas as ações para o modo janelas', () => {
     const p = ops.windowsFromProfiles(sampleProject());
     expect(p.actions.every((a) => a.tagSource === 'windows')).toBe(true);
-    const tags = p.buffWindows.map((w) => w.tag);
-    expect(new Set(tags).size).toBe(tags.length);
-    expect(tags).toEqual(expect.arrayContaining(['char:3', 'gear:3', 'label:Scroll', 'label:TTDS']));
+    const tags = new Set(p.buffWindows.map((w) => w.tag));
+    expect([...tags]).toEqual(expect.arrayContaining(['char:3', 'gear:3', 'label:Scroll', 'label:TTDS']));
+    expect(p.buffWindows.length).toBeGreaterThanOrEqual(tags.size);
   });
 
-  it('cada janela cobre todos os golpes que antes usavam aquela etiqueta', () => {
+  it('cada golpe fica com EXATAMENTE as mesmas etiquetas de antes (nem a mais, nem a menos)', () => {
     const src = sampleProject();
     const p = ops.windowsFromProfiles(src);
     for (const a of src.actions) {
-      const now = tagsAt(p.buffWindows, a.time);
-      for (const tag of a.activeTags) expect(now, `${a.id} perdeu ${tag}`).toContain(tag);
+      expect([...tagsAt(p.buffWindows, a.time)].sort(), `golpe ${a.id}`).toEqual([...a.activeTags].sort());
     }
+  });
+
+  it('por isso o dano e o DPS continuam os da planilha (3.790.496 e 216.600)', () => {
+    const p = ops.windowsFromProfiles(sampleProject());
+    expect(total(p)).toBeCloseTo(3790496.07, 1);
   });
 
   it('é idempotente e o projeto continua válido e calculável', () => {

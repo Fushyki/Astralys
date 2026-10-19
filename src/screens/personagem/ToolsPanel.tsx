@@ -3,6 +3,9 @@ import { useEffect, useRef, useState } from 'react';
 import type { ProjectView } from '../../app/ProjectContext';
 import { Panel, Segmented } from '../../design/primitives';
 import { SUBSTATS, type Substat } from '../../engine';
+import { enkaToGood, mergeGood } from '../../features/enka/enkaImport';
+import { fetchEnka, UID_PATTERN } from '../../online/enka';
+import { ONLINE_ENABLED } from '../../online/config';
 import { buildFromGood, goodCharacterNames, parseGood, type Good } from '../../features/good/goodImport';
 import { clearGood, loadGood, saveGood } from '../../features/good/goodStore';
 import { searchBestLoadout, weightsFromGains, type SearchResult } from '../../features/good/loadoutSearch';
@@ -172,6 +175,45 @@ function GoodView({ v, index }: { v: ProjectView; index: number }) {
     }
   };
 
+  const [uid, setUid] = useState(() => {
+    try {
+      return localStorage.getItem('astralys.uid') ?? '';
+    } catch {
+      return '';
+    }
+  });
+  const [fetching, setFetching] = useState(false);
+  const fromGame = async () => {
+    setError(null);
+    setNotes([]);
+    setFetching(true);
+    try {
+      const enka = await fetchEnka(uid);
+      const r = enkaToGood(enka, v.data.game);
+      if (!r.characters.length) {
+        setError(r.notes[0] ?? 'Nenhum personagem importável na vitrine deste jogador.');
+        return;
+      }
+      const merged = mergeGood(loadGood(), r.good);
+      if (!saveGood(merged)) throw new Error('Não foi possível guardar o inventário: o armazenamento do navegador está cheio ou bloqueado.');
+      try {
+        localStorage.setItem('astralys.uid', uid.trim());
+      } catch {
+        /* sem armazenamento: o UID não fica lembrado */
+      }
+      setGood(merged);
+      setNotes([
+        `${r.nickname ? `${r.nickname} (UID ${r.uid})` : `UID ${r.uid}`}: ${r.characters.length} ${r.characters.length === 1 ? 'personagem importado' : 'personagens importados'} da vitrine (${r.characters.join(', ')}).`,
+        r.characters.includes(name) ? `${name} está na vitrine: use "Aplicar o build de ${name}".` : `${name} não está na vitrine deste jogador; coloque-o na vitrine do jogo para importar.`,
+        ...r.notes,
+      ]);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
+    } finally {
+      setFetching(false);
+    }
+  };
+
   const apply = () => {
     if (!good) return;
     try {
@@ -231,6 +273,15 @@ function GoodView({ v, index }: { v: ProjectView; index: number }) {
 
   return (
     <div className="pc-good">
+      {ONLINE_ENABLED && (
+        <div className="pc-uid">
+          <p className="note">Pelo UID do jogo: traz os personagens da sua vitrine (até 8), com arma e artefatos reais. É a mesma fonte do akasha.cv (Enka.Network). A vitrine precisa estar com os detalhes visíveis.</p>
+          <form className="pc-acts" onSubmit={(e) => { e.preventDefault(); void fromGame(); }}>
+            <input className="dz-input" inputMode="numeric" placeholder="UID (9 ou 10 números)" aria-label="UID do jogo" value={uid} onChange={(e) => setUid(e.target.value.replace(/\D/g, '').slice(0, 10))} />
+            <button type="submit" className="dz-btn sm" disabled={fetching || !UID_PATTERN.test(uid.trim())}>{fetching ? 'Buscando…' : 'Buscar pelo UID'}</button>
+          </form>
+        </div>
+      )}
       <p className="note">Importe o arquivo do Genshin Optimizer (Configurações, Baixar dados) para usar o build real dos seus personagens. O arquivo fica só no seu navegador.</p>
       <div className="pc-acts">
         <button type="button" className="dz-btn sm" onClick={() => input.current?.click()}>{good ? 'Trocar o inventário' : 'Importar inventário GOOD'}</button>

@@ -5,6 +5,7 @@
 import type { Element } from '../data/schema';
 import { weaponStatsAt } from '../effects/schema';
 import type { ResistanceMap } from './damage';
+import type { Rolls } from './artifacts';
 import {
   activeCharacterBuffs,
   addDelta,
@@ -19,6 +20,7 @@ import {
   activeTeamDelta,
   minimumRolls,
   type MemberInput,
+
   type StatBlock,
   type StatSource,
   type TeamBuff,
@@ -59,6 +61,8 @@ export interface TeamInput {
 export interface AssembleOptions {
   /** Ids a desligar: fontes estáticas (`m0:set4p`), buffs de time (`gear-0`, `extra-1`, `flat-atk-2`), `resonance-pyro`, `res-shred-<membro>`. */
   disabled?: ReadonlySet<string>;
+  /** Rolls totais de cada membro, para calcular as conversões de stat (padrão: os rolls mínimos). */
+  rolls?: readonly Rolls[];
 }
 
 export interface TeamAssembly {
@@ -71,6 +75,8 @@ export interface TeamAssembly {
   /** ATK de referência de cada membro (rolls mínimos, buffs de %, sem ATK fixo de time). */
   referenceAtk: number[];
   enemyRes: ResistanceMap;
+  /** Há conversões de stat: o valor delas depende dos rolls, então vale montar de novo com os rolls otimizados. */
+  hasDerived: boolean;
   warnings: string[];
 }
 
@@ -209,6 +215,44 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
     });
   });
 
+  // 5b) Conversões de stat (Kazuha A4, Raiden A4...): valor = coef × stat da fonte, sem contar as próprias conversões
+  const derivedStats = members.map((m, i) =>
+    finalStats(m, statics[i], options.rolls?.[i] ?? minRolls, activeTeamDelta(buffs, names[i], 'all'), resonanceAtkPct),
+  );
+  const highestEm = derivedStats.reduce((best, s, i) => (s.em > derivedStats[best].em ? i : best), 0);
+  let hasDerived = false;
+  members.forEach((m, i) => {
+    for (const b of activeCharacterBuffs(m)) {
+      const c = b.convert;
+      if (!c) continue;
+      hasDerived = true;
+      const id = `cbuff-${i}-${b.id}`;
+      if (off(id)) continue;
+      const srcIndex = c.source === 'highestEm' ? highestEm : i;
+      const s = derivedStats[srcIndex];
+      const stat = { atk: s.atk, hp: s.hp, def: s.def, em: s.em, er: s.er }[c.from];
+      const raw = (c.perPoint ?? 0) * Math.max(0, stat - (c.threshold ?? 0));
+      const value = c.cap !== undefined ? Math.min(raw, c.cap) : raw;
+      if (value <= 0) continue;
+      const targets = names.filter((_, j) => {
+        if (b.scope === 'self' && j !== i) return false;
+        if (b.scope === 'others' && j === i) return false;
+        return !b.forElements || b.forElements.includes(members[j].character.element);
+      });
+      if (targets.length === 0) continue;
+      const delta: StatDelta = { dmgByType: {} };
+      for (const to of c.to) {
+        if (to === 'atkFlat' || to === 'hpFlat' || to === 'defFlat' || to === 'atkPct' || to === 'hpPct' || to === 'defPct' || to === 'em' || to === 'critRate' || to === 'critDmg') delta[to] = value;
+        else if (to === 'dmgPct') delta.dmgBonus = value;
+        else delta.dmgByType![to] = value;
+      }
+      buffs.push({
+        id, tag: labelTag(b.label), targets, delta, description: `${names[i]}: ${b.label}`, derived: true,
+        ...(b.timed ? {} : { always: true }),
+      });
+    }
+  });
+
   // 6) RES do inimigo por elemento (redução de RES de personagens; vale o tempo todo)
   const enemyRes: ResistanceMap = { Physical: config.enemyBaseRes };
   const resonanceShred = resonanceEffects(members).filter((r) => r.resShred && !off(`resonance-${r.element.toLowerCase()}`));
@@ -228,6 +272,6 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
     enemyRes[el] = config.enemyBaseRes - shred;
   }
 
-  return { statics, sources, buffs, resonanceAtkPct, referenceAtk, enemyRes, warnings };
+  return { statics, sources, buffs, resonanceAtkPct, referenceAtk, enemyRes, hasDerived, warnings };
 }
 

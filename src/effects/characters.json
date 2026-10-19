@@ -83,6 +83,23 @@
           "dmgPctByType": {}
         },
         "note": "ATK da equipe (menos a Raiden) por 10 s depois do Supremo: ligue nas janelas."
+      },
+      {
+        "id": "a4",
+        "label": "Raiden A4",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "convert": {
+          "from": "er",
+          "source": "self",
+          "perPoint": 0.4,
+          "threshold": 1,
+          "to": [
+            "dmgPct"
+          ]
+        },
+        "note": "+0,4% de DMG Electro por 1% de Recarga acima de 100%, sempre. A energia extra do Musou Isshin não entra."
       }
     ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -599,6 +616,23 @@
           "dmgPctByType": {}
         },
         "note": "+20% de DMG Electro por 5 s depois dos raios das Sakuras: ligue nas janelas. Só personagens Electro recebem."
+      },
+      {
+        "id": "a4",
+        "label": "Yae A4",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "convert": {
+          "from": "em",
+          "source": "self",
+          "perPoint": 0.0015,
+          "threshold": 0,
+          "to": [
+            "skill"
+          ]
+        },
+        "note": "+0,15% de DMG da habilidade (Sesshou Sakura) por ponto de Maestria, sempre."
       }
     ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -864,6 +898,42 @@
           ]
         },
         "note": "Assume a redução de RES Hydro (10 s) sempre ativa. A de Dendro (após Floração) NÃO entra."
+      },
+      {
+        "id": "c6cr",
+        "label": "Nilou C6 (Taxa Crítica)",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": false,
+        "convert": {
+          "from": "hp",
+          "source": "self",
+          "perPoint": 0.000006,
+          "threshold": 0,
+          "cap": 0.3,
+          "to": [
+            "critRate"
+          ]
+        },
+        "note": "+0,6% de Taxa Crítica a cada 1.000 de HP máximo, teto de 30%, sempre."
+      },
+      {
+        "id": "c6cd",
+        "label": "Nilou C6 (Dano Crítico)",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": false,
+        "convert": {
+          "from": "hp",
+          "source": "self",
+          "perPoint": 0.000012,
+          "threshold": 0,
+          "cap": 0.6,
+          "to": [
+            "critDmg"
+          ]
+        },
+        "note": "+1,2% de Dano Crítico a cada 1.000 de HP máximo, teto de 60%, sempre."
       }
     ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -1552,6 +1622,23 @@
           }
         },
         "note": "+15% de DMG de Ataque Carregado, sempre."
+      },
+      {
+        "id": "c6",
+        "label": "Noelle C6",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": true,
+        "convert": {
+          "from": "def",
+          "source": "self",
+          "perPoint": 0.5,
+          "threshold": 0,
+          "to": [
+            "atkFlat"
+          ]
+        },
+        "note": "+50% da DEF dela como ATK fixo durante o Supremo: ligue nas janelas."
       }
     ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -1756,6 +1843,23 @@
           }
         },
         "note": "Assume o teto de +180% de DMG do próximo Ataque Carregado: ligue nas janelas. Os 200% extras contra Presságio não entram."
+      },
+      {
+        "id": "a4",
+        "label": "Mona A4",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "convert": {
+          "from": "er",
+          "source": "self",
+          "perPoint": 0.2,
+          "threshold": 0,
+          "to": [
+            "dmgPct"
+          ]
+        },
+        "note": "DMG Hydro = 20% da Recarga total (ex.: 200% de Recarga dá +40%), sempre."
       }
     ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -1875,6 +1979,23 @@
           "dmgPctByType": {}
         },
         "note": "+20% de DMG do elemento absorvido durante o Supremo: ligue nas janelas em que o elemento bate com o de quem ataca."
+      },
+      {
+        "id": "a4",
+        "label": "Sucrose A4",
+        "minConstellation": 0,
+        "scope": "others",
+        "timed": true,
+        "convert": {
+          "from": "em",
+          "source": "self",
+          "perPoint": 0.2,
+          "threshold": 0,
+          "to": [
+            "em"
+          ]
+        },
+        "note": "+20% da Maestria da Sucrose para os demais por 8 s depois da habilidade ou Supremo: ligue nas janelas."
       }
     ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -2394,6 +2515,24 @@
           "dmgPctByType": {}
         },
         "note": "+60 de Maestria da equipe por 8 s depois do Supremo: ligue nas janelas. Os +60 extras por reação não entram."
+      },
+      {
+        "id": "a4",
+        "label": "Tighnari A4",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "convert": {
+          "from": "em",
+          "source": "self",
+          "perPoint": 0.0006,
+          "threshold": 0,
+          "cap": 0.6,
+          "to": [
+            "charged"
+          ]
+        },
+        "note": "+0,06% de DMG de Ataque Carregado por ponto de Maestria, teto de 60%, sempre. O Tanglevine Shaft (Supremo) não entra."
       }
     ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -2477,6 +2616,24 @@
           "dmgPctByType": {}
         },
         "note": "Assume 1 inimigo marcado pelas Sementes (+100 de Maestria): ligue nas janelas."
+      },
+      {
+        "id": "a1",
+        "label": "Nahida A1",
+        "minConstellation": 0,
+        "scope": "others",
+        "timed": true,
+        "convert": {
+          "from": "em",
+          "source": "highestEm",
+          "perPoint": 0.25,
+          "threshold": 0,
+          "cap": 250,
+          "to": [
+            "em"
+          ]
+        },
+        "note": "+25% da maior Maestria do time (teto de 250) para os demais dentro do campo do Supremo: ligue nas janelas."
       }
     ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -2795,6 +2952,28 @@
           "dmgPctByType": {}
         },
         "note": "Assume 3 stacks (+60% de DMG Pyro/Electro) por 8 s depois da cura: ligue nas janelas. Só personagens Pyro/Electro recebem."
+      },
+      {
+        "id": "a4",
+        "label": "Chevreuse A4",
+        "minConstellation": 0,
+        "scope": "others",
+        "timed": true,
+        "forElements": [
+          "Pyro",
+          "Electro"
+        ],
+        "convert": {
+          "from": "hp",
+          "source": "self",
+          "perPoint": 0.00001,
+          "threshold": 0,
+          "cap": 0.4,
+          "to": [
+            "atkPct"
+          ]
+        },
+        "note": "+1% de ATK por 1.000 de HP máximo dela (teto de 40%) para os Pyro e Electro por 30 s: ligue nas janelas."
       }
     ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -4590,6 +4769,54 @@
           "dmgPctByType": {}
         },
         "note": "+40% de ATK com o máximo de stacks de Ação Disciplinar (modo Armed for Action): ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Kaedehara Kazuha",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "a4",
+        "label": "Kazuha A4",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "convert": {
+          "from": "em",
+          "source": "self",
+          "perPoint": 0.0004,
+          "threshold": 0,
+          "to": [
+            "dmgPct"
+          ]
+        },
+        "note": "+0,04% de DMG do elemento absorvido por ponto de Maestria dele, por 8 s depois do Espalhar: ligue nas janelas em que o elemento bate com o de quem ataca."
+      },
+      {
+        "id": "c6",
+        "label": "Kazuha C6",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": true,
+        "convert": {
+          "from": "em",
+          "source": "self",
+          "perPoint": 0.002,
+          "threshold": 0,
+          "to": [
+            "normal",
+            "charged",
+            "plunge"
+          ]
+        },
+        "note": "+0,2% de DMG de Normal/Carregado/Plunging por ponto de Maestria, por 5 s depois da habilidade ou Supremo: ligue nas janelas."
       }
     ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."

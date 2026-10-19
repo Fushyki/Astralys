@@ -42,9 +42,9 @@ export interface AttributionResult {
 
 export function attributeBuffs(input: AttributionInput): AttributionResult {
   const { team, actions, rolls } = input;
-  const base = assembleTeam(team);
+  const base = assembleTeam(team, { rolls });
   const run = (disabled?: ReadonlySet<string>) => {
-    const assembly = disabled ? assembleTeam(team, { disabled }) : base;
+    const assembly = disabled ? assembleTeam(team, { disabled, rolls }) : base;
     return evaluateRotation(
       { members: team.members, assembly, config: team.config, rolls, flatEffects: input.flatEffects, ampCoefficient: input.ampCoefficient },
       actions,

@@ -326,6 +326,10 @@ export interface TeamBuff {
   targets: 'all' | string[];
   delta: StatDelta;
   description?: string;
+  /** Vale em toda ação, sem etiqueta nem faixa (conversões de stat que não dependem de janela). */
+  always?: boolean;
+  /** Conversão de stat: `delta` guarda o valor calculado com os rolls dados à montagem da equipe. */
+  derived?: true;
 }
 
 export function receivesBuff(buff: TeamBuff, characterName: string): boolean {
@@ -342,7 +346,7 @@ export function activeTeamDelta(
   const sum = zeroBlock();
   for (const b of buffs) {
     if (!receivesBuff(b, characterName) || !include(b)) continue;
-    if (tags !== 'all' && !tags.has(b.tag)) continue;
+    if (tags !== 'all' && !b.always && !tags.has(b.tag)) continue;
     addDelta(sum, b.delta);
   }
   return sum;

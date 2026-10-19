@@ -67,7 +67,7 @@ export function DamageTablePanel({ v, index }: { v: ProjectView; index: number }
   const teamElements = v.resolved.team.members.map((m) => m.character.element);
   const options = reactionOptions(member.character.element, teamElements);
   const active = options.includes(reaction) ? reaction : 'none';
-  const assembly = useMemo(() => assembleTeam(v.resolved.team), [v.resolved.team]);
+  const assembly = useMemo(() => assembleTeam(v.resolved.team, { rolls: v.bundle.optimization.rolls }), [v.resolved.team, v.bundle.optimization.rolls]);
   const groups = useMemo(() => {
     const rows = damageTable({ team: v.resolved.team, assembly, rolls: v.bundle.optimization.rolls, member: index, moves: v.data.game.moves, reaction: active, ampCoefficient: v.resolved.ampCoefficient });
     return moveGroups(rows, effectiveTalents(ref.talents, ref.constellation, member.character));

@@ -4,9 +4,9 @@
  */
 import type { FlatDamageEffect } from '../effects/schema';
 import { attributeBuffs, type AttributionResult } from './attribution';
-import { critProfile, damageBySource, substatGains, type CritProfile, type SourceBreakdown, type SubstatGain } from './analysis';
+import { critProfile, optimizeAssembled, damageBySource, substatGains, type CritProfile, type SourceBreakdown, type SubstatGain } from './analysis';
 import { SUBSTATS, type Rolls } from './artifacts';
-import { optimizeTeam, type TeamOptimization } from './optimizer';
+import { type TeamOptimization } from './optimizer';
 import type { RotationAction } from './rotation';
 import { activeTeamDelta, defaultTotalRolls, finalStats, maxRollsFor, type FinalStats } from './stats';
 import { assembleTeam, type TeamAssembly, type TeamInput } from './team';
@@ -53,7 +53,7 @@ export function rollWarningsFor(member: number, name: string, team: TeamInput, r
 }
 
 export function analyzeProject(input: AnalysisInput): AnalysisBundle {
-  const assembly: TeamAssembly = assembleTeam(input.team);
+  const { assembly, optimization } = optimizeAssembled(input.team, { actions: input.actions, flatEffects: input.flatEffects, ampCoefficient: input.ampCoefficient });
   const ctx = {
     members: input.team.members,
     assembly,
@@ -62,7 +62,6 @@ export function analyzeProject(input: AnalysisInput): AnalysisBundle {
     flatEffects: input.flatEffects,
     ampCoefficient: input.ampCoefficient,
   };
-  const optimization = optimizeTeam(ctx);
   const attribution = attributeBuffs({
     team: input.team,
     actions: input.actions,

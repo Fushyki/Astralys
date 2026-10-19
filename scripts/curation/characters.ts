@@ -7,6 +7,7 @@
  * ligadas por você nas janelas em que valem; só o que é do próprio personagem e sempre vale fica estático.
  */
 import type { Element } from '../../src/data/schema';
+import type { ConvertTarget } from '../../src/effects/schema';
 import type { Val } from './sets';
 
 export type Src = 'p1' | 'p2' | 'p3' | 'const1' | 'const2' | 'const3' | 'const4' | 'const5' | 'const6';
@@ -23,6 +24,15 @@ export interface BuffCuration {
     byType?: Partial<Record<'normal' | 'charged' | 'plunge' | 'skill' | 'burst', Val>>;
   };
   resShred?: { value: Val; elements: Element[] };
+  /** Bônus que depende de um stat da fonte (ver `BuffConvertSchema`). Substitui `stats`. */
+  convert?: {
+    from: 'atk' | 'hp' | 'def' | 'em' | 'er';
+    source?: 'self' | 'highestEm';
+    perPoint: Val;
+    threshold?: Val;
+    cap?: Val;
+    to: ConvertTarget[];
+  };
   expect: string;
   note: string;
 }

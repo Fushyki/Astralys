@@ -200,7 +200,7 @@ export function receivedBuffs(project: RotationProject, resolved: ResolvedProjec
   const names = resolved.team.members.map((m) => m.character.name);
   const name = names[member];
   // Montagem SEM desligados: lista todos os buffs, inclusive os que o usuário desligou.
-  const full = assembleTeam({ ...resolved.team, disabled: [] });
+  const full = assembleTeam({ ...resolved.team, disabled: [] }, { rolls: bundle.optimization.rolls });
   const memberAvg = bundle.optimization.result.members[member]?.avg || 1;
 
   const fromBuffs = full.buffs
@@ -217,7 +217,7 @@ export function receivedBuffs(project: RotationProject, resolved: ResolvedProjec
         name: flagged ? 'Buff sem origem conhecida' : label,
         giver,
         giverName: giver !== null ? names[giver] : 'Time',
-        window: windowText(project, b.tag),
+        window: b.always ? 'o tempo todo' : windowText(project, b.tag),
         value: deltaChips(b.delta).join(', ') || '—',
         active,
         share: active && mine ? mine.contribution / memberAvg : null,

@@ -75,17 +75,17 @@ export function AppHeader({ projectId, memberName, projectName, favorite, onTogg
           {nav.map((t) => (
             <Link key={t.label} to={t.to} aria-current={t.on ? 'page' : undefined}>{t.label}</Link>
           ))}
-          <Menu label="Ferramentas ▾" ariaLabel="Ferramentas" className="dz-navbtn" align="left">
-            {(close) => (
-              <>
-                <Link role="menuitem" className="dz-menu-item" to={projectId ? `${base}/recarga` : '/recarga'} onClick={close}>Recarga de energia</Link>
-                <Link role="menuitem" className="dz-menu-item" to={projectId ? `/comparar?a=${projectId}` : '/comparar'} onClick={close}>Comparar dois times</Link>
-                {projectId && <Link role="menuitem" className="dz-menu-item" to={`${base}/armas`} onClick={close}>Armas e constelações</Link>}
-                {projectId && <Link role="menuitem" className="dz-menu-item" to={`/card/${projectId}`} onClick={close}>Card para compartilhar</Link>}
-              </>
-            )}
-          </Menu>
         </nav>
+        <Menu label="Ferramentas ▾" ariaLabel="Ferramentas" className="dz-navbtn" align="left">
+          {(close) => (
+            <>
+              <Link role="menuitem" className="dz-menu-item" to={projectId ? `${base}/recarga` : '/recarga'} onClick={close}>Recarga de energia</Link>
+              <Link role="menuitem" className="dz-menu-item" to={projectId ? `/comparar?a=${projectId}` : '/comparar'} onClick={close}>Comparar dois times</Link>
+              {projectId && <Link role="menuitem" className="dz-menu-item" to={`${base}/armas`} onClick={close}>Armas e constelações</Link>}
+              {projectId && <Link role="menuitem" className="dz-menu-item" to={`/card/${projectId}`} onClick={close}>Card para compartilhar</Link>}
+            </>
+          )}
+        </Menu>
         <Account />
       </header>
       {projectId && (

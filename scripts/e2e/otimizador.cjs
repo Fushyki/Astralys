@@ -28,7 +28,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.reload({ waitUntil: 'networkidle' });
 
   // ---- Menu ----
-  const nav = await page.$$eval('.dz-nav > a, .dz-nav .dz-navbtn', (a) => a.map((x) => x.textContent.trim()));
+  const nav = await page.$$eval('.dz-nav > a, .dz-header .dz-navbtn', (a) => a.map((x) => x.textContent.trim()));
   check('o menu é Times · Personagens · Inventário · Otimizador · Ferramentas', nav.join('|') === 'Times|Personagens|Inventário|Otimizador|Ferramentas ▾', nav.join('|'));
   check('Inventário está marcado', (await page.getAttribute('.dz-nav a:has-text("Inventário")', 'aria-current')) === 'page');
 

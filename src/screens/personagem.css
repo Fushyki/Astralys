@@ -100,3 +100,12 @@
 .pc-notes li:first-child { color: var(--good); }
 .pc-uid { display: flex; flex-direction: column; gap: 8px; }
 .pc-uid .dz-input { max-width: 260px; }
+
+/* abas do personagem: Resumo, Build e Avançado */
+.pc-views { display: flex; gap: 4px; padding: 4px; background: var(--bg-header); border: 1px solid var(--border); border-radius: 12px; align-self: flex-start; max-width: 100%; }
+.pc-views button { min-height: 44px; padding: 0 22px; border: 0; border-radius: 9px; background: none; color: var(--muted); font-family: var(--font-display); font-weight: 600; font-size: 18px; letter-spacing: .06em; text-transform: uppercase; cursor: pointer; }
+.pc-views button:hover { color: var(--text); }
+.pc-views button[aria-selected="true"] { background: var(--gold); color: var(--on-gold); }
+.pc-hint { margin: -4px 0 0; color: var(--muted); font-size: 15px; }
+.pc-next { margin: 0; color: var(--text-2); font-size: 15px; }
+.pc-substats { max-width: 640px; }

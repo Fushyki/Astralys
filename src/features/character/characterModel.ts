@@ -50,6 +50,14 @@ export function cleanMoveName(label: string): string {
   return lowered.charAt(0).toUpperCase() + lowered.slice(1);
 }
 
+/** Os `n` golpes que mais dão dano médio, do maior ao menor (para o resumo do personagem). */
+export function topHits(groups: MoveGroup[], n = 5): (MoveLine & { talent: Talent })[] {
+  return groups
+    .flatMap((g) => g.lines.map((l) => ({ ...l, talent: g.talent })))
+    .sort((a, b) => b.avg - a.avg)
+    .slice(0, n);
+}
+
 const PLUNGE_VARIANT = ['(baixa altitude)', '(alta altitude)'];
 
 /** Nome de exibição de um golpe, em português quando o Lunaris traz. */

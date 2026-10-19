@@ -426,13 +426,20 @@ export function applyFlatLevels(flat: FlatDamageEffect[], members: MemberInput[]
   });
 }
 
+/**
+ * Aplica as regras de composição do time aos membros já resolvidos. No modo planilha, os personagens que vêm da planilha
+ * ficam só com os efeitos dela: sem as passivas e constelações curadas depois.
+ */
+export function finalizeMembers(members: MemberInput[], planilha: boolean): MemberInput[] {
+  return applyTeamRules(members).map((m) =>
+    planilha && m.characterEffect && !m.characterEffect.fonte_info.includes('scripts/curation/') ? { ...m, characterEffect: planilhaEffect(m.characterEffect) } : m,
+  );
+}
+
 /** Transforma o projeto salvo nas entradas do motor. Lança ProjectResolveError se algo não existir nos dados. */
 export function resolveProject(project: RotationProject, data: GameData, effects: EffectsData): ResolvedProject {
   const planilha = project.compat === 'planilha';
-  const members = applyTeamRules(project.members.map((m) => resolveMember(m, data, effects, project.config.minRollsPerSubstat))).map((m) =>
-    // No modo planilha, os personagens que vêm da planilha ficam só com os efeitos dela: sem as passivas e constelações curadas depois.
-    planilha && m.characterEffect && !m.characterEffect.fonte_info.includes('scripts/curation/') ? { ...m, characterEffect: planilhaEffect(m.characterEffect) } : m,
-  );
+  const members = finalizeMembers(project.members.map((m) => resolveMember(m, data, effects, project.config.minRollsPerSubstat)), planilha);
   const moves = indexMoves(data.moves);
   const config: GlobalConfig = { ...project.config };
 

@@ -48,14 +48,14 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.screenshot({ path: path.join(OUT, 'r-equipe.png'), fullPage: true });
 
   // Navegação
-  check('a aba Equipe está marcada', (await page.getAttribute('.dz-nav a:has-text("Equipe")', 'aria-current')) === 'page');
-  await page.click('.eq-card:has(.name:text-is("Citlali")) a:has-text("Abrir calculadora")');
+  check('a aba Equipe está marcada', (await page.getAttribute('.dz-subnav a:has-text("Equipe")', 'aria-current')) === 'page');
+  await page.click('.eq-card:has(.name:text-is("Citlali")) a:has-text("Ajustar build")');
   await page.waitForURL(/\/projeto\/exemplo\/personagem\/Citlali/);
-  check('Abrir calculadora leva à aba do personagem', true);
+  check('Ajustar build leva à aba do personagem', true);
   await page.goBack(); await page.waitForSelector('.eq-card');
 
   // Trocar, remover e adicionar
-  await page.click('.eq-card:has(.name:text-is("Bennett")) button:has-text("Trocar")');
+  await page.click('.eq-card:has(.name:text-is("Bennett")) button.who');
   await page.fill('.dz-dialog input[type="search"]', 'Xingqiu');
   await page.click('.dz-dialog .pick:has-text("Xingqiu")'); await settle();
   check('trocar o Bennett pelo Xingqiu', (await cards()).join() === 'Mavuika,Citlali,Iansan,Xingqiu', (await cards()).join());
@@ -73,11 +73,11 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.keyboard.press('Control+z'); await settle();
 
   // Favoritar e duplicar
-  await page.click('button:has-text("Salvar no Vault")');
+  await page.click('button:has-text("Salvar nos Times")');
   await page.waitForURL('**/vault'); await page.waitForSelector('.vt-card');
-  check('Salvar no Vault leva ao Vault com o time favoritado', (await page.locator('.vt-fav[aria-pressed="true"]').count()) === 1);
+  check('Salvar nos Times leva aos Times com o time favoritado', (await page.locator('.vt-fav[aria-pressed="true"]').count()) === 1);
   await page.goto(`${BASE}/projeto/exemplo`, { waitUntil: 'networkidle' }); await page.waitForSelector('.eq-card');
-  check('o botão passa a "Salvo no Vault"', (await page.locator('button:has-text("Salvo no Vault")').count()) === 1);
+  check('o botão passa a "Salvo nos Times"', (await page.locator('button:has-text("Salvo nos Times")').count()) === 1);
   await page.click('button:has-text("Duplicar")');
   await page.waitForURL(/\/projeto\/(?!exemplo)[^/]+$/);
   await page.waitForSelector('.eq-card');

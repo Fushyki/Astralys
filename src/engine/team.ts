@@ -198,7 +198,7 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
   const minRolls = minimumRolls(config.minRollsPerSubstat);
   const referenceAtk = members.map((m, i) => {
     const team = activeTeamDelta(buffs, names[i], 'all');
-    return finalStats(m, statics[i], minRolls, team, resonanceAtkPct).atk;
+    return finalStats(m, statics[i], m.externalStats ? minimumRolls(0) : minRolls, team, resonanceAtkPct).atk;
   });
 
   // 5) ATK fixo que um personagem dá ao time

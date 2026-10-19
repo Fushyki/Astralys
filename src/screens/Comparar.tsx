@@ -71,7 +71,7 @@ export default function Comparar() {
             <h1 className="h1">Comparar times</h1>
             <span className="muted">Cada time é calculado com a própria equipe, build e rotação.</span>
           </div>
-          <div className="actions"><Link className="dz-btn" to="/vault">Vault</Link></div>
+          <div className="actions"><Link className="dz-btn" to="/vault">Times</Link></div>
         </section>
 
         <section className="dz-panel cp-pick">

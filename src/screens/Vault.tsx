@@ -139,7 +139,7 @@ export default function Vault() {
       <main className="dz-page">
         <section className="dz-pagehead">
           <div className="titles">
-            <h1 className="h1">Vault</h1>
+            <h1 className="h1">Times</h1>
             <span className="muted">{items.length} {items.length === 1 ? 'time salvo' : 'times salvos'} neste navegador. {token ? 'Use "Sincronizar com a conta" para guardá-los também online.' : 'Nada sai do seu navegador.'}</span>
           </div>
           <div className="actions">

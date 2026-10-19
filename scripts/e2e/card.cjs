@@ -29,7 +29,7 @@ const pngSize = (file) => { const b = fs.readFileSync(file); return { w: b.readU
   await page.reload({ waitUntil: 'networkidle' });
   await page.waitForSelector('.pc');
 
-  check('a aba Vault está ativa', (await page.locator('.dz-nav a[aria-current="page"]').textContent()).includes('Vault'));
+  check('a aba Times está ativa', (await page.locator('.dz-nav a[aria-current="page"]').textContent()).includes('Times'));
   check('abre em 4:5 (1080×1350)', (await page.locator('.pc').evaluate((e) => `${parseInt(e.style.width)}x${parseInt(e.style.height)}`)) === '1080x1350');
   const text = await page.textContent('.pc');
   check('o card mostra DPS 216.600 e 3,79 mi', text.includes('216.600') && text.includes('3,79 mi'), '');

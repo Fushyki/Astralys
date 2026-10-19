@@ -29,7 +29,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
 
   check('DPS do time é 216.600', (await page.textContent('[data-testid="team-dps"]')) === '216.600');
   check('dano da rotação é 3.790.496', (await page.textContent('[data-testid="team-dpr"]')) === '3.790.496');
-  check('a aba "Dano do time" está ativa', (await page.locator('.dz-nav a[aria-current="page"]').textContent()).includes('Dano do time'));
+  check('a aba "Dano do time" está ativa', (await page.locator('.dz-subnav a[aria-current="page"]').textContent()).includes('Dano do time'));
   check('curva acumulada desenhada', (await page.locator('.dz-chart .curve').count()) === 1);
   const marks = await page.$$eval('.dz-chart .mark', (e) => e.map((x) => x.textContent));
   check('o Supremo da Mavuika aparece na curva com +1,24 mi', marks.some((m) => /^Q Mavuika \+1,24 mi$/.test(m)), marks.join(' | '));

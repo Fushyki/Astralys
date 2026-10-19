@@ -60,3 +60,14 @@ Nosso dano vem do motor (`evaluateRotation`), que é uma caixa preta e **monóto
 
 Diferenças assumidas: o GO calcula a fórmula inteira de forma simbólica; nós usamos o motor como avaliador. O GO assume a fórmula dele; nós usamos o
 nosso gabarito (a planilha). Efeitos que o motor ainda não modela também não entram na otimização (aparecem como "fora do cálculo").
+
+## 4. O que ficou implementado (resumo)
+
+Tudo da seção 3 foi feito, com estas diferenças e acréscimos:
+
+- O limite superior usa a "peça virtual" por posição, mas o main stat de areia, cálice e tiara é fixado ANTES de escolher peças (nó da busca), porque um main stat de cada tipo na mesma peça não existe. Sem isso o limite ficava 2× acima do real.
+- Os padrões de set viram variantes (4 peças: qual posição é a peça extra; 2 peças: quais 2 ou 3 posições levam o set e os outros sets têm de ser todos diferentes), o que dá regras de contagem simples e exatas.
+- Dominância por posição e set, com topN; dominância só nos stats que importam (detectados numericamente) por bônus de set.
+- A busca é um gerador e roda em até 6 Web Workers com piso de poda compartilhado.
+- O foco da build é escolhível (time, personagem, golpe, stat), e as restrições mínimas valem -Infinity quando falham (continua monótono).
+- Pendências: limite mais justo (orçamento de rolls), avaliador incremental, nível da peça no main stat, "permitir parcial" e gráfico dano × stat do GO.

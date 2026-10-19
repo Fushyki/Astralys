@@ -41,7 +41,7 @@ export default function Inicio() {
             <li>
               <Link className="in-path" to="/vault">
                 <b>Abrir um time salvo</b>
-                <span>Seus times ficam no Vault, cada um como um card.</span>
+                <span>Seus times ficam em Times, cada um como um card.</span>
               </Link>
             </li>
           </ul>
@@ -55,7 +55,7 @@ export default function Inicio() {
             </li>
           ))}
         </ul>
-        <p className="muted small">Você pode importar a planilha de theorycraft (.xlsx) no Vault.</p>
+        <p className="muted small">Você pode importar a planilha de theorycraft (.xlsx) em Times.</p>
       </main>
     </div>
   );

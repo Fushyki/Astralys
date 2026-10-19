@@ -127,9 +127,9 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await viewer.waitForSelector('[data-testid="pub-dps"]', { timeout: 30000 });
   check('quem abre o link vê o time e os números', /Novo time/.test(await viewer.textContent('h1')) && /[0-9]/.test(await viewer.textContent('[data-testid="pub-dps"]')), (await viewer.textContent('.pb-kp')).trim());
   await viewer.screenshot({ path: path.join(OUT, 'conta-publico.png'), fullPage: true });
-  await viewer.click('button:has-text("Abrir no meu Vault")');
+  await viewer.click('button:has-text("Abrir nos meus Times")');
   await viewer.waitForURL('**/projeto/**');
-  check('"Abrir no meu Vault" cria uma cópia editável', !viewer.url().endsWith(publicId));
+  check('"Abrir nos meus Times" cria uma cópia editável', !viewer.url().endsWith(publicId));
   await pickCard(novo, 'Parar de compartilhar');
   await page.waitForFunction(() => /desligado/.test(document.querySelector('.vt-share')?.textContent ?? ''));
   const closed = await fetch(`${API}/astralys/publicos/${publicId}`);

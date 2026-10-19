@@ -27,7 +27,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.reload({ waitUntil: 'networkidle' });
   await page.waitForSelector('.ar-table tbody tr', { timeout: 30000 });
 
-  check('a aba "Armas e constelações" está ativa', (await page.locator('.dz-nav a[aria-current="page"]').textContent()).includes('Armas'));
+  check('Armas e constelações fica dentro da aba Equipe do time', (await page.locator('.dz-subnav a[aria-current="page"]').textContent()).includes('Equipe'));
   check('4 personagens no seletor, o primeiro selecionado', (await page.locator('.ar-member').count()) === 4 && (await page.locator('.ar-member[aria-selected="true"]').textContent()).includes('Mavuika'));
   const weaponRows = await page.locator('.ar-table:first-of-type tbody tr').count();
   check('lista de armas com a atual marcada', (await page.locator('tr[data-current="true"] .dz-chip:has-text("atual")').count()) >= 2, `${weaponRows} linhas`);

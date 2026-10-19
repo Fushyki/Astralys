@@ -101,14 +101,15 @@ export default function Equipe() {
             <article className="eq-card" key={ref.character} style={{ ['--c' as string]: colors[i] }} aria-label={`Personagem ${ref.character}`}>
               <div className="top" />
               <div className="body">
-                <div className="who">
+                <button type="button" className="who" onClick={() => setPicker({ mode: 'replace', index: i })} aria-label={`Trocar ${ref.character} por outro personagem`} title="Tocar aqui troca o personagem">
                   <CharacterAvatar name={ref.character} icon={character?.icon} color={colors[i]} size={64} />
                   <div className="meta">
                     <span className="name">{ref.character}</span>
                     <span className="role">{role} · {character?.element}</span>
                     <span className="num sub">Nv {project.config.characterLevel} · C{ref.constellation ?? 0} · talentos {talents.normal}/{talents.skill}/{talents.burst}</span>
                   </div>
-                </div>
+                  <span className="swap" aria-hidden="true">⇄</span>
+                </button>
 
                 <div className="gear">
                   <div className="line"><span>{ref.weapon}</span><span className="num muted">R{ref.refinement ?? 1}</span></div>
@@ -138,9 +139,9 @@ export default function Equipe() {
                 </div>
 
                 <div className="acts">
-                  <Link className="dz-btn" to={`/projeto/${v.id}/personagem/${encodeURIComponent(ref.character)}`}>Abrir calculadora</Link>
+                  <Link className="dz-btn gold" to={`/projeto/${v.id}/personagem/${encodeURIComponent(ref.character)}`}>Ajustar build</Link>
                   <div className="small-acts">
-                    <button type="button" className="dz-link" onClick={() => setPicker({ mode: 'replace', index: i })}>Trocar</button>
+                    <Link className="dz-link" to={`/projeto/${v.id}/otimizador/${encodeURIComponent(ref.character)}`}>Otimizar artefatos</Link>
                     <button type="button" className="dz-link" disabled={project.members.length <= 1} onClick={() => removeMember(i)}>Remover</button>
                   </div>
                 </div>

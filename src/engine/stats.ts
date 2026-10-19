@@ -161,6 +161,11 @@ export interface MemberInput {
    * membro: é o modo "theorycraft" manual.
    */
   manualRolls?: Rolls;
+  /**
+   * Soma EXATA dos stats das 5 peças (main stats, ATK e HP fixos de flor e pluma, substats reais). Quando presente,
+   * vale no lugar dos main stats e dos rolls (o otimizador de artefatos avalia conjuntos reais e "virtuais" assim).
+   */
+  externalStats?: StatDelta;
 }
 
 export const fourPieceActive = (m: MemberInput) => !!m.primarySet && !m.secondarySet && m.fourPiece !== false;
@@ -317,6 +322,10 @@ export function staticSources(m: MemberInput, member = 0): StatSource[] {
   }
 
   const a = m.artifacts;
+  if (m.externalStats) {
+    add('artifacts', 'Artefatos (peças reais)', 'main-stat', m.externalStats);
+    return out;
+  }
   for (const [slot, stat] of [['sands', a.sands], ['goblet', a.goblet], ['circlet', a.circlet]] as const) {
     add(`main-${slot}`, `Main stat: ${stat}`, 'main-stat', namedStatDelta(stat, mainStatValue(slot, stat, a.rarity[slot])));
   }
@@ -410,11 +419,11 @@ export function finalStats(m: MemberInput, statics: StatBlock, rolls: Rolls, tea
   const atkBase = m.character.baseAtk + m.weapon.baseAtk;
   const atk =
     atkBase * (1 + statics.atkPct + team.atkPct + resonanceAtkPct + rolls['ATK%'] * rv['ATK%'] + erAtk) +
-    pick(PLUME_ATK, a.rarity.plume) + statics.atkFlat + team.atkFlat + rolls.ATK * rv.ATK;
+    (m.externalStats ? 0 : pick(PLUME_ATK, a.rarity.plume)) + statics.atkFlat + team.atkFlat + rolls.ATK * rv.ATK;
 
   const hp =
     m.character.baseHp * (1 + statics.hpPct + team.hpPct + rolls['HP%'] * rv['HP%']) +
-    pick(FLOWER_HP, a.rarity.flower) + statics.hpFlat + team.hpFlat + rolls.HP * rv.HP;
+    (m.externalStats ? 0 : pick(FLOWER_HP, a.rarity.flower)) + statics.hpFlat + team.hpFlat + rolls.HP * rv.HP;
 
   const def =
     m.character.baseDef * (1 + statics.defPct + team.defPct + rolls['DEF%'] * rv['DEF%']) +

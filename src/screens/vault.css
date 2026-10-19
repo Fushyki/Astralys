@@ -1,0 +1,23 @@
+/* Vault: usa o cartão da Equipe (eq-card, definido em equipe.css) como base. */
+@import './equipe.css';
+.dz-grid.c3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 1100px) { .dz-grid.c3 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 720px) { .dz-grid.c3 { grid-template-columns: minmax(0, 1fr); } }
+.vt-list { list-style: none; margin: 0; padding: 0; }
+.vt-filters { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.vt-filters .dz-input { width: auto; flex: 1 1 200px; max-width: 320px; }
+.vt-filters .dz-btn[aria-pressed="true"] { border-color: var(--gold); color: var(--gold); }
+.vt-card .vt-title { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+.vt-card .name { font-family: var(--font-display); font-weight: 700; font-size: 24px; line-height: 1.1; color: var(--text); text-decoration: none; overflow-wrap: anywhere; }
+.vt-card .name:hover { color: var(--gold); }
+.vt-fav { background: none; border: 0; color: var(--muted); font-size: 22px; cursor: pointer; min-width: 44px; min-height: 44px; margin: -8px -8px 0 0; }
+.vt-fav[aria-pressed="true"] { color: var(--gold); }
+.vt-faces { display: flex; gap: 8px; }
+.vt-kp { display: flex; gap: 16px; flex-wrap: wrap; font-size: 14px; color: var(--text-2); }
+.vt-kp b { color: var(--gold-soft); font-size: 18px; }
+.vt-meta { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.vt-card .small-acts { flex-wrap: wrap; row-gap: 4px; }
+.vt-card .small { font-size: 13px; }
+.vt-card .warn { color: var(--warn); }
+.vt-empty { text-align: center; }
+.vt-notes p { margin: 2px 0; }

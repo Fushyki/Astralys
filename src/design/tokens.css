@@ -1,0 +1,53 @@
+/*
+ * Tokens de design do Astralys. Único lugar com cores, fontes e medidas: o resto usa estas variáveis.
+ * Identidade: azul-noite com dourado, Saira Condensed nos títulos e números grandes, IBM Plex Sans no texto.
+ */
+:root {
+  /* superfícies */
+  --bg: #0a0e1c;
+  --bg-header: #0d1226;
+  --surface: #111733;
+  --surface-2: #172042;
+  /* bordas e linhas */
+  --border: #1e2647;
+  --border-ctl: #263057;
+  --border-ctl-hi: #2e3966;
+  --divider: #1a2244;
+  /* texto */
+  --text: #e7eaf6;
+  --text-2: #c9cfea;
+  --muted: #9aa3c7;
+  --faint: #7f89b3;
+  /* destaque */
+  --gold: #e9c46a;
+  --gold-hi: #f4da9a;
+  --gold-soft: #f2c879;
+  --on-gold: #1a1405;
+  --warn: #e89a9a;
+  --warn-bg: #2a1a18;
+  --warn-border: #5a3527;
+  --good: #7fd6a3;
+  /* elementos */
+  --el-pyro: #f08a5d;
+  --el-cryo: #8fd3e8;
+  --el-electro: #c49cf2;
+  --el-hydro: #5fa8f5;
+  --el-anemo: #6fd6b3;
+  --el-geo: #e7b75c;
+  --el-dendro: #a5cf5a;
+  --el-physical: #c9cfea;
+  /* tipografia */
+  --font-display: 'Saira Condensed', 'Arial Narrow', sans-serif;
+  --font-body: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  /* medidas */
+  --radius-panel: 16px;
+  --radius-card: 14px;
+  --radius-ctl: 8px;
+  --control-h: 44px;
+  --page-max: 1376px;
+  --gutter: 32px;
+}
+
+@media (max-width: 720px) {
+  :root { --gutter: 16px; }
+}

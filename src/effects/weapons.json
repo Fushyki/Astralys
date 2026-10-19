@@ -1,0 +1,5814 @@
+[
+  {
+    "weapon": "A Thousand Blazing Suns",
+    "atkPct": 0.49,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0.35,
+    "em": 0,
+    "er": 0,
+    "fonte_info": "planilha Mavuika_Iansan_Combo2, aba \"Armas (efeitos)\". R1 em Nightsoul (×1,75): 28%→49% ATK, 20%→35% CD."
+  },
+  {
+    "weapon": "Thrilling Tales of Dragon Slayers",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "fonte_info": "planilha Mavuika_Iansan_Combo2, aba \"Armas (efeitos)\". Vai só ao PRÓXIMO personagem: use 'Buffs extras' (R5 = 48%)."
+  },
+  {
+    "weapon": "Engulfing Lightning",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "atkPctPerEr": {
+      "coef": 0.28,
+      "cap": 0.8
+    },
+    "fonte_info": "planilha Mavuika_Iansan_Combo2, aba \"Armas (efeitos)\". R1: ATK% = 28% do ER acima de 100%, máx. 80%."
+  },
+  {
+    "weapon": "Absolution",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0.2,
+    "em": 0,
+    "er": 0,
+    "fonte_info": "planilha Mavuika_Iansan_Combo2, aba \"Armas (efeitos)\". R1: +20% dano crit (stacks de DMG não incluídos)."
+  },
+  {
+    "weapon": "Wolf's Gravestone",
+    "atkPct": 0.2,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "fonte_info": "planilha Mavuika_Iansan_Combo2, aba \"Armas (efeitos)\". R1: +20% ATK (buff condicional de time não incluído)."
+  },
+  {
+    "weapon": "Serpent Spine",
+    "atkPct": 0,
+    "dmgPct": 0.3,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "fonte_info": "planilha Mavuika_Iansan_Combo2, aba \"Armas (efeitos)\". R1, 5 stacks."
+  },
+  {
+    "weapon": "Beacon of the Reed Sea",
+    "atkPct": 0.4,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "fonte_info": "planilha Mavuika_Iansan_Combo2, aba \"Armas (efeitos)\". R1: 20% + 20%."
+  },
+  {
+    "atkPct": 0.2,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Aquila Favonia",
+    "refinements": [
+      {
+        "atkPct": 0.2,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.25,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.3,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.35,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.4,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Só o ATK. A cura e o dano em área ao levar dano NÃO entram.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0.04,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Skyward Blade",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0.04,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0.05,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0.06,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0.07,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0.08,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Só a Taxa Crítica. O dano extra de Normal/Carregado (% do ATK) e a velocidade NÃO entram.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0.1,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "team": {
+      "atkPct": 0.2,
+      "dmgPct": 0,
+      "em": 0
+    },
+    "weapon": "Freedom-Sworn",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0.1,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {},
+        "team": {
+          "atkPct": 0.2,
+          "dmgPct": 0,
+          "em": 0
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.125,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {},
+        "team": {
+          "atkPct": 0.25,
+          "dmgPct": 0,
+          "em": 0
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.15,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {},
+        "team": {
+          "atkPct": 0.3,
+          "dmgPct": 0,
+          "em": 0
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.175,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {},
+        "team": {
+          "atkPct": 0.35,
+          "dmgPct": 0,
+          "em": 0
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.2,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {},
+        "team": {
+          "atkPct": 0.4,
+          "dmgPct": 0,
+          "em": 0
+        }
+      }
+    ],
+    "note": "DMG próprio sempre ativo. O ATK da equipe vem de reações (2 Sigils): vale só nas janelas de buff. Os +% de Normal/Carregado/Imersivo da equipe NÃO entram.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0.2,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Summit Shaper",
+    "refinements": [
+      {
+        "atkPct": 0.2,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.25,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.3,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.35,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.4,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Assume os stacks máximos sempre ativos. (5 stacks; sem o dobro com escudo).",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0.4,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Mistsplitter Reforged",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0.4,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.5,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.6,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.7,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.8,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Assume 3 stacks do Emblema (+28% de dano do elemento do personagem) sempre ativos, além dos 12% base.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0.12,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {
+      "normal": 0.4
+    },
+    "weapon": "Haran Geppaku Futsu",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0.12,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "normal": 0.4
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.15,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "normal": 0.5
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.18,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "normal": 0.6
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.21,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "normal": 0.7
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.24,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "normal": 0.8
+        }
+      }
+    ],
+    "note": "Assume 2 stacks de Wavespike consumidos pela habilidade (+40% de Ataque Normal), sempre ativos.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0.2,
+    "dmgPctByType": {
+      "normal": 0.16,
+      "skill": 0.24
+    },
+    "weapon": "Uraku Misugiri",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0.2,
+        "dmgPctByType": {
+          "normal": 0.16,
+          "skill": 0.24
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0.25,
+        "dmgPctByType": {
+          "normal": 0.2,
+          "skill": 0.3
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0.3,
+        "dmgPctByType": {
+          "normal": 0.24,
+          "skill": 0.36
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0.35,
+        "dmgPctByType": {
+          "normal": 0.28,
+          "skill": 0.42
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0.4,
+        "dmgPctByType": {
+          "normal": 0.32,
+          "skill": 0.48
+        }
+      }
+    ],
+    "note": "Valores base. O dobro depois de dano Geo da equipe NÃO entra.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0.2,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Primordial Jade Cutter",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0.2,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0.25,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0.3,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0.35,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0.4,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Só o HP. O bônus de ATK (1,2% do HP máximo) NÃO entra.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0.2,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Key of Khaj-Nisut",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0.2,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0.25,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0.3,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0.35,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0.4,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Só o HP. A Maestria Elemental por HP máximo NÃO entra.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0.04,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Light of Foliar Incision",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0.04,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0.05,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0.06,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0.07,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0.08,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Só a Taxa Crítica. O dano extra por Maestria NÃO entra.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0.36,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Blackcliff Longsword",
+    "refinements": [
+      {
+        "atkPct": 0.36,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.45,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.54,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.63,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.72,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Assume 3 stacks de ATK (derrotar inimigos) sempre ativos.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0.4,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Royal Longsword",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0.4,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0.5,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0.6,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0.7,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0.8,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Melhor caso: 5 stacks de Taxa Crítica ativos (um acerto crítico remove todos, então o valor real é menor).",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0.12,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Iron Sting",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0.12,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.15,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.18,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.21,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.24,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Assume 2 stacks de +DMG sempre ativos.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0.2,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Lion's Roar",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0.2,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.24,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.28,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.32,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.36,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Assume inimigo sob Pyro ou Electro.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 60,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Sapwood Blade",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 60,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 75,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 90,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 105,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 120,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Assume a Folha coletada e a Maestria ativa (limitado a uma a cada 20 s no jogo).",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0.16,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Fleuve Cendre Ferryman",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0.16,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0.2,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0.24,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0.28,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0.32,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Só a Recarga (5 s depois da habilidade, assumida ativa). A Taxa Crítica de habilidade NÃO entra.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0.08,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Skyward Pride",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0.08,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.1,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.12,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.14,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.16,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Só o DMG geral. As lâminas de vácuo NÃO entram.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0.16,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "team": {
+      "atkPct": 0.2,
+      "dmgPct": 0,
+      "em": 0
+    },
+    "weapon": "Song of Broken Pines",
+    "refinements": [
+      {
+        "atkPct": 0.16,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {},
+        "team": {
+          "atkPct": 0.2,
+          "dmgPct": 0,
+          "em": 0
+        }
+      },
+      {
+        "atkPct": 0.2,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {},
+        "team": {
+          "atkPct": 0.25,
+          "dmgPct": 0,
+          "em": 0
+        }
+      },
+      {
+        "atkPct": 0.24,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {},
+        "team": {
+          "atkPct": 0.3,
+          "dmgPct": 0,
+          "em": 0
+        }
+      },
+      {
+        "atkPct": 0.28,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {},
+        "team": {
+          "atkPct": 0.35,
+          "dmgPct": 0,
+          "em": 0
+        }
+      },
+      {
+        "atkPct": 0.32,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {},
+        "team": {
+          "atkPct": 0.4,
+          "dmgPct": 0,
+          "em": 0
+        }
+      }
+    ],
+    "note": "ATK próprio sempre ativo. O ATK da equipe (4 Sigils) vale só nas janelas de buff.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0.2,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "The Unforged",
+    "refinements": [
+      {
+        "atkPct": 0.2,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.25,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.3,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.35,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.4,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Assume os stacks máximos sempre ativos. (5 stacks; sem o dobro com escudo).",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0.28,
+    "dmgPctByType": {},
+    "weapon": "Redhorn Stonethresher",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0.28,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0.35,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0.42,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0.49,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0.56,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Só o DEF. O dano de Normal/Carregado por DEF NÃO entra.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {
+      "skill": 0.6,
+      "burst": 0.6
+    },
+    "weapon": "Fang of the Mountain King",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "skill": 0.6,
+          "burst": 0.6
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "skill": 0.75,
+          "burst": 0.75
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "skill": 0.9,
+          "burst": 0.9
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "skill": 1.05,
+          "burst": 1.05
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "skill": 1.2,
+          "burst": 1.2
+        }
+      }
+    ],
+    "note": "Melhor caso: 6 stacks de Canopy's Favor ativos em habilidade e Supremo.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0.3,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Gest of the Mighty Wolf",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0.3,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.38,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.46,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.54,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.62,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Assume 4 stacks de Four Winds' Hymn. O CRIT DMG com Hexerei NÃO entra.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0.28,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "A Teaspoon of Transcendence",
+    "refinements": [
+      {
+        "atkPct": 0.28,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.35,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.42,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.49,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.56,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Só o ATK. O bônus Estelar NÃO entra.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0.36,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Blackcliff Slasher",
+    "refinements": [
+      {
+        "atkPct": 0.36,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.45,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.54,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.63,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.72,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Assume 3 stacks de ATK (derrotar inimigos) sempre ativos.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0.4,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Royal Greatsword",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0.4,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0.5,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0.6,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0.7,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0.8,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Melhor caso: 5 stacks de Taxa Crítica ativos (um acerto crítico remove todos, então o valor real é menor).",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0.12,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 48,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Mailed Flower",
+    "refinements": [
+      {
+        "atkPct": 0.12,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 48,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.15,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 60,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.18,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 72,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.21,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 84,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.24,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 96,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Assume o bônus de 8 s depois da habilidade sempre ativo.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0.24,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Tidal Shadow",
+    "refinements": [
+      {
+        "atkPct": 0.24,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.3,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.36,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.42,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.48,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Assume o bônus depois de ser curado sempre ativo.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {
+      "burst": 0.4
+    },
+    "weapon": "Akuoumaru",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "burst": 0.4
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "burst": 0.5
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "burst": 0.6
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "burst": 0.7
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "burst": 0.8
+        }
+      }
+    ],
+    "note": "Assume o teto de +40% de dano de Supremo (energia máxima da equipe alta).",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0.2,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Staff of Homa",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0.2,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0.25,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0.3,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0.35,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0.4,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Só o HP. O ATK por HP máximo NÃO entra.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0.08,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Skyward Spine",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0.08,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0.1,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0.12,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0.14,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0.16,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Só a Taxa Crítica. A velocidade e a lâmina de vácuo NÃO entram.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0.2,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Vortex Vanquisher",
+    "refinements": [
+      {
+        "atkPct": 0.2,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.25,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.3,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.35,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.4,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Assume os stacks máximos sempre ativos. (5 stacks; sem o dobro com escudo).",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0.224,
+    "dmgPct": 0.12,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Primordial Jade Winged-Spear",
+    "refinements": [
+      {
+        "atkPct": 0.224,
+        "dmgPct": 0.12,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.273,
+        "dmgPct": 0.15,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.322,
+        "dmgPct": 0.18,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.371,
+        "dmgPct": 0.21,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.42,
+        "dmgPct": 0.24,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Assume 7 stacks de ATK e o +12% de DMG que vem com eles.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0.192,
+    "dmgPct": 0.12,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Calamity Queller",
+    "refinements": [
+      {
+        "atkPct": 0.192,
+        "dmgPct": 0.12,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.24,
+        "dmgPct": 0.15,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.288,
+        "dmgPct": 0.18,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.336,
+        "dmgPct": 0.21,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.384,
+        "dmgPct": 0.24,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Assume 6 stacks de Consummation (ATK). O dobro fora de campo NÃO entra.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0.36,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Crimson Moon's Semblance",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0.36,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.48,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.6,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.72,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.84,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Assume o Bond of Life de 30% do HP máximo ativo (+12% e +24% de DMG).",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0.15,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Lumidouce Elegy",
+    "refinements": [
+      {
+        "atkPct": 0.15,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.19,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.23,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.27,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.31,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Só o ATK. O DMG com Queimadura e a energia NÃO entram.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0.12,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Symphonist of Scents",
+    "refinements": [
+      {
+        "atkPct": 0.12,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.15,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.18,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.21,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.24,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Só o ATK base. O bônus fora de campo e o \"Sweet Echoes\" NÃO entram.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0.24,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Fractured Halo",
+    "refinements": [
+      {
+        "atkPct": 0.24,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.3,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.36,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.42,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.48,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Assume o ATK depois de habilidade/Supremo sempre ativo. O bônus de Lunar-Carregado NÃO entra.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0.36,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Blackcliff Pole",
+    "refinements": [
+      {
+        "atkPct": 0.36,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.45,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.54,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.63,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.72,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Assume 3 stacks de ATK (derrotar inimigos) sempre ativos.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0.4,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Royal Spear",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0.4,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0.5,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0.6,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0.7,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0.8,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Melhor caso: 5 stacks de Taxa Crítica ativos (um acerto crítico remove todos, então o valor real é menor).",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0.2,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Dragon's Bane",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0.2,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.24,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.28,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.32,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.36,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Assume inimigo sob Hydro ou Pyro.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {
+      "skill": 0.06
+    },
+    "weapon": "Kitain Cross Spear",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "skill": 0.06
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "skill": 0.075
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "skill": 0.09
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "skill": 0.105
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "skill": 0.12
+        }
+      }
+    ],
+    "note": "Só o DMG de habilidade. A energia NÃO entra.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0.16,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Moonpiercer",
+    "refinements": [
+      {
+        "atkPct": 0.16,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.2,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.24,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.28,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.32,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Assume a Folha coletada e o ATK ativo (limitado a uma a cada 20 s no jogo).",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0.16,
+    "dmgPctByType": {},
+    "weapon": "Footprint of the Rainbow",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0.16,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0.2,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0.24,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0.28,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0.32,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Assume o DEF de 15 s depois da habilidade sempre ativo.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0.2,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Tamayuratei no Ohanashi",
+    "refinements": [
+      {
+        "atkPct": 0.2,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.25,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.3,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.35,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.4,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Assume o ATK de 10 s depois da habilidade sempre ativo.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0.12,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Skyward Atlas",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0.12,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.15,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.18,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.21,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.24,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Só o DMG elemental. As nuvens (dano extra) NÃO entram.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0.32,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Lost Prayer to the Sacred Winds",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0.32,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.4,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.48,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.56,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.64,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Assume 4 stacks (+32% no R1) ativos.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0.2,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Memory of Dust",
+    "refinements": [
+      {
+        "atkPct": 0.2,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.25,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.3,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.35,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.4,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Assume os stacks máximos sempre ativos. (5 stacks; sem o dobro com escudo).",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0.12,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Jadefall's Splendor",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0.12,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.2,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.28,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.36,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.44,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Assume o teto de +12% de DMG elemental (HP máximo alto) por 3 s depois do Supremo.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0.12,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {
+      "skill": 0.36
+    },
+    "weapon": "Kagura's Verity",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0.12,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "skill": 0.36
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.15,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "skill": 0.45
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.18,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "skill": 0.54
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.21,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "skill": 0.63
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.24,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "skill": 0.72
+        }
+      }
+    ],
+    "note": "Assume 3 stacks (+36% de dano de habilidade e +12% de DMG elemental). O bônus Estelar NÃO entra.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {
+      "normal": 0.48
+    },
+    "weapon": "Tulaytullah's Remembrance",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "normal": 0.48
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "normal": 0.6
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "normal": 0.72
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "normal": 0.84
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "normal": 0.96
+        }
+      }
+    ],
+    "note": "Assume o máximo de +48% (R1) de dano de Ataque Normal na janela.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0.2,
+    "defPct": 0,
+    "dmgPctByType": {
+      "normal": 0.48
+    },
+    "weapon": "Surf's Up",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0.2,
+        "defPct": 0,
+        "dmgPctByType": {
+          "normal": 0.48
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0.25,
+        "defPct": 0,
+        "dmgPctByType": {
+          "normal": 0.6
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0.3,
+        "defPct": 0,
+        "dmgPctByType": {
+          "normal": 0.72
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0.35,
+        "defPct": 0,
+        "dmgPctByType": {
+          "normal": 0.84
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0.4,
+        "defPct": 0,
+        "dmgPctByType": {
+          "normal": 0.96
+        }
+      }
+    ],
+    "note": "Assume 4 stacks de Scorching Summer (+48% de Ataque Normal no R1) ativos.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "team": {
+      "atkPct": 0,
+      "dmgPct": 0.28,
+      "em": 0
+    },
+    "weapon": "Starcaller's Watch",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {},
+        "team": {
+          "atkPct": 0,
+          "dmgPct": 0.28,
+          "em": 0
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {},
+        "team": {
+          "atkPct": 0,
+          "dmgPct": 0.35,
+          "em": 0
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {},
+        "team": {
+          "atkPct": 0,
+          "dmgPct": 0.42,
+          "em": 0
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {},
+        "team": {
+          "atkPct": 0,
+          "dmgPct": 0.49,
+          "em": 0
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {},
+        "team": {
+          "atkPct": 0,
+          "dmgPct": 0.56,
+          "em": 0
+        }
+      }
+    ],
+    "note": "O +DMG vale para o personagem ativo, só nas janelas de buff. Os +100 de Maestria NÃO entram.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0.08,
+    "critDmg": 0,
+    "em": 80,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Reliquary of Truth",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0.08,
+        "critDmg": 0,
+        "em": 80,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0.1,
+        "critDmg": 0,
+        "em": 100,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0.12,
+        "critDmg": 0,
+        "em": 120,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0.14,
+        "critDmg": 0,
+        "em": 140,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0.16,
+        "critDmg": 0,
+        "em": 160,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Assume a Maestria depois da habilidade sempre ativa. O CRIT DMG de Lunar-Floração NÃO entra.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0.12,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Angelos' Heptades",
+    "refinements": [
+      {
+        "atkPct": 0.12,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.15,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.18,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.21,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.24,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Só o ATK. O DMG do personagem ativo por ATK NÃO entra.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0.16,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Mappa Mare",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0.16,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.2,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.24,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.28,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.32,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Assume 2 stacks de DMG elemental ativos.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0.24,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Oathsworn Eye",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0.24,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0.3,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0.36,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0.42,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0.48,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Assume a Recarga de 10 s depois da habilidade sempre ativa.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0.08,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {
+      "charged": 0.16
+    },
+    "weapon": "Dodoco Tales",
+    "refinements": [
+      {
+        "atkPct": 0.08,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "charged": 0.16
+        }
+      },
+      {
+        "atkPct": 0.1,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "charged": 0.2
+        }
+      },
+      {
+        "atkPct": 0.12,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "charged": 0.24
+        }
+      },
+      {
+        "atkPct": 0.14,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "charged": 0.28
+        }
+      },
+      {
+        "atkPct": 0.16,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "charged": 0.32
+        }
+      }
+    ],
+    "note": "Assume os dois bônus (Carregado +DMG e ATK) ativos.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0.2,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Skyward Harp",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0.2,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0.25,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0.3,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0.35,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0.4,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Só o CRIT DMG. O dano físico em área NÃO entra.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {
+      "normal": 0.52,
+      "charged": 0.52
+    },
+    "weapon": "Amos' Bow",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "normal": 0.52,
+          "charged": 0.52
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "normal": 0.65,
+          "charged": 0.65
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "normal": 0.78,
+          "charged": 0.78
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "normal": 0.91,
+          "charged": 0.91
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "normal": 1.04,
+          "charged": 1.04
+        }
+      }
+    ],
+    "note": "Assume o máximo: 12% base + 5 aumentos de 8% (a flecha 0,5 s no ar).",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 60,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Elegy for the End",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 60,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 75,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 90,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 105,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 120,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Só a Maestria própria. O buff de 4 Sigils da equipe NÃO entra.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0.48,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {
+      "skill": 0.12,
+      "burst": 0.12
+    },
+    "weapon": "Polar Star",
+    "refinements": [
+      {
+        "atkPct": 0.48,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "skill": 0.12,
+          "burst": 0.12
+        }
+      },
+      {
+        "atkPct": 0.6,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "skill": 0.15,
+          "burst": 0.15
+        }
+      },
+      {
+        "atkPct": 0.72,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "skill": 0.18,
+          "burst": 0.18
+        }
+      },
+      {
+        "atkPct": 0.84,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "skill": 0.21,
+          "burst": 0.21
+        }
+      },
+      {
+        "atkPct": 0.96,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "skill": 0.24,
+          "burst": 0.24
+        }
+      }
+    ],
+    "note": "Assume 4 stacks de Ashen Nightstar (ATK +48% no R1) sempre ativos.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0.2,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0.16,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Aqua Simulacra",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0.2,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0.16,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.25,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0.2,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.3,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0.24,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.35,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0.28,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.4,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0.32,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Assume inimigos por perto (+DMG sempre ativo).",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0.2,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {
+      "normal": 0.4
+    },
+    "weapon": "Thundering Pulse",
+    "refinements": [
+      {
+        "atkPct": 0.2,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "normal": 0.4
+        }
+      },
+      {
+        "atkPct": 0.25,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "normal": 0.5
+        }
+      },
+      {
+        "atkPct": 0.3,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "normal": 0.6
+        }
+      },
+      {
+        "atkPct": 0.35,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "normal": 0.7
+        }
+      },
+      {
+        "atkPct": 0.4,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "normal": 0.8
+        }
+      }
+    ],
+    "note": "Assume 3 stacks do Emblema (+40% de Ataque Normal no R1) ativos.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {
+      "charged": 0.16
+    },
+    "weapon": "The First Great Magic",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "charged": 0.16
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "charged": 0.2
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "charged": 0.24
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "charged": 0.28
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "charged": 0.32
+        }
+      }
+    ],
+    "note": "Só o dano de Ataque Carregado. O ATK por membros do time NÃO entra.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0.16,
+    "dmgPctByType": {},
+    "weapon": "Golden Frostbound Oath",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0.16,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0.2,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0.24,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0.28,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0.32,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Só o DEF. Os bônus de dano Geo e Lunar-Cristalizar NÃO entram.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0.12,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Hunter's Path",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0.12,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.15,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.18,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.21,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0.24,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Só o DMG elemental. O dano de Carregado por Maestria NÃO entra.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0.36,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Blackcliff Warbow",
+    "refinements": [
+      {
+        "atkPct": 0.36,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.45,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.54,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.63,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.72,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Assume 3 stacks de ATK (derrotar inimigos) sempre ativos.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0.4,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Royal Bow",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0.4,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0.5,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0.6,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0.7,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0.8,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Melhor caso: 5 stacks de Taxa Crítica ativos (um acerto crítico remove todos, então o valor real é menor).",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {
+      "skill": 0.24,
+      "burst": 0.24
+    },
+    "weapon": "The Stringless",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "skill": 0.24,
+          "burst": 0.24
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "skill": 0.3,
+          "burst": 0.3
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "skill": 0.36,
+          "burst": 0.36
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "skill": 0.42,
+          "burst": 0.42
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "skill": 0.48,
+          "burst": 0.48
+        }
+      }
+    ],
+    "note": "Valor fixo.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {
+      "normal": 0.4,
+      "charged": -0.1
+    },
+    "weapon": "Rust",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "normal": 0.4,
+          "charged": -0.1
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "normal": 0.5,
+          "charged": -0.1
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "normal": 0.6,
+          "charged": -0.1
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "normal": 0.7,
+          "charged": -0.1
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "normal": 0.8,
+          "charged": -0.1
+        }
+      }
+    ],
+    "note": "Normal +40%, Carregado -10% (no R1).",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {
+      "normal": 0.16,
+      "charged": 0.12
+    },
+    "weapon": "Hamayumi",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "normal": 0.16,
+          "charged": 0.12
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "normal": 0.2,
+          "charged": 0.15
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "normal": 0.24,
+          "charged": 0.18
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "normal": 0.28,
+          "charged": 0.21
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "normal": 0.32,
+          "charged": 0.24
+        }
+      }
+    ],
+    "note": "Só o valor base. O dobro com 100% de energia NÃO entra.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0.16,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Windblume Ode",
+    "refinements": [
+      {
+        "atkPct": 0.16,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.2,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.24,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.28,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.32,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Assume o ATK de 6 s depois da habilidade sempre ativo.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 80,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Ibis Piercer",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 80,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 100,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 120,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 140,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 160,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Assume 2 stacks de Maestria ativos.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {
+      "skill": 0.16,
+      "burst": 0.16
+    },
+    "weapon": "Wolf-Fang",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "skill": 0.16,
+          "burst": 0.16
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "skill": 0.2,
+          "burst": 0.2
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "skill": 0.24,
+          "burst": 0.24
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "skill": 0.28,
+          "burst": 0.28
+        }
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {
+          "skill": 0.32,
+          "burst": 0.32
+        }
+      }
+    ],
+    "note": "Só o DMG de habilidade e Supremo. A Taxa Crítica por stack NÃO entra.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0.36,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Blackcliff Agate",
+    "refinements": [
+      {
+        "atkPct": 0.36,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.45,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.54,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.63,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0.72,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Assume 3 stacks de ATK (derrotar inimigos) sempre ativos.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0.4,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "weapon": "Royal Grimoire",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0.4,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0.5,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0.6,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0.7,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0.8,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {}
+      }
+    ],
+    "note": "Melhor caso: 5 stacks de Taxa Crítica ativos (um acerto crítico remove todos, então o valor real é menor).",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  }
+]

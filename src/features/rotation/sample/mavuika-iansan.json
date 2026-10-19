@@ -1,0 +1,1014 @@
+{
+  "schemaVersion": 1,
+  "id": "exemplo",
+  "name": "Exemplo: Mavuika, Citlali, Iansan e Bennett",
+  "gameVersion": "7.1.53",
+  "compat": "planilha",
+  "config": {
+    "characterLevel": 90,
+    "enemyLevel": 100,
+    "enemyBaseRes": 0.1,
+    "enemyDefRed": 0,
+    "minRollsPerSubstat": 2,
+    "rotationDuration": 17.5
+  },
+  "members": [
+    {
+      "character": "Mavuika",
+      "weapon": "A Thousand Blazing Suns",
+      "primarySet": "Obsidian Codex",
+      "artifacts": {
+        "rarity": {
+          "flower": 5,
+          "plume": 5,
+          "sands": 5,
+          "goblet": 5,
+          "circlet": 5
+        },
+        "sands": "EM",
+        "goblet": "DMG%",
+        "circlet": "CD"
+      },
+      "talents": {
+        "normal": 10,
+        "skill": 10,
+        "burst": 10
+      },
+      "minER": 1,
+      "totalRolls": 40,
+      "forcedCritRolls": 20
+    },
+    {
+      "character": "Citlali",
+      "weapon": "Thrilling Tales of Dragon Slayers",
+      "primarySet": "Instructor",
+      "artifacts": {
+        "rarity": {
+          "flower": 4,
+          "plume": 4,
+          "sands": 5,
+          "goblet": 4,
+          "circlet": 4
+        },
+        "sands": "ER",
+        "goblet": "DMG%",
+        "circlet": "CR"
+      },
+      "talents": {
+        "normal": 10,
+        "skill": 10,
+        "burst": 10
+      },
+      "minER": 2,
+      "totalRolls": 40
+    },
+    {
+      "character": "Iansan",
+      "weapon": "Engulfing Lightning",
+      "primarySet": "Scroll of the Hero of Cinder City",
+      "artifacts": {
+        "rarity": {
+          "flower": 5,
+          "plume": 5,
+          "sands": 5,
+          "goblet": 5,
+          "circlet": 5
+        },
+        "sands": "ATK%",
+        "goblet": "ATK%",
+        "circlet": "CR"
+      },
+      "talents": {
+        "normal": 10,
+        "skill": 13,
+        "burst": 13
+      },
+      "minER": 2,
+      "totalRolls": 40
+    },
+    {
+      "character": "Bennett",
+      "weapon": "Absolution",
+      "primarySet": "Noblesse Oblige",
+      "artifacts": {
+        "rarity": {
+          "flower": 5,
+          "plume": 5,
+          "sands": 5,
+          "goblet": 5,
+          "circlet": 5
+        },
+        "sands": "ER",
+        "goblet": "DMG%",
+        "circlet": "CR"
+      },
+      "talents": {
+        "normal": 10,
+        "skill": 13,
+        "burst": 13
+      },
+      "minER": 2,
+      "totalRolls": 40
+    }
+  ],
+  "extras": [
+    {
+      "target": "Mavuika",
+      "stat": "ATK%",
+      "value": 0.48,
+      "team": true,
+      "label": "TTDS",
+      "description": "TTDS R5 da Citlali (10 s após a troca em 6,7 s)"
+    },
+    {
+      "target": "Mavuika",
+      "stat": "DMG%",
+      "value": 0.4,
+      "team": true,
+      "label": "Scroll",
+      "description": "Scroll da Iansan (12% + 28% Nightsoul) — Pyro/Electro"
+    },
+    {
+      "target": "Bennett",
+      "stat": "DMG%",
+      "value": 0.4,
+      "team": true,
+      "label": "Scroll",
+      "description": "Scroll da Iansan"
+    },
+    {
+      "target": "Iansan",
+      "stat": "DMG%",
+      "value": 0.4,
+      "team": true,
+      "label": "Scroll",
+      "description": "Scroll da Iansan (depois da reação dela)"
+    },
+    {
+      "target": "Mavuika",
+      "stat": "ATK%",
+      "value": 0.3,
+      "team": false,
+      "description": "Da planilha original — origem não identificada, confirme"
+    },
+    {
+      "target": "Mavuika",
+      "stat": "DMG%",
+      "value": 0.25,
+      "team": false,
+      "description": "Da planilha original — origem não identificada, confirme"
+    },
+    {
+      "target": "Mavuika",
+      "stat": "DMG%",
+      "value": 0.15,
+      "team": false,
+      "description": "Da planilha original — origem não identificada, confirme"
+    },
+    {
+      "target": "Citlali",
+      "stat": "ATK%",
+      "value": 0.3,
+      "team": false,
+      "description": "Da planilha original — origem não identificada, confirme"
+    }
+  ],
+  "actions": [
+    {
+      "id": "row-5",
+      "member": 0,
+      "move": {
+        "character": "Mavuika",
+        "talent": "skill",
+        "label": "Flamestrider Charged Attack Cyclic DMG",
+        "variant": 0
+      },
+      "displayName": "Mavuika - Habilidade: Flamestrider Charged Attack Cyclic DMG",
+      "executions": 1,
+      "reaction": "melt",
+      "activeTags": [
+        "char:0",
+        "gear:0",
+        "char:1",
+        "gear:1",
+        "char:2",
+        "gear:2",
+        "char:3",
+        "gear:3",
+        "label:_geral",
+        "label:TTDS",
+        "label:Scroll",
+        "label:Rótulo 3",
+        "label:Rótulo 4"
+      ],
+      "tagSource": "manual",
+      "dmgAdjust": -0.4,
+      "time": 6.9,
+      "note": "C  6,9 s — antes do Q (sem Fighting Spirit, sem A4)"
+    },
+    {
+      "id": "row-6",
+      "member": 0,
+      "move": {
+        "character": "Mavuika",
+        "talent": "burst",
+        "label": "Skill DMG",
+        "variant": 0
+      },
+      "displayName": "Mavuika - Supremo (200 FS)",
+      "extraScale": {
+        "atk": 5.76,
+        "em": 0,
+        "hp": 0,
+        "def": 0
+      },
+      "executions": 1,
+      "reaction": "melt",
+      "activeTags": [
+        "char:0",
+        "gear:0",
+        "char:1",
+        "gear:1",
+        "char:2",
+        "gear:2",
+        "char:3",
+        "gear:3",
+        "label:_geral",
+        "label:TTDS",
+        "label:Scroll",
+        "label:Rótulo 3",
+        "label:Rótulo 4"
+      ],
+      "tagSource": "manual",
+      "dmgAdjust": -0.012,
+      "time": 7.4,
+      "note": "8.0 s · Q  7,4 s"
+    },
+    {
+      "id": "row-7",
+      "member": 0,
+      "move": {
+        "character": "Mavuika",
+        "talent": "skill",
+        "label": "Flamestrider Charged Attack Cyclic DMG",
+        "variant": 0
+      },
+      "displayName": "Mavuika - Carregado no Supremo",
+      "extraScale": {
+        "atk": 2.04,
+        "em": 0,
+        "hp": 0,
+        "def": 0
+      },
+      "executions": 1,
+      "reaction": "none",
+      "activeTags": [
+        "char:0",
+        "gear:0",
+        "char:1",
+        "gear:1",
+        "char:2",
+        "gear:2",
+        "char:3",
+        "gear:3",
+        "label:_geral",
+        "label:TTDS",
+        "label:Scroll",
+        "label:Rótulo 3",
+        "label:Rótulo 4"
+      ],
+      "tagSource": "manual",
+      "dmgAdjust": -0.016,
+      "time": 8.2,
+      "note": "8.2 s · c"
+    },
+    {
+      "id": "row-8",
+      "member": 0,
+      "move": {
+        "character": "Mavuika",
+        "talent": "skill",
+        "label": "Flamestrider Sprint DMG",
+        "variant": 0
+      },
+      "displayName": "Mavuika - Habilidade: Flamestrider Sprint DMG",
+      "executions": 1,
+      "reaction": "none",
+      "activeTags": [
+        "char:0",
+        "gear:0",
+        "char:1",
+        "gear:1",
+        "char:2",
+        "gear:2",
+        "char:3",
+        "gear:3",
+        "label:_geral",
+        "label:TTDS",
+        "label:Scroll",
+        "label:Rótulo 3",
+        "label:Rótulo 4"
+      ],
+      "tagSource": "manual",
+      "dmgAdjust": -0.029,
+      "time": 8.9,
+      "note": "8.9 s · d"
+    },
+    {
+      "id": "row-9",
+      "member": 0,
+      "move": {
+        "character": "Mavuika",
+        "talent": "skill",
+        "label": "Flamestrider Charged Attack Cyclic DMG",
+        "variant": 0
+      },
+      "displayName": "Mavuika - Carregado no Supremo",
+      "extraScale": {
+        "atk": 2.04,
+        "em": 0,
+        "hp": 0,
+        "def": 0
+      },
+      "executions": 1,
+      "reaction": "melt",
+      "activeTags": [
+        "char:0",
+        "gear:0",
+        "char:1",
+        "gear:1",
+        "char:2",
+        "gear:2",
+        "char:3",
+        "gear:3",
+        "label:_geral",
+        "label:TTDS",
+        "label:Scroll",
+        "label:Rótulo 3",
+        "label:Rótulo 4"
+      ],
+      "tagSource": "manual",
+      "dmgAdjust": -0.042,
+      "time": 9.5,
+      "note": "9.5 s · C"
+    },
+    {
+      "id": "row-10",
+      "member": 0,
+      "move": {
+        "character": "Mavuika",
+        "talent": "skill",
+        "label": "Flamestrider Charged Attack Cyclic DMG",
+        "variant": 0
+      },
+      "displayName": "Mavuika - Carregado no Supremo",
+      "extraScale": {
+        "atk": 2.04,
+        "em": 0,
+        "hp": 0,
+        "def": 0
+      },
+      "executions": 1,
+      "reaction": "none",
+      "activeTags": [
+        "char:0",
+        "gear:0",
+        "char:1",
+        "gear:1",
+        "char:2",
+        "gear:2",
+        "char:3",
+        "gear:3",
+        "label:_geral",
+        "label:TTDS",
+        "label:Scroll",
+        "label:Rótulo 3",
+        "label:Rótulo 4"
+      ],
+      "tagSource": "manual",
+      "dmgAdjust": -0.055,
+      "time": 10.2,
+      "note": "10.2 s · c"
+    },
+    {
+      "id": "row-11",
+      "member": 0,
+      "move": {
+        "character": "Mavuika",
+        "talent": "skill",
+        "label": "Flamestrider Charged Attack Cyclic DMG",
+        "variant": 0
+      },
+      "displayName": "Mavuika - Carregado no Supremo",
+      "extraScale": {
+        "atk": 2.04,
+        "em": 0,
+        "hp": 0,
+        "def": 0
+      },
+      "executions": 1,
+      "reaction": "none",
+      "activeTags": [
+        "char:0",
+        "gear:0",
+        "char:1",
+        "gear:1",
+        "char:2",
+        "gear:2",
+        "char:3",
+        "gear:3",
+        "label:_geral",
+        "label:TTDS",
+        "label:Scroll",
+        "label:Rótulo 3",
+        "label:Rótulo 4"
+      ],
+      "tagSource": "manual",
+      "dmgAdjust": -0.069,
+      "time": 10.8,
+      "note": "10.8 s · c"
+    },
+    {
+      "id": "row-12",
+      "member": 0,
+      "move": {
+        "character": "Mavuika",
+        "talent": "skill",
+        "label": "Flamestrider Charged Attack Final DMG",
+        "variant": 0
+      },
+      "displayName": "Mavuika - Carregado final no Supremo",
+      "extraScale": {
+        "atk": 2.04,
+        "em": 0,
+        "hp": 0,
+        "def": 0
+      },
+      "executions": 1,
+      "reaction": "melt",
+      "activeTags": [
+        "char:0",
+        "gear:0",
+        "char:1",
+        "gear:1",
+        "char:2",
+        "gear:2",
+        "char:3",
+        "gear:3",
+        "label:_geral",
+        "label:TTDS",
+        "label:Scroll",
+        "label:Rótulo 3",
+        "label:Rótulo 4"
+      ],
+      "tagSource": "manual",
+      "dmgAdjust": -0.082,
+      "time": 11.5,
+      "note": "11.5 s · F"
+    },
+    {
+      "id": "row-13",
+      "member": 0,
+      "move": {
+        "character": "Mavuika",
+        "talent": "skill",
+        "label": "Flamestrider Sprint DMG",
+        "variant": 0
+      },
+      "displayName": "Mavuika - Habilidade: Flamestrider Sprint DMG",
+      "executions": 1,
+      "reaction": "none",
+      "activeTags": [
+        "char:0",
+        "gear:0",
+        "char:1",
+        "gear:1",
+        "char:2",
+        "gear:2",
+        "char:3",
+        "gear:3",
+        "label:_geral",
+        "label:TTDS",
+        "label:Scroll",
+        "label:Rótulo 3",
+        "label:Rótulo 4"
+      ],
+      "tagSource": "manual",
+      "dmgAdjust": -0.095,
+      "time": 12.1,
+      "note": "12.1 s · [d"
+    },
+    {
+      "id": "row-14",
+      "member": 0,
+      "move": {
+        "character": "Mavuika",
+        "talent": "skill",
+        "label": "Flamestrider Charged Attack Cyclic DMG",
+        "variant": 0
+      },
+      "displayName": "Mavuika - Carregado no Supremo",
+      "extraScale": {
+        "atk": 2.04,
+        "em": 0,
+        "hp": 0,
+        "def": 0
+      },
+      "executions": 1,
+      "reaction": "none",
+      "activeTags": [
+        "char:0",
+        "gear:0",
+        "char:1",
+        "gear:1",
+        "char:2",
+        "gear:2",
+        "char:3",
+        "gear:3",
+        "label:_geral",
+        "label:TTDS",
+        "label:Scroll",
+        "label:Rótulo 3",
+        "label:Rótulo 4"
+      ],
+      "tagSource": "manual",
+      "dmgAdjust": -0.108,
+      "time": 12.8,
+      "note": "12.8 s · c"
+    },
+    {
+      "id": "row-15",
+      "member": 0,
+      "move": {
+        "character": "Mavuika",
+        "talent": "skill",
+        "label": "Flamestrider Charged Attack Final DMG",
+        "variant": 0
+      },
+      "displayName": "Mavuika - Carregado final no Supremo",
+      "extraScale": {
+        "atk": 2.04,
+        "em": 0,
+        "hp": 0,
+        "def": 0
+      },
+      "executions": 1,
+      "reaction": "melt",
+      "activeTags": [
+        "char:0",
+        "gear:0",
+        "char:1",
+        "gear:1",
+        "char:2",
+        "gear:2",
+        "char:3",
+        "gear:3",
+        "label:_geral",
+        "label:TTDS",
+        "label:Scroll",
+        "label:Rótulo 3",
+        "label:Rótulo 4"
+      ],
+      "tagSource": "manual",
+      "dmgAdjust": -0.121,
+      "time": 13.5,
+      "note": "13.5 s · F]"
+    },
+    {
+      "id": "row-16",
+      "member": 0,
+      "move": {
+        "character": "Mavuika",
+        "talent": "skill",
+        "label": "Flamestrider Sprint DMG",
+        "variant": 0
+      },
+      "displayName": "Mavuika - Habilidade: Flamestrider Sprint DMG",
+      "executions": 1,
+      "reaction": "none",
+      "activeTags": [
+        "char:0",
+        "gear:0",
+        "char:1",
+        "gear:1",
+        "char:2",
+        "gear:2",
+        "char:3",
+        "gear:3",
+        "label:_geral",
+        "label:TTDS",
+        "label:Scroll",
+        "label:Rótulo 3",
+        "label:Rótulo 4"
+      ],
+      "tagSource": "manual",
+      "dmgAdjust": -0.134,
+      "time": 14.1,
+      "note": "14.1 s · [d"
+    },
+    {
+      "id": "row-17",
+      "member": 0,
+      "move": {
+        "character": "Mavuika",
+        "talent": "skill",
+        "label": "Flamestrider Charged Attack Cyclic DMG",
+        "variant": 0
+      },
+      "displayName": "Mavuika - Habilidade: Flamestrider Charged Attack Cyclic DMG",
+      "executions": 1,
+      "reaction": "none",
+      "activeTags": [
+        "char:0",
+        "gear:0",
+        "char:1",
+        "gear:1",
+        "gear:2",
+        "char:3",
+        "gear:3",
+        "label:_geral",
+        "label:TTDS",
+        "label:Scroll"
+      ],
+      "tagSource": "manual",
+      "dmgAdjust": -0.147,
+      "time": 14.8,
+      "note": "14.8 s · c  — Crucible acabou em 14,4 s"
+    },
+    {
+      "id": "row-18",
+      "member": 0,
+      "move": {
+        "character": "Mavuika",
+        "talent": "skill",
+        "label": "Flamestrider Charged Attack Final DMG",
+        "variant": 0
+      },
+      "displayName": "Mavuika - Habilidade: Flamestrider Charged Attack Final DMG",
+      "executions": 1,
+      "reaction": "melt",
+      "activeTags": [
+        "char:0",
+        "gear:0",
+        "char:1",
+        "gear:1",
+        "gear:2",
+        "char:3",
+        "gear:3",
+        "label:_geral",
+        "label:TTDS",
+        "label:Scroll"
+      ],
+      "tagSource": "manual",
+      "dmgAdjust": -0.161,
+      "time": 15.4,
+      "note": "15.4 s · F]"
+    },
+    {
+      "id": "row-19",
+      "member": 0,
+      "move": {
+        "character": "Mavuika",
+        "talent": "skill",
+        "label": "Flamestrider Sprint DMG",
+        "variant": 0
+      },
+      "displayName": "Mavuika - Habilidade: Flamestrider Sprint DMG",
+      "executions": 1,
+      "reaction": "none",
+      "activeTags": [
+        "char:0",
+        "gear:0",
+        "char:1",
+        "gear:1",
+        "gear:2",
+        "char:3",
+        "label:_geral",
+        "label:Scroll"
+      ],
+      "tagSource": "manual",
+      "dmgAdjust": -0.174,
+      "time": 16.1,
+      "note": "16.1 s · [d  — Noblesse acabou ~16 s"
+    },
+    {
+      "id": "row-20",
+      "member": 0,
+      "move": {
+        "character": "Mavuika",
+        "talent": "skill",
+        "label": "Flamestrider Charged Attack Cyclic DMG",
+        "variant": 0
+      },
+      "displayName": "Mavuika - Habilidade: Flamestrider Charged Attack Cyclic DMG",
+      "executions": 1,
+      "reaction": "none",
+      "activeTags": [
+        "char:0",
+        "gear:0",
+        "char:1",
+        "gear:1",
+        "gear:2",
+        "char:3",
+        "label:_geral",
+        "label:Scroll"
+      ],
+      "tagSource": "manual",
+      "dmgAdjust": -0.187,
+      "time": 16.7,
+      "note": "16.7 s · c  — TTDS acabou ~16,7 s"
+    },
+    {
+      "id": "row-21",
+      "member": 0,
+      "move": {
+        "character": "Mavuika",
+        "talent": "skill",
+        "label": "Flamestrider Charged Attack Final DMG",
+        "variant": 0
+      },
+      "displayName": "Mavuika - Habilidade: Flamestrider Charged Attack Final DMG",
+      "executions": 1,
+      "reaction": "melt",
+      "activeTags": [
+        "char:0",
+        "gear:0",
+        "char:1",
+        "gear:1",
+        "gear:2",
+        "char:3",
+        "label:_geral",
+        "label:Scroll"
+      ],
+      "tagSource": "manual",
+      "dmgAdjust": -0.2,
+      "time": 17.4,
+      "note": "17.4 s · F]"
+    },
+    {
+      "id": "row-22",
+      "member": 1,
+      "move": {
+        "character": "Citlali",
+        "talent": "skill",
+        "label": "Obsidian Tzitzimitl DMG",
+        "variant": 0
+      },
+      "displayName": "Citlali - Obsidian Tzitzimitl (+EM)",
+      "executions": 1,
+      "reaction": "melt",
+      "activeTags": [
+        "char:0",
+        "gear:0",
+        "char:1",
+        "gear:1",
+        "char:2",
+        "gear:2",
+        "char:3",
+        "gear:3",
+        "label:_geral",
+        "label:TTDS",
+        "label:Scroll",
+        "label:Rótulo 3",
+        "label:Rótulo 4"
+      ],
+      "tagSource": "manual",
+      "dmgAdjust": 0,
+      "time": 0.4,
+      "note": "Citlali E"
+    },
+    {
+      "id": "row-23",
+      "member": 1,
+      "move": {
+        "character": "Citlali",
+        "talent": "skill",
+        "label": "Frostfall Storm DMG",
+        "variant": 0
+      },
+      "displayName": "Citlali - Frostfall Storm (+EM)",
+      "extraScale": {
+        "atk": 0,
+        "em": 0.9,
+        "hp": 0,
+        "def": 0
+      },
+      "executions": 8,
+      "reaction": "none",
+      "activeTags": [
+        "char:0",
+        "gear:0",
+        "char:1",
+        "gear:1",
+        "char:2",
+        "gear:2",
+        "char:3",
+        "gear:3",
+        "label:_geral",
+        "label:TTDS",
+        "label:Scroll",
+        "label:Rótulo 3",
+        "label:Rótulo 4"
+      ],
+      "tagSource": "manual",
+      "dmgAdjust": 0,
+      "time": 1.6
+    },
+    {
+      "id": "row-24",
+      "member": 1,
+      "move": {
+        "character": "Citlali",
+        "talent": "burst",
+        "label": "Ice Storm DMG",
+        "variant": 0
+      },
+      "displayName": "Citlali - Ice Storm (+EM)",
+      "extraScale": {
+        "atk": 0,
+        "em": 12,
+        "hp": 0,
+        "def": 0
+      },
+      "executions": 1,
+      "reaction": "melt",
+      "activeTags": [
+        "char:0",
+        "gear:0",
+        "char:1",
+        "gear:1",
+        "char:2",
+        "gear:2",
+        "char:3",
+        "gear:3",
+        "label:_geral",
+        "label:TTDS",
+        "label:Scroll",
+        "label:Rótulo 3",
+        "label:Rótulo 4"
+      ],
+      "tagSource": "manual",
+      "dmgAdjust": 0,
+      "time": 2,
+      "note": "Citlali Q"
+    },
+    {
+      "id": "row-25",
+      "member": 1,
+      "move": {
+        "character": "Citlali",
+        "talent": "burst",
+        "label": "Spiritvessel Skull DMG",
+        "variant": 0
+      },
+      "displayName": "Citlali - Supremo: Spiritvessel Skull DMG",
+      "executions": 2,
+      "reaction": "none",
+      "activeTags": [
+        "char:0",
+        "gear:0",
+        "char:1",
+        "gear:1",
+        "char:2",
+        "gear:2",
+        "char:3",
+        "gear:3",
+        "label:_geral",
+        "label:TTDS",
+        "label:Scroll",
+        "label:Rótulo 3",
+        "label:Rótulo 4"
+      ],
+      "tagSource": "manual",
+      "dmgAdjust": 0,
+      "time": 2.6
+    },
+    {
+      "id": "row-26",
+      "member": 2,
+      "move": {
+        "character": "Iansan",
+        "talent": "skill",
+        "label": "Skill DMG",
+        "variant": 0
+      },
+      "displayName": "Iansan - Habilidade: Skill DMG",
+      "executions": 1,
+      "reaction": "none",
+      "activeTags": [
+        "char:0",
+        "gear:0",
+        "label:_geral"
+      ],
+      "tagSource": "manual",
+      "dmgAdjust": 0,
+      "time": 3.4,
+      "note": "Iansan E (antes do Bennett)"
+    },
+    {
+      "id": "row-27",
+      "member": 2,
+      "move": {
+        "character": "Iansan",
+        "talent": "burst",
+        "label": "Skill DMG",
+        "variant": 0
+      },
+      "displayName": "Iansan - Supremo: Skill DMG",
+      "executions": 1,
+      "reaction": "none",
+      "activeTags": [
+        "char:0",
+        "gear:0",
+        "label:_geral"
+      ],
+      "tagSource": "manual",
+      "dmgAdjust": 0,
+      "time": 4.6,
+      "note": "Iansan Q"
+    },
+    {
+      "id": "row-28",
+      "member": 3,
+      "move": {
+        "character": "Bennett",
+        "talent": "burst",
+        "label": "Skill DMG",
+        "variant": 0
+      },
+      "displayName": "Bennett - Supremo: Skill DMG",
+      "executions": 1,
+      "reaction": "none",
+      "activeTags": [
+        "char:0",
+        "gear:0",
+        "char:1",
+        "gear:1",
+        "char:2",
+        "gear:2",
+        "char:3",
+        "gear:3",
+        "label:_geral",
+        "label:TTDS",
+        "label:Scroll",
+        "label:Rótulo 3",
+        "label:Rótulo 4"
+      ],
+      "tagSource": "manual",
+      "dmgAdjust": 0,
+      "time": 5.8,
+      "note": "Bennett Q"
+    }
+  ],
+  "buffWindows": [],
+  "profiles": {
+    "Todos": [
+      "char:0",
+      "gear:0",
+      "char:1",
+      "gear:1",
+      "char:2",
+      "gear:2",
+      "char:3",
+      "gear:3",
+      "label:_geral",
+      "label:TTDS",
+      "label:Scroll",
+      "label:Rótulo 3",
+      "label:Rótulo 4"
+    ],
+    "Iansan (início)": [
+      "char:0",
+      "gear:0",
+      "label:_geral"
+    ],
+    "Pós-Supremo": [
+      "char:0",
+      "gear:0",
+      "char:1",
+      "gear:1",
+      "gear:2",
+      "char:3",
+      "gear:3",
+      "label:_geral",
+      "label:TTDS",
+      "label:Scroll"
+    ],
+    "Final": [
+      "char:0",
+      "gear:0",
+      "char:1",
+      "gear:1",
+      "gear:2",
+      "char:3",
+      "label:_geral",
+      "label:Scroll"
+    ],
+    "Nenhum": []
+  },
+  "meta": {
+    "tags": [],
+    "createdAt": "2026-10-18T00:00:00.000Z",
+    "updatedAt": "2026-10-18T00:00:00.000Z"
+  }
+}

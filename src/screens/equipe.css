@@ -1,0 +1,25 @@
+/* Tela Equipe: cartão de personagem (também é a base do cartão do Vault). */
+.eq-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-panel); overflow: hidden; display: flex; flex-direction: column; min-width: 0; }
+.eq-card .top { height: 4px; background: var(--c); }
+.eq-card .body { padding: 20px; display: flex; flex-direction: column; gap: 16px; flex: 1; }
+.eq-card .who { display: flex; gap: 14px; align-items: center; min-width: 0; }
+.eq-card .meta { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.eq-card .name { font-family: var(--font-display); font-weight: 700; font-size: 26px; line-height: 1; }
+.eq-card .role { font-size: 13px; color: var(--muted); }
+.eq-card .sub { font-size: 13px; color: var(--text-2); }
+.eq-card .gear { display: flex; flex-direction: column; gap: 8px; }
+.eq-card .gear .line { display: flex; justify-content: space-between; gap: 10px; padding: 10px 12px; background: var(--bg-header); border-radius: 10px; font-size: 14px; }
+.eq-card .gear .line > span:first-child { min-width: 0; overflow-wrap: anywhere; }
+.eq-card .small { font-size: 13px; }
+.eq-card .stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 16px; }
+.eq-card .stats > div { display: flex; justify-content: space-between; gap: 8px; border-bottom: 1px solid var(--border); padding-bottom: 6px; font-size: 13px; }
+.eq-card .stats .num { font-weight: 600; font-size: 15px; }
+.eq-card .dmg { display: flex; flex-direction: column; gap: 6px; }
+.eq-card .dmg .row { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+.eq-card .dmg .strong { font-weight: 600; }
+.eq-card .gives { display: flex; flex-direction: column; gap: 8px; }
+.eq-card .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.eq-card .acts { margin-top: auto; display: flex; flex-direction: column; gap: 8px; }
+.eq-card .small-acts { display: flex; gap: 16px; justify-content: center; font-size: 13px; }
+.eq-add { min-height: 220px; border: 1px dashed var(--border-ctl-hi); border-radius: var(--radius-panel); background: none; color: var(--gold); font-family: var(--font-display); font-weight: 600; font-size: 18px; letter-spacing: .06em; text-transform: uppercase; cursor: pointer; }
+.eq-add:hover { background: var(--surface); }

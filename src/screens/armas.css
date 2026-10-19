@@ -1,0 +1,14 @@
+/* Tela Armas e constelações. */
+.ar-members { display: flex; flex-wrap: wrap; gap: 8px; }
+.ar-member { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding: 6px 16px 6px 8px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface); color: var(--text-2); text-decoration: none; font-weight: 500; }
+.ar-member[aria-selected="true"] { color: var(--text); border-color: var(--gold); background: color-mix(in srgb, var(--gold) 10%, var(--surface)); }
+.ar-grid { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+.ar-filters { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.ar-filters .dz-btn[aria-pressed="true"] { border-color: var(--gold); color: var(--gold); }
+.ar-scroll { overflow-x: auto; }
+.ar-table { min-width: 340px; }
+.ar-table td .dz-chip { margin-left: 8px; }
+.ar-table th:last-child, .ar-table td:last-child { width: 56px; }
+.ar-grid .note { margin: 0 0 12px; font-size: 13px; color: var(--muted); }
+.ar-grid .dz-table + .note { margin-top: 12px; }
+@media (max-width: 1100px) { .ar-grid { grid-template-columns: minmax(0, 1fr); } }

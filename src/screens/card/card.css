@@ -1,0 +1,68 @@
+/* Card para compartilhar. Tamanhos fixos em px (a imagem exportada sai sempre igual); ver PosterCard.tsx. */
+.pc { --bg: #0a0e1c; --line: #263057; --muted: #9aa3c7; --text: #e7eaf6; --track: #141b38;
+  position: relative; overflow: hidden; box-sizing: border-box; display: flex; flex-direction: column; gap: 34px;
+  background: var(--bg); color: var(--text); font-family: 'IBM Plex Sans', system-ui, sans-serif; padding: 64px 72px; line-height: 1.2; }
+.pc *, .pc *::before, .pc *::after { box-sizing: border-box; }
+.pc .num { font-variant-numeric: tabular-nums; }
+.pc > * { position: relative; }
+.pc .pc-sky { position: absolute; inset: 0; pointer-events: none; }
+.pc-top { display: flex; justify-content: space-between; align-items: center; }
+.pc-brand { display: flex; align-items: center; gap: 12px; font-family: 'Saira Condensed', 'Arial Narrow', sans-serif; font-weight: 700; font-size: 30px; letter-spacing: .16em; }
+.pc-nick { font-size: 18px; color: var(--muted); }
+.pc-main { display: flex; flex-direction: column; gap: 34px; flex: 1; min-height: 0; }
+.pc-left, .pc-right { display: flex; flex-direction: column; gap: 34px; }
+.pc-title { display: flex; flex-direction: column; gap: 10px; }
+.pc-sub { font-family: 'Saira Condensed', sans-serif; font-weight: 600; font-size: 22px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
+.pc-title h1 { margin: 0; font-family: 'Saira Condensed', sans-serif; font-weight: 700; font-size: 80px; line-height: .95; letter-spacing: .01em; overflow-wrap: anywhere; }
+.pc-title h1.long { font-size: 60px; }
+.pc-lead { font-size: 22px; color: var(--muted); }
+.pc-chars { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
+.pc-char { display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; min-width: 0; }
+.pc-char .n { font-family: 'Saira Condensed', sans-serif; font-weight: 700; font-size: 28px; line-height: 1; }
+.pc-char .w { font-size: 15px; color: var(--muted); line-height: 1.3; }
+.pc-face { width: 120px; height: 120px; border-radius: 50%; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #111733; border: 3px solid var(--c); font-family: 'Saira Condensed', sans-serif; font-size: 58px; font-weight: 700; color: var(--c); }
+.pc-face img { width: 100%; height: 100%; object-fit: cover; }
+.pc-hero { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; padding: 28px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.pc-hero .k { display: block; font-family: 'Saira Condensed', sans-serif; font-weight: 600; font-size: 22px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.pc-hero .big { font-family: 'Saira Condensed', sans-serif; font-weight: 700; font-size: 150px; line-height: .85; color: var(--accent); }
+.pc-hero .side { display: flex; flex-direction: column; gap: 14px; text-align: right; }
+.pc-hero .side > div { display: flex; flex-direction: column; }
+.pc-hero .v { font-family: 'Saira Condensed', sans-serif; font-weight: 700; font-size: 44px; line-height: 1; }
+.pc-hero .l { font-size: 16px; color: var(--muted); }
+.pc-bars { display: flex; flex-direction: column; gap: 14px; }
+.pc-bar { display: grid; grid-template-columns: 150px 1fr 110px; gap: 18px; align-items: center; }
+.pc-bar .n { font-family: 'Saira Condensed', sans-serif; font-weight: 600; font-size: 24px; }
+.pc-bar .track { height: 18px; background: var(--track); border-radius: 9px; overflow: hidden; }
+.pc-bar .track i { display: block; height: 100%; border-radius: 9px; }
+.pc-bar .p { font-family: 'Saira Condensed', sans-serif; font-weight: 700; font-size: 26px; text-align: right; }
+.pc-foot { display: flex; flex-direction: column; gap: 12px; margin-top: auto; }
+.pc-foot .k { font-family: 'Saira Condensed', sans-serif; font-weight: 600; font-size: 18px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.pc-line { position: relative; height: 56px; border-top: 1px solid var(--line); }
+.pc-line span { position: absolute; top: 28px; border-radius: 50%; border: 2px solid var(--bg); transform: translate(-50%, -50%); }
+.pc-seq { display: flex; justify-content: space-between; gap: 24px; font-size: 16px; color: var(--muted); }
+.pc-seq span:first-child { min-width: 0; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.pc-seq span:last-child { white-space: nowrap; }
+
+/* 16:9: duas colunas */
+.pc-wide { padding: 48px 64px; gap: 24px; }
+.pc-wide .pc-main { flex-direction: row; gap: 56px; }
+.pc-wide .pc-left { flex: 1.1; justify-content: space-between; gap: 24px; }
+.pc-wide .pc-right { flex: 1; justify-content: space-between; gap: 20px; }
+.pc-wide .pc-title h1 { font-size: 66px; }
+.pc-wide .pc-title h1.long { font-size: 50px; }
+.pc-wide .pc-face { width: 92px; height: 92px; font-size: 44px; }
+.pc-wide .pc-char .n { font-size: 24px; }
+.pc-wide .pc-hero { padding: 18px 0; }
+.pc-wide .pc-hero .big { font-size: 118px; }
+.pc-wide .pc-hero .v { font-size: 36px; }
+
+/* 9:16: mesma ordem do 4:5, com mais respiro */
+.pc-tall { padding: 88px 72px; gap: 52px; }
+.pc-tall .pc-main { gap: 52px; }
+.pc-tall .pc-left, .pc-tall .pc-right { gap: 52px; }
+.pc-tall .pc-title h1 { font-size: 92px; }
+.pc-tall .pc-title h1.long { font-size: 68px; }
+.pc-tall .pc-line { height: 80px; }
+.pc-tall .pc-line span { top: 40px; }
+
+.pc-box { width: 100%; max-width: 100%; overflow: hidden; border-radius: 12px; border: 1px solid #263057; }

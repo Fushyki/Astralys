@@ -7,28 +7,30 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "test": "tsx tests/runAllTests.ts"
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "sync:data": "tsx scripts/sync-data.ts",
+    "e2e": "node scripts/e2e/equipe.cjs && node scripts/e2e/personagem.cjs && node scripts/e2e/rotacao.cjs && node scripts/e2e/time.cjs && node scripts/e2e/armas.cjs && node scripts/e2e/recarga.cjs && node scripts/e2e/vault.cjs && node scripts/e2e/card.cjs && node scripts/e2e/importar.cjs"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.117.2",
-    "clsx": "^2.1.1",
+    "@tanstack/react-query": "^5.104.4",
     "html-to-image": "^1.11.11",
-    "lucide-react": "^0.453.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "tailwind-merge": "^2.5.4",
-    "xlsx": "^0.18.5"
+    "react-router-dom": "^6.30.6",
+    "xlsx": "^0.18.5",
+    "zod": "^3.25.76",
+    "zustand": "^4.5.7"
   },
   "devDependencies": {
     "@types/node": "^22.7.5",
     "@types/react": "^18.3.11",
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.3",
-    "autoprefixer": "^10.4.20",
-    "postcss": "^8.4.47",
-    "tailwindcss": "^3.4.14",
+    "playwright-core": "^1.64.1",
     "tsx": "^4.19.1",
     "typescript": "^5.6.3",
-    "vite": "^5.4.9"
+    "vite": "^5.4.9",
+    "vitest": "^2.1.9"
   }
 }

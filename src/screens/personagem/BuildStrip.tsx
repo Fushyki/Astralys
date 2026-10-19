@@ -11,7 +11,7 @@ import { weaponsFor } from '../../features/rotation/teamOps';
 import { WeaponPickerDialog } from './WeaponPicker';
 import { SetPickerDialog } from './SetPicker';
 import { useRotationStore } from '../../features/rotation/store';
-import { effectCoverage, missingEffects } from '../../features/rotation/teamInfo';
+import { EFFECT_STATUS_LABEL, effectCoverage, effectStatus, missingEffects } from '../../features/rotation/teamInfo';
 import type { LoadedData } from '../../features/rotation/data';
 import { formatDecimal, formatInt } from '../../ui/format';
 
@@ -67,8 +67,9 @@ export function BuildStrip({ data, index, member: memberRef }: { data: LoadedDat
     .map((n) => data.game.artifacts.find((x) => x.name === n))
     .filter((x): x is NonNullable<typeof x> => !!x);
   const fourPiece = !!memberRef.primarySet && !memberRef.secondarySet && memberRef.fourPiece !== false;
-  const weaponEffect = data.effects.weapons.some((e) => e.weapon === memberRef.weapon);
-  const setEffect = (name: string) => data.effects.sets.some((e) => e.set === name && (e.twoPiece || e.fourPiece));
+  const weaponFx = data.effects.weapons.find((e) => e.weapon === memberRef.weapon);
+  const weaponStatus = effectStatus(weaponFx);
+  const setFx = (name: string) => data.effects.sets.find((e) => e.set === name);
   // Com dois sets (2+2), a 1ª, 2ª e 5ª peça ilustram o principal; as outras, o segundo.
   const setFor = (i: number) => (sets.length === 2 && (i === 2 || i === 3) ? sets[1] : sets[0]);
 
@@ -110,8 +111,8 @@ export function BuildStrip({ data, index, member: memberRef }: { data: LoadedDat
                 <button key={r} type="button" aria-pressed={refine === r} onClick={() => update(index, { refinement: r === 1 ? undefined : r })}>R{r}</button>
               ))}
             </div>
-            <span className={`dz-chip ${weaponEffect ? 'ok' : 'warn'}`} title={weaponEffect ? 'O efeito numérico desta arma entra no cálculo' : 'O efeito desta arma ainda não entra no cálculo; só ATK base e substat contam'}>
-              {weaponEffect ? 'No cálculo' : 'Ainda fora do cálculo'}
+            <span className={`dz-chip ${weaponStatus === 'full' ? 'ok' : weaponStatus === 'none' ? '' : 'warn'}`} title={weaponFx?.note ?? 'Sem cadastro: só ATK base e substat contam'}>
+              {EFFECT_STATUS_LABEL[weaponStatus]}
             </span>
           </header>
           <Passive text={cleanText(weapon?.passive?.refinements[refine - 1]?.descriptionPt ?? weapon?.passive?.refinements[refine - 1]?.description)} />
@@ -131,7 +132,7 @@ export function BuildStrip({ data, index, member: memberRef }: { data: LoadedDat
             <div className="pc-bonus" key={x.id}>
               <div className="head">
                 <b>{x.name}{x.namePt && x.namePt !== x.name ? <small> · {x.namePt}</small> : null}</b>
-                <span className={`dz-chip ${setEffect(x.name) ? 'ok' : 'warn'}`}>{setEffect(x.name) ? 'No cálculo' : 'Ainda fora do cálculo'}</span>
+                <span className={`dz-chip ${effectStatus(setFx(x.name)) === 'full' ? 'ok' : effectStatus(setFx(x.name)) === 'none' ? '' : 'warn'}`} title={setFx(x.name)?.note}>{EFFECT_STATUS_LABEL[effectStatus(setFx(x.name))]}</span>
               </div>
               {x.bonuses.twoPiece && <p><span className="pcs">2 peças</span> {cleanText(x.bonuses.twoPiece.descriptionPt ?? x.bonuses.twoPiece.description)}</p>}
               {fourPiece && x.bonuses.fourPiece && (
@@ -145,7 +146,7 @@ export function BuildStrip({ data, index, member: memberRef }: { data: LoadedDat
         <WeaponPickerDialog
           weapons={weaponsFor(character, data.game.weapons)}
           current={memberRef.weapon}
-          withEffect={new Set(data.effects.weapons.map((e) => e.weapon))}
+          status={(name) => effectStatus(data.effects.weapons.find((e) => e.weapon === name))}
           onPick={(name) => { update(index, { weapon: name }); setPickWeapon(false); }}
           onClose={() => setPickWeapon(false)}
         />
@@ -154,7 +155,7 @@ export function BuildStrip({ data, index, member: memberRef }: { data: LoadedDat
         <SetPickerDialog
           sets={data.game.artifacts}
           current={{ primarySet: memberRef.primarySet, secondarySet: memberRef.secondarySet }}
-          withEffect={new Set(data.effects.sets.filter((e) => e.twoPiece || e.fourPiece).map((e) => e.set))}
+          status={(name) => effectStatus(data.effects.sets.find((e) => e.set === name))}
           onPick={(c) => { update(index, { primarySet: c.primarySet, secondarySet: c.secondarySet, fourPiece: c.fourPiece }); setPickSet(false); }}
           onClose={() => setPickSet(false)}
         />
@@ -173,7 +174,7 @@ function BuildDialog({ data, index, memberRef, onClose }: { data: LoadedData; in
   const mainOptions = (slot: 'sands' | 'goblet' | 'circlet') => Object.keys(MAIN_STAT_VALUES[slot]).map((k) => ({ value: k, label: STAT_LABEL[k] ?? k }));
   const setOptions = [
     { value: '', label: 'Nenhum' },
-    ...data.game.artifacts.map((s) => ({ value: s.name, label: `${s.name}${data.effects.sets.some((e) => e.set === s.name && (e.twoPiece || e.fourPiece)) ? '' : ' (sem efeito)'}` })),
+    ...data.game.artifacts.map((s) => ({ value: s.name, label: `${s.name}${data.effects.sets.some((e) => e.set === s.name) ? '' : ' (sem efeito)'}` })),
   ];
   const missing = missingEffects(memberRef, data.effects);
   const cover = effectCoverage(memberRef, data.effects);

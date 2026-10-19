@@ -19,7 +19,7 @@ describe('passivas e constelações curadas', () => {
       expect(new Set(ids).size, `${c.character}: ids repetidos`).toBe(ids.length);
       for (const b of c.buffs!) {
         for (const [k, v] of Object.entries(b.stats ?? {})) {
-          if (typeof v === 'number') expect(Math.abs(v) * (b.level ? Math.max(...b.level.table) : 1), `${c.character} ${b.id} ${k}`).toBeLessThanOrEqual(k === 'em' ? 400 : 2);
+          if (typeof v === 'number') expect(Math.abs(v) * (b.level ? Math.max(...b.level.table) : 1), `${c.character} ${b.id} ${k}`).toBeLessThanOrEqual(k === 'em' ? 400 : /Flat$/.test(k) ? 1000 : 2);
         }
         // Com `team.scale` o valor guardado é 1 e a tabela traz os números de verdade.
         const shred = b.resShred && b.resShred.value * (b.team?.scale ? Math.max(...b.team.scale.table) : 1) * (b.level ? Math.max(...b.level.table) : 1);

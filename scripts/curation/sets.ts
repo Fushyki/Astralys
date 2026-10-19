@@ -3,9 +3,10 @@
  * assumido. Só entram efeitos que o motor sabe aplicar; o resto fica de fora e a `note` diz o que falta.
  */
 import type { Element } from '../../src/data/schema';
+import type { BuffCur, FlatCur } from './gear';
 
 /** Um parâmetro do Lunaris (`p` = índice, `x` = multiplicador, ex.: stacks) ou um literal tirado da descrição. */
-export type Val = number | { p: number; x?: number } | { lit: number };
+export type Val = number | { p: number; x?: number } | { lit: number } | { re: string; x?: number };
 
 export interface FourCuration {
   atkPct?: Val;
@@ -18,6 +19,18 @@ export interface FourCuration {
   meltBonus?: Val;
   byType?: Partial<Record<'normal' | 'charged' | 'plunge' | 'skill' | 'burst', Val>>;
   team?: { atkPct?: Val; dmgPct?: Val; em?: Val };
+  er?: Val;
+  critRateByType?: Partial<Record<'normal' | 'charged' | 'plunge' | 'skill' | 'burst', Val>>;
+  critDmgByType?: Partial<Record<'normal' | 'charged' | 'plunge' | 'skill' | 'burst', Val>>;
+  /** Conversões, regras de time e faixas (mesmo formato dos buffs de arma). */
+  buffs?: BuffCur[];
+  flat?: FlatCur[];
+  /** Só energia, cura, recarga ou resistência: nada a calcular em dano. */
+  noDamage?: true;
+  /** Parte que mexe em dano (reação, Lunar, Estelar, golpe extra) ainda fora do cálculo. */
+  partial?: true;
+  /** Trecho que TEM de aparecer na descrição do 4 peças. */
+  expect?: string;
   resShred?: { value: Val; elements: Element[] };
   /** Suposições e o que não entra no cálculo. */
   note: string;

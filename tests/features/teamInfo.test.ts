@@ -53,19 +53,20 @@ describe('cobertura de efeitos', () => {
   });
 
   it('arma e set sem efeito cadastrado são apontados', () => {
-    const m = { ...p.members[0], weapon: 'Dull Blade', primarySet: 'Tiny Miracle' };
+    const m = { ...p.members[0], weapon: 'Dull Blade', primarySet: 'Conjunto Inexistente' };
     const c = effectCoverage(m, effects);
     expect(c.weaponHasEffect).toBe(false);
     expect(c.primarySetHasEffect).toBe(false);
-    expect(missingEffects(m, effects)).toEqual(['arma Dull Blade', 'set Tiny Miracle']);
+    expect(missingEffects(m, effects)).toEqual(['arma Dull Blade', 'set Conjunto Inexistente']);
   });
 
   it('set com 2 peças cadastradas mas sem 4 peças avisa só o bônus de 4 peças', () => {
+    const sem4 = { ...effects, sets: effects.sets.map((s) => (s.set === 'Gilded Dreams' ? { ...s, fourPiece: undefined } : s)) };
     const m = { ...p.members[0], primarySet: 'Gilded Dreams', secondarySet: undefined };
-    expect(effectCoverage(m, effects).primarySetHasEffect).toBe(true);
-    expect(effectCoverage(m, effects).fourPieceMissing).toBe(true);
-    expect(missingEffects(m, effects)).toContain('4 peças de Gilded Dreams');
-    expect(missingEffects({ ...m, fourPiece: false }, effects)).not.toContain('4 peças de Gilded Dreams');
+    expect(effectCoverage(m, sem4).primarySetHasEffect).toBe(true);
+    expect(effectCoverage(m, sem4).fourPieceMissing).toBe(true);
+    expect(missingEffects(m, sem4)).toContain('4 peças de Gilded Dreams');
+    expect(missingEffects({ ...m, fourPiece: false }, sem4)).not.toContain('4 peças de Gilded Dreams');
   });
 
   it('sem set escolhido não é falta', () => {
@@ -74,8 +75,8 @@ describe('cobertura de efeitos', () => {
     expect(missingEffects(m, effects)).toEqual([]);
   });
 
-  it('um personagem novo por defeito geralmente não tem efeitos cadastrados', () => {
+  it('personagem que só tem notas (golpes extras fora do cálculo) já conta como cadastrado', () => {
     const ref = defaultMember('Fischl', data);
-    expect(effectCoverage(ref, effects).characterHasEffect).toBe(false);
+    expect(effectCoverage(ref, effects).characterHasEffect).toBe(true);
   });
 });

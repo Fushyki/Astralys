@@ -18,21 +18,30 @@ export interface BuffCuration {
   src: Src;
   scope: 'self' | 'others' | 'team';
   timed: boolean;
+  /** Constelação mínima (por padrão vem de `src`; num buff do kit, informe aqui, ex.: +1 stack na C2). */
+  minConstellation?: number;
   forElements?: Element[];
   stats?: {
     atkPct?: Val; dmgPct?: Val; critRate?: Val; critDmg?: Val; em?: Val; hpPct?: Val; defPct?: Val;
     byType?: Partial<Record<'normal' | 'charged' | 'plunge' | 'skill' | 'burst', Val>>;
     critRateByType?: Partial<Record<'normal' | 'charged' | 'plunge' | 'skill' | 'burst', Val>>;
     critDmgByType?: Partial<Record<'normal' | 'charged' | 'plunge' | 'skill' | 'burst', Val>>;
+    /** Fração da DEF do inimigo ignorada pelos golpes do dono. */
+    defIgnore?: Val;
+    atkFlat?: Val; hpFlat?: Val; defFlat?: Val; er?: Val;
   };
+  /** Dano fixo por golpe elegível (ex.: Gorou A4, 156% da DEF no dano da habilidade). */
+  flat?: { name: string; sourceStat: 'ATK' | 'HP' | 'DEF' | 'EM'; perPoint: Val; cap?: Val; hitTypes: ('normal' | 'charged' | 'plunge' | 'skill' | 'burst')[]; stacks?: number }[];
   resShred?: { value: Val; elements: Element[] };
+  /** Redução de DEF do inimigo, em fração (vale o tempo todo). */
+  defShred?: Val;
   /**
    * Efeito do kit (habilidade ou supremo) que cresce com o nível do talento: `src: 'kit'`, os valores em `stats`,
    * `resShred` ou `convert` valem 1 e são multiplicados pela linha `key` da tabela de multiplicadores do Lunaris.
    */
   kit?: { talent: 'normal' | 'skill' | 'burst'; key?: string };
   /** Regras de composição do time (ver `BuffTeamRulesSchema`); `scale.table` vem de parâmetros do Lunaris. */
-  team?: { only?: Element[]; eachOf?: Element[]; scale?: { of: 'distinct' | Element[]; table: Val[] } };
+  team?: { only?: Element[]; eachOf?: Element[]; scale?: { of: 'distinct' | 'same' | 'different' | Element[]; table: Val[] } };
   /** Bônus que depende de um stat da fonte (ver `BuffConvertSchema`). Substitui `stats`. */
   convert?: {
     from: 'atk' | 'baseAtk' | 'hp' | 'def' | 'em' | 'er';
@@ -47,6 +56,13 @@ export interface BuffCuration {
   expect: string;
   note: string;
 }
+
+/** Passiva ou constelação que não vira buff: só utilidade (energia, cura, CD) ou só em parte (golpe extra, mecânica nova). */
+export interface NoteCuration {
+  kind: 'utility' | 'partial';
+  note: string;
+}
+export type CharacterNotes = Record<string, Partial<Record<Src, NoteCuration>>>;
 
 export const CHARACTERS: Record<string, BuffCuration[]> = {
   'Raiden Shogun': [

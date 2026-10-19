@@ -196,8 +196,8 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
       enemy: {
         level: config.enemyLevel,
         res: assembly.enemyRes,
-        defRed: config.enemyDefRed,
-        defIgnore: config.enemyDefIgnore,
+        defRed: assembly.enemyDefRed,
+        defIgnore: Math.min(1, (config.enemyDefIgnore ?? 0) + (stats.defIgnore ?? 0)),
       },
       reaction: action.reaction === 'none' ? undefined : { kind: action.reaction, bonus: reactionBonus },
       ampCoefficient: ctx.ampCoefficient,

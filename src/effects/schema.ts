@@ -6,7 +6,7 @@
  * Percentuais em fração (0.3 = 30%). Modelo herdado das abas "(efeitos)" da planilha de referência.
  */
 import { z } from 'zod';
-import { ElementSchema, HitTypeSchema } from '../data/schema';
+import { ElementSchema, HitTypeSchema, WeaponTypeSchema } from '../data/schema';
 
 const frac = z.number().default(0);
 const FonteInfo = z.string().min(1, 'fonte_info é obrigatório: de onde veio este número?');
@@ -35,11 +35,17 @@ const BuffStatsSchema = z.object({
   /** Taxa e Dano Crítico só para certos tipos de golpe. */
   critRateByType: z.record(HitTypeSchema, z.number()).default({}),
   critDmgByType: z.record(HitTypeSchema, z.number()).default({}),
+  /** Fração da DEF do inimigo que os golpes do dono ignoram (soma com a do cenário, no máximo 100%). */
+  defIgnore: frac,
+  /** ATK, HP e DEF fixos (ex.: Nicole, +300 de ATK; Prune C6, +350). */
+  atkFlat: frac,
+  hpFlat: frac,
+  defFlat: frac,
 });
 export type BuffStats = z.infer<typeof BuffStatsSchema>;
 
 /** Stats que uma conversão pode alimentar (fixos ou em fração). */
-export const ConvertTargetSchema = z.enum(['atkFlat', 'hpFlat', 'defFlat', 'atkPct', 'hpPct', 'defPct', 'em', 'dmgPct', 'critRate', 'critDmg', 'normal', 'charged', 'plunge', 'skill', 'burst']);
+export const ConvertTargetSchema = z.enum(['atkFlat', 'hpFlat', 'defFlat', 'atkPct', 'hpPct', 'defPct', 'em', 'dmgPct', 'critRate', 'critDmg', 'er', 'normal', 'charged', 'plunge', 'skill', 'burst']);
 export type ConvertTarget = z.infer<typeof ConvertTargetSchema>;
 
 /**
@@ -49,7 +55,8 @@ export type ConvertTarget = z.infer<typeof ConvertTargetSchema>;
  */
 export const BuffConvertSchema = z.object({
   /** 'baseAtk' = ATK base do personagem + arma (ex.: ATK que a Kujou Sara dá). */
-  from: z.enum(['atk', 'baseAtk', 'hp', 'def', 'em', 'er']),
+  /** 'partyEnergy' = soma da energia do Supremo de todos os membros (ex.: Mouun's Moon). */
+  from: z.enum(['atk', 'baseAtk', 'hp', 'def', 'em', 'er', 'partyEnergy']),
   source: z.enum(['self', 'highestEm']).default('self'),
   perPoint: z.number(),
   threshold: z.number().default(0),
@@ -69,13 +76,40 @@ export type BuffConvert = z.infer<typeof BuffConvertSchema>;
 export const BuffTeamRulesSchema = z.object({
   only: z.array(ElementSchema).optional(),
   eachOf: z.array(ElementSchema).optional(),
-  scale: z.object({ of: z.union([z.literal('distinct'), z.array(ElementSchema).min(1)]), table: z.array(z.number()).min(1) }).optional(),
+  /** O time precisa ter ao menos tantos elementos diferentes (ex.: Ballad of the Fjords, 3). */
+  minDistinct: z.number().int().positive().optional(),
+  /** Só vale para personagens com um destes tipos de arma (ex.: Wanderer's Troupe, Catalisador ou Arco). */
+  onlyWeapons: z.array(WeaponTypeSchema).optional(),
+  /** Só vale se o Supremo do dono custa até tanta energia (ex.: Moonweaver's Dawn, 60 e 40). */
+  maxBurstEnergy: z.number().positive().optional(),
+  /**
+   * `of`: 'distinct' = elementos diferentes no time; lista de elementos ou `{ names }` (nomes de personagem) = quantos
+   * membros são desses; 'same' / 'different' = quantos OUTROS membros têm o mesmo elemento / outro elemento que o dono.
+   * `names` + `orDifferent` conta também quem tem outro elemento (ex.: Chain Breaker, "de Natlan ou de outro elemento").
+   */
+  scale: z
+    .object({
+      of: z.union([z.literal('distinct'), z.literal('same'), z.literal('different'), z.array(ElementSchema).min(1), z.object({ names: z.array(z.string().min(1)).min(1), orDifferent: z.boolean().optional() })]),
+      table: z.array(z.number()).min(1),
+    })
+    .optional(),
 });
 export type BuffTeamRules = z.infer<typeof BuffTeamRulesSchema>;
 
 /** Buff de habilidade (e não de passiva): os valores são multiplicados por `table[nível do talento - 1]`. */
 export const BuffLevelSchema = z.object({ talent: z.enum(['normal', 'skill', 'burst']), table: z.array(z.number()).length(15) });
 export type BuffLevel = z.infer<typeof BuffLevelSchema>;
+
+/** Dano plano de arma/set: `perPoint` × stat do dono por golpe elegível, até `capPerHit` e `stacks` golpes. */
+export const WeaponFlatSchema = z.object({
+  name: z.string().min(1),
+  sourceStat: z.enum(['ATK', 'HP', 'DEF', 'EM']),
+  perPoint: z.number(),
+  capPerHit: z.number().optional(),
+  hitTypes: z.array(HitTypeSchema).default([]),
+  stacks: z.number().int().positive().optional(),
+});
+export type WeaponFlat = z.infer<typeof WeaponFlatSchema>;
 
 /**
  * Um buff de passiva ou constelação. Vale a partir de `minConstellation`. `timed` buffs viram uma faixa na linha do
@@ -99,10 +133,22 @@ export const CharacterBuffSchema = z.object({
   level: BuffLevelSchema.optional(),
   /** Redução de RES do inimigo (vale o tempo todo). */
   resShred: z.object({ value: z.number(), elements: z.array(ElementSchema).min(1) }).optional(),
+  /** Redução de DEF do inimigo, em fração (vale o tempo todo; soma com a do cenário, no máximo 90%). */
+  defShred: z.number().positive().optional(),
+  /** Dano fixo por golpe elegível (ex.: Gorou A4, "Dano de Habilidade aumentado em 156% da DEF"). */
+  flat: z.array(WeaponFlatSchema).default([]),
   /** O que foi assumido e o que não entra. */
   note: z.string().optional(),
 });
 export type CharacterBuff = z.infer<typeof CharacterBuffSchema>;
+
+/** O que o cálculo faz com uma passiva ou constelação que NÃO virou buff: só utilidade (energia, cura, CD) ou só em parte. */
+export const CharacterNoteSchema = z.object({
+  src: z.enum(['p1', 'p2', 'p3', 'const1', 'const2', 'const3', 'const4', 'const5', 'const6']),
+  kind: z.enum(['utility', 'partial']),
+  note: z.string().min(1),
+});
+export type CharacterNote = z.infer<typeof CharacterNoteSchema>;
 
 export const CharacterEffectSchema = z.object({
   character: z.string().min(1),
@@ -118,6 +164,8 @@ export const CharacterEffectSchema = z.object({
   resShred: z.object({ value: z.number(), elements: z.array(ElementSchema).min(1) }).optional(),
   /** Passivas e constelações com número (a partir de `minConstellation`). */
   buffs: z.array(CharacterBuffSchema).default([]),
+  /** Passivas e constelações sem buff: "utility" (nada a calcular em dano) ou "partial" (parte do dano fora do cálculo). */
+  notes: z.array(CharacterNoteSchema).default([]),
   fonte_info: FonteInfo,
 });
 export type CharacterEffect = z.infer<typeof CharacterEffectSchema>;
@@ -139,6 +187,10 @@ const WeaponStatsSchema = z.object({
   /** ATK% = coef × (ER − 100%), até `cap` (ex.: Engulfing Lightning 0.28, teto 0.8). */
   atkPctPerEr: z.object({ coef: z.number(), cap: z.number() }).optional(),
   team: TeamBuffSchema.optional(),
+  /** Efeitos com conversão, crítico por golpe, buff de outros ou regra de time (mesmo formato dos buffs de personagem). */
+  buffs: z.array(CharacterBuffSchema).default([]),
+  /** Dano extra somado ao golpe (ex.: "Dano de Habilidade aumentado em 40% da DEF"). */
+  flat: z.array(WeaponFlatSchema).default([]),
 });
 export type WeaponStats = z.infer<typeof WeaponStatsSchema>;
 
@@ -148,6 +200,10 @@ export const WeaponEffectSchema = WeaponStatsSchema.extend({
   refinements: z.array(WeaponStatsSchema).length(5).optional(),
   /** O que foi assumido (stacks, tempo ativo) e o que NÃO entra no cálculo. */
   note: z.string().optional(),
+  /** O efeito da passiva não toca em dano (energia, cura, estamina, reinício de recarga): nada a calcular. */
+  noDamage: z.boolean().optional(),
+  /** Parte da passiva que mexe em dano (golpe extra, reação, mecânica nova) ainda NÃO entra no cálculo. */
+  partial: z.boolean().optional(),
   fonte_info: FonteInfo,
 });
 export type WeaponEffect = z.infer<typeof WeaponEffectSchema>;
@@ -156,7 +212,7 @@ export type WeaponEffect = z.infer<typeof WeaponEffectSchema>;
 export function weaponStatsAt(effect: WeaponEffect, refinement = 1): WeaponStats {
   const r = effect.refinements?.[Math.min(5, Math.max(1, Math.round(refinement))) - 1] ?? effect;
   // Os JSON de efeitos são lidos sem passar pelo Zod, então os campos novos podem faltar nos efeitos antigos.
-  return { ...r, hpPct: r.hpPct ?? 0, defPct: r.defPct ?? 0, dmgPctByType: r.dmgPctByType ?? {} };
+  return { ...r, hpPct: r.hpPct ?? 0, defPct: r.defPct ?? 0, dmgPctByType: r.dmgPctByType ?? {}, buffs: r.buffs ?? [], flat: r.flat ?? [] };
 }
 
 /** Bônus de 2 peças que a planilha modela como "stat + valor". */
@@ -190,10 +246,18 @@ export const SetEffectSchema = z.object({
       /** Redução de RES do inimigo nos elementos listados (ex.: Deepwood Memories, Dendro -30%). */
       resShred: z.object({ value: z.number(), elements: z.array(ElementSchema).min(1) }).optional(),
       team: TeamBuffSchema.optional(),
+      buffs: z.array(CharacterBuffSchema).default([]),
+      flat: z.array(WeaponFlatSchema).default([]),
     })
     .optional(),
+  /** Buffs dos 2 peças além do stat simples (conversões, regras de time). */
+  twoPieceBuffs: z.array(CharacterBuffSchema).default([]),
   /** O que foi assumido e o que NÃO entra no cálculo. */
   note: z.string().optional(),
+  /** O efeito do set não toca em dano (ex.: Prayers): nada a calcular. */
+  noDamage: z.boolean().optional(),
+  /** Parte do efeito que mexe em dano ainda NÃO entra no cálculo. */
+  partial: z.boolean().optional(),
   fonte_info: FonteInfo,
 });
 export type SetEffect = z.infer<typeof SetEffectSchema>;

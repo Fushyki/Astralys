@@ -12,3 +12,14 @@
 .ar-grid .note { margin: 0 0 12px; font-size: 13px; color: var(--muted); }
 .ar-grid .dz-table + .note { margin-top: 12px; }
 @media (max-width: 1100px) { .ar-grid { grid-template-columns: minmax(0, 1fr); } }
+
+.ar-kit { list-style: none; margin: 14px 0 6px; padding: 0; display: grid; gap: 6px; }
+.ar-kit li { display: grid; grid-template-columns: 36px 150px 1fr; gap: 10px; align-items: baseline; padding: 8px 10px; border-radius: 10px; background: var(--surface-2, rgba(255, 255, 255, 0.04)); border-left: 3px solid var(--muted); }
+.ar-kit li[data-status='modeled'] { border-left-color: var(--ok, #5ecf8d); }
+.ar-kit li[data-status='boost'] { border-left-color: var(--gold, #e9c46a); }
+.ar-kit li[data-status='partial'] { border-left-color: var(--warn, #f0a35c); }
+.ar-kit li[data-status='missing'] { border-left-color: var(--bad, #e05a6a); }
+.ar-kit b { font-family: var(--font-display); }
+.ar-kit .st { font-size: 12px; color: var(--muted); }
+.ar-kit .tx { font-size: 13px; }
+@media (max-width: 720px) { .ar-kit li { grid-template-columns: 36px 1fr; } .ar-kit .tx { grid-column: 1 / -1; } }

@@ -48,6 +48,8 @@ export interface StatBlock {
   critDmgByType: Record<HitType, number>;
   meltBonus: number;
   vaporizeBonus: number;
+  /** Fração da DEF do inimigo ignorada pelos golpes deste membro. */
+  defIgnore: number;
 }
 
 type ByType = Partial<Record<HitType, number>>;
@@ -63,7 +65,7 @@ export const zeroBlock = (): StatBlock => ({
   atkPct: 0, atkFlat: 0, hpPct: 0, hpFlat: 0, defPct: 0, defFlat: 0, em: 0, er: 0, critRate: 0, critDmg: 0,
   dmgBonus: 0, dmgByType: { normal: 0, charged: 0, plunge: 0, skill: 0, burst: 0 },
   critRateByType: { normal: 0, charged: 0, plunge: 0, skill: 0, burst: 0 }, critDmgByType: { normal: 0, charged: 0, plunge: 0, skill: 0, burst: 0 },
-  meltBonus: 0, vaporizeBonus: 0,
+  meltBonus: 0, vaporizeBonus: 0, defIgnore: 0,
 });
 
 export function addDelta(target: StatBlock, delta: StatDelta): StatBlock {
@@ -212,7 +214,8 @@ export function characterBuffDelta(stats: BuffStats | undefined): StatDelta {
   return {
     atkPct: stats.atkPct ?? 0, dmgBonus: stats.dmgPct ?? 0, critRate: stats.critRate ?? 0, critDmg: stats.critDmg ?? 0,
     em: stats.em ?? 0, er: stats.er ?? 0, hpPct: stats.hpPct ?? 0, defPct: stats.defPct ?? 0, dmgByType: stats.dmgPctByType ?? {},
-    critRateByType: stats.critRateByType ?? {}, critDmgByType: stats.critDmgByType ?? {},
+    critRateByType: stats.critRateByType ?? {}, critDmgByType: stats.critDmgByType ?? {}, defIgnore: stats.defIgnore ?? 0,
+    atkFlat: stats.atkFlat ?? 0, hpFlat: stats.hpFlat ?? 0, defFlat: stats.defFlat ?? 0,
   };
 }
 
@@ -384,6 +387,7 @@ export interface FinalStats {
   critDmgByType: Record<HitType, number>;
   meltBonus: number;
   vaporizeBonus: number;
+  defIgnore: number;
   /** Bônus de ATK% que a arma ganha com ER (ex.: Engulfing Lightning). */
   weaponErAtkPct: number;
 }
@@ -437,6 +441,7 @@ export function finalStats(m: MemberInput, statics: StatBlock, rolls: Rolls, tea
     critDmgByType,
     meltBonus: statics.meltBonus + team.meltBonus,
     vaporizeBonus: statics.vaporizeBonus + team.vaporizeBonus,
+    defIgnore: statics.defIgnore + team.defIgnore,
     weaponErAtkPct: erAtk,
   };
 }

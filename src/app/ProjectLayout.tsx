@@ -101,7 +101,7 @@ export default function ProjectLayout() {
       <StateCard title="Projeto não encontrado">
         <p>Não existe um projeto salvo com o id “{id}” neste navegador.</p>
         <Link className="dz-btn" to={`/projeto/${SAMPLE_ID}`}>Abrir o exemplo</Link>
-        <Link className="dz-btn" to="/vault">Ir ao Vault</Link>
+        <Link className="dz-btn" to="/vault">Ir aos Times</Link>
       </StateCard>
     );
   }
@@ -123,7 +123,7 @@ export default function ProjectLayout() {
   if (!current || !data || !ready || !summary) {
     return (
       <div className="dz">
-        <AppHeader projectId={id} memberName={headerMember} />
+        <AppHeader projectId={id} memberName={headerMember} projectName={current?.name} />
         <div className="dz-state" role="status">
           <h1 className="h2">Calculando</h1>
           <p>Carregando os dados do jogo e otimizando os substats da equipe.</p>
@@ -134,7 +134,7 @@ export default function ProjectLayout() {
 
   return (
     <div className="dz">
-      <AppHeader projectId={id} memberName={headerMember} favorite={!!current.meta.favorite} onToggleFavorite={() => toggleFavorite(current)} />
+      <AppHeader projectId={id} memberName={headerMember} projectName={current.name} favorite={!!current.meta.favorite} onToggleFavorite={() => toggleFavorite(current)} />
       <ProjectProvider value={{ id, project: current, data, bundle: ready.bundle, resolved: ready.resolved, stale: ready.stale, inSync, summary, colors }}>
         <div className={ready.stale ? 'dz-busy' : undefined}>
           <Outlet />

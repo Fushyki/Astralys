@@ -32,7 +32,7 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
   await page.reload({ waitUntil: 'networkidle' });
   await page.waitForSelector('.rc-card');
 
-  check('a aba Recarga está ativa', (await page.locator('.dz-nav a[aria-current="page"]').textContent()).includes('Recarga'));
+  check('a Recarga abre dentro do time (faixa do time visível)', (await page.locator('.dz-subnav').count()) === 1);
   check('quatro cartões, um por personagem', (await page.locator('.rc-card').count()) === 4);
   check('Mavuika (sem custo de Supremo) não precisa de ER', (await need('Mavuika')) === '—');
   const c0 = await need('Citlali');

@@ -137,7 +137,7 @@ export function optimizeMember(ctx: OptimizerContext, memberIndex: number, flatB
     const stats = minStats(a.activeTags); // só para os bônus de DMG% (não dependem dos rolls)
     const element = a.move.element ?? m.character.element;
     const dmg = 1 + stats.dmgBonus + stats.dmgByType[a.move.hitType] + a.dmgAdjust;
-    const def = defMultiplier(config.characterLevel, config.enemyLevel, config.enemyDefRed, config.enemyDefIgnore ?? 0);
+    const def = defMultiplier(config.characterLevel, config.enemyLevel, assembly.enemyDefRed, config.enemyDefIgnore ?? 0);
     const res = resMultiplier(enemyRes({ level: config.enemyLevel, res: assembly.enemyRes }, element));
     const w = a.executions * dmg * def * res;
     const sc = scaleAt(a.move, m.talents[a.move.talent]);

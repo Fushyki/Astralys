@@ -48,6 +48,8 @@ export interface StatBlock {
   critDmgByType: Record<HitType, number>;
   meltBonus: number;
   vaporizeBonus: number;
+  /** Fração da DEF do inimigo ignorada pelos golpes deste membro. */
+  defIgnore: number;
 }
 
 type ByType = Partial<Record<HitType, number>>;
@@ -63,7 +65,7 @@ export const zeroBlock = (): StatBlock => ({
   atkPct: 0, atkFlat: 0, hpPct: 0, hpFlat: 0, defPct: 0, defFlat: 0, em: 0, er: 0, critRate: 0, critDmg: 0,
   dmgBonus: 0, dmgByType: { normal: 0, charged: 0, plunge: 0, skill: 0, burst: 0 },
   critRateByType: { normal: 0, charged: 0, plunge: 0, skill: 0, burst: 0 }, critDmgByType: { normal: 0, charged: 0, plunge: 0, skill: 0, burst: 0 },
-  meltBonus: 0, vaporizeBonus: 0,
+  meltBonus: 0, vaporizeBonus: 0, defIgnore: 0,
 });
 
 export function addDelta(target: StatBlock, delta: StatDelta): StatBlock {
@@ -159,6 +161,11 @@ export interface MemberInput {
    * membro: é o modo "theorycraft" manual.
    */
   manualRolls?: Rolls;
+  /**
+   * Soma EXATA dos stats das 5 peças (main stats, ATK e HP fixos de flor e pluma, substats reais). Quando presente,
+   * vale no lugar dos main stats e dos rolls (o otimizador de artefatos avalia conjuntos reais e "virtuais" assim).
+   */
+  externalStats?: StatDelta;
 }
 
 export const fourPieceActive = (m: MemberInput) => !!m.primarySet && !m.secondarySet && m.fourPiece !== false;
@@ -212,7 +219,8 @@ export function characterBuffDelta(stats: BuffStats | undefined): StatDelta {
   return {
     atkPct: stats.atkPct ?? 0, dmgBonus: stats.dmgPct ?? 0, critRate: stats.critRate ?? 0, critDmg: stats.critDmg ?? 0,
     em: stats.em ?? 0, er: stats.er ?? 0, hpPct: stats.hpPct ?? 0, defPct: stats.defPct ?? 0, dmgByType: stats.dmgPctByType ?? {},
-    critRateByType: stats.critRateByType ?? {}, critDmgByType: stats.critDmgByType ?? {},
+    critRateByType: stats.critRateByType ?? {}, critDmgByType: stats.critDmgByType ?? {}, defIgnore: stats.defIgnore ?? 0,
+    atkFlat: stats.atkFlat ?? 0, hpFlat: stats.hpFlat ?? 0, defFlat: stats.defFlat ?? 0,
   };
 }
 
@@ -314,6 +322,10 @@ export function staticSources(m: MemberInput, member = 0): StatSource[] {
   }
 
   const a = m.artifacts;
+  if (m.externalStats) {
+    add('artifacts', 'Artefatos (peças reais)', 'main-stat', m.externalStats);
+    return out;
+  }
   for (const [slot, stat] of [['sands', a.sands], ['goblet', a.goblet], ['circlet', a.circlet]] as const) {
     add(`main-${slot}`, `Main stat: ${stat}`, 'main-stat', namedStatDelta(stat, mainStatValue(slot, stat, a.rarity[slot])));
   }
@@ -384,6 +396,7 @@ export interface FinalStats {
   critDmgByType: Record<HitType, number>;
   meltBonus: number;
   vaporizeBonus: number;
+  defIgnore: number;
   /** Bônus de ATK% que a arma ganha com ER (ex.: Engulfing Lightning). */
   weaponErAtkPct: number;
 }
@@ -406,11 +419,11 @@ export function finalStats(m: MemberInput, statics: StatBlock, rolls: Rolls, tea
   const atkBase = m.character.baseAtk + m.weapon.baseAtk;
   const atk =
     atkBase * (1 + statics.atkPct + team.atkPct + resonanceAtkPct + rolls['ATK%'] * rv['ATK%'] + erAtk) +
-    pick(PLUME_ATK, a.rarity.plume) + statics.atkFlat + team.atkFlat + rolls.ATK * rv.ATK;
+    (m.externalStats ? 0 : pick(PLUME_ATK, a.rarity.plume)) + statics.atkFlat + team.atkFlat + rolls.ATK * rv.ATK;
 
   const hp =
     m.character.baseHp * (1 + statics.hpPct + team.hpPct + rolls['HP%'] * rv['HP%']) +
-    pick(FLOWER_HP, a.rarity.flower) + statics.hpFlat + team.hpFlat + rolls.HP * rv.HP;
+    (m.externalStats ? 0 : pick(FLOWER_HP, a.rarity.flower)) + statics.hpFlat + team.hpFlat + rolls.HP * rv.HP;
 
   const def =
     m.character.baseDef * (1 + statics.defPct + team.defPct + rolls['DEF%'] * rv['DEF%']) +
@@ -437,6 +450,7 @@ export function finalStats(m: MemberInput, statics: StatBlock, rolls: Rolls, tea
     critDmgByType,
     meltBonus: statics.meltBonus + team.meltBonus,
     vaporizeBonus: statics.vaporizeBonus + team.vaporizeBonus,
+    defIgnore: statics.defIgnore + team.defIgnore,
     weaponErAtkPct: erAtk,
   };
 }

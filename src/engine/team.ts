@@ -75,6 +75,8 @@ export interface TeamAssembly {
   /** ATK de referência de cada membro (rolls mínimos, buffs de %, sem ATK fixo de time). */
   referenceAtk: number[];
   enemyRes: ResistanceMap;
+  /** Redução de DEF do inimigo: a do cenário mais a dos buffs (no máximo 90%). */
+  enemyDefRed: number;
   /** Há conversões de stat: o valor delas depende dos rolls, então vale montar de novo com os rolls otimizados. */
   hasDerived: boolean;
   warnings: string[];
@@ -196,7 +198,7 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
   const minRolls = minimumRolls(config.minRollsPerSubstat);
   const referenceAtk = members.map((m, i) => {
     const team = activeTeamDelta(buffs, names[i], 'all');
-    return finalStats(m, statics[i], minRolls, team, resonanceAtkPct).atk;
+    return finalStats(m, statics[i], m.externalStats ? minimumRolls(0) : minRolls, team, resonanceAtkPct).atk;
   });
 
   // 5) ATK fixo que um personagem dá ao time
@@ -231,7 +233,8 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
       const srcIndex = c.source === 'highestEm' ? highestEm : i;
       const s = derivedStats[srcIndex];
       const srcBase = members[srcIndex].character.baseAtk + members[srcIndex].weapon.baseAtk;
-      const stat = { atk: s.atk, baseAtk: srcBase, hp: s.hp, def: s.def, em: s.em, er: s.er }[c.from];
+      const partyEnergy = members.reduce((sum, x) => sum + (x.character.burst.energyCost ?? 0), 0);
+      const stat = { atk: s.atk, baseAtk: srcBase, hp: s.hp, def: s.def, em: s.em, er: s.er, partyEnergy }[c.from];
       const raw = (c.perPoint ?? 0) * Math.max(0, stat - (c.threshold ?? 0));
       const caps = [c.cap, c.capBaseAtk !== undefined ? c.capBaseAtk * srcBase : undefined].filter((x): x is number => x !== undefined);
       const value = caps.length ? Math.min(raw, ...caps) : raw;
@@ -244,7 +247,7 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
       if (targets.length === 0) continue;
       const delta: StatDelta = { dmgByType: {} };
       for (const to of c.to) {
-        if (to === 'atkFlat' || to === 'hpFlat' || to === 'defFlat' || to === 'atkPct' || to === 'hpPct' || to === 'defPct' || to === 'em' || to === 'critRate' || to === 'critDmg') delta[to] = value;
+        if (to === 'atkFlat' || to === 'hpFlat' || to === 'defFlat' || to === 'atkPct' || to === 'hpPct' || to === 'defPct' || to === 'em' || to === 'critRate' || to === 'critDmg' || to === 'er') delta[to] = value;
         else if (to === 'dmgPct') delta.dmgBonus = value;
         else delta.dmgByType![to] = value;
       }
@@ -274,6 +277,12 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
     enemyRes[el] = config.enemyBaseRes - shred;
   }
 
-  return { statics, sources, buffs, resonanceAtkPct, referenceAtk, enemyRes, hasDerived, warnings };
+  let defShred = 0;
+  members.forEach((m, i) => {
+    for (const b of activeCharacterBuffs(m)) if (b.defShred && !off(`cbuff-def-${i}-${b.id}`)) defShred += b.defShred;
+  });
+  const enemyDefRed = Math.min(0.9, config.enemyDefRed + defShred);
+
+  return { statics, sources, buffs, resonanceAtkPct, referenceAtk, enemyRes, enemyDefRed, hasDerived, warnings };
 }
 

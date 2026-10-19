@@ -72,6 +72,11 @@ function rarityOf(v: unknown): Rarity {
   return v === 4 || v === false || String(v) === '4' ? 4 : 5;
 }
 
+/** A planilha só conhece os efeitos dela: as passivas e constelações curadas depois (`buffs`) ficam de fora no modo compat. */
+export function planilhaEffect<T extends { buffs?: unknown[] } | undefined>(effect: T): T {
+  return effect ? ({ ...effect, buffs: [] } as T) : effect;
+}
+
 export function importPlanilha(wb: WorkBook, data: GameData, effects: EffectsData): PlanilhaImport {
   const warnings: string[] = [];
   const time = sheet(wb, 'Time');
@@ -112,7 +117,7 @@ export function importPlanilha(wb: WorkBook, data: GameData, effects: EffectsDat
     members.push({
       character: findByName(data.characters, name, 'Personagem'),
       weapon: findByName(data.weapons, weaponName, 'Arma'),
-      characterEffect: effects.characters.find((c) => c.character === name),
+      characterEffect: planilhaEffect(effects.characters.find((c) => c.character === name)),
       weaponEffect: effects.weapons.find((w) => w.weapon === weaponName),
       primarySet: setOf(`${col}6`),
       secondarySet: setOf(`${col}7`),

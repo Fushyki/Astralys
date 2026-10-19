@@ -23,3 +23,8 @@
 .eq-card .small-acts { display: flex; gap: 16px; justify-content: center; font-size: 13px; }
 .eq-add { min-height: 220px; border: 1px dashed var(--border-ctl-hi); border-radius: var(--radius-panel); background: none; color: var(--gold); font-family: var(--font-display); font-weight: 600; font-size: 18px; letter-spacing: .06em; text-transform: uppercase; cursor: pointer; }
 .eq-add:hover { background: var(--surface); }
+.eq-card button.who { background: none; border: 0; padding: 0; margin: 0; color: inherit; font: inherit; text-align: left; cursor: pointer; width: 100%; position: relative; border-radius: 12px; }
+.eq-card button.who:hover .name, .eq-card button.who:focus-visible .name { color: var(--gold-hi); }
+.eq-card button.who .swap { margin-left: auto; color: var(--muted); font-size: 18px; opacity: 0; transition: opacity .15s; }
+.eq-card button.who:hover .swap, .eq-card button.who:focus-visible .swap { opacity: 1; }
+@media (hover: none) { .eq-card button.who .swap { opacity: .7; } }

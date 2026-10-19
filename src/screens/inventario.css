@@ -1,0 +1,16 @@
+/* Inventário: importação e grade de peças e armas (os cartões de peça usam `.piece` do otimizador). */
+.inv-import { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+.inv-import .opt { display: flex; flex-direction: column; gap: 10px; align-items: flex-start; padding: 16px; background: var(--bg-header); border: 1px solid var(--border); border-radius: var(--radius-card); }
+.inv-import .opt.now { border-color: var(--gold); }
+.inv-import .row { display: flex; flex-wrap: wrap; gap: 8px; width: 100%; }
+.inv-import .row .dz-input { flex: 1; min-width: 120px; }
+.inv-tools { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin: 20px 0 12px; }
+.inv-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; margin: 12px 0; }
+.inv-grid.weapons { grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); }
+.inv-weapon { display: flex; flex-direction: column; gap: 6px; align-items: center; text-align: center; padding: 12px; background: var(--surface); border: 2px solid var(--border); border-radius: 12px; }
+.inv-weapon[data-rarity='5'] { border-color: #8a6a2e; background: linear-gradient(160deg, #3a2f18, var(--surface) 60%); }
+.inv-weapon[data-rarity='4'] { border-color: #5a4a8a; background: linear-gradient(160deg, #2b2547, var(--surface) 60%); }
+.inv-weapon .art { height: 72px; display: grid; place-items: center; }
+.inv-weapon .art img { max-height: 72px; max-width: 100%; object-fit: contain; }
+.inv-weapon .n { font-weight: 600; font-size: 14px; overflow-wrap: anywhere; }
+.piece .main small { color: var(--muted); font-weight: 400; margin-left: 4px; }

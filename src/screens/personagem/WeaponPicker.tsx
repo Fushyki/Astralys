@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Weapon } from '../../data/schema';
 import { weaponIconUrl } from '../../design/images';
+import { EFFECT_STATUS_LABEL, type EffectStatus } from '../../features/rotation/teamInfo';
 import { formatDecimal, formatInt } from '../../ui/format';
 
 const substatText = (w: Weapon): string => {
@@ -18,14 +19,14 @@ function Icon({ w }: { w: Weapon }) {
 export function WeaponPickerDialog({
   weapons,
   current,
-  withEffect,
+  status,
   onPick,
   onClose,
 }: {
   weapons: Weapon[];
   current: string;
-  /** Nomes das armas cujo efeito numérico já entra no cálculo. */
-  withEffect: ReadonlySet<string>;
+  /** Estado do efeito de cada arma: completo, parcial, sem efeito no dano ou sem cadastro. */
+  status: (name: string) => EffectStatus;
   onPick: (name: string) => void;
   onClose: () => void;
 }) {
@@ -78,7 +79,7 @@ export function WeaponPickerDialog({
               <span className="num sub">ATK {formatInt(w.baseAtk)}{w.substat ? ` · ${substatText(w)}` : ''}</span>
               <span className="tags">
                 {w.name === current && <span className="dz-chip ok">Equipada</span>}
-                {!withEffect.has(w.name) && <span className="dz-chip warn" title="O efeito desta arma ainda não entra no cálculo">sem efeito</span>}
+                {status(w.name) !== 'full' && <span className={`dz-chip ${status(w.name) === 'none' ? '' : 'warn'}`} title={EFFECT_STATUS_LABEL[status(w.name)]}>{status(w.name) === 'none' ? 'só energia/cura' : status(w.name) === 'partial' ? 'parcial' : 'sem efeito'}</span>}
               </span>
             </button>
           ))}

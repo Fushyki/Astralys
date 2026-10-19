@@ -47,7 +47,7 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
   // Abas e cabeçalho
   const tabs = await page.$$eval('.pc-tabs a', (a) => a.map((x) => x.textContent));
   check('uma sub-aba por personagem com a % do dano', tabs.length === 4 && /Mavuika.*95,3%/.test(tabs[0]) && /Citlali.*2,7%/.test(tabs[1]), tabs.join(' | '));
-  check('a aba Personagens do menu está marcada', (await page.getAttribute('.dz-nav a:has-text("Personagens")', 'aria-current')) === 'page');
+  check('a aba Equipe do time está marcada (o personagem fica dentro dela)', (await page.getAttribute('.dz-subnav a:has-text("Equipe")', 'aria-current')) === 'page');
 
   // Atributos do gabarito
   const attrs = await page.locator('.dz-panel:has(h2:text-is("Atributos"))').textContent();

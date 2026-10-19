@@ -5,7 +5,9 @@
  */
 import { z } from 'zod';
 import type { ArtifactSet, Character, Move, Talent, Weapon } from '../data/schema';
-import type { CharacterEffect, FlatDamageEffect, SetEffect, WeaponEffect } from '../effects/schema';
+import { planilhaEffect } from './compat/planilha';
+import { activeCharacterBuffs } from './stats';
+import { weaponStatsAt, type CharacterBuff, type CharacterEffect, type FlatDamageEffect, type SetEffect, type WeaponEffect, type WeaponFlat } from '../effects/schema';
 import { SUBSTATS, type Rolls } from './artifacts';
 import { AMP_EM_COEFFICIENT_SHEET } from './constants/reactions';
 import type { ExtraScale, ReactionChoice, ResolvedMove, RotationAction } from './rotation';
@@ -277,17 +279,65 @@ export function effectiveTalents(
   return out;
 }
 
+/** Buffs de arma e de set (conversões, crítico por golpe, regras de time) no formato dos buffs de personagem. */
+export function gearBuffs(m: Pick<MemberInput, 'weapon' | 'weaponEffect' | 'refinement' | 'primarySet' | 'secondarySet' | 'fourPiece'>): CharacterBuff[] {
+  const out: CharacterBuff[] = [];
+  const add = (prefix: string, label: string, list: CharacterBuff[]) => {
+    for (const b of list) out.push({ ...b, id: `${prefix}:${b.id}`, label: `${label}: ${b.label}` });
+  };
+  if (m.weaponEffect) add('arma', m.weapon.name, weaponStatsAt(m.weaponEffect, m.refinement).buffs);
+  for (const set of [m.primarySet, m.secondarySet]) {
+    if (set?.effect?.twoPieceBuffs?.length) add(`set2-${set.name}`, set.name, set.effect.twoPieceBuffs);
+  }
+  if (m.primarySet && !m.secondarySet && m.fourPiece !== false && m.primarySet.effect?.fourPiece?.buffs?.length) {
+    add(`set4-${m.primarySet.name}`, m.primarySet.name, m.primarySet.effect.fourPiece.buffs);
+  }
+  return out;
+}
+
+/** Dano fixo de arma e de set de 4 peças (ex.: "Dano de Habilidade aumentado em 40% da DEF"). */
+export function gearFlat(members: MemberInput[]): FlatDamageEffect[] {
+  const out: FlatDamageEffect[] = [];
+  members.forEach((m) => {
+    const lists: [string, WeaponFlat[]][] = [];
+    if (m.weaponEffect) lists.push([m.weapon.name, weaponStatsAt(m.weaponEffect, m.refinement).flat]);
+    if (m.primarySet && !m.secondarySet && m.fourPiece !== false) lists.push([m.primarySet.name, m.primarySet.effect?.fourPiece?.flat ?? []]);
+    for (const b of activeCharacterBuffs(m)) if (b.flat?.length) lists.push([b.label, b.flat]);
+    for (const [origin, flat] of lists) {
+      for (const f of flat) {
+        out.push({
+          name: `${origin}: ${f.name}`, source: m.character.name, sourceStat: f.sourceStat, perPoint: f.perPoint, threshold: 0,
+          ...(f.capPerHit !== undefined ? { capPerHit: f.capPerHit } : {}), targets: [m.character.name], elements: [], hitTypes: f.hitTypes,
+          ...(f.stacks !== undefined ? { stacks: f.stacks } : {}), active: true, fonte_info: `Passiva de ${origin} (curadoria do Lunaris)`,
+        });
+      }
+    }
+  });
+  return out;
+}
+
 export function resolveMember(ref: MemberRef, data: GameData, effects: EffectsData, minRolls = 0): MemberInput {
   const setOf = (name?: string) => (name ? { name, effect: effects.sets.find((s) => s.set === name) } : undefined);
   const weapon = byName(data.weapons, ref.weapon, 'Arma');
   const character = byName(data.characters, ref.character, 'Personagem');
+  const weaponEffect = effects.weapons.find((w) => w.weapon === weapon.name);
+  const primarySet = setOf(ref.primarySet);
+  const secondarySet = setOf(ref.secondarySet);
+  const gear = gearBuffs({ weapon, weaponEffect, refinement: ref.refinement, primarySet, secondarySet, fourPiece: ref.fourPiece });
+  const own = effects.characters.find((c) => c.character === ref.character);
+  const characterEffect: CharacterEffect | undefined = gear.length
+    ? {
+        ...(own ?? { character: ref.character, atkPct: 0, dmgPct: 0, critRate: 0, critDmg: 0, em: 0, appliesToSelf: false, notes: [], fonte_info: 'Buffs de arma e set' }),
+        buffs: [...(own?.buffs ?? []), ...gear],
+      }
+    : own;
   return {
     character,
     weapon,
-    characterEffect: effects.characters.find((c) => c.character === ref.character),
-    weaponEffect: effects.weapons.find((w) => w.weapon === weapon.name),
-    primarySet: setOf(ref.primarySet),
-    secondarySet: setOf(ref.secondarySet),
+    characterEffect,
+    weaponEffect,
+    primarySet,
+    secondarySet,
     fourPiece: ref.fourPiece,
     refinement: ref.refinement,
     artifacts: ref.artifacts,
@@ -321,16 +371,27 @@ export interface ResolvedProject {
  */
 export function applyTeamRules(members: MemberInput[]): MemberInput[] {
   const elements = members.map((m) => m.character.element);
-  return members.map((m) => {
+  return members.map((m, self) => {
     const buffs = m.characterEffect?.buffs;
     if (!buffs?.some((b) => b.team || b.level)) return m;
+    const others = members.filter((_, j) => j !== self);
     const next = buffs.flatMap((b) => {
       const t = b.team;
       if (t?.only && !elements.every((e) => t.only!.includes(e))) return [];
       if (t?.eachOf && !t.eachOf.every((e) => elements.includes(e))) return [];
+      if (t?.minDistinct && new Set(elements).size < t.minDistinct) return [];
+      if (t?.onlyWeapons && !t.onlyWeapons.includes(m.character.weapon)) return [];
+      if (t?.maxBurstEnergy && (m.character.burst.energyCost ?? Infinity) > t.maxBurstEnergy) return [];
       let k = 1;
       if (t?.scale) {
-        const n = t.scale.of === 'distinct' ? new Set(elements).size : elements.filter((e) => (t.scale!.of as string[]).includes(e)).length;
+        const of = t.scale.of;
+        const sameEl = (x: MemberInput) => x.character.element === m.character.element;
+        const n =
+          of === 'distinct' ? new Set(elements).size
+          : of === 'same' ? others.filter(sameEl).length
+          : of === 'different' ? others.filter((x) => !sameEl(x)).length
+          : Array.isArray(of) ? elements.filter((e) => of.includes(e)).length
+          : others.filter((x) => of.names.includes(x.character.name) || (of.orDifferent === true && !sameEl(x))).length;
         k *= n >= 1 ? t.scale.table[Math.min(n, t.scale.table.length) - 1] : 0;
       }
       if (b.level) k *= b.level.table[Math.min(15, Math.max(1, Math.round(m.talents[b.level.talent]))) - 1] ?? 0;
@@ -347,6 +408,7 @@ export function applyTeamRules(members: MemberInput[]): MemberInput[] {
         stats,
         ...(b.resShred ? { resShred: { ...b.resShred, value: b.resShred.value * k } } : {}),
         ...(b.convert ? { convert: { ...b.convert, perPoint: b.convert.perPoint * k } } : {}),
+        ...(b.flat?.length ? { flat: b.flat.map((f) => ({ ...f, perPoint: f.perPoint * k, ...(f.capPerHit !== undefined ? { capPerHit: f.capPerHit * k } : {}) })) } : {}),
       }];
     });
     return { ...m, characterEffect: { ...m.characterEffect!, buffs: next } };
@@ -364,9 +426,20 @@ export function applyFlatLevels(flat: FlatDamageEffect[], members: MemberInput[]
   });
 }
 
+/**
+ * Aplica as regras de composição do time aos membros já resolvidos. No modo planilha, os personagens que vêm da planilha
+ * ficam só com os efeitos dela: sem as passivas e constelações curadas depois.
+ */
+export function finalizeMembers(members: MemberInput[], planilha: boolean): MemberInput[] {
+  return applyTeamRules(members).map((m) =>
+    planilha && m.characterEffect && !m.characterEffect.fonte_info.includes('scripts/curation/') ? { ...m, characterEffect: planilhaEffect(m.characterEffect) } : m,
+  );
+}
+
 /** Transforma o projeto salvo nas entradas do motor. Lança ProjectResolveError se algo não existir nos dados. */
 export function resolveProject(project: RotationProject, data: GameData, effects: EffectsData): ResolvedProject {
-  const members = applyTeamRules(project.members.map((m) => resolveMember(m, data, effects, project.config.minRollsPerSubstat)));
+  const planilha = project.compat === 'planilha';
+  const members = finalizeMembers(project.members.map((m) => resolveMember(m, data, effects, project.config.minRollsPerSubstat)), planilha);
   const moves = indexMoves(data.moves);
   const config: GlobalConfig = { ...project.config };
 
@@ -391,7 +464,7 @@ export function resolveProject(project: RotationProject, data: GameData, effects
   return {
     team: { members, extras: project.extras, config, disabled: project.disabled },
     actions,
-    flatEffects: applyFlatLevels(effects.flatDamage, members),
+    flatEffects: [...applyFlatLevels(effects.flatDamage, members), ...gearFlat(members)],
     ampCoefficient: project.compat === 'planilha' ? AMP_EM_COEFFICIENT_SHEET : undefined,
   };
 }

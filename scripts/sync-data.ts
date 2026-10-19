@@ -207,7 +207,11 @@ function buildMoves(char: Character, detail: RawCharDetail, detailPt: RawCharDet
   return moves;
 }
 
-/** C3 e C5 aumentam em 3 o nível de um talento: o texto diz qual ("Increases the Level of X by 3"). */
+/**
+ * C3 e C5 aumentam em 3 o nível de um talento. O texto diz qual de dois jeitos: pelo NOME do talento ("Increases the
+ * Level of Kamisato Art: Soumetsu by 3") ou pelo TIPO ("Increases the Level of the Elemental Skill X by 3",
+ * "Elemental Burst X increases by 3 Levels"). Tenta o nome e, se não casar, o tipo.
+ */
 function constellationBoosts(detail: RawCharDetail): { c3: Talent | null; c5: Talent | null } {
   const strip = (t: string) =>
     t
@@ -224,9 +228,18 @@ function constellationBoosts(detail: RawCharDetail): { c3: Talent | null; c5: Ta
     }
     return null;
   };
+  const byKind = (description: string): Talent | null => {
+    const text = description.replace(/<[^>]*>/g, '').replace(/\{\/?LINK[^}]*\}/g, '').replace(/\s+/g, ' ');
+    if (!/\bLevels?\b/i.test(text) || !/\bby 3\b/i.test(text)) return null;
+    const m = /(Normal Attack|Elemental Skill|Elemental Burst)/i.exec(text);
+    if (!m) return null;
+    const kind = m[1].toLowerCase();
+    return kind === 'normal attack' ? 'normal' : kind === 'elemental skill' ? 'skill' : 'burst';
+  };
   const of = (key: string): Talent | null => {
-    const m = (detail.constellations?.[key]?.description ?? '').match(/Increases? the Level of (.*?) by 3/i);
-    return m ? talentOf(strip(m[1])) : null;
+    const description = detail.constellations?.[key]?.description ?? '';
+    const m = description.match(/Increases? the Level of (.*?) by 3/i);
+    return (m ? talentOf(strip(m[1])) : null) ?? byKind(description);
   };
   return { c3: of('const3'), c5: of('const5') };
 }

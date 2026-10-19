@@ -59,7 +59,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   check('o projeto leva o nome do arquivo', /Mavuika_Iansan_Combo2/i.test(await page.textContent('.dz-pagehead .lbl')));
   const importedUrl = page.url();
 
-  await page.click('.dz-nav a:has-text("Vault")'); await page.waitForSelector('.vt-card');
+  await page.click('.dz-nav a:has-text("Times")'); await page.waitForSelector('.vt-card');
   check('o projeto importado aparece no Vault', (await names()).length === 2, (await names()).join(' | '));
 
   // Renomear + exportar + reimportar

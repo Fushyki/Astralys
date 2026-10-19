@@ -4,6 +4,7 @@ import { Link, Navigate, useParams } from 'react-router-dom';
 import { useProjectView } from '../app/ProjectContext';
 import { CharacterAvatar, Chip, Panel, Segmented } from '../design/primitives';
 import { useRotationStore } from '../features/rotation/store';
+import { effectStatus, kitCoverage } from '../features/rotation/teamInfo';
 import { useWeaponCompare } from '../features/rotation/useWeaponCompare';
 import { formatDecimal, formatInt } from '../ui/format';
 import './armas.css';
@@ -30,7 +31,8 @@ export default function Armas() {
 
   const character = v.data.game.characters.find((c) => c.name === ref.character);
   const rarity = (w: string) => v.data.game.weapons.find((x) => x.name === w)?.rarity ?? 0;
-  const hasEffect = (w: string) => v.data.effects.weapons.some((e) => e.weapon === w);
+  const weaponStatus = (w: string) => effectStatus(v.data.effects.weapons.find((e) => e.weapon === w));
+  const kit = kitCoverage(v.data.effects.characters.find((c) => c.character === ref.character), character?.constellationBoosts);
 
   const weaponRows = (rows ?? []).filter((r) => !r.refinement && r.constellation === undefined);
   const conRows = (rows ?? []).filter((r) => r.constellation !== undefined).sort((a, b) => a.constellation! - b.constellation!);
@@ -93,7 +95,7 @@ export default function Armas() {
                         <td>
                           <span className="ar-name">{rarity(r.weapon)}★ {r.weapon}</span>
                           {isCur && <Chip tone="#e9c46a">atual</Chip>}
-                          {!hasEffect(r.weapon) && <Chip warn>sem efeito</Chip>}
+                          {weaponStatus(r.weapon) === 'partial' && <Chip warn>parcial</Chip>}{weaponStatus(r.weapon) === 'missing' && <Chip warn>sem efeito</Chip>}
                         </td>
                         <td className="avg">{formatInt(r.teamAvg)}</td>
                         <td>{isCur || !current ? '—' : delta(r.teamAvg, current.teamAvg)}</td>
@@ -128,8 +130,17 @@ export default function Armas() {
               </tbody>
             </table>
             </div>
+            <ul className="ar-kit" aria-label="O que cada passiva e constelação faz no cálculo">
+              {kit.map((k) => (
+                <li key={k.label} data-status={k.status}>
+                  <b>{k.label}</b>
+                  <span className="st">{k.status === 'modeled' ? 'No cálculo' : k.status === 'boost' ? 'Nível de talento' : k.status === 'utility' ? 'Sem efeito no dano' : k.status === 'partial' ? 'Parcial' : 'Sem cadastro'}</span>
+                  <span className="tx">{k.note}</span>
+                </li>
+              ))}
+            </ul>
             <p className="note">
-              Conta só o +3 de nível de talento (C3 e C5) e os buffs de passivas e constelações cadastrados. Os efeitos de dano próprios do kit ainda não entram, então o ganho real é maior que o mostrado.
+              Entram o +3 de nível de talento (C3 e C5) e os buffs de passivas e constelações com número. "Parcial" quer dizer que uma parte (golpe extra, reação, mecânica Lunar ou Estelar) ainda fica de fora, então o ganho real pode ser maior.
             </p>
             {character && <p className="note">Elemento: {character.element}.</p>}
           </Panel>

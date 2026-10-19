@@ -6,7 +6,51 @@
       "value": 0.18
     },
     "twoPieceMore": [],
-    "note": "4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {},
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0,
+      "buffs": [
+        {
+          "id": "crit-golpe",
+          "label": "Crítico por golpe",
+          "minConstellation": 0,
+          "scope": "self",
+          "timed": false,
+          "stats": {
+            "atkPct": 0,
+            "dmgPct": 0,
+            "critRate": 0,
+            "critDmg": 0,
+            "em": 0,
+            "er": 0,
+            "hpPct": 0,
+            "defPct": 0,
+            "dmgPctByType": {},
+            "critRateByType": {
+              "charged": 0.3
+            },
+            "critDmgByType": {},
+            "defIgnore": 0,
+            "atkFlat": 0,
+            "hpFlat": 0,
+            "defFlat": 0
+          },
+          "flat": []
+        }
+      ],
+      "flat": []
+    },
+    "twoPieceBuffs": [],
+    "note": "+30% de Taxa Crítica só do Carregado.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
   {
@@ -27,8 +71,11 @@
       "vaporizeBonus": 0,
       "er": 0,
       "hpPct": 0,
-      "defPct": 0
+      "defPct": 0,
+      "buffs": [],
+      "flat": []
     },
+    "twoPieceBuffs": [],
     "note": "Assume inimigo com mais de 50% de HP.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
@@ -39,13 +86,47 @@
       "value": 0.3
     },
     "twoPieceMore": [],
-    "note": "4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {},
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0,
+      "buffs": [],
+      "flat": []
+    },
+    "twoPieceBuffs": [],
+    "note": "Só RES elemental própria: não muda o dano.",
+    "noDamage": true,
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
   {
     "set": "Tiny Miracle",
     "twoPieceMore": [],
-    "note": "2 peças (\"All Elemental RES increased by 20%.\") não entra: sem efeito em dano. 4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {},
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0,
+      "buffs": [],
+      "flat": []
+    },
+    "twoPieceBuffs": [],
+    "note": "2 peças (\"All Elemental RES increased by 20%.\") não entra: sem efeito em dano. Só RES elemental ao levar dano: não muda o dano.",
+    "noDamage": true,
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
   {
@@ -55,7 +136,23 @@
       "value": 0.12
     },
     "twoPieceMore": [],
-    "note": "4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0,
+      "critRate": 0.24,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {},
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0,
+      "buffs": [],
+      "flat": []
+    },
+    "twoPieceBuffs": [],
+    "note": "Assume HP abaixo de 70% (+24% de Taxa Crítica) sempre ativo.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
   {
@@ -84,8 +181,11 @@
       "vaporizeBonus": 0,
       "er": 0,
       "hpPct": 0,
-      "defPct": 0
+      "defPct": 0,
+      "buffs": [],
+      "flat": []
     },
+    "twoPieceBuffs": [],
     "note": "Assume o bônus de 8 s depois da habilidade sempre ativo.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
@@ -119,7 +219,24 @@
       "value": 0.2
     },
     "twoPieceMore": [],
-    "note": "4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {},
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0,
+      "buffs": [],
+      "flat": []
+    },
+    "twoPieceBuffs": [],
+    "note": "Só reinicia a recarga da habilidade ao derrotar um inimigo: não muda os stats.",
+    "noDamage": true,
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
   {
@@ -129,18 +246,37 @@
       "value": 0.2
     },
     "twoPieceMore": [],
-    "note": "4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {},
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0,
+      "buffs": [],
+      "flat": []
+    },
+    "twoPieceBuffs": [],
+    "note": "Só energia: use a calculadora de Recarga.",
+    "noDamage": true,
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
   {
     "set": "Adventurer",
     "twoPieceMore": [],
+    "twoPieceBuffs": [],
     "note": "2 peças (\"Max HP increased by 1,000.\") não entra: sem efeito em dano. 4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
   {
     "set": "Lucky Dog",
     "twoPieceMore": [],
+    "twoPieceBuffs": [],
     "note": "2 peças (\"DEF increased by 100.\") não entra: sem efeito em dano. 4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
@@ -151,12 +287,30 @@
       "value": 0.2
     },
     "twoPieceMore": [],
-    "note": "4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {},
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0,
+      "buffs": [],
+      "flat": []
+    },
+    "twoPieceBuffs": [],
+    "note": "Só energia: use a calculadora de Recarga.",
+    "noDamage": true,
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
   {
     "set": "Traveling Doctor",
     "twoPieceMore": [],
+    "twoPieceBuffs": [],
     "note": "2 peças (\"Increases incoming healing by 20%.\") não entra: sem efeito em dano. 4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
@@ -179,8 +333,11 @@
       "vaporizeBonus": 0,
       "er": 0,
       "hpPct": 0,
-      "defPct": 0
+      "defPct": 0,
+      "buffs": [],
+      "flat": []
     },
+    "twoPieceBuffs": [],
     "note": "Assume inimigo sob Cryo. Os +20% extras contra inimigo congelado NÃO entram.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
@@ -198,8 +355,11 @@
       "vaporizeBonus": 0,
       "er": 0,
       "hpPct": 0,
-      "defPct": 0
+      "defPct": 0,
+      "buffs": [],
+      "flat": []
     },
+    "twoPieceBuffs": [],
     "note": "2 peças (\"Electro RES increased by 40%.\") não entra: sem efeito em dano. Assume inimigo sob Electro.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
@@ -217,16 +377,44 @@
       "vaporizeBonus": 0,
       "er": 0,
       "hpPct": 0,
-      "defPct": 0
+      "defPct": 0,
+      "buffs": [],
+      "flat": []
     },
+    "twoPieceBuffs": [],
     "note": "2 peças (\"Pyro RES increased by 40%.\") não entra: sem efeito em dano. Assume inimigo sob Pyro.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
   {
     "set": "Maiden Beloved",
     "twoPieceMore": [],
-    "note": "2 peças (\"Character Healing Effectiveness +15%\") não entra: sem efeito em dano. 4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {},
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0,
+      "buffs": [],
+      "flat": []
+    },
+    "twoPieceBuffs": [],
+    "note": "2 peças (\"Character Healing Effectiveness +15%\") não entra: sem efeito em dano. Só cura recebida: não muda o dano.",
+    "noDamage": true,
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "???",
+    "twoPieceMore": [],
+    "twoPieceBuffs": [],
+    "note": "Set sem bônus no jogo.",
+    "noDamage": true,
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); scripts/curation/sets.ts (sem efeito em dano)."
   },
   {
     "set": "Gladiator's Finale",
@@ -256,7 +444,24 @@
       "element": "Anemo"
     },
     "twoPieceMore": [],
-    "note": "4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {},
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0,
+      "buffs": [],
+      "flat": []
+    },
+    "twoPieceBuffs": [],
+    "note": "O bônus de dano de Espalhar e a redução de 40% da RES do elemento espalhado NÃO entram: dependem do elemento do Espalhar, que a rotação ainda não tem.",
+    "partial": true,
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
   {
@@ -266,7 +471,57 @@
       "value": 80
     },
     "twoPieceMore": [],
-    "note": "4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {},
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0,
+      "buffs": [
+        {
+          "id": "carregado",
+          "label": "Carregado (Catalisador ou Arco)",
+          "minConstellation": 0,
+          "scope": "self",
+          "timed": false,
+          "stats": {
+            "atkPct": 0,
+            "dmgPct": 0,
+            "critRate": 0,
+            "critDmg": 0,
+            "em": 0,
+            "er": 0,
+            "hpPct": 0,
+            "defPct": 0,
+            "dmgPctByType": {
+              "charged": 0.35
+            },
+            "critRateByType": {},
+            "critDmgByType": {},
+            "defIgnore": 0,
+            "atkFlat": 0,
+            "hpFlat": 0,
+            "defFlat": 0
+          },
+          "team": {
+            "onlyWeapons": [
+              "Catalyst",
+              "Bow"
+            ]
+          },
+          "flat": []
+        }
+      ],
+      "flat": []
+    },
+    "twoPieceBuffs": [],
+    "note": "Só vale para quem usa Catalisador ou Arco (o 4 peças é ignorado para os outros tipos de arma).",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
   {
@@ -288,8 +543,11 @@
       "vaporizeBonus": 0,
       "er": 0,
       "hpPct": 0,
-      "defPct": 0
+      "defPct": 0,
+      "buffs": [],
+      "flat": []
     },
+    "twoPieceBuffs": [],
     "note": "Assume o +30% de dano Cryo do Supremo (10 s) sempre ativo. Os +100% de Supercondutor NÃO entram.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
@@ -301,7 +559,24 @@
       "element": "Electro"
     },
     "twoPieceMore": [],
-    "note": "4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {},
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0,
+      "buffs": [],
+      "flat": []
+    },
+    "twoPieceBuffs": [],
+    "note": "O bônus de dano de Sobrecarga, Eletrocarregado, Supercondutor, Hiperflorescer e Intensificar e a redução de recarga da habilidade NÃO entram: o motor ainda não aceita bônus por reação vindo de set.",
+    "partial": true,
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
   {
@@ -348,8 +623,92 @@
   {
     "set": "Bloodstained Chivalry",
     "twoPieceMore": [],
-    "note": "2 peças (\"Physical DMG +25%\") não entra: sem efeito em dano. 4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {},
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0,
+      "buffs": [
+        {
+          "id": "carregado",
+          "label": "Carregado depois de derrotar",
+          "minConstellation": 0,
+          "scope": "self",
+          "timed": true,
+          "stats": {
+            "atkPct": 0,
+            "dmgPct": 0,
+            "critRate": 0,
+            "critDmg": 0,
+            "em": 0,
+            "er": 0,
+            "hpPct": 0,
+            "defPct": 0,
+            "dmgPctByType": {
+              "charged": 0.5
+            },
+            "critRateByType": {},
+            "critDmgByType": {},
+            "defIgnore": 0,
+            "atkFlat": 0,
+            "hpFlat": 0,
+            "defFlat": 0
+          },
+          "flat": []
+        }
+      ],
+      "flat": []
+    },
+    "twoPieceBuffs": [],
+    "note": "2 peças (\"Physical DMG +25%\") não entra: sem efeito em dano. +50% de DMG do Carregado por 10 s depois de derrotar um inimigo: faixa na linha do tempo, ligue na janela.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Prayers for Illumination",
+    "twoPieceMore": [],
+    "twoPieceBuffs": [],
+    "note": "Só duração de status elemental recebido (1 peça): não muda o dano.",
+    "noDamage": true,
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); scripts/curation/sets.ts (sem efeito em dano)."
+  },
+  {
+    "set": "Prayers for Destiny",
+    "twoPieceMore": [],
+    "twoPieceBuffs": [],
+    "note": "Só duração de status elemental recebido (1 peça): não muda o dano.",
+    "noDamage": true,
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); scripts/curation/sets.ts (sem efeito em dano)."
+  },
+  {
+    "set": "Prayers for Wisdom",
+    "twoPieceMore": [],
+    "twoPieceBuffs": [],
+    "note": "Só duração de status elemental recebido (1 peça): não muda o dano.",
+    "noDamage": true,
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); scripts/curation/sets.ts (sem efeito em dano)."
+  },
+  {
+    "set": "Prayers to the Firmament",
+    "twoPieceMore": [],
+    "twoPieceBuffs": [],
+    "note": "Só duração de status elemental recebido (1 peça): não muda o dano.",
+    "noDamage": true,
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); scripts/curation/sets.ts (sem efeito em dano)."
+  },
+  {
+    "set": "Prayers to Springtime",
+    "twoPieceMore": [],
+    "twoPieceBuffs": [],
+    "note": "Só duração de status elemental recebido (1 peça): não muda o dano.",
+    "noDamage": true,
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); scripts/curation/sets.ts (sem efeito em dano)."
   },
   {
     "set": "Archaic Petra",
@@ -359,7 +718,50 @@
       "element": "Geo"
     },
     "twoPieceMore": [],
-    "note": "4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {},
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0,
+      "buffs": [
+        {
+          "id": "geo",
+          "label": "DMG do elemento do fragmento",
+          "minConstellation": 0,
+          "scope": "team",
+          "timed": true,
+          "stats": {
+            "atkPct": 0,
+            "dmgPct": 0.35,
+            "critRate": 0,
+            "critDmg": 0,
+            "em": 0,
+            "er": 0,
+            "hpPct": 0,
+            "defPct": 0,
+            "dmgPctByType": {},
+            "critRateByType": {},
+            "critDmgByType": {},
+            "defIgnore": 0,
+            "atkFlat": 0,
+            "hpFlat": 0,
+            "defFlat": 0
+          },
+          "flat": []
+        }
+      ],
+      "flat": []
+    },
+    "twoPieceBuffs": [],
+    "note": "+35% de DMG elemental da equipe por 10 s depois de pegar um fragmento de Cristalizar: faixa na linha do tempo. Só um elemento por vez; ligue em quem tem o elemento do fragmento.",
+    "partial": true,
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
   {
@@ -379,8 +781,11 @@
       "vaporizeBonus": 0,
       "er": 0,
       "hpPct": 0,
-      "defPct": 0
+      "defPct": 0,
+      "buffs": [],
+      "flat": []
     },
+    "twoPieceBuffs": [],
     "note": "2 peças (\"Increases Shield Strength by 35%.\") não entra: sem efeito em dano. Assume personagem protegido por escudo.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
@@ -406,8 +811,11 @@
       "vaporizeBonus": 0,
       "er": 0,
       "hpPct": 0,
-      "defPct": 0
+      "defPct": 0,
+      "buffs": [],
+      "flat": []
     },
+    "twoPieceBuffs": [],
     "note": "Assume o bônus de 15 s depois da habilidade sempre ativo.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
@@ -434,8 +842,11 @@
         "atkPct": 0.2,
         "dmgPct": 0,
         "em": 0
-      }
+      },
+      "buffs": [],
+      "flat": []
     },
+    "twoPieceBuffs": [],
     "note": "ATK da equipe por 3 s depois da habilidade: só vale nas janelas de buff. A força do escudo NÃO entra.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
@@ -453,8 +864,11 @@
       "vaporizeBonus": 0,
       "er": 0,
       "hpPct": 0,
-      "defPct": 0
+      "defPct": 0,
+      "buffs": [],
+      "flat": []
     },
+    "twoPieceBuffs": [],
     "note": "2 peças (\"Physical DMG is increased by 25%.\") não entra: sem efeito em dano. Assume 2 stacks (9% cada). O dobro do bônus de dano Físico de 2 peças com 2 stacks NÃO entra.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
@@ -486,7 +900,42 @@
       "value": 0.2
     },
     "twoPieceMore": [],
-    "note": "4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {},
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0,
+      "buffs": [
+        {
+          "id": "er-burst",
+          "label": "DMG do Supremo por Recarga",
+          "minConstellation": 0,
+          "scope": "self",
+          "timed": false,
+          "convert": {
+            "from": "er",
+            "source": "self",
+            "perPoint": 0.25,
+            "threshold": 0,
+            "cap": 0.75,
+            "to": [
+              "burst"
+            ]
+          },
+          "flat": []
+        }
+      ],
+      "flat": []
+    },
+    "twoPieceBuffs": [],
+    "note": "DMG do Supremo = 25% da Recarga total, até 75%.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
   {
@@ -496,13 +945,46 @@
       "value": 0.3
     },
     "twoPieceMore": [],
-    "note": "4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0.24,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {},
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0.24,
+      "buffs": [],
+      "flat": []
+    },
+    "twoPieceBuffs": [],
+    "note": "Assume os 4 stacks de Curiosity (+24% de DEF e +24% de DMG Geo). O DMG Geo vale como DMG% geral: use em personagens Geo.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
   {
     "set": "Ocean-Hued Clam",
     "twoPieceMore": [],
-    "note": "2 peças (\"Healing Bonus +15%.\") não entra: sem efeito em dano. 4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {},
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0,
+      "buffs": [],
+      "flat": []
+    },
+    "twoPieceBuffs": [],
+    "note": "2 peças (\"Healing Bonus +15%.\") não entra: sem efeito em dano. O dano extra por cura (Sea-Dyed Foam) NÃO entra: o motor não acompanha cura.",
+    "partial": true,
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
   {
@@ -523,8 +1005,11 @@
       "vaporizeBonus": 0,
       "er": 0,
       "hpPct": 0,
-      "defPct": 0
+      "defPct": 0,
+      "buffs": [],
+      "flat": []
     },
+    "twoPieceBuffs": [],
     "note": "Só os 8% de ATK do Supremo. Os +10% por perda de HP (até 4 vezes) NÃO entram.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
@@ -535,7 +1020,24 @@
       "value": 0.18
     },
     "twoPieceMore": [],
-    "note": "4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {},
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0,
+      "buffs": [],
+      "flat": []
+    },
+    "twoPieceBuffs": [],
+    "note": "O bônus do Normal por chance (36%, +70% do ATK) NÃO entra: depende de chance.",
+    "partial": true,
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
   {
@@ -563,8 +1065,11 @@
         "elements": [
           "Dendro"
         ]
-      }
+      },
+      "buffs": [],
+      "flat": []
     },
+    "twoPieceBuffs": [],
     "note": "Reduz a RES Dendro do inimigo em 30% (assume sempre ativo).",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
@@ -575,7 +1080,94 @@
       "value": 80
     },
     "twoPieceMore": [],
-    "note": "4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {},
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0,
+      "buffs": [
+        {
+          "id": "mesmo",
+          "label": "ATK por aliado do mesmo elemento",
+          "minConstellation": 0,
+          "scope": "self",
+          "timed": true,
+          "stats": {
+            "atkPct": 0.14,
+            "dmgPct": 0,
+            "critRate": 0,
+            "critDmg": 0,
+            "em": 0,
+            "er": 0,
+            "hpPct": 0,
+            "defPct": 0,
+            "dmgPctByType": {},
+            "critRateByType": {},
+            "critDmgByType": {},
+            "defIgnore": 0,
+            "atkFlat": 0,
+            "hpFlat": 0,
+            "defFlat": 0
+          },
+          "team": {
+            "scale": {
+              "of": "same",
+              "table": [
+                1,
+                2,
+                3
+              ]
+            }
+          },
+          "flat": []
+        },
+        {
+          "id": "outro",
+          "label": "Maestria por aliado de outro elemento",
+          "minConstellation": 0,
+          "scope": "self",
+          "timed": true,
+          "stats": {
+            "atkPct": 0,
+            "dmgPct": 0,
+            "critRate": 0,
+            "critDmg": 0,
+            "em": 50,
+            "er": 0,
+            "hpPct": 0,
+            "defPct": 0,
+            "dmgPctByType": {},
+            "critRateByType": {},
+            "critDmgByType": {},
+            "defIgnore": 0,
+            "atkFlat": 0,
+            "hpFlat": 0,
+            "defFlat": 0
+          },
+          "team": {
+            "scale": {
+              "of": "different",
+              "table": [
+                1,
+                2,
+                3
+              ]
+            }
+          },
+          "flat": []
+        }
+      ],
+      "flat": []
+    },
+    "twoPieceBuffs": [],
+    "note": "Faixas de 8 s depois de uma reação: ATK por aliado do mesmo elemento e Maestria por aliado de elemento diferente (até 3 cada). Ligue nas janelas.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
   {
@@ -601,8 +1193,11 @@
       "vaporizeBonus": 0,
       "er": 0,
       "hpPct": 0,
-      "defPct": 0
+      "defPct": 0,
+      "buffs": [],
+      "flat": []
     },
+    "twoPieceBuffs": [],
     "note": "Assume o bônus de 15 s depois do ataque carregado sempre ativo. A velocidade de ataque NÃO entra.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
@@ -613,7 +1208,24 @@
       "value": 80
     },
     "twoPieceMore": [],
-    "note": "4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {},
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0,
+      "buffs": [],
+      "flat": []
+    },
+    "twoPieceBuffs": [],
+    "note": "O bônus de dano de Florescer, Hiperflorescer e Brotar NÃO entra: o motor ainda não aceita bônus por reação vindo de set.",
+    "partial": true,
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
   {
@@ -635,8 +1247,11 @@
       "vaporizeBonus": 0,
       "er": 0,
       "hpPct": 0,
-      "defPct": 0
+      "defPct": 0,
+      "buffs": [],
+      "flat": []
     },
+    "twoPieceBuffs": [],
     "note": "Assume 3 stacks de Mirrored Nymph (ATK +25% e dano Hydro +15%).",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
@@ -661,8 +1276,11 @@
       "vaporizeBonus": 0,
       "er": 0,
       "hpPct": 0,
-      "defPct": 0
+      "defPct": 0,
+      "buffs": [],
+      "flat": []
     },
+    "twoPieceBuffs": [],
     "note": "Só os +10% de dano de habilidade e Supremo. O aumento por levar dano (até 5 stacks) NÃO entra.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
@@ -689,8 +1307,11 @@
       "vaporizeBonus": 0,
       "er": 0,
       "hpPct": 0,
-      "defPct": 0
+      "defPct": 0,
+      "buffs": [],
+      "flat": []
     },
+    "twoPieceBuffs": [],
     "note": "Assume 3 stacks de +12% de Taxa Crítica (variação de HP).",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
@@ -714,15 +1335,35 @@
       "vaporizeBonus": 0,
       "er": 0,
       "hpPct": 0,
-      "defPct": 0
+      "defPct": 0,
+      "buffs": [],
+      "flat": []
     },
+    "twoPieceBuffs": [],
     "note": "Só os +25% de dano da habilidade em campo. Os +25% fora de campo NÃO entram.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
   {
     "set": "Song of Days Past",
     "twoPieceMore": [],
-    "note": "2 peças (\"Healing Bonus +15%.\") não entra: sem efeito em dano. 4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {},
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0,
+      "buffs": [],
+      "flat": []
+    },
+    "twoPieceBuffs": [],
+    "note": "2 peças (\"Healing Bonus +15%.\") não entra: sem efeito em dano. O bônus de dano por cura acumulada (Yearning) NÃO entra: o motor não acompanha cura.",
+    "partial": true,
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
   {
@@ -743,8 +1384,11 @@
       "vaporizeBonus": 0,
       "er": 0,
       "hpPct": 0,
-      "defPct": 0
+      "defPct": 0,
+      "buffs": [],
+      "flat": []
     },
+    "twoPieceBuffs": [],
     "note": "Assume +20% de dano Geo depois da habilidade sempre ativo. O aumento com escudo de Cristalizar NÃO entra.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
@@ -766,8 +1410,11 @@
       "vaporizeBonus": 0,
       "er": 0,
       "hpPct": 0,
-      "defPct": 0
+      "defPct": 0,
+      "buffs": [],
+      "flat": []
     },
+    "twoPieceBuffs": [],
     "note": "Assume 3 stacks de +18% de dano (Bond of Life).",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
@@ -789,8 +1436,11 @@
       "vaporizeBonus": 0,
       "er": 0,
       "hpPct": 0,
-      "defPct": 0
+      "defPct": 0,
+      "buffs": [],
+      "flat": []
     },
+    "twoPieceBuffs": [],
     "note": "Assume o bônus máximo de 50% de dano (fora de combate ou com inimigo em Queimadura).",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
@@ -850,8 +1500,11 @@
       "vaporizeBonus": 0,
       "er": 0,
       "hpPct": 0,
-      "defPct": 0
+      "defPct": 0,
+      "buffs": [],
+      "flat": []
     },
+    "twoPieceBuffs": [],
     "note": "Assume 5 stacks de +15% de dano do ataque imersivo.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
@@ -863,7 +1516,26 @@
       "element": "Cryo"
     },
     "twoPieceMore": [],
-    "note": "4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {
+        "normal": 0.6,
+        "burst": 0.6
+      },
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0,
+      "buffs": [],
+      "flat": []
+    },
+    "twoPieceBuffs": [],
+    "note": "Assume 0 de energia: +60% de DMG do Normal e do Supremo. No jogo o efeito de um deixa de valer por 6 s depois do outro.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
   {
@@ -873,7 +1545,24 @@
       "value": 80
     },
     "twoPieceMore": [],
-    "note": "4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {},
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0,
+      "buffs": [],
+      "flat": []
+    },
+    "twoPieceBuffs": [],
+    "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela.",
+    "partial": true,
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
   {
@@ -883,7 +1572,24 @@
       "value": 0.2
     },
     "twoPieceMore": [],
-    "note": "4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {},
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0,
+      "buffs": [],
+      "flat": []
+    },
+    "twoPieceBuffs": [],
+    "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela.",
+    "partial": true,
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
   {
@@ -893,7 +1599,24 @@
       "value": 80
     },
     "twoPieceMore": [],
-    "note": "4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {},
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0,
+      "buffs": [],
+      "flat": []
+    },
+    "twoPieceBuffs": [],
+    "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela.",
+    "partial": true,
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
   {
@@ -914,8 +1637,11 @@
       "vaporizeBonus": 0,
       "er": 0,
       "hpPct": 0,
-      "defPct": 0
+      "defPct": 0,
+      "buffs": [],
+      "flat": []
     },
+    "twoPieceBuffs": [],
     "note": "Só o +25% de ATK. O efeito extra de \"Witch's Homework\" NÃO entra.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
@@ -926,7 +1652,24 @@
       "value": 0.2
     },
     "twoPieceMore": [],
-    "note": "4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {},
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0,
+      "buffs": [],
+      "flat": []
+    },
+    "twoPieceBuffs": [],
+    "note": "Depende do Hexerei: Secret Rite, que o motor ainda não modela.",
+    "partial": true,
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
   {
@@ -936,7 +1679,24 @@
       "value": 0.18
     },
     "twoPieceMore": [],
-    "note": "4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {},
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0,
+      "buffs": [],
+      "flat": []
+    },
+    "twoPieceBuffs": [],
+    "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela.",
+    "partial": true,
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
   {
@@ -946,7 +1706,50 @@
       "value": 0.18
     },
     "twoPieceMore": [],
-    "note": "4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {},
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0,
+      "buffs": [
+        {
+          "id": "taxa",
+          "label": "Taxa Crítica depois de Espalhar Estelar",
+          "minConstellation": 0,
+          "scope": "self",
+          "timed": true,
+          "stats": {
+            "atkPct": 0,
+            "dmgPct": 0,
+            "critRate": 0.16,
+            "critDmg": 0,
+            "em": 0,
+            "er": 0,
+            "hpPct": 0,
+            "defPct": 0,
+            "dmgPctByType": {},
+            "critRateByType": {},
+            "critDmgByType": {},
+            "defIgnore": 0,
+            "atkFlat": 0,
+            "hpFlat": 0,
+            "defFlat": 0
+          },
+          "flat": []
+        }
+      ],
+      "flat": []
+    },
+    "twoPieceBuffs": [],
+    "note": "+16% de Taxa Crítica por 10 s depois de um Estelar-Swirl: faixa na linha do tempo. O dano de reação Estelar NÃO entra.",
+    "partial": true,
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
   {
@@ -956,7 +1759,50 @@
       "value": 0.18
     },
     "twoPieceMore": [],
-    "note": "4 peças ainda não cadastrado: só o bônus de 2 peças conta.",
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {},
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0,
+      "buffs": [
+        {
+          "id": "atk",
+          "label": "ATK depois de reação Estelar",
+          "minConstellation": 0,
+          "scope": "self",
+          "timed": true,
+          "stats": {
+            "atkPct": 0.12,
+            "dmgPct": 0,
+            "critRate": 0,
+            "critDmg": 0,
+            "em": 0,
+            "er": 0,
+            "hpPct": 0,
+            "defPct": 0,
+            "dmgPctByType": {},
+            "critRateByType": {},
+            "critDmgByType": {},
+            "defIgnore": 0,
+            "atkFlat": 0,
+            "hpFlat": 0,
+            "defFlat": 0
+          },
+          "flat": []
+        }
+      ],
+      "flat": []
+    },
+    "twoPieceBuffs": [],
+    "note": "+12% de ATK por 12 s depois de uma reação Estelar: faixa na linha do tempo. O bônus de dano Estelar NÃO entra.",
+    "partial": true,
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   }
 ]

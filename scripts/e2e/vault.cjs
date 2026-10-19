@@ -48,7 +48,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.reload({ waitUntil: 'networkidle' });
   await page.waitForSelector('.vt-card');
 
-  check('a aba Vault está ativa', (await page.locator('.dz-nav a[aria-current="page"]').textContent()).includes('Vault'));
+  check('a aba Times está ativa', (await page.locator('.dz-nav a[aria-current="page"]').textContent()).includes('Times'));
   check('começa só com o exemplo', (await cards().count()) === 1 && /Exemplo/.test(await cards().first().getAttribute('data-name')));
   await page.waitForSelector('.vt-card .pc', { timeout: 30000 });
   const poster = (await page.textContent('.vt-card .pc')).replace(/\s+/g, ' ');
@@ -60,10 +60,10 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await createTeam('Novo time');
   check('"Novo time" abre o projeto novo', /\/projeto\/[^/]+$/.test(page.url()) && !page.url().endsWith('/exemplo'));
   await page.waitForSelector('.dz-pagehead');
-  await page.click('.dz-header button:has-text("Salvar no Vault")');
+  await page.click('.dz-subnav button:has-text("Salvar nos Times")');
   await page.waitForURL('**/vault');
   await page.waitForSelector('.vt-card');
-  check('"Salvar no Vault" favorita e leva ao Vault', (await cards().count()) === 2 && (await page.locator('.vt-fav[aria-pressed="true"]').count()) === 1);
+  check('"Salvar nos Times" favorita e leva aos Times', (await cards().count()) === 2 && (await page.locator('.vt-fav[aria-pressed="true"]').count()) === 1);
   check('o favorito vem primeiro', (await cards().first().locator('.vt-fav[aria-pressed="true"]').count()) === 1);
 
   // Filtros

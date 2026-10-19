@@ -1,4 +1,4 @@
-/** Time compartilhado por link (/p/:id): leitura sem login, com os números do motor e "Abrir no meu Vault". */
+/** Time compartilhado por link (/p/:id): leitura sem login, com os números do motor e "Abrir nos meus Times". */
 import { useEffect, useState } from 'react';
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 import { AppHeader } from '../app/AppHeader';
@@ -98,7 +98,7 @@ export default function Publico() {
                 <span className="muted">Compartilhado por {loaded.meta.author}. Somente leitura: abra uma cópia para editar.</span>
               </div>
               <div className="actions">
-                <button type="button" className="dz-btn gold" onClick={openCopy}>Abrir no meu Vault</button>
+                <button type="button" className="dz-btn gold" onClick={openCopy}>Abrir nos meus Times</button>
               </div>
             </section>
 

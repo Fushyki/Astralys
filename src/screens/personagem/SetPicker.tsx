@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { ArtifactSet } from '../../data/schema';
 import { cleanText, pieceIconUrl } from '../../design/images';
+import { EFFECT_STATUS_LABEL, type EffectStatus } from '../../features/rotation/teamInfo';
 
 export interface SetChoice {
   primarySet?: string;
@@ -19,14 +20,14 @@ type Mode = 'four' | 'two-two';
 export function SetPickerDialog({
   sets,
   current,
-  withEffect,
+  status,
   onPick,
   onClose,
 }: {
   sets: ArtifactSet[];
   current: SetChoice;
-  /** Nomes dos sets cujo efeito numérico já entra no cálculo. */
-  withEffect: ReadonlySet<string>;
+  /** Estado do efeito de cada set: completo, parcial, sem efeito no dano ou sem cadastro. */
+  status: (name: string) => EffectStatus;
   onPick: (choice: SetChoice) => void;
   onClose: () => void;
 }) {
@@ -96,7 +97,7 @@ export function SetPickerDialog({
                 <span className="tags">
                   {marked && <span className="dz-chip ok">Em uso</span>}
                   {first === s.name && <span className="dz-chip">1º set</span>}
-                  {!withEffect.has(s.name) && <span className="dz-chip warn" title="O efeito deste set ainda não entra no cálculo">sem efeito</span>}
+                  {status(s.name) !== 'full' && <span className={`dz-chip ${status(s.name) === 'none' ? '' : 'warn'}`} title={EFFECT_STATUS_LABEL[status(s.name)]}>{status(s.name) === 'none' ? 'só energia/cura' : status(s.name) === 'partial' ? 'parcial' : 'sem efeito'}</span>}
                 </span>
               </button>
             );

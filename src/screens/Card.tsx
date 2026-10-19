@@ -76,7 +76,7 @@ export default function Card() {
     return (
       <StateCard title="Projeto não encontrado">
         <p>Não existe um projeto salvo com o id “{id}” neste navegador.</p>
-        <Link className="dz-btn" to="/vault">Ir ao Vault</Link>
+        <Link className="dz-btn" to="/vault">Ir aos Times</Link>
       </StateCard>
     );
   }

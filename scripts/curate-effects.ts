@@ -13,21 +13,31 @@
  */
 import { readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
-import { CharacterEffectSchema, SetEffectSchema, WeaponEffectSchema, type CharacterEffect, type SetEffect, type WeaponEffect, type WeaponStats } from '../src/effects/schema';
+import { CharacterBuffSchema, CharacterEffectSchema, SetEffectSchema, WeaponEffectSchema, type CharacterBuff, type CharacterEffect, type SetEffect, type WeaponEffect, type WeaponFlat, type WeaponStats } from '../src/effects/schema';
 import { FOUR_PIECE, type Val } from './curation/sets';
+import { FOUR_PIECE_2 } from './curation/sets2';
 import { parseTwoPiece } from './lib/twoPiece';
-import { WEAPONS, type Sum } from './curation/weapons';
+import { WEAPONS } from './curation/weapons';
+import { WEAPONS_2 } from './curation/weapons2';
+import type { BuffCur, FlatCur, GearCur, StatsCur, Sum } from './curation/gear';
 import { CHARACTERS as CHARACTERS_1 } from './curation/characters';
 import { CHARACTERS_2 } from './curation/characters2';
 import { CHARACTERS_3 } from './curation/characters3';
 import { CHARACTERS_4 } from './curation/characters4';
 import { CHARACTERS_5 } from './curation/characters5';
 import { CHARACTERS_6, CHARACTERS_7, CHARACTERS_8, CHARACTERS_9, CHARACTERS_10 } from './curation/characters6';
+import { CHARACTERS_11 } from './curation/characters7';
+import { CHARACTERS_12 } from './curation/characters8';
+import { CHARACTERS_13 } from './curation/characters9';
+import { CHARACTERS_14 } from './curation/characters10';
+import { CHARACTERS_15 } from './curation/characters11';
+import { CHARACTERS_16 } from './curation/characters12';
 import type { BuffCuration } from './curation/characters';
+import { CHARACTER_NOTES } from './curation/charnotes';
 
 /** Junta os lotes: o mesmo personagem pode aparecer em mais de um e as listas se somam. */
 const CHARACTER_BUFFS: Record<string, BuffCuration[]> = {};
-for (const batch of [CHARACTERS_1, CHARACTERS_2, CHARACTERS_3, CHARACTERS_4, CHARACTERS_5, CHARACTERS_6, CHARACTERS_7, CHARACTERS_8, CHARACTERS_9, CHARACTERS_10]) {
+for (const batch of [CHARACTERS_1, CHARACTERS_2, CHARACTERS_3, CHARACTERS_4, CHARACTERS_5, CHARACTERS_6, CHARACTERS_7, CHARACTERS_8, CHARACTERS_9, CHARACTERS_10, CHARACTERS_11, CHARACTERS_12, CHARACTERS_13, CHARACTERS_14, CHARACTERS_15, CHARACTERS_16]) {
   for (const [name, list] of Object.entries(batch)) CHARACTER_BUFFS[name] = [...(CHARACTER_BUFFS[name] ?? []), ...list];
 }
 
@@ -36,16 +46,21 @@ const read = <T>(rel: string): T => JSON.parse(readFileSync(path.join(root, rel)
 const write = (rel: string, data: unknown) => writeFileSync(path.join(root, rel), JSON.stringify(data, null, 2) + '\n', 'utf8');
 
 interface Bonus { description: string; params: number[] }
-interface RawSet { name: string; bonuses: { twoPiece?: Bonus; fourPiece?: Bonus } }
+interface RawSet { name: string; bonuses: { onePiece?: Bonus; twoPiece?: Bonus; fourPiece?: Bonus } }
 const meta = read<{ gameVersion: string }>('src/data/generated/meta.json');
 
 /** Entradas feitas à mão (planilha de referência); as geradas por este script são refeitas a cada execução. */
 const handMade = <T extends { fonte_info: string }>(list: T[]): T[] => list.filter((e) => !e.fonte_info.includes('scripts/curation/'));
 
 const round = (n: number) => Math.round(n * 1e6) / 1e6;
-const valueOf = (v: Val, params: number[], where: string): number => {
+const valueOf = (v: Val, params: number[], where: string, text = ''): number => {
   if (typeof v === 'number') return v;
   if ('lit' in v) return v.lit;
+  if ('re' in v) {
+    const m = new RegExp(v.re).exec(text);
+    if (!m) throw new Error(`${where}: a expressão /${v.re}/ não casa com o texto do refinamento`);
+    return round((parseFloat(m[1]) / 100) * (v.x ?? 1));
+  }
   const raw = params[v.p];
   if (raw === undefined) throw new Error(`${where}: parâmetro ${v.p} não existe`);
   return round(raw * (v.x ?? 1));
@@ -59,27 +74,43 @@ function buildSets(): SetEffect[] {
   const source = `Lunaris ${meta.gameVersion} (descrição e parâmetros)`;
 
   for (const set of raw) {
-    if (!set.bonuses.twoPiece || !set.bonuses.fourPiece) continue; // sets de 1 peça ou sem bônus
+    if (!set.bonuses.twoPiece || !set.bonuses.fourPiece) {
+      // Sets de 1 peça ou sem bônus (Prayers, ???): só duração de status e utilidade, nada a calcular em dano.
+      out.push(SetEffectSchema.parse({
+        set: set.name, twoPieceMore: [], twoPieceBuffs: [], noDamage: true,
+        note: set.bonuses.onePiece ? 'Só duração de status elemental recebido (1 peça): não muda o dano.' : 'Set sem bônus no jogo.',
+        fonte_info: `${source}; scripts/curation/sets.ts (sem efeito em dano).`,
+      }));
+      continue;
+    }
     const old = keep.get(set.name);
     if (old) {
       out.push(old);
       continue;
     }
     const two = parseTwoPiece(set.bonuses.twoPiece.description);
-    const cur = FOUR_PIECE[set.name];
+    const cur = FOUR_PIECE[set.name] ?? FOUR_PIECE_2[set.name];
     const params = set.bonuses.fourPiece.params;
     const notes: string[] = [];
     if (!two) notes.push(`2 peças ("${set.bonuses.twoPiece.description.trim()}") não entra: sem efeito em dano.`);
 
     let fourPiece: SetEffect['fourPiece'];
     if (cur) {
-      const v = (x: Val | undefined) => (x === undefined ? 0 : valueOf(x, params, set.name));
+      if (cur.expect && !set.bonuses.fourPiece.description.includes(cur.expect)) {
+        throw new Error(`${set.name}: a descrição do 4 peças não contém "${cur.expect}" (o Lunaris mudou?)`);
+      }
+      const text = set.bonuses.fourPiece.description;
+      const ctx: Ctx = { params, text, where: set.name };
+      const v = (x: Val | undefined) => (x === undefined ? 0 : valueOf(x, params, set.name, text));
+      const crit = cur.critRateByType || cur.critDmgByType ? [buildBuff({ id: 'crit-golpe', label: 'Crítico por golpe', stats: { critRateByType: cur.critRateByType, critDmgByType: cur.critDmgByType } }, ctx)] : [];
       fourPiece = {
         atkPct: v(cur.atkPct), dmgPct: v(cur.dmgPct), critRate: v(cur.critRate), critDmg: v(cur.critDmg), em: v(cur.em),
         dmgPctByType: Object.fromEntries(Object.entries(cur.byType ?? {}).map(([k, x]) => [k, v(x)])),
-        meltBonus: v(cur.meltBonus), vaporizeBonus: 0, er: 0, hpPct: v(cur.hpPct), defPct: v(cur.defPct),
+        meltBonus: v(cur.meltBonus), vaporizeBonus: 0, er: v(cur.er), hpPct: v(cur.hpPct), defPct: v(cur.defPct),
         ...(cur.resShred ? { resShred: { value: v(cur.resShred.value), elements: cur.resShred.elements } } : {}),
         ...(cur.team ? { team: { atkPct: v(cur.team.atkPct), dmgPct: v(cur.team.dmgPct), em: v(cur.team.em) } } : {}),
+        buffs: [...crit, ...(cur.buffs ?? []).map((b) => buildBuff(b, ctx))],
+        flat: (cur.flat ?? []).map((f) => buildFlat(f, ctx)),
       };
       notes.push(cur.note);
     } else {
@@ -89,20 +120,20 @@ function buildSets(): SetEffect[] {
     const entry: SetEffect = {
       set: set.name,
       ...(two ? { twoPiece: two[0], twoPieceMore: two.slice(1) } : { twoPieceMore: [] }),
+      twoPieceBuffs: [],
+      ...(cur?.noDamage ? { noDamage: true } : {}),
+      ...(cur?.partial ? { partial: true } : {}),
       ...(fourPiece ? { fourPiece } : {}),
       note: notes.join(' '),
       fonte_info: `${source}; curadoria em scripts/curation/sets.ts.`,
     };
     out.push(SetEffectSchema.parse(entry));
   }
-  const unknown = Object.keys(FOUR_PIECE).filter((n) => !raw.some((r) => r.name === n));
+  const unknown = Object.keys({ ...FOUR_PIECE, ...FOUR_PIECE_2 }).filter((n) => !raw.some((r) => r.name === n));
   if (unknown.length) throw new Error(`Curadoria com sets que não existem no Lunaris: ${unknown.join(', ')}`);
   return out;
 }
 
-const sets = buildSets();
-write('src/effects/sets.json', sets);
-console.log(`sets.json: ${sets.length} sets (${sets.filter((s) => s.fourPiece).length} com 4 peças, ${sets.filter((s) => s.twoPiece).length} com 2 peças)`);
 
 // ---------- Armas ----------
 
@@ -112,8 +143,61 @@ interface RawWeapon {
   passive: { refinements: Bonus[] } | null;
 }
 
-const sumOf = (v: Sum | undefined, params: number[], where: string): number =>
-  v === undefined ? 0 : round(((Array.isArray(v) ? v : [v]) as Val[]).reduce((acc: number, x: Val) => acc + valueOf(x, params, where), 0));
+const sumOf = (v: Sum | undefined, params: number[], where: string, text = ''): number =>
+  v === undefined ? 0 : round(((Array.isArray(v) ? v : [v]) as Val[]).reduce((acc: number, x: Val) => acc + valueOf(x, params, where, text), 0));
+
+type Ctx = { params: number[]; text: string; where: string };
+const sm = (v: Sum | undefined, c: Ctx) => sumOf(v, c.params, c.where, c.text);
+const byTypeOf = (b: StatsCur['byType'], c: Ctx) => Object.fromEntries(Object.entries(b ?? {}).map(([k, x]) => [k, sm(x, c)]));
+
+/** Stats de um buff no formato do motor (todos os campos preenchidos). */
+function buffStats(cur: StatsCur, c: Ctx) {
+  return {
+    atkPct: sm(cur.atkPct, c), dmgPct: sm(cur.dmgPct, c), critRate: sm(cur.critRate, c), critDmg: sm(cur.critDmg, c),
+    em: sm(cur.em, c), er: sm(cur.er, c), hpPct: sm(cur.hpPct, c), defPct: sm(cur.defPct, c),
+    dmgPctByType: byTypeOf(cur.byType, c), critRateByType: byTypeOf(cur.critRateByType, c), critDmgByType: byTypeOf(cur.critDmgByType, c),
+  };
+}
+
+function buildBuff(b: BuffCur, c: Ctx): CharacterBuff {
+  return CharacterBuffSchema.parse({
+    id: b.id, label: b.label, minConstellation: 0, scope: b.scope ?? 'self', timed: b.timed ?? false,
+    ...(b.forElements ? { forElements: b.forElements } : {}),
+    ...(b.stats ? { stats: buffStats(b.stats, c) } : {}),
+    ...(b.convert
+      ? {
+          convert: {
+            from: b.convert.from, perPoint: sm(b.convert.perPoint, c), threshold: sm(b.convert.threshold, c),
+            ...(b.convert.cap !== undefined ? { cap: sm(b.convert.cap, c) } : {}), to: b.convert.to,
+          },
+        }
+      : {}),
+    ...(b.team ? { team: b.team } : {}),
+  });
+}
+
+const buildFlat = (f: FlatCur, c: Ctx): WeaponFlat => ({
+  name: f.name, sourceStat: f.sourceStat, perPoint: sm(f.perPoint, c),
+  ...(f.cap !== undefined ? { capPerHit: sm(f.cap, c) } : {}), hitTypes: f.hitTypes, ...(f.stacks !== undefined ? { stacks: f.stacks } : {}),
+});
+
+/** Números de um refinamento: os campos simples vão na raiz; o resto vira buffs (crítico por golpe, conversões, regras de time). */
+function gearStats(cur: GearCur, c: Ctx): WeaponStats {
+  const crit = cur.critRateByType || cur.critDmgByType ? [buildBuff({ id: 'crit-golpe', label: 'Crítico por golpe', stats: { critRateByType: cur.critRateByType, critDmgByType: cur.critDmgByType } }, c)] : [];
+  const t = cur.team;
+  return {
+    atkPct: sm(cur.atkPct, c), dmgPct: sm(cur.dmgPct, c), critRate: sm(cur.critRate, c), critDmg: sm(cur.critDmg, c),
+    em: sm(cur.em, c), er: sm(cur.er, c), hpPct: sm(cur.hpPct, c), defPct: sm(cur.defPct, c),
+    dmgPctByType: byTypeOf(cur.byType, c),
+    ...(t ? { team: { atkPct: sm(t.atkPct, c), dmgPct: sm(t.dmgPct, c), em: sm(t.em, c) } } : {}),
+    buffs: [...crit, ...(cur.buffs ?? []).map((b) => buildBuff(b, c))],
+    flat: (cur.flat ?? []).map((f) => buildFlat(f, c)),
+  };
+}
+
+const sets = buildSets();
+write('src/effects/sets.json', sets);
+console.log(`sets.json: ${sets.length} sets (${sets.filter((s) => s.fourPiece).length} com 4 peças, ${sets.filter((s) => s.twoPiece).length} com 2 peças)`);
 
 function buildWeapons(): WeaponEffect[] {
   const raw = read<RawWeapon[]>('src/data/generated/weapons.json');
@@ -122,39 +206,36 @@ function buildWeapons(): WeaponEffect[] {
   const out: WeaponEffect[] = [...existing];
   const errors: string[] = [];
   const source = `Lunaris ${meta.gameVersion} (descrição e parâmetros por refinamento)`;
+  const all: Record<string, GearCur> = { ...WEAPONS, ...WEAPONS_2 };
 
-  for (const [name, cur] of Object.entries(WEAPONS)) {
+  for (const [name, cur] of Object.entries(all)) {
     if (keep.has(name)) continue; // já veio da planilha de referência: não sobrescrever
-    const w = raw.find((x) => x.name === name);
-    if (!w?.passive || w.passive.refinements.length !== 5) {
-      errors.push(`${name}: arma ou passiva não existe no Lunaris`);
+    const w = raw.find((x) => x.name === name && x.passive) ?? raw.find((x) => x.name === name);
+    if (!w) {
+      errors.push(`${name}: arma não existe no Lunaris`);
       continue;
     }
-    if (!w.passive.refinements[0].description.includes(cur.expect)) {
+    const flags = { ...(cur.noDamage ? { noDamage: true } : {}), ...(cur.partial ? { partial: true } : {}) };
+    const fonte = `${source}; curadoria em scripts/curation/${name in WEAPONS_2 ? 'weapons2' : 'weapons'}.ts.`;
+    if (!w.passive || w.passive.refinements.length !== 5) {
+      if (cur.expect) {
+        errors.push(`${name}: tem "expect", mas a arma não tem passiva no Lunaris`);
+        continue;
+      }
+      out.push(WeaponEffectSchema.parse({ weapon: name, ...gearStats({ note: '' }, { params: [], text: '', where: name }), note: cur.note, ...flags, fonte_info: fonte }));
+      continue;
+    }
+    if (cur.expect && !w.passive.refinements[0].description.includes(cur.expect)) {
       errors.push(`${name}: a descrição do R1 não contém "${cur.expect}" (o Lunaris mudou?)`);
       continue;
     }
-    const at = (r: number): WeaponStats => {
-      const params = w.passive!.refinements[r].params;
-      const where = `${name} R${r + 1}`;
-      const t = cur.team;
-      return {
-        atkPct: sumOf(cur.atkPct, params, where), dmgPct: sumOf(cur.dmgPct, params, where),
-        critRate: sumOf(cur.critRate, params, where), critDmg: sumOf(cur.critDmg, params, where),
-        em: sumOf(cur.em, params, where), er: sumOf(cur.er, params, where),
-        hpPct: sumOf(cur.hpPct, params, where), defPct: sumOf(cur.defPct, params, where),
-        dmgPctByType: Object.fromEntries(Object.entries(cur.byType ?? {}).map(([k, x]) => [k, sumOf(x, params, where)])),
-        ...(t ? { team: { atkPct: sumOf(t.atkPct, params, where), dmgPct: sumOf(t.dmgPct, params, where), em: sumOf(t.em, params, where) } } : {}),
-      };
-    };
-    const refinements = [0, 1, 2, 3, 4].map(at);
-    out.push(WeaponEffectSchema.parse({
-      weapon: name,
-      ...refinements[0],
-      refinements,
-      note: cur.note,
-      fonte_info: `${source}; curadoria em scripts/curation/weapons.ts.`,
-    }));
+    try {
+      const at = (r: number) => gearStats(cur, { params: w.passive!.refinements[r].params, text: w.passive!.refinements[r].description, where: `${name} R${r + 1}` });
+      const refinements = [0, 1, 2, 3, 4].map(at);
+      out.push(WeaponEffectSchema.parse({ weapon: name, ...refinements[0], refinements, note: cur.note, ...flags, fonte_info: fonte }));
+    } catch (e) {
+      errors.push(`${name}: ${(e as Error).message}`);
+    }
   }
   if (errors.length) throw new Error(['Curadoria de armas com problemas:', ...errors].join('\n  '));
   return out;
@@ -188,11 +269,10 @@ function buildCharacters(): CharacterEffect[] {
   const source = `Lunaris ${meta.gameVersion} (passivas e constelações)`;
   const strip = (t: string) => t.replace(/<[^>]*>/g, '').replace(/\n/g, ' ').replace(/\s+/g, ' ');
 
-  for (const [name, list] of Object.entries(CHARACTER_BUFFS)) {
-    if (existing.some((e) => e.character === name)) {
-      errors.push(`${name}: já tem efeito da planilha (some as passivas à mão ou remova da curadoria)`);
-      continue;
-    }
+  const names = [...new Set([...Object.keys(CHARACTER_BUFFS), ...Object.keys(CHARACTER_NOTES)])];
+  for (const name of names) {
+    const list = CHARACTER_BUFFS[name] ?? [];
+    const handMadeEntry = existing.find((e) => e.character === name);
     const c = chars.find((x) => x.name === name);
     if (!c) {
       errors.push(`${name}: não existe nos dados do jogo`);
@@ -205,6 +285,8 @@ function buildCharacters(): CharacterEffect[] {
       errors.push(`${name}: sem o JSON bruto em data/raw (rode npm run sync:data)`);
       continue;
     }
+    const dup = list.map((b) => b.id).filter((id, i, all) => all.indexOf(id) !== i);
+    if (dup.length) errors.push(`${name}: ids de buff repetidos: ${[...new Set(dup)].join(', ')}`);
     const buffs = list.map((b) => {
       const isConst = b.src.startsWith('const');
       const kitNode = b.kit ? raw.skills?.[SKILL_KEY[b.kit.talent]] : undefined;
@@ -225,7 +307,7 @@ function buildCharacters(): CharacterEffect[] {
       return {
         id: b.id,
         label: b.label,
-        minConstellation: isConst ? Number(b.src.slice(5)) : 0,
+        minConstellation: b.minConstellation ?? (isConst ? Number(b.src.slice(5)) : 0),
         ...(levelTable ? { level: { talent: b.kit!.talent, table: levelTable } } : {}),
         scope: b.scope,
         timed: b.timed,
@@ -234,11 +316,21 @@ function buildCharacters(): CharacterEffect[] {
           ? {
               stats: {
                 atkPct: v(s.atkPct), dmgPct: v(s.dmgPct), critRate: v(s.critRate), critDmg: v(s.critDmg), em: v(s.em),
-                er: 0, hpPct: v(s.hpPct), defPct: v(s.defPct),
+                er: v(s.er), hpPct: v(s.hpPct), defPct: v(s.defPct),
                 dmgPctByType: Object.fromEntries(Object.entries(s.byType ?? {}).map(([k, x]) => [k, v(x)])),
                 critRateByType: Object.fromEntries(Object.entries(s.critRateByType ?? {}).map(([k, x]) => [k, v(x)])),
                 critDmgByType: Object.fromEntries(Object.entries(s.critDmgByType ?? {}).map(([k, x]) => [k, v(x)])),
+                defIgnore: v(s.defIgnore),
+                atkFlat: v(s.atkFlat), hpFlat: v(s.hpFlat), defFlat: v(s.defFlat),
               },
+            }
+          : {}),
+        ...(b.flat
+          ? {
+              flat: b.flat.map((f) => ({
+                name: f.name, sourceStat: f.sourceStat, perPoint: v(f.perPoint), ...(f.cap !== undefined ? { capPerHit: v(f.cap) } : {}),
+                hitTypes: f.hitTypes, ...(f.stacks !== undefined ? { stacks: f.stacks } : {}),
+              })),
             }
           : {}),
         ...(b.team
@@ -264,13 +356,22 @@ function buildCharacters(): CharacterEffect[] {
             }
           : {}),
         ...(b.resShred ? { resShred: { value: v(b.resShred.value), elements: b.resShred.elements } } : {}),
+        ...(b.defShred !== undefined ? { defShred: v(b.defShred) } : {}),
         note: b.note,
       };
     });
+    const notes = Object.entries(CHARACTER_NOTES[name] ?? {}).map(([src, n]) => ({ src, kind: n!.kind, note: n!.note }));
+    if (handMadeEntry) {
+      // Personagem que já veio da planilha de referência: os efeitos dela ficam e a curadoria soma os buffs e as notas.
+      const at = out.findIndex((e) => e.character === name);
+      out[at] = CharacterEffectSchema.parse({ ...handMadeEntry, buffs: [...(handMadeEntry.buffs ?? []).filter((old) => !buffs.some((n) => n.id === old.id)), ...buffs], notes });
+      continue;
+    }
     out.push(CharacterEffectSchema.parse({
       character: name,
       atkPct: 0, dmgPct: 0, critRate: 0, critDmg: 0, em: 0,
       buffs,
+      notes,
       fonte_info: `${source}; curadoria em scripts/curation/characters.ts.`,
     }));
   }
@@ -280,4 +381,4 @@ function buildCharacters(): CharacterEffect[] {
 
 const characters = buildCharacters();
 write('src/effects/characters.json', characters);
-console.log(`characters.json: ${characters.length} personagens (${characters.filter((c) => c.buffs?.length).length} com passivas/constelações)`);
+console.log(`characters.json: ${characters.length} personagens (${characters.filter((c) => c.buffs?.length).length} com buffs, ${characters.filter((c) => c.notes?.length).length} com notas)`);

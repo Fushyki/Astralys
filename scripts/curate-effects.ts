@@ -17,7 +17,13 @@ import { CharacterEffectSchema, SetEffectSchema, WeaponEffectSchema, type Charac
 import { FOUR_PIECE, type Val } from './curation/sets';
 import { parseTwoPiece } from './lib/twoPiece';
 import { WEAPONS, type Sum } from './curation/weapons';
-import { CHARACTERS as CHARACTER_BUFFS } from './curation/characters';
+import { CHARACTERS as CHARACTERS_1 } from './curation/characters';
+import { CHARACTERS_2 } from './curation/characters2';
+import { CHARACTERS_3 } from './curation/characters3';
+import { CHARACTERS_4 } from './curation/characters4';
+import { CHARACTERS_5 } from './curation/characters5';
+
+const CHARACTER_BUFFS = { ...CHARACTERS_1, ...CHARACTERS_2, ...CHARACTERS_3, ...CHARACTERS_4, ...CHARACTERS_5 };
 
 const root = process.cwd();
 const read = <T>(rel: string): T => JSON.parse(readFileSync(path.join(root, rel), 'utf8'));

@@ -132,3 +132,7 @@ body { font-family: var(--font-body); font-size: 15px; line-height: 1.5; -webkit
 .dz-dialog .pick .dz-avatar { grid-row: 1 / span 2; }
 .dz-dialog .pick .n { font-family: var(--font-display); font-weight: 600; font-size: 17px; letter-spacing: .03em; }
 .dz-dialog .pick .m { color: var(--muted); font-size: 12px; }
+
+.dz-account { display: flex; align-items: center; gap: 10px; }
+.dz-account-name { max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text-2); font-size: 14px; }
+@media (max-width: 900px) { .dz-account-name { max-width: 100px; } }

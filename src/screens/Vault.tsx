@@ -9,6 +9,10 @@ import { useGameData } from '../features/rotation/data';
 import { downloadProject, importJson, importXlsx, type ImportResult } from '../features/rotation/importFile';
 import { SAMPLE_ID, cloneProject, deleteStoredProject, listProjects, loadProject, saveProject, sampleForApp } from '../features/rotation/persistence';
 import { useProjectStats } from '../features/rotation/useProjectStats';
+import { deleteRemote } from '../online/api';
+import { ONLINE_ENABLED } from '../online/config';
+import { useSession } from '../online/session';
+import { summaryText, syncNow } from '../online/syncNow';
 import { NO_FILTERS, NO_PATCH, filterProjects, patchesOf, type VaultFilters } from '../features/vault/vaultModel';
 import { compact, formatDecimal, formatInt, formatPercent } from '../ui/format';
 import './vault.css';
@@ -57,8 +61,26 @@ export default function Vault() {
     const trimmed = name.trim();
     if (trimmed) edit(id, (p) => (trimmed === p.name ? null : { ...p, name: trimmed, meta: { ...p.meta, updatedAt: new Date().toISOString() } }));
   };
+  const token = useSession((st) => st.token);
+  const [syncing, setSyncing] = useState(false);
+  const sync = async () => {
+    if (!token) return;
+    setSyncing(true);
+    setError(null);
+    setNotes([]);
+    try {
+      const r = await syncNow(token);
+      setNotes([summaryText(r)]);
+      refresh();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Não foi possível sincronizar.');
+    } finally {
+      setSyncing(false);
+    }
+  };
   const remove = (id: string) => {
     deleteStoredProject(id);
+    if (token) void deleteRemote(token, id).catch(() => undefined);
     setConfirmDelete(null);
     refresh();
   };
@@ -97,11 +119,14 @@ export default function Vault() {
         <section className="dz-pagehead">
           <div className="titles">
             <h1 className="h1">Vault</h1>
-            <span className="muted">{items.length} {items.length === 1 ? 'time' : 'times'} salvos neste navegador. Nada sai do seu navegador.</span>
+            <span className="muted">{items.length} {items.length === 1 ? 'time salvo' : 'times salvos'} neste navegador. {token ? 'Use "Sincronizar com a conta" para guardá-los também online.' : 'Nada sai do seu navegador.'}</span>
           </div>
           <div className="actions">
             <button type="button" className="dz-btn" disabled={busy || !data} onClick={() => xlsxInput.current?.click()} title="Importa a planilha de theorycraft (abas Time e Rotação)">Importar planilha .xlsx</button>
             <button type="button" className="dz-btn" disabled={busy} onClick={() => jsonInput.current?.click()} title="Abre um projeto exportado pelo Astralys">Importar projeto .json</button>
+            {ONLINE_ENABLED && (token
+              ? <button type="button" className="dz-btn" disabled={syncing} onClick={() => void sync()} title="Envia os times mais novos para a conta e baixa os que só existem nela">{syncing ? 'Sincronizando…' : 'Sincronizar com a conta'}</button>
+              : <Link to="/entrar" className="dz-btn" title="Guarde seus times fora deste navegador">Entrar para sincronizar</Link>)}
             <button type="button" className="dz-btn gold" onClick={createNew}>Novo time</button>
             <input ref={xlsxInput} type="file" accept=".xlsx,.xlsm" hidden aria-label="Escolher planilha" onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ''; if (f && data) void run(() => importXlsx(f, data)); }} />
             <input ref={jsonInput} type="file" accept=".json,application/json" hidden aria-label="Escolher projeto" onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ''; if (f) void run(() => importJson(f)); }} />

@@ -1,6 +1,9 @@
 /** Barra superior fixa: marca, abas de navegação e o botão "Salvar no Vault". */
+import { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import '../design/design.css';
+import { ONLINE_ENABLED } from '../online/config';
+import { useSession } from '../online/session';
 
 export function StarMark({ size = 26 }: { size?: number }) {
   return (
@@ -17,6 +20,24 @@ export interface AppHeaderProps {
   memberName?: string;
   favorite?: boolean;
   onToggleFavorite?: () => void;
+}
+
+/** Entrar / nome da conta e Sair; só aparece quando o site tem API configurada. */
+function Account() {
+  const usuario = useSession((s) => s.usuario);
+  const signOut = useSession((s) => s.signOut);
+  const restore = useSession((s) => s.restore);
+  useEffect(() => {
+    void restore();
+  }, [restore]);
+  if (!ONLINE_ENABLED) return null;
+  if (!usuario) return <Link to="/entrar" className="dz-btn">Entrar</Link>;
+  return (
+    <span className="dz-account">
+      <span className="dz-account-name" title={usuario.email}>{usuario.nome}</span>
+      <button type="button" className="dz-btn" onClick={() => void signOut()}>Sair</button>
+    </span>
+  );
 }
 
 export function AppHeader({ projectId, memberName, favorite, onToggleFavorite }: AppHeaderProps) {
@@ -55,6 +76,7 @@ export function AppHeader({ projectId, memberName, favorite, onToggleFavorite }:
           {favorite ? 'Salvo no Vault' : 'Salvar no Vault'}
         </button>
       )}
+      <Account />
     </header>
   );
 }

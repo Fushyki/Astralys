@@ -91,6 +91,22 @@ export function listProjects(): ProjectSummary[] {
   return out.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
 }
 
+/** Os projetos realmente salvos neste navegador (sem o exemplo embutido). */
+export function listStoredProjects(): RotationProject[] {
+  const out: RotationProject[] = [];
+  try {
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (!key?.startsWith(PREFIX)) continue;
+      const p = loadStoredProject(key.slice(PREFIX.length));
+      if (p) out.push(p);
+    }
+  } catch {
+    /* sem armazenamento: nada a listar */
+  }
+  return out;
+}
+
 export const newProjectId = (): string =>
   typeof crypto !== 'undefined' && 'randomUUID' in crypto ? crypto.randomUUID() : `p-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
 

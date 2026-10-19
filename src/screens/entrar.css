@@ -1,0 +1,9 @@
+/* Tela Entrar / Criar conta. */
+.en-page { display: flex; justify-content: center; }
+.en-form { width: 100%; max-width: 440px; display: flex; flex-direction: column; gap: 16px; }
+.en-form .muted { margin: 0; font-size: 14px; }
+.en-tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+.en-tabs .dz-btn { flex: 1 1 140px; }
+.en-tabs .dz-btn[aria-selected="true"] { border-color: var(--gold); color: var(--gold); }
+.en-form .dz-field { display: flex; flex-direction: column; gap: 6px; }
+.en-form small { font-size: 13px; }

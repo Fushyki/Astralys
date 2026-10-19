@@ -44,6 +44,11 @@ API não oficial `https://api.lunaris.moe/data/` (descoberta lendo o bundle do s
 - Testes: `tests/data/` confere os dados gerados contra as abas `L_Golpes`, `L_Personagens` e `L_Armas` da planilha (os 55 golpes batem nos 15 níveis) e valida as referências dos efeitos.
 - Dados de jogo só vêm de `src/data/generated/` (Lunaris). O legado `characters.ts`/`weapons.ts` foi removido; partículas da habilidade em `src/effects/particles.json`.
 
+## Conta online (opcional)
+- `src/online/`: `config.ts` (`VITE_API_URL`; **sem ela nenhum botão de conta aparece** e o site segue só local), `api.ts` (cliente do FastAPI, erros em pt-BR), `session.ts` (Zustand, token em `localStorage['astralys.sessao']`), `sync.ts` (plano puro: vale o `meta.updatedAt` mais novo) e `syncNow.ts`. Tela `/entrar` (`screens/Entrar.tsx`); o header mostra Entrar / nome + Sair; o Vault tem "Sincronizar com a conta" e apagar um time apaga também na conta.
+- Teste com backend local: `DATABASE_URL=sqlite:///dev.db SECRET_KEY=<32+> ALLOWED_ORIGINS=http://localhost:4174 uvicorn main:app`, `VITE_API_URL=http://localhost:8000 npm run build:conta`, `npx vite preview --outDir dist-conta --port 4174` e `npm run e2e:conta` (17 verificações; o backend limita 6 chamadas `/auth` por minuto, use `E2E_COOLDOWN_MS=62000` entre execuções).
+- Ainda não existe: compartilhar por link público, recuperar senha na interface, trocar nome/senha.
+
 ## Segurança
 `.env` nunca no git (só `.env.example` com `VITE_API_URL`). Auth só e-mail+senha via JWT do backend; Supabase e login Google foram removidos (reintroduzir Google só com verificação de token no backend).
 

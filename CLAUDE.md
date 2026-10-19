@@ -2,7 +2,7 @@
 
 Ambiente de theorycrafting de Genshin Impact: monta rotações de time numa timeline, mostra de onde vem cada buff e quanto vale, guarda tudo num Vault e gera cards para partilhar. Meta: melhor que o Genshin Optimizer em times/rotações e mais legível que o GCSim.
 
-Dono: Davi. UI em pt-BR. Commits em português. Trabalhar numa branch longa (agora `v2/trabalho`), nunca direto no `main`; várias entregas por branch e o Davi abre e mescla UM PR por lote no GitHub (decisão de 19/10/2026, para ele mesclar menos).
+Dono: Davi. UI em pt-BR. Commits em português. Trabalhar numa branch longa (agora `v2/importar-uid`), nunca direto no `main`; várias entregas por branch e o Davi abre e mescla UM PR por lote no GitHub (decisão de 19/10/2026, para ele mesclar menos).
 
 ## Stack
 React 18 + Vite + TypeScript, CSS próprio (sem Tailwind). Testes: Vitest + e2e com playwright-core (`npm run e2e`). Backend separado: `Fushyki/Astralys-BackEnd` (FastAPI + SQLAlchemy + JWT), pasta `C:\Users\dabiv\Astralys-BackEnd`.
@@ -49,6 +49,9 @@ API não oficial `https://api.lunaris.moe/data/` (descoberta lendo o bundle do s
 - Teste com backend local: `DATABASE_URL=sqlite:///dev.db SECRET_KEY=<32+> ALLOWED_ORIGINS=http://localhost:4174 uvicorn main:app`, `VITE_API_URL=http://localhost:8000 npm run build:conta`, `npx vite preview --outDir dist-conta --port 4174` e `npm run e2e:conta` (25 verificações; o backend limita 6 chamadas `/auth` por minuto, use `E2E_COOLDOWN_MS=62000` entre execuções).
 - Link público: "Compartilhar" no cartão do Vault liga `meta.shared` (vira `is_public` no servidor), copia `https://site/p/<id>` e a tela `screens/Publico.tsx` (`/p/:id`, sem login, lê `GET /astralys/publicos/{id}` do backend) mostra o time com DPS/DPR e "Abrir no meu Vault" (cópia local). Parar de compartilhar fecha o link. O exemplo embutido nunca sincroniza.
 - Ainda não existe: recuperar senha na interface e trocar nome/senha. (O endpoint público é do backend `v2/core`; sem ele o link dá "Time não encontrado".)
+
+## Importar pelo UID (Enka.Network)
+- O akasha.cv bloqueia acesso automatizado (Cloudflare), mas a fonte dele é o Enka.Network, que tem API pública. O navegador não chama o Enka (sem CORS): o backend tem `GET /enka/{uid}` (`enka.py`, User-Agent próprio, cache de 60 s, erros em pt-BR). `src/online/enka.ts` busca e `src/features/enka/enkaImport.ts` converte a vitrine (até 8 personagens) em inventário GOOD (ids do Enka = ids dos dados: personagem, arma, set; ordem dos talentos em `skillOrder.json`, gerado da tabela pública do Enka). `mergeGood` junta à vitrine o inventário que o usuário já tinha. UI: Personagem > Ferramentas > Inventário GOOD > "Buscar pelo UID" (só com `VITE_API_URL`). Teste: `tests/features/enkaImport.test.ts` (fixture sanitizada em `tests/fixtures/enka-vitrine.json`) e `scripts/e2e/uid.cjs` (mock do backend). Não importa o Viajante. Prints (OCR) não foram feitos.
 
 ## Segurança
 `.env` nunca no git (só `.env.example` com `VITE_API_URL`). Auth só e-mail+senha via JWT do backend; Supabase e login Google foram removidos (reintroduzir Google só com verificação de token no backend).

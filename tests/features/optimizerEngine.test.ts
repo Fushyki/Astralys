@@ -166,3 +166,66 @@ describe('busca dividida em partes (workers)', () => {
     }
   });
 });
+
+describe('alvo da otimização: golpe do kit e buff', () => {
+  it('um golpe do kit (com reação e crítico) acha o mesmo que a força bruta', () => {
+    const burst = game.moves.find((m) => m.character === 'Mavuika' && m.talent === 'burst')!;
+    for (const [reaction, crit] of [['none', 'avg'], ['melt', 'crit']] as const) {
+      const { expected, got } = compare({ ...DEFAULT_CONFIG, topN: 3, objective: { kind: 'move', moveId: burst.id, reaction, crit } }, 4);
+      expect(got.builds.length).toBe(expected.length);
+      got.builds.forEach((b, i) => expect(b.report.value).toBeCloseTo(expected[i].value, 3));
+    }
+  });
+
+  it('o valor do golpe muda com a reação (Derreter vale mais que sem reação)', () => {
+    const burst = game.moves.find((m) => m.character === 'Mavuika' && m.talent === 'burst')!;
+    const none = compare({ ...DEFAULT_CONFIG, topN: 1, objective: { kind: 'move', moveId: burst.id, reaction: 'none', crit: 'avg' } }, 3).got.builds[0].report.value;
+    const melt = compare({ ...DEFAULT_CONFIG, topN: 1, objective: { kind: 'move', moveId: burst.id, reaction: 'melt', crit: 'avg' } }, 3).got.builds[0].report.value;
+    expect(melt).toBeGreaterThan(none);
+  });
+
+  it('buff da Vodyanitsa C1 (ATK dos aliados = 0,8% do HP): o melhor build maximiza o HP', () => {
+    const base = sampleProject();
+    const members = ['Vodyanitsa', 'Mavuika', 'Citlali', 'Bennett'].map((name) => {
+      const ref = { ...project.members[0], character: name, weapon: game.weapons.find((w) => w.type === game.characters.find((c) => c.name === name)!.weapon && w.rarity === 4)!.name, constellation: name === 'Vodyanitsa' ? 1 : undefined, primarySet: undefined, secondarySet: undefined };
+      return ref;
+    });
+    const p = { ...base, compat: 'none' as const, members, actions: [], buffWindows: [] };
+    const r = resolveProject(p as never, game, effects);
+    const buffId = 'cbuff-0-c1';
+    const ev = (objective: never) => runOptimizer({ resolved: r, member: 0, rolls: r.team.members.map(() => ({ CR: 0, CD: 0, 'ATK%': 0, EM: 0, ER: 0, ATK: 0, 'HP%': 0, HP: 0, 'DEF%': 0, DEF: 0 })), ref: p.members[0] as never, game, effects, good: inventoryFor('Vodyanitsa'), characterKey: 'Vodyanitsa', config: { ...DEFAULT_CONFIG, topN: 1, objective } });
+    const byBuff = ev({ kind: 'buff', buffId } as never).builds[0];
+    const byHp = ev({ kind: 'stat', stat: 'hp' } as never).builds[0];
+    expect(byBuff.report.value).toBeGreaterThan(0);
+    // 0,8% do HP máximo: o valor do buff é 0,008 × HP final (ao menos dentro de 1% do melhor HP)
+    expect(byBuff.report.stats.hp * 0.008).toBeCloseTo(byBuff.report.value, 0);
+    expect(byBuff.report.stats.hp).toBeGreaterThanOrEqual(byHp.report.stats.hp * 0.99);
+  });
+});
+
+function inventoryFor(character: string) {
+  const g = inventory(4);
+  return { ...g, characters: [{ key: character }] };
+}
+
+describe('peças reais no personagem (MemberRef.pieces)', () => {
+  it('o build com as 5 peças reais dá EXATAMENTE o dano que o otimizador mostrou (inclusive cálice de outro elemento)', () => {
+    const good = inventory(4);
+    const r = runOptimizer({ ...base, good, characterKey: 'Mavuika', config: { ...DEFAULT_CONFIG, topN: 1 } });
+    const top = r.builds[0];
+    const patched = { ...project, members: project.members.map((m, i) => (i === 0 ? { ...m, pieces: top.pieces } : m)) };
+    const rp = resolveProject(patched, game, effects);
+    const b = analyzeProject({ team: rp.team, actions: rp.actions, flatEffects: rp.flatEffects, ampCoefficient: rp.ampCoefficient });
+    expect(b.optimization.result.totals.avg).toBeCloseTo(top.report.teamAvg, 3);
+    expect(rp.team.members[0].primarySet?.name).toBe(top.config.primarySet);
+  });
+
+  it('com menos de 5 peças, as posições vazias não contam (sem ATK de pluma nem HP de flor)', () => {
+    const good = inventory(2);
+    const flower = good.artifacts.find((a) => a.slotKey === 'flower')!;
+    const one = resolveProject({ ...project, members: project.members.map((m, i) => (i === 0 ? { ...m, pieces: [flower] } : m)) }, game, effects);
+    const stats = one.team.members[0].externalStats!;
+    expect(stats.hpFlat).toBeGreaterThan(4000);
+    expect(stats.atkFlat ?? 0).toBeLessThan(100);
+  });
+});

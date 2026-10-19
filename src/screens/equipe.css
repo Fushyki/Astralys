@@ -28,3 +28,27 @@
 .eq-card button.who .swap { margin-left: auto; color: var(--muted); font-size: 18px; opacity: 0; transition: opacity .15s; }
 .eq-card button.who:hover .swap, .eq-card button.who:focus-visible .swap { opacity: 1; }
 @media (hover: none) { .eq-card button.who .swap { opacity: .7; } }
+
+/* Arma e artefatos só como imagem; tocar abre a troca. 2+2: cada set tem uma cor e o selo "2". */
+.eq-gear { display: flex; gap: 10px; align-items: stretch; }
+.eq-pieces { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; flex: 1; min-width: 0; }
+.eq-tile { position: relative; display: grid; place-items: center; padding: 4px; border-radius: 12px; border: 2px solid var(--border-ctl); background: linear-gradient(180deg, #4a3a73 0%, #1a1f3d 70%); cursor: pointer; min-width: 0; aspect-ratio: 1; }
+.eq-tile[data-rarity='5'] { background: linear-gradient(180deg, #7a5a2b 0%, #2a2418 72%); border-color: #5a4524; }
+.eq-tile:hover, .eq-tile:focus-visible { border-color: var(--gold); outline: none; }
+.eq-tile img { width: 100%; height: 100%; object-fit: contain; }
+.eq-tile .ph { font-family: var(--font-display); color: var(--gold); font-size: 22px; }
+.eq-tile.weapon { width: 25%; min-width: 64px; flex: none; }
+.eq-tile .badge { position: absolute; right: 2px; bottom: 2px; min-width: 18px; padding: 0 5px; border-radius: 999px; background: rgba(10, 14, 28, .85); color: var(--text); font-size: 11px; line-height: 18px; text-align: center; }
+.eq-tile.piece[data-tone='a'] { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold) inset; }
+.eq-tile.piece[data-tone='a'] .badge { background: var(--gold); color: var(--on-gold); }
+.eq-tile.piece[data-tone='b'] { border-color: #6fd3ff; box-shadow: 0 0 0 1px #6fd3ff inset; }
+.eq-tile.piece[data-tone='b'] .badge { background: #6fd3ff; color: #06202e; }
+.eq-gear[data-mode='four'] .eq-tile.piece { border-color: var(--gold); }
+@media (max-width: 520px) { .eq-gear { flex-direction: column; } .eq-tile.weapon { width: 72px; } }
+
+/* Vaga vazia do time: cartão tracejado com silhueta; tocar abre a escolha de personagem. */
+.eq-add { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; text-transform: none; letter-spacing: 0; }
+.eq-add .silhouette { display: grid; place-items: center; width: 72px; height: 72px; border-radius: 50%; border: 2px dashed var(--border-ctl-hi); color: var(--muted); font-family: var(--font-display); font-size: 36px; }
+.eq-add .t { font-family: var(--font-display); font-weight: 700; font-size: 20px; color: var(--text-2); }
+.eq-add .s { font-family: var(--font-body); font-size: 13px; color: var(--muted); font-weight: 400; }
+.eq-add:hover .silhouette { border-color: var(--gold); color: var(--gold); }

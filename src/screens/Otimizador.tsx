@@ -1,15 +1,20 @@
-/** Otimizador de artefatos (/projeto/:id/otimizador/:nome?): os melhores conjuntos do inventário GOOD para um personagem do time. */
+/**
+ * Otimizador de artefatos, como aba "Otimizar" da página do personagem (/projeto/:id/personagem/:nome?aba=otimizar):
+ * a otimização é individual de cada personagem. A rota antiga /projeto/:id/otimizador/:nome? redireciona para lá.
+ */
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
+import { Link, Navigate, useParams } from 'react-router-dom';
 import { useProjectView } from '../app/ProjectContext';
-import { CharacterAvatar, Chip, Panel, Segmented } from '../design/primitives';
+import { Chip, Panel } from '../design/primitives';
 import { pieceIconUrl } from '../design/images';
 import { norm, type Good, type GoodArtifact } from '../features/good/goodImport';
 import { loadGood } from '../features/good/goodStore';
 import { startOptimizerJob, type OptimizerJob, type OptimizerProgress } from '../features/optimizer/client';
 import type { Constraints, Objective } from '../features/optimizer/evaluator';
 import { DEFAULT_CONFIG, countCandidates, type OptimizedBuild, type OptimizerConfig, type OptimizerResult } from '../features/optimizer/run';
+import { REACTION_LABEL, reactionOptions } from '../features/character/characterModel';
 import { useRotationStore } from '../features/rotation/store';
+import type { ReactionChoice } from '../engine';
 import { formatDecimal, formatInt } from '../ui/format';
 import './otimizador.css';
 
@@ -30,13 +35,24 @@ const SUB_LABEL: Record<string, string> = { hp: 'HP', hp_: 'HP%', atk: 'ATK', at
 const PERCENT = new Set(['hp_', 'atk_', 'def_', 'enerRech_', 'critRate_', 'critDMG_', 'heal_', 'pyro_dmg_', 'hydro_dmg_', 'cryo_dmg_', 'electro_dmg_', 'anemo_dmg_', 'geo_dmg_', 'dendro_dmg_', 'physical_dmg_']);
 const fmtStat = (key: string, value: number) => (PERCENT.has(key) ? `${formatDecimal(value, 1)}%` : formatInt(value));
 
-type Focus = 'team' | 'member' | 'action' | 'stat';
+type Goal = 'dano' | 'buff' | 'stat';
+type Scope = 'team' | 'member' | 'move';
+type Crit = 'avg' | 'crit' | 'noCrit';
 type StatKey = 'hp' | 'atk' | 'def' | 'em' | 'er';
 const STAT_LABEL: Record<StatKey, string> = { hp: 'HP máximo', atk: 'ATK', def: 'DEF', em: 'Maestria', er: 'Recarga' };
+const FROM_LABEL: Record<string, string> = { atk: 'o ATK', baseAtk: 'o ATK base', hp: 'o HP', def: 'a DEF', em: 'a Maestria', er: 'a Recarga' };
+const CRIT_LABEL: Record<Crit, string> = { avg: 'Média com crítico', crit: 'Sempre crítico', noCrit: 'Sem crítico' };
+const TALENT_LABEL = { normal: 'Ataque normal', skill: 'Habilidade', burst: 'Supremo' } as const;
 
 interface UiState {
-  focus: Focus;
-  action: number;
+  /** O que otimizar: dano, o valor de um buff ou um stat. */
+  goal: Goal;
+  /** Dano de: toda a rotação do time, só do personagem ou um golpe do kit. */
+  scope: Scope;
+  moveId: string;
+  reaction: string;
+  crit: Crit;
+  buffId: string;
   stat: StatKey;
   mins: Record<'er' | 'cr' | 'cd' | 'em' | 'hp' | 'atk' | 'def', string>;
   levelMin: number;
@@ -49,7 +65,7 @@ interface UiState {
 }
 
 const initial: UiState = {
-  focus: 'team', action: 0, stat: 'hp', mins: { er: '', cr: '', cd: '', em: '', hp: '', atk: '', def: '' },
+  goal: 'dano', scope: 'team', moveId: '', reaction: 'none', crit: 'avg', buffId: '', stat: 'hp', mins: { er: '', cr: '', cd: '', em: '', hp: '', atk: '', def: '' },
   levelMin: 0, levelMax: 20, topN: 5, borrow: false, offMains: { sands: [], goblet: [], circlet: [] }, offSets: [],
 };
 
@@ -68,13 +84,17 @@ function Img({ src, fallback }: { src?: string; fallback: string }) {
   return src && !failed ? <img src={src} alt="" loading="lazy" crossOrigin="anonymous" onError={() => setFailed(true)} /> : <b className="ph" aria-hidden="true">{fallback}</b>;
 }
 
+/** Rota antiga: manda para a aba Otimizar do personagem. */
 export default function Otimizador() {
   const v = useProjectView();
   const { nome } = useParams();
-  const navigate = useNavigate();
+  return <Navigate to={`/projeto/${v.id}/personagem/${encodeURIComponent(nome ?? v.project.members[0].character)}?aba=otimizar`} replace />;
+}
+
+export function OtimizadorPanel({ index }: { index: number }) {
+  const v = useProjectView();
   const update = useRotationStore((s) => s.updateMember);
-  const { project, data, colors } = v;
-  const index = Math.max(0, project.members.findIndex((m) => m.character === nome));
+  const { project, data } = v;
   const ref = project.members[index];
   const character = data.game.characters.find((c) => c.name === ref?.character);
 
@@ -122,11 +142,22 @@ export default function Otimizador() {
     return [...counts.entries()].sort((a, b) => b[1] - a[1]);
   };
 
-  if (!ref) return <Navigate to={`/projeto/${v.id}`} replace />;
+  if (!ref) return null;
 
-  const memberActions = v.resolved.actions.map((a, i) => ({ a, i })).filter(({ a }) => a.member === index);
-  const buffStats = (v.resolved.team.members[index]?.characterEffect?.buffs ?? []).filter((b) => b.convert && b.convert.from !== 'partyEnergy' && b.convert.from !== 'baseAtk');
-  const buffShortcuts = [...new Map(buffStats.map((b) => [b.convert!.from, b])).entries()].filter(([from]) => from in STAT_LABEL) as [StatKey, (typeof buffStats)[number]][];
+  const moves = data.game.moves.filter((m) => m.character === ref.character);
+  const moveChosen = moves.find((m) => m.id === ui.moveId) ?? moves.find((m) => m.talent === 'burst') ?? moves[0];
+  const teamElements = v.resolved.team.members.map((m) => m.character.element);
+  const reactions = character ? reactionOptions(character.element, teamElements) : (['none'] as ReactionChoice[]);
+  const reaction = (reactions.includes(ui.reaction as ReactionChoice) ? ui.reaction : 'none') as ReactionChoice;
+  /** Buffs que este personagem dá e que crescem com os stats dele (o valor muda com o build). */
+  const effect = v.resolved.team.members[index]?.characterEffect;
+  const buffOptions = [
+    ...(effect?.teamFlatAtk ? [{ id: `flat-atk-${index}`, label: 'ATK fixo que ele dá ao time', hint: 'cresce com o ATK dele' }] : []),
+    ...(effect?.buffs ?? [])
+      .filter((b) => b.convert && b.convert.from !== 'partyEnergy' && (b.minConstellation ?? 0) <= (ref.constellation ?? 0))
+      .map((b) => ({ id: `cbuff-${index}-${b.id}`, label: b.label, hint: `cresce com ${FROM_LABEL[b.convert!.from] ?? b.convert!.from}` })),
+  ];
+  const buffChosen = buffOptions.find((b) => b.id === ui.buffId) ?? buffOptions[0];
 
   const config = (): OptimizerConfig => {
     const num = (s: string, f: number) => (s.trim() === '' || Number.isNaN(Number(s)) ? undefined : Number(s) / f);
@@ -134,7 +165,12 @@ export default function Otimizador() {
       er: num(ui.mins.er, 100), cr: num(ui.mins.cr, 100), cd: num(ui.mins.cd, 100),
       em: num(ui.mins.em, 1), hp: num(ui.mins.hp, 1), atk: num(ui.mins.atk, 1), def: num(ui.mins.def, 1),
     };
-    const objective: Objective = ui.focus === 'team' ? { kind: 'team' } : ui.focus === 'member' ? { kind: 'member' } : ui.focus === 'action' ? { kind: 'action', index: ui.action } : { kind: 'stat', stat: ui.stat };
+    const objective: Objective =
+      ui.goal === 'stat' ? { kind: 'stat', stat: ui.stat }
+      : ui.goal === 'buff' ? { kind: 'buff', buffId: buffChosen?.id ?? '' }
+      : ui.scope === 'move' && moveChosen ? { kind: 'move', moveId: moveChosen.id, reaction, crit: ui.crit }
+      : ui.scope === 'member' ? { kind: 'member' }
+      : { kind: 'team' };
     const mainStats: OptimizerConfig['mainStats'] = {};
     for (const slot of ['sands', 'goblet', 'circlet'] as const) {
       const on = mainsOf(slot).map(([k]) => k).filter((k) => !ui.offMains[slot].includes(k));
@@ -171,37 +207,21 @@ export default function Otimizador() {
   const stop = () => job.current?.stop();
 
   const equip = (b: OptimizedBuild) => {
-    update(index, { artifacts: b.loadout.artifacts, primarySet: b.loadout.primarySet, secondarySet: b.loadout.secondarySet, fourPiece: b.loadout.fourPiece, manualRolls: b.loadout.manualRolls });
+    // Equipar põe as 5 peças reais no personagem: o dano calculado é exatamente o mostrado aqui.
+    update(index, { pieces: b.pieces.map((p) => ({ ...p })) });
     setEquippedKey(b.key);
   };
 
   const toggle = (list: string[], key: string) => (list.includes(key) ? list.filter((k) => k !== key) : [...list, key]);
   const focusValue = (r: OptimizedBuild['report']) =>
-    ui.focus === 'stat' ? (ui.stat === 'er' ? `${formatDecimal(r.value * 100, 0)}%` : formatInt(r.value)) : formatInt(r.value);
+    ui.goal === 'stat' ? (ui.stat === 'er' ? `${formatDecimal(r.value * 100, 0)}%` : formatInt(r.value))
+    : ui.goal === 'buff' ? (Math.abs(r.value) < 10 ? `${formatDecimal(r.value * 100, 1)}%` : formatInt(r.value))
+    : formatInt(r.value);
+  const goalCaption = ui.goal === 'stat' ? STAT_LABEL[ui.stat] : ui.goal === 'buff' ? (buffChosen?.label ?? 'buff') : ui.scope === 'move' ? `${moveChosen?.labelPt ?? moveChosen?.label ?? 'golpe'} · ${REACTION_LABEL[reaction] ?? reaction}` : ui.scope === 'member' ? `dano de ${ref.character}` : 'dano da rotação do time';
   const base = result?.equipped?.report.value;
 
   return (
-    <main className="dz-page ot">
-      <section className="dz-pagehead">
-        <div className="titles">
-          <span className="lbl">Otimizador de artefatos · {project.name}</span>
-          <h1 className="h1">Os melhores artefatos de {ref.character}</h1>
-          <span className="muted">Busca exata no seu inventário: testa as combinações que importam e descarta só o que não pode vencer.</span>
-        </div>
-      </section>
-
-      <div className="ot-team" role="tablist" aria-label="Quem otimizar">
-        {project.members.map((m, i) => {
-          const c = data.game.characters.find((x) => x.name === m.character);
-          return (
-            <button key={m.character} type="button" role="tab" aria-selected={i === index} className="ot-member" style={{ ['--c' as string]: colors[i] }} onClick={() => navigate(`/projeto/${v.id}/otimizador/${encodeURIComponent(m.character)}`)}>
-              <CharacterAvatar name={m.character} icon={c?.icon} color={colors[i]} size={56} />
-              <span className="n">{m.character}</span>
-            </button>
-          );
-        })}
-      </div>
-
+    <div className="ot">
       {!good ? (
         <Panel title="Inventário">
           <div className="ot-empty">
@@ -212,33 +232,76 @@ export default function Otimizador() {
       ) : (
         <div className="ot-grid">
           <div className="ot-side">
-            <Panel title="Foco da build">
-              <div className="ot-focus" role="group" aria-label="Foco da build">
-                {([['team', 'Dano do time'], ['member', `Dano de ${ref.character}`], ['action', 'Um golpe'], ['stat', 'Um stat']] as [Focus, string][]).map(([k, label]) => (
-                  <button key={k} type="button" aria-pressed={ui.focus === k} onClick={() => setUi({ ...ui, focus: k })}>{label}</button>
-                ))}
+            <Panel title="O que otimizar">
+              <div className="ot-goals" role="group" aria-label="O que otimizar">
+                <button type="button" aria-pressed={ui.goal === 'dano'} onClick={() => setUi({ ...ui, goal: 'dano' })}><b>Dano</b><small>do time, dele ou de um golpe</small></button>
+                <button type="button" aria-pressed={ui.goal === 'buff'} onClick={() => setUi({ ...ui, goal: 'buff' })}><b>Buff</b><small>o que ele dá ao time</small></button>
+                <button type="button" aria-pressed={ui.goal === 'stat'} onClick={() => setUi({ ...ui, goal: 'stat' })}><b>Stat</b><small>HP, ATK, Maestria…</small></button>
               </div>
-              {ui.focus === 'action' && (
-                <select className="dz-input" aria-label="Golpe" value={ui.action} onChange={(e) => setUi({ ...ui, action: Number(e.target.value) })}>
-                  {memberActions.length === 0 && <option value={0}>Sem golpes dele na rotação</option>}
-                  {memberActions.map(({ a, i }) => <option key={a.id} value={i}>{(a.time ?? 0).toFixed(1)} s · {a.move.label}</option>)}
-                </select>
-              )}
-              {ui.focus === 'stat' && (
-                <div className="ot-chips">
-                  {(Object.keys(STAT_LABEL) as StatKey[]).map((k) => (
-                    <button key={k} type="button" className="ot-chip" aria-pressed={ui.stat === k} onClick={() => setUi({ ...ui, stat: k })}>{STAT_LABEL[k]}</button>
-                  ))}
+
+              {ui.goal === 'dano' && (
+                <div className="ot-sub">
+                  <div className="ot-focus" role="group" aria-label="Dano de">
+                    {([['team', 'Rotação do time'], ['member', `Só ${ref.character}`], ['move', 'Um golpe do kit']] as [Scope, string][]).map(([k, label]) => (
+                      <button key={k} type="button" aria-pressed={ui.scope === k} onClick={() => setUi({ ...ui, scope: k })}>{label}</button>
+                    ))}
+                  </div>
+                  {ui.scope === 'team' && <p className="muted small">Soma o dano de todos na rotação. Conta os buffs que {ref.character} dá aos outros, nas janelas que você montou.</p>}
+                  {ui.scope === 'member' && <p className="muted small">Só o dano de {ref.character} na rotação do time.</p>}
+                  {ui.scope === 'move' && (
+                    <>
+                      <select className="dz-input" aria-label="Golpe do kit" value={moveChosen?.id ?? ''} onChange={(e) => setUi({ ...ui, moveId: e.target.value })}>
+                        {(['normal', 'skill', 'burst'] as const).map((t) => (
+                          <optgroup key={t} label={TALENT_LABEL[t]}>
+                            {moves.filter((m) => m.talent === t).map((m) => <option key={m.id} value={m.id}>{m.labelPt ?? m.label}</option>)}
+                          </optgroup>
+                        ))}
+                      </select>
+                      <span className="lbl">Reação</span>
+                      <div className="ot-chips" role="group" aria-label="Reação">
+                        {reactions.map((r) => (
+                          <button key={r} type="button" className="ot-chip" aria-pressed={reaction === r} onClick={() => setUi({ ...ui, reaction: r })}>{REACTION_LABEL[r] ?? r}</button>
+                        ))}
+                      </div>
+                      <span className="lbl">Crítico</span>
+                      <div className="ot-chips" role="group" aria-label="Crítico">
+                        {(Object.keys(CRIT_LABEL) as Crit[]).map((c) => (
+                          <button key={c} type="button" className="ot-chip" aria-pressed={ui.crit === c} onClick={() => setUi({ ...ui, crit: c })}>{CRIT_LABEL[c]}</button>
+                        ))}
+                      </div>
+                      <p className="muted small">O golpe é avaliado sozinho, com todos os buffs do time ligados. Escolha o golpe que importa mais para ele.</p>
+                    </>
+                  )}
                 </div>
               )}
-              {buffShortcuts.length > 0 && (
-                <div className="ot-buffs">
-                  <span className="muted small">Quem dá buff que escala com stat? Maximize a fonte:</span>
-                  {buffShortcuts.map(([from, b]) => (
-                    <button key={from} type="button" className="ot-chip warm" onClick={() => setUi({ ...ui, focus: 'stat', stat: from })} title={b.note}>
-                      {STAT_LABEL[from]} · {b.label}
-                    </button>
-                  ))}
+
+              {ui.goal === 'buff' && (
+                <div className="ot-sub">
+                  {buffOptions.length === 0 ? (
+                    <p className="note">{ref.character} não tem buff que cresça com os stats dele (nesta constelação). Escolha Dano ou Stat.</p>
+                  ) : (
+                    <>
+                      <div className="ot-buffs">
+                        {buffOptions.map((b) => (
+                          <button key={b.id} type="button" className="ot-chip warm" aria-pressed={buffChosen?.id === b.id} onClick={() => setUi({ ...ui, buffId: b.id })}>
+                            {b.label}<small>{b.hint}</small>
+                          </button>
+                        ))}
+                      </div>
+                      <p className="muted small">Faz o build que dá o MAIOR valor deste buff, mesmo que o dano dele caia. É o foco de suportes como a Vodyanitsa.</p>
+                    </>
+                  )}
+                </div>
+              )}
+
+              {ui.goal === 'stat' && (
+                <div className="ot-sub">
+                  <div className="ot-chips">
+                    {(Object.keys(STAT_LABEL) as StatKey[]).map((k) => (
+                      <button key={k} type="button" className="ot-chip" aria-pressed={ui.stat === k} onClick={() => setUi({ ...ui, stat: k })}>{STAT_LABEL[k]}</button>
+                    ))}
+                  </div>
+                  <p className="muted small">Faz o build com o MAIOR valor final deste stat. Use os mínimos abaixo para não perder o resto.</p>
                 </div>
               )}
             </Panel>
@@ -318,7 +381,7 @@ export default function Otimizador() {
             {error && <p className="dz-error" role="alert">{error}</p>}
             {!running && !result && !error && (
               <div className="ot-empty">
-                <p>Escolha o foco e os filtros e toque em <b>Otimizar</b>. {ui.focus === 'team' ? 'O dano do time inclui os buffs que este personagem dá aos outros.' : ''}</p>
+                <p>Escolha o foco e os filtros e toque em <b>Otimizar</b>. {ui.goal === 'dano' && ui.scope === 'team' ? 'O dano do time inclui os buffs que este personagem dá aos outros.' : ''}</p>
               </div>
             )}
             {result && (
@@ -328,28 +391,28 @@ export default function Otimizador() {
                   <span className="muted small">{formatInt(result.stats.evaluations)} avaliações de {result.stats.combinations.toExponential(1)} combinações</span>
                 </div>
                 {result.equipped && (
-                  <BuildCard title="Equipado hoje" build={result.equipped} base={undefined} focusValue={focusValue} data={data.game.artifacts} focus={ui.focus} />
+                  <BuildCard title="Equipado hoje" build={result.equipped} base={undefined} focusValue={focusValue} data={data.game.artifacts} caption={goalCaption} />
                 )}
                 {result.builds.length === 0 && <p className="note">Nenhum conjunto cumpre os mínimos escolhidos. Afrouxe um deles.</p>}
                 {result.builds.map((b, i) => (
-                  <BuildCard key={b.key} title={`#${i + 1}`} build={b} base={base} focusValue={focusValue} data={data.game.artifacts} focus={ui.focus} onEquip={() => equip(b)} equipped={equippedKey === b.key} />
+                  <BuildCard key={b.key} title={`#${i + 1}`} build={b} base={base} focusValue={focusValue} data={data.game.artifacts} caption={goalCaption} onEquip={() => equip(b)} equipped={equippedKey === b.key} />
                 ))}
               </>
             )}
           </div>
         </div>
       )}
-    </main>
+    </div>
   );
 }
 
-function BuildCard({ title, build, base, focusValue, data, focus, onEquip, equipped }: {
+function BuildCard({ title, build, base, focusValue, data, caption, onEquip, equipped }: {
   title: string;
   build: OptimizedBuild;
   base?: number;
   focusValue: (r: OptimizedBuild['report']) => string;
   data: { name: string; id: number }[];
-  focus: Focus;
+  caption: string;
   onEquip?: () => void;
   equipped?: boolean;
 }) {
@@ -361,7 +424,7 @@ function BuildCard({ title, build, base, focusValue, data, focus, onEquip, equip
         <span className="rank">{title}</span>
         <div className="val">
           <b className="num">{focusValue(r)}</b>
-          <small>{focus === 'team' ? 'dano da rotação' : focus === 'member' ? 'dano dele' : focus === 'action' ? 'dano do golpe' : 'valor do stat'}</small>
+          <small>{caption}</small>
         </div>
         {delta !== undefined && <Chip tone={delta >= 0 ? '#7bd88f' : '#e06c75'}>{delta >= 0 ? '+' : ''}{formatDecimal(delta, 2)}% contra o equipado</Chip>}
         <span className="set">{build.setLabel}</span>

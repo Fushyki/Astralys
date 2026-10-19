@@ -14,6 +14,8 @@ export function CharacterPickerDialog({
   characters,
   exclude,
   onPick,
+  onClear,
+  clearLabel = 'Deixar a vaga vazia',
   onClose,
 }: {
   title: string;
@@ -21,6 +23,9 @@ export function CharacterPickerDialog({
   characters: Character[];
   exclude: string[];
   onPick: (name: string) => void;
+  /** Se informado, mostra o botão que esvazia a vaga (tira o personagem do time). */
+  onClear?: () => void;
+  clearLabel?: string;
   onClose: () => void;
 }) {
   const [query, setQuery] = useState('');
@@ -57,6 +62,7 @@ export function CharacterPickerDialog({
               <button key={el} type="button" aria-pressed={element === el} onClick={() => setElement(element === el ? null : el)}>{el}</button>
             ))}
           </div>
+          {onClear && <button type="button" className="dz-btn sm" onClick={onClear}>{clearLabel}</button>}
         </div>
         <div className="grid">
           {list.length === 0 && <p className="note">Nenhum personagem encontrado.</p>}

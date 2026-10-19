@@ -86,7 +86,7 @@ export default function Personagens() {
                     {teams.length > 4 && <span className="muted small">+{teams.length - 4}</span>}
                   </div>
                   {teams.length > 0 && good && (
-                    <Link className="dz-link small" to={`/projeto/${teams[0].id}/otimizador/${encodeURIComponent(c.name)}`}>Otimizar artefatos</Link>
+                    <Link className="dz-link small" to={`/projeto/${teams[0].id}/personagem/${encodeURIComponent(c.name)}?aba=otimizar`}>Otimizar artefatos</Link>
                   )}
                 </article>
               );

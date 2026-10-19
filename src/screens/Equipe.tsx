@@ -4,7 +4,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useProjectView } from '../app/ProjectContext';
 import { CharacterPickerDialog } from '../design/CharacterPickerDialog';
 import { CharacterAvatar, Chip, KpiCard, StackedBar } from '../design/primitives';
-import { MAX_TEAM_SIZE, effectiveTalents } from '../engine';
+import { pieceIconUrl, weaponIconUrl } from '../design/images';
+import { MAX_TEAM_SIZE, effectiveTalents, type MemberRef } from '../engine';
+import type { LoadedData } from '../features/rotation/data';
+import { effectStatus } from '../features/rotation/teamInfo';
+import { weaponsFor } from '../features/rotation/teamOps';
+import { SetPickerDialog } from './personagem/SetPicker';
+import { WeaponPickerDialog } from './personagem/WeaponPicker';
 import { downloadProject } from '../features/rotation/importFile';
 import { cloneProject, saveProject } from '../features/rotation/persistence';
 import { useRotationStore } from '../features/rotation/store';
@@ -12,6 +18,64 @@ import { defaultMember } from '../features/rotation/teamOps';
 import { configChips, givenBuffs, keyStats, mainReaction, mainsText, receivedBuffCount, roleOf, setPiecesText } from '../features/team/teamModel';
 import { formatDecimal, formatInt, formatPercent } from '../ui/format';
 import './equipe.css';
+
+const PIECES = ['flower', 'plume', 'sands', 'goblet', 'circlet'] as const;
+const PIECE_NAME = { flower: 'Flor', plume: 'Pluma', sands: 'Areia', goblet: 'Cálice', circlet: 'Tiara' } as const;
+
+function GearImg({ src, fallback }: { src?: string; fallback: string }) {
+  const [failed, setFailed] = useState(false);
+  return src && !failed ? <img src={src} alt="" loading="lazy" crossOrigin="anonymous" onError={() => setFailed(true)} /> : <b className="ph" aria-hidden="true">{fallback}</b>;
+}
+
+/** Arma e 5 artefatos só como imagem; tocar abre a troca. Em 2+2 cada set ganha uma cor e o selo "2". */
+function EquipGear({ index, memberRef, data, mains, setText }: { index: number; memberRef: MemberRef; data: LoadedData; mains: string; setText: string }) {
+  const update = useRotationStore((st) => st.updateMember);
+  const [pick, setPick] = useState<'weapon' | 'set' | null>(null);
+  const character = data.game.characters.find((c) => c.name === memberRef.character);
+  const weapon = data.game.weapons.find((w) => w.name === memberRef.weapon);
+  const sets = [memberRef.primarySet, memberRef.secondarySet].filter((n): n is string => !!n).map((n) => data.game.artifacts.find((x) => x.name === n));
+  const twoTwo = sets.length === 2;
+  const four = sets.length === 1 && memberRef.fourPiece !== false;
+  const setFor = (i: number) => (twoTwo && (i === 2 || i === 3) ? sets[1] : sets[0]);
+  return (
+    <div className="eq-gear" data-mode={twoTwo ? 'two-two' : four ? 'four' : sets.length ? 'two' : 'none'}>
+      <button type="button" className="eq-tile weapon" data-rarity={weapon?.rarity ?? 5} onClick={() => setPick('weapon')} aria-label={`Trocar a arma ${memberRef.weapon}`} title={`${memberRef.weapon} (R${memberRef.refinement ?? 1}) · tocar para trocar`}>
+        <GearImg src={weapon?.icon ? weaponIconUrl(weapon.icon) : undefined} fallback="⚔" />
+        <span className="badge">R{memberRef.refinement ?? 1}</span>
+      </button>
+      <div className="eq-pieces" role="group" aria-label={`Artefatos: ${setText}. Mains: ${mains}`} title={`${setText} · Mains: ${mains}`}>
+        {PIECES.map((slot, i) => {
+          const set = setFor(i);
+          const tone = twoTwo ? (set === sets[0] ? 'a' : 'b') : undefined;
+          return (
+            <button type="button" key={slot} className="eq-tile piece" data-tone={tone} data-rarity={memberRef.artifacts.rarity[slot]} onClick={() => setPick('set')} aria-label={`${PIECE_NAME[slot]} de ${set?.name ?? 'nenhum set'}: tocar para trocar o set`}>
+              <GearImg src={set ? pieceIconUrl(set.id, slot) : undefined} fallback={PIECE_NAME[slot].charAt(0)} />
+              {twoTwo && <span className="badge">2</span>}
+            </button>
+          );
+        })}
+      </div>
+      {pick === 'weapon' && character && (
+        <WeaponPickerDialog
+          weapons={weaponsFor(character, data.game.weapons)}
+          current={memberRef.weapon}
+          status={(name) => effectStatus(data.effects.weapons.find((e) => e.weapon === name))}
+          onPick={(name) => { update(index, { weapon: name }); setPick(null); }}
+          onClose={() => setPick(null)}
+        />
+      )}
+      {pick === 'set' && (
+        <SetPickerDialog
+          sets={data.game.artifacts}
+          current={{ primarySet: memberRef.primarySet, secondarySet: memberRef.secondarySet }}
+          status={(name) => effectStatus(data.effects.sets.find((e) => e.set === name))}
+          onPick={(c) => { update(index, { primarySet: c.primarySet, secondarySet: c.secondarySet, fourPiece: c.fourPiece }); setPick(null); }}
+          onClose={() => setPick(null)}
+        />
+      )}
+    </div>
+  );
+}
 
 export default function Equipe() {
   const v = useProjectView();
@@ -111,11 +175,7 @@ export default function Equipe() {
                   <span className="swap" aria-hidden="true">⇄</span>
                 </button>
 
-                <div className="gear">
-                  <div className="line"><span>{ref.weapon}</span><span className="num muted">R{ref.refinement ?? 1}</span></div>
-                  <div className="line"><span>{set.name}</span><span className="muted">{set.pieces}</span></div>
-                  <span className="muted small">Mains: {mainsText(ref, character?.element)}</span>
-                </div>
+                <EquipGear index={i} memberRef={ref} data={data} mains={mainsText(ref, character?.element)} setText={`${set.name} · ${set.pieces}`} />
 
                 <div className="stats">
                   {stats.map((s) => (
@@ -141,19 +201,19 @@ export default function Equipe() {
                 <div className="acts">
                   <Link className="dz-btn gold" to={`/projeto/${v.id}/personagem/${encodeURIComponent(ref.character)}`}>Ajustar build</Link>
                   <div className="small-acts">
-                    <Link className="dz-link" to={`/projeto/${v.id}/otimizador/${encodeURIComponent(ref.character)}`}>Otimizar artefatos</Link>
-                    <button type="button" className="dz-link" disabled={project.members.length <= 1} onClick={() => removeMember(i)}>Remover</button>
                   </div>
                 </div>
               </div>
             </article>
           );
         })}
-        {project.members.length < MAX_TEAM_SIZE && (
-          <button type="button" className="eq-add" onClick={() => setPicker({ mode: 'add' })}>
-            + Adicionar personagem
+        {Array.from({ length: Math.max(0, MAX_TEAM_SIZE - project.members.length) }, (_, k) => (
+          <button type="button" key={`vazio-${k}`} className="eq-add" onClick={() => setPicker({ mode: 'add' })} aria-label="Personagem vazio: tocar para escolher">
+            <span className="silhouette" aria-hidden="true">?</span>
+            <span className="t">Personagem vazio</span>
+            <span className="s">Toque para escolher</span>
           </button>
-        )}
+        ))}
       </section>
 
       <p className="muted small" style={{ margin: 0 }}>
@@ -171,6 +231,7 @@ export default function Equipe() {
           characters={characters}
           exclude={project.members.map((m) => m.character)}
           onPick={pick}
+          onClear={picker.mode === 'replace' && project.members.length > 1 ? () => { removeMember(picker.index); setPicker(null); } : undefined}
           onClose={() => setPicker(null)}
         />
       )}

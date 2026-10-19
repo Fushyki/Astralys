@@ -31,7 +31,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
 
   const tabs = await page.$$eval('.dz-subnav nav a', (a) => a.map((x) => x.textContent.replace(/\s+/g, ' ').trim()));
   check('a faixa do time tem os 3 passos numerados', tabs.join('|') === '1Equipe|2Rotação e buffs|3Dano do time', tabs.join('|'));
-  check('o menu geral é Times, Personagens, Inventário, Otimizador e Ferramentas', (await page.$$eval('.dz-nav > a, .dz-nav .dz-navbtn', (a) => a.map((x) => x.textContent.trim()))).join('|') === 'Times|Personagens|Inventário|Otimizador|Ferramentas ▾');
+  check('o menu geral é Times, Personagens, Inventário, Otimizador e Ferramentas', (await page.$$eval('.dz-nav > a, .dz-header .dz-navbtn', (a) => a.map((x) => x.textContent.trim()))).join('|') === 'Times|Personagens|Inventário|Ferramentas ▾');
   check('o passo 1 explica o que fazer e oferece o próximo', /Passo 1 de 3/.test(await bar()) && (await page.locator('.dz-stepbar a:has-text("Próximo passo: Montar a rotação")').count()) === 1);
   check('no passo 1 não há botão de voltar', (await page.locator('.dz-stepbar a:has-text("←")').count()) === 0);
 

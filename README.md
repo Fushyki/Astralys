@@ -32,6 +32,8 @@ O motor reproduz uma planilha de theorycraft de referência com precisão total 
 
 ## Telas
 
+O projeto tem 4 passos numerados no topo (Equipe → Personagens → Rotação e buffs → Dano do time) e uma barra no rodapé que explica o que fazer em cada um e leva ao próximo. Armas, Recarga, Comparar e Card ficam no menu **Mais**.
+
 | Tela | O que faz |
 | --- | --- |
 | **Equipe** | Visão do time: DPS, divisão do dano, reação principal e um cartão por personagem. |

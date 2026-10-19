@@ -13,6 +13,7 @@ import { useRotationStore } from '../features/rotation/store';
 import { summarize } from '../features/rotation/summary';
 import { useAnalysis } from '../features/rotation/useAnalysis';
 import { AppHeader } from './AppHeader';
+import { ProjectSteps } from './ProjectSteps';
 import { ProjectProvider } from './ProjectContext';
 
 const SAVE_DELAY_MS = 400;
@@ -138,6 +139,7 @@ export default function ProjectLayout() {
         <div className={ready.stale ? 'dz-busy' : undefined}>
           <Outlet />
         </div>
+        <ProjectSteps id={id} firstMember={current.members[0].character} />
       </ProjectProvider>
     </div>
   );

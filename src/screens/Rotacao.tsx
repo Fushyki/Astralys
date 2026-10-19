@@ -2,6 +2,7 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useProjectView } from '../app/ProjectContext';
+import { realignActions } from '../features/rotation/projectOps';
 import { laneInfos } from '../features/rotation/rotationModel';
 import { useRotationStore } from '../features/rotation/store';
 import { formatInt } from '../ui/format';
@@ -18,10 +19,18 @@ export default function Rotacao() {
   const canRedo = useRotationStore((s) => s.future.length > 0);
   const undo = useRotationStore((s) => s.undo);
   const redo = useRotationStore((s) => s.redo);
+  const realign = useRotationStore((s) => s.realign);
 
   const lanes = useMemo(() => laneInfos(v.project, v.resolved), [v.project, v.resolved]);
   const names = v.project.members.map((m) => m.character);
   const windowed = new Set(v.project.buffWindows.map((w) => w.tag)).size;
+  // "Apertar a linha" só faz sentido se algum golpe sairia do lugar (há espaços vazios entre eles).
+  const canTighten = useMemo(() => {
+    if (v.project.actions.length === 0) return false;
+    const next = realignActions(v.project);
+    const was = new Map(v.project.actions.map((a) => [a.id, a.time]));
+    return next.actions.some((a) => Math.abs((was.get(a.id) ?? a.time) - a.time) > 1e-6);
+  }, [v.project]);
 
   return (
     <main className="dz-page">
@@ -33,6 +42,7 @@ export default function Rotacao() {
         <div className="actions rt-actions">
           <button type="button" className="dz-btn" onClick={undo} disabled={!canUndo} title="Ctrl+Z">Desfazer</button>
           <button type="button" className="dz-btn" onClick={redo} disabled={!canRedo} title="Ctrl+Y">Refazer</button>
+          <button type="button" className="dz-btn" onClick={() => realign()} disabled={!canTighten} title="Tira os espaços vazios entre os golpes, mantendo a ordem. Ctrl+Z desfaz.">Apertar a linha</button>
           <Link className="dz-btn" to={`/comparar?a=${v.id}`}>Comparar A / B</Link>
           <button type="button" className="dz-btn" onClick={() => setSettings(true)}>Configurações</button>
           <div className="rt-live" aria-live="polite">

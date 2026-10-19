@@ -10,10 +10,9 @@ import { Attributes, DamageTablePanel, ReactionsPanel, ReceivedBuffsPanel, TopHi
 import { ToolsPanel, type ToolTab } from './personagem/ToolsPanel';
 import './personagem.css';
 
-type View = 'resumo' | 'build' | 'avancado';
+type View = 'resumo' | 'avancado';
 const VIEWS: { id: View; label: string; hint: string }[] = [
-  { id: 'resumo', label: 'Resumo', hint: 'A visão rápida: quanto este personagem rende e os golpes que mais pesam.' },
-  { id: 'build', label: 'Build', hint: 'Troque a arma, os artefatos e os substats.' },
+  { id: 'resumo', label: 'Resumo e build', hint: 'Quanto este personagem rende, os golpes que mais pesam e o build (arma, artefatos e substats).' },
   { id: 'avancado', label: 'Avançado', hint: 'Tabela de dano completa, reações, buffs recebidos e ferramentas (crítico, inventário GOOD).' },
 ];
 
@@ -84,26 +83,19 @@ export default function Personagem() {
 
           {view === 'resumo' && (
             <>
+              <BuildStrip data={v.data} index={index} member={ref} />
               <div className="pc-row a">
                 <Attributes v={v} index={index} />
-                <TopHitsPanel v={v} index={index} onMore={() => goView('avancado')} />
+                <div className="pc-col">
+                  <TopHitsPanel v={v} index={index} onMore={() => goView('avancado')} />
+                  <SubstatsPanel memberRef={ref} index={index} bundle={v.bundle} onGood={goToGood} />
+                </div>
               </div>
               <p className="pc-next">
-                Quer mudar o build? Abra <button type="button" className="dz-link" onClick={() => goView('build')}>Build</button>.
                 Quer ver todos os golpes, buffs e reações? Abra <button type="button" className="dz-link" onClick={() => goView('avancado')}>Avançado</button>.
               </p>
             </>
           )}
-
-          {view === 'build' && (
-            <>
-              <BuildStrip data={v.data} index={index} member={ref} />
-              <div className="pc-substats">
-                <SubstatsPanel memberRef={ref} index={index} bundle={v.bundle} onGood={goToGood} />
-              </div>
-            </>
-          )}
-
           {view === 'avancado' && (
             <>
               <DamageTablePanel v={v} index={index} />

@@ -4,17 +4,18 @@ import { Link, useNavigate } from 'react-router-dom';
 import { AppHeader } from '../app/AppHeader';
 import '../design/design.css';
 import { elementColor } from '../design/elements';
-import { CharacterAvatar, Chip, StackedBar } from '../design/primitives';
+import { CharacterAvatar, Chip } from '../design/primitives';
 import { useGameData } from '../features/rotation/data';
 import { downloadProject, importJson, importXlsx, type ImportResult } from '../features/rotation/importFile';
 import { SAMPLE_ID, cloneProject, deleteStoredProject, listProjects, loadProject, saveProject, sampleForApp } from '../features/rotation/persistence';
-import { useProjectStats } from '../features/rotation/useProjectStats';
+import { useProjectCards } from '../features/rotation/useProjectCards';
+import { PosterCard, ScaledPoster } from './card/PosterCard';
 import { deleteRemote } from '../online/api';
 import { ONLINE_ENABLED } from '../online/config';
 import { useSession } from '../online/session';
 import { summaryText, syncNow } from '../online/syncNow';
 import { NO_FILTERS, NO_PATCH, filterProjects, patchesOf, type VaultFilters } from '../features/vault/vaultModel';
-import { compact, formatDecimal, formatInt, formatPercent } from '../ui/format';
+import { formatInt } from '../ui/format';
 import './vault.css';
 
 const ELEMENTS = ['Pyro', 'Hydro', 'Anemo', 'Electro', 'Dendro', 'Cryo', 'Geo'];
@@ -40,7 +41,7 @@ export default function Vault() {
   const characters = data?.game.characters ?? [];
   const characterOf = (name: string) => characters.find((c) => c.name === name);
   const elementOf = (name: string) => characterOf(name)?.element;
-  const stats = useProjectStats(items.map((i) => i.id), data, items.map((i) => i.id + i.updatedAt).join());
+  const cards = useProjectCards(items.map((i) => i.id), data, items.map((i) => i.id + i.updatedAt).join());
 
   const visible = useMemo(() => filterProjects(items, filters, elementOf), [items, filters, characters]);
   const allCharacters = useMemo(() => [...new Set(items.flatMap((p) => p.members))].sort(), [items]);
@@ -194,12 +195,23 @@ export default function Vault() {
         ) : (
           <ul className="dz-grid c3 vt-list">
             {visible.map((p) => {
-              const st = stats[p.id];
+              const model = cards[p.id];
               const lead = p.members[0] ? elementColor(elementOf(p.members[0])) : '#e9c46a';
               return (
-                <li key={p.id} className="eq-card vt-card" data-id={p.id} style={{ ['--c' as string]: lead }}>
-                  <div className="top" />
-                  <div className="body">
+                <li key={p.id} className="vt-card" data-id={p.id} style={{ ['--c' as string]: lead }}>
+                  <Link className="vt-poster" to={`/projeto/${p.id}`} aria-label={`Abrir ${p.name}`}>
+                    {model && model !== 'error' ? (
+                      <ScaledPoster format="portrait"><PosterCard model={model} format="portrait" /></ScaledPoster>
+                    ) : (
+                      <div className="vt-wait">
+                        <div className="vt-faces" aria-hidden="true">
+                          {p.members.map((n) => <CharacterAvatar key={n} name={n} icon={characterOf(n)?.icon} color={elementColor(elementOf(n))} size={48} />)}
+                        </div>
+                        <p className="muted small">{model === 'error' ? 'Não foi possível calcular este time.' : 'Calculando…'}</p>
+                      </div>
+                    )}
+                  </Link>
+                  <div className="vt-foot">
                     <div className="vt-title">
                       {renaming === p.id ? (
                         <input
@@ -215,22 +227,6 @@ export default function Vault() {
                       )}
                       <button type="button" className="vt-fav" aria-pressed={p.favorite} aria-label={p.favorite ? `Tirar ${p.name} dos favoritos` : `Favoritar ${p.name}`} onClick={() => toggleFavorite(p.id)}>★</button>
                     </div>
-                    <div className="vt-faces" aria-hidden="true">
-                      {p.members.map((n) => <CharacterAvatar key={n} name={n} icon={characterOf(n)?.icon} color={elementColor(elementOf(n))} size={48} />)}
-                    </div>
-                    <span className="muted small">{p.members.join(' · ')}</span>
-                    {!st || st === 'error' ? (
-                      <p className="muted small">{st === 'error' ? 'Não foi possível calcular este time.' : 'Calculando…'}</p>
-                    ) : (
-                      <>
-                        <StackedBar legend={false} format={(f) => formatPercent(f, 1)} parts={p.members.map((n, i) => ({ key: n, label: n, fraction: st.shares[i] ?? 0, color: elementColor(elementOf(n)) }))} />
-                        <div className="vt-kp">
-                          <span><b className="num">{compact(st.dps)}</b> DPS</span>
-                          <span><b className="num">{compact(st.dpr)}</b> DPR</span>
-                          <span className="num">{formatDecimal(st.duration, 1)} s</span>
-                        </div>
-                      </>
-                    )}
                     <div className="vt-meta">
                       <Chip>{formatInt(p.actions)} golpes</Chip>
                       {p.isSample && <Chip tone="#e9c46a">exemplo</Chip>}

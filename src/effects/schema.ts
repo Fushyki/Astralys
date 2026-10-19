@@ -32,6 +32,9 @@ const BuffStatsSchema = z.object({
   hpPct: frac,
   defPct: frac,
   dmgPctByType: z.record(HitTypeSchema, z.number()).default({}),
+  /** Taxa e Dano Crítico só para certos tipos de golpe. */
+  critRateByType: z.record(HitTypeSchema, z.number()).default({}),
+  critDmgByType: z.record(HitTypeSchema, z.number()).default({}),
 });
 export type BuffStats = z.infer<typeof BuffStatsSchema>;
 

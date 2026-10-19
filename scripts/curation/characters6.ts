@@ -108,3 +108,34 @@ export const CHARACTERS_9: Record<string, BuffCuration[]> = {
     { id: 'burst', label: 'Furina: Fanfarra', src: 'kit', kit: { talent: 'burst', key: 'Fanfare to DMG Increase Conversion Ratio' }, scope: 'team', timed: true, stats: { dmgPct: { lit: 300 } }, expect: 'Furina will increase the DMG dealt by and Incoming Healing Bonus of all nearby party members based on the amount of Fanfare', note: 'Assume o máximo de 300 pontos de Fanfarra (DMG da equipe = 300 × a razão do nível do Supremo): ligue nas janelas. A Fanfarra real depende das variações de HP do time.' },
   ],
 };
+
+/** Taxa e Dano Crítico só para certos tipos de golpe (`critRateByType`, `critDmgByType`). */
+export const CHARACTERS_10: Record<string, BuffCuration[]> = {
+  Kaeya: [
+    { id: 'c1', label: 'Kaeya C1', src: 'const1', scope: 'self', timed: false, stats: { critRateByType: { normal: { lit: 0.15 }, charged: { lit: 0.15 } } }, expect: 'CRIT Rate of Kaeya\'s Normal and Charge Attacks against opponents affected by Cryo is increased by 15%', note: '+15% de Taxa Crítica de Normal/Carregado contra inimigos sob Cryo (assumido sempre).' },
+  ],
+  Yanfei: [
+    { id: 'c2', label: 'Yanfei C2', src: 'const2', scope: 'self', timed: true, stats: { critRateByType: { charged: { p: 1 } } }, expect: "Increases Yanfei's Charged Attack CRIT Rate by 20% against enemies below 50% HP", note: '+20% de Taxa Crítica de Carregado contra inimigos com menos de 50% de HP: ligue nas janelas.' },
+  ],
+  'Arataki Itto': [
+    { id: 'c6', label: 'Itto C6', src: 'const6', scope: 'self', timed: false, stats: { critDmgByType: { charged: { p: 0 } } }, expect: "Charged Attacks deal +70% CRIT DMG", note: '+70% de Dano Crítico de Ataque Carregado, sempre.' },
+  ],
+  Gaming: [
+    { id: 'c6', label: 'Gaming C6', src: 'const6', scope: 'self', timed: false, stats: { critRateByType: { plunge: { p: 0 } }, critDmgByType: { plunge: { p: 1 } } }, expect: 'CRIT Rate increased by 20% and CRIT DMG increased by 40%', note: '+20% de Taxa e +40% de Dano Crítico do Plunging da habilidade, sempre.' },
+  ],
+  Varesa: [
+    { id: 'c6', label: 'Varesa C6', src: 'const6', scope: 'self', timed: false, stats: { critRateByType: { plunge: { p: 0 }, burst: { p: 0 } }, critDmgByType: { plunge: { p: 1 }, burst: { p: 1 } } }, expect: 'Her Plunging Attacks and Elemental Burst Guardian Vent! gain 10% CRIT Rate and 100% CRIT DMG', note: '+10% de Taxa e +100% de Dano Crítico de Plunging e Supremo, sempre.' },
+  ],
+  Arlecchino: [
+    { id: 'c6', label: 'Arlecchino C6', src: 'const6', scope: 'self', timed: true, stats: { critRateByType: { normal: { p: 0 }, burst: { p: 0 } }, critDmgByType: { normal: { p: 1 }, burst: { p: 1 } } }, expect: 'both her Normal Attacks and Elemental Burst gain 10% increased CRIT Rate and 70% increased CRIT DMG', note: '+10% de Taxa e +70% de Dano Crítico de Normal e Supremo por 20 s depois do All Is Ash: ligue nas janelas.' },
+  ],
+  Tighnari: [
+    { id: 'c1', label: 'Tighnari C1', src: 'const1', scope: 'self', timed: false, stats: { critRateByType: { charged: { p: 0 } } }, expect: "Tighnari's Charged Attack CRIT Rate is increased by 15%", note: '+15% de Taxa Crítica de Ataque Carregado, sempre.' },
+  ],
+  Freminet: [
+    { id: 'c1', label: 'Freminet C1', src: 'const1', scope: 'self', timed: false, stats: { critRateByType: { skill: { p: 0 } } }, expect: 'The CRIT Rate of Pressurized Floe: Shattering Pressure will be increased by 15%', note: '+15% de Taxa Crítica do Shattering Pressure (habilidade), sempre.' },
+  ],
+  Xianyun: [
+    { id: 'a1', label: 'Xianyun A1', src: 'p1', scope: 'team', timed: true, stats: { critRateByType: { plunge: { p: 3 } } }, expect: 'cause the characters\' Plunging Attack CRIT Rate to increase by 4%/6%/8%/10%', note: 'Assume 4 stacks (+10% de Taxa Crítica de Plunging da equipe) por 20 s: ligue nas janelas.' },
+  ],
+};

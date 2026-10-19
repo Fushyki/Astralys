@@ -42,21 +42,35 @@ export interface StatBlock {
   /** DMG% geral (elemental/todos). */
   dmgBonus: number;
   dmgByType: Record<HitType, number>;
+  /** Taxa crítica extra só para um tipo de golpe (ex.: Kaeya C1, Normal e Carregado). */
+  critRateByType: Record<HitType, number>;
+  /** Dano crítico extra só para um tipo de golpe (ex.: Itto C6, Carregado). */
+  critDmgByType: Record<HitType, number>;
   meltBonus: number;
   vaporizeBonus: number;
 }
 
-export type StatDelta = Partial<Omit<StatBlock, 'dmgByType'>> & { dmgByType?: Partial<Record<HitType, number>> };
+type ByType = Partial<Record<HitType, number>>;
+const BY_TYPE_KEYS = ['dmgByType', 'critRateByType', 'critDmgByType'] as const;
+
+export type StatDelta = Partial<Omit<StatBlock, 'dmgByType' | 'critRateByType' | 'critDmgByType'>> & {
+  dmgByType?: ByType;
+  critRateByType?: ByType;
+  critDmgByType?: ByType;
+};
 
 export const zeroBlock = (): StatBlock => ({
   atkPct: 0, atkFlat: 0, hpPct: 0, hpFlat: 0, defPct: 0, defFlat: 0, em: 0, er: 0, critRate: 0, critDmg: 0,
-  dmgBonus: 0, dmgByType: { normal: 0, charged: 0, plunge: 0, skill: 0, burst: 0 }, meltBonus: 0, vaporizeBonus: 0,
+  dmgBonus: 0, dmgByType: { normal: 0, charged: 0, plunge: 0, skill: 0, burst: 0 },
+  critRateByType: { normal: 0, charged: 0, plunge: 0, skill: 0, burst: 0 }, critDmgByType: { normal: 0, charged: 0, plunge: 0, skill: 0, burst: 0 },
+  meltBonus: 0, vaporizeBonus: 0,
 });
 
 export function addDelta(target: StatBlock, delta: StatDelta): StatBlock {
   for (const [k, v] of Object.entries(delta)) {
-    if (k === 'dmgByType') {
-      for (const [t, x] of Object.entries(v as object)) target.dmgByType[t as HitType] += x as number;
+    if ((BY_TYPE_KEYS as readonly string[]).includes(k)) {
+      const into = target[k as (typeof BY_TYPE_KEYS)[number]];
+      for (const [t, x] of Object.entries(v as object)) into[t as HitType] += x as number;
     } else if (typeof v === 'number') {
       (target as unknown as Record<string, number>)[k] += v;
     }
@@ -198,6 +212,7 @@ export function characterBuffDelta(stats: BuffStats | undefined): StatDelta {
   return {
     atkPct: stats.atkPct ?? 0, dmgBonus: stats.dmgPct ?? 0, critRate: stats.critRate ?? 0, critDmg: stats.critDmg ?? 0,
     em: stats.em ?? 0, er: stats.er ?? 0, hpPct: stats.hpPct ?? 0, defPct: stats.defPct ?? 0, dmgByType: stats.dmgPctByType ?? {},
+    critRateByType: stats.critRateByType ?? {}, critDmgByType: stats.critDmgByType ?? {},
   };
 }
 
@@ -246,7 +261,7 @@ export interface StatSource {
 }
 
 export const isEmptyDelta = (d: StatDelta) =>
-  Object.entries(d).every(([k, v]) => (k === 'dmgByType' ? Object.values(v as object).every((x) => !x) : !v));
+  Object.entries(d).every(([k, v]) => ((BY_TYPE_KEYS as readonly string[]).includes(k) ? Object.values(v as object).every((x) => !x) : !v));
 
 /**
  * Tudo o que o personagem tem SEM substats e SEM buffs de time, uma fonte por vez: ascensão, substat da
@@ -365,6 +380,8 @@ export interface FinalStats {
   critDmg: number;
   dmgBonus: number;
   dmgByType: Record<HitType, number>;
+  critRateByType: Record<HitType, number>;
+  critDmgByType: Record<HitType, number>;
   meltBonus: number;
   vaporizeBonus: number;
   /** Bônus de ATK% que a arma ganha com ER (ex.: Engulfing Lightning). */
@@ -401,6 +418,12 @@ export function finalStats(m: MemberInput, statics: StatBlock, rolls: Rolls, tea
 
   const dmgByType = { ...statics.dmgByType };
   for (const t of Object.keys(dmgByType) as HitType[]) dmgByType[t] += team.dmgByType[t];
+  const critRateByType = { ...statics.critRateByType };
+  const critDmgByType = { ...statics.critDmgByType };
+  for (const t of Object.keys(critRateByType) as HitType[]) {
+    critRateByType[t] += team.critRateByType[t];
+    critDmgByType[t] += team.critDmgByType[t];
+  }
 
   return {
     atk, hp, def,
@@ -410,6 +433,8 @@ export function finalStats(m: MemberInput, statics: StatBlock, rolls: Rolls, tea
     critDmg: 0.5 + statics.critDmg + team.critDmg + rolls.CD * rv.CD,
     dmgBonus: statics.dmgBonus + team.dmgBonus,
     dmgByType,
+    critRateByType,
+    critDmgByType,
     meltBonus: statics.meltBonus + team.meltBonus,
     vaporizeBonus: statics.vaporizeBonus + team.vaporizeBonus,
     weaponErAtkPct: erAtk,

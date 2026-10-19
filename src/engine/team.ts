@@ -230,9 +230,11 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
       if (off(id)) continue;
       const srcIndex = c.source === 'highestEm' ? highestEm : i;
       const s = derivedStats[srcIndex];
-      const stat = { atk: s.atk, hp: s.hp, def: s.def, em: s.em, er: s.er }[c.from];
+      const srcBase = members[srcIndex].character.baseAtk + members[srcIndex].weapon.baseAtk;
+      const stat = { atk: s.atk, baseAtk: srcBase, hp: s.hp, def: s.def, em: s.em, er: s.er }[c.from];
       const raw = (c.perPoint ?? 0) * Math.max(0, stat - (c.threshold ?? 0));
-      const value = c.cap !== undefined ? Math.min(raw, c.cap) : raw;
+      const caps = [c.cap, c.capBaseAtk !== undefined ? c.capBaseAtk * srcBase : undefined].filter((x): x is number => x !== undefined);
+      const value = caps.length ? Math.min(raw, ...caps) : raw;
       if (value <= 0) continue;
       const targets = names.filter((_, j) => {
         if (b.scope === 'self' && j !== i) return false;

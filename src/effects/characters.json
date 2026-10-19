@@ -286,6 +286,44 @@
           "dmgPctByType": {}
         },
         "note": "+12% de Taxa Crítica da equipe por 15 s depois de derrotar inimigo com Blood Blossom: ligue nas janelas."
+      },
+      {
+        "id": "paramita",
+        "label": "Hu Tao: Paramita",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "convert": {
+          "from": "hp",
+          "source": "self",
+          "perPoint": 1,
+          "threshold": 0,
+          "capBaseAtk": 4,
+          "to": [
+            "atkFlat"
+          ]
+        },
+        "level": {
+          "talent": "skill",
+          "table": [
+            0.0384,
+            0.0407,
+            0.043,
+            0.046,
+            0.0483,
+            0.0506,
+            0.0536,
+            0.0566,
+            0.0596,
+            0.0626,
+            0.0655,
+            0.0685,
+            0.0715,
+            0.0745,
+            0.0775
+          ]
+        },
+        "note": "ATK fixo = % do HP máximo (pelo nível da habilidade), limitado a 400% do ATK base, por 9 s: ligue nas janelas. O HP é o total do build, sem a perda de HP da ativação."
       }
     ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -664,6 +702,40 @@
           "dmgPctByType": {}
         },
         "note": "+30% de DMG Físico (vale para todo o dano dela) por 6 s por stack gasto: ligue nas janelas."
+      },
+      {
+        "id": "skill",
+        "label": "Eula: Lacerar (RES)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "level": {
+          "talent": "skill",
+          "table": [
+            0.16,
+            0.17,
+            0.18,
+            0.19,
+            0.2,
+            0.21,
+            0.22,
+            0.23,
+            0.24,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25
+          ]
+        },
+        "resShred": {
+          "value": 1,
+          "elements": [
+            "Cryo"
+          ]
+        },
+        "note": "Assume a redução de RES Cryo da versão segurada da habilidade sempre ativa (a Física não entra)."
       }
     ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -726,6 +798,60 @@
           "dmgPctByType": {}
         },
         "note": "+25% de DEF da equipe por 12 s depois da habilidade: ligue nas janelas. Só importa para quem escala com DEF."
+      },
+      {
+        "id": "skill",
+        "label": "Gorou: Estandarte (Geo)",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "forElements": [
+          "Geo"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 1,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "team": {
+          "scale": {
+            "of": [
+              "Geo"
+            ],
+            "table": [
+              0,
+              0,
+              1
+            ]
+          }
+        },
+        "level": {
+          "talent": "skill",
+          "table": [
+            0.15,
+            0.15,
+            0.15,
+            0.15,
+            0.15,
+            0.15,
+            0.15,
+            0.15,
+            0.15,
+            0.15,
+            0.15,
+            0.15,
+            0.15,
+            0.15,
+            0.15
+          ]
+        },
+        "note": "+15% de DMG Geo com 3 personagens Geo no time (o Gorou conta): ligue nas janelas. Os bônus de DEF e de resistência a interrupção não entram."
       }
     ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -804,6 +930,40 @@
           "dmgPctByType": {}
         },
         "note": "+15% de Dano Crítico Cryo no campo dela: ligue nas janelas."
+      },
+      {
+        "id": "burst",
+        "label": "Shenhe: Campo (RES)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "level": {
+          "talent": "burst",
+          "table": [
+            0.06,
+            0.07,
+            0.08,
+            0.09,
+            0.1,
+            0.11,
+            0.12,
+            0.13,
+            0.14,
+            0.15,
+            0.15,
+            0.15,
+            0.15,
+            0.15,
+            0.15
+          ]
+        },
+        "resShred": {
+          "value": 1,
+          "elements": [
+            "Cryo"
+          ]
+        },
+        "note": "Assume a redução de RES Cryo do campo do Supremo sempre ativa (a Física não entra)."
       }
     ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -1555,6 +1715,49 @@
           }
         },
         "note": "Assume 3 stacks (+45% de DMG da habilidade): ligue nas janelas."
+      },
+      {
+        "id": "burst",
+        "label": "Xiao: Máscara Yaksha",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {
+            "normal": 1,
+            "charged": 1,
+            "plunge": 1
+          }
+        },
+        "level": {
+          "talent": "burst",
+          "table": [
+            0.5845,
+            0.6195,
+            0.6545,
+            0.7,
+            0.735,
+            0.77,
+            0.8155,
+            0.861,
+            0.9065,
+            0.952,
+            0.9975,
+            1.043,
+            1.0885,
+            1.134,
+            1.1795
+          ]
+        },
+        "note": "DMG de Normal/Carregado/Plunging pelo nível do Supremo, durante a máscara: ligue nas janelas."
       }
     ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -1639,6 +1842,43 @@
           ]
         },
         "note": "+50% da DEF dela como ATK fixo durante o Supremo: ligue nas janelas."
+      },
+      {
+        "id": "burst",
+        "label": "Noelle: Varredura",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "convert": {
+          "from": "def",
+          "source": "self",
+          "perPoint": 1,
+          "threshold": 0,
+          "to": [
+            "atkFlat"
+          ]
+        },
+        "level": {
+          "talent": "burst",
+          "table": [
+            0.4,
+            0.43,
+            0.46,
+            0.5,
+            0.53,
+            0.56,
+            0.6,
+            0.64,
+            0.68,
+            0.72,
+            0.76,
+            0.8,
+            0.85,
+            0.9,
+            0.95
+          ]
+        },
+        "note": "ATK fixo = % da DEF pelo nível do Supremo: ligue nas janelas."
       }
     ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -1860,6 +2100,45 @@
           ]
         },
         "note": "DMG Hydro = 20% da Recarga total (ex.: 200% de Recarga dá +40%), sempre."
+      },
+      {
+        "id": "burst",
+        "label": "Mona: Presságio",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 1,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "level": {
+          "talent": "burst",
+          "table": [
+            0.42,
+            0.44,
+            0.46,
+            0.48,
+            0.5,
+            0.52,
+            0.54,
+            0.56,
+            0.58,
+            0.6,
+            0.6,
+            0.6,
+            0.6,
+            0.6,
+            0.6
+          ]
+        },
+        "note": "DMG da equipe contra inimigos com Presságio, pelo nível do Supremo (o aumento do golpe que o aplica não entra): ligue nas janelas."
       }
     ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -2220,6 +2499,43 @@
           "dmgPctByType": {}
         },
         "note": "+60% de Dano Crítico Electro de quem recebeu o bônus de ATK do Tengu: ligue nas janelas. O bônus de ATK em si depende do ATK base da Sara e não entra."
+      },
+      {
+        "id": "skill",
+        "label": "Sara: Tengu Juurai",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "convert": {
+          "from": "baseAtk",
+          "source": "self",
+          "perPoint": 1,
+          "threshold": 0,
+          "to": [
+            "atkFlat"
+          ]
+        },
+        "level": {
+          "talent": "skill",
+          "table": [
+            0.4296,
+            0.4618,
+            0.494,
+            0.537,
+            0.5692,
+            0.6014,
+            0.6444,
+            0.6874,
+            0.7303,
+            0.7733,
+            0.8162,
+            0.8592,
+            0.9129,
+            0.9666,
+            1.0203
+          ]
+        },
+        "note": "ATK fixo = % do ATK base dela (pelo nível da habilidade) para o personagem em campo: ligue nas janelas."
       }
     ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -2251,6 +2567,43 @@
           "dmgPctByType": {}
         },
         "note": "+20% de ATK e +20% de DEF da equipe por 10 s depois do Supremo: ligue nas janelas."
+      },
+      {
+        "id": "burst",
+        "label": "Itto: Rei Oni",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "convert": {
+          "from": "def",
+          "source": "self",
+          "perPoint": 1,
+          "threshold": 0,
+          "to": [
+            "atkFlat"
+          ]
+        },
+        "level": {
+          "talent": "burst",
+          "table": [
+            0.576,
+            0.6192,
+            0.6624,
+            0.72,
+            0.7632,
+            0.8064,
+            0.864,
+            0.9216,
+            0.9792,
+            1.0368,
+            1.0944,
+            1.152,
+            1.224,
+            1.296,
+            1.368
+          ]
+        },
+        "note": "ATK fixo = % da DEF pelo nível do Supremo, durante o Rei Oni: ligue nas janelas. A queda de 20% de RES dele não entra."
       }
     ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -2415,6 +2768,47 @@
           }
         },
         "note": "+40% de DMG da habilidade contra inimigos com 50% de HP ou menos: ligue nas janelas."
+      },
+      {
+        "id": "burst",
+        "label": "Ayato: Jardim de Pureza",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {
+            "normal": 1
+          }
+        },
+        "level": {
+          "talent": "burst",
+          "table": [
+            0.11,
+            0.12,
+            0.13,
+            0.14,
+            0.15,
+            0.16,
+            0.17,
+            0.18,
+            0.19,
+            0.2,
+            0.2,
+            0.2,
+            0.2,
+            0.2,
+            0.2
+          ]
+        },
+        "note": "DMG de Ataque Normal de quem está no jardim, pelo nível do Supremo: ligue nas janelas."
       }
     ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -2718,6 +3112,82 @@
           "dmgPctByType": {}
         },
         "note": "+40% de Dano Crítico Anemo de quem está sob o Benefício do Vento: ligue nas janelas. Só personagens Anemo recebem."
+      },
+      {
+        "id": "burst",
+        "label": "Faruzan: Benefício do Vento",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "forElements": [
+          "Anemo"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 1,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {}
+        },
+        "level": {
+          "talent": "burst",
+          "table": [
+            0.18,
+            0.1935,
+            0.207,
+            0.225,
+            0.2385,
+            0.252,
+            0.27,
+            0.288,
+            0.306,
+            0.324,
+            0.342,
+            0.36,
+            0.3825,
+            0.405,
+            0.4275
+          ]
+        },
+        "note": "DMG Anemo da equipe pelo nível do Supremo: ligue nas janelas. Só personagens Anemo recebem."
+      },
+      {
+        "id": "burst-res",
+        "label": "Faruzan: Pulso (RES)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "level": {
+          "talent": "burst",
+          "table": [
+            0.3,
+            0.3,
+            0.3,
+            0.3,
+            0.3,
+            0.3,
+            0.3,
+            0.3,
+            0.3,
+            0.3,
+            0.3,
+            0.3,
+            0.3,
+            0.3,
+            0.3
+          ]
+        },
+        "resShred": {
+          "value": 1,
+          "elements": [
+            "Anemo"
+          ]
+        },
+        "note": "Assume a redução de RES Anemo do Supremo sempre ativa."
       }
     ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -4793,6 +5263,41 @@
           "dmgPctByType": {}
         },
         "note": "+60% de DMG Hydro/Cryo da equipe enquanto a Canção das Eras Passadas estiver ativa: ligue nas janelas."
+      },
+      {
+        "id": "skill",
+        "label": "Vodyanitsa: Canção (RES)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "level": {
+          "talent": "skill",
+          "table": [
+            0.165,
+            0.18,
+            0.195,
+            0.21,
+            0.225,
+            0.24,
+            0.255,
+            0.27,
+            0.285,
+            0.3,
+            0.318,
+            0.336,
+            0.354,
+            0.372,
+            0.39
+          ]
+        },
+        "resShred": {
+          "value": 1,
+          "elements": [
+            "Hydro",
+            "Cryo"
+          ]
+        },
+        "note": "Assume a redução de RES Hydro e Cryo sempre ativa."
       }
     ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -4913,6 +5418,112 @@
           ]
         },
         "note": "Redução de RES Hydro e Cryo de 5/10/15/55% conforme o nº de Hydro e Cryo no time (a Escoffier conta), sempre ativa."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Yanfei",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "burst",
+        "label": "Yanfei: Brilho",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {
+            "charged": 1
+          }
+        },
+        "level": {
+          "talent": "burst",
+          "table": [
+            0.334,
+            0.354,
+            0.374,
+            0.4,
+            0.42,
+            0.44,
+            0.466,
+            0.492,
+            0.518,
+            0.544,
+            0.57,
+            0.596,
+            0.622,
+            0.648,
+            0.674
+          ]
+        },
+        "note": "DMG de Ataque Carregado pelo nível do Supremo, enquanto o Brilho durar: ligue nas janelas."
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Candace",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "burst",
+        "label": "Candace: Prece da Coroa",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {
+            "normal": 1
+          }
+        },
+        "level": {
+          "talent": "burst",
+          "table": [
+            0.2,
+            0.2,
+            0.2,
+            0.2,
+            0.2,
+            0.2,
+            0.2,
+            0.2,
+            0.2,
+            0.2,
+            0.2,
+            0.2,
+            0.2,
+            0.2,
+            0.2
+          ]
+        },
+        "note": "DMG de Ataque Normal elemental pelo nível do Supremo: ligue nas janelas (vale para quem tem a infusão Hydro)."
       }
     ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."

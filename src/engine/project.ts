@@ -314,30 +314,38 @@ export interface ResolvedProject {
 }
 
 /**
- * Aplica as regras de composição (`CharacterBuff.team`): tira os buffs que o time não cumpre e multiplica os que
- * escalam pela quantidade de elementos. Devolve cópias; os dados de efeitos não são alterados.
+ * Aplica as regras de composição (`CharacterBuff.team`) e o nível do talento (`CharacterBuff.level`): tira os
+ * buffs que o time não cumpre e multiplica os que escalam pela quantidade de elementos ou pelo nível. Devolve cópias; os dados de efeitos não são alterados.
  */
 export function applyTeamRules(members: MemberInput[]): MemberInput[] {
   const elements = members.map((m) => m.character.element);
   return members.map((m) => {
     const buffs = m.characterEffect?.buffs;
-    if (!buffs?.some((b) => b.team)) return m;
+    if (!buffs?.some((b) => b.team || b.level)) return m;
     const next = buffs.flatMap((b) => {
       const t = b.team;
-      if (!t) return [b];
-      if (t.only && !elements.every((e) => t.only!.includes(e))) return [];
-      if (t.eachOf && !t.eachOf.every((e) => elements.includes(e))) return [];
-      if (!t.scale) return [b];
-      const n = t.scale.of === 'distinct' ? new Set(elements).size : elements.filter((e) => (t.scale!.of as string[]).includes(e)).length;
-      const k = n >= 1 ? t.scale.table[Math.min(n, t.scale.table.length) - 1] : 0;
+      if (t?.only && !elements.every((e) => t.only!.includes(e))) return [];
+      if (t?.eachOf && !t.eachOf.every((e) => elements.includes(e))) return [];
+      let k = 1;
+      if (t?.scale) {
+        const n = t.scale.of === 'distinct' ? new Set(elements).size : elements.filter((e) => (t.scale!.of as string[]).includes(e)).length;
+        k *= n >= 1 ? t.scale.table[Math.min(n, t.scale.table.length) - 1] : 0;
+      }
+      if (b.level) k *= b.level.table[Math.min(15, Math.max(1, Math.round(m.talents[b.level.talent]))) - 1] ?? 0;
       if (!k) return [];
+      if (k === 1) return [b];
       const stats = b.stats && {
         ...b.stats,
         atkPct: b.stats.atkPct * k, dmgPct: b.stats.dmgPct * k, critRate: b.stats.critRate * k, critDmg: b.stats.critDmg * k,
         em: b.stats.em * k, er: b.stats.er * k, hpPct: b.stats.hpPct * k, defPct: b.stats.defPct * k,
         dmgPctByType: Object.fromEntries(Object.entries(b.stats.dmgPctByType ?? {}).map(([h, x]) => [h, x * k])),
       };
-      return [{ ...b, stats, ...(b.resShred ? { resShred: { ...b.resShred, value: b.resShred.value * k } } : {}) }];
+      return [{
+        ...b,
+        stats,
+        ...(b.resShred ? { resShred: { ...b.resShred, value: b.resShred.value * k } } : {}),
+        ...(b.convert ? { convert: { ...b.convert, perPoint: b.convert.perPoint * k } } : {}),
+      }];
     });
     return { ...m, characterEffect: { ...m.characterEffect!, buffs: next } };
   });

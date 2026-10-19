@@ -45,12 +45,15 @@ export type ConvertTarget = z.infer<typeof ConvertTargetSchema>;
  * `source: 'highestEm'`, o membro com mais Maestria. Recarga entra como multiplicador (1,5 = 150%).
  */
 export const BuffConvertSchema = z.object({
-  from: z.enum(['atk', 'hp', 'def', 'em', 'er']),
+  /** 'baseAtk' = ATK base do personagem + arma (ex.: ATK que a Kujou Sara dá). */
+  from: z.enum(['atk', 'baseAtk', 'hp', 'def', 'em', 'er']),
   source: z.enum(['self', 'highestEm']).default('self'),
   perPoint: z.number(),
   threshold: z.number().default(0),
   /** Teto do valor convertido (sem teto = omitido). */
   cap: z.number().optional(),
+  /** Teto em múltiplos do ATK base da fonte (ex.: Hu Tao, 4 = 400%). */
+  capBaseAtk: z.number().optional(),
   to: z.array(ConvertTargetSchema).min(1),
 });
 export type BuffConvert = z.infer<typeof BuffConvertSchema>;
@@ -66,6 +69,10 @@ export const BuffTeamRulesSchema = z.object({
   scale: z.object({ of: z.union([z.literal('distinct'), z.array(ElementSchema).min(1)]), table: z.array(z.number()).min(1) }).optional(),
 });
 export type BuffTeamRules = z.infer<typeof BuffTeamRulesSchema>;
+
+/** Buff de habilidade (e não de passiva): os valores são multiplicados por `table[nível do talento - 1]`. */
+export const BuffLevelSchema = z.object({ talent: z.enum(['normal', 'skill', 'burst']), table: z.array(z.number()).length(15) });
+export type BuffLevel = z.infer<typeof BuffLevelSchema>;
 
 /**
  * Um buff de passiva ou constelação. Vale a partir de `minConstellation`. `timed` buffs viram uma faixa na linha do
@@ -85,6 +92,8 @@ export const CharacterBuffSchema = z.object({
   convert: BuffConvertSchema.optional(),
   /** Só vale (ou vale mais) conforme a composição do time. */
   team: BuffTeamRulesSchema.optional(),
+  /** Efeito do kit que cresce com o nível do talento. */
+  level: BuffLevelSchema.optional(),
   /** Redução de RES do inimigo (vale o tempo todo). */
   resShred: z.object({ value: z.number(), elements: z.array(ElementSchema).min(1) }).optional(),
   /** O que foi assumido e o que não entra. */

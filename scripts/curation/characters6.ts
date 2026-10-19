@@ -51,3 +51,50 @@ export const CHARACTERS_7: Record<string, BuffCuration[]> = {
     { id: 'a1', label: 'Chevreuse A1', src: 'p1', scope: 'self', timed: false, resShred: { value: { p: 0 }, elements: ['Pyro', 'Electro'] }, team: { only: ['Pyro', 'Electro'], eachOf: ['Pyro', 'Electro'] }, expect: 'the Pyro and Electro RES of the opponent(s) affected by this Overloaded reaction will be decreased by 40%', note: 'Só com time de Pyro e Electro (ao menos um de cada). Assume a redução de RES Pyro e Electro (6 s, depois de Sobrecarregar) sempre ativa.' },
   ],
 };
+
+/** Efeitos do kit (habilidade e supremo) que crescem com o nível do talento (`kit`). */
+export const CHARACTERS_8: Record<string, BuffCuration[]> = {
+  'Hu Tao': [
+    { id: 'paramita', label: 'Hu Tao: Paramita', src: 'kit', kit: { talent: 'skill', key: 'ATK Increase' }, scope: 'self', timed: true, convert: { from: 'hp', perPoint: { lit: 1 }, capBaseAtk: 4, to: ['atkFlat'] }, expect: 'ATK Bonus gained this way cannot exceed 400%', note: 'ATK fixo = % do HP máximo (pelo nível da habilidade), limitado a 400% do ATK base, por 9 s: ligue nas janelas. O HP é o total do build, sem a perda de HP da ativação.' },
+  ],
+  Xiao: [
+    { id: 'burst', label: 'Xiao: Máscara Yaksha', src: 'kit', kit: { talent: 'burst', key: 'Normal/Charged/Plunging Attack DMG Bonus' }, scope: 'self', timed: true, stats: { byType: { normal: { lit: 1 }, charged: { lit: 1 }, plunge: { lit: 1 } } }, expect: 'Increases his attack AoE and attack DMG', note: 'DMG de Normal/Carregado/Plunging pelo nível do Supremo, durante a máscara: ligue nas janelas.' },
+  ],
+  Mona: [
+    { id: 'burst', label: 'Mona: Presságio', src: 'kit', kit: { talent: 'burst', key: 'DMG Bonus' }, scope: 'team', timed: true, stats: { dmgPct: { lit: 1 } }, expect: 'increases DMG taken by opponents', note: 'DMG da equipe contra inimigos com Presságio, pelo nível do Supremo (o aumento do golpe que o aplica não entra): ligue nas janelas.' },
+  ],
+  Yanfei: [
+    { id: 'burst', label: 'Yanfei: Brilho', src: 'kit', kit: { talent: 'burst', key: 'Charged Attack DMG Bonus' }, scope: 'self', timed: true, stats: { byType: { charged: { lit: 1 } } }, expect: 'Increases the DMG dealt by her Charged Attacks', note: 'DMG de Ataque Carregado pelo nível do Supremo, enquanto o Brilho durar: ligue nas janelas.' },
+  ],
+  Noelle: [
+    { id: 'burst', label: 'Noelle: Varredura', src: 'kit', kit: { talent: 'burst', key: 'ATK Bonus' }, scope: 'self', timed: true, convert: { from: 'def', perPoint: { lit: 1 }, to: ['atkFlat'] }, expect: 'Increased ATK that scales based on her DEF', note: 'ATK fixo = % da DEF pelo nível do Supremo: ligue nas janelas.' },
+  ],
+  'Arataki Itto': [
+    { id: 'burst', label: 'Itto: Rei Oni', src: 'kit', kit: { talent: 'burst', key: 'ATK Bonus' }, scope: 'self', timed: true, convert: { from: 'def', perPoint: { lit: 1 }, to: ['atkFlat'] }, expect: 'increases his ATK based on his DEF', note: 'ATK fixo = % da DEF pelo nível do Supremo, durante o Rei Oni: ligue nas janelas. A queda de 20% de RES dele não entra.' },
+  ],
+  'Kujou Sara': [
+    { id: 'skill', label: 'Sara: Tengu Juurai', src: 'kit', kit: { talent: 'skill', key: 'ATK Bonus Ratio' }, scope: 'team', timed: true, convert: { from: 'baseAtk', perPoint: { lit: 1 }, to: ['atkFlat'] }, expect: "an ATK Bonus based on Kujou Sara's Base ATK", note: 'ATK fixo = % do ATK base dela (pelo nível da habilidade) para o personagem em campo: ligue nas janelas.' },
+  ],
+  Eula: [
+    { id: 'skill', label: 'Eula: Lacerar (RES)', src: 'kit', kit: { talent: 'skill', key: 'Cryo RES Decrease' }, scope: 'self', timed: false, resShred: { value: { lit: 1 }, elements: ['Cryo'] }, expect: 'Physical RES and Cryo RES decreased', note: 'Assume a redução de RES Cryo da versão segurada da habilidade sempre ativa (a Física não entra).' },
+  ],
+  Shenhe: [
+    { id: 'burst', label: 'Shenhe: Campo (RES)', src: 'kit', kit: { talent: 'burst', key: 'RES Decrease' }, scope: 'self', timed: false, resShred: { value: { lit: 1 }, elements: ['Cryo'] }, expect: 'decreases the Cryo RES and Physical RES of opponents within it', note: 'Assume a redução de RES Cryo do campo do Supremo sempre ativa (a Física não entra).' },
+  ],
+  Faruzan: [
+    { id: 'burst', label: 'Faruzan: Benefício do Vento', src: 'kit', kit: { talent: 'burst', key: 'Anemo DMG Bonus' }, scope: 'team', timed: true, forElements: ['Anemo'], stats: { dmgPct: { lit: 1 } }, expect: "granting them an Anemo DMG Bonus", note: 'DMG Anemo da equipe pelo nível do Supremo: ligue nas janelas. Só personagens Anemo recebem.' },
+    { id: 'burst-res', label: 'Faruzan: Pulso (RES)', src: 'kit', kit: { talent: 'burst', key: 'Anemo RES Decrease' }, scope: 'self', timed: false, resShred: { value: { lit: 1 }, elements: ['Anemo'] }, expect: 'decreasing their Anemo RES', note: 'Assume a redução de RES Anemo do Supremo sempre ativa.' },
+  ],
+  Vodyanitsa: [
+    { id: 'skill', label: 'Vodyanitsa: Canção (RES)', src: 'kit', kit: { talent: 'skill', key: 'Hydro/Cryo RES Reduction' }, scope: 'self', timed: false, resShred: { value: { lit: 1 }, elements: ['Hydro', 'Cryo'] }, expect: 'decrease the Hydro RES and Cryo RES of opponents hit', note: 'Assume a redução de RES Hydro e Cryo sempre ativa.' },
+  ],
+  'Kamisato Ayato': [
+    { id: 'burst', label: 'Ayato: Jardim de Pureza', src: 'kit', kit: { talent: 'burst', key: 'Normal Attack DMG Bonus' }, scope: 'team', timed: true, stats: { byType: { normal: { lit: 1 } } }, expect: 'increasing the Normal Attack DMG of characters within', note: 'DMG de Ataque Normal de quem está no jardim, pelo nível do Supremo: ligue nas janelas.' },
+  ],
+  Candace: [
+    { id: 'burst', label: 'Candace: Prece da Coroa', src: 'kit', kit: { talent: 'burst', key: 'DMG Bonus' }, scope: 'team', timed: true, stats: { byType: { normal: { lit: 1 } } }, expect: 'Characters deal increased Elemental DMG with their Normal Attacks', note: 'DMG de Ataque Normal elemental pelo nível do Supremo: ligue nas janelas (vale para quem tem a infusão Hydro).' },
+  ],
+  Gorou: [
+    { id: 'skill', label: 'Gorou: Estandarte (Geo)', src: 'kit', kit: { talent: 'skill', key: 'Geo DMG Bonus' }, scope: 'team', timed: true, forElements: ['Geo'], stats: { dmgPct: { lit: 1 } }, team: { scale: { of: ['Geo'], table: [{ lit: 0 }, { lit: 0 }, { lit: 1 }] } }, expect: 'Adds "Crunch" - Geo DMG Bonus', note: '+15% de DMG Geo com 3 personagens Geo no time (o Gorou conta): ligue nas janelas. Os bônus de DEF e de resistência a interrupção não entram.' },
+  ],
+};

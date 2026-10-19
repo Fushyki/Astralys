@@ -51,6 +51,21 @@ describe('regras de composição do time', () => {
     expect(withBuff({ eachOf: ['Pyro', 'Anemo'] })).toHaveLength(0);
   });
 
+  it('multiplica pelo valor da tabela no nível do talento (e junto com a regra de time)', () => {
+    const table = Array.from({ length: 15 }, (_, i) => (i + 1) / 100);
+    const level = members[0].talents.skill;
+    const [b] = withBuff(undefined, { level: { talent: 'skill', table } });
+    expect(b.stats!.atkPct).toBeCloseTo(table[level - 1], 9);
+    const [c] = withBuff({ scale: { of: 'distinct', table: [1, 2, 3] } }, { level: { talent: 'skill', table } });
+    expect(c.stats!.atkPct).toBeCloseTo(table[level - 1] * 3, 9);
+  });
+
+  it('multiplica também o coeficiente de uma conversão', () => {
+    const table = Array.from({ length: 15 }, () => 0.5);
+    const [b] = withBuff(undefined, { stats: undefined, convert: { from: 'hp', source: 'self', perPoint: 1, threshold: 0, to: ['atkFlat'] }, level: { talent: 'burst', table } });
+    expect(b.convert!.perPoint).toBeCloseTo(0.5, 9);
+  });
+
   it('sem regra, devolve o mesmo membro e não mexe nos dados originais', () => {
     expect(applyTeamRules(members)[1]).toBe(members[1]);
     withBuff({ scale: { of: 'distinct', table: [0.5] } });

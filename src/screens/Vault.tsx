@@ -9,7 +9,7 @@ import { useGameData } from '../features/rotation/data';
 import { downloadProject, importJson, importXlsx, type ImportResult } from '../features/rotation/importFile';
 import { SAMPLE_ID, cloneProject, deleteStoredProject, listProjects, loadProject, saveProject, sampleForApp } from '../features/rotation/persistence';
 import { useProjectStats } from '../features/rotation/useProjectStats';
-import { NO_FILTERS, filterProjects, type VaultFilters } from '../features/vault/vaultModel';
+import { NO_FILTERS, NO_PATCH, filterProjects, patchesOf, type VaultFilters } from '../features/vault/vaultModel';
 import { compact, formatDecimal, formatInt, formatPercent } from '../ui/format';
 import './vault.css';
 
@@ -40,6 +40,8 @@ export default function Vault() {
 
   const visible = useMemo(() => filterProjects(items, filters, elementOf), [items, filters, characters]);
   const allCharacters = useMemo(() => [...new Set(items.flatMap((p) => p.members))].sort(), [items]);
+  const patches = useMemo(() => patchesOf(items), [items]);
+  const hasUnversioned = items.some((p) => !p.gameVersion);
   const set = (patch: Partial<VaultFilters>) => setFilters((f) => ({ ...f, ...patch }));
 
   const edit = (id: string, fn: (p: NonNullable<ReturnType<typeof loadProject>>) => ReturnType<typeof loadProject>) => {
@@ -81,12 +83,12 @@ export default function Vault() {
   };
 
   const createNew = () => {
-    const copy = cloneProject(sampleForApp(), 'Novo time');
+    const copy = { ...cloneProject(sampleForApp(), 'Novo time'), gameVersion: data?.meta.gameVersion ?? '' };
     saveProject(copy);
     navigate(`/projeto/${copy.id}`);
   };
 
-  const filtered = filters.query || filters.character || filters.element || filters.favoritesOnly;
+  const filtered = filters.query || filters.character || filters.element || filters.favoritesOnly || filters.patch;
 
   return (
     <div className="dz">
@@ -119,6 +121,13 @@ export default function Vault() {
             <option value="">Todos os elementos</option>
             {ELEMENTS.map((el) => <option key={el} value={el}>{el}</option>)}
           </select>
+          {(patches.length > 0 || hasUnversioned) && (
+            <select className="dz-input" aria-label="Patch" value={filters.patch} onChange={(e) => set({ patch: e.target.value })}>
+              <option value="">Todos os patches</option>
+              {patches.map((v) => <option key={v} value={v}>Patch {v}</option>)}
+              {hasUnversioned && <option value={NO_PATCH}>Sem patch registrado</option>}
+            </select>
+          )}
           <button type="button" className="dz-btn" aria-pressed={filters.favoritesOnly} onClick={() => set({ favoritesOnly: !filters.favoritesOnly })}>★ Favoritos</button>
           {filtered && <button type="button" className="dz-link" onClick={() => setFilters(NO_FILTERS)}>Limpar filtros</button>}
         </section>

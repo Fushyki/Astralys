@@ -83,8 +83,10 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.keyboard.press('Control+z'); await settle();
   check('Ctrl+Z desfaz a troca', (await cards()).join() === 'Mavuika,Citlali,Iansan,Bennett', (await cards()).join());
 
-  await page.click('.eq-card:has(.name:text-is("Bennett")) button:has-text("Remover")'); await settle();
-  check('remover deixa 3 personagens e mostra o botão de adicionar', (await cards()).length === 3 && (await page.locator('.eq-add').count()) === 1);
+  check('não há mais botão Remover nos cartões', (await page.locator('.eq-card button:has-text("Remover")').count()) === 0);
+  await page.click('.eq-card:has(.name:text-is("Bennett")) button.who');
+  await page.click('.dz-dialog button:has-text("Deixar a vaga vazia")'); await settle();
+  check('esvaziar a vaga deixa 3 personagens e 1 personagem vazio', (await cards()).length === 3 && (await page.locator('.eq-add').count()) === 1 && /Personagem vazio/.test(await page.textContent('.eq-add')));
   await page.click('.eq-add');
   check('o diálogo não oferece quem já está no time', !(await page.$$eval('.dz-dialog .pick .n', (e) => e.map((x) => x.textContent))).some((n) => ['Mavuika', 'Citlali', 'Iansan'].includes(n)));
   await page.keyboard.press('Escape');

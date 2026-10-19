@@ -97,7 +97,13 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.waitForSelector('.dz-dialog');
   check('tocar no retrato abre a escolha de personagem', /Trocar/.test(await page.textContent('.dz-dialog')));
   await page.keyboard.press('Escape');
-  check('o cartão tem "Ajustar build" e "Otimizar artefatos"', (await page.locator('.eq-card a:has-text("Ajustar build")').count()) === 4 && (await page.locator('.eq-card a:has-text("Otimizar artefatos")').count()) === 4);
+  check('o cartão tem "Ajustar build" e não tem mais "Otimizar artefatos"', (await page.locator('.eq-card a:has-text("Ajustar build")').count()) === 4 && (await page.locator('.eq-card a:has-text("Otimizar artefatos")').count()) === 0);
+  await page.click('.eq-card:has(.name:text-is("Citlali")) a:has-text("Ajustar build")');
+  await page.waitForSelector('.pc-gear');
+  await page.click('a:has-text("Otimizar artefatos")');
+  await page.waitForSelector('.ot-grid');
+  check('"Otimizar artefatos" fica dentro do ajuste de build e abre o otimizador do personagem', /\/otimizador\/Citlali/.test(page.url()));
+  await page.goto(`${BASE}/projeto/exemplo`, { waitUntil: 'networkidle' });
   check('a barra de passos tem 3 passos', /Passo 1 de 3/.test(await page.textContent('.dz-stepbar')));
 
   // ---- Personagens ----

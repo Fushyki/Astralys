@@ -3,6 +3,7 @@
  * (arma, refinamento, sets, main stats, raridades e ER mínimo).
  */
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { NumberInput, SelectField } from '../../design/fields';
 import { Panel } from '../../design/primitives';
 import { cleanText, pieceIconUrl, weaponIconUrl } from '../../design/images';
@@ -53,7 +54,7 @@ function Img({ src, fallback }: { src: string | undefined; fallback: string }) {
   return src && !failed ? <img src={src} alt="" loading="lazy" crossOrigin="anonymous" onError={() => setFailed(true)} /> : <b className="ph" aria-hidden="true">{fallback}</b>;
 }
 
-export function BuildStrip({ data, index, member: memberRef }: { data: LoadedData; index: number; member: MemberRef }) {
+export function BuildStrip({ data, index, member: memberRef, projectId }: { data: LoadedData; index: number; member: MemberRef; projectId: string }) {
   const [open, setOpen] = useState(false);
   const [pickWeapon, setPickWeapon] = useState(false);
   const [pickSet, setPickSet] = useState(false);
@@ -74,7 +75,15 @@ export function BuildStrip({ data, index, member: memberRef }: { data: LoadedDat
   const setFor = (i: number) => (sets.length === 2 && (i === 2 || i === 3) ? sets[1] : sets[0]);
 
   return (
-    <Panel title="Equipamento" aside={<button type="button" className="dz-btn sm" onClick={() => setOpen(true)}>Editar build</button>}>
+    <Panel
+      title="Equipamento"
+      aside={
+        <span className="pc-gearacts">
+          <Link className="dz-btn sm gold" to={`/projeto/${projectId}/otimizador/${encodeURIComponent(memberRef.character)}`}>Otimizar artefatos</Link>
+          <button type="button" className="dz-btn sm" onClick={() => setOpen(true)}>Editar build</button>
+        </span>
+      }
+    >
       <div className="pc-gear">
         <button type="button" className="pc-weapon gear-tile" data-rarity={weapon?.rarity ?? 5} onClick={() => setPickWeapon(true)} aria-label={`Trocar a arma ${memberRef.weapon}`}>
           <span className="art"><Img src={weapon?.icon ? weaponIconUrl(weapon.icon) : undefined} fallback="⚔" /></span>

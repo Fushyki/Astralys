@@ -201,19 +201,19 @@ export default function Equipe() {
                 <div className="acts">
                   <Link className="dz-btn gold" to={`/projeto/${v.id}/personagem/${encodeURIComponent(ref.character)}`}>Ajustar build</Link>
                   <div className="small-acts">
-                    <Link className="dz-link" to={`/projeto/${v.id}/otimizador/${encodeURIComponent(ref.character)}`}>Otimizar artefatos</Link>
-                    <button type="button" className="dz-link" disabled={project.members.length <= 1} onClick={() => removeMember(i)}>Remover</button>
                   </div>
                 </div>
               </div>
             </article>
           );
         })}
-        {project.members.length < MAX_TEAM_SIZE && (
-          <button type="button" className="eq-add" onClick={() => setPicker({ mode: 'add' })}>
-            + Adicionar personagem
+        {Array.from({ length: Math.max(0, MAX_TEAM_SIZE - project.members.length) }, (_, k) => (
+          <button type="button" key={`vazio-${k}`} className="eq-add" onClick={() => setPicker({ mode: 'add' })} aria-label="Personagem vazio: tocar para escolher">
+            <span className="silhouette" aria-hidden="true">?</span>
+            <span className="t">Personagem vazio</span>
+            <span className="s">Toque para escolher</span>
           </button>
-        )}
+        ))}
       </section>
 
       <p className="muted small" style={{ margin: 0 }}>
@@ -231,6 +231,7 @@ export default function Equipe() {
           characters={characters}
           exclude={project.members.map((m) => m.character)}
           onPick={pick}
+          onClear={picker.mode === 'replace' && project.members.length > 1 ? () => { removeMember(picker.index); setPicker(null); } : undefined}
           onClose={() => setPicker(null)}
         />
       )}

@@ -83,7 +83,7 @@ export default function Personagem() {
 
           {view === 'resumo' && (
             <>
-              <BuildStrip data={v.data} index={index} member={ref} />
+              <BuildStrip data={v.data} index={index} member={ref} projectId={v.id} />
               <div className="pc-row a">
                 <Attributes v={v} index={index} />
                 <div className="pc-col">

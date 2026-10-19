@@ -45,3 +45,10 @@
 .eq-tile.piece[data-tone='b'] .badge { background: #6fd3ff; color: #06202e; }
 .eq-gear[data-mode='four'] .eq-tile.piece { border-color: var(--gold); }
 @media (max-width: 520px) { .eq-gear { flex-direction: column; } .eq-tile.weapon { width: 72px; } }
+
+/* Vaga vazia do time: cartão tracejado com silhueta; tocar abre a escolha de personagem. */
+.eq-add { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; text-transform: none; letter-spacing: 0; }
+.eq-add .silhouette { display: grid; place-items: center; width: 72px; height: 72px; border-radius: 50%; border: 2px dashed var(--border-ctl-hi); color: var(--muted); font-family: var(--font-display); font-size: 36px; }
+.eq-add .t { font-family: var(--font-display); font-weight: 700; font-size: 20px; color: var(--text-2); }
+.eq-add .s { font-family: var(--font-body); font-size: 13px; color: var(--muted); font-weight: 400; }
+.eq-add:hover .silhouette { border-color: var(--gold); color: var(--gold); }

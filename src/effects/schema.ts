@@ -56,6 +56,18 @@ export const BuffConvertSchema = z.object({
 export type BuffConvert = z.infer<typeof BuffConvertSchema>;
 
 /**
+ * Regras de composição do time (resolvidas ao montar o projeto): `only` = todos os membros precisam ser destes
+ * elementos; `eachOf` = ao menos um de cada; `scale` multiplica os valores do buff por `table[n - 1]`, onde n é
+ * quantos elementos diferentes há no time (`of: 'distinct'`) ou quantos membros são dos elementos listados.
+ */
+export const BuffTeamRulesSchema = z.object({
+  only: z.array(ElementSchema).optional(),
+  eachOf: z.array(ElementSchema).optional(),
+  scale: z.object({ of: z.union([z.literal('distinct'), z.array(ElementSchema).min(1)]), table: z.array(z.number()).min(1) }).optional(),
+});
+export type BuffTeamRules = z.infer<typeof BuffTeamRulesSchema>;
+
+/**
  * Um buff de passiva ou constelação. Vale a partir de `minConstellation`. `timed` buffs viram uma faixa na linha do
  * tempo (só valem nas janelas em que você os liga); sem `timed`, só o próprio personagem (`self`) ganha, o tempo todo.
  */
@@ -71,6 +83,8 @@ export const CharacterBuffSchema = z.object({
   stats: BuffStatsSchema.optional(),
   /** Bônus que depende de um stat da fonte (no lugar de `stats`). Os `timed: false` valem o tempo todo. */
   convert: BuffConvertSchema.optional(),
+  /** Só vale (ou vale mais) conforme a composição do time. */
+  team: BuffTeamRulesSchema.optional(),
   /** Redução de RES do inimigo (vale o tempo todo). */
   resShred: z.object({ value: z.number(), elements: z.array(ElementSchema).min(1) }).optional(),
   /** O que foi assumido e o que não entra. */

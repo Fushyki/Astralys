@@ -24,6 +24,8 @@ export interface BuffCuration {
     byType?: Partial<Record<'normal' | 'charged' | 'plunge' | 'skill' | 'burst', Val>>;
   };
   resShred?: { value: Val; elements: Element[] };
+  /** Regras de composição do time (ver `BuffTeamRulesSchema`); `scale.table` vem de parâmetros do Lunaris. */
+  team?: { only?: Element[]; eachOf?: Element[]; scale?: { of: 'distinct' | Element[]; table: Val[] } };
   /** Bônus que depende de um stat da fonte (ver `BuffConvertSchema`). Substitui `stats`. */
   convert?: {
     from: 'atk' | 'hp' | 'def' | 'em' | 'er';

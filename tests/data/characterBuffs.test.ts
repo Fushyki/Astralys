@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import characters from '../../src/effects/characters.json';
 import generated from '../../src/data/generated/characters.json';
 
-type Buff = { id: string; label: string; stats?: Record<string, unknown>; resShred?: { value: number; elements: string[] } };
+type Buff = { id: string; label: string; stats?: Record<string, unknown>; resShred?: { value: number; elements: string[] }; team?: { scale?: { table: number[] } } };
 
 const withBuffs = (characters as { character: string; buffs?: Buff[] }[]).filter((c) => c.buffs?.length);
 
@@ -21,7 +21,9 @@ describe('passivas e constelações curadas', () => {
         for (const [k, v] of Object.entries(b.stats ?? {})) {
           if (typeof v === 'number') expect(Math.abs(v), `${c.character} ${b.id} ${k}`).toBeLessThanOrEqual(k === 'em' ? 400 : 2);
         }
-        if (b.resShred) expect(b.resShred.value, `${c.character} ${b.id}`).toBeLessThanOrEqual(0.55);
+        // Com `team.scale` o valor guardado é 1 e a tabela traz os números de verdade.
+        const shred = b.resShred && (b.team?.scale ? Math.max(...b.team.scale.table) : b.resShred.value);
+        if (shred !== undefined) expect(shred, `${c.character} ${b.id}`).toBeLessThanOrEqual(0.55);
       }
     }
   });

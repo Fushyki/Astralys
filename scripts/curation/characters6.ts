@@ -38,3 +38,16 @@ export const CHARACTERS_6: Record<string, BuffCuration[]> = {
     { id: 'a4', label: 'Chevreuse A4', src: 'p2', scope: 'others', timed: true, forElements: ['Pyro', 'Electro'], convert: { from: 'hp', perPoint: { p: 0, x: 0.001 }, cap: { p: 2 }, to: ['atkPct'] }, expect: 'gain 1% increased ATK for every 1,000 Max HP', note: '+1% de ATK por 1.000 de HP máximo dela (teto de 40%) para os Pyro e Electro por 30 s: ligue nas janelas.' },
   ],
 };
+
+/** Buffs que dependem da composição do time (`team`). */
+export const CHARACTERS_7: Record<string, BuffCuration[]> = {
+  Lynette: [
+    { id: 'a1', label: 'Lynette A1', src: 'p1', scope: 'team', timed: true, stats: { atkPct: { lit: 1 } }, team: { scale: { of: 'distinct', table: [{ p: 1 }, { p: 2 }, { p: 3 }, { p: 4 }] } }, expect: "when there are 1/2/3/4 Elemental Types in the party, all party members' ATK will be increased by 8%/12%/16%/20%", note: '+8/12/16/20% de ATK da equipe conforme o nº de elementos diferentes no time, por 10 s depois da habilidade: ligue nas janelas.' },
+  ],
+  Escoffier: [
+    { id: 'a4', label: 'Escoffier A4', src: 'p2', scope: 'self', timed: false, resShred: { value: { lit: 1 }, elements: ['Hydro', 'Cryo'] }, team: { scale: { of: ['Hydro', 'Cryo'], table: [{ p: 0 }, { p: 1 }, { p: 2 }, { p: 3 }] } }, expect: 'decrease the Hydro RES and Cryo RES of any opponents hit by her Elemental Skill', note: 'Redução de RES Hydro e Cryo de 5/10/15/55% conforme o nº de Hydro e Cryo no time (a Escoffier conta), sempre ativa.' },
+  ],
+  Chevreuse: [
+    { id: 'a1', label: 'Chevreuse A1', src: 'p1', scope: 'self', timed: false, resShred: { value: { p: 0 }, elements: ['Pyro', 'Electro'] }, team: { only: ['Pyro', 'Electro'], eachOf: ['Pyro', 'Electro'] }, expect: 'the Pyro and Electro RES of the opponent(s) affected by this Overloaded reaction will be decreased by 40%', note: 'Só com time de Pyro e Electro (ao menos um de cada). Assume a redução de RES Pyro e Electro (6 s, depois de Sobrecarregar) sempre ativa.' },
+  ],
+};

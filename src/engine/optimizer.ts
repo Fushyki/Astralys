@@ -36,6 +36,7 @@ import {
   activeTeamDelta,
   defaultTotalRolls,
   finalStats,
+  hitDmgBonus,
   maxRollsFor,
   minimumRolls,
   rollValues,
@@ -136,11 +137,11 @@ export function optimizeMember(ctx: OptimizerContext, memberIndex: number, flatB
     const { key, team } = profileOf(a.activeTags);
     const stats = minStats(a.activeTags); // só para os bônus de DMG% (não dependem dos rolls)
     const element = a.move.element ?? m.character.element;
-    const dmg = 1 + stats.dmgBonus + stats.dmgByType[a.move.hitType] + a.dmgAdjust;
+    const dmg = 1 + hitDmgBonus(stats, element, m.character.element, a.move.hitType) + a.dmgAdjust;
     const def = defMultiplier(config.characterLevel, config.enemyLevel, assembly.enemyDefRed, config.enemyDefIgnore ?? 0);
     const res = resMultiplier(enemyRes({ level: config.enemyLevel, res: assembly.enemyRes }, element));
     const w = a.executions * dmg * def * res;
-    const sc = scaleAt(a.move, m.talents[a.move.talent]);
+    const sc = scaleAt(a.move, a.move.talent === 'proc' ? 1 : m.talents[a.move.talent]);
     const flat = (flatByAction?.[idx] ?? 0) * dmg * def * res;
     const gk = `${key}|${a.reaction}|${element}`;
     let g = groups.get(gk);
@@ -215,7 +216,8 @@ export function optimizeMember(ctx: OptimizerContext, memberIndex: number, flatB
         amp = ampMultiplier(g.reaction, g.element as never, em, bonus, ctx.ampCoefficient);
       } else if (g.reaction === 'spread' || g.reaction === 'aggravate') {
         const info = ADDITIVE[g.reaction];
-        if (g.element === info.element) part += g.sW * additiveTerm(g.reaction, g.element as never, config.characterLevel, em);
+        const bonus = (statics.reactionBonus?.[g.reaction] ?? 0) + (t.reactionBonus?.[g.reaction] ?? 0);
+        if (g.element === info.element) part += g.sW * additiveTerm(g.reaction, g.element as never, config.characterLevel, em, bonus);
       }
       acc += amp * part;
     }

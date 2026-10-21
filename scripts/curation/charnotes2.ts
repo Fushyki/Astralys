@@ -3,7 +3,6 @@ import type { CharacterNotes, NoteCuration } from './characters';
 
 const u = (note: string): NoteCuration => ({ kind: 'utility', note });
 const x = (note: string): NoteCuration => ({ kind: 'partial', note });
-const FISICO = 'O dano Físico ainda não é modelado (o motor não tem o elemento Físico como padrão dos golpes de arma).';
 
 export const NOTES_2: CharacterNotes = {
   Mona: {
@@ -13,11 +12,11 @@ export const NOTES_2: CharacterNotes = {
   Keqing: { p1: x('A infusão Electro dos Normais e Carregados não entra.'), const1: x('O dano do blink (50% do ATK) não entra.'), const2: u('Só partículas.') },
   Sucrose: { const1: u('Só cargas da habilidade.'), const2: u('Só duração do Supremo.'), const4: u('Só recarga da habilidade.') },
   Xinyan: {
-    p1: u('Só requisito do escudo.'), p2: x(`Dano Físico +15% com escudo. ${FISICO}`), const1: u('Só velocidade de ataque.'),
-    const2: x(`Taxa Crítica +100% do dano Físico do Supremo. ${FISICO}`), const4: x(`Redução de RES Física. ${FISICO}`),
-    const6: x('ATK extra do Carregado (50% da DEF) e estamina: o dano é Físico e não entra.'),
+    p1: u('Só requisito do escudo.'), const1: u('Só velocidade de ataque.'),
+    const2: x('Taxa Crítica +100% só no dano Físico do Supremo: o motor não tem Taxa Crítica por elemento e tipo de golpe juntos.'),
+    const6: x('ATK extra só nos Carregados (50% da DEF): o motor ainda não tem ATK por tipo de golpe. A estamina não muda o dano.'),
   },
-  Rosaria: { const2: u('Só duração da lança de gelo.'), const4: u('Só energia.'), const6: x(`Redução de RES Física. ${FISICO}`) },
+  Rosaria: { const2: u('Só duração da lança de gelo.'), const4: u('Só energia.') },
   'Hu Tao': { const1: u('Só estamina.'), const2: x('O dano da Blood Blossom (10% do HP máximo) não entra.') },
   'Kaedehara Kazuha': {
     p1: x('O dano extra do Imersivo com o elemento absorvido (200% do ATK) não entra.'), const1: u('Só recarga da habilidade.'), const4: u('Só energia.'),
@@ -26,8 +25,8 @@ export const NOTES_2: CharacterNotes = {
   Yoimiya: { const4: u('Só recarga da habilidade.'), const6: x('A flecha extra do Normal (60% do dano original, 50% de chance) não entra.') },
   Thoma: { p1: u('Só força do escudo.'), const1: u('Só recarga.'), const2: u('Só duração do Supremo.'), const4: u('Só energia.') },
   Eula: {
-    p1: x(`A espada de luz extra do Redemoinho (dano Físico). ${FISICO}`), p2: u('Só recarga e stacks de Grimheart.'), const2: u('Só recarga da habilidade.'),
-    const4: x(`+25% de dano das espadas de luz contra inimigo com menos de 50% de HP (Físico). ${FISICO}`),
+    p1: x(`A espada de luz extra do Redemoinho (dano Físico). O golpe é 50% do dano base de outro golpe (a espada do Supremo), ainda não modelado.`), p2: u('Só recarga e stacks de Grimheart.'), const2: u('Só recarga da habilidade.'),
+    const4: x(`+25% de dano das espadas de luz contra inimigo com menos de 50% de HP (Físico). Depende do HP do inimigo e só vale para a espada do Supremo (não para todo dano Físico).`),
     const6: x('Mais stacks de energia nas espadas de luz (dano Físico): não entra.'),
   },
   'Raiden Shogun': { p1: u('Só stacks de Resolve.'), const1: u('Só stacks de Resolve.'), const6: u('Só recarga do Supremo dos aliados.') },

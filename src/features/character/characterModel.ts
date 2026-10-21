@@ -145,6 +145,8 @@ export function characterReactions(args: {
   characterLevel: number;
   enemy: Parameters<typeof reactionTable>[0]['enemy'];
   ampCoefficient?: number;
+  /** Bônus de dano de reação do personagem (sets, armas, passivas). */
+  reactionBonus?: Parameters<typeof reactionTable>[0]['reactionBonus'];
 }): ReactionInfo[] {
   const { element, teamElements, em } = args;
   if (!element) return [];
@@ -154,7 +156,7 @@ export function characterReactions(args: {
     const amp = ampMultiplier(kind, element, em, 0, args.ampCoefficient);
     if (amp > 1) out.push({ id: kind, name: `${REACTION_LABEL[kind]} (${element})`, kind: 'amplificadora', value: { type: 'mult', amount: amp } });
   }
-  const table = reactionTable({ characterLevel: args.characterLevel, em, enemy: args.enemy });
+  const table = reactionTable({ characterLevel: args.characterLevel, em, enemy: args.enemy, reactionBonus: args.reactionBonus });
   const has = (el: Element) => teamElements.includes(el);
   for (const row of table) {
     const rule = NEEDS[row.id];

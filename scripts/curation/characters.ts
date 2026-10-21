@@ -9,6 +9,7 @@
 import type { Element } from '../../src/data/schema';
 import type { ConvertTarget } from '../../src/effects/schema';
 import type { Val } from './sets';
+import type { ReactionKey } from './gear';
 
 export type Src = 'kit' | 'p1' | 'p2' | 'p3' | 'const1' | 'const2' | 'const3' | 'const4' | 'const5' | 'const6';
 
@@ -29,10 +30,16 @@ export interface BuffCuration {
     /** Fração da DEF do inimigo ignorada pelos golpes do dono. */
     defIgnore?: Val;
     atkFlat?: Val; hpFlat?: Val; defFlat?: Val; er?: Val;
+    /** Bônus de DMG Físico. */
+    physDmgPct?: Val;
+    /** Dano Crítico só em golpes Físicos. */
+    physCritDmg?: Val;
+    /** Bônus de dano de reação (ex.: { bloom: { p: 0 } }). */
+    reactionBonus?: Partial<Record<ReactionKey, Val>>;
   };
   /** Dano fixo por golpe elegível (ex.: Gorou A4, 156% da DEF no dano da habilidade). */
   flat?: { name: string; sourceStat: 'ATK' | 'HP' | 'DEF' | 'EM'; perPoint: Val; cap?: Val; hitTypes: ('normal' | 'charged' | 'plunge' | 'skill' | 'burst')[]; stacks?: number }[];
-  resShred?: { value: Val; elements: Element[] };
+  resShred?: { value: Val; elements: (Element | 'Physical')[] };
   /** Redução de DEF do inimigo, em fração (vale o tempo todo). */
   defShred?: Val;
   /**
@@ -63,6 +70,22 @@ export interface NoteCuration {
   note: string;
 }
 export type CharacterNotes = Record<string, Partial<Record<Src, NoteCuration>>>;
+
+/**
+ * Golpe extra de passiva ou constelação: escala em fração do stat final (parâmetro `p` da passiva/constelação `src`, ou
+ * `lit`). Sem `element`, é do elemento do personagem; `hitType` só quando o texto diz "considered X DMG" (ou o
+ * Genshin Optimizer o trata assim). Vira um golpe na paleta da rotação a partir da constelação de `src`.
+ */
+export interface ProcCuration {
+  id: string;
+  label: string;
+  src: Exclude<Src, 'kit'>;
+  scale: { atk?: Val; hp?: Val; def?: Val; em?: Val };
+  element?: Element | 'Physical';
+  hitType?: 'normal' | 'charged' | 'plunge' | 'skill' | 'burst';
+  expect: string;
+  note: string;
+}
 
 export const CHARACTERS: Record<string, BuffCuration[]> = {
   'Raiden Shogun': [
@@ -110,7 +133,7 @@ export const CHARACTERS: Record<string, BuffCuration[]> = {
     { id: 'c4', label: 'Yae C4', src: 'const4', scope: 'team', timed: true, forElements: ['Electro'], stats: { dmgPct: { p: 0 } }, expect: 'Electro DMG Bonus of all nearby party members is increased by 20%', note: '+20% de DMG Electro por 5 s depois dos raios das Sakuras: ligue nas janelas. Só personagens Electro recebem.' },
   ],
   Eula: [
-    { id: 'c1', label: 'Eula C1', src: 'const1', scope: 'self', timed: true, stats: { dmgPct: { p: 0 } }, expect: 'Physical DMG is increased by 30%', note: '+30% de DMG Físico (vale para todo o dano dela) por 6 s por stack gasto: ligue nas janelas.' },
+    { id: 'c1', label: 'Eula C1', src: 'const1', scope: 'self', timed: true, stats: { physDmgPct: { p: 0 } }, expect: 'Physical DMG is increased by 30%', note: '+30% de DMG Físico por 6 s por stack gasto: ligue nas janelas. Só vale nos golpes Físicos (marque o elemento Físico nos golpes dela que não são Cryo).' },
   ],
   Alhaitham: [
     { id: 'c2', label: 'Alhaitham C2', src: 'const2', scope: 'self', timed: true, stats: { em: { p: 0, x: 4 } }, expect: 'Elemental Mastery will be increased by 50', note: 'Assume 4 stacks de +50 de Maestria: ligue nas janelas.' },

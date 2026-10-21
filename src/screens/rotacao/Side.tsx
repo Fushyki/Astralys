@@ -10,6 +10,9 @@ import { useRotationStore } from '../../features/rotation/store';
 import { formatDecimal, formatInt, formatPercent } from '../../ui/format';
 
 const REACTIONS: ActionRef['reaction'][] = ['none', 'melt', 'vaporize', 'spread', 'aggravate'];
+/** '' = elemento padrão do golpe (o do personagem); 'Physical' = golpe sem infusão. */
+const ELEMENTS = ['', 'Physical', 'Pyro', 'Hydro', 'Anemo', 'Electro', 'Dendro', 'Cryo', 'Geo'] as const;
+const ELEMENT_LABEL: Record<(typeof ELEMENTS)[number], string> = { '': 'Padrão (do personagem)', Physical: 'Físico', Pyro: 'Pyro', Hydro: 'Hydro', Anemo: 'Anemo', Electro: 'Electro', Dendro: 'Dendro', Cryo: 'Cryo', Geo: 'Geo' };
 
 export function SelectedHit({ v, lanes }: { v: ProjectView; lanes: LaneInfo[] }) {
   const selectedActionId = useRotationStore((s) => s.selectedActionId);
@@ -82,6 +85,7 @@ function HitPanels({ v, action, result, lanes }: { v: ProjectView; action: Actio
           <NumberInput label="Execuções" value={action.executions} min={1} step={1} suffix="×" onCommit={(x) => update(action.id, { executions: Math.round(x) })} />
           <NumberInput label="Ajuste de DMG%" value={Math.round(action.dmgAdjust * 1000) / 10} step={0.5} suffix="%" onCommit={(x) => update(action.id, { dmgAdjust: x / 100 })} />
           <SelectField label="Reação" value={action.reaction} onChange={(x) => update(action.id, { reaction: x })} options={REACTIONS.map((r) => ({ value: r, label: REACTION_LABEL[r] }))} />
+          <SelectField label="Elemento do dano" value={action.element ?? ''} onChange={(x) => update(action.id, { element: x === '' ? undefined : x })} options={ELEMENTS.map((e) => ({ value: e, label: ELEMENT_LABEL[e] }))} />
         </div>
         <fieldset className="rt-src">
           <legend className="lbl">Buffs de time deste golpe</legend>

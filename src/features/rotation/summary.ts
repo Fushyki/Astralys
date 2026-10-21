@@ -52,6 +52,7 @@ const SOURCE_LABEL: Record<SourceKey, string> = {
   plunge: 'Ataque imersivo',
   skill: 'Habilidade (E)',
   burst: 'Supremo (Q)',
+  other: 'Golpes extras (arma, set, constelação)',
   amplifying: 'Reações amplificadoras',
   additive: 'Reações aditivas',
   transformative: 'Reações transformativas',
@@ -65,6 +66,7 @@ const SOURCE_COLOR: Record<SourceKey, string> = {
   plunge: '#5fe0c1',
   skill: '#8fdcff',
   burst: '#c39bff',
+  other: '#a9b3c9',
   amplifying: '#d8b668',
   additive: '#9bdb5a',
   transformative: '#e58fb8',
@@ -72,7 +74,7 @@ const SOURCE_COLOR: Record<SourceKey, string> = {
   stellar: '#f0d98a',
 };
 
-const SOURCE_ORDER: SourceKey[] = ['normal', 'charged', 'plunge', 'skill', 'burst', 'amplifying', 'additive', 'transformative', 'lunar', 'stellar'];
+const SOURCE_ORDER: SourceKey[] = ['normal', 'charged', 'plunge', 'skill', 'burst', 'other', 'amplifying', 'additive', 'transformative', 'lunar', 'stellar'];
 
 /** Buffs que a planilha original marcou como "origem não identificada" precisam de confirmação do usuário. */
 const NEEDS_CONFIRMATION = /origem não identificada|confirme/i;

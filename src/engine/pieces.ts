@@ -103,7 +103,7 @@ export function vecToDelta(v: Vec): StatDelta {
   return {
     hpFlat: v[DIM.hpFlat], hpPct: v[DIM.hpPct], atkFlat: v[DIM.atkFlat], atkPct: v[DIM.atkPct],
     defFlat: v[DIM.defFlat], defPct: v[DIM.defPct], em: v[DIM.em], er: v[DIM.er],
-    critRate: v[DIM.cr], critDmg: v[DIM.cd], dmgBonus: v[DIM.dmg],
+    critRate: v[DIM.cr], critDmg: v[DIM.cd], dmgBonus: v[DIM.dmg], eleDmg: v[DIM.dmg],
   };
 }
 
@@ -132,7 +132,9 @@ export function buildFromPieces(pieces: readonly RealPiece[], element: Element, 
   const counts = new Map<string, number>();
   for (const p of pieces) counts.set(nameOf(p.setKey), (counts.get(nameOf(p.setKey)) ?? 0) + 1);
   const ranked = [...counts.entries()].sort((a, b) => b[1] - a[1] || (a[0] < b[0] ? -1 : 1));
-  const out: PiecesBuild = { stats: vecToDelta(vec) };
+  // O cálice Físico fica fora do vetor (o otimizador não o enxerga), mas entra na soma das peças reais.
+  const physDmg = pieces.reduce((s, p) => s + (p.slotKey === 'goblet' && p.mainStatKey === 'physical_dmg_' ? mainValue(p) : 0), 0);
+  const out: PiecesBuild = { stats: { ...vecToDelta(vec), ...(physDmg ? { physDmg } : {}) } };
   if (ranked[0] && ranked[0][1] >= 4) out.primarySet = ranked[0][0];
   else if (ranked[0] && ranked[0][1] >= 2 && ranked[1] && ranked[1][1] >= 2) {
     out.primarySet = ranked[0][0];

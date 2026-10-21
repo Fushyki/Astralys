@@ -5,6 +5,7 @@
 import type { Element } from '../data/schema';
 import { weaponStatsAt } from '../effects/schema';
 import type { ResistanceMap } from './damage';
+import type { ElementOrPhysical } from './constants/reactions';
 import type { Rolls } from './artifacts';
 import {
   activeCharacterBuffs,
@@ -82,7 +83,7 @@ export interface TeamAssembly {
   warnings: string[];
 }
 
-const ELEMENTS: Element[] = ['Pyro', 'Hydro', 'Anemo', 'Electro', 'Dendro', 'Cryo', 'Geo'];
+const ELEMENTS: ElementOrPhysical[] = ['Pyro', 'Hydro', 'Anemo', 'Electro', 'Dendro', 'Cryo', 'Geo', 'Physical'];
 export const labelTag = (label?: string) => `label:${label?.trim() ? label.trim() : '_geral'}`;
 export const gearTag = (memberIndex: number) => `gear:${memberIndex}`;
 export const characterTag = (memberIndex: number) => `char:${memberIndex}`;
@@ -167,7 +168,7 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
   members.forEach((m, i) => {
     for (const b of activeCharacterBuffs(m)) {
       if (!b.timed || !b.stats) continue;
-      const delta = characterBuffDelta(b.stats);
+      const delta = characterBuffDelta(b.stats, !!b.forElements);
       if (isEmptyDelta(delta) || off(`cbuff-${i}-${b.id}`)) continue;
       const targets = names.filter((n, j) => {
         if (b.scope === 'self' && j !== i) return false;
@@ -248,7 +249,10 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
       const delta: StatDelta = { dmgByType: {} };
       for (const to of c.to) {
         if (to === 'atkFlat' || to === 'hpFlat' || to === 'defFlat' || to === 'atkPct' || to === 'hpPct' || to === 'defPct' || to === 'em' || to === 'critRate' || to === 'critDmg' || to === 'er') delta[to] = value;
-        else if (to === 'dmgPct') delta.dmgBonus = value;
+        else if (to === 'dmgPct') {
+          delta.dmgBonus = value;
+          if (b.forElements) delta.eleDmg = value;
+        }
         else delta.dmgByType![to] = value;
       }
       buffs.push({
@@ -258,8 +262,8 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
     }
   });
 
-  // 6) RES do inimigo por elemento (redução de RES de personagens; vale o tempo todo)
-  const enemyRes: ResistanceMap = { Physical: config.enemyBaseRes };
+  // 6) RES do inimigo por elemento, Físico incluído (redução de RES de personagens; vale o tempo todo)
+  const enemyRes: ResistanceMap = {};
   const resonanceShred = resonanceEffects(members).filter((r) => r.resShred && !off(`resonance-${r.element.toLowerCase()}`));
   for (const el of ELEMENTS) {
     let shred = 0;

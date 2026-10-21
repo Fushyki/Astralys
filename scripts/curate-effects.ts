@@ -13,13 +13,13 @@
  */
 import { readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
-import { CharacterBuffSchema, CharacterEffectSchema, SetEffectSchema, WeaponEffectSchema, type CharacterBuff, type CharacterEffect, type SetEffect, type WeaponEffect, type WeaponFlat, type WeaponStats } from '../src/effects/schema';
+import { CharacterBuffSchema, CharacterEffectSchema, ProcSchema, SetEffectSchema, WeaponEffectSchema, type CharacterBuff, type CharacterEffect, type Proc, type SetEffect, type WeaponEffect, type WeaponFlat, type WeaponStats } from '../src/effects/schema';
 import { FOUR_PIECE, type Val } from './curation/sets';
 import { FOUR_PIECE_2 } from './curation/sets2';
 import { parseTwoPiece } from './lib/twoPiece';
 import { WEAPONS } from './curation/weapons';
 import { WEAPONS_2 } from './curation/weapons2';
-import type { BuffCur, FlatCur, GearCur, StatsCur, Sum } from './curation/gear';
+import type { BuffCur, FlatCur, GearCur, ProcCur, StatsCur, Sum } from './curation/gear';
 import { CHARACTERS as CHARACTERS_1 } from './curation/characters';
 import { CHARACTERS_2 } from './curation/characters2';
 import { CHARACTERS_3 } from './curation/characters3';
@@ -34,6 +34,7 @@ import { CHARACTERS_15 } from './curation/characters11';
 import { CHARACTERS_16 } from './curation/characters12';
 import type { BuffCuration } from './curation/characters';
 import { CHARACTER_NOTES } from './curation/charnotes';
+import { CHARACTER_PROCS } from './curation/procs';
 
 /** Junta os lotes: o mesmo personagem pode aparecer em mais de um e as listas se somam. */
 const CHARACTER_BUFFS: Record<string, BuffCuration[]> = {};
@@ -111,6 +112,8 @@ function buildSets(): SetEffect[] {
         ...(cur.team ? { team: { atkPct: v(cur.team.atkPct), dmgPct: v(cur.team.dmgPct), em: v(cur.team.em) } } : {}),
         buffs: [...crit, ...(cur.buffs ?? []).map((b) => buildBuff(b, ctx))],
         flat: (cur.flat ?? []).map((f) => buildFlat(f, ctx)),
+        reactionBonus: reactionsOf(cur.reactionBonus, ctx),
+        procs: (cur.procs ?? []).map((p) => buildProc(p, ctx)),
       };
       notes.push(cur.note);
     } else {
@@ -156,7 +159,20 @@ function buffStats(cur: StatsCur, c: Ctx) {
     atkPct: sm(cur.atkPct, c), dmgPct: sm(cur.dmgPct, c), critRate: sm(cur.critRate, c), critDmg: sm(cur.critDmg, c),
     em: sm(cur.em, c), er: sm(cur.er, c), hpPct: sm(cur.hpPct, c), defPct: sm(cur.defPct, c),
     dmgPctByType: byTypeOf(cur.byType, c), critRateByType: byTypeOf(cur.critRateByType, c), critDmgByType: byTypeOf(cur.critDmgByType, c),
+    physDmgPct: sm(cur.physDmgPct, c), physCritDmg: sm(cur.physCritDmg, c), reactionBonus: reactionsOf(cur.reactionBonus, c),
   };
+}
+
+const reactionsOf = (r: StatsCur['reactionBonus'], c: Ctx) => Object.fromEntries(Object.entries(r ?? {}).map(([k, x]) => [k, sm(x, c)]));
+
+/** Golpe extra: cada escala é a soma dos valores (parâmetro, literal ou regex) no refinamento/contexto dado. */
+function buildProc(p: ProcCur, c: Ctx): Proc {
+  const scale = Object.fromEntries(Object.entries(p.scale).map(([k, x]) => [k, sm(x, c)]).filter(([, v]) => v !== 0));
+  if (!Object.keys(scale).length) throw new Error(`${c.where}: golpe extra ${p.id} sem escala`);
+  return ProcSchema.parse({
+    id: p.id, label: p.label, scale, ...(p.element ? { element: p.element } : {}), ...(p.hitType ? { hitType: p.hitType } : {}),
+    ...(p.note ? { note: p.note } : {}),
+  });
 }
 
 function buildBuff(b: BuffCur, c: Ctx): CharacterBuff {
@@ -184,6 +200,10 @@ const buildFlat = (f: FlatCur, c: Ctx): WeaponFlat => ({
 /** Números de um refinamento: os campos simples vão na raiz; o resto vira buffs (crítico por golpe, conversões, regras de time). */
 function gearStats(cur: GearCur, c: Ctx): WeaponStats {
   const crit = cur.critRateByType || cur.critDmgByType ? [buildBuff({ id: 'crit-golpe', label: 'Crítico por golpe', stats: { critRateByType: cur.critRateByType, critDmgByType: cur.critDmgByType } }, c)] : [];
+  // Bônus Físico e de reação do próprio dono viram um buff sempre ativo (a raiz da arma só tem os stats simples).
+  if (cur.physDmgPct || cur.physCritDmg || cur.reactionBonus) {
+    crit.push(buildBuff({ id: 'dono', label: 'Bônus Físico/de reação', stats: { physDmgPct: cur.physDmgPct, physCritDmg: cur.physCritDmg, reactionBonus: cur.reactionBonus } }, c));
+  }
   const t = cur.team;
   return {
     atkPct: sm(cur.atkPct, c), dmgPct: sm(cur.dmgPct, c), critRate: sm(cur.critRate, c), critDmg: sm(cur.critDmg, c),
@@ -192,6 +212,7 @@ function gearStats(cur: GearCur, c: Ctx): WeaponStats {
     ...(t ? { team: { atkPct: sm(t.atkPct, c), dmgPct: sm(t.dmgPct, c), em: sm(t.em, c) } } : {}),
     buffs: [...crit, ...(cur.buffs ?? []).map((b) => buildBuff(b, c))],
     flat: (cur.flat ?? []).map((f) => buildFlat(f, c)),
+    procs: (cur.procs ?? []).map((p) => buildProc(p, c)),
   };
 }
 
@@ -269,7 +290,7 @@ function buildCharacters(): CharacterEffect[] {
   const source = `Lunaris ${meta.gameVersion} (passivas e constelações)`;
   const strip = (t: string) => t.replace(/<[^>]*>/g, '').replace(/\n/g, ' ').replace(/\s+/g, ' ');
 
-  const names = [...new Set([...Object.keys(CHARACTER_BUFFS), ...Object.keys(CHARACTER_NOTES)])];
+  const names = [...new Set([...Object.keys(CHARACTER_BUFFS), ...Object.keys(CHARACTER_NOTES), ...Object.keys(CHARACTER_PROCS)])];
   for (const name of names) {
     const list = CHARACTER_BUFFS[name] ?? [];
     const handMadeEntry = existing.find((e) => e.character === name);
@@ -322,6 +343,8 @@ function buildCharacters(): CharacterEffect[] {
                 critDmgByType: Object.fromEntries(Object.entries(s.critDmgByType ?? {}).map(([k, x]) => [k, v(x)])),
                 defIgnore: v(s.defIgnore),
                 atkFlat: v(s.atkFlat), hpFlat: v(s.hpFlat), defFlat: v(s.defFlat),
+                physDmgPct: v(s.physDmgPct), physCritDmg: v(s.physCritDmg),
+                reactionBonus: Object.fromEntries(Object.entries(s.reactionBonus ?? {}).map(([k, x]) => [k, v(x)])),
               },
             }
           : {}),
@@ -361,10 +384,24 @@ function buildCharacters(): CharacterEffect[] {
       };
     });
     const notes = Object.entries(CHARACTER_NOTES[name] ?? {}).map(([src, n]) => ({ src, kind: n!.kind, note: n!.note }));
+    const procs = (CHARACTER_PROCS[name] ?? []).map((p) => {
+      const isConst = p.src.startsWith('const');
+      const node = (isConst ? raw.constellations : raw.passives)?.[p.src];
+      if (!node) throw new Error(`${name} ${p.id}: ${p.src} não existe`);
+      if (!strip(node.description).includes(p.expect)) errors.push(`${name} ${p.id}: a descrição de ${p.src} não contém "${p.expect}" (o Lunaris mudou?)`);
+      const scale = Object.fromEntries(Object.entries(p.scale).map(([k, x]) => [k, valueOf(x, node.params, `${name} ${p.id}`)]));
+      if (Object.values(scale).some((x) => !(x > 0))) errors.push(`${name} ${p.id}: escala zerada ou negativa (parâmetro errado?)`);
+      return ProcSchema.parse({
+        id: p.id, label: p.label, scale, src: p.src, minConstellation: isConst ? Number(p.src.slice(5)) : 0,
+        ...(p.element ? { element: p.element } : {}), ...(p.hitType ? { hitType: p.hitType } : {}), note: p.note,
+      });
+    });
+    const procIds = procs.map((p) => p.id).filter((id, i, all) => all.indexOf(id) !== i);
+    if (procIds.length) errors.push(`${name}: ids de golpe extra repetidos: ${procIds.join(', ')}`);
     if (handMadeEntry) {
       // Personagem que já veio da planilha de referência: os efeitos dela ficam e a curadoria soma os buffs e as notas.
       const at = out.findIndex((e) => e.character === name);
-      out[at] = CharacterEffectSchema.parse({ ...handMadeEntry, buffs: [...(handMadeEntry.buffs ?? []).filter((old) => !buffs.some((n) => n.id === old.id)), ...buffs], notes });
+      out[at] = CharacterEffectSchema.parse({ ...handMadeEntry, buffs: [...(handMadeEntry.buffs ?? []).filter((old) => !buffs.some((n) => n.id === old.id)), ...buffs], notes, procs });
       continue;
     }
     out.push(CharacterEffectSchema.parse({
@@ -372,6 +409,7 @@ function buildCharacters(): CharacterEffect[] {
       atkPct: 0, dmgPct: 0, critRate: 0, critDmg: 0, em: 0,
       buffs,
       notes,
+      procs,
       fonte_info: `${source}; curadoria em scripts/curation/characters.ts.`,
     }));
   }

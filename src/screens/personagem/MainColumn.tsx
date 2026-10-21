@@ -135,6 +135,7 @@ export function ReactionsPanel({ v, index }: { v: ProjectView; index: number }) 
     characterLevel: team.config.characterLevel,
     enemy: { level: team.config.enemyLevel, res: assembly.enemyRes, defRed: assembly.enemyDefRed, defIgnore: team.config.enemyDefIgnore },
     ampCoefficient: v.resolved.ampCoefficient,
+    reactionBonus: v.bundle.memberStats[index].reactionBonus,
   });
   return (
     <Panel title="Reações deste time">

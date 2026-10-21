@@ -10,7 +10,7 @@ import type { AdditiveReaction, AmplifyingReaction, ElementOrPhysical } from './
 import { computeHit, type HitBreakdown } from './damage';
 import { critFactor } from './formulas';
 import type { Rolls } from './artifacts';
-import { activeTeamDelta, finalStats, type FinalStats, type MemberInput } from './stats';
+import { activeTeamDelta, finalStats, hitDmgBonus, type FinalStats, type MemberInput } from './stats';
 import type { GlobalConfig, TeamAssembly } from './team';
 
 export type ReactionChoice = 'none' | AmplifyingReaction | AdditiveReaction;
@@ -24,12 +24,16 @@ export interface ExtraScale {
   flat?: number;
 }
 
+/** Tipo do golpe para os bônus: os 5 do jogo ou 'other' (golpe extra de proc, sem bônus de tipo). */
+export type MoveHitType = HitType | 'other';
+
 export interface ResolvedMove {
   id: string;
   /** Nome do personagem dono do golpe (igual a `character.name`). */
   character: string;
-  talent: Talent;
-  hitType: HitType;
+  /** 'proc' = golpe extra de arma, set, passiva ou constelação (escala fixa, não depende do nível de talento). */
+  talent: Talent | 'proc';
+  hitType: MoveHitType;
   label: string;
   displayName: string;
   /** Acertos que o golpe contém (importa para os stacks de dano fixo). */
@@ -97,8 +101,8 @@ export interface RotationResult {
 
 const TALENT_MAX = 15;
 
-export function scaleAt(move: ResolvedMove, level: number) {
-  const i = Math.min(Math.max(Math.trunc(level), 1), TALENT_MAX) - 1;
+export function scaleAt(move: ResolvedMove, level: number | undefined) {
+  const i = Math.min(Math.max(Math.trunc(level ?? 1) || 1, 1), TALENT_MAX) - 1;
   const x = move.extra ?? {};
   return {
     atk: (move.scale.atk?.[i] ?? 0) + (x.atk ?? 0),
@@ -165,29 +169,33 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
       const e = f.effect;
       const targetOk = e.targets === 'all' || e.targets.includes(member.character.name);
       const elementOk = e.elements.length === 0 || (element !== 'Physical' && e.elements.some((x) => sameEl(x, element)));
-      const typeOk = e.hitTypes.length === 0 || e.hitTypes.includes(move.hitType);
+      const typeOk = e.hitTypes.length === 0 || (move.hitType !== 'other' && e.hitTypes.includes(move.hitType));
       if (!(targetOk && elementOk && typeOk)) continue;
       const covered = Math.min(hitsOfAction, f.remaining);
       f.remaining -= covered;
       flatDamage += covered * f.perHit;
     }
 
-    const level = member.talents[move.talent];
+    const level = move.talent === 'proc' ? 1 : member.talents[move.talent];
     const scale = scaleAt(move, level);
     const base = stats.atk * scale.atk + stats.em * scale.em + stats.hp * scale.hp + stats.def * scale.def + scale.flat;
 
-    const critRate = stats.critRate + (stats.critRateByType?.[move.hitType] ?? 0);
-    const critDmg = stats.critDmg + (stats.critDmgByType?.[move.hitType] ?? 0);
+    const byType = <T,>(r: Record<HitType, T> | undefined) => (move.hitType === 'other' ? undefined : r?.[move.hitType]);
+    const critRate = stats.critRate + ((byType(stats.critRateByType) as number | undefined) ?? 0);
+    const critDmg = stats.critDmg + ((byType(stats.critDmgByType) as number | undefined) ?? 0) + (element === 'Physical' ? stats.physCritDmg ?? 0 : 0);
 
     const reactionBonus =
-      action.reaction === 'melt' ? stats.meltBonus : action.reaction === 'vaporize' ? stats.vaporizeBonus : 0;
+      action.reaction === 'melt' ? stats.meltBonus
+      : action.reaction === 'vaporize' ? stats.vaporizeBonus
+      : action.reaction === 'spread' || action.reaction === 'aggravate' ? stats.reactionBonus?.[action.reaction] ?? 0
+      : 0;
 
     const breakdown = computeHit({
       element,
       base,
       executions: action.executions,
       flatDamage,
-      dmgBonus: stats.dmgBonus + stats.dmgByType[move.hitType] + action.dmgAdjust,
+      dmgBonus: hitDmgBonus(stats, element, member.character.element, move.hitType) + action.dmgAdjust,
       critRate,
       critDmg,
       critMode: 'hit',

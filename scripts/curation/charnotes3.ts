@@ -3,7 +3,6 @@ import type { CharacterNotes, NoteCuration } from './characters';
 
 const u = (note: string): NoteCuration => ({ kind: 'utility', note });
 const x = (note: string): NoteCuration => ({ kind: 'partial', note });
-const FISICO = 'O dano Físico ainda não é modelado.';
 
 export const NOTES_3: CharacterNotes = {
   'Yun Jin': { const6: u('Só velocidade de ataque.') },
@@ -49,8 +48,8 @@ export const NOTES_3: CharacterNotes = {
   },
   Dehya: { p1: u('Só redução de dano recebido.'), p2: u('Só cura.'), const2: x('+50% do ataque coordenado do Fiery Sanctum não entra.'), const4: u('Só energia e cura.') },
   Mika: {
-    p1: x(`Dano Físico +10% por stack de Detector. ${FISICO}`), p2: x(`Stacks de Detector (Físico). ${FISICO}`), const1: u('Só cura.'), const2: x(`Stacks de Detector (Físico). ${FISICO}`),
-    const4: u('Só energia.'), const6: x(`+60% de Dano Crítico Físico. ${FISICO}`),
+    const1: u('Só cura.'), const2: u('Só gera stacks de Detector: os buffs Mika A1/A4 já assumem o máximo de stacks.'),
+    const4: u('Só energia.'),
   },
   Kaveh: {
     p1: u('Só cura.'), const1: u('Só RES e Bônus de Cura.'), const2: u('Só velocidade de ataque.'),

@@ -9,6 +9,7 @@ import { z } from 'zod';
 import { ElementSchema, HitTypeSchema, WeaponTypeSchema } from '../data/schema';
 
 const frac = z.number().default(0);
+const ReactionBonusKeySchema = z.enum(['overloaded', 'shattered', 'electrocharged', 'superconduct', 'swirl', 'burning', 'bloom', 'burgeon', 'hyperbloom', 'spread', 'aggravate']);
 const FonteInfo = z.string().min(1, 'fonte_info é obrigatório: de onde veio este número?');
 
 /** Buff que aumenta o ATK fixo de quem o recebe, calculado a partir do ATK do doador. */
@@ -41,8 +42,38 @@ const BuffStatsSchema = z.object({
   atkFlat: frac,
   hpFlat: frac,
   defFlat: frac,
+  /** Bônus de DMG Físico (só golpes Físicos; ex.: Eula C1, Mika A1). */
+  physDmgPct: frac,
+  /** Dano Crítico só em golpes Físicos (ex.: Mika C6). */
+  physCritDmg: frac,
+  /** Bônus de dano de reação (ex.: "+40% de Florescer"), por reação. Derreter/Vaporizar ficam nos campos próprios dos sets. */
+  reactionBonus: z.record(ReactionBonusKeySchema, z.number()).default({}),
 });
 export type BuffStats = z.infer<typeof BuffStatsSchema>;
+
+/** Elemento de um golpe, incluindo o Físico. */
+export const ElementOrPhysicalSchema = z.union([ElementSchema, z.literal('Physical')]);
+
+/**
+ * Golpe extra de proc (arma, set, passiva ou constelação): um dano próprio, com escala no stat do dono, que você coloca
+ * na linha do tempo como qualquer golpe. Sem `element`, é do elemento do personagem; sem `hitType`, não conta como
+ * Normal/Carregado/Imersivo/Habilidade/Supremo (não recebe bônus de tipo de golpe, como no Genshin Optimizer).
+ */
+export const ProcSchema = z.object({
+  id: z.string().min(1),
+  /** Nome curto mostrado na paleta, ex.: "The Flute: onda". */
+  label: z.string().min(1),
+  /** Escala do golpe (fração do stat final do dono, ex.: 1 = 100% do ATK). */
+  scale: z.object({ atk: z.number(), hp: z.number(), def: z.number(), em: z.number() }).partial(),
+  element: ElementOrPhysicalSchema.optional(),
+  hitType: HitTypeSchema.optional(),
+  /** Passiva/constelação: vale a partir desta constelação. */
+  minConstellation: z.number().int().min(0).max(6).default(0),
+  /** De qual passiva/constelação vem (para a cobertura do kit). */
+  src: z.enum(['p1', 'p2', 'p3', 'const1', 'const2', 'const3', 'const4', 'const5', 'const6']).optional(),
+  note: z.string().optional(),
+});
+export type Proc = z.infer<typeof ProcSchema>;
 
 /** Stats que uma conversão pode alimentar (fixos ou em fração). */
 export const ConvertTargetSchema = z.enum(['atkFlat', 'hpFlat', 'defFlat', 'atkPct', 'hpPct', 'defPct', 'em', 'dmgPct', 'critRate', 'critDmg', 'er', 'normal', 'charged', 'plunge', 'skill', 'burst']);
@@ -132,7 +163,7 @@ export const CharacterBuffSchema = z.object({
   /** Efeito do kit que cresce com o nível do talento. */
   level: BuffLevelSchema.optional(),
   /** Redução de RES do inimigo (vale o tempo todo). */
-  resShred: z.object({ value: z.number(), elements: z.array(ElementSchema).min(1) }).optional(),
+  resShred: z.object({ value: z.number(), elements: z.array(ElementOrPhysicalSchema).min(1) }).optional(),
   /** Redução de DEF do inimigo, em fração (vale o tempo todo; soma com a do cenário, no máximo 90%). */
   defShred: z.number().positive().optional(),
   /** Dano fixo por golpe elegível (ex.: Gorou A4, "Dano de Habilidade aumentado em 156% da DEF"). */
@@ -161,11 +192,13 @@ export const CharacterEffectSchema = z.object({
   /** O buff de ATK fixo vale também para o próprio doador? */
   appliesToSelf: z.boolean().default(false),
   /** Redução de RES no inimigo, só nos elementos listados. */
-  resShred: z.object({ value: z.number(), elements: z.array(ElementSchema).min(1) }).optional(),
+  resShred: z.object({ value: z.number(), elements: z.array(ElementOrPhysicalSchema).min(1) }).optional(),
   /** Passivas e constelações com número (a partir de `minConstellation`). */
   buffs: z.array(CharacterBuffSchema).default([]),
   /** Passivas e constelações sem buff: "utility" (nada a calcular em dano) ou "partial" (parte do dano fora do cálculo). */
   notes: z.array(CharacterNoteSchema).default([]),
+  /** Golpes extras de passiva/constelação (a partir de `minConstellation`), para pôr na linha do tempo. */
+  procs: z.array(ProcSchema).default([]),
   fonte_info: FonteInfo,
 });
 export type CharacterEffect = z.infer<typeof CharacterEffectSchema>;
@@ -191,6 +224,8 @@ const WeaponStatsSchema = z.object({
   buffs: z.array(CharacterBuffSchema).default([]),
   /** Dano extra somado ao golpe (ex.: "Dano de Habilidade aumentado em 40% da DEF"). */
   flat: z.array(WeaponFlatSchema).default([]),
+  /** Golpes extras da arma (ex.: The Flute, 100% do ATK Físico), com os números deste refinamento. */
+  procs: z.array(ProcSchema).default([]),
 });
 export type WeaponStats = z.infer<typeof WeaponStatsSchema>;
 
@@ -212,11 +247,11 @@ export type WeaponEffect = z.infer<typeof WeaponEffectSchema>;
 export function weaponStatsAt(effect: WeaponEffect, refinement = 1): WeaponStats {
   const r = effect.refinements?.[Math.min(5, Math.max(1, Math.round(refinement))) - 1] ?? effect;
   // Os JSON de efeitos são lidos sem passar pelo Zod, então os campos novos podem faltar nos efeitos antigos.
-  return { ...r, hpPct: r.hpPct ?? 0, defPct: r.defPct ?? 0, dmgPctByType: r.dmgPctByType ?? {}, buffs: r.buffs ?? [], flat: r.flat ?? [] };
+  return { ...r, hpPct: r.hpPct ?? 0, defPct: r.defPct ?? 0, dmgPctByType: r.dmgPctByType ?? {}, buffs: r.buffs ?? [], flat: r.flat ?? [], procs: r.procs ?? [] };
 }
 
 /** Bônus de 2 peças que a planilha modela como "stat + valor". */
-export const SetTwoPieceStatSchema = z.enum(['ATK%', 'HP%', 'DEF%', 'EM', 'ER', 'CR', 'DMG%', 'DMG% Normal', 'DMG% Charged', 'DMG% Plunge', 'DMG% Skill', 'DMG% Supremo']);
+export const SetTwoPieceStatSchema = z.enum(['ATK%', 'HP%', 'DEF%', 'EM', 'ER', 'CR', 'DMG%', 'Physical DMG%', 'DMG% Normal', 'DMG% Charged', 'DMG% Plunge', 'DMG% Skill', 'DMG% Supremo']);
 const TwoPieceEntrySchema = z.object({
   stat: SetTwoPieceStatSchema,
   value: z.number(),
@@ -244,10 +279,14 @@ export const SetEffectSchema = z.object({
       hpPct: frac,
       defPct: frac,
       /** Redução de RES do inimigo nos elementos listados (ex.: Deepwood Memories, Dendro -30%). */
-      resShred: z.object({ value: z.number(), elements: z.array(ElementSchema).min(1) }).optional(),
+      resShred: z.object({ value: z.number(), elements: z.array(ElementOrPhysicalSchema).min(1) }).optional(),
       team: TeamBuffSchema.optional(),
       buffs: z.array(CharacterBuffSchema).default([]),
       flat: z.array(WeaponFlatSchema).default([]),
+      /** Bônus de dano de reação do dono (ex.: Thundering Fury, +40% de Sobrecarga). */
+      reactionBonus: z.record(ReactionBonusKeySchema, z.number()).default({}),
+      /** Golpes extras do set. */
+      procs: z.array(ProcSchema).default([]),
     })
     .optional(),
   /** Buffs dos 2 peças além do stat simples (conversões, regras de time). */

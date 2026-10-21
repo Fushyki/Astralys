@@ -14,7 +14,8 @@ import type { FlatDamageEffect } from '../effects/schema';
 
 // ---------- Dano por fonte e participação de reações ----------
 
-export type SourceKey = HitType | 'amplifying' | 'additive' | 'transformative' | 'lunar' | 'stellar';
+/** `other` = golpes extras de proc (arma, set, passiva, constelação). */
+export type SourceKey = HitType | 'other' | 'amplifying' | 'additive' | 'transformative' | 'lunar' | 'stellar';
 
 export interface SourceBreakdown {
   total: number;
@@ -26,7 +27,7 @@ export interface SourceBreakdown {
   reactionShare: number;
 }
 
-const SOURCE_KEYS: SourceKey[] = ['normal', 'charged', 'plunge', 'skill', 'burst', 'amplifying', 'additive', 'transformative', 'lunar', 'stellar'];
+const SOURCE_KEYS: SourceKey[] = ['normal', 'charged', 'plunge', 'skill', 'burst', 'other', 'amplifying', 'additive', 'transformative', 'lunar', 'stellar'];
 const emptySources = (): Record<SourceKey, number> => Object.fromEntries(SOURCE_KEYS.map((k) => [k, 0])) as Record<SourceKey, number>;
 
 /**

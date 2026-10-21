@@ -7,7 +7,7 @@ import { z } from 'zod';
 import type { ArtifactSet, Character, Move, Talent, Weapon } from '../data/schema';
 import { planilhaEffect } from './compat/planilha';
 import { activeCharacterBuffs } from './stats';
-import { weaponStatsAt, type CharacterBuff, type CharacterEffect, type FlatDamageEffect, type SetEffect, type WeaponEffect, type WeaponFlat } from '../effects/schema';
+import { weaponStatsAt, type CharacterBuff, type CharacterEffect, type FlatDamageEffect, type Proc, type SetEffect, type WeaponEffect, type WeaponFlat } from '../effects/schema';
 import { SUBSTATS, zeroRolls, type Rolls } from './artifacts';
 import { RealPieceSchema, buildFromPieces } from './pieces';
 import { AMP_EM_COEFFICIENT_SHEET } from './constants/reactions';
@@ -94,7 +94,8 @@ export const ConfigSchema = z.object({
 
 export const MoveRefSchema = z.object({
   character: z.string().min(1),
-  talent: z.enum(['normal', 'skill', 'burst']),
+  /** 'proc' = golpe extra de arma, set, passiva ou constelação; `label` é a chave dele (ver `memberProcs`). */
+  talent: z.enum(['normal', 'skill', 'burst', 'proc']),
   label: z.string().min(1),
   variant: z.number().int().min(0).default(0),
 });
@@ -126,6 +127,8 @@ export const ActionSchema = z.object({
   extraScale: ExtraScaleSchema.optional(),
   executions: z.number().positive().default(1),
   reaction: ReactionChoiceSchema.default('none'),
+  /** Elemento do dano, se diferente do padrão (ex.: 'Physical' num Normal sem infusão). Ausente = o do golpe/personagem. */
+  element: z.enum(['Pyro', 'Hydro', 'Anemo', 'Electro', 'Dendro', 'Cryo', 'Geo', 'Physical']).optional(),
   /** Etiquetas de buff de time ativas nesta ação (usadas quando `tagSource` é 'manual'). */
   activeTags: z.array(z.string()).default([]),
   /** 'manual': usa `activeTags` (perfis da planilha). 'windows': as etiquetas vêm das janelas de buff, pelo `time`. */
@@ -248,6 +251,7 @@ export function indexMoves(moves: Move[]): MoveIndex {
 
 /** Junta a referência de um golpe com os dados do Lunaris. */
 export function resolveMove(index: MoveIndex, ref: MoveRef, displayName?: string, extra?: ExtraScale): ResolvedMove {
+  if (ref.talent === 'proc') throw new ProjectResolveError(`Golpe extra precisa do membro para ser resolvido: ${ref.label}`);
   const move = index.find(ref);
   if (!move) {
     throw new ProjectResolveError(`Golpe não encontrado nos dados do jogo: ${ref.character} / ${ref.talent} / ${ref.label}`);
@@ -301,6 +305,53 @@ export function gearBuffs(m: Pick<MemberInput, 'weapon' | 'weaponEffect' | 'refi
   return out;
 }
 
+/** Um golpe extra disponível para um membro: a chave (`MoveRef.label` com `talent: 'proc'`) e o golpe pronto. */
+export interface MemberProc {
+  key: string;
+  origin: string;
+  proc: Proc;
+  move: ResolvedMove;
+}
+
+const fifteen = (v: number | undefined) => (v ? Array.from({ length: 15 }, () => v) : undefined);
+
+/**
+ * Golpes extras do membro: da arma (no refinamento dele), do set de 4 peças e das passivas/constelações ativas.
+ * Chaves: `arma:<id>`, `set:<id>` e `char:<id>`.
+ */
+export function memberProcs(m: Pick<MemberInput, 'character' | 'weapon' | 'weaponEffect' | 'refinement' | 'primarySet' | 'secondarySet' | 'fourPiece' | 'characterEffect' | 'constellation'>): MemberProc[] {
+  const out: MemberProc[] = [];
+  const add = (prefix: string, origin: string, list: readonly Proc[] | undefined) => {
+    for (const p of list ?? []) {
+      if ((m.constellation ?? 0) < (p.minConstellation ?? 0)) continue;
+      const key = `${prefix}:${p.id}`;
+      out.push({
+        key, origin, proc: p,
+        move: {
+          id: `${m.character.name}:proc:${key}`, character: m.character.name, talent: 'proc', hitType: p.hitType ?? 'other',
+          label: key, displayName: `${m.character.name}: ${p.label}`, hits: 1,
+          scale: { atk: fifteen(p.scale.atk), hp: fifteen(p.scale.hp), def: fifteen(p.scale.def), em: fifteen(p.scale.em) },
+          ...(p.element ? { element: p.element } : {}),
+        },
+      });
+    }
+  };
+  if (m.weaponEffect) add('arma', m.weapon.name, weaponStatsAt(m.weaponEffect, m.refinement).procs);
+  if (m.primarySet && !m.secondarySet && m.fourPiece !== false) add('set', m.primarySet.name, m.primarySet.effect?.fourPiece?.procs);
+  add('char', m.character.name, m.characterEffect?.procs);
+  return out;
+}
+
+/** Golpe extra de uma ação. Se o membro não o tem mais (trocou de arma ou de set), vale 0 e o nome avisa. */
+export function procMove(procs: readonly MemberProc[], ref: MoveRef, displayName?: string): ResolvedMove {
+  const found = procs.find((p) => p.key === ref.label);
+  if (found) return displayName ? { ...found.move, displayName } : found.move;
+  return {
+    id: `${ref.character}:proc:${ref.label}`, character: ref.character, talent: 'proc', hitType: 'other', label: ref.label,
+    displayName: `${ref.character}: golpe extra indisponível (${ref.label})`, hits: 1, scale: {},
+  };
+}
+
 /** Dano fixo de arma e de set de 4 peças (ex.: "Dano de Habilidade aumentado em 40% da DEF"). */
 export function gearFlat(members: MemberInput[]): FlatDamageEffect[] {
   const out: FlatDamageEffect[] = [];
@@ -335,7 +386,7 @@ export function resolveMember(ref: MemberRef, data: GameData, effects: EffectsDa
   const own = effects.characters.find((c) => c.character === ref.character);
   const characterEffect: CharacterEffect | undefined = gear.length
     ? {
-        ...(own ?? { character: ref.character, atkPct: 0, dmgPct: 0, critRate: 0, critDmg: 0, em: 0, appliesToSelf: false, notes: [], fonte_info: 'Buffs de arma e set' }),
+        ...(own ?? { character: ref.character, atkPct: 0, dmgPct: 0, critRate: 0, critDmg: 0, em: 0, appliesToSelf: false, notes: [], procs: [], fonte_info: 'Buffs de arma e set' }),
         buffs: [...(own?.buffs ?? []), ...gear],
       }
     : own;
@@ -455,12 +506,14 @@ export function resolveProject(project: RotationProject, data: GameData, effects
 
   // Cronológico: os stacks de dano fixo são consumidos pelos primeiros hits elegíveis NO TEMPO (ordem estável nos empates).
   const chronological = [...project.actions].sort((a, b) => a.time - b.time);
+  const procs = members.map((m) => memberProcs(m));
   const actions: RotationAction[] = chronological.map((a) => {
-    const move = resolveMove(moves, a.move, a.displayName, a.extraScale);
+    const base = a.move.talent === 'proc' ? procMove(procs[a.member] ?? [], a.move, a.displayName) : resolveMove(moves, a.move, a.displayName, a.extraScale);
+    // Sem `element` na ação, o golpe é do elemento do personagem (no modo planilha, sempre).
+    const move = a.element ? { ...base, element: a.element } : base;
     return {
       id: a.id,
       member: a.member,
-      // No modo planilha, o elemento de todo golpe é o do personagem (o motor já usa isso por padrão).
       move,
       executions: a.executions,
       reaction: a.reaction as ReactionChoice,

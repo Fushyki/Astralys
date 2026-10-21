@@ -42,12 +42,17 @@
             "defIgnore": 0,
             "atkFlat": 0,
             "hpFlat": 0,
-            "defFlat": 0
+            "defFlat": 0,
+            "physDmgPct": 0,
+            "physCritDmg": 0,
+            "reactionBonus": {}
           },
           "flat": []
         }
       ],
-      "flat": []
+      "flat": [],
+      "reactionBonus": {},
+      "procs": []
     },
     "twoPieceBuffs": [],
     "note": "+30% de Taxa Crítica só do Carregado.",
@@ -73,7 +78,9 @@
       "hpPct": 0,
       "defPct": 0,
       "buffs": [],
-      "flat": []
+      "flat": [],
+      "reactionBonus": {},
+      "procs": []
     },
     "twoPieceBuffs": [],
     "note": "Assume inimigo com mais de 50% de HP.",
@@ -99,7 +106,9 @@
       "hpPct": 0,
       "defPct": 0,
       "buffs": [],
-      "flat": []
+      "flat": [],
+      "reactionBonus": {},
+      "procs": []
     },
     "twoPieceBuffs": [],
     "note": "Só RES elemental própria: não muda o dano.",
@@ -122,7 +131,9 @@
       "hpPct": 0,
       "defPct": 0,
       "buffs": [],
-      "flat": []
+      "flat": [],
+      "reactionBonus": {},
+      "procs": []
     },
     "twoPieceBuffs": [],
     "note": "2 peças (\"All Elemental RES increased by 20%.\") não entra: sem efeito em dano. Só RES elemental ao levar dano: não muda o dano.",
@@ -149,7 +160,9 @@
       "hpPct": 0,
       "defPct": 0,
       "buffs": [],
-      "flat": []
+      "flat": [],
+      "reactionBonus": {},
+      "procs": []
     },
     "twoPieceBuffs": [],
     "note": "Assume HP abaixo de 70% (+24% de Taxa Crítica) sempre ativo.",
@@ -183,7 +196,9 @@
       "hpPct": 0,
       "defPct": 0,
       "buffs": [],
-      "flat": []
+      "flat": [],
+      "reactionBonus": {},
+      "procs": []
     },
     "twoPieceBuffs": [],
     "note": "Assume o bônus de 8 s depois da habilidade sempre ativo.",
@@ -232,7 +247,9 @@
       "hpPct": 0,
       "defPct": 0,
       "buffs": [],
-      "flat": []
+      "flat": [],
+      "reactionBonus": {},
+      "procs": []
     },
     "twoPieceBuffs": [],
     "note": "Só reinicia a recarga da habilidade ao derrotar um inimigo: não muda os stats.",
@@ -259,7 +276,9 @@
       "hpPct": 0,
       "defPct": 0,
       "buffs": [],
-      "flat": []
+      "flat": [],
+      "reactionBonus": {},
+      "procs": []
     },
     "twoPieceBuffs": [],
     "note": "Só energia: use a calculadora de Recarga.",
@@ -300,7 +319,9 @@
       "hpPct": 0,
       "defPct": 0,
       "buffs": [],
-      "flat": []
+      "flat": [],
+      "reactionBonus": {},
+      "procs": []
     },
     "twoPieceBuffs": [],
     "note": "Só energia: use a calculadora de Recarga.",
@@ -335,7 +356,9 @@
       "hpPct": 0,
       "defPct": 0,
       "buffs": [],
-      "flat": []
+      "flat": [],
+      "reactionBonus": {},
+      "procs": []
     },
     "twoPieceBuffs": [],
     "note": "Assume inimigo sob Cryo. Os +20% extras contra inimigo congelado NÃO entram.",
@@ -357,7 +380,9 @@
       "hpPct": 0,
       "defPct": 0,
       "buffs": [],
-      "flat": []
+      "flat": [],
+      "reactionBonus": {},
+      "procs": []
     },
     "twoPieceBuffs": [],
     "note": "2 peças (\"Electro RES increased by 40%.\") não entra: sem efeito em dano. Assume inimigo sob Electro.",
@@ -379,7 +404,9 @@
       "hpPct": 0,
       "defPct": 0,
       "buffs": [],
-      "flat": []
+      "flat": [],
+      "reactionBonus": {},
+      "procs": []
     },
     "twoPieceBuffs": [],
     "note": "2 peças (\"Pyro RES increased by 40%.\") não entra: sem efeito em dano. Assume inimigo sob Pyro.",
@@ -401,7 +428,9 @@
       "hpPct": 0,
       "defPct": 0,
       "buffs": [],
-      "flat": []
+      "flat": [],
+      "reactionBonus": {},
+      "procs": []
     },
     "twoPieceBuffs": [],
     "note": "2 peças (\"Character Healing Effectiveness +15%\") não entra: sem efeito em dano. Só cura recebida: não muda o dano.",
@@ -457,10 +486,14 @@
       "hpPct": 0,
       "defPct": 0,
       "buffs": [],
-      "flat": []
+      "flat": [],
+      "reactionBonus": {
+        "swirl": 0.6
+      },
+      "procs": []
     },
     "twoPieceBuffs": [],
-    "note": "O bônus de dano de Espalhar e a redução de 40% da RES do elemento espalhado NÃO entram: dependem do elemento do Espalhar, que a rotação ainda não tem.",
+    "note": "+60% de dano de Redemoinho (tabela de reações). A redução de 40% da RES do elemento espalhado (depende do elemento do Redemoinho, que a rotação ainda não tem) e o bônus Estelar NÃO entram.",
     "partial": true,
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
@@ -507,7 +540,10 @@
             "defIgnore": 0,
             "atkFlat": 0,
             "hpFlat": 0,
-            "defFlat": 0
+            "defFlat": 0,
+            "physDmgPct": 0,
+            "physCritDmg": 0,
+            "reactionBonus": {}
           },
           "team": {
             "onlyWeapons": [
@@ -518,7 +554,9 @@
           "flat": []
         }
       ],
-      "flat": []
+      "flat": [],
+      "reactionBonus": {},
+      "procs": []
     },
     "twoPieceBuffs": [],
     "note": "Só vale para quem usa Catalisador ou Arco (o 4 peças é ignorado para os outros tipos de arma).",
@@ -545,10 +583,14 @@
       "hpPct": 0,
       "defPct": 0,
       "buffs": [],
-      "flat": []
+      "flat": [],
+      "reactionBonus": {
+        "superconduct": 1
+      },
+      "procs": []
     },
     "twoPieceBuffs": [],
-    "note": "Assume o +30% de dano Cryo do Supremo (10 s) sempre ativo. Os +100% de Supercondutor NÃO entram.",
+    "note": "Assume o +30% de dano Cryo do Supremo (10 s) sempre ativo. Os +100% de Supercondutor entram na tabela de reações.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
   {
@@ -572,10 +614,18 @@
       "hpPct": 0,
       "defPct": 0,
       "buffs": [],
-      "flat": []
+      "flat": [],
+      "reactionBonus": {
+        "overloaded": 0.4,
+        "electrocharged": 0.4,
+        "superconduct": 0.4,
+        "hyperbloom": 0.4,
+        "aggravate": 0.2
+      },
+      "procs": []
     },
     "twoPieceBuffs": [],
-    "note": "O bônus de dano de Sobrecarga, Eletrocarregado, Supercondutor, Hiperflorescer e Intensificar e a redução de recarga da habilidade NÃO entram: o motor ainda não aceita bônus por reação vindo de set.",
+    "note": "+40% de Sobrecarga, Eletrocarregado, Supercondutor e Hiperflorescer (tabela de reações) e +20% no bônus de Intensificar (nos golpes com Intensificar). A redução de recarga da habilidade só muda a rotação. O bônus de Lunar-Carregado e Estelar-Conduct NÃO entra (mecânica Lunar/Estelar ainda não modelada).",
     "partial": true,
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
@@ -622,6 +672,10 @@
   },
   {
     "set": "Bloodstained Chivalry",
+    "twoPiece": {
+      "stat": "Physical DMG%",
+      "value": 0.25
+    },
     "twoPieceMore": [],
     "fourPiece": {
       "atkPct": 0,
@@ -659,15 +713,20 @@
             "defIgnore": 0,
             "atkFlat": 0,
             "hpFlat": 0,
-            "defFlat": 0
+            "defFlat": 0,
+            "physDmgPct": 0,
+            "physCritDmg": 0,
+            "reactionBonus": {}
           },
           "flat": []
         }
       ],
-      "flat": []
+      "flat": [],
+      "reactionBonus": {},
+      "procs": []
     },
     "twoPieceBuffs": [],
-    "note": "2 peças (\"Physical DMG +25%\") não entra: sem efeito em dano. +50% de DMG do Carregado por 10 s depois de derrotar um inimigo: faixa na linha do tempo, ligue na janela.",
+    "note": "+50% de DMG do Carregado por 10 s depois de derrotar um inimigo: faixa na linha do tempo, ligue na janela.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
   {
@@ -752,12 +811,17 @@
             "defIgnore": 0,
             "atkFlat": 0,
             "hpFlat": 0,
-            "defFlat": 0
+            "defFlat": 0,
+            "physDmgPct": 0,
+            "physCritDmg": 0,
+            "reactionBonus": {}
           },
           "flat": []
         }
       ],
-      "flat": []
+      "flat": [],
+      "reactionBonus": {},
+      "procs": []
     },
     "twoPieceBuffs": [],
     "note": "+35% de DMG elemental da equipe por 10 s depois de pegar um fragmento de Cristalizar: faixa na linha do tempo. Só um elemento por vez; ligue em quem tem o elemento do fragmento.",
@@ -783,7 +847,9 @@
       "hpPct": 0,
       "defPct": 0,
       "buffs": [],
-      "flat": []
+      "flat": [],
+      "reactionBonus": {},
+      "procs": []
     },
     "twoPieceBuffs": [],
     "note": "2 peças (\"Increases Shield Strength by 35%.\") não entra: sem efeito em dano. Assume personagem protegido por escudo.",
@@ -813,7 +879,9 @@
       "hpPct": 0,
       "defPct": 0,
       "buffs": [],
-      "flat": []
+      "flat": [],
+      "reactionBonus": {},
+      "procs": []
     },
     "twoPieceBuffs": [],
     "note": "Assume o bônus de 15 s depois da habilidade sempre ativo.",
@@ -844,7 +912,9 @@
         "em": 0
       },
       "buffs": [],
-      "flat": []
+      "flat": [],
+      "reactionBonus": {},
+      "procs": []
     },
     "twoPieceBuffs": [],
     "note": "ATK da equipe por 3 s depois da habilidade: só vale nas janelas de buff. A força do escudo NÃO entra.",
@@ -852,6 +922,10 @@
   },
   {
     "set": "Pale Flame",
+    "twoPiece": {
+      "stat": "Physical DMG%",
+      "value": 0.25
+    },
     "twoPieceMore": [],
     "fourPiece": {
       "atkPct": 0.18,
@@ -865,11 +939,42 @@
       "er": 0,
       "hpPct": 0,
       "defPct": 0,
-      "buffs": [],
-      "flat": []
+      "buffs": [
+        {
+          "id": "fisico",
+          "label": "2 stacks: dobro do DMG Físico",
+          "minConstellation": 0,
+          "scope": "self",
+          "timed": false,
+          "stats": {
+            "atkPct": 0,
+            "dmgPct": 0,
+            "critRate": 0,
+            "critDmg": 0,
+            "em": 0,
+            "er": 0,
+            "hpPct": 0,
+            "defPct": 0,
+            "dmgPctByType": {},
+            "critRateByType": {},
+            "critDmgByType": {},
+            "defIgnore": 0,
+            "atkFlat": 0,
+            "hpFlat": 0,
+            "defFlat": 0,
+            "physDmgPct": 0.25,
+            "physCritDmg": 0,
+            "reactionBonus": {}
+          },
+          "flat": []
+        }
+      ],
+      "flat": [],
+      "reactionBonus": {},
+      "procs": []
     },
     "twoPieceBuffs": [],
-    "note": "2 peças (\"Physical DMG is increased by 25%.\") não entra: sem efeito em dano. Assume 2 stacks (9% cada). O dobro do bônus de dano Físico de 2 peças com 2 stacks NÃO entra.",
+    "note": "Assume 2 stacks (9% de ATK cada) e, com eles, o bônus Físico de 2 peças dobrado (+25%).",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
   {
@@ -932,7 +1037,9 @@
           "flat": []
         }
       ],
-      "flat": []
+      "flat": [],
+      "reactionBonus": {},
+      "procs": []
     },
     "twoPieceBuffs": [],
     "note": "DMG do Supremo = 25% da Recarga total, até 75%.",
@@ -958,7 +1065,9 @@
       "hpPct": 0,
       "defPct": 0.24,
       "buffs": [],
-      "flat": []
+      "flat": [],
+      "reactionBonus": {},
+      "procs": []
     },
     "twoPieceBuffs": [],
     "note": "Assume os 4 stacks de Curiosity (+24% de DEF e +24% de DMG Geo). O DMG Geo vale como DMG% geral: use em personagens Geo.",
@@ -980,7 +1089,9 @@
       "hpPct": 0,
       "defPct": 0,
       "buffs": [],
-      "flat": []
+      "flat": [],
+      "reactionBonus": {},
+      "procs": []
     },
     "twoPieceBuffs": [],
     "note": "2 peças (\"Healing Bonus +15%.\") não entra: sem efeito em dano. O dano extra por cura (Sea-Dyed Foam) NÃO entra: o motor não acompanha cura.",
@@ -1007,7 +1118,9 @@
       "hpPct": 0,
       "defPct": 0,
       "buffs": [],
-      "flat": []
+      "flat": [],
+      "reactionBonus": {},
+      "procs": []
     },
     "twoPieceBuffs": [],
     "note": "Só os 8% de ATK do Supremo. Os +10% por perda de HP (até 4 vezes) NÃO entram.",
@@ -1033,7 +1146,9 @@
       "hpPct": 0,
       "defPct": 0,
       "buffs": [],
-      "flat": []
+      "flat": [],
+      "reactionBonus": {},
+      "procs": []
     },
     "twoPieceBuffs": [],
     "note": "O bônus do Normal por chance (36%, +70% do ATK) NÃO entra: depende de chance.",
@@ -1067,7 +1182,9 @@
         ]
       },
       "buffs": [],
-      "flat": []
+      "flat": [],
+      "reactionBonus": {},
+      "procs": []
     },
     "twoPieceBuffs": [],
     "note": "Reduz a RES Dendro do inimigo em 30% (assume sempre ativo).",
@@ -1114,7 +1231,10 @@
             "defIgnore": 0,
             "atkFlat": 0,
             "hpFlat": 0,
-            "defFlat": 0
+            "defFlat": 0,
+            "physDmgPct": 0,
+            "physCritDmg": 0,
+            "reactionBonus": {}
           },
           "team": {
             "scale": {
@@ -1149,7 +1269,10 @@
             "defIgnore": 0,
             "atkFlat": 0,
             "hpFlat": 0,
-            "defFlat": 0
+            "defFlat": 0,
+            "physDmgPct": 0,
+            "physCritDmg": 0,
+            "reactionBonus": {}
           },
           "team": {
             "scale": {
@@ -1164,7 +1287,9 @@
           "flat": []
         }
       ],
-      "flat": []
+      "flat": [],
+      "reactionBonus": {},
+      "procs": []
     },
     "twoPieceBuffs": [],
     "note": "Faixas de 8 s depois de uma reação: ATK por aliado do mesmo elemento e Maestria por aliado de elemento diferente (até 3 cada). Ligue nas janelas.",
@@ -1195,7 +1320,9 @@
       "hpPct": 0,
       "defPct": 0,
       "buffs": [],
-      "flat": []
+      "flat": [],
+      "reactionBonus": {},
+      "procs": []
     },
     "twoPieceBuffs": [],
     "note": "Assume o bônus de 15 s depois do ataque carregado sempre ativo. A velocidade de ataque NÃO entra.",
@@ -1221,10 +1348,16 @@
       "hpPct": 0,
       "defPct": 0,
       "buffs": [],
-      "flat": []
+      "flat": [],
+      "reactionBonus": {
+        "bloom": 0.8,
+        "hyperbloom": 0.8,
+        "burgeon": 0.8
+      },
+      "procs": []
     },
     "twoPieceBuffs": [],
-    "note": "O bônus de dano de Florescer, Hiperflorescer e Brotar NÃO entra: o motor ainda não aceita bônus por reação vindo de set.",
+    "note": "Assume os 4 stacks: 40% × (1 + 4 × 25%) = +80% de Florescer, Hiperflorescer e Brotar (tabela de reações). O bônus de Lunar-Florescer NÃO entra (mecânica Lunar ainda não modelada).",
     "partial": true,
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
@@ -1249,7 +1382,9 @@
       "hpPct": 0,
       "defPct": 0,
       "buffs": [],
-      "flat": []
+      "flat": [],
+      "reactionBonus": {},
+      "procs": []
     },
     "twoPieceBuffs": [],
     "note": "Assume 3 stacks de Mirrored Nymph (ATK +25% e dano Hydro +15%).",
@@ -1278,7 +1413,9 @@
       "hpPct": 0,
       "defPct": 0,
       "buffs": [],
-      "flat": []
+      "flat": [],
+      "reactionBonus": {},
+      "procs": []
     },
     "twoPieceBuffs": [],
     "note": "Só os +10% de dano de habilidade e Supremo. O aumento por levar dano (até 5 stacks) NÃO entra.",
@@ -1309,7 +1446,9 @@
       "hpPct": 0,
       "defPct": 0,
       "buffs": [],
-      "flat": []
+      "flat": [],
+      "reactionBonus": {},
+      "procs": []
     },
     "twoPieceBuffs": [],
     "note": "Assume 3 stacks de +12% de Taxa Crítica (variação de HP).",
@@ -1337,7 +1476,9 @@
       "hpPct": 0,
       "defPct": 0,
       "buffs": [],
-      "flat": []
+      "flat": [],
+      "reactionBonus": {},
+      "procs": []
     },
     "twoPieceBuffs": [],
     "note": "Só os +25% de dano da habilidade em campo. Os +25% fora de campo NÃO entram.",
@@ -1359,7 +1500,9 @@
       "hpPct": 0,
       "defPct": 0,
       "buffs": [],
-      "flat": []
+      "flat": [],
+      "reactionBonus": {},
+      "procs": []
     },
     "twoPieceBuffs": [],
     "note": "2 peças (\"Healing Bonus +15%.\") não entra: sem efeito em dano. O bônus de dano por cura acumulada (Yearning) NÃO entra: o motor não acompanha cura.",
@@ -1386,7 +1529,9 @@
       "hpPct": 0,
       "defPct": 0,
       "buffs": [],
-      "flat": []
+      "flat": [],
+      "reactionBonus": {},
+      "procs": []
     },
     "twoPieceBuffs": [],
     "note": "Assume +20% de dano Geo depois da habilidade sempre ativo. O aumento com escudo de Cristalizar NÃO entra.",
@@ -1412,7 +1557,9 @@
       "hpPct": 0,
       "defPct": 0,
       "buffs": [],
-      "flat": []
+      "flat": [],
+      "reactionBonus": {},
+      "procs": []
     },
     "twoPieceBuffs": [],
     "note": "Assume 3 stacks de +18% de dano (Bond of Life).",
@@ -1438,7 +1585,9 @@
       "hpPct": 0,
       "defPct": 0,
       "buffs": [],
-      "flat": []
+      "flat": [],
+      "reactionBonus": {},
+      "procs": []
     },
     "twoPieceBuffs": [],
     "note": "Assume o bônus máximo de 50% de dano (fora de combate ou com inimigo em Queimadura).",
@@ -1502,7 +1651,9 @@
       "hpPct": 0,
       "defPct": 0,
       "buffs": [],
-      "flat": []
+      "flat": [],
+      "reactionBonus": {},
+      "procs": []
     },
     "twoPieceBuffs": [],
     "note": "Assume 5 stacks de +15% de dano do ataque imersivo.",
@@ -1532,7 +1683,9 @@
       "hpPct": 0,
       "defPct": 0,
       "buffs": [],
-      "flat": []
+      "flat": [],
+      "reactionBonus": {},
+      "procs": []
     },
     "twoPieceBuffs": [],
     "note": "Assume 0 de energia: +60% de DMG do Normal e do Supremo. No jogo o efeito de um deixa de valer por 6 s depois do outro.",
@@ -1558,7 +1711,9 @@
       "hpPct": 0,
       "defPct": 0,
       "buffs": [],
-      "flat": []
+      "flat": [],
+      "reactionBonus": {},
+      "procs": []
     },
     "twoPieceBuffs": [],
     "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela.",
@@ -1585,7 +1740,9 @@
       "hpPct": 0,
       "defPct": 0,
       "buffs": [],
-      "flat": []
+      "flat": [],
+      "reactionBonus": {},
+      "procs": []
     },
     "twoPieceBuffs": [],
     "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela.",
@@ -1612,7 +1769,9 @@
       "hpPct": 0,
       "defPct": 0,
       "buffs": [],
-      "flat": []
+      "flat": [],
+      "reactionBonus": {},
+      "procs": []
     },
     "twoPieceBuffs": [],
     "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela.",
@@ -1639,7 +1798,9 @@
       "hpPct": 0,
       "defPct": 0,
       "buffs": [],
-      "flat": []
+      "flat": [],
+      "reactionBonus": {},
+      "procs": []
     },
     "twoPieceBuffs": [],
     "note": "Só o +25% de ATK. O efeito extra de \"Witch's Homework\" NÃO entra.",
@@ -1665,7 +1826,9 @@
       "hpPct": 0,
       "defPct": 0,
       "buffs": [],
-      "flat": []
+      "flat": [],
+      "reactionBonus": {},
+      "procs": []
     },
     "twoPieceBuffs": [],
     "note": "Depende do Hexerei: Secret Rite, que o motor ainda não modela.",
@@ -1692,7 +1855,9 @@
       "hpPct": 0,
       "defPct": 0,
       "buffs": [],
-      "flat": []
+      "flat": [],
+      "reactionBonus": {},
+      "procs": []
     },
     "twoPieceBuffs": [],
     "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela.",
@@ -1740,12 +1905,17 @@
             "defIgnore": 0,
             "atkFlat": 0,
             "hpFlat": 0,
-            "defFlat": 0
+            "defFlat": 0,
+            "physDmgPct": 0,
+            "physCritDmg": 0,
+            "reactionBonus": {}
           },
           "flat": []
         }
       ],
-      "flat": []
+      "flat": [],
+      "reactionBonus": {},
+      "procs": []
     },
     "twoPieceBuffs": [],
     "note": "+16% de Taxa Crítica por 10 s depois de um Estelar-Swirl: faixa na linha do tempo. O dano de reação Estelar NÃO entra.",
@@ -1793,12 +1963,17 @@
             "defIgnore": 0,
             "atkFlat": 0,
             "hpFlat": 0,
-            "defFlat": 0
+            "defFlat": 0,
+            "physDmgPct": 0,
+            "physCritDmg": 0,
+            "reactionBonus": {}
           },
           "flat": []
         }
       ],
-      "flat": []
+      "flat": [],
+      "reactionBonus": {},
+      "procs": []
     },
     "twoPieceBuffs": [],
     "note": "+12% de ATK por 12 s depois de uma reação Estelar: faixa na linha do tempo. O bônus de dano Estelar NÃO entra.",

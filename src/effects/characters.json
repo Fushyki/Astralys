@@ -29,7 +29,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+30% de ATK por 10 s depois de um Nightsoul Burst de aliado: ligue na janela."
@@ -55,7 +58,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume o bônus máximo (+40% de DMG de quem está em campo, com 200 de Fighting Spirit): ligue na janela. No jogo ele decai em 20 s (a C4 tira o decaimento)."
@@ -81,7 +87,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+40% de ATK por 8 s depois de ganhar Fighting Spirit: ligue na janela."
@@ -107,7 +116,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+10% de DMG de quem está em campo (o bônus do A4 deixa de decair): ligue junto com o A4."
@@ -125,6 +137,7 @@
         "note": "O Flamestrider extra (200% do ATK) e o anel do Supremo não entram."
       }
     ],
+    "procs": [],
     "fonte_info": "planilha Mavuika_Iansan_Combo2, aba \"Personagens (efeitos)\". A1 +30% ATK (Lunaris p1); A4 +40% DMG decaindo (use 'Ajuste DMG%' na Rotação)."
   },
   {
@@ -216,7 +229,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+125 de Maestria dela."
@@ -242,7 +258,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+250 de Maestria dos aliados protegidos pelo Opal Shield ou seguidos pelo Itzpapa: ligue na janela."
@@ -288,7 +307,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume 40 pontos de Cifra (+60% de DMG Pyro e Hydro da equipe): ligue na janela. Os pontos sobem durante o Itzpapa."
@@ -314,7 +336,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume 40 pontos de Cifra (+100% de DMG dela): ligue na janela."
@@ -337,6 +362,7 @@
         "note": "O Obsidian Spiritvessel Skull (1.800% da Maestria) não entra."
       }
     ],
+    "procs": [],
     "fonte_info": "planilha Mavuika_Iansan_Combo2, aba \"Personagens (efeitos)\". Reduz RES Pyro/Hydro em 20%."
   },
   {
@@ -374,7 +400,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+20% de ATK por 15 s (Precise Movement): ligue na janela."
@@ -400,7 +429,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+30% de ATK do personagem ativo com a Iansan fora de campo: ligue na janela."
@@ -426,7 +458,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+25% de DMG do personagem ativo por 3 s (Extreme Force): ligue na janela."
@@ -449,6 +484,7 @@
         "note": "Só stacks de Surging Force."
       }
     ],
+    "procs": [],
     "fonte_info": "planilha Mavuika_Iansan_Combo2, aba \"Personagens (efeitos)\". Supremo: ATK fixo = 37% do ATK dela, máx. 810 (sua planilha)."
   },
   {
@@ -504,7 +540,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+15% de DMG Pyro de quem usa espada, montante ou lança dentro do Supremo: ligue só em quem se aplica. A infusão Pyro dos Normais não entra."
@@ -532,6 +571,7 @@
         "note": "O ataque extra do Passion Overload (135%) não entra."
       }
     ],
+    "procs": [],
     "fonte_info": "planilha Mavuika_Iansan_Combo2, aba \"Personagens (efeitos)\". Supremo: 139% do ATK base (nv 13 + C1, sua planilha)."
   },
   {
@@ -564,7 +604,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "ATK da equipe (menos a Raiden) por 10 s depois do Supremo: ligue nas janelas."
@@ -608,7 +651,10 @@
           "defIgnore": 0.6,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Ignora 60% da DEF do inimigo durante o Musou Isshin: ligue só na janela do Supremo (vale para todos os golpes dela dentro da janela)."
@@ -631,6 +677,7 @@
         "note": "Só recarga do Supremo dos aliados."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -663,7 +710,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "ATK ao pegar a pimenta (10 s): ligue nas janelas."
@@ -707,7 +757,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+15% de DMG Pyro durante o Pyronado: ligue nas janelas. Só personagens Pyro recebem."
@@ -730,6 +783,7 @@
         "note": "Só duração do Supremo (mais golpes: ajuste as execuções do Supremo na rotação)."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -762,7 +816,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume o máximo de +50% de DMG do personagem ativo (cresce 3,5% por segundo): ligue nas janelas."
@@ -788,7 +845,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume 4 inimigos marcados (+40% de HP máximo) por 25 s: ligue nas janelas."
@@ -814,7 +874,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "team": {
           "scale": {
@@ -848,6 +911,7 @@
         "note": "O Carregado do estado Mastermind (156% do dano) não entra."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -880,7 +944,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+12% de Taxa Crítica da equipe (menos a Hu Tao) por 8 s depois do Paramita: ligue nas janelas."
@@ -906,7 +973,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+33% de DMG Pyro com HP a 50% ou menos: ligue nas janelas."
@@ -932,7 +1002,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+12% de Taxa Crítica da equipe por 15 s depois de derrotar inimigo com Blood Blossom: ligue nas janelas."
@@ -997,7 +1070,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+100% de Taxa Crítica por 10 s quando o HP cai abaixo de 25%: ligue na janela em que isso acontece."
@@ -1015,6 +1091,7 @@
         "note": "O dano da Blood Blossom (10% do HP máximo) não entra."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -1047,7 +1124,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+20% de Taxa Crítica nas flechas seguintes (5 s): ligue nas janelas."
@@ -1076,7 +1156,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+20% de DMG Cryo dentro do Celestial Shower: ligue nas janelas. Só personagens Cryo recebem."
@@ -1117,7 +1200,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume o DMG recebido pelo inimigo no máximo (+25%) dentro da área da Chuva Celestial: ligue na janela. Entra como DMG% da equipe."
@@ -1135,6 +1221,7 @@
         "note": "Só dispensa a carga da flecha."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -1170,7 +1257,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+30% de DMG de Normal/Carregado por 6 s depois da habilidade: ligue nas janelas."
@@ -1196,7 +1286,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+18% de DMG Cryo por 10 s depois do Senho: ligue nas janelas."
@@ -1234,7 +1327,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+298% de DMG do Carregado a cada 10 s (apagado 0,5 s depois do Carregado acertar): ligue só no Carregado que o recebe."
@@ -1252,6 +1348,7 @@
         "note": "Os 2 Frostflake extras (20% do dano da tempestade cada) não entram."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -1284,7 +1381,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+20% de DMG Hydro, sempre."
@@ -1327,7 +1427,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+50% de DMG da habilidade durante o Supremo: ligue na janela do Supremo."
@@ -1350,6 +1453,7 @@
         "note": "Só energia (e a terceira espada de chuva já tem dano no kit)."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -1382,7 +1486,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+125 de Maestria da equipe por 10 s depois do Supremo: ligue nas janelas."
@@ -1408,7 +1515,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+50% de DEF por 20 s depois da habilidade (o dano dele escala com DEF): ligue na janela."
@@ -1436,7 +1546,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+30% de DMG do Imersivo de quem está no campo do Solar Isotoma: ligue na janela."
@@ -1462,7 +1575,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+17% de DMG de quem está no campo e protegido por escudo de Cristalizar: ligue na janela."
@@ -1480,6 +1596,7 @@
         "note": "O dano extra por DEF (30% da DEF por stack, até 4) do Supremo e das Flores Fatais não entra."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -1512,7 +1629,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+20% de DMG Pyro durante a infusão do Supremo: ligue nas janelas."
@@ -1538,7 +1658,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+15% de DMG contra inimigos com mais de 50% de HP: ligue nas janelas."
@@ -1564,7 +1687,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume 3 stacks de +10% de ATK (ao levar dano): ligue nas janelas."
@@ -1592,7 +1718,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+40% de DMG da habilidade no segundo Searing Onslaught do combo: ligue só nele."
@@ -1620,7 +1749,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+30% de DMG dos 2 Normais seguintes à habilidade: ligue só neles. A velocidade de ataque não entra."
@@ -1633,6 +1765,7 @@
         "note": "Só estamina e duração."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -1665,7 +1798,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+60% de ATK por 12 s depois das faíscas: ligue nas janelas."
@@ -1701,7 +1837,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+50% de DMG Pyro dela por 25 s depois do Supremo: ligue na janela. O bônus de Hexerei não entra."
@@ -1730,7 +1869,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+10% de DMG Pyro dos outros por 25 s depois do Supremo: ligue na janela. Só personagens Pyro recebem."
@@ -1753,6 +1895,7 @@
         "note": "A explosão ao fim do Supremo (555% do ATK) não entra."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -1788,7 +1931,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+20% de DMG Electro por 5 s depois dos raios das Sakuras: ligue nas janelas. Só personagens Electro recebem."
@@ -1835,7 +1981,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+50% de DMG Electro da equipe por 10 s depois de Supercondutor ou Estelar-Condução: ligue na janela. Só personagens Electro recebem; o bônus do dano Estelar não entra."
@@ -1861,7 +2010,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume Sesshou Sakura no nível 4 (+200 de Maestria dela e de quem está no campo): ligue na janela. No nível 1 a 3 o valor é 60, 90 e 120."
@@ -1887,7 +2039,10 @@
           "defIgnore": 0.6,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Os Sesshou Sakura ignoram 60% da DEF: ligue só nas janelas da habilidade (vale para todos os golpes dela dentro da janela). O Dano Crítico Estelar não entra."
@@ -1900,6 +2055,7 @@
         "note": "O raio extra (40% do ATK) com 3 Sesshou Sakura não entra."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -1919,7 +2075,7 @@
         "timed": true,
         "stats": {
           "atkPct": 0,
-          "dmgPct": 0.3,
+          "dmgPct": 0,
           "critRate": 0,
           "critDmg": 0,
           "em": 0,
@@ -1932,10 +2088,13 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0.3,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
-        "note": "+30% de DMG Físico (vale para todo o dano dela) por 6 s por stack gasto: ligue nas janelas."
+        "note": "+30% de DMG Físico por 6 s por stack gasto: ligue nas janelas. Só vale nos golpes Físicos (marque o elemento Físico nos golpes dela que não são Cryo)."
       },
       {
         "id": "skill",
@@ -1970,14 +2129,49 @@
           ]
         },
         "flat": [],
-        "note": "Assume a redução de RES Cryo da versão segurada da habilidade sempre ativa (a Física não entra)."
+        "note": "Assume a redução de RES Cryo da versão segurada da habilidade sempre ativa."
+      },
+      {
+        "id": "skill-fis",
+        "label": "Eula: Lacerar (RES Física)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "level": {
+          "talent": "skill",
+          "table": [
+            0.16,
+            0.17,
+            0.18,
+            0.19,
+            0.2,
+            0.21,
+            0.22,
+            0.23,
+            0.24,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25,
+            0.25
+          ]
+        },
+        "resShred": {
+          "value": 1,
+          "elements": [
+            "Physical"
+          ]
+        },
+        "flat": [],
+        "note": "Assume a redução de RES Física da versão segurada da habilidade sempre ativa."
       }
     ],
     "notes": [
       {
         "src": "p1",
         "kind": "partial",
-        "note": "A espada de luz extra do Redemoinho (dano Físico). O dano Físico ainda não é modelado (o motor não tem o elemento Físico como padrão dos golpes de arma)."
+        "note": "A espada de luz extra do Redemoinho (dano Físico). O golpe é 50% do dano base de outro golpe (a espada do Supremo), ainda não modelado."
       },
       {
         "src": "p2",
@@ -1992,7 +2186,7 @@
       {
         "src": "const4",
         "kind": "partial",
-        "note": "+25% de dano das espadas de luz contra inimigo com menos de 50% de HP (Físico). O dano Físico ainda não é modelado (o motor não tem o elemento Físico como padrão dos golpes de arma)."
+        "note": "+25% de dano das espadas de luz contra inimigo com menos de 50% de HP (Físico). Depende do HP do inimigo e só vale para a espada do Supremo (não para todo dano Físico)."
       },
       {
         "src": "const6",
@@ -2000,6 +2194,7 @@
         "note": "Mais stacks de energia nas espadas de luz (dano Físico): não entra."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -2032,7 +2227,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume 4 stacks de +50 de Maestria: ligue nas janelas."
@@ -2078,7 +2276,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+10% de Taxa Crítica e +70% de Dano Crítico por 6 s quando gera Espelhos com o limite cheio: ligue na janela."
@@ -2101,6 +2302,7 @@
         "note": "Os +10% de DMG Dendro por Espelho gerado e +30 de Maestria dos aliados por Espelho consumido dependem do número de Espelhos: não entram."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -2133,7 +2335,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+25% de DEF da equipe por 12 s depois da habilidade: ligue nas janelas. Só importa para quem escala com DEF."
@@ -2162,7 +2367,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "team": {
           "scale": {
@@ -2259,7 +2467,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume o nível Crunch (+40% de Dano Crítico do dano Geo) por 12 s: ligue na janela. Só personagens Geo recebem."
@@ -2282,6 +2493,7 @@
         "note": "Só cura."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -2317,7 +2529,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+15% de DMG Cryo para o personagem ativo no campo: ligue nas janelas. Só personagens Cryo recebem."
@@ -2346,7 +2561,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+15% de DMG de habilidade e Supremo por 10 s (versão \"toque\"): ligue nas janelas. A versão \"segurar\" NÃO está modelada."
@@ -2375,7 +2593,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+15% de Dano Crítico Cryo no campo dela: ligue nas janelas."
@@ -2409,11 +2630,12 @@
         "resShred": {
           "value": 1,
           "elements": [
-            "Cryo"
+            "Cryo",
+            "Physical"
           ]
         },
         "flat": [],
-        "note": "Assume a redução de RES Cryo do campo do Supremo sempre ativa (a Física não entra)."
+        "note": "Assume a redução de RES Cryo e Física do campo do Supremo sempre ativa."
       }
     ],
     "notes": [
@@ -2433,6 +2655,7 @@
         "note": "Só cota do Icy Quill."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -2467,7 +2690,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+15% de DMG de Ataque Normal da equipe por 12 s: ligue nas janelas."
@@ -2493,7 +2719,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+20% de DEF por 12 s depois de Cristalizar: ligue na janela (o dano dela escala com DEF)."
@@ -2521,6 +2750,7 @@
         "note": "Só velocidade de ataque."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -2557,7 +2787,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+15% de DMG de Normal/Carregado/Imersivo por 6 s: ligue nas janelas."
@@ -2603,6 +2836,7 @@
         "note": "Só energia."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -2688,7 +2922,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "team": {
           "only": [
@@ -2726,7 +2963,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+50% de DMG do Supremo por 8 s: ligue na janela."
@@ -2744,6 +2984,7 @@
         "note": "Os +65% de dano do Luminous Illusion (um golpe da habilidade) não entram."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -2776,7 +3017,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume HP alto: o teto de +30% de DMG Hydro, sempre."
@@ -2804,7 +3048,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume 3 stacks de Past Draconic Glories (+60% de DMG do Carregado): ligue na janela."
@@ -2832,7 +3079,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume 3 stacks (+42% de Dano Crítico do Carregado): ligue na janela."
@@ -2855,6 +3105,7 @@
         "note": "As 2 correntes extras (10% do HP máximo cada) não entram."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -2887,7 +3138,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume 5 stacks de +6% de ATK (variação de HP): ligue nas janelas."
@@ -2915,7 +3169,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+50% de DMG do Carregado (Rebuke: Vaulting Fist) com HP abaixo de 60%: ligue só nesse Carregado."
@@ -2945,7 +3202,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+10% de Taxa Crítica e +80% de Dano Crítico no Carregado Rebuke: ligue só nele. O gelo extra não entra."
@@ -2968,6 +3228,7 @@
         "note": "Só cura e velocidade de ataque."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -3000,7 +3261,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume inimigo sob Pyro (+60% de DMG). Os +20% por outro personagem Pyro NÃO entram."
@@ -3026,7 +3290,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume 3 stacks de +20% de Dano Crítico: ligue nas janelas."
@@ -3064,6 +3331,7 @@
         "note": "O Pyrotechnic Strike: Reprised (80% do dano, conta como Carregado) não entra."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -3096,7 +3364,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+10% de Taxa Crítica e +70% de Dano Crítico por 12 s depois da habilidade: ligue nas janelas."
@@ -3142,7 +3413,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume 2 stacks (+20% de Taxa Crítica) com o Bond of Life em 100% ou mais: ligue na janela."
@@ -3190,7 +3464,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume o máximo (+200% de DMG do Last Lightfall): ligue na janela do Supremo."
@@ -3203,6 +3480,7 @@
         "note": "Os 2 ataques coordenados do Nightvigil Shade (30% do ATK, contam como Normal) não entram."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -3254,7 +3532,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+40% de DMG de Normal, Carregado e Imersivo por 4 s depois da habilidade: ligue na janela. A conversão para Geo não entra."
@@ -3280,7 +3561,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "team": {
           "scale": {
@@ -3323,7 +3607,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume 3 stacks de Crystal Shrapnel gastos (+36% de Taxa Crítica na habilidade): ligue na janela. O tiro do canhão não entra."
@@ -3346,6 +3633,7 @@
         "note": "O +45% de Dano Crítico por stack de Crystal Shrapnel acima de 3 não entra."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -3414,7 +3702,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+100% de Dano Crítico no Scalespiker Cannon (aqui conta nos golpes de habilidade dele)."
@@ -3442,7 +3733,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+70% de DMG do Supremo (Hail to the Almighty Dragonlord)."
@@ -3460,6 +3754,7 @@
         "note": "O salto do Scalespiker Cannon (700% do ATK) não entra."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -3492,7 +3787,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+20% de DMG Geo por 20 s depois de um construto Geo: ligue nas janelas."
@@ -3538,6 +3836,7 @@
         "note": "O Kinu dos Normais (dano extra) não entra."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -3572,7 +3871,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+40% de DMG da habilidade (Gale Blade) depois de segurar por mais de 1 s: ligue nas janelas."
@@ -3615,6 +3917,7 @@
         "note": "Só redução de dano recebido."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -3650,7 +3953,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+15% de DMG Hydro do personagem em campo durante a habilidade: ligue nas janelas. Só personagens Hydro recebem."
@@ -3683,6 +3989,7 @@
         "note": "Só reviver."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -3715,7 +4022,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+10% de DMG por 8 s depois de pegar partícula: ligue nas janelas."
@@ -3741,7 +4051,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+10% de Taxa Crítica contra inimigos com menos de 30% de HP: ligue nas janelas."
@@ -3767,7 +4080,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+10% de Taxa e +50% de Dano Crítico por 15 s depois de consumir Sigilos: ligue nas janelas."
@@ -3795,6 +4111,7 @@
         "note": "Só Recarga de Energia quando a energia está abaixo de 50%: depende do momento, não entra."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -3827,7 +4144,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+15% de ATK por 10 s depois de acertar ponto fraco com tiro mirado: ligue nas janelas."
@@ -3853,7 +4173,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+15% de ATK da equipe por 10 s depois da Chuva de Fogo: ligue nas janelas."
@@ -3881,7 +4204,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+10% de Taxa Crítica só no Supremo (Fiery Rain)."
@@ -3904,6 +4230,203 @@
         "note": "Só recarga e cargas da habilidade."
       }
     ],
+    "procs": [],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Xinyan",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "a4",
+        "label": "Xinyan A4",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0.15,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "note": "+15% de DMG Físico para quem está protegido pelo escudo da habilidade: ligue nas janelas."
+      },
+      {
+        "id": "c4",
+        "label": "Xinyan C4",
+        "minConstellation": 4,
+        "scope": "self",
+        "timed": false,
+        "resShred": {
+          "value": 0.15,
+          "elements": [
+            "Physical"
+          ]
+        },
+        "flat": [],
+        "note": "Assume a redução de RES Física (12 s) depois do golpe da habilidade sempre ativa."
+      }
+    ],
+    "notes": [
+      {
+        "src": "p1",
+        "kind": "utility",
+        "note": "Só requisito do escudo."
+      },
+      {
+        "src": "const1",
+        "kind": "utility",
+        "note": "Só velocidade de ataque."
+      },
+      {
+        "src": "const2",
+        "kind": "partial",
+        "note": "Taxa Crítica +100% só no dano Físico do Supremo: o motor não tem Taxa Crítica por elemento e tipo de golpe juntos."
+      },
+      {
+        "src": "const6",
+        "kind": "partial",
+        "note": "ATK extra só nos Carregados (50% da DEF): o motor ainda não tem ATK por tipo de golpe. A estamina não muda o dano."
+      }
+    ],
+    "procs": [],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Mika",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "a1",
+        "label": "Mika A1",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0.3,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "note": "Assume os 3 stacks de Detector (+10% de DMG Físico cada) no personagem em campo durante a Soulwind: ligue nas janelas."
+      },
+      {
+        "id": "a4",
+        "label": "Mika A4",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0.1,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "note": "+1 stack de Detector (+10% de DMG Físico, o valor por stack da A1): ligue nas janelas junto com a A1."
+      },
+      {
+        "id": "c6",
+        "label": "Mika C6",
+        "minConstellation": 6,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0.1,
+          "physCritDmg": 0.6,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "note": "+1 stack de Detector (+10% de DMG Físico) e +60% de Dano Crítico Físico para o personagem em campo durante a Soulwind: ligue nas janelas."
+      }
+    ],
+    "notes": [
+      {
+        "src": "const1",
+        "kind": "utility",
+        "note": "Só cura."
+      },
+      {
+        "src": "const2",
+        "kind": "utility",
+        "note": "Só gera stacks de Detector: os buffs Mika A1/A4 já assumem o máximo de stacks."
+      },
+      {
+        "src": "const4",
+        "kind": "utility",
+        "note": "Só energia."
+      }
+    ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -3924,11 +4447,12 @@
         "resShred": {
           "value": 0.24,
           "elements": [
-            "Anemo"
+            "Anemo",
+            "Physical"
           ]
         },
         "flat": [],
-        "note": "Assume a redução de RES Anemo (10 s) sempre ativa. A de RES Física não entra."
+        "note": "Assume a redução de RES Anemo e Física (10 s) sempre ativa."
       },
       {
         "id": "c4",
@@ -3954,7 +4478,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+25% de DMG Anemo por 10 s depois da habilidade ou do Supremo: ligue nas janelas."
@@ -3995,7 +4522,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+100% de Dano Crítico contra alvos atingidos pelo Supremo: ligue nas janelas."
@@ -4018,6 +4548,7 @@
         "note": "As flechas extras (33% e 20% da original) não entram."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -4053,7 +4584,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+15% de DMG de Normal/Carregado por 10 s depois de contra-atacar no tempo certo: ligue nas janelas."
@@ -4096,6 +4630,7 @@
         "note": "O dano extra de 20% Electro dos Normais depois de levar dano não entra."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -4128,7 +4663,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume o teto de +25% de DMG (cresce 5% a cada 3 s do Supremo): ligue nas janelas."
@@ -4156,7 +4694,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume 3 stacks (+45% de DMG da habilidade): ligue nas janelas."
@@ -4186,7 +4727,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "level": {
           "talent": "burst",
@@ -4234,6 +4778,7 @@
         "note": "Só cargas da habilidade."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -4269,7 +4814,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+12% de DMG Geo por 10 s depois de atravessar a Tela de Jade: ligue nas janelas. Só personagens Geo recebem."
@@ -4302,6 +4850,7 @@
         "note": "Só Jades Estelares (o Carregado já usa o kit)."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -4336,7 +4885,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+15% de DMG de Ataque Carregado, sempre."
@@ -4420,6 +4972,7 @@
         "note": "A explosão da Couraça (400% do ATK) não entra."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -4455,7 +5008,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume o inimigo sempre sob Cryo (+15% de DMG de Normal/Carregado). Vale para a Qiqi, não para a equipe."
@@ -4488,6 +5044,7 @@
         "note": "Só reviver."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -4537,7 +5094,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+15% de DMG do Supremo contra inimigos com menos HP% que ele: ligue nas janelas."
@@ -4565,6 +5125,7 @@
         "note": "Só energia."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -4599,7 +5160,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+15% de DMG da habilidade, sempre."
@@ -4625,7 +5189,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+200 de Maestria da equipe dentro do campo com HP acima de 50%: ligue nas janelas."
@@ -4653,6 +5220,7 @@
         "note": "Só tempo de mira."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -4685,7 +5253,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+80 de Maestria da equipe por 12 s depois do Ataque Carregado da Mona: ligue nas janelas."
@@ -4711,7 +5282,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+15% de Taxa Crítica da equipe contra inimigos com Presságio: ligue nas janelas."
@@ -4739,7 +5313,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume o teto de +180% de DMG do próximo Ataque Carregado: ligue nas janelas. Os 200% extras contra Presságio não entram."
@@ -4783,7 +5360,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "level": {
           "talent": "burst",
@@ -4821,6 +5401,7 @@
         "note": "Os +15% de dano de Vaporizar, Eletrocarregado e outras reações NÃO entram (o motor ainda não aceita bônus por reação vindo de constelação)."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -4853,7 +5434,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+15% de Taxa Crítica por 8 s depois da habilidade: ligue nas janelas. Os +15% de Recarga não entram."
@@ -4879,7 +5463,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+25% de ATK por 10 s depois de uma reação com Electro: ligue nas janelas."
@@ -4905,7 +5492,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume 4 efeitos independentes ativos (+24% de DMG Electro): ligue nas janelas."
@@ -4928,6 +5518,7 @@
         "note": "Só partículas."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -4960,7 +5551,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+50 de Maestria dos demais com o elemento absorvido pelo Espalhar: ligue nas janelas em que o elemento bate. A parte de 20% da Maestria da Sucrose (A4) ainda não entra."
@@ -4986,7 +5580,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+20% de DMG do elemento absorvido durante o Supremo: ligue nas janelas em que o elemento bate com o de quem ataca."
@@ -5027,6 +5624,7 @@
         "note": "Só recarga da habilidade."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -5038,6 +5636,21 @@
     "em": 0,
     "appliesToSelf": false,
     "buffs": [
+      {
+        "id": "c6",
+        "label": "Rosaria C6",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": false,
+        "resShred": {
+          "value": 0.2,
+          "elements": [
+            "Physical"
+          ]
+        },
+        "flat": [],
+        "note": "Assume a redução de RES Física do Supremo (10 s) sempre ativa."
+      },
       {
         "id": "a1",
         "label": "Rosaria A1",
@@ -5059,7 +5672,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+12% de Taxa Crítica por 5 s depois de acertar pelas costas: ligue nas janelas."
@@ -5085,7 +5701,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume o teto de +15% de Taxa Crítica dos demais por 10 s depois do Supremo (o valor real é 15% da Taxa da Rosaria): ligue nas janelas."
@@ -5113,7 +5732,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+10% de DMG de Normal por 4 s depois de um acerto crítico: ligue nas janelas."
@@ -5129,13 +5751,9 @@
         "src": "const4",
         "kind": "utility",
         "note": "Só energia."
-      },
-      {
-        "src": "const6",
-        "kind": "partial",
-        "note": "Redução de RES Física. O dano Físico ainda não é modelado (o motor não tem o elemento Físico como padrão dos golpes de arma)."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -5168,7 +5786,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume 10 stacks (+20% de DMG Pyro) durante o Niwabi: ligue nas janelas."
@@ -5194,7 +5815,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+10% de ATK da equipe por 15 s mais 1% por stack da A1; assume 10 stacks (+20%): ligue nas janelas."
@@ -5220,7 +5844,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+20% de ATK por 20 s depois de derrotar inimigo sob a Marca Dourada: ligue nas janelas."
@@ -5246,7 +5873,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+25% de DMG Pyro por 6 s depois de um acerto crítico Pyro: ligue nas janelas."
@@ -5264,6 +5894,7 @@
         "note": "A flecha extra do Normal (60% do dano original, 50% de chance) não entra."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -5296,7 +5927,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+40% de DMG Hydro por 4 s quando Normal/Carregado curam alguém com 80% de HP ou mais: ligue nas janelas."
@@ -5329,6 +5963,7 @@
         "note": "Só velocidade de ataque e energia."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -5364,7 +5999,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+60% de Dano Crítico Electro de quem recebeu o bônus de ATK do Tengu: ligue nas janelas. O bônus de ATK em si depende do ATK base da Sara e não entra."
@@ -5435,6 +6073,7 @@
         "note": "Os Stormcluster extras do Supremo (de 4 para 6) não entram: ajuste as execuções do Supremo."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -5467,7 +6106,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+20% de ATK e +20% de DEF da equipe por 10 s depois do Supremo: ligue nas janelas."
@@ -5533,7 +6175,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+70% de Dano Crítico de Ataque Carregado, sempre."
@@ -5574,6 +6219,7 @@
         "note": "Só recarga e energia."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -5606,7 +6252,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+80 de Maestria dos demais por 10 s depois do Golpe: ligue nas janelas."
@@ -5636,7 +6285,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume 4 stacks (+16% de Taxa Crítica) e Convicção (+32% de Dano Crítico) no Heartstopper Strike (habilidade): ligue na janela."
@@ -5664,6 +6316,7 @@
         "note": "Só energia."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -5696,7 +6349,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+12% de DMG elemental da equipe por 15 s depois da habilidade ou Supremo: ligue nas janelas."
@@ -5760,6 +6416,7 @@
         "note": "O ataque coordenado com Cat Grass Cardamom (200% do ATK, conta como Supremo) não entra."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -5792,7 +6449,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+16% de ATK por 10 s depois do efeito Coil: ligue nas janelas."
@@ -5818,7 +6478,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+8% de ATK dos demais por 10 s: ligue nas janelas."
@@ -5844,7 +6507,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume o teto de +35% de DMG Cryo (3,5% por segundo no estado Gelo Veloz): ligue nas janelas."
@@ -5882,6 +6548,7 @@
         "note": "Sem efeito no jogo: a constelação da Aloy não existe (texto de placeholder)."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -5916,7 +6583,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+40% de DMG da habilidade contra inimigos com 50% de HP ou menos: ligue nas janelas."
@@ -5944,7 +6614,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "level": {
           "talent": "burst",
@@ -6066,7 +6739,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+50% de HP máximo com 3 ou mais stacks de Namisen: ligue na janela do estado da habilidade."
@@ -6094,6 +6770,7 @@
         "note": "Os 2 Shunsuiken extras (450% do ATK cada) não entram."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -6126,7 +6803,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+60 de Maestria dos demais por 12 s depois do Supremo: ligue nas janelas."
@@ -6159,6 +6839,7 @@
         "note": "O miniatura Cuilein-Anbar (200% do ATK) não entra."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -6191,7 +6872,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+50 de Maestria por 4 s depois de uma Flecha de Guirlanda: ligue nas janelas."
@@ -6217,7 +6901,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+20% de DMG Dendro com inimigos dentro do campo da Mina: ligue nas janelas."
@@ -6243,7 +6930,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+60 de Maestria da equipe por 8 s depois do Supremo: ligue nas janelas. Os +60 extras por reação não entram."
@@ -6290,7 +6980,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+15% de Taxa Crítica de Ataque Carregado, sempre."
@@ -6303,6 +6996,7 @@
         "note": "A flecha Clusterbloom extra (150% do ATK) não entra."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -6337,7 +7031,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+35% de DMG da habilidade com o Julgamento ativo: ligue nas janelas. Os 3 raios extras não entram."
@@ -6363,7 +7060,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume 5 stacks (+50% de DMG Electro) por 4 s depois de acertos Normais: ligue nas janelas."
@@ -6386,6 +7086,7 @@
         "note": "Os Duststalker Bolt (dano extra por stack) não entram."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -6418,7 +7119,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume 1 inimigo marcado pelas Sementes (+100 de Maestria): ligue nas janelas."
@@ -6484,6 +7188,7 @@
         "note": "O Tri-Karma Karmic Oblivion (200% do ATK + 400% da Maestria) não entra."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -6516,7 +7221,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+30% de ATK no estado Windfavored se a habilidade tocou Pyro: ligue nas janelas."
@@ -6542,7 +7250,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+20% de Taxa Crítica no estado Windfavored se a habilidade tocou Cryo: ligue nas janelas."
@@ -6570,7 +7281,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume o bônus máximo de +200% de DMG do Supremo (depende dos pontos Kuugoryoku gastos): ligue na janela."
@@ -6598,6 +7312,7 @@
         "note": "O Fushoudan extra (40% do dano original) não entra."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -6633,7 +7348,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+40% de Dano Crítico Anemo de quem está sob o Benefício do Vento: ligue nas janelas. Só personagens Anemo recebem."
@@ -6662,7 +7380,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "level": {
           "talent": "burst",
@@ -6750,6 +7471,7 @@
         "note": "Só energia."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -6785,7 +7507,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+15% de DMG Dendro por 8 s depois da explosão dos rabanetes: ligue nas janelas. Só personagens Dendro recebem."
@@ -6832,6 +7557,7 @@
         "note": "O Mega Radish (75% do ATK) não entra."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -6864,7 +7590,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume 4 stacks (+100 de Maestria) durante o Painted Dome: ligue nas janelas."
@@ -6897,6 +7626,7 @@
         "note": "A Luz de Pairidaeza (61,8% do ATK) não entra."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -6929,7 +7659,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+25% de DMG Dendro com o personagem em campo acima de 50% de HP (assumido sempre)."
@@ -6955,7 +7688,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+80 de Maestria da equipe por 15 s depois do Supremo: ligue nas janelas."
@@ -6983,6 +7719,7 @@
         "note": "O dano dos Spiritveins (+8% do HP máximo) não entra."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -7018,7 +7755,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+20% de DMG Anemo por 6 s depois do Enigma Thrust: ligue nas janelas."
@@ -7044,7 +7784,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "team": {
           "scale": {
@@ -7083,7 +7826,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+15% de DMG do Supremo depois da Conversão Elemental da caixa: ligue na janela."
@@ -7106,6 +7852,7 @@
         "note": "Só cargas."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -7138,7 +7885,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume 2 stacks (+18% de ATK): ligue nas janelas."
@@ -7164,7 +7914,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume 3 stacks (+36% de Dano Crítico): ligue nas janelas."
@@ -7192,7 +7945,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+15% de Taxa Crítica do Shattering Pressure (habilidade), sempre."
@@ -7220,7 +7976,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+40% de DMG da habilidade por 5 s depois de Estilhaçar: ligue na janela."
@@ -7238,6 +7997,7 @@
         "note": "Só energia."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -7274,7 +8034,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume 3 stacks (+60% de DMG Pyro/Electro) por 8 s depois da cura: ligue nas janelas. Só personagens Pyro/Electro recebem."
@@ -7346,6 +8109,7 @@
         "note": "Só recarga."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -7380,7 +8144,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+20% de DMG do Plunging da habilidade com HP de 50% ou mais: ligue nas janelas."
@@ -7406,7 +8173,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+20% de ATK por 5 s depois de cura com overflow: ligue nas janelas."
@@ -7436,7 +8206,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+20% de Taxa e +40% de Dano Crítico do Plunging da habilidade, sempre."
@@ -7459,6 +8232,7 @@
         "note": "Só energia."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -7491,7 +8265,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+20% de ATK por 15 s depois do Skyladder: ligue nas janelas."
@@ -7519,7 +8296,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume 4 stacks (+10% de Taxa Crítica de Plunging da equipe) por 20 s: ligue nas janelas."
@@ -7547,7 +8327,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume 3 Skyladders (+70% de Dano Crítico do Driftcloud Wave): ligue na janela."
@@ -7570,6 +8353,7 @@
         "note": "Só cura."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -7605,7 +8389,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+8% de DMG Hydro por 18 s depois da habilidade: ligue nas janelas. O dano fixo por Convalescência não entra."
@@ -7681,6 +8468,7 @@
         "note": "Só duração."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -7713,7 +8501,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+40% de DMG Pyro em combate, sempre."
@@ -7745,7 +8536,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+10% de Taxa e +70% de Dano Crítico de Normal e Supremo por 20 s depois do All Is Ash: ligue nas janelas."
@@ -7773,6 +8567,7 @@
         "note": "Só recarga e energia."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -7805,7 +8600,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume 2 stacks (+30% de DMG Electro): ligue nas janelas."
@@ -7831,7 +8629,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+80 de Maestria da equipe por 10 s (acertando 2 ou mais inimigos): ligue nas janelas."
@@ -7878,7 +8679,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+15% de Taxa Crítica nos Shadowpiercing Shots (Carregados)."
@@ -7896,6 +8700,7 @@
         "note": "Só energia."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -7930,7 +8735,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+20% de DMG da habilidade, sempre. O Cleardew Cologne da A1 não entra."
@@ -7987,6 +8795,7 @@
         "note": "O DMG extra dos Normais e Carregados (300% do ATK) e a conversão para Dendro não entram."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -8022,7 +8831,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+20% de DMG Geo por 12 s depois de um Nightsoul Burst: ligue nas janelas."
@@ -8066,7 +8878,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume 1 inimigo (+8% de DEF): ligue na janela. Com 4 ou mais inimigos é 20%."
@@ -8089,6 +8904,7 @@
         "note": "A explosão ao quebrar o escudo (200% da DEF) não entra."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -8123,7 +8939,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+75% de DMG do Supremo, sempre."
@@ -8184,6 +9003,7 @@
         "note": "Só remove o limite de uso do C1 (aplicado como se fosse sempre) ."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -8219,7 +9039,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+30% de DMG de Normal/Plunging com menos de 2 Amostras alteradas no Nightsoul: ligue nas janelas."
@@ -8248,7 +9071,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+50% de DMG para personagens Geo com a Amostra Geo ativa: ligue nas janelas."
@@ -8277,7 +9103,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+45% de ATK para personagens Pyro com a Amostra Pyro ativa: ligue nas janelas."
@@ -8306,7 +9135,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+45% de HP máximo para personagens Hydro com a Amostra Hydro ativa: ligue nas janelas."
@@ -8335,7 +9167,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+60% de Dano Crítico para personagens Cryo com a Amostra Cryo ativa: ligue nas janelas."
@@ -8361,7 +9196,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+20% de DEF por 15 s depois do Nightsoul Burst de um aliado: ligue na janela."
@@ -8403,6 +9241,7 @@
         "note": "O Blooming Blessing dos aliados (65% da DEF dela nos Normais, Carregados e Imersivos deles) não entra: dano fixo que vem de outro personagem."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -8438,7 +9277,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+8% de DMG Electro por 9 s depois do Supremo (1 inimigo atingido): ligue nas janelas. Cada inimigo extra soma +8% até 32%."
@@ -8464,7 +9306,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume 3 stacks (+30% de ATK do personagem em campo): ligue nas janelas."
@@ -8492,6 +9337,7 @@
         "note": "Só energia e velocidade do Oculus."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -8524,7 +9370,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+60 de Maestria da equipe por 12 s depois do Supremo: ligue nas janelas."
@@ -8588,6 +9437,7 @@
         "note": "Só cargas."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -8620,7 +9470,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+100 de Maestria por 4 s quando aliados acertam com outro elemento: ligue nas janelas."
@@ -8667,6 +9520,7 @@
         "note": "O crítico das reações de Espalhar e o bônus por Maestria não entram."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -8699,7 +9553,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume 2 stacks (+70% de ATK) depois de Nightsoul Burst: ligue nas janelas."
@@ -8727,7 +9584,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+100% de DMG do Supremo com Fiery Passion ou Apex Drive ativo: ligue nas janelas."
@@ -8759,7 +9619,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+10% de Taxa e +100% de Dano Crítico de Plunging e Supremo, sempre."
@@ -8796,6 +9659,7 @@
         "note": "Só energia e resistência a interrupção."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -8828,7 +9692,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+80 de Maestria por 10 s depois de um Nightsoul Burst: ligue nas janelas."
@@ -8854,7 +9721,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+100 de Maestria por 15 s depois do Supremo: ligue nas janelas."
@@ -8882,6 +9752,7 @@
         "note": "O Tonicshot extra (120% do ATK, conta como Normal) não entra."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -8914,7 +9785,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+70% de ATK por 12,5 s depois do Havoc: Extinction no modo Sete Fases: ligue nas janelas."
@@ -8942,7 +9816,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume 3 stacks (+70% de DMG dos Normais no Seven-Phase Flash): ligue na janela."
@@ -8970,7 +9847,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume 3 stacks (+60% de DMG do Supremo): ligue na janela."
@@ -8996,7 +9876,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume 3 stacks (+40% de ATK): ligue na janela."
@@ -9019,6 +9902,7 @@
         "note": "Os ataques coordenados por Havoc: Sever não entram."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -9051,7 +9935,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+20% de ATK, sempre. O aumento da Maestria por ATK não entra."
@@ -9098,6 +9985,7 @@
         "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -9130,7 +10018,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+80 de Maestria dela e do personagem em campo por 15 s depois da habilidade ou Supremo: ligue nas janelas."
@@ -9176,6 +10067,7 @@
         "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -9208,7 +10100,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+100 de Maestria por 8 s com 3 stacks de Véu da Falsidade (Ascendant Gleam): ligue nas janelas."
@@ -9251,6 +10146,7 @@
         "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -9301,7 +10197,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+50% de DMG Pyro por 6 s depois de uma reação: ligue nas janelas. O bônus do elemento da reação não entra."
@@ -9329,7 +10228,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+40% de DMG do Supremo, sempre."
@@ -9374,7 +10276,10 @@
           "defIgnore": 0.3,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Ignora 30% da DEF do inimigo no Supremo: ligue só na janela do Supremo. A redução extra de DEF não entra."
@@ -9392,6 +10297,7 @@
         "note": "A redução de 30% de DEF do inimigo (6 s) e o dano extra do Principle of Darkness não entram."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -9424,7 +10330,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+100 de Maestria do personagem curado (HP acima de 70%) por 6 s: ligue nas janelas."
@@ -9457,6 +10366,7 @@
         "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -9489,7 +10399,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume 3 stacks (+15% de Taxa Crítica) por 10 s: ligue nas janelas."
@@ -9515,7 +10428,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+40% de HP máximo por 8 s depois do Gravity Interference: ligue na janela."
@@ -9543,6 +10459,7 @@
         "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -9578,7 +10495,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+5% de Taxa e +10% de Dano Crítico Geo dos demais por 20 s depois da habilidade ou Supremo: ligue nas janelas. Só personagens Geo recebem."
@@ -9607,7 +10527,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "A C6 troca o bônus da A1 por +10% de Taxa e +30% de Dano Crítico; este buff soma só a diferença (+5% e +20%) sobre o da A1. Ligue nas mesmas janelas."
@@ -9635,6 +10558,7 @@
         "note": "+200 de DEF dos aliados: o motor não tem DEF fixa de buff de equipe neste caso (em breve)."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -9670,7 +10594,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume 4 stacks (+30% de DMG de Normal/Carregado): ligue nas janelas."
@@ -9699,7 +10626,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+20% de DMG Anemo por 10 s depois de um Espalhar: ligue nas janelas. O bônus do elemento absorvido não entra."
@@ -9725,7 +10655,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume 4 stacks de Azure Fang's Oath (+80% de Dano Crítico): ligue nas janelas."
@@ -9762,6 +10695,7 @@
         "note": "O golpe extra de 800% do ATK não entra."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -9794,7 +10728,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+15% de ATK por 8 s depois de aliado causar reação Cryo: ligue nas janelas."
@@ -9820,7 +10757,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+15% de ATK do aliado que causou a reação Cryo por 8 s: ligue nas janelas."
@@ -9846,7 +10786,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+200 de Maestria dos demais por 8 s depois do golpe da Lâmina do Mal: ligue nas janelas."
@@ -9874,6 +10817,7 @@
         "note": "O Joy máximo e o dano da habilidade especial não entram."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -9921,7 +10865,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+16% de Recarga de Energia."
@@ -9949,6 +10896,7 @@
         "note": "Só redução de dano recebido."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -9981,7 +10929,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+10% de Taxa Crítica da equipe dentro do raio de Wake of Earth: ligue nas janelas."
@@ -10014,6 +10965,7 @@
         "note": "Só duração."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -10068,6 +11020,7 @@
         "note": "O Falling Thunder reforçado (200% do dano) não entra."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -10100,7 +11053,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume 10 níveis de Luz de Lótus (+60 de Maestria) dentro da área da Lâmpada: ligue nas janelas."
@@ -10129,7 +11085,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+12% de DMG Dendro do personagem sob a Luz de Lótus: ligue nas janelas. O bônus extra do elemento transfigurado não entra."
@@ -10188,6 +11147,7 @@
         "note": "Só stacks de Overflowing Lotuslight."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -10220,7 +11180,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+6% de DMG do personagem em campo com o Limiar ativo: ligue nas janelas. Os +9% extras com Bênção Nightsoul não entram."
@@ -10249,7 +11212,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+20% de DMG Pyro por 9 s depois do Supremo: ligue nas janelas."
@@ -10279,7 +11245,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+40% de Dano Crítico de Normal, Carregado e Imersivo no Nightsoul's Blessing: ligue na janela. A conversão para Pyro não entra."
@@ -10302,6 +11271,7 @@
         "note": "Só pontos de Nightsoul."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -10349,7 +11319,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+16% de Recarga de Energia."
@@ -10377,6 +11350,7 @@
         "note": "Só redução de dano recebido."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -10409,7 +11383,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+10% de Taxa Crítica da equipe dentro do raio de Wake of Earth: ligue nas janelas."
@@ -10442,6 +11419,7 @@
         "note": "Só duração."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -10496,6 +11474,7 @@
         "note": "O Falling Thunder reforçado (200% do dano) não entra."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -10528,7 +11507,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume 10 níveis de Luz de Lótus (+60 de Maestria) dentro da área da Lâmpada: ligue nas janelas."
@@ -10557,7 +11539,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+12% de DMG Dendro do personagem sob a Luz de Lótus: ligue nas janelas. O bônus extra do elemento transfigurado não entra."
@@ -10616,6 +11601,7 @@
         "note": "Só stacks de Overflowing Lotuslight."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -10648,7 +11634,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+6% de DMG do personagem em campo com o Limiar ativo: ligue nas janelas. Os +9% extras com Bênção Nightsoul não entram."
@@ -10677,7 +11666,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+20% de DMG Pyro por 9 s depois do Supremo: ligue nas janelas."
@@ -10707,7 +11699,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+40% de Dano Crítico de Normal, Carregado e Imersivo no Nightsoul's Blessing: ligue na janela. A conversão para Pyro não entra."
@@ -10730,6 +11725,7 @@
         "note": "Só pontos de Nightsoul."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -10781,7 +11777,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+40% de Dano Crítico de Hydro e Geo por 8 s depois do Moondrift Harmony: ligue nas janelas."
@@ -10807,7 +11806,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+25% de DEF dela e do personagem ativo por 5 s depois do Moondrift Harmony: ligue na janela."
@@ -10843,6 +11845,7 @@
         "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -10875,7 +11878,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume o teto de +40% de ATK durante o Supremo: ligue nas janelas."
@@ -10920,7 +11926,10 @@
           "defIgnore": 0,
           "atkFlat": 350,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+350 de ATK dos aliados depois de uma reação: ligue na janela."
@@ -10943,6 +11952,7 @@
         "note": "O ricochete do martelo (80% do ATK) não entra."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -10975,7 +11985,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+40% de Dano Crítico do personagem em campo com o Núcleo de Detecção presente: ligue nas janelas."
@@ -11017,7 +12030,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+123 de Maestria da equipe com o Núcleo em Estado Estável: ligue nas janelas. No estado Sobrecarregado seria +234 só para o personagem em campo."
@@ -11043,7 +12059,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume 4 stacks (+20% de Taxa Crítica) depois de criar Gradient Beacons: ligue na janela."
@@ -11066,6 +12085,7 @@
         "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -11098,7 +12118,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+100 de Maestria da equipe por 18 s depois da habilidade: ligue nas janelas."
@@ -11131,6 +12154,7 @@
         "note": "Os +100% de dano do Carregado especial e dos Thunderburst Shells e o crítico do Electro não entram."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -11182,7 +12206,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+50% de Dano Crítico Hydro/Cryo por 5 s: ligue nas janelas. Até a C5 vale só para o personagem em campo; a C6 estende a todos."
@@ -11212,7 +12239,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+60% de DMG Hydro/Cryo da equipe enquanto a Canção das Eras Passadas estiver ativa: ligue nas janelas."
@@ -11292,7 +12322,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume 3 stacks (+60% de HP máximo): ligue na janela. O HP maior eleva todos os buffs dela que escalam com HP."
@@ -11305,6 +12338,7 @@
         "note": "Os 25 stacks de Lead Vocal e 10 de Chorus já estão no dano fixo cadastrado dela."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -11337,7 +12371,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+40% de ATK com o máximo de stacks de Ação Disciplinar (modo Armed for Action): ligue nas janelas."
@@ -11370,6 +12407,7 @@
         "note": "O Windborne Sword: Transpose (150% do ATK + 200% dos Spirit Blades) não entra."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -11440,7 +12478,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+200 de Maestria dele e de quem está no campo do Kazuha Slash: ligue na janela."
@@ -11463,6 +12504,7 @@
         "note": "Só energia."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -11528,7 +12570,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "team": {
           "only": [
@@ -11562,6 +12607,7 @@
         "note": "O Frosty Parfait extra (500% do ATK, conta como habilidade) não entra."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -11596,7 +12642,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "level": {
           "talent": "burst",
@@ -11644,7 +12693,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+20% de Taxa Crítica de Carregado contra inimigos com menos de 50% de HP: ligue nas janelas."
@@ -11670,7 +12722,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume 3 Selos gastos no Carregado (+15% de DMG Pyro por 6 s): ligue na janela do Carregado."
@@ -11696,7 +12751,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "O 4º Selo soma +5% de DMG Pyro ao A1: ligue junto com o A1."
@@ -11719,6 +12777,7 @@
         "note": "Só escudo."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -11753,7 +12812,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "level": {
           "talent": "burst",
@@ -11817,7 +12879,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+20% de HP máximo por 15 s depois da habilidade segurada: ligue na janela."
@@ -11845,6 +12910,7 @@
         "note": "A onda extra (15% do HP máximo, conta como Supremo) não entra."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -11871,11 +12937,12 @@
             "Electro",
             "Dendro",
             "Cryo",
-            "Geo"
+            "Geo",
+            "Physical"
           ]
         },
         "flat": [],
-        "note": "Assume a redução de 20% de RES elemental (com o Escudo de Jade ativo) sempre ativa. A de RES Física não entra."
+        "note": "Assume a redução de 20% de RES elemental e Física (com o Escudo de Jade ativo) sempre ativa."
       }
     ],
     "notes": [
@@ -11905,6 +12972,7 @@
         "note": "Só cura."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -11937,7 +13005,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "level": {
           "talent": "burst",
@@ -12002,7 +13073,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume o aumento máximo de HP (+140%, com Fanfare muito acima do limite): ligue na janela do Supremo."
@@ -12030,6 +13104,7 @@
         "note": "O dano extra dos Normais, Carregados e Imersivos (18% do HP máximo) e a conversão para Hydro não entram."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -12065,7 +13140,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+15% de Taxa Crítica de Normal/Carregado contra inimigos sob Cryo (assumido sempre)."
@@ -12098,6 +13176,7 @@
         "note": "O Icicle extra do Supremo não entra (a energia também não)."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -12147,6 +13226,7 @@
         "note": "Só aplica o status Condutivo."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -12181,7 +13261,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume o bônus máximo (+66%) do Fuufuu Whirlwind Kick segurando o Windwheel: ligue na janela."
@@ -12214,6 +13297,7 @@
         "note": "O dano extra do Daruma por Maestria (0,2% do ATK por ponto, até 400%) não entra."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -12264,7 +13348,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+150 de Maestria por 15 s quando o HP cai abaixo de 25%: ligue na janela."
@@ -12292,6 +13379,7 @@
         "note": "A Marca de Thundergrass (9,7% do HP máximo, a cada 5 s) não entra."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -12345,7 +13433,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+40% de DMG da habilidade (Shooting Stars) e do Supremo (Starlight Slugs)."
@@ -12373,6 +13464,7 @@
         "note": "O dano extra dos aliados (5% do HP máximo da Layla, só no primeiro golpe) não entra."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -12405,7 +13497,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+20% de HP máximo."
@@ -12471,7 +13566,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+10% de Taxa Crítica e +15% de Dano Crítico no Supremo (assume o stack de Dano Crítico ativo)."
@@ -12499,6 +13597,7 @@
         "note": "Só energia e cura."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -12531,7 +13630,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Assume 1 inimigo atingido pelo Monsieur Verite (+10% de ATK por 12 s): ligue na janela. Com 2 e 3 inimigos o valor é 20% e 30%."
@@ -12559,7 +13661,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+10% de DMG da habilidade contra inimigo marcado (Snappy Silhouette ou Focused Impression): ligue na janela."
@@ -12587,6 +13692,7 @@
         "note": "O ataque coordenado do Monsieur Verite (180% do ATK) não entra."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -12644,6 +13750,7 @@
         "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -12702,6 +13809,7 @@
         "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -12734,7 +13842,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "team": {
           "scale": {
@@ -12770,7 +13881,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "team": {
           "scale": {
@@ -12815,6 +13929,7 @@
         "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -12847,7 +13962,10 @@
           "defIgnore": 0,
           "atkFlat": 300,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+300 de ATK dos aliados observados por 3 s no campo (Guidance of Theosis): ligue na janela."
@@ -12873,7 +13991,10 @@
           "defIgnore": 0,
           "atkFlat": 300,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+300 de ATK extra do Grace of Kenosis (fora do limite do bônus): ligue na janela. A redução de RES não entra."
@@ -12899,7 +14020,10 @@
           "defIgnore": 0.4,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "Ignora 40% da DEF do inimigo para quem tem Guidance of Theosis: ligue na janela."
@@ -12922,6 +14046,7 @@
         "note": "O bônus de dano do Pathfinder's Blessing (valor dependente do elemento) não entra."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -12980,6 +14105,7 @@
         "note": "O Condensed Cluster Beam (4 instâncias de 100% do ATK) não entra."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -13050,7 +14176,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+100 de Maestria de quem está no campo com 2 stacks de Hunter's Precision: ligue na janela."
@@ -13078,6 +14207,7 @@
         "note": "Só cura."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -13129,7 +14259,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+60 de Maestria do personagem ativo por 5 s: ligue na janela."
@@ -13157,6 +14290,7 @@
         "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -13208,7 +14342,10 @@
           "defIgnore": 0,
           "atkFlat": 0,
           "hpFlat": 0,
-          "defFlat": 0
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
         "note": "+60 de Maestria do personagem ativo por 5 s: ligue na janela."
@@ -13236,6 +14373,7 @@
         "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -13279,6 +14417,7 @@
         "note": "O ataque coordenado do Oz (30% do ATK) e o ATK extra não entram."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -13322,49 +14461,7 @@
         "note": "Só recarga."
       }
     ],
-    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
-  },
-  {
-    "character": "Xinyan",
-    "atkPct": 0,
-    "dmgPct": 0,
-    "critRate": 0,
-    "critDmg": 0,
-    "em": 0,
-    "appliesToSelf": false,
-    "buffs": [],
-    "notes": [
-      {
-        "src": "p1",
-        "kind": "utility",
-        "note": "Só requisito do escudo."
-      },
-      {
-        "src": "p2",
-        "kind": "partial",
-        "note": "Dano Físico +15% com escudo. O dano Físico ainda não é modelado (o motor não tem o elemento Físico como padrão dos golpes de arma)."
-      },
-      {
-        "src": "const1",
-        "kind": "utility",
-        "note": "Só velocidade de ataque."
-      },
-      {
-        "src": "const2",
-        "kind": "partial",
-        "note": "Taxa Crítica +100% do dano Físico do Supremo. O dano Físico ainda não é modelado (o motor não tem o elemento Físico como padrão dos golpes de arma)."
-      },
-      {
-        "src": "const4",
-        "kind": "partial",
-        "note": "Redução de RES Física. O dano Físico ainda não é modelado (o motor não tem o elemento Físico como padrão dos golpes de arma)."
-      },
-      {
-        "src": "const6",
-        "kind": "partial",
-        "note": "ATK extra do Carregado (50% da DEF) e estamina: o dano é Físico e não entra."
-      }
-    ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -13408,49 +14505,7 @@
         "note": "Só infusão Electro e cura."
       }
     ],
-    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
-  },
-  {
-    "character": "Mika",
-    "atkPct": 0,
-    "dmgPct": 0,
-    "critRate": 0,
-    "critDmg": 0,
-    "em": 0,
-    "appliesToSelf": false,
-    "buffs": [],
-    "notes": [
-      {
-        "src": "p1",
-        "kind": "partial",
-        "note": "Dano Físico +10% por stack de Detector. O dano Físico ainda não é modelado."
-      },
-      {
-        "src": "p2",
-        "kind": "partial",
-        "note": "Stacks de Detector (Físico). O dano Físico ainda não é modelado."
-      },
-      {
-        "src": "const1",
-        "kind": "utility",
-        "note": "Só cura."
-      },
-      {
-        "src": "const2",
-        "kind": "partial",
-        "note": "Stacks de Detector (Físico). O dano Físico ainda não é modelado."
-      },
-      {
-        "src": "const4",
-        "kind": "utility",
-        "note": "Só energia."
-      },
-      {
-        "src": "const6",
-        "kind": "partial",
-        "note": "+60% de Dano Crítico Físico. O dano Físico ainda não é modelado."
-      }
-    ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -13494,6 +14549,7 @@
         "note": "O +120% de Dano Crítico dos tiros do Multitarget Fire depois da conversão não entra."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -13537,6 +14593,7 @@
         "note": "Só velocidade de ataque e reviver."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -13580,6 +14637,7 @@
         "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -13623,6 +14681,7 @@
         "note": "Só cura."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -13666,6 +14725,7 @@
         "note": "Só cura."
       }
     ],
+    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   }
 ]

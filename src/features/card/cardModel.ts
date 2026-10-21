@@ -65,7 +65,7 @@ const MAIN_ABBR: Record<string, string> = {
 };
 const abbr = (s: string) => MAIN_ABBR[s] ?? s;
 
-const HIT_LETTER = { normal: 'N', charged: 'CA', plunge: 'PA', skill: 'E', burst: 'Q' } as const;
+const HIT_LETTER = { normal: 'N', charged: 'CA', plunge: 'PA', skill: 'E', burst: 'Q', other: '+' } as const;
 
 /**
  * Letras dos golpes agrupadas por personagem na ordem do tempo: "Citlali E Q · Mavuika E CA CA Q".

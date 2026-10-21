@@ -76,10 +76,11 @@ export const CHARACTERS_8: Record<string, BuffCuration[]> = {
     { id: 'skill', label: 'Sara: Tengu Juurai', src: 'kit', kit: { talent: 'skill', key: 'ATK Bonus Ratio' }, scope: 'team', timed: true, convert: { from: 'baseAtk', perPoint: { lit: 1 }, to: ['atkFlat'] }, expect: "an ATK Bonus based on Kujou Sara's Base ATK", note: 'ATK fixo = % do ATK base dela (pelo nível da habilidade) para o personagem em campo: ligue nas janelas.' },
   ],
   Eula: [
-    { id: 'skill', label: 'Eula: Lacerar (RES)', src: 'kit', kit: { talent: 'skill', key: 'Cryo RES Decrease' }, scope: 'self', timed: false, resShred: { value: { lit: 1 }, elements: ['Cryo'] }, expect: 'Physical RES and Cryo RES decreased', note: 'Assume a redução de RES Cryo da versão segurada da habilidade sempre ativa (a Física não entra).' },
+    { id: 'skill', label: 'Eula: Lacerar (RES)', src: 'kit', kit: { talent: 'skill', key: 'Cryo RES Decrease' }, scope: 'self', timed: false, resShred: { value: { lit: 1 }, elements: ['Cryo'] }, expect: 'Physical RES and Cryo RES decreased', note: 'Assume a redução de RES Cryo da versão segurada da habilidade sempre ativa.' },
+    { id: 'skill-fis', label: 'Eula: Lacerar (RES Física)', src: 'kit', kit: { talent: 'skill', key: 'Physical RES Decrease' }, scope: 'self', timed: false, resShred: { value: { lit: 1 }, elements: ['Physical'] }, expect: 'Physical RES and Cryo RES decreased', note: 'Assume a redução de RES Física da versão segurada da habilidade sempre ativa.' },
   ],
   Shenhe: [
-    { id: 'burst', label: 'Shenhe: Campo (RES)', src: 'kit', kit: { talent: 'burst', key: 'RES Decrease' }, scope: 'self', timed: false, resShred: { value: { lit: 1 }, elements: ['Cryo'] }, expect: 'decreases the Cryo RES and Physical RES of opponents within it', note: 'Assume a redução de RES Cryo do campo do Supremo sempre ativa (a Física não entra).' },
+    { id: 'burst', label: 'Shenhe: Campo (RES)', src: 'kit', kit: { talent: 'burst', key: 'RES Decrease' }, scope: 'self', timed: false, resShred: { value: { lit: 1 }, elements: ['Cryo', 'Physical'] }, expect: 'decreases the Cryo RES and Physical RES of opponents within it', note: 'Assume a redução de RES Cryo e Física do campo do Supremo sempre ativa.' },
   ],
   Faruzan: [
     { id: 'burst', label: 'Faruzan: Benefício do Vento', src: 'kit', kit: { talent: 'burst', key: 'Anemo DMG Bonus' }, scope: 'team', timed: true, forElements: ['Anemo'], stats: { dmgPct: { lit: 1 } }, expect: "granting them an Anemo DMG Bonus", note: 'DMG Anemo da equipe pelo nível do Supremo: ligue nas janelas. Só personagens Anemo recebem.' },
@@ -102,7 +103,7 @@ export const CHARACTERS_8: Record<string, BuffCuration[]> = {
 /** Kit sem tabela de nível (valor fixo no texto) e kit com Fanfare. */
 export const CHARACTERS_9: Record<string, BuffCuration[]> = {
   Zhongli: [
-    { id: 'shield', label: 'Zhongli: Escudo de Jade', src: 'kit', kit: { talent: 'skill' }, scope: 'self', timed: false, resShred: { value: { lit: 0.2 }, elements: ['Pyro', 'Hydro', 'Anemo', 'Electro', 'Dendro', 'Cryo', 'Geo'] }, expect: 'will decrease the Elemental RES and Physical RES of opponents in a small AoE by 20%', note: 'Assume a redução de 20% de RES elemental (com o Escudo de Jade ativo) sempre ativa. A de RES Física não entra.' },
+    { id: 'shield', label: 'Zhongli: Escudo de Jade', src: 'kit', kit: { talent: 'skill' }, scope: 'self', timed: false, resShred: { value: { lit: 0.2 }, elements: ['Pyro', 'Hydro', 'Anemo', 'Electro', 'Dendro', 'Cryo', 'Geo', 'Physical'] }, expect: 'will decrease the Elemental RES and Physical RES of opponents in a small AoE by 20%', note: 'Assume a redução de 20% de RES elemental e Física (com o Escudo de Jade ativo) sempre ativa.' },
   ],
   Furina: [
     { id: 'burst', label: 'Furina: Fanfarra', src: 'kit', kit: { talent: 'burst', key: 'Fanfare to DMG Increase Conversion Ratio' }, scope: 'team', timed: true, stats: { dmgPct: { lit: 300 } }, expect: 'Furina will increase the DMG dealt by and Incoming Healing Bonus of all nearby party members based on the amount of Fanfare', note: 'Assume o máximo de 300 pontos de Fanfarra (DMG da equipe = 300 × a razão do nível do Supremo): ligue nas janelas. A Fanfarra real depende das variações de HP do time.' },

@@ -229,3 +229,27 @@ describe('peças reais no personagem (MemberRef.pieces)', () => {
     expect(stats.atkFlat ?? 0).toBeLessThan(100);
   });
 });
+
+describe('nível da peça e builds completos', () => {
+  it('sem peça em alguma posição o otimizador não devolve build (nem parcial)', () => {
+    const good = inventory(3);
+    const noCirclet = { ...good, artifacts: good.artifacts.filter((a) => a.slotKey !== 'circlet') };
+    expect(() => runOptimizer({ ...base, good: noCirclet, characterKey: 'Mavuika', config: DEFAULT_CONFIG })).toThrow(/circlet/);
+  });
+
+  it('todo build devolvido tem as 5 posições', () => {
+    const got = runOptimizer({ ...base, good: inventory(3), characterKey: 'Mavuika', config: { ...DEFAULT_CONFIG, topN: 5 } });
+    expect(got.builds.length).toBeGreaterThan(0);
+    for (const b of got.builds) expect(b.pieces.map((p) => p.slotKey).sort()).toEqual(['circlet', 'flower', 'goblet', 'plume', 'sands']);
+  });
+
+  it('o main stat entra no nível real da peça: a mesma peça em +0 perde para a de +20', () => {
+    const good = inventory(1);
+    const sands = good.artifacts.find((a) => a.slotKey === 'sands')!;
+    const low = { ...sands, level: 0 };
+    const got = runOptimizer({ ...base, good: { ...good, artifacts: [...good.artifacts, low] }, characterKey: 'Mavuika', config: { ...DEFAULT_CONFIG, topN: 2 } });
+    expect(got.builds[0].pieces.find((p) => p.slotKey === 'sands')!.level).toBe(20);
+    expect(got.builds[1].pieces.find((p) => p.slotKey === 'sands')!.level).toBe(0);
+    expect(got.builds[1].report.value).toBeLessThan(got.builds[0].report.value);
+  });
+});

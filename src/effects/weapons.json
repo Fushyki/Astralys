@@ -19939,6 +19939,192 @@
           "reactionBonus": {}
         },
         "flat": []
+      },
+      {
+        "id": "pyro",
+        "label": "DMG Pyro (Sobrecarga)",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "forElements": [
+          "Pyro"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.1,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": []
+      },
+      {
+        "id": "hydro",
+        "label": "DMG Hydro (Eletrocarregado)",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "forElements": [
+          "Hydro"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.1,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": []
+      },
+      {
+        "id": "cryo",
+        "label": "DMG Cryo (Supercondutor)",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "forElements": [
+          "Cryo"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.1,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": []
+      },
+      {
+        "id": "dendro",
+        "label": "DMG Dendro (Catalisar)",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "forElements": [
+          "Dendro"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.1,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": []
+      },
+      {
+        "id": "anemo",
+        "label": "DMG Anemo (Redemoinho Electro)",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "forElements": [
+          "Anemo"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.1,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": []
+      },
+      {
+        "id": "geo",
+        "label": "DMG Geo (Cristalizar Electro)",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "forElements": [
+          "Geo"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.1,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": []
       }
     ],
     "flat": [],
@@ -19964,6 +20150,192 @@
             "timed": true,
             "forElements": [
               "Electro"
+            ],
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0.1,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          },
+          {
+            "id": "pyro",
+            "label": "DMG Pyro (Sobrecarga)",
+            "minConstellation": 0,
+            "scope": "team",
+            "timed": true,
+            "forElements": [
+              "Pyro"
+            ],
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0.1,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          },
+          {
+            "id": "hydro",
+            "label": "DMG Hydro (Eletrocarregado)",
+            "minConstellation": 0,
+            "scope": "team",
+            "timed": true,
+            "forElements": [
+              "Hydro"
+            ],
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0.1,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          },
+          {
+            "id": "cryo",
+            "label": "DMG Cryo (Supercondutor)",
+            "minConstellation": 0,
+            "scope": "team",
+            "timed": true,
+            "forElements": [
+              "Cryo"
+            ],
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0.1,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          },
+          {
+            "id": "dendro",
+            "label": "DMG Dendro (Catalisar)",
+            "minConstellation": 0,
+            "scope": "team",
+            "timed": true,
+            "forElements": [
+              "Dendro"
+            ],
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0.1,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          },
+          {
+            "id": "anemo",
+            "label": "DMG Anemo (Redemoinho Electro)",
+            "minConstellation": 0,
+            "scope": "team",
+            "timed": true,
+            "forElements": [
+              "Anemo"
+            ],
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0.1,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          },
+          {
+            "id": "geo",
+            "label": "DMG Geo (Cristalizar Electro)",
+            "minConstellation": 0,
+            "scope": "team",
+            "timed": true,
+            "forElements": [
+              "Geo"
             ],
             "stats": {
               "atkPct": 0,
@@ -20032,6 +20404,192 @@
               "reactionBonus": {}
             },
             "flat": []
+          },
+          {
+            "id": "pyro",
+            "label": "DMG Pyro (Sobrecarga)",
+            "minConstellation": 0,
+            "scope": "team",
+            "timed": true,
+            "forElements": [
+              "Pyro"
+            ],
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0.125,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          },
+          {
+            "id": "hydro",
+            "label": "DMG Hydro (Eletrocarregado)",
+            "minConstellation": 0,
+            "scope": "team",
+            "timed": true,
+            "forElements": [
+              "Hydro"
+            ],
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0.125,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          },
+          {
+            "id": "cryo",
+            "label": "DMG Cryo (Supercondutor)",
+            "minConstellation": 0,
+            "scope": "team",
+            "timed": true,
+            "forElements": [
+              "Cryo"
+            ],
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0.125,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          },
+          {
+            "id": "dendro",
+            "label": "DMG Dendro (Catalisar)",
+            "minConstellation": 0,
+            "scope": "team",
+            "timed": true,
+            "forElements": [
+              "Dendro"
+            ],
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0.125,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          },
+          {
+            "id": "anemo",
+            "label": "DMG Anemo (Redemoinho Electro)",
+            "minConstellation": 0,
+            "scope": "team",
+            "timed": true,
+            "forElements": [
+              "Anemo"
+            ],
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0.125,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          },
+          {
+            "id": "geo",
+            "label": "DMG Geo (Cristalizar Electro)",
+            "minConstellation": 0,
+            "scope": "team",
+            "timed": true,
+            "forElements": [
+              "Geo"
+            ],
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0.125,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
           }
         ],
         "flat": [],
@@ -20056,6 +20614,192 @@
             "timed": true,
             "forElements": [
               "Electro"
+            ],
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0.15,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          },
+          {
+            "id": "pyro",
+            "label": "DMG Pyro (Sobrecarga)",
+            "minConstellation": 0,
+            "scope": "team",
+            "timed": true,
+            "forElements": [
+              "Pyro"
+            ],
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0.15,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          },
+          {
+            "id": "hydro",
+            "label": "DMG Hydro (Eletrocarregado)",
+            "minConstellation": 0,
+            "scope": "team",
+            "timed": true,
+            "forElements": [
+              "Hydro"
+            ],
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0.15,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          },
+          {
+            "id": "cryo",
+            "label": "DMG Cryo (Supercondutor)",
+            "minConstellation": 0,
+            "scope": "team",
+            "timed": true,
+            "forElements": [
+              "Cryo"
+            ],
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0.15,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          },
+          {
+            "id": "dendro",
+            "label": "DMG Dendro (Catalisar)",
+            "minConstellation": 0,
+            "scope": "team",
+            "timed": true,
+            "forElements": [
+              "Dendro"
+            ],
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0.15,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          },
+          {
+            "id": "anemo",
+            "label": "DMG Anemo (Redemoinho Electro)",
+            "minConstellation": 0,
+            "scope": "team",
+            "timed": true,
+            "forElements": [
+              "Anemo"
+            ],
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0.15,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          },
+          {
+            "id": "geo",
+            "label": "DMG Geo (Cristalizar Electro)",
+            "minConstellation": 0,
+            "scope": "team",
+            "timed": true,
+            "forElements": [
+              "Geo"
             ],
             "stats": {
               "atkPct": 0,
@@ -20124,6 +20868,192 @@
               "reactionBonus": {}
             },
             "flat": []
+          },
+          {
+            "id": "pyro",
+            "label": "DMG Pyro (Sobrecarga)",
+            "minConstellation": 0,
+            "scope": "team",
+            "timed": true,
+            "forElements": [
+              "Pyro"
+            ],
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0.175,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          },
+          {
+            "id": "hydro",
+            "label": "DMG Hydro (Eletrocarregado)",
+            "minConstellation": 0,
+            "scope": "team",
+            "timed": true,
+            "forElements": [
+              "Hydro"
+            ],
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0.175,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          },
+          {
+            "id": "cryo",
+            "label": "DMG Cryo (Supercondutor)",
+            "minConstellation": 0,
+            "scope": "team",
+            "timed": true,
+            "forElements": [
+              "Cryo"
+            ],
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0.175,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          },
+          {
+            "id": "dendro",
+            "label": "DMG Dendro (Catalisar)",
+            "minConstellation": 0,
+            "scope": "team",
+            "timed": true,
+            "forElements": [
+              "Dendro"
+            ],
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0.175,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          },
+          {
+            "id": "anemo",
+            "label": "DMG Anemo (Redemoinho Electro)",
+            "minConstellation": 0,
+            "scope": "team",
+            "timed": true,
+            "forElements": [
+              "Anemo"
+            ],
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0.175,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          },
+          {
+            "id": "geo",
+            "label": "DMG Geo (Cristalizar Electro)",
+            "minConstellation": 0,
+            "scope": "team",
+            "timed": true,
+            "forElements": [
+              "Geo"
+            ],
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0.175,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
           }
         ],
         "flat": [],
@@ -20170,14 +21100,199 @@
               "reactionBonus": {}
             },
             "flat": []
+          },
+          {
+            "id": "pyro",
+            "label": "DMG Pyro (Sobrecarga)",
+            "minConstellation": 0,
+            "scope": "team",
+            "timed": true,
+            "forElements": [
+              "Pyro"
+            ],
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0.2,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          },
+          {
+            "id": "hydro",
+            "label": "DMG Hydro (Eletrocarregado)",
+            "minConstellation": 0,
+            "scope": "team",
+            "timed": true,
+            "forElements": [
+              "Hydro"
+            ],
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0.2,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          },
+          {
+            "id": "cryo",
+            "label": "DMG Cryo (Supercondutor)",
+            "minConstellation": 0,
+            "scope": "team",
+            "timed": true,
+            "forElements": [
+              "Cryo"
+            ],
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0.2,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          },
+          {
+            "id": "dendro",
+            "label": "DMG Dendro (Catalisar)",
+            "minConstellation": 0,
+            "scope": "team",
+            "timed": true,
+            "forElements": [
+              "Dendro"
+            ],
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0.2,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          },
+          {
+            "id": "anemo",
+            "label": "DMG Anemo (Redemoinho Electro)",
+            "minConstellation": 0,
+            "scope": "team",
+            "timed": true,
+            "forElements": [
+              "Anemo"
+            ],
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0.2,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          },
+          {
+            "id": "geo",
+            "label": "DMG Geo (Cristalizar Electro)",
+            "minConstellation": 0,
+            "scope": "team",
+            "timed": true,
+            "forElements": [
+              "Geo"
+            ],
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0.2,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
           }
         ],
         "flat": [],
         "procs": []
       }
     ],
-    "note": "Faixa de DMG elemental para os membros Electro. O bônus para o outro elemento da reação NÃO entra.",
-    "partial": true,
+    "note": "Faixas de 6 s de DMG elemental: uma para os membros Electro e uma para o outro elemento de cada reação Electro (Pyro, Hydro, Cryo, Dendro, Anemo, Geo). Ligue nas janelas a faixa da reação que acontece (os bônus não se somam no jogo).",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
   {

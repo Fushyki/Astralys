@@ -34,11 +34,11 @@ import { CHARACTERS_15 } from './curation/characters11';
 import { CHARACTERS_16 } from './curation/characters12';
 import type { BuffCuration } from './curation/characters';
 import { CHARACTER_NOTES } from './curation/charnotes';
-import { CHARACTER_PROCS } from './curation/procs';
+import { CHARACTER_PROCS, CHARACTERS_PROC_BUFFS } from './curation/procs';
 
 /** Junta os lotes: o mesmo personagem pode aparecer em mais de um e as listas se somam. */
 const CHARACTER_BUFFS: Record<string, BuffCuration[]> = {};
-for (const batch of [CHARACTERS_1, CHARACTERS_2, CHARACTERS_3, CHARACTERS_4, CHARACTERS_5, CHARACTERS_6, CHARACTERS_7, CHARACTERS_8, CHARACTERS_9, CHARACTERS_10, CHARACTERS_11, CHARACTERS_12, CHARACTERS_13, CHARACTERS_14, CHARACTERS_15, CHARACTERS_16]) {
+for (const batch of [CHARACTERS_1, CHARACTERS_2, CHARACTERS_3, CHARACTERS_4, CHARACTERS_5, CHARACTERS_6, CHARACTERS_7, CHARACTERS_8, CHARACTERS_9, CHARACTERS_10, CHARACTERS_11, CHARACTERS_12, CHARACTERS_13, CHARACTERS_14, CHARACTERS_15, CHARACTERS_16, CHARACTERS_PROC_BUFFS]) {
   for (const [name, list] of Object.entries(batch)) CHARACTER_BUFFS[name] = [...(CHARACTER_BUFFS[name] ?? []), ...list];
 }
 

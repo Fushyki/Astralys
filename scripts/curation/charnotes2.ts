@@ -9,7 +9,7 @@ export const NOTES_2: CharacterNotes = {
     p1: x('A explosão do Fantasma (50% do dano do Espelho) não entra.'),
     const1: x('Os +15% de dano de Vaporizar, Eletrocarregado e outras reações NÃO entram (o motor ainda não aceita bônus por reação vindo de constelação).'),
   },
-  Keqing: { p1: x('A infusão Electro dos Normais e Carregados não entra.'), const1: x('O dano do blink (50% do ATK) não entra.'), const2: u('Só partículas.') },
+  Keqing: { p1: x('A infusão Electro dos Normais e Carregados não entra.'), const2: u('Só partículas.') },
   Sucrose: { const1: u('Só cargas da habilidade.'), const2: u('Só duração do Supremo.'), const4: u('Só recarga da habilidade.') },
   Xinyan: {
     p1: u('Só requisito do escudo.'), const1: u('Só velocidade de ataque.'),
@@ -17,11 +17,11 @@ export const NOTES_2: CharacterNotes = {
     const6: x('ATK extra só nos Carregados (50% da DEF): o motor ainda não tem ATK por tipo de golpe. A estamina não muda o dano.'),
   },
   Rosaria: { const2: u('Só duração da lança de gelo.'), const4: u('Só energia.') },
-  'Hu Tao': { const1: u('Só estamina.'), const2: x('O dano da Blood Blossom (10% do HP máximo) não entra.') },
+  'Hu Tao': { const1: u('Só estamina.') },
   'Kaedehara Kazuha': {
-    p1: x('O dano extra do Imersivo com o elemento absorvido (200% do ATK) não entra.'), const1: u('Só recarga da habilidade.'), const4: u('Só energia.'),
+    const1: u('Só recarga da habilidade.'), const4: u('Só energia.'),
   },
-  Yanfei: { p2: x('O dano extra do Carregado crítico (80% do ATK, conta como Carregado) não entra.'), const1: u('Só estamina e resistência a interrupção.'), const4: u('Só escudo.') },
+  Yanfei: { const1: u('Só estamina e resistência a interrupção.'), const4: u('Só escudo.') },
   Yoimiya: { const4: u('Só recarga da habilidade.'), const6: x('A flecha extra do Normal (60% do dano original, 50% de chance) não entra.') },
   Thoma: { p1: u('Só força do escudo.'), const1: u('Só recarga.'), const2: u('Só duração do Supremo.'), const4: u('Só energia.') },
   Eula: {
@@ -36,7 +36,7 @@ export const NOTES_2: CharacterNotes = {
   },
   'Sangonomiya Kokomi': {
     p1: u('Só duração da Bake-Kurage.'), p2: x('O bônus de dano de Normal e Carregado por Bônus de Cura não entra: o motor não acompanha cura.'),
-    const1: x('O peixe do último Normal (30% do HP máximo) não entra.'), const2: u('Só cura.'), const4: u('Só velocidade de ataque e energia.'),
+    const2: u('Só cura.'), const4: u('Só velocidade de ataque e energia.'),
   },
   Gorou: { const1: u('Só recarga da habilidade.'), const2: u('Só duração do campo.'), const4: u('Só cura.') },
   'Kujou Sara': {
@@ -44,10 +44,10 @@ export const NOTES_2: CharacterNotes = {
     const2: x('O Corvo extra (30% do dano) não entra.'), const4: x('Os Stormcluster extras do Supremo (de 4 para 6) não entram: ajuste as execuções do Supremo.'),
   },
   'Arataki Itto': { p1: u('Só velocidade de ataque.'), const1: x('Os stacks extras de Superlative Superstrength não entram.'), const2: u('Só recarga e energia.') },
-  'Yae Miko': { p1: x('O raio extra (40% do ATK) com 3 Sesshou Sakura não entra.') },
+  'Yae Miko': { p1: x('O raio extra (40% do ATK) é golpe extra na paleta. A versão Estelar-Conduct (Radiance) NÃO entra (mecânica Estelar ainda não modelada).') },
   'Shikanoin Heizou': { p1: u('Só stacks de Declension.'), const1: u('Só velocidade de ataque.'), const2: u('Só puxão e duração.'), const4: u('Só energia.') },
-  Yelan: { const1: u('Só cargas da habilidade.'), const2: x('A flecha de água extra (14% do HP máximo) não entra.'), const6: x('O Carregado do estado Mastermind (156% do dano) não entra.') },
-  Kirara: { p1: u('Só escudos.'), const1: u('Só Cat Grass Cardamom extra.'), const2: u('Só escudos.'), const4: x('O ataque coordenado com Cat Grass Cardamom (200% do ATK, conta como Supremo) não entra.') },
+  Yelan: { const1: u('Só cargas da habilidade.'), const6: x('O Carregado do estado Mastermind (156% do dano) não entra.') },
+  Kirara: { p1: u('Só escudos.'), const1: u('Só Cat Grass Cardamom extra.'), const2: u('Só escudos.') },
   Aloy: Object.fromEntries((['const1', 'const2', 'const3', 'const4', 'const5', 'const6'] as const).map((k) => [k, u('Sem efeito no jogo: a constelação da Aloy não existe (texto de placeholder).')])),
   Shenhe: { const1: u('Só cargas da habilidade.'), const4: x('+5% de dano da habilidade por stack (até 50) depende de quantas vezes a equipe ativa o Icy Quill: não entra.'), const6: u('Só cota do Icy Quill.') },
   'Yun Jin': { p1: u('Só tipo de golpe da habilidade.'), p2: x('O bônus de Normal da formação (2,5% a 11,5% da DEF por número de elementos) não entra.'), const1: u('Só recarga.') },

@@ -7,10 +7,10 @@ const LUNAR = 'Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ai
 
 const TRAVELER: Record<string, CharacterNotes[string]> = {
   Anemo: {
-    p1: x('A lâmina de vento do último Normal (60% do ATK) não entra.'), p2: u('Só cura.'), const1: u('Só puxa inimigos.'), const4: u('Só redução de dano recebido.'),
+    p2: u('Só cura.'), const1: u('Só puxa inimigos.'), const4: u('Só redução de dano recebido.'),
   },
   Geo: {
-    p1: u('Só recarga da habilidade.'), p2: x('O desabamento do último Normal (60% do ATK) não entra.'),
+    p1: u('Só recarga da habilidade.'),
     const2: x('A explosão do meteorito (dano igual ao da Starfell Sword) não entra.'), const4: u('Só energia.'), const6: u('Só duração.'),
   },
   Electro: {

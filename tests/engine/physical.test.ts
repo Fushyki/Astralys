@@ -114,3 +114,19 @@ describe('golpes extras de proc', () => {
     expect(r.action.move.displayName).toContain('indisponível');
   });
 });
+
+describe('golpes extras de passivas e constelações', () => {
+  it('Nahida C6: 200% do ATK + 400% da Maestria, conta como habilidade, só a partir da C6', () => {
+    const c6 = run([{ character: 'Nahida', constellation: 6 }], [{ talent: 'proc', label: 'char:c6' }]).result.actions[0];
+    expect(c6.action.move.hitType).toBe('skill');
+    expect(c6.breakdown.base).toBeCloseTo(2 * c6.stats.atk + 4 * c6.stats.em, 6);
+    const c5 = run([{ character: 'Nahida', constellation: 5 }], [{ talent: 'proc', label: 'char:c6' }]).result.actions[0];
+    expect(c5.avg).toBe(0);
+  });
+
+  it('Hu Tao C2: Blood Blossom ganha 10% do HP como dano fixo', () => {
+    const r = run([{ character: 'Hu Tao', constellation: 2 }], []).r;
+    const f = r.flatEffects.find((e) => e.name.includes('Blood Blossom'))!;
+    expect(f).toMatchObject({ sourceStat: 'HP', perPoint: 0.1, hitTypes: ['skill'] });
+  });
+});

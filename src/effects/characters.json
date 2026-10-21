@@ -355,14 +355,20 @@
         "src": "const1",
         "kind": "partial",
         "note": "O dano extra dos Stellar Blade (200% da Maestria dela por golpe dos aliados) não entra: dano fixo que vem de outro personagem."
-      },
-      {
-        "src": "const4",
-        "kind": "partial",
-        "note": "O Obsidian Spiritvessel Skull (1.800% da Maestria) não entra."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "c4",
+        "label": "Citlali C4: Spiritvessel Skull",
+        "scale": {
+          "em": 18
+        },
+        "minConstellation": 4,
+        "src": "const4",
+        "note": "1.800% da Maestria a cada 8 s (não conta como Supremo)."
+      }
+    ],
     "fonte_info": "planilha Mavuika_Iansan_Combo2, aba \"Personagens (efeitos)\". Reduz RES Pyro/Hydro em 20%."
   },
   {
@@ -773,17 +779,23 @@
         "note": "Só alcance do Guoba."
       },
       {
-        "src": "const2",
-        "kind": "partial",
-        "note": "A explosão de 75% do ATK depois do último Normal não entra."
-      },
-      {
         "src": "const4",
         "kind": "utility",
         "note": "Só duração do Supremo (mais golpes: ajuste as execuções do Supremo na rotação)."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "c2",
+        "label": "Xiangling C2: Implode",
+        "scale": {
+          "atk": 0.75
+        },
+        "minConstellation": 2,
+        "src": "const2",
+        "note": "Explosão de 75% do ATK 2 s depois do último Normal."
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -901,17 +913,24 @@
         "note": "Só cargas da habilidade."
       },
       {
-        "src": "const2",
-        "kind": "partial",
-        "note": "A flecha de água extra (14% do HP máximo) não entra."
-      },
-      {
         "src": "const6",
         "kind": "partial",
         "note": "O Carregado do estado Mastermind (156% do dano) não entra."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "c2",
+        "label": "Yelan C2: flecha extra",
+        "scale": {
+          "hp": 0.14
+        },
+        "hitType": "burst",
+        "minConstellation": 2,
+        "src": "const2",
+        "note": "14% do HP máximo a cada ataque coordenado do Supremo (até 1 a cada 1,8 s; conta como Supremo, Genshin Optimizer)."
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -1077,6 +1096,24 @@
         },
         "flat": [],
         "note": "+100% de Taxa Crítica por 10 s quando o HP cai abaixo de 25%: ligue na janela em que isso acontece."
+      },
+      {
+        "id": "c2",
+        "label": "Hu Tao C2",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": false,
+        "flat": [
+          {
+            "name": "Blood Blossom por HP",
+            "sourceStat": "HP",
+            "perPoint": 0.1,
+            "hitTypes": [
+              "skill"
+            ]
+          }
+        ],
+        "note": "Soma 10% do HP máximo a cada Blood Blossom (o único dano da habilidade dela). Usa o HP final, não o do momento da aplicação."
       }
     ],
     "notes": [
@@ -1084,11 +1121,6 @@
         "src": "const1",
         "kind": "utility",
         "note": "Só estamina."
-      },
-      {
-        "src": "const2",
-        "kind": "partial",
-        "note": "O dano da Blood Blossom (10% do HP máximo) não entra."
       }
     ],
     "procs": [],
@@ -1888,14 +1920,20 @@
         "src": "p2",
         "kind": "utility",
         "note": "Só energia."
-      },
-      {
-        "src": "const4",
-        "kind": "partial",
-        "note": "A explosão ao fim do Supremo (555% do ATK) não entra."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "c4",
+        "label": "Klee C4: explosão",
+        "scale": {
+          "atk": 5.55
+        },
+        "minConstellation": 4,
+        "src": "const4",
+        "note": "Explosão de 555% do ATK ao sair de campo ou ao fim do Supremo (o dobro com a Klee em campo não entra)."
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -2052,10 +2090,21 @@
       {
         "src": "p1",
         "kind": "partial",
-        "note": "O raio extra (40% do ATK) com 3 Sesshou Sakura não entra."
+        "note": "O raio extra (40% do ATK) é golpe extra na paleta. A versão Estelar-Conduct (Radiance) NÃO entra (mecânica Estelar ainda não modelada)."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "a1",
+        "label": "Yae A1: raio extra",
+        "scale": {
+          "atk": 0.4
+        },
+        "minConstellation": 0,
+        "src": "p1",
+        "note": "40% do ATK ao usar a habilidade com 3 Sesshou Sakura."
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -3473,14 +3522,20 @@
         "note": "Assume o máximo (+200% de DMG do Last Lightfall): ligue na janela do Supremo."
       }
     ],
-    "notes": [
+    "notes": [],
+    "procs": [
       {
+        "id": "c1",
+        "label": "Clorinde C1: Nightvigil Shade",
+        "scale": {
+          "atk": 0.3
+        },
+        "hitType": "normal",
+        "minConstellation": 1,
         "src": "const1",
-        "kind": "partial",
-        "note": "Os 2 ataques coordenados do Nightvigil Shade (30% do ATK, contam como Normal) não entram."
+        "note": "Cada ataque vale 30% do ATK; são 2 a cada 1,2 s (conta como Normal)."
       }
     ],
-    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -3747,14 +3802,21 @@
         "src": "p1",
         "kind": "utility",
         "note": "Só pontos de Nightsoul (a mecânica de estado não muda o dano calculado)."
-      },
-      {
-        "src": "const6",
-        "kind": "partial",
-        "note": "O salto do Scalespiker Cannon (700% do ATK) não entra."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "c6",
+        "label": "Kinich C6: ricochete",
+        "scale": {
+          "atk": 7
+        },
+        "hitType": "skill",
+        "minConstellation": 6,
+        "src": "const6",
+        "note": "700% do ATK por Scalespiker Cannon (conta como habilidade, Genshin Optimizer). Os buffs da A1 e da C2 sobre o canhão não entram neste golpe."
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -4965,14 +5027,20 @@
         "src": "const1",
         "kind": "utility",
         "note": "Só cura."
-      },
-      {
-        "src": "const4",
-        "kind": "partial",
-        "note": "A explosão da Couraça (400% do ATK) não entra."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "c4",
+        "label": "Noelle C4: Couraça",
+        "scale": {
+          "atk": 4
+        },
+        "minConstellation": 4,
+        "src": "const4",
+        "note": "Explosão de 400% do ATK quando a Couraça acaba ou quebra."
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -5110,11 +5178,6 @@
         "note": "Só velocidade de ataque."
       },
       {
-        "src": "const1",
-        "kind": "partial",
-        "note": "As 3 lâminas de gelo (50% do ATK cada) não entram."
-      },
-      {
         "src": "const2",
         "kind": "utility",
         "note": "Só recarga."
@@ -5125,7 +5188,18 @@
         "note": "Só energia."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "c1",
+        "label": "Chongyun C1: lâmina de gelo",
+        "scale": {
+          "atk": 0.5
+        },
+        "minConstellation": 1,
+        "src": "const1",
+        "note": "Cada lâmina vale 50% do ATK; são 3 no último Normal (use 3 execuções)."
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -5508,17 +5582,23 @@
         "note": "A infusão Electro dos Normais e Carregados não entra."
       },
       {
-        "src": "const1",
-        "kind": "partial",
-        "note": "O dano do blink (50% do ATK) não entra."
-      },
-      {
         "src": "const2",
         "kind": "utility",
         "note": "Só partículas."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "c1",
+        "label": "Keqing C1: blink",
+        "scale": {
+          "atk": 0.5
+        },
+        "minConstellation": 1,
+        "src": "const1",
+        "note": "50% do ATK no início e no fim do blink (use 2 execuções)."
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -5948,11 +6028,6 @@
         "note": "O bônus de dano de Normal e Carregado por Bônus de Cura não entra: o motor não acompanha cura."
       },
       {
-        "src": "const1",
-        "kind": "partial",
-        "note": "O peixe do último Normal (30% do HP máximo) não entra."
-      },
-      {
         "src": "const2",
         "kind": "utility",
         "note": "Só cura."
@@ -5963,7 +6038,18 @@
         "note": "Só velocidade de ataque e energia."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "c1",
+        "label": "Kokomi C1: peixe",
+        "scale": {
+          "hp": 0.3
+        },
+        "minConstellation": 1,
+        "src": "const1",
+        "note": "30% do HP máximo no último Normal durante o Supremo (não conta como Normal)."
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -6409,14 +6495,21 @@
         "src": "const2",
         "kind": "utility",
         "note": "Só escudos."
-      },
-      {
-        "src": "const4",
-        "kind": "partial",
-        "note": "O ataque coordenado com Cat Grass Cardamom (200% do ATK, conta como Supremo) não entra."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "c4",
+        "label": "Kirara C4: Cardamomo",
+        "scale": {
+          "atk": 2
+        },
+        "hitType": "burst",
+        "minConstellation": 4,
+        "src": "const4",
+        "note": "200% do ATK a cada 3,8 s com escudo (conta como Supremo)."
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -6763,14 +6856,21 @@
         "src": "const4",
         "kind": "utility",
         "note": "Só velocidade de ataque."
-      },
-      {
-        "src": "const6",
-        "kind": "partial",
-        "note": "Os 2 Shunsuiken extras (450% do ATK cada) não entram."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "c6",
+        "label": "Ayato C6: Shunsuiken extra",
+        "scale": {
+          "atk": 4.5
+        },
+        "hitType": "normal",
+        "minConstellation": 6,
+        "src": "const6",
+        "note": "Cada golpe extra vale 450% do ATK; são 2 depois do Supremo (use 2 execuções; conta como Normal, Genshin Optimizer). Não recebem o Namisen."
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -6814,11 +6914,6 @@
     ],
     "notes": [
       {
-        "src": "p1",
-        "kind": "partial",
-        "note": "O Sprout (40% do ATK por 3 s depois de reação) não entra."
-      },
-      {
         "src": "p2",
         "kind": "utility",
         "note": "Só duração da Zona."
@@ -6830,16 +6925,33 @@
       },
       {
         "src": "const2",
-        "kind": "partial",
-        "note": "O Sprout (40% do ATK) depois de reação não entra."
-      },
-      {
-        "src": "const6",
-        "kind": "partial",
-        "note": "O miniatura Cuilein-Anbar (200% do ATK) não entra."
+        "kind": "utility",
+        "note": "Só faz o Sprout da A1 (golpe extra na paleta) vir sem reação e durar mais."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "a1",
+        "label": "Collei A1: Sprout",
+        "scale": {
+          "atk": 0.4
+        },
+        "hitType": "skill",
+        "minConstellation": 0,
+        "src": "p1",
+        "note": "Dano contínuo de 40% do ATK por 3 s depois de reação Dendro (conta como habilidade). Na C2 ele vem sempre."
+      },
+      {
+        "id": "c6",
+        "label": "Collei C6: mini Cuilein-Anbar",
+        "scale": {
+          "atk": 2
+        },
+        "minConstellation": 6,
+        "src": "const6",
+        "note": "200% do ATK por habilidade."
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -6989,14 +7101,20 @@
         "note": "+15% de Taxa Crítica de Ataque Carregado, sempre."
       }
     ],
-    "notes": [
+    "notes": [],
+    "procs": [
       {
+        "id": "c6",
+        "label": "Tighnari C6: Clusterbloom extra",
+        "scale": {
+          "atk": 1.5
+        },
+        "hitType": "charged",
+        "minConstellation": 6,
         "src": "const6",
-        "kind": "partial",
-        "note": "A flecha Clusterbloom extra (150% do ATK) não entra."
+        "note": "150% do ATK por Wreath Arrow (conta como Carregado, Genshin Optimizer)."
       }
     ],
-    "procs": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -7181,14 +7299,22 @@
         "src": "const1",
         "kind": "utility",
         "note": "Só a contagem de elementos do A1."
-      },
-      {
-        "src": "const6",
-        "kind": "partial",
-        "note": "O Tri-Karma Karmic Oblivion (200% do ATK + 400% da Maestria) não entra."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "c6",
+        "label": "Nahida C6: Karmic Oblivion",
+        "scale": {
+          "atk": 2,
+          "em": 4
+        },
+        "hitType": "skill",
+        "minConstellation": 6,
+        "src": "const6",
+        "note": "200% do ATK + 400% da Maestria, até 6 vezes em 10 s depois do Supremo (conta como habilidade)."
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -7550,14 +7676,21 @@
         "src": "const2",
         "kind": "utility",
         "note": "Só energia."
-      },
-      {
-        "src": "const6",
-        "kind": "partial",
-        "note": "O Mega Radish (75% do ATK) não entra."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "c6",
+        "label": "Yaoyao C6: Mega Rabanete",
+        "scale": {
+          "atk": 0.75
+        },
+        "hitType": "burst",
+        "minConstellation": 6,
+        "src": "const6",
+        "note": "75% do ATK, até 2 por Supremo (conta como Supremo, Genshin Optimizer)."
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -7597,6 +7730,37 @@
         },
         "flat": [],
         "note": "Assume 4 stacks (+100 de Maestria) durante o Painted Dome: ligue nas janelas."
+      },
+      {
+        "id": "c4",
+        "label": "Kaveh C4",
+        "minConstellation": 4,
+        "scope": "self",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "bloom": 0.6
+          }
+        },
+        "flat": [],
+        "note": "+60% de dano de Florescer dos Núcleos Dendro que ele cria (tabela de reações)."
       }
     ],
     "notes": [
@@ -7618,15 +7782,21 @@
       {
         "src": "const4",
         "kind": "partial",
-        "note": "+60% de dano dos Dendro Cores de Florescer (reação) não entra."
-      },
-      {
-        "src": "const6",
-        "kind": "partial",
-        "note": "A Luz de Pairidaeza (61,8% do ATK) não entra."
+        "note": "Os +60% de Florescer entram (buff Kaveh C4, tabela de reações). O de Lunar-Florescer NÃO entra (mecânica Lunar ainda não modelada)."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "c6",
+        "label": "Kaveh C6: Luz de Pairidaeza",
+        "scale": {
+          "atk": 0.618
+        },
+        "minConstellation": 6,
+        "src": "const6",
+        "note": "61,8% do ATK a cada 3 s durante o Supremo."
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -7695,6 +7865,24 @@
         },
         "flat": [],
         "note": "+80 de Maestria da equipe por 15 s depois do Supremo: ligue nas janelas."
+      },
+      {
+        "id": "c6",
+        "label": "Baizhu C6",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": false,
+        "flat": [
+          {
+            "name": "Spiritveins por HP",
+            "sourceStat": "HP",
+            "perPoint": 0.08,
+            "hitTypes": [
+              "burst"
+            ]
+          }
+        ],
+        "note": "Soma 8% do HP máximo a cada Spiritvein (o dano do Supremo dele). Os escudos extras não mudam o dano."
       }
     ],
     "notes": [
@@ -7707,19 +7895,21 @@
         "src": "const1",
         "kind": "utility",
         "note": "Só cargas."
-      },
-      {
-        "src": "const2",
-        "kind": "partial",
-        "note": "O Gossamer Sprite: Splice (250% do ATK, conta como habilidade) não entra."
-      },
-      {
-        "src": "const6",
-        "kind": "partial",
-        "note": "O dano dos Spiritveins (+8% do HP máximo) não entra."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "c2",
+        "label": "Baizhu C2: Gossamer Sprite: Splice",
+        "scale": {
+          "atk": 2.5
+        },
+        "hitType": "skill",
+        "minConstellation": 2,
+        "src": "const2",
+        "note": "250% do ATK a cada 5 s (conta como habilidade). A cura não muda o dano."
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -8099,17 +8289,24 @@
         "note": "Só energia."
       },
       {
-        "src": "const2",
-        "kind": "partial",
-        "note": "As 2 explosões em cadeia (120% do ATK cada, contam como habilidade) não entram."
-      },
-      {
         "src": "const4",
         "kind": "utility",
         "note": "Só recarga."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "c2",
+        "label": "Chevreuse C2: explosão em cadeia",
+        "scale": {
+          "atk": 1.2
+        },
+        "hitType": "skill",
+        "minConstellation": 2,
+        "src": "const2",
+        "note": "Cada explosão vale 120% do ATK; são 2 (use 2 execuções; conta como habilidade)."
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -8557,17 +8754,23 @@
         "note": "O aumento do Masque of the Red Death (+100% do ATK dos Normais) não entra: depende do valor do talento."
       },
       {
-        "src": "const2",
-        "kind": "partial",
-        "note": "A explosão Balemoon Bloodfire (900% do ATK) não entra."
-      },
-      {
         "src": "const4",
         "kind": "utility",
         "note": "Só recarga e energia."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "c2",
+        "label": "Arlecchino C2: Balemoon Bloodfire",
+        "scale": {
+          "atk": 9
+        },
+        "minConstellation": 2,
+        "src": "const2",
+        "note": "900% do ATK a cada 10 s. A RES dela não muda o dano."
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -8776,26 +8979,47 @@
         },
         "flat": [],
         "note": "+15% de DMG por 1.000 de ATK, até 36%, contra inimigo em Queimadura (assumido)."
+      },
+      {
+        "id": "c6",
+        "label": "Emilie C6",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": false,
+        "flat": [
+          {
+            "name": "Abiding Fragrance",
+            "sourceStat": "ATK",
+            "perPoint": 3,
+            "hitTypes": [
+              "normal",
+              "charged"
+            ],
+            "stacks": 4
+          }
+        ],
+        "note": "Soma 300% do ATK aos 4 primeiros Normais/Carregados da rotação (o efeito acaba depois de 4 Aromas). A conversão para Dendro já é o padrão."
       }
     ],
     "notes": [
       {
-        "src": "p1",
-        "kind": "partial",
-        "note": "A explosão do Cleardew Cologne (600% do ATK) não entra."
-      },
-      {
         "src": "const4",
         "kind": "utility",
         "note": "Só duração."
-      },
-      {
-        "src": "const6",
-        "kind": "partial",
-        "note": "O DMG extra dos Normais e Carregados (300% do ATK) e a conversão para Dendro não entram."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "a1",
+        "label": "Emilie A1: Cleardew Cologne",
+        "scale": {
+          "atk": 6
+        },
+        "minConstellation": 0,
+        "src": "p1",
+        "note": "600% do ATK a cada 2 Aromas coletados (não conta como habilidade)."
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -8897,14 +9121,20 @@
         "src": "const2",
         "kind": "utility",
         "note": "Só pontos de Nightsoul (a mecânica de estado não muda o dano calculado)."
-      },
-      {
-        "src": "const6",
-        "kind": "partial",
-        "note": "A explosão ao quebrar o escudo (200% da DEF) não entra."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "c6",
+        "label": "Kachina C6: escudo quebrado",
+        "scale": {
+          "def": 2
+        },
+        "minConstellation": 6,
+        "src": "const6",
+        "note": "200% da DEF quando o escudo do personagem ativo é trocado ou quebra (a cada 5 s)."
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -9745,14 +9975,21 @@
         "src": "const2",
         "kind": "partial",
         "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
-      },
-      {
-        "src": "const6",
-        "kind": "partial",
-        "note": "O Tonicshot extra (120% do ATK, conta como Normal) não entra."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "c6",
+        "label": "Ifa C6: Tonicshot extra",
+        "scale": {
+          "atk": 1.2
+        },
+        "hitType": "normal",
+        "minConstellation": 6,
+        "src": "const6",
+        "note": "120% do ATK com 50% de chance no tiro segurado (conta como Normal)."
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -9892,17 +10129,24 @@
         "note": "Os Void Rifts e a absorção (dano extra) não entram."
       },
       {
-        "src": "const1",
-        "kind": "partial",
-        "note": "Os blades de cristal (500% do ATK, contam como Carregado) não entram."
-      },
-      {
         "src": "const6",
         "kind": "partial",
         "note": "Os ataques coordenados por Havoc: Sever não entram."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "c1",
+        "label": "Skirk C1: lâmina de cristal",
+        "scale": {
+          "atk": 5
+        },
+        "hitType": "charged",
+        "minConstellation": 1,
+        "src": "const1",
+        "note": "500% do ATK por Void Rift absorvido (conta como Carregado)."
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -10052,11 +10296,6 @@
         "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
       },
       {
-        "src": "const2",
-        "kind": "partial",
-        "note": "A bola de água extra (25% do ATK + 100% da Maestria) não entra."
-      },
-      {
         "src": "const4",
         "kind": "utility",
         "note": "Só energia."
@@ -10067,7 +10306,20 @@
         "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "c2",
+        "label": "Aino C2: bola de água",
+        "scale": {
+          "atk": 0.25,
+          "em": 1
+        },
+        "hitType": "burst",
+        "minConstellation": 2,
+        "src": "const2",
+        "note": "25% do ATK + 100% da Maestria a cada 5 s com a Aino fora de campo (conta como Supremo)."
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -10548,17 +10800,25 @@
         "note": "Só energia."
       },
       {
-        "src": "const2",
-        "kind": "partial",
-        "note": "O Aedon (400% da Maestria + 200% da DEF) não entra."
-      },
-      {
         "src": "const4",
         "kind": "partial",
         "note": "+200 de DEF dos aliados: o motor não tem DEF fixa de buff de equipe neste caso (em breve)."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "c2",
+        "label": "Illuga C2: Aedon",
+        "scale": {
+          "def": 2,
+          "em": 4
+        },
+        "hitType": "burst",
+        "minConstellation": 2,
+        "src": "const2",
+        "note": "400% da Maestria + 200% da DEF a cada 7 stacks de Nightingale's Song (conta como Supremo)."
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -10688,14 +10948,20 @@
         "src": "const1",
         "kind": "partial",
         "note": "O uso extra da habilidade especial e o bônus do Lyrical Libation não entram."
-      },
-      {
-        "src": "const2",
-        "kind": "partial",
-        "note": "O golpe extra de 800% do ATK não entra."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "c2",
+        "label": "Varka C2: golpe extra",
+        "scale": {
+          "atk": 8
+        },
+        "minConstellation": 2,
+        "src": "const2",
+        "note": "800% do ATK na habilidade especial ou no Carregado especial."
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -10876,11 +11142,6 @@
     ],
     "notes": [
       {
-        "src": "p1",
-        "kind": "partial",
-        "note": "A lâmina de vento do último Normal (60% do ATK) não entra."
-      },
-      {
         "src": "p2",
         "kind": "utility",
         "note": "Só cura."
@@ -10896,7 +11157,18 @@
         "note": "Só redução de dano recebido."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "a1",
+        "label": "Viajante A1: lâmina de vento",
+        "scale": {
+          "atk": 0.6
+        },
+        "minConstellation": 0,
+        "src": "p1",
+        "note": "60% do ATK no último Normal."
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -10945,11 +11217,6 @@
         "note": "Só recarga da habilidade."
       },
       {
-        "src": "p2",
-        "kind": "partial",
-        "note": "O desabamento do último Normal (60% do ATK) não entra."
-      },
-      {
         "src": "const2",
         "kind": "partial",
         "note": "A explosão do meteorito (dano igual ao da Starfell Sword) não entra."
@@ -10965,7 +11232,18 @@
         "note": "Só duração."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "a4",
+        "label": "Viajante A4: desabamento",
+        "scale": {
+          "atk": 0.6
+        },
+        "minConstellation": 0,
+        "src": "p2",
+        "note": "60% do ATK no último Normal."
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -11330,11 +11608,6 @@
     ],
     "notes": [
       {
-        "src": "p1",
-        "kind": "partial",
-        "note": "A lâmina de vento do último Normal (60% do ATK) não entra."
-      },
-      {
         "src": "p2",
         "kind": "utility",
         "note": "Só cura."
@@ -11350,7 +11623,18 @@
         "note": "Só redução de dano recebido."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "a1",
+        "label": "Viajante A1: lâmina de vento",
+        "scale": {
+          "atk": 0.6
+        },
+        "minConstellation": 0,
+        "src": "p1",
+        "note": "60% do ATK no último Normal."
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -11399,11 +11683,6 @@
         "note": "Só recarga da habilidade."
       },
       {
-        "src": "p2",
-        "kind": "partial",
-        "note": "O desabamento do último Normal (60% do ATK) não entra."
-      },
-      {
         "src": "const2",
         "kind": "partial",
         "note": "A explosão do meteorito (dano igual ao da Starfell Sword) não entra."
@@ -11419,7 +11698,18 @@
         "note": "Só duração."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "a4",
+        "label": "Viajante A4: desabamento",
+        "scale": {
+          "atk": 0.6
+        },
+        "minConstellation": 0,
+        "src": "p2",
+        "note": "60% do ATK no último Normal."
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -11937,22 +12227,34 @@
     ],
     "notes": [
       {
-        "src": "p1",
-        "kind": "partial",
-        "note": "O Banehunter Oathhammer (150% do ATK) não entra."
-      },
-      {
         "src": "const1",
         "kind": "utility",
         "note": "Só energia."
-      },
-      {
-        "src": "const4",
-        "kind": "partial",
-        "note": "O ricochete do martelo (80% do ATK) não entra."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "a1",
+        "label": "Prune A1: Banehunter Oathhammer",
+        "scale": {
+          "atk": 1.5
+        },
+        "hitType": "burst",
+        "minConstellation": 0,
+        "src": "p1",
+        "note": "150% do ATK quando o sino causa Redemoinho (conta como Supremo). Escolha o elemento absorvido/convertido no campo \"Elemento do dano\" do golpe (o padrão é Anemo)."
+      },
+      {
+        "id": "c4",
+        "label": "Prune C4: ricochete",
+        "scale": {
+          "atk": 0.8
+        },
+        "minConstellation": 4,
+        "src": "const4",
+        "note": "80% do ATK no ricochete do martelo. Escolha o elemento absorvido/convertido no campo \"Elemento do dano\" do golpe (o padrão é Anemo)."
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -12489,11 +12791,6 @@
     ],
     "notes": [
       {
-        "src": "p1",
-        "kind": "partial",
-        "note": "O dano extra do Imersivo com o elemento absorvido (200% do ATK) não entra."
-      },
-      {
         "src": "const1",
         "kind": "utility",
         "note": "Só recarga da habilidade."
@@ -12504,7 +12801,19 @@
         "note": "Só energia."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "a1",
+        "label": "Kazuha A1: Imersivo absorvido",
+        "scale": {
+          "atk": 2
+        },
+        "hitType": "plunge",
+        "minConstellation": 0,
+        "src": "p1",
+        "note": "200% do ATK do elemento absorvido no Imersivo da habilidade (conta como Imersivo). Escolha o elemento absorvido/convertido no campo \"Elemento do dano\" do golpe (o padrão é Anemo)."
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -12600,14 +12909,21 @@
         "src": "const4",
         "kind": "utility",
         "note": "Só cura e energia."
-      },
-      {
-        "src": "const6",
-        "kind": "partial",
-        "note": "O Frosty Parfait extra (500% do ATK, conta como habilidade) não entra."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "c6",
+        "label": "Escoffier C6: Frosty Parfait extra",
+        "scale": {
+          "atk": 5
+        },
+        "hitType": "skill",
+        "minConstellation": 6,
+        "src": "const6",
+        "note": "500% do ATK, até 6 vezes por habilidade (conta como habilidade)."
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -12762,11 +13078,6 @@
     ],
     "notes": [
       {
-        "src": "p2",
-        "kind": "partial",
-        "note": "O dano extra do Carregado crítico (80% do ATK, conta como Carregado) não entra."
-      },
-      {
         "src": "const1",
         "kind": "utility",
         "note": "Só estamina e resistência a interrupção."
@@ -12777,7 +13088,19 @@
         "note": "Só escudo."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "a4",
+        "label": "Yanfei A4: explosão do crítico",
+        "scale": {
+          "atk": 0.8
+        },
+        "hitType": "charged",
+        "minConstellation": 0,
+        "src": "p2",
+        "note": "80% do ATK quando o Carregado causa crítico (conta como Carregado)."
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -12903,14 +13226,21 @@
         "src": "const4",
         "kind": "utility",
         "note": "Só recarga."
-      },
-      {
-        "src": "const6",
-        "kind": "partial",
-        "note": "A onda extra (15% do HP máximo, conta como Supremo) não entra."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "c6",
+        "label": "Candace C6: onda",
+        "scale": {
+          "hp": 0.15
+        },
+        "hitType": "burst",
+        "minConstellation": 6,
+        "src": "const6",
+        "note": "15% do HP máximo a cada 2,3 s (conta como Supremo)."
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -13080,6 +13410,26 @@
         },
         "flat": [],
         "note": "Assume o aumento máximo de HP (+140%, com Fanfare muito acima do limite): ligue na janela do Supremo."
+      },
+      {
+        "id": "c6",
+        "label": "Furina C6",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": false,
+        "flat": [
+          {
+            "name": "Center of Attention por HP",
+            "sourceStat": "HP",
+            "perPoint": 0.18,
+            "hitTypes": [
+              "normal",
+              "charged",
+              "plunge"
+            ]
+          }
+        ],
+        "note": "Soma 18% do HP máximo a todo Normal, Carregado e Imersivo dela (assume todos dentro dos 10 s do Center of Attention). A conversão para Hydro já é o padrão; a cura e a perda de HP não mudam o dano."
       }
     ],
     "notes": [
@@ -13097,11 +13447,6 @@
         "src": "const4",
         "kind": "utility",
         "note": "Só energia."
-      },
-      {
-        "src": "const6",
-        "kind": "partial",
-        "note": "O dano extra dos Normais, Carregados e Imersivos (18% do HP máximo) e a conversão para Hydro não entram."
       }
     ],
     "procs": [],
@@ -13372,14 +13717,21 @@
         "src": "const2",
         "kind": "utility",
         "note": "Só duração."
-      },
-      {
-        "src": "const4",
-        "kind": "partial",
-        "note": "A Marca de Thundergrass (9,7% do HP máximo, a cada 5 s) não entra."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "c4",
+        "label": "Kuki C4: Thundergrass Mark",
+        "scale": {
+          "hp": 0.097
+        },
+        "hitType": "skill",
+        "minConstellation": 4,
+        "src": "const4",
+        "note": "9,7% do HP máximo a cada 5 s (conta como habilidade, Genshin Optimizer)."
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -13685,14 +14037,21 @@
         "src": "const1",
         "kind": "utility",
         "note": "Só cura."
-      },
-      {
-        "src": "const6",
-        "kind": "partial",
-        "note": "O ataque coordenado do Monsieur Verite (180% do ATK) não entra."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "c6",
+        "label": "Charlotte C6: Monsieur Verite",
+        "scale": {
+          "atk": 1.8
+        },
+        "hitType": "burst",
+        "minConstellation": 6,
+        "src": "const6",
+        "note": "180% do ATK a cada 6 s (conta como Supremo). A cura não muda o dano."
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -14102,10 +14461,21 @@
       {
         "src": "const6",
         "kind": "partial",
-        "note": "O Condensed Cluster Beam (4 instâncias de 100% do ATK) não entra."
+        "note": "As 4 instâncias de 100% do ATK são golpe extra na paleta. A versão Estelar (Radiance) NÃO entra (mecânica Estelar ainda não modelada)."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "c6",
+        "label": "Sandrone C6: Condensed Cluster Beam",
+        "scale": {
+          "atk": 1
+        },
+        "minConstellation": 6,
+        "src": "const6",
+        "note": "Cada instância vale 100% do ATK; até 4 (use 4 execuções)."
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -14392,32 +14762,69 @@
         "note": "O dano do raio do Oz (152,7% da flecha) não entra."
       },
       {
-        "src": "p2",
-        "kind": "partial",
-        "note": "O dano do Oz depois de reação (80% do ATK) não entra."
-      },
-      {
-        "src": "const1",
-        "kind": "partial",
-        "note": "O ataque coordenado do Oz (22% do ATK) não entra."
-      },
-      {
-        "src": "const2",
-        "kind": "partial",
-        "note": "O dano extra do Supremo (200% do ATK) não entra."
-      },
-      {
-        "src": "const4",
-        "kind": "partial",
-        "note": "O dano do Supremo (222% do ATK) não entra."
-      },
-      {
         "src": "const6",
         "kind": "partial",
-        "note": "O ataque coordenado do Oz (30% do ATK) e o ATK extra não entram."
+        "note": "O ataque coordenado do Oz (30% do ATK) é golpe extra na paleta. O ATK e a Maestria extras do Witch's Eve Rite NÃO entram (Hexerei ainda não modelado)."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "a4",
+        "label": "Fischl A4: Thundering Retribution",
+        "scale": {
+          "atk": 0.8
+        },
+        "hitType": "skill",
+        "minConstellation": 0,
+        "src": "p2",
+        "note": "80% do ATK quando o personagem ativo dispara reação Electro com o Oz em campo (conta como habilidade, Genshin Optimizer)."
+      },
+      {
+        "id": "c1",
+        "label": "Fischl C1: ataque do Oz",
+        "scale": {
+          "atk": 0.22
+        },
+        "element": "Physical",
+        "hitType": "normal",
+        "minConstellation": 1,
+        "src": "const1",
+        "note": "Ataque coordenado de 22% do ATK a cada Normal da Fischl sem o Oz (Físico, conta como Normal, Genshin Optimizer)."
+      },
+      {
+        "id": "c2",
+        "label": "Fischl C2: Nightrider extra",
+        "scale": {
+          "atk": 2
+        },
+        "hitType": "skill",
+        "minConstellation": 2,
+        "src": "const2",
+        "note": "200% do ATK a mais ao invocar o Oz (conta como habilidade)."
+      },
+      {
+        "id": "c4",
+        "label": "Fischl C4: Supremo extra",
+        "scale": {
+          "atk": 2.22
+        },
+        "hitType": "burst",
+        "minConstellation": 4,
+        "src": "const4",
+        "note": "222% do ATK ao usar o Supremo (conta como Supremo, Genshin Optimizer). A cura não muda o dano."
+      },
+      {
+        "id": "c6",
+        "label": "Fischl C6: ataque coordenado",
+        "scale": {
+          "atk": 0.3
+        },
+        "hitType": "skill",
+        "minConstellation": 6,
+        "src": "const6",
+        "note": "Ataque coordenado de 30% do ATK com o personagem ativo (conta como habilidade, Genshin Optimizer)."
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -14490,11 +14897,6 @@
         "note": "Só número de rodadas."
       },
       {
-        "src": "const2",
-        "kind": "partial",
-        "note": "O tiro do Jinni (50% do ATK) não entra."
-      },
-      {
         "src": "const4",
         "kind": "utility",
         "note": "Só Bônus de Cura e Recarga com pouca energia."
@@ -14505,7 +14907,18 @@
         "note": "Só infusão Electro e cura."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "c2",
+        "label": "Dori C2: Jinni Toop",
+        "scale": {
+          "atk": 0.5
+        },
+        "minConstellation": 2,
+        "src": "const2",
+        "note": "50% do ATK quando o Jinni cura."
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {

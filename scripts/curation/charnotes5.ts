@@ -10,17 +10,17 @@ export const NOTES_5: CharacterNotes = {
   Escoffier: {
     p1: u('Só cura.'),
     const2: x('O dano extra dos aliados por Cold Dish (240% do ATK da Escoffier por golpe Cryo) não entra: dano fixo que vem de outro personagem.'),
-    const4: u('Só cura e energia.'), const6: x('O Frosty Parfait extra (500% do ATK, conta como habilidade) não entra.'),
+    const4: u('Só cura e energia.'),
   },
-  Ifa: { p1: x(LUNAR), const1: u('Só energia.'), const2: x(LUNAR), const6: x('O Tonicshot extra (120% do ATK, conta como Normal) não entra.') },
-  Skirk: { p1: x('Os Void Rifts e a absorção (dano extra) não entram.'), const1: x('Os blades de cristal (500% do ATK, contam como Carregado) não entram.'), const6: x('Os ataques coordenados por Havoc: Sever não entram.') },
+  Ifa: { p1: x(LUNAR), const1: u('Só energia.'), const2: x(LUNAR) },
+  Skirk: { p1: x('Os Void Rifts e a absorção (dano extra) não entram.'), const6: x('Os ataques coordenados por Havoc: Sever não entram.') },
   Dahlia: { p1: u('Só stacks de Benison.'), p2: u('Só velocidade de ataque.'), const1: u('Só energia.'), const2: u('Só escudo.'), const4: u('Só duração.'), const6: u('Só velocidade de ataque e reviver.') },
   Ineffa: {
     p1: x(LUNAR), const1: x(LUNAR), const2: x(LUNAR), const4: u('Só energia.'), const6: x(LUNAR),
   },
   Lauma: { p1: x(LUNAR), const1: u('Só cura.'), const2: x(LUNAR), const4: u('Só energia.'), const6: x(LUNAR) },
   Flins: { p1: x(LUNAR), const1: u('Só recarga e energia.'), const2: x(LUNAR), const6: x(LUNAR) },
-  Aino: { p1: x(LUNAR), const2: x('A bola de água extra (25% do ATK + 100% da Maestria) não entra.'), const4: u('Só energia.'), const6: x(LUNAR) },
+  Aino: { p1: x(LUNAR), const4: u('Só energia.'), const6: x(LUNAR) },
   Nefer: { p2: x(LUNAR), const1: x(LUNAR), const2: x(LUNAR), const6: x(LUNAR) },
   Durin: {
     const1: x('Os stacks de Cycle of Enlightenment dos aliados (dano extra por golpe) não entram: dano fixo que vem de outro personagem.'),
@@ -34,12 +34,10 @@ export const NOTES_5: CharacterNotes = {
   },
   Illuga: {
     p2: x('O bônus do Nightingale\'s Song por Maestria (e de Lunar-Cristalizar) não entra.'), const1: u('Só energia.'),
-    const2: x('O Aedon (400% da Maestria + 200% da DEF) não entra.'),
     const4: x('+200 de DEF dos aliados: o motor não tem DEF fixa de buff de equipe neste caso (em breve).'),
   },
   Varka: {
     const1: x('O uso extra da habilidade especial e o bônus do Lyrical Libation não entram.'),
-    const2: x('O golpe extra de 800% do ATK não entra.'),
   },
   Lohen: {
     p1: x('A mecânica de Will to Win não entra.'), const1: x('A mecânica de Will to Win não entra.'),
@@ -55,10 +53,9 @@ export const NOTES_5: CharacterNotes = {
     const4: x('O bônus de dano do Pathfinder\'s Blessing (valor dependente do elemento) não entra.'),
   },
   Prune: {
-    p1: x('O Banehunter Oathhammer (150% do ATK) não entra.'), const1: u('Só energia.'),
-    const4: x('O ricochete do martelo (80% do ATK) não entra.'),
+    const1: u('Só energia.'),
   },
-  Sandrone: { p1: x(LUNAR), const1: x(LUNAR), const2: x(LUNAR), const4: x(LUNAR), const6: x('O Condensed Cluster Beam (4 instâncias de 100% do ATK) não entra.') },
+  Sandrone: { p1: x(LUNAR), const1: x(LUNAR), const2: x(LUNAR), const4: x(LUNAR), const6: x('As 4 instâncias de 100% do ATK são golpe extra na paleta. A versão Estelar (Radiance) NÃO entra (mecânica Estelar ainda não modelada).') },
   Mitya: { p1: x('A Maestria por Gradient Beacon (30 cada) depende do número de Beacons e não entra.'), const4: x(LUNAR), const6: x(LUNAR) },
   Valeriy: {
     p1: u('Só acumula Impact Momentum.'),

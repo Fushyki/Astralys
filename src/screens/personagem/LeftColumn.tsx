@@ -6,6 +6,7 @@ import { SUBSTATS, defaultTotalRolls, effectiveTalents, maxRollsFor, rollValues,
 import { SUB_LABEL, formatSub } from '../../features/good/labels';
 import type { Character } from '../../data/schema';
 import { useRotationStore } from '../../features/rotation/store';
+import { FINAL_STAT_SUBS, applyFinalStat, type FinalStatKey } from '../../features/character/finalStatModel';
 import { formatInt, formatPercent } from '../../ui/format';
 
 const WEAPON_LABEL: Record<string, string> = { Sword: 'ESPADA', Claymore: 'ESPADÃO', Polearm: 'LANÇA', Catalyst: 'CATALISADOR', Bow: 'ARCO' };
@@ -56,12 +57,13 @@ export function CharacterCard({ character, memberRef, index, color, level, share
 const PCT_SUBSTAT = new Set<Substat>(['CR', 'CD', 'ATK%', 'ER', 'HP%', 'DEF%']);
 const GOOD_OF: Record<Substat, string> = { CR: 'critRate_', CD: 'critDMG_', 'ATK%': 'atk_', EM: 'eleMas', ER: 'enerRech_', ATK: 'atk', 'HP%': 'hp_', HP: 'hp', 'DEF%': 'def_', DEF: 'def' };
 
-export function SubstatsPanel({ memberRef, index, bundle, onGood }: { memberRef: MemberRef; index: number; bundle: AnalysisBundle; onGood: () => void }) {
+export function SubstatsPanel({ memberRef, index, bundle, onGood, bases }: { memberRef: MemberRef; index: number; bundle: AnalysisBundle; onGood: () => void; bases: { atk: number; hp: number; def: number } }) {
   const update = useRotationStore((s) => s.updateMember);
   const useManual = useRotationStore((s) => s.useManualRolls);
   const useAuto = useRotationStore((s) => s.useAutoRolls);
   const setRoll = useRotationStore((s) => s.setManualRoll);
   const [unit, setUnit] = useState<'rolls' | 'valores'>('valores');
+  const [finalNote, setFinalNote] = useState<string | null>(null);
   const rolls = bundle.optimization.rolls[index];
   if (!rolls) return <Panel title="Substats (rolls)"><p className="note">Calculando…</p></Panel>;
 
@@ -92,6 +94,36 @@ export function SubstatsPanel({ memberRef, index, bundle, onGood }: { memberRef:
   const budget = memberRef.totalRolls ?? defaultTotalRolls(memberRef.artifacts);
   const max = Math.max(1, ...SUBSTATS.map((s) => rolls[s]));
   const forced = memberRef.forcedCritRolls;
+  const finals = bundle.memberStats[index];
+  const FINALS: { key: FinalStatKey; label: string; value: number; shown: number; step: number; pct: boolean }[] = finals
+    ? [
+        { key: 'atk', label: 'ATK', value: finals.atk, shown: Math.round(finals.atk), step: 10, pct: false },
+        { key: 'hp', label: 'HP', value: finals.hp, shown: Math.round(finals.hp), step: 100, pct: false },
+        { key: 'def', label: 'DEF', value: finals.def, shown: Math.round(finals.def), step: 10, pct: false },
+        { key: 'em', label: 'Maestria', value: finals.em, shown: Math.round(finals.em), step: 1, pct: false },
+        { key: 'er', label: 'Recarga (%)', value: finals.er, shown: Math.round(finals.er * 1000) / 10, step: 0.1, pct: true },
+        { key: 'critRate', label: 'Taxa crít. (%)', value: finals.critRate, shown: Math.round(finals.critRate * 1000) / 10, step: 0.1, pct: true },
+        { key: 'critDmg', label: 'Dano crít. (%)', value: finals.critDmg, shown: Math.round(finals.critDmg * 1000) / 10, step: 0.1, pct: true },
+      ]
+    : [];
+  const setFinal = (f: (typeof FINALS)[number], typed: number) => {
+    const r = applyFinalStat({
+      key: f.key,
+      target: f.pct ? typed / 100 : typed,
+      current: f.value,
+      base: f.key === 'atk' ? bases.atk : f.key === 'hp' ? bases.hp : bases.def,
+      rolls: { ...rolls, ...memberRef.manualRolls },
+      perRoll,
+      cap: (s) => maxRollsFor(memberRef.artifacts, s),
+    });
+    update(index, { manualRolls: r.rolls });
+    const subs = FINAL_STAT_SUBS[f.key];
+    setFinalNote(
+      r.limited
+        ? `${f.label}: o máximo possível com os substats é ${f.pct ? formatPercent(r.reached, 1) : formatInt(r.reached)} (limite de rolls ou valor abaixo do que as peças já dão). Gravado em ${SUBSTAT_LABEL[subs.pct]}${subs.flat ? ` e ${SUBSTAT_LABEL[subs.flat]}` : ''}.`
+        : null,
+    );
+  };
 
   return (
     <Panel title="Substats (rolls)">
@@ -143,6 +175,18 @@ export function SubstatsPanel({ memberRef, index, bundle, onGood }: { memberRef:
           );
         })}
       </div>
+      {manual && finals && (
+        <>
+          <span className="lbl">Stats finais (com buffs ativos)</span>
+          <div className="pc-form two">
+            {FINALS.map((f) => (
+              <NumberInput key={f.key} label={f.label} value={f.shown} min={0} step={f.step} onCommit={(v) => setFinal(f, v)} />
+            ))}
+          </div>
+          <span className="muted small">Digite o valor final: o painel ajusta os substats que faltam (ATK, HP e DEF pelo % e depois pelo fixo).</span>
+          {finalNote && <p className="dz-error" role="alert">{finalNote}</p>}
+        </>
+      )}
       <span className={`muted small num${used > budget ? ' over' : ''}`}>
         {used} de {budget} rolls{forced ? ` · ${forced} fixos em crítico` : ''}
       </span>

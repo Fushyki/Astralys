@@ -89,7 +89,7 @@ export default function Personagem() {
               <div className="pc-row a">
                 <Attributes v={v} index={index} />
                 <div className="pc-col">
-                  <SubstatsPanel memberRef={ref} index={index} bundle={v.bundle} onGood={goToGood} />
+                  <SubstatsPanel memberRef={ref} index={index} bundle={v.bundle} onGood={goToGood} bases={{ atk: character.baseAtk + (v.data.game.weapons.find((w) => w.name === ref.weapon)?.baseAtk ?? 0), hp: character.baseHp, def: character.baseDef }} />
                 </div>
               </div>
               <p className="pc-next">

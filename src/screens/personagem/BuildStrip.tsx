@@ -124,7 +124,7 @@ export function BuildStrip({ data, index, member: memberRef, projectId }: { data
             return (
               <button type="button" key={slot} className={`pc-piece gear-tile real${piece ? '' : ' empty'}`} data-rarity={piece?.rarity ?? 4} onClick={() => setPickPiece(slot)} aria-label={`${SLOT_LABEL[slot]}: ${piece ? (pset?.name ?? piece.setKey) : 'sem peça'}. Tocar para escolher do inventário`}>
                 <span className="art"><Img src={pset ? pieceIconUrl(pset.id, slot) : undefined} fallback={piece ? '◆' : '+'} /></span>
-                {piece && <span className="lv num">+{piece.level ?? 20}</span>}
+                {piece && main && <span className="lv num">+{main.level}</span>}
                 <span className="n">{SLOT_LABEL[slot]}</span>
                 <span className="main">{piece && main ? (MAIN_LABEL[main.key] ?? main.key) : 'Sem peça'}</span>
                 <span className="num val">{piece && main ? formatMain(main.key, main.value) : ''}</span>

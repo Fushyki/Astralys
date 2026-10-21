@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { AppHeader } from '../app/AppHeader';
 import '../design/design.css';
 import { pieceIconUrl, weaponIconUrl } from '../design/images';
+import { pieceLevel } from '../engine';
 import { Chip, Panel, Segmented } from '../design/primitives';
 import { enkaToGood, mergeGood } from '../features/enka/enkaImport';
 import { norm, parseGood, type Good, type GoodArtifact } from '../features/good/goodImport';
@@ -214,7 +215,7 @@ function ArtifactTile({ a, setInfo }: { a: GoodArtifact; setInfo?: { name: strin
   return (
     <div className="piece" data-rarity={a.rarity}>
       <span className="art">{setInfo && !failed ? <img src={pieceIconUrl(setInfo.id, a.slotKey as 'flower')} alt="" loading="lazy" crossOrigin="anonymous" onError={() => setFailed(true)} /> : <b className="ph">◆</b>}</span>
-      <span className="main">{MAIN_LABEL[a.mainStatKey] ?? a.mainStatKey} <small>+{a.level ?? 20}</small></span>
+      <span className="main">{MAIN_LABEL[a.mainStatKey] ?? a.mainStatKey} <small>+{pieceLevel(a)}</small></span>
       <span className="muted small">{setInfo?.name ?? a.setKey}</span>
       <ul>{a.substats.map((s) => <li key={s.key}><span>{SUB_LABEL[s.key] ?? s.key}</span><b className="num">{fmt(s.key, s.value)}</b></li>)}</ul>
       {a.location && <span className="loc">de {a.location}</span>}

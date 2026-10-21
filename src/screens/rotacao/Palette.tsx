@@ -2,6 +2,7 @@
 import { useMemo, useState } from 'react';
 import type { ProjectView } from '../../app/ProjectContext';
 import { Panel } from '../../design/primitives';
+import { memberProcs } from '../../engine';
 import { cleanMoveName } from '../../features/character/characterModel';
 import { useRotationStore } from '../../features/rotation/store';
 import { formatDecimal } from '../../ui/format';
@@ -25,6 +26,12 @@ export function Palette({ v }: { v: ProjectView }) {
       .sort((a, b) => TALENT_ORDER.indexOf(a.talent) - TALENT_ORDER.indexOf(b.talent));
   }, [v.data.game.moves, character, query]);
   const list = all || query ? moves : moves.slice(0, SHOWN);
+  // Golpes extras de arma, set, passivas e constelações deste membro (escala fixa, sem nível de talento).
+  const procs = useMemo(() => {
+    const m = v.resolved.team.members[member];
+    const q = query.trim().toLowerCase();
+    return m ? memberProcs(m).filter((p) => !q || p.proc.label.toLowerCase().includes(q) || p.origin.toLowerCase().includes(q)) : [];
+  }, [v.resolved, member, query]);
 
   return (
     <Panel title={`Inserir em ${formatDecimal(playhead, 1)} s`} aside={<input className="dz-input" style={{ maxWidth: 220 }} type="search" placeholder="Buscar golpe" aria-label="Buscar golpe" value={query} onChange={(e) => setQuery(e.target.value)} />}>
@@ -36,7 +43,19 @@ export function Palette({ v }: { v: ProjectView }) {
         ))}
       </div>
       <div className="rt-chips">
-        {list.length === 0 && <p className="note">Nenhum golpe encontrado.</p>}
+        {list.length === 0 && procs.length === 0 && <p className="note">Nenhum golpe encontrado.</p>}
+        {procs.map((p) => (
+          <button
+            key={p.key}
+            type="button"
+            className="chip"
+            style={{ ['--c' as string]: v.colors[member] }}
+            title={`${p.origin}${p.proc.note ? `: ${p.proc.note}` : ''}`}
+            onClick={() => add({ member, move: { character, talent: 'proc', label: p.key, variant: 0 }, displayName: `${character} - ${p.proc.label}`, time: playhead })}
+          >
+            + · {p.proc.label}
+          </button>
+        ))}
         {list.map((m) => {
           const label = `${cleanMoveName(m.labelPt ?? m.label)}${m.variants > 1 ? ` (${m.variant + 1}/${m.variants})` : ''}`;
           return (

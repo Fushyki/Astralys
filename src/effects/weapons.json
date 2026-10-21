@@ -85,7 +85,17 @@
     "dmgPctByType": {},
     "buffs": [],
     "flat": [],
-    "procs": [],
+    "procs": [
+      {
+        "id": "falcao",
+        "label": "Aquila Favonia: falcão",
+        "scale": {
+          "atk": 2
+        },
+        "element": "Physical",
+        "minConstellation": 0
+      }
+    ],
     "weapon": "Aquila Favonia",
     "refinements": [
       {
@@ -100,7 +110,17 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "falcao",
+            "label": "Aquila Favonia: falcão",
+            "scale": {
+              "atk": 2
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0.25,
@@ -114,7 +134,17 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "falcao",
+            "label": "Aquila Favonia: falcão",
+            "scale": {
+              "atk": 2.3
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0.3,
@@ -128,7 +158,17 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "falcao",
+            "label": "Aquila Favonia: falcão",
+            "scale": {
+              "atk": 2.6
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0.35,
@@ -142,7 +182,17 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "falcao",
+            "label": "Aquila Favonia: falcão",
+            "scale": {
+              "atk": 2.9
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0.4,
@@ -156,10 +206,20 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "falcao",
+            "label": "Aquila Favonia: falcão",
+            "scale": {
+              "atk": 3.2
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       }
     ],
-    "note": "Só o ATK. A cura e o dano em área ao levar dano NÃO entram.",
+    "note": "ATK. Golpe extra na paleta da rotação (coloque quantas vezes ele acontece). Dano em área de 200% (R1) do ATK, Físico, ao levar dano (a cada 15 s). A cura não muda o dano.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
   },
   {
@@ -174,7 +234,17 @@
     "dmgPctByType": {},
     "buffs": [],
     "flat": [],
-    "procs": [],
+    "procs": [
+      {
+        "id": "lamina",
+        "label": "Skyward Blade: dano extra (1 acerto)",
+        "scale": {
+          "atk": 0.2
+        },
+        "element": "Physical",
+        "minConstellation": 0
+      }
+    ],
     "weapon": "Skyward Blade",
     "refinements": [
       {
@@ -189,7 +259,17 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "lamina",
+            "label": "Skyward Blade: dano extra (1 acerto)",
+            "scale": {
+              "atk": 0.2
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -203,7 +283,17 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "lamina",
+            "label": "Skyward Blade: dano extra (1 acerto)",
+            "scale": {
+              "atk": 0.25
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -217,7 +307,17 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "lamina",
+            "label": "Skyward Blade: dano extra (1 acerto)",
+            "scale": {
+              "atk": 0.3
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -231,7 +331,17 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "lamina",
+            "label": "Skyward Blade: dano extra (1 acerto)",
+            "scale": {
+              "atk": 0.35
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -245,10 +355,20 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "lamina",
+            "label": "Skyward Blade: dano extra (1 acerto)",
+            "scale": {
+              "atk": 0.4
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       }
     ],
-    "note": "Só a Taxa Crítica. O dano extra de Normal/Carregado (% do ATK) e a velocidade NÃO entram.",
+    "note": "Taxa Crítica. Golpe extra na paleta da rotação (coloque quantas vezes ele acontece). Cada acerto de Normal/Carregado nos 12 s depois do Supremo soma 20% (R1) do ATK como dano Físico à parte (Genshin Optimizer). A velocidade não entra.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
   },
   {
@@ -1569,7 +1689,17 @@
     "dmgPctByType": {},
     "buffs": [],
     "flat": [],
-    "procs": [],
+    "procs": [
+      {
+        "id": "lamina",
+        "label": "Skyward Pride: lâmina de vácuo",
+        "scale": {
+          "atk": 0.8
+        },
+        "element": "Physical",
+        "minConstellation": 0
+      }
+    ],
     "weapon": "Skyward Pride",
     "refinements": [
       {
@@ -1584,7 +1714,17 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "lamina",
+            "label": "Skyward Pride: lâmina de vácuo",
+            "scale": {
+              "atk": 0.8
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -1598,7 +1738,17 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "lamina",
+            "label": "Skyward Pride: lâmina de vácuo",
+            "scale": {
+              "atk": 1
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -1612,7 +1762,17 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "lamina",
+            "label": "Skyward Pride: lâmina de vácuo",
+            "scale": {
+              "atk": 1.2
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -1626,7 +1786,17 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "lamina",
+            "label": "Skyward Pride: lâmina de vácuo",
+            "scale": {
+              "atk": 1.4
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -1640,10 +1810,20 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "lamina",
+            "label": "Skyward Pride: lâmina de vácuo",
+            "scale": {
+              "atk": 1.6
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       }
     ],
-    "note": "Só o DMG geral. As lâminas de vácuo NÃO entram.",
+    "note": "DMG geral. Golpe extra na paleta da rotação (coloque quantas vezes ele acontece). Lâmina de vácuo de 80% (R1) do ATK, Física, até 8 depois do Supremo.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
   },
   {
@@ -2786,7 +2966,17 @@
     "dmgPctByType": {},
     "buffs": [],
     "flat": [],
-    "procs": [],
+    "procs": [
+      {
+        "id": "lamina",
+        "label": "Skyward Spine: lâmina de vácuo",
+        "scale": {
+          "atk": 0.4
+        },
+        "element": "Physical",
+        "minConstellation": 0
+      }
+    ],
     "weapon": "Skyward Spine",
     "refinements": [
       {
@@ -2801,7 +2991,17 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "lamina",
+            "label": "Skyward Spine: lâmina de vácuo",
+            "scale": {
+              "atk": 0.4
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -2815,7 +3015,17 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "lamina",
+            "label": "Skyward Spine: lâmina de vácuo",
+            "scale": {
+              "atk": 0.55
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -2829,7 +3039,17 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "lamina",
+            "label": "Skyward Spine: lâmina de vácuo",
+            "scale": {
+              "atk": 0.7
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -2843,7 +3063,17 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "lamina",
+            "label": "Skyward Spine: lâmina de vácuo",
+            "scale": {
+              "atk": 0.85
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -2857,10 +3087,20 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "lamina",
+            "label": "Skyward Spine: lâmina de vácuo",
+            "scale": {
+              "atk": 1
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       }
     ],
-    "note": "Só a Taxa Crítica. A velocidade e a lâmina de vácuo NÃO entram.",
+    "note": "Taxa Crítica. Golpe extra na paleta da rotação (coloque quantas vezes ele acontece). Lâmina de vácuo de 40% (R1) do ATK, Física, 50% de chance a cada 2 s. A velocidade não entra.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
   },
   {
@@ -4133,7 +4373,17 @@
     "dmgPctByType": {},
     "buffs": [],
     "flat": [],
-    "procs": [],
+    "procs": [
+      {
+        "id": "nuvem",
+        "label": "Skyward Atlas: nuvem (1 ataque)",
+        "scale": {
+          "atk": 1.6
+        },
+        "element": "Physical",
+        "minConstellation": 0
+      }
+    ],
     "weapon": "Skyward Atlas",
     "refinements": [
       {
@@ -4148,7 +4398,17 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "nuvem",
+            "label": "Skyward Atlas: nuvem (1 ataque)",
+            "scale": {
+              "atk": 1.6
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -4162,7 +4422,17 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "nuvem",
+            "label": "Skyward Atlas: nuvem (1 ataque)",
+            "scale": {
+              "atk": 2
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -4176,7 +4446,17 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "nuvem",
+            "label": "Skyward Atlas: nuvem (1 ataque)",
+            "scale": {
+              "atk": 2.4
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -4190,7 +4470,17 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "nuvem",
+            "label": "Skyward Atlas: nuvem (1 ataque)",
+            "scale": {
+              "atk": 2.8
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -4204,10 +4494,20 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "nuvem",
+            "label": "Skyward Atlas: nuvem (1 ataque)",
+            "scale": {
+              "atk": 3.2
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       }
     ],
-    "note": "Só o DMG elemental. As nuvens (dano extra) NÃO entram.",
+    "note": "DMG elemental. Golpe extra na paleta da rotação (coloque quantas vezes ele acontece). Cada ataque das nuvens vale 160% (R1) do ATK, Físico (Genshin Optimizer); duram 15 s, 50% de chance a cada 30 s.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
   },
   {
@@ -5368,7 +5668,17 @@
     "dmgPctByType": {},
     "buffs": [],
     "flat": [],
-    "procs": [],
+    "procs": [
+      {
+        "id": "area",
+        "label": "Skyward Harp: área",
+        "scale": {
+          "atk": 1.25
+        },
+        "element": "Physical",
+        "minConstellation": 0
+      }
+    ],
     "weapon": "Skyward Harp",
     "refinements": [
       {
@@ -5383,7 +5693,17 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "area",
+            "label": "Skyward Harp: área",
+            "scale": {
+              "atk": 1.25
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -5397,7 +5717,17 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "area",
+            "label": "Skyward Harp: área",
+            "scale": {
+              "atk": 1.25
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -5411,7 +5741,17 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "area",
+            "label": "Skyward Harp: área",
+            "scale": {
+              "atk": 1.25
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -5425,7 +5765,17 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "area",
+            "label": "Skyward Harp: área",
+            "scale": {
+              "atk": 1.25
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -5439,10 +5789,20 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "area",
+            "label": "Skyward Harp: área",
+            "scale": {
+              "atk": 1.25
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       }
     ],
-    "note": "Só o CRIT DMG. O dano físico em área NÃO entra.",
+    "note": "Dano Crítico. Golpe extra na paleta da rotação (coloque quantas vezes ele acontece). Dano em área de 125% do ATK, Físico, com 60% (R1) de chance a cada 4 s (R1).",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
   },
   {
@@ -7281,7 +7641,17 @@
     "dmgPctByType": {},
     "buffs": [],
     "flat": [],
-    "procs": [],
+    "procs": [
+      {
+        "id": "onda",
+        "label": "The Flute: onda",
+        "scale": {
+          "atk": 1
+        },
+        "element": "Physical",
+        "minConstellation": 0
+      }
+    ],
     "weapon": "The Flute",
     "refinements": [
       {
@@ -7296,7 +7666,17 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "onda",
+            "label": "The Flute: onda",
+            "scale": {
+              "atk": 1
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -7310,7 +7690,17 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "onda",
+            "label": "The Flute: onda",
+            "scale": {
+              "atk": 1.25
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -7324,7 +7714,17 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "onda",
+            "label": "The Flute: onda",
+            "scale": {
+              "atk": 1.5
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -7338,7 +7738,17 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "onda",
+            "label": "The Flute: onda",
+            "scale": {
+              "atk": 1.75
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -7352,11 +7762,20 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "onda",
+            "label": "The Flute: onda",
+            "scale": {
+              "atk": 2
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       }
     ],
-    "note": "O dano de 100% do ATK a cada 5 acertos (golpe extra) NÃO entra: precisa do modelo de golpes extras de arma.",
-    "partial": true,
+    "note": "Golpe extra na paleta da rotação (coloque quantas vezes ele acontece). Onda de 100% (R1) do ATK, Física, a cada 5 Harmonias (5 acertos de Normal/Carregado).",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
   {
@@ -8893,7 +9312,17 @@
     "dmgPctByType": {},
     "buffs": [],
     "flat": [],
-    "procs": [],
+    "procs": [
+      {
+        "id": "rajada",
+        "label": "Narzissenkreuz: rajada",
+        "scale": {
+          "atk": 1.6
+        },
+        "element": "Physical",
+        "minConstellation": 0
+      }
+    ],
     "weapon": "Sword of Narzissenkreuz",
     "refinements": [
       {
@@ -8908,7 +9337,17 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "rajada",
+            "label": "Narzissenkreuz: rajada",
+            "scale": {
+              "atk": 1.6
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -8922,7 +9361,17 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "rajada",
+            "label": "Narzissenkreuz: rajada",
+            "scale": {
+              "atk": 2
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -8936,7 +9385,17 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "rajada",
+            "label": "Narzissenkreuz: rajada",
+            "scale": {
+              "atk": 2.4
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -8950,7 +9409,17 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "rajada",
+            "label": "Narzissenkreuz: rajada",
+            "scale": {
+              "atk": 2.8
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -8964,11 +9433,20 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "rajada",
+            "label": "Narzissenkreuz: rajada",
+            "scale": {
+              "atk": 3.2
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       }
     ],
-    "note": "O golpe extra (160% do ATK a cada 12 s) NÃO entra: precisa do modelo de golpes extras de arma.",
-    "partial": true,
+    "note": "Golpe extra na paleta da rotação (coloque quantas vezes ele acontece). Rajada de 160% (R1) do ATK, Física (Genshin Optimizer), a cada 12 s, só para quem não tem Arkhe.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
   {
@@ -12025,7 +12503,17 @@
     "dmgPctByType": {},
     "buffs": [],
     "flat": [],
-    "procs": [],
+    "procs": [
+      {
+        "id": "golpe",
+        "label": "Prototype Archaic: golpe",
+        "scale": {
+          "atk": 2.4
+        },
+        "element": "Physical",
+        "minConstellation": 0
+      }
+    ],
     "weapon": "Prototype Archaic",
     "refinements": [
       {
@@ -12040,7 +12528,17 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "golpe",
+            "label": "Prototype Archaic: golpe",
+            "scale": {
+              "atk": 2.4
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -12054,7 +12552,17 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "golpe",
+            "label": "Prototype Archaic: golpe",
+            "scale": {
+              "atk": 3
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -12068,7 +12576,17 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "golpe",
+            "label": "Prototype Archaic: golpe",
+            "scale": {
+              "atk": 3.6
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -12082,7 +12600,17 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "golpe",
+            "label": "Prototype Archaic: golpe",
+            "scale": {
+              "atk": 4.2
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -12096,11 +12624,20 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "golpe",
+            "label": "Prototype Archaic: golpe",
+            "scale": {
+              "atk": 4.8
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       }
     ],
-    "note": "O golpe extra (240% do ATK, 50% de chance a cada 15 s) NÃO entra: precisa do modelo de golpes extras de arma.",
-    "partial": true,
+    "note": "Golpe extra na paleta da rotação (coloque quantas vezes ele acontece). 240% (R1) do ATK, Físico, com 50% de chance a cada 15 s.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
   {
@@ -12677,7 +13214,26 @@
     "dmgPctByType": {},
     "buffs": [],
     "flat": [],
-    "procs": [],
+    "procs": [
+      {
+        "id": "icicle",
+        "label": "Icicle",
+        "scale": {
+          "atk": 0.8
+        },
+        "element": "Physical",
+        "minConstellation": 0
+      },
+      {
+        "id": "icicle-cryo",
+        "label": "Icicle (inimigo sob Cryo)",
+        "scale": {
+          "atk": 2
+        },
+        "element": "Physical",
+        "minConstellation": 0
+      }
+    ],
     "weapon": "Snow-Tombed Starsilver",
     "refinements": [
       {
@@ -12692,7 +13248,26 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "icicle",
+            "label": "Icicle",
+            "scale": {
+              "atk": 0.8
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          },
+          {
+            "id": "icicle-cryo",
+            "label": "Icicle (inimigo sob Cryo)",
+            "scale": {
+              "atk": 2
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -12706,7 +13281,26 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "icicle",
+            "label": "Icicle",
+            "scale": {
+              "atk": 0.95
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          },
+          {
+            "id": "icicle-cryo",
+            "label": "Icicle (inimigo sob Cryo)",
+            "scale": {
+              "atk": 2.4
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -12720,7 +13314,26 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "icicle",
+            "label": "Icicle",
+            "scale": {
+              "atk": 1.1
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          },
+          {
+            "id": "icicle-cryo",
+            "label": "Icicle (inimigo sob Cryo)",
+            "scale": {
+              "atk": 2.8
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -12734,7 +13347,26 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "icicle",
+            "label": "Icicle",
+            "scale": {
+              "atk": 1.25
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          },
+          {
+            "id": "icicle-cryo",
+            "label": "Icicle (inimigo sob Cryo)",
+            "scale": {
+              "atk": 3.2
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -12748,11 +13380,29 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "icicle",
+            "label": "Icicle",
+            "scale": {
+              "atk": 1.4
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          },
+          {
+            "id": "icicle-cryo",
+            "label": "Icicle (inimigo sob Cryo)",
+            "scale": {
+              "atk": 3.6
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       }
     ],
-    "note": "O golpe extra (Icicle: 80% ou 200% do ATK) NÃO entra: precisa do modelo de golpes extras de arma.",
-    "partial": true,
+    "note": "Golpe extra na paleta da rotação (coloque quantas vezes ele acontece). Icicle Físico: 80% (R1) do ATK, ou 200% contra inimigo sob Cryo; 60% de chance a cada 10 s.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
   {
@@ -12769,7 +13419,17 @@
     },
     "buffs": [],
     "flat": [],
-    "procs": [],
+    "procs": [
+      {
+        "id": "atum",
+        "label": "Sea-Lord: atum",
+        "scale": {
+          "atk": 1
+        },
+        "element": "Physical",
+        "minConstellation": 0
+      }
+    ],
     "weapon": "Luxurious Sea-Lord",
     "refinements": [
       {
@@ -12786,7 +13446,17 @@
         },
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "atum",
+            "label": "Sea-Lord: atum",
+            "scale": {
+              "atk": 1
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -12802,7 +13472,17 @@
         },
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "atum",
+            "label": "Sea-Lord: atum",
+            "scale": {
+              "atk": 1.25
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -12818,7 +13498,17 @@
         },
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "atum",
+            "label": "Sea-Lord: atum",
+            "scale": {
+              "atk": 1.5
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -12834,7 +13524,17 @@
         },
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "atum",
+            "label": "Sea-Lord: atum",
+            "scale": {
+              "atk": 1.75
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -12850,11 +13550,20 @@
         },
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "atum",
+            "label": "Sea-Lord: atum",
+            "scale": {
+              "atk": 2
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       }
     ],
-    "note": "Só o DMG do Supremo. O golpe extra do atum (100% do ATK) NÃO entra.",
-    "partial": true,
+    "note": "DMG do Supremo. Golpe extra na paleta da rotação (coloque quantas vezes ele acontece). Atum de 100% (R1) do ATK, Físico, a cada 15 s.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
   {
@@ -15393,7 +16102,26 @@
     "dmgPctByType": {},
     "buffs": [],
     "flat": [],
-    "procs": [],
+    "procs": [
+      {
+        "id": "icicle",
+        "label": "Icicle",
+        "scale": {
+          "atk": 0.8
+        },
+        "element": "Physical",
+        "minConstellation": 0
+      },
+      {
+        "id": "icicle-cryo",
+        "label": "Icicle (inimigo sob Cryo)",
+        "scale": {
+          "atk": 2
+        },
+        "element": "Physical",
+        "minConstellation": 0
+      }
+    ],
     "weapon": "Dragonspine Spear",
     "refinements": [
       {
@@ -15408,7 +16136,26 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "icicle",
+            "label": "Icicle",
+            "scale": {
+              "atk": 0.8
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          },
+          {
+            "id": "icicle-cryo",
+            "label": "Icicle (inimigo sob Cryo)",
+            "scale": {
+              "atk": 2
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -15422,7 +16169,26 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "icicle",
+            "label": "Icicle",
+            "scale": {
+              "atk": 0.95
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          },
+          {
+            "id": "icicle-cryo",
+            "label": "Icicle (inimigo sob Cryo)",
+            "scale": {
+              "atk": 2.4
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -15436,7 +16202,26 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "icicle",
+            "label": "Icicle",
+            "scale": {
+              "atk": 1.1
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          },
+          {
+            "id": "icicle-cryo",
+            "label": "Icicle (inimigo sob Cryo)",
+            "scale": {
+              "atk": 2.8
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -15450,7 +16235,26 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "icicle",
+            "label": "Icicle",
+            "scale": {
+              "atk": 1.25
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          },
+          {
+            "id": "icicle-cryo",
+            "label": "Icicle (inimigo sob Cryo)",
+            "scale": {
+              "atk": 3.2
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -15464,11 +16268,29 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "icicle",
+            "label": "Icicle",
+            "scale": {
+              "atk": 1.4
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          },
+          {
+            "id": "icicle-cryo",
+            "label": "Icicle (inimigo sob Cryo)",
+            "scale": {
+              "atk": 3.6
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       }
     ],
-    "note": "O golpe extra (Icicle: 80% ou 200% do ATK) NÃO entra: precisa do modelo de golpes extras de arma.",
-    "partial": true,
+    "note": "Golpe extra na paleta da rotação (coloque quantas vezes ele acontece). Icicle Físico: 80% (R1) do ATK, ou 200% contra inimigo sob Cryo; 60% de chance a cada 10 s.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
   {
@@ -18647,7 +19469,17 @@
     "dmgPctByType": {},
     "buffs": [],
     "flat": [],
-    "procs": [],
+    "procs": [
+      {
+        "id": "raio",
+        "label": "Eye of Perception: raio",
+        "scale": {
+          "atk": 2.4
+        },
+        "element": "Physical",
+        "minConstellation": 0
+      }
+    ],
     "weapon": "Eye of Perception",
     "refinements": [
       {
@@ -18662,7 +19494,17 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "raio",
+            "label": "Eye of Perception: raio",
+            "scale": {
+              "atk": 2.4
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -18676,7 +19518,17 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "raio",
+            "label": "Eye of Perception: raio",
+            "scale": {
+              "atk": 2.7
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -18690,7 +19542,17 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "raio",
+            "label": "Eye of Perception: raio",
+            "scale": {
+              "atk": 3
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -18704,7 +19566,17 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "raio",
+            "label": "Eye of Perception: raio",
+            "scale": {
+              "atk": 3.3
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -18718,11 +19590,20 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "raio",
+            "label": "Eye of Perception: raio",
+            "scale": {
+              "atk": 3.6
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       }
     ],
-    "note": "O golpe extra (raio de 240% do ATK, 50% de chance) NÃO entra: precisa do modelo de golpes extras de arma.",
-    "partial": true,
+    "note": "Golpe extra na paleta da rotação (coloque quantas vezes ele acontece). Raio de 240% (R1) do ATK, Físico (Genshin Optimizer), 50% de chance a cada 12 s; quica até 4 vezes entre inimigos.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
   {
@@ -18826,7 +19707,26 @@
     "dmgPctByType": {},
     "buffs": [],
     "flat": [],
-    "procs": [],
+    "procs": [
+      {
+        "id": "icicle",
+        "label": "Icicle",
+        "scale": {
+          "atk": 0.8
+        },
+        "element": "Physical",
+        "minConstellation": 0
+      },
+      {
+        "id": "icicle-cryo",
+        "label": "Icicle (inimigo sob Cryo)",
+        "scale": {
+          "atk": 2
+        },
+        "element": "Physical",
+        "minConstellation": 0
+      }
+    ],
     "weapon": "Frostbearer",
     "refinements": [
       {
@@ -18841,7 +19741,26 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "icicle",
+            "label": "Icicle",
+            "scale": {
+              "atk": 0.8
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          },
+          {
+            "id": "icicle-cryo",
+            "label": "Icicle (inimigo sob Cryo)",
+            "scale": {
+              "atk": 2
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -18855,7 +19774,26 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "icicle",
+            "label": "Icicle",
+            "scale": {
+              "atk": 0.95
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          },
+          {
+            "id": "icicle-cryo",
+            "label": "Icicle (inimigo sob Cryo)",
+            "scale": {
+              "atk": 2.4
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -18869,7 +19807,26 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "icicle",
+            "label": "Icicle",
+            "scale": {
+              "atk": 1.1
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          },
+          {
+            "id": "icicle-cryo",
+            "label": "Icicle (inimigo sob Cryo)",
+            "scale": {
+              "atk": 2.8
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -18883,7 +19840,26 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "icicle",
+            "label": "Icicle",
+            "scale": {
+              "atk": 1.25
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          },
+          {
+            "id": "icicle-cryo",
+            "label": "Icicle (inimigo sob Cryo)",
+            "scale": {
+              "atk": 3.2
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -18897,11 +19873,29 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "icicle",
+            "label": "Icicle",
+            "scale": {
+              "atk": 1.4
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          },
+          {
+            "id": "icicle-cryo",
+            "label": "Icicle (inimigo sob Cryo)",
+            "scale": {
+              "atk": 3.6
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       }
     ],
-    "note": "O golpe extra (Icicle: 80% ou 200% do ATK) NÃO entra: precisa do modelo de golpes extras de arma.",
-    "partial": true,
+    "note": "Golpe extra na paleta da rotação (coloque quantas vezes ele acontece). Icicle Físico: 80% (R1) do ATK, ou 200% contra inimigo sob Cryo; 60% de chance a cada 10 s.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
   {
@@ -19871,7 +20865,17 @@
     "dmgPctByType": {},
     "buffs": [],
     "flat": [],
-    "procs": [],
+    "procs": [
+      {
+        "id": "golpe",
+        "label": "Ash-Graven: golpe",
+        "scale": {
+          "hp": 0.4
+        },
+        "element": "Physical",
+        "minConstellation": 0
+      }
+    ],
     "weapon": "Ash-Graven Drinking Horn",
     "refinements": [
       {
@@ -19886,7 +20890,17 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "golpe",
+            "label": "Ash-Graven: golpe",
+            "scale": {
+              "hp": 0.4
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -19900,7 +20914,17 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "golpe",
+            "label": "Ash-Graven: golpe",
+            "scale": {
+              "hp": 0.5
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -19914,7 +20938,17 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "golpe",
+            "label": "Ash-Graven: golpe",
+            "scale": {
+              "hp": 0.6
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -19928,7 +20962,17 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "golpe",
+            "label": "Ash-Graven: golpe",
+            "scale": {
+              "hp": 0.7
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -19942,11 +20986,20 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "golpe",
+            "label": "Ash-Graven: golpe",
+            "scale": {
+              "hp": 0.8
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       }
     ],
-    "note": "O golpe extra (40% do HP máximo a cada 15 s) NÃO entra: precisa do modelo de golpes extras de arma.",
-    "partial": true,
+    "note": "Golpe extra na paleta da rotação (coloque quantas vezes ele acontece). 40% (R1) do HP máximo, Físico (Genshin Optimizer), a cada 15 s.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
   {
@@ -24453,7 +25506,17 @@
     "dmgPctByType": {},
     "buffs": [],
     "flat": [],
-    "procs": [],
+    "procs": [
+      {
+        "id": "ciclone",
+        "label": "Viridescent Hunt: ciclone (1 acerto)",
+        "scale": {
+          "atk": 0.4
+        },
+        "element": "Physical",
+        "minConstellation": 0
+      }
+    ],
     "weapon": "The Viridescent Hunt",
     "refinements": [
       {
@@ -24468,7 +25531,17 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "ciclone",
+            "label": "Viridescent Hunt: ciclone (1 acerto)",
+            "scale": {
+              "atk": 0.4
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -24482,7 +25555,17 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "ciclone",
+            "label": "Viridescent Hunt: ciclone (1 acerto)",
+            "scale": {
+              "atk": 0.5
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -24496,7 +25579,17 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "ciclone",
+            "label": "Viridescent Hunt: ciclone (1 acerto)",
+            "scale": {
+              "atk": 0.6
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -24510,7 +25603,17 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "ciclone",
+            "label": "Viridescent Hunt: ciclone (1 acerto)",
+            "scale": {
+              "atk": 0.7
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -24524,11 +25627,20 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "ciclone",
+            "label": "Viridescent Hunt: ciclone (1 acerto)",
+            "scale": {
+              "atk": 0.8
+            },
+            "element": "Physical",
+            "minConstellation": 0
+          }
+        ]
       }
     ],
-    "note": "O golpe extra (Cyclone: 40% do ATK a cada 0,5 s) NÃO entra: precisa do modelo de golpes extras de arma.",
-    "partial": true,
+    "note": "Golpe extra na paleta da rotação (coloque quantas vezes ele acontece). Cada acerto do ciclone vale 40% (R1) do ATK, Físico; são 8 acertos em 4 s (use 8 execuções), 50% de chance a cada 14 s.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
   {
@@ -25049,7 +26161,16 @@
     "dmgPctByType": {},
     "buffs": [],
     "flat": [],
-    "procs": [],
+    "procs": [
+      {
+        "id": "final",
+        "label": "King's Squire: golpe final",
+        "scale": {
+          "atk": 1
+        },
+        "minConstellation": 0
+      }
+    ],
     "weapon": "King's Squire",
     "refinements": [
       {
@@ -25064,7 +26185,16 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "final",
+            "label": "King's Squire: golpe final",
+            "scale": {
+              "atk": 1
+            },
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -25078,7 +26208,16 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "final",
+            "label": "King's Squire: golpe final",
+            "scale": {
+              "atk": 1.2
+            },
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -25092,7 +26231,16 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "final",
+            "label": "King's Squire: golpe final",
+            "scale": {
+              "atk": 1.4
+            },
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -25106,7 +26254,16 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "final",
+            "label": "King's Squire: golpe final",
+            "scale": {
+              "atk": 1.6
+            },
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -25120,11 +26277,19 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "final",
+            "label": "King's Squire: golpe final",
+            "scale": {
+              "atk": 1.8
+            },
+            "minConstellation": 0
+          }
+        ]
       }
     ],
-    "note": "Só a Maestria. O dano final (100% do ATK ao acabar) NÃO entra.",
-    "partial": true,
+    "note": "Maestria (assumida ativa). Golpe extra na paleta da rotação (coloque quantas vezes ele acontece). Golpe final de 100% (R1) do ATK, do elemento do personagem, quando o efeito acaba.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
   {
@@ -25139,7 +26304,16 @@
     "dmgPctByType": {},
     "buffs": [],
     "flat": [],
-    "procs": [],
+    "procs": [
+      {
+        "id": "flowrider",
+        "label": "End of the Line: Flowrider",
+        "scale": {
+          "atk": 0.8
+        },
+        "minConstellation": 0
+      }
+    ],
     "weapon": "End of the Line",
     "refinements": [
       {
@@ -25154,7 +26328,16 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "flowrider",
+            "label": "End of the Line: Flowrider",
+            "scale": {
+              "atk": 0.8
+            },
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -25168,7 +26351,16 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "flowrider",
+            "label": "End of the Line: Flowrider",
+            "scale": {
+              "atk": 1
+            },
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -25182,7 +26374,16 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "flowrider",
+            "label": "End of the Line: Flowrider",
+            "scale": {
+              "atk": 1.2
+            },
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -25196,7 +26397,16 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "flowrider",
+            "label": "End of the Line: Flowrider",
+            "scale": {
+              "atk": 1.4
+            },
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -25210,11 +26420,19 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "flowrider",
+            "label": "End of the Line: Flowrider",
+            "scale": {
+              "atk": 1.6
+            },
+            "minConstellation": 0
+          }
+        ]
       }
     ],
-    "note": "O golpe extra (Flowrider: 80% do ATK, até 3 vezes) NÃO entra: precisa do modelo de golpes extras de arma.",
-    "partial": true,
+    "note": "Golpe extra na paleta da rotação (coloque quantas vezes ele acontece). 80% (R1) do ATK, do elemento do personagem, até 3 vezes depois da habilidade.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
   {
@@ -25231,7 +26449,16 @@
     },
     "buffs": [],
     "flat": [],
-    "procs": [],
+    "procs": [
+      {
+        "id": "flecha",
+        "label": "Scion: Sunfire Arrow",
+        "scale": {
+          "atk": 0.6
+        },
+        "minConstellation": 0
+      }
+    ],
     "weapon": "Scion of the Blazing Sun",
     "refinements": [
       {
@@ -25248,7 +26475,16 @@
         },
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "flecha",
+            "label": "Scion: Sunfire Arrow",
+            "scale": {
+              "atk": 0.6
+            },
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -25264,7 +26500,16 @@
         },
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "flecha",
+            "label": "Scion: Sunfire Arrow",
+            "scale": {
+              "atk": 0.75
+            },
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -25280,7 +26525,16 @@
         },
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "flecha",
+            "label": "Scion: Sunfire Arrow",
+            "scale": {
+              "atk": 0.9
+            },
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -25296,7 +26550,16 @@
         },
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "flecha",
+            "label": "Scion: Sunfire Arrow",
+            "scale": {
+              "atk": 1.05
+            },
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -25312,11 +26575,19 @@
         },
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "flecha",
+            "label": "Scion: Sunfire Arrow",
+            "scale": {
+              "atk": 1.2
+            },
+            "minConstellation": 0
+          }
+        ]
       }
     ],
-    "note": "Só os +28% (R1) de DMG do Carregado (inimigo marcado). O golpe extra da flecha NÃO entra.",
-    "partial": true,
+    "note": "+28% (R1) de DMG do Carregado (inimigo marcado). Golpe extra na paleta da rotação (coloque quantas vezes ele acontece). Flecha de 60% (R1) do ATK, do elemento do personagem, a cada 10 s.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
   {
@@ -26430,7 +27701,16 @@
     "dmgPctByType": {},
     "buffs": [],
     "flat": [],
-    "procs": [],
+    "procs": [
+      {
+        "id": "golpe",
+        "label": "Sequence of Solitude: golpe",
+        "scale": {
+          "hp": 0.4
+        },
+        "minConstellation": 0
+      }
+    ],
     "weapon": "Sequence of Solitude",
     "refinements": [
       {
@@ -26445,7 +27725,16 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "golpe",
+            "label": "Sequence of Solitude: golpe",
+            "scale": {
+              "hp": 0.4
+            },
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -26459,7 +27748,16 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "golpe",
+            "label": "Sequence of Solitude: golpe",
+            "scale": {
+              "hp": 0.5
+            },
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -26473,7 +27771,16 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "golpe",
+            "label": "Sequence of Solitude: golpe",
+            "scale": {
+              "hp": 0.6
+            },
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -26487,7 +27794,16 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "golpe",
+            "label": "Sequence of Solitude: golpe",
+            "scale": {
+              "hp": 0.7
+            },
+            "minConstellation": 0
+          }
+        ]
       },
       {
         "atkPct": 0,
@@ -26501,11 +27817,19 @@
         "dmgPctByType": {},
         "buffs": [],
         "flat": [],
-        "procs": []
+        "procs": [
+          {
+            "id": "golpe",
+            "label": "Sequence of Solitude: golpe",
+            "scale": {
+              "hp": 0.8
+            },
+            "minConstellation": 0
+          }
+        ]
       }
     ],
-    "note": "O golpe extra (40% do HP máximo a cada 15 s) NÃO entra: precisa do modelo de golpes extras de arma.",
-    "partial": true,
+    "note": "Golpe extra na paleta da rotação (coloque quantas vezes ele acontece). 40% (R1) do HP máximo, do elemento do personagem (Genshin Optimizer), a cada 15 s.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
   {

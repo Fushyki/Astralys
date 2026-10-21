@@ -4,6 +4,7 @@
  * `expect` é um trecho que TEM de aparecer na descrição do R1: protege contra o Lunaris mudar a ordem dos parâmetros.
  */
 import type { Val } from './sets';
+import type { ProcCur } from './gear';
 
 export type Sum = Val | Val[];
 
@@ -19,6 +20,8 @@ export interface WeaponCuration {
   byType?: Partial<Record<'normal' | 'charged' | 'plunge' | 'skill' | 'burst', Sum>>;
   /** Buff que a arma dá à equipe inteira (vale nas janelas de buff). */
   team?: { atkPct?: Sum; dmgPct?: Sum; em?: Sum };
+  /** Golpes extras (ver `ProcCur` em gear.ts). */
+  procs?: ProcCur[];
   expect: string;
   note: string;
 }

@@ -488,12 +488,13 @@
       "buffs": [],
       "flat": [],
       "reactionBonus": {
-        "swirl": 0.6
+        "swirl": 0.6,
+        "stellarswirl": 0.2
       },
       "procs": []
     },
     "twoPieceBuffs": [],
-    "note": "+60% de dano de Redemoinho (tabela de reações). A redução de 40% da RES do elemento espalhado (depende do elemento do Redemoinho, que a rotação ainda não tem) e o bônus Estelar NÃO entram.",
+    "note": "+60% de Redemoinho e +20% de Redemoinho Estelar (também como ação na rotação). A redução de 40% da RES do elemento espalhado (e da Cryo no Redemoinho Estelar) NÃO entra: depende do elemento de cada Redemoinho e o motor só tem redução de RES sempre ativa.",
     "partial": true,
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
@@ -620,13 +621,14 @@
         "electrocharged": 0.4,
         "superconduct": 0.4,
         "hyperbloom": 0.4,
-        "aggravate": 0.2
+        "aggravate": 0.2,
+        "lunarcharged": 0.2,
+        "stellarconduct": 0.2
       },
       "procs": []
     },
     "twoPieceBuffs": [],
-    "note": "+40% de Sobrecarga, Eletrocarregado, Supercondutor e Hiperflorescer (tabela de reações) e +20% no bônus de Intensificar (nos golpes com Intensificar). A redução de recarga da habilidade só muda a rotação. O bônus de Lunar-Carregado e Estelar-Conduct NÃO entra (mecânica Lunar/Estelar ainda não modelada).",
-    "partial": true,
+    "note": "+40% de Sobrecarga, Eletrocarregado, Supercondutor e Hiperflorescer, +20% no bônus de Intensificar e +20% de Lunar-Carregado e Estelar-Conduct. A redução de recarga da habilidade só muda a rotação.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
   {
@@ -1352,13 +1354,13 @@
       "reactionBonus": {
         "bloom": 0.8,
         "hyperbloom": 0.8,
-        "burgeon": 0.8
+        "burgeon": 0.8,
+        "lunarbloom": 0.2
       },
       "procs": []
     },
     "twoPieceBuffs": [],
-    "note": "Assume os 4 stacks: 40% × (1 + 4 × 25%) = +80% de Florescer, Hiperflorescer e Brotar (tabela de reações). O bônus de Lunar-Florescer NÃO entra (mecânica Lunar ainda não modelada).",
-    "partial": true,
+    "note": "Assume os 4 stacks: 40% × (1 + 4 × 25%) = +80% de Florescer, Hiperflorescer e Brotar e 10% × 2 = +20% de Lunar-Florescer.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
   {
@@ -1710,14 +1712,108 @@
       "er": 0,
       "hpPct": 0,
       "defPct": 0,
-      "buffs": [],
+      "buffs": [
+        {
+          "id": "cr-n",
+          "label": "Gleaming Moon: Intent (Nascent)",
+          "minConstellation": 0,
+          "scope": "self",
+          "timed": true,
+          "stats": {
+            "atkPct": 0,
+            "dmgPct": 0,
+            "critRate": 0.15,
+            "critDmg": 0,
+            "em": 0,
+            "er": 0,
+            "hpPct": 0,
+            "defPct": 0,
+            "dmgPctByType": {},
+            "critRateByType": {},
+            "critDmgByType": {},
+            "defIgnore": 0,
+            "atkFlat": 0,
+            "hpFlat": 0,
+            "defFlat": 0,
+            "physDmgPct": 0,
+            "physCritDmg": 0,
+            "reactionBonus": {}
+          },
+          "team": {
+            "moonsignMax": 1
+          },
+          "flat": []
+        },
+        {
+          "id": "cr-a",
+          "label": "Gleaming Moon: Intent (Ascendant)",
+          "minConstellation": 0,
+          "scope": "self",
+          "timed": true,
+          "stats": {
+            "atkPct": 0,
+            "dmgPct": 0,
+            "critRate": 0.3,
+            "critDmg": 0,
+            "em": 0,
+            "er": 0,
+            "hpPct": 0,
+            "defPct": 0,
+            "dmgPctByType": {},
+            "critRateByType": {},
+            "critDmgByType": {},
+            "defIgnore": 0,
+            "atkFlat": 0,
+            "hpFlat": 0,
+            "defFlat": 0,
+            "physDmgPct": 0,
+            "physCritDmg": 0,
+            "reactionBonus": {}
+          },
+          "team": {
+            "moonsign": 2
+          },
+          "flat": []
+        },
+        {
+          "id": "lunar",
+          "label": "Gleaming Moon: Intent (equipe)",
+          "minConstellation": 0,
+          "scope": "team",
+          "timed": true,
+          "stats": {
+            "atkPct": 0,
+            "dmgPct": 0,
+            "critRate": 0,
+            "critDmg": 0,
+            "em": 0,
+            "er": 0,
+            "hpPct": 0,
+            "defPct": 0,
+            "dmgPctByType": {},
+            "critRateByType": {},
+            "critDmgByType": {},
+            "defIgnore": 0,
+            "atkFlat": 0,
+            "hpFlat": 0,
+            "defFlat": 0,
+            "physDmgPct": 0,
+            "physCritDmg": 0,
+            "reactionBonus": {
+              "lunarcharged": 0.1,
+              "lunarbloom": 0.1,
+              "lunarcrystallize": 0.1
+            }
+          },
+          "flat": []
+        }
+      ],
       "flat": [],
       "reactionBonus": {},
       "procs": []
     },
     "twoPieceBuffs": [],
-    "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela.",
-    "partial": true,
+    "note": "Por 4 s depois de uma reação Lunar com o dono em campo: +15%/30% de Taxa Crítica (Nascent/Ascendant Gleam) e +10% de DMG das reações Lunares da equipe: faixas. Cada efeito Gleaming Moon diferente soma 10%; o mesmo efeito em dois membros não se soma.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
   {
@@ -1739,14 +1835,108 @@
       "er": 0,
       "hpPct": 0,
       "defPct": 0,
-      "buffs": [],
+      "buffs": [
+        {
+          "id": "em-n",
+          "label": "Gleaming Moon: Devotion (Nascent)",
+          "minConstellation": 0,
+          "scope": "team",
+          "timed": true,
+          "stats": {
+            "atkPct": 0,
+            "dmgPct": 0,
+            "critRate": 0,
+            "critDmg": 0,
+            "em": 60,
+            "er": 0,
+            "hpPct": 0,
+            "defPct": 0,
+            "dmgPctByType": {},
+            "critRateByType": {},
+            "critDmgByType": {},
+            "defIgnore": 0,
+            "atkFlat": 0,
+            "hpFlat": 0,
+            "defFlat": 0,
+            "physDmgPct": 0,
+            "physCritDmg": 0,
+            "reactionBonus": {}
+          },
+          "team": {
+            "moonsignMax": 1
+          },
+          "flat": []
+        },
+        {
+          "id": "em-a",
+          "label": "Gleaming Moon: Devotion (Ascendant)",
+          "minConstellation": 0,
+          "scope": "team",
+          "timed": true,
+          "stats": {
+            "atkPct": 0,
+            "dmgPct": 0,
+            "critRate": 0,
+            "critDmg": 0,
+            "em": 120,
+            "er": 0,
+            "hpPct": 0,
+            "defPct": 0,
+            "dmgPctByType": {},
+            "critRateByType": {},
+            "critDmgByType": {},
+            "defIgnore": 0,
+            "atkFlat": 0,
+            "hpFlat": 0,
+            "defFlat": 0,
+            "physDmgPct": 0,
+            "physCritDmg": 0,
+            "reactionBonus": {}
+          },
+          "team": {
+            "moonsign": 2
+          },
+          "flat": []
+        },
+        {
+          "id": "lunar",
+          "label": "Gleaming Moon: Devotion (equipe)",
+          "minConstellation": 0,
+          "scope": "team",
+          "timed": true,
+          "stats": {
+            "atkPct": 0,
+            "dmgPct": 0,
+            "critRate": 0,
+            "critDmg": 0,
+            "em": 0,
+            "er": 0,
+            "hpPct": 0,
+            "defPct": 0,
+            "dmgPctByType": {},
+            "critRateByType": {},
+            "critDmgByType": {},
+            "defIgnore": 0,
+            "atkFlat": 0,
+            "hpFlat": 0,
+            "defFlat": 0,
+            "physDmgPct": 0,
+            "physCritDmg": 0,
+            "reactionBonus": {
+              "lunarcharged": 0.1,
+              "lunarbloom": 0.1,
+              "lunarcrystallize": 0.1
+            }
+          },
+          "flat": []
+        }
+      ],
       "flat": [],
       "reactionBonus": {},
       "procs": []
     },
     "twoPieceBuffs": [],
-    "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela.",
-    "partial": true,
+    "note": "Por 8 s depois de causar dano elemental: +60/120 de Maestria da equipe (Nascent/Ascendant Gleam) e +10% de DMG das reações Lunares da equipe: faixas. Cada efeito Gleaming Moon diferente soma 10%; o mesmo efeito não se soma.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
   {
@@ -1768,14 +1958,81 @@
       "er": 0,
       "hpPct": 0,
       "defPct": 0,
-      "buffs": [],
+      "buffs": [
+        {
+          "id": "fora",
+          "label": "Fora de campo",
+          "minConstellation": 0,
+          "scope": "self",
+          "timed": true,
+          "stats": {
+            "atkPct": 0,
+            "dmgPct": 0,
+            "critRate": 0,
+            "critDmg": 0,
+            "em": 0,
+            "er": 0,
+            "hpPct": 0,
+            "defPct": 0,
+            "dmgPctByType": {},
+            "critRateByType": {},
+            "critDmgByType": {},
+            "defIgnore": 0,
+            "atkFlat": 0,
+            "hpFlat": 0,
+            "defFlat": 0,
+            "physDmgPct": 0,
+            "physCritDmg": 0,
+            "reactionBonus": {
+              "lunarcharged": 0.2,
+              "lunarbloom": 0.2,
+              "lunarcrystallize": 0.2
+            }
+          },
+          "flat": []
+        },
+        {
+          "id": "fora-a",
+          "label": "Fora de campo (Ascendant)",
+          "minConstellation": 0,
+          "scope": "self",
+          "timed": true,
+          "stats": {
+            "atkPct": 0,
+            "dmgPct": 0,
+            "critRate": 0,
+            "critDmg": 0,
+            "em": 0,
+            "er": 0,
+            "hpPct": 0,
+            "defPct": 0,
+            "dmgPctByType": {},
+            "critRateByType": {},
+            "critDmgByType": {},
+            "defIgnore": 0,
+            "atkFlat": 0,
+            "hpFlat": 0,
+            "defFlat": 0,
+            "physDmgPct": 0,
+            "physCritDmg": 0,
+            "reactionBonus": {
+              "lunarcharged": 0.4,
+              "lunarbloom": 0.4,
+              "lunarcrystallize": 0.4
+            }
+          },
+          "team": {
+            "moonsign": 2
+          },
+          "flat": []
+        }
+      ],
       "flat": [],
       "reactionBonus": {},
       "procs": []
     },
     "twoPieceBuffs": [],
-    "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela.",
-    "partial": true,
+    "note": "+20% de DMG das reações Lunares do dono enquanto ele está fora de campo (e até 3 s depois de entrar), +40% com Moonsign: Ascendant Gleam: faixas.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
   {
@@ -1831,7 +2088,7 @@
       "procs": []
     },
     "twoPieceBuffs": [],
-    "note": "Depende do Hexerei: Secret Rite, que o motor ainda não modela.",
+    "note": "O bônus é DMG do elemento do DONO para a equipe inteira (e, com Hexerei: Secret Rite, também do personagem ativo): o motor só dá DMG elemental a membros daquele elemento, então o efeito fica de fora.",
     "partial": true,
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
@@ -1854,39 +2111,10 @@
       "er": 0,
       "hpPct": 0,
       "defPct": 0,
-      "buffs": [],
-      "flat": [],
-      "reactionBonus": {},
-      "procs": []
-    },
-    "twoPieceBuffs": [],
-    "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela.",
-    "partial": true,
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
-  },
-  {
-    "set": "Scarlet Proof",
-    "twoPiece": {
-      "stat": "ATK%",
-      "value": 0.18
-    },
-    "twoPieceMore": [],
-    "fourPiece": {
-      "atkPct": 0,
-      "dmgPct": 0,
-      "critRate": 0,
-      "critDmg": 0,
-      "em": 0,
-      "dmgPctByType": {},
-      "meltBonus": 0,
-      "vaporizeBonus": 0,
-      "er": 0,
-      "hpPct": 0,
-      "defPct": 0,
       "buffs": [
         {
-          "id": "taxa",
-          "label": "Taxa Crítica depois de Espalhar Estelar",
+          "id": "cr",
+          "label": "Taxa Crítica (inimigo com Supercondutor)",
           "minConstellation": 0,
           "scope": "self",
           "timed": true,
@@ -1914,12 +2142,73 @@
         }
       ],
       "flat": [],
+      "reactionBonus": {
+        "superconduct": 0.8,
+        "stellarconduct": 0.4
+      },
+      "procs": []
+    },
+    "twoPieceBuffs": [],
+    "note": "+80% de Supercondutor, +40% de Estelar-Conduct e +16% de Taxa Crítica contra inimigo sob Supercondutor ou Estelar-Conduct (faixa).",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+  },
+  {
+    "set": "Scarlet Proof",
+    "twoPiece": {
+      "stat": "ATK%",
+      "value": 0.18
+    },
+    "twoPieceMore": [],
+    "fourPiece": {
+      "atkPct": 0,
+      "dmgPct": 0,
+      "critRate": 0,
+      "critDmg": 0,
+      "em": 0,
+      "dmgPctByType": {},
+      "meltBonus": 0,
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0,
+      "buffs": [
+        {
+          "id": "taxa",
+          "label": "Taxa Crítica depois de Redemoinho Estelar",
+          "minConstellation": 0,
+          "scope": "self",
+          "timed": true,
+          "stats": {
+            "atkPct": 0,
+            "dmgPct": 0,
+            "critRate": 0.16,
+            "critDmg": 0,
+            "em": 0,
+            "er": 0,
+            "hpPct": 0,
+            "defPct": 0,
+            "dmgPctByType": {},
+            "critRateByType": {},
+            "critDmgByType": {},
+            "defIgnore": 0,
+            "atkFlat": 0,
+            "hpFlat": 0,
+            "defFlat": 0,
+            "physDmgPct": 0,
+            "physCritDmg": 0,
+            "reactionBonus": {
+              "stellarswirl": 0.4
+            }
+          },
+          "flat": []
+        }
+      ],
+      "flat": [],
       "reactionBonus": {},
       "procs": []
     },
     "twoPieceBuffs": [],
-    "note": "+16% de Taxa Crítica por 10 s depois de um Estelar-Swirl: faixa na linha do tempo. O dano de reação Estelar NÃO entra.",
-    "partial": true,
+    "note": "+16% de Taxa Crítica e +40% de Redemoinho Estelar por 10 s depois de um Redemoinho Estelar: faixa na linha do tempo.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
   {
@@ -1969,6 +2258,37 @@
             "reactionBonus": {}
           },
           "flat": []
+        },
+        {
+          "id": "estelar",
+          "label": "DMG Estelar da equipe",
+          "minConstellation": 0,
+          "scope": "team",
+          "timed": true,
+          "stats": {
+            "atkPct": 0,
+            "dmgPct": 0,
+            "critRate": 0,
+            "critDmg": 0,
+            "em": 0,
+            "er": 0,
+            "hpPct": 0,
+            "defPct": 0,
+            "dmgPctByType": {},
+            "critRateByType": {},
+            "critDmgByType": {},
+            "defIgnore": 0,
+            "atkFlat": 0,
+            "hpFlat": 0,
+            "defFlat": 0,
+            "physDmgPct": 0,
+            "physCritDmg": 0,
+            "reactionBonus": {
+              "stellarconduct": 0.5,
+              "stellarswirl": 0.5
+            }
+          },
+          "flat": []
         }
       ],
       "flat": [],
@@ -1976,8 +2296,7 @@
       "procs": []
     },
     "twoPieceBuffs": [],
-    "note": "+12% de ATK por 12 s depois de uma reação Estelar: faixa na linha do tempo. O bônus de dano Estelar NÃO entra.",
-    "partial": true,
+    "note": "+12% de ATK do dono por 12 s depois de uma reação Estelar e +50% de DMG Estelar da equipe (não se soma com outro Heart of the Furnace): faixas.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   }
 ]

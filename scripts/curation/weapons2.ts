@@ -47,7 +47,7 @@ const TRAVELER = 'Sem passiva no Lunaris (arma de missão ou do Viajante): só A
 export const WEAPONS_2: Record<string, GearCur> = {
   // ---- Espadas ----
   'Favonius Sword': fav(),
-  'The Flute': { procs: [{ id: 'onda', label: "The Flute: onda", scale: { atk: { p: 1 } }, element: 'Physical' }], expect: 'Gaining 5 Harmonics', note: 'Golpe extra na paleta da rotação (coloque quantas vezes ele acontece). Onda de 100% (R1) do ATK, Física, a cada 5 Harmonias (5 acertos de Normal/Carregado).' },
+  'The Flute': { procs: [{ id: 'onda', label: "The Flute: onda", scale: { atk: { lit: 2 } }, element: 'Physical' }], expect: 'Gaining 5 Harmonics', note: 'Golpe extra na paleta da rotação (coloque quantas vezes ele acontece). Onda de 200% do ATK, Física, a cada 5 Harmonias (5 acertos de Normal/Carregado), fixa em todos os refinamentos como no Genshin Optimizer (confirmado pelo Davi; o texto do Lunaris diz 100% no R1).' },
   'Sacrificial Sword': sac(),
   'Prototype Rancour': { atkPct: { p: 0, x: 4 }, defPct: { p: 0, x: 4 }, expect: 'increase ATK and DEF by', note: 'Assume 4 stacks de ATK e DEF.' },
   'The Black Sword': { byType: { normal: { p: 0 }, charged: { p: 0 } }, expect: 'Increases DMG dealt by Normal and Charged Attacks by', note: 'Só o DMG de Normal e Carregado. A cura ao acertar crítico não entra.' },

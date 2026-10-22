@@ -95,15 +95,15 @@ describe('bônus de reação', () => {
 });
 
 describe('golpes extras de proc', () => {
-  it('The Flute: a onda é um golpe Físico de 100% do ATK (R1) e 200% (R5), sem bônus de Normal', () => {
+  it('The Flute: a onda é um golpe Físico de 200% do ATK em todo refinamento (Genshin Optimizer), sem bônus de Normal', () => {
     const at = (refinement: number) =>
       run([{ character: 'Bennett', weapon: 'The Flute', refinement }], [{ talent: 'proc', label: 'arma:onda' }]).result.actions[0];
     const r1 = at(1);
     const r5 = at(5);
     expect(r1.element).toBe('Physical');
     expect(r1.action.move.hitType).toBe('other');
-    expect(r1.scale.atk).toBeCloseTo(1, 9);
-    expect(r1.breakdown.base).toBeCloseTo(r1.stats.atk, 6);
+    expect(r1.scale.atk).toBeCloseTo(2, 9);
+    expect(r1.breakdown.base).toBeCloseTo(2 * r1.stats.atk, 6);
     expect(r1.breakdown.dmgMultiplier - 1).toBeCloseTo(r1.stats.dmgBonus - r1.stats.eleDmg + r1.stats.physDmg, 9);
     expect(r5.scale.atk).toBeCloseTo(2, 9);
   });

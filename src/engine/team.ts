@@ -167,16 +167,18 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
   // 2b) Buffs de passivas e constelações em janela: viram faixas na linha do tempo
   members.forEach((m, i) => {
     for (const b of activeCharacterBuffs(m)) {
-      if (!b.timed || !b.stats) continue;
+      // Sem `timed`, o buff do próprio membro já está no bloco estático; o de equipe vale em toda ação (`always`).
+      if (!b.stats || (!b.timed && b.scope === 'self')) continue;
       const delta = characterBuffDelta(b.stats, !!b.forElements);
       if (isEmptyDelta(delta) || off(`cbuff-${i}-${b.id}`)) continue;
       const targets = names.filter((n, j) => {
         if (b.scope === 'self' && j !== i) return false;
         if (b.scope === 'others' && j === i) return false;
+        if (b.forFactions && !b.forFactions.some((f) => members[j].characterEffect?.factions?.includes(f))) return false;
         return !b.forElements || b.forElements.includes(members[j].character.element);
       });
       if (targets.length === 0) continue;
-      buffs.push({ id: `cbuff-${i}-${b.id}`, tag: labelTag(b.label), targets, delta, description: `${names[i]}: ${b.label}` });
+      buffs.push({ id: `cbuff-${i}-${b.id}`, tag: labelTag(b.label), targets, delta, description: `${names[i]}: ${b.label}`, ...(b.timed ? {} : { always: true as const }) });
     }
   });
 
@@ -243,6 +245,7 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
       const targets = names.filter((_, j) => {
         if (b.scope === 'self' && j !== i) return false;
         if (b.scope === 'others' && j === i) return false;
+        if (b.forFactions && !b.forFactions.some((f) => members[j].characterEffect?.factions?.includes(f))) return false;
         return !b.forElements || b.forElements.includes(members[j].character.element);
       });
       if (targets.length === 0) continue;

@@ -15,37 +15,33 @@ export const NOTES_5: CharacterNotes = {
   Ifa: { p1: x(LUNAR), const1: u('Só energia.'), const2: x(LUNAR) },
   Skirk: { p1: x('Os Void Rifts e a absorção (dano extra) não entram.'), const6: x('Os ataques coordenados por Havoc: Sever não entram.') },
   Dahlia: { p1: u('Só stacks de Benison.'), p2: u('Só velocidade de ataque.'), const1: u('Só energia.'), const2: u('Só escudo.'), const4: u('Só duração.'), const6: u('Só velocidade de ataque e reviver.') },
-  Ineffa: {
-    p1: x(LUNAR), const1: x(LUNAR), const2: x(LUNAR), const4: u('Só energia.'), const6: x(LUNAR),
+  Ineffa: { const4: u('Só energia.') },
+  Lauma: { const1: u('Só cura.'), const4: u('Só energia.') },
+  Flins: { const1: u('Só recarga e energia.') },
+  Aino: { p1: u('Só deixa as bolas do Supremo mais frequentes e maiores: ajuste as execuções do golpe na rotação.'), const4: u('Só energia.') },
+  Nefer: {
+    p2: u('Só gera mais Verdant Dew (recurso do Phantasm Performance).'),
+    const1: x('Os +60% da Maestria na base do Lunar-Florescer do Phantasm Performance (e o reforço do Veil of Falsehood) não entram: o motor não soma escala só a alguns golpes do kit.'),
+    const2: x('A Maestria extra (200 no lugar de 100) entra; o Phantasm Performance com até 140% do dano original não entra (depende dos stacks de Veil of Falsehood).'),
   },
-  Lauma: { p1: x(LUNAR), const1: u('Só cura.'), const2: x(LUNAR), const4: u('Só energia.'), const6: x(LUNAR) },
-  Flins: { p1: x(LUNAR), const1: u('Só recarga e energia.'), const2: x(LUNAR), const6: x(LUNAR) },
-  Aino: { p1: x(LUNAR), const4: u('Só energia.'), const6: x(LUNAR) },
-  Nefer: { p2: x(LUNAR), const1: x(LUNAR), const2: x(LUNAR), const6: x(LUNAR) },
   Durin: {
     const1: x('Os stacks de Cycle of Enlightenment dos aliados (dano extra por golpe) não entram: dano fixo que vem de outro personagem.'),
     const6: x('A redução de 30% de DEF do inimigo (6 s) e o dano extra do Principle of Darkness não entram.'),
   },
-  Jahoda: { p1: x('O Burst melhorado conforme os elementos do time não entra.'), const1: x('A segunda bola (50% de chance) não entra.'), const2: x(LUNAR), const4: u('Só energia.'), const6: x(LUNAR) },
-  Columbina: { p2: x(LUNAR), const1: x(LUNAR), const4: x(LUNAR), const6: x(LUNAR) },
+  Jahoda: { p1: x('O Burst melhorado conforme os elementos do time não entra.'), const1: x('A segunda bola (50% de chance) não entra.'), const2: x('Só amplia o A1 (robôs melhorados pelos elementos do time), que não entra.'), const4: u('Só energia.') },
+  Columbina: { p2: x('Os golpes extras por chance (33%) do Lunar-Carregado e do Lunar-Cristalizar e o Moonridge Dew não entram: dependem de chance; ponha os golpes a mais na rotação.') },
   Zibai: {
-    p1: x('O dano extra do 2º golpe do Spirit Steed\'s Stride (60% da DEF) depende do modo Lunar e não entra.'),
-    const1: x(LUNAR), const2: x(LUNAR), const4: x(LUNAR), const6: x(LUNAR),
+    p1: x('O dano extra do 2º golpe do Spirit Steed\'s Stride (60% da DEF) não entra: o motor não tem bônus Lunar só de um golpe.'),
+    const1: x('Os +220% de DMG Lunar-Cristalizar só no 1º Spirit Steed\'s Stride não entram (bônus de um golpe só).'),
+    const2: x('O +30% da equipe entra (faixa); os +550% da DEF no 2º golpe do Spirit Steed\'s Stride não entram (bônus de um golpe só).'),
   },
-  Illuga: {
-    p2: x('O bônus do Nightingale\'s Song por Maestria (e de Lunar-Cristalizar) não entra.'), const1: u('Só energia.'),
-    const4: x('+200 de DEF dos aliados: o motor não tem DEF fixa de buff de equipe neste caso (em breve).'),
-  },
+  Illuga: { const1: u('Só energia.') },
   Varka: {
     const1: x('O uso extra da habilidade especial e o bônus do Lyrical Libation não entram.'),
   },
   Lohen: {
     p1: x('A mecânica de Will to Win não entra.'), const1: x('A mecânica de Will to Win não entra.'),
     const4: x('O Supremo no máximo de Will to Win e a energia não entram.'), const6: x('O Joy máximo e o dano da habilidade especial não entram.'),
-  },
-  Linnea: {
-    const1: x('O bônus de Lunar-Cristalizar por Field Catalog (75% da DEF) não entra.'),
-    const6: x(LUNAR),
   },
   Nicole: {
     p2: u('Só faz o Grace of Kenosis virar Guidance of Theosis (o ATK está no A1).'),

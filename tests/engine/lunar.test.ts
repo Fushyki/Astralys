@@ -130,3 +130,19 @@ describe('Moonsign e golpes derivados', () => {
     expect(result.actions[1].flatDamage).toBe(0); // golpe de habilidade: fora dos tipos
   });
 });
+
+describe('curadoria Lunar (dados reais)', () => {
+  it('Flins: o Supremo Lunar-Carregado usa a fórmula Lunar; Ineffa A1 é golpe extra Lunar-Carregado; Moonsign com os dois', () => {
+    const r = run([{ character: 'Flins' }, { character: 'Ineffa' }, { character: 'Bennett' }], [
+      { talent: 'burst', label: 'Middle Phase Lunar-Charged DMG' },
+      { member: 1, talent: 'proc', label: 'char:a1' },
+    ]);
+    expect(r.result.actions.map((a) => a.kind)).toEqual(['lunar', 'lunar']);
+    expect(r.result.actions[1].scale.atk).toBeCloseTo(0.65, 6);
+    // Base do Lunar-Carregado da Ineffa e do Flins (Moonsign Benediction), sem janela, até 14% cada.
+    const base = r.result.actions[0].stats.reactionBonus.lunarchargedBase;
+    expect(base).toBeGreaterThan(0);
+    expect(base).toBeLessThanOrEqual(0.28 + 1e-9);
+    expect(r.assembly.buffs.some((b) => b.description?.includes('Ascendant Gleam (Bennett)'))).toBe(true);
+  });
+});

@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { CharacterEffectSchema, type CharacterEffect } from '../../src/effects/schema';
+import { CharacterEffectSchema, REACTION_BONUS_KEYS, type CharacterEffect } from '../../src/effects/schema';
 import { assembleTeam, resolveProject, type EffectsData, type GameData, type RotationProject } from '../../src/engine';
 import { buffLanes } from '../../src/features/rotation/buffLanes';
 import { sampleProject } from '../../src/features/rotation/persistence';
@@ -44,7 +44,12 @@ describe('efeitos de personagens cadastrados', () => {
     for (const c of chars) {
       for (const b of c.buffs ?? []) {
         expect(b.note?.length ?? 0, `${c.character} ${b.id}`).toBeGreaterThan(10);
-        if (b.scope !== 'self') expect(b.timed, `${c.character} ${b.id}`).toBe(true);
+        // Exceção: bônus incondicionais das reações Lunares/Estelares (Moonsign Benediction, "elevated" da equipe), como no
+        // Genshin Optimizer, valem sem janela.
+        const onlyReaction =
+          (b.convert ? b.convert.to.every((t) => (REACTION_BONUS_KEYS as readonly string[]).includes(t)) : true) &&
+          Object.entries(b.stats ?? {}).every(([k, v]) => k === 'reactionBonus' || !v || (typeof v === 'object' && Object.keys(v).length === 0));
+        if (b.scope !== 'self' && !onlyReaction) expect(b.timed, `${c.character} ${b.id}`).toBe(true);
       }
     }
   });

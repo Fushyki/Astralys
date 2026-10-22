@@ -3,7 +3,7 @@
  * descrição (`lit`) ou de uma expressão regular sobre o texto de CADA refinamento (`re`, grupo 1; "16%" vira 0,16).
  */
 import type { Element, HitType } from '../../src/data/schema';
-import type { BuffTeamRules, ConvertTarget } from '../../src/effects/schema';
+import type { BuffTeamRules, ConvertTarget, ReactionBonusKey, SpecialMove } from '../../src/effects/schema';
 import type { Val } from './sets';
 
 export type { Val };
@@ -23,7 +23,7 @@ export type StatsCur = Partial<Record<StatKey, Sum>> & {
   reactionBonus?: Partial<Record<ReactionKey, Sum>>;
 };
 
-export type ReactionKey = 'overloaded' | 'shattered' | 'electrocharged' | 'superconduct' | 'swirl' | 'burning' | 'bloom' | 'burgeon' | 'hyperbloom' | 'spread' | 'aggravate';
+export type ReactionKey = ReactionBonusKey;
 
 /**
  * Golpe extra de proc: escala em fração do stat final do dono (`atk: { p: 0 }` = parâmetro 0 do Lunaris). O elemento
@@ -36,6 +36,8 @@ export interface ProcCur {
   scale: { atk?: Sum; hp?: Sum; def?: Sum; em?: Sum };
   element?: Element | 'Physical';
   hitType?: HitType;
+  /** Dano Lunar/Estelar (Genshin Optimizer `lunarDmgNode`/`stellarDmgNode`). */
+  special?: SpecialMove;
   note?: string;
 }
 
@@ -54,7 +56,9 @@ export interface BuffCur {
 
 export interface FlatCur {
   name: string;
-  sourceStat: 'ATK' | 'HP' | 'DEF' | 'EM';
+  sourceStat: 'ATK' | 'HP' | 'DEF' | 'EM' | 'BaseATK';
+  targets?: 'self' | 'team' | 'others';
+  elements?: Element[];
   perPoint: Sum;
   cap?: Sum;
   hitTypes: HitType[];

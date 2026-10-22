@@ -500,6 +500,7 @@ export function applyTeamRules(members: MemberInput[]): MemberInput[] {
     const next = buffs.flatMap((b) => {
       const t = b.team;
       if (t?.moonsign && moonsign < t.moonsign) return [];
+      if (t?.moonsignMax && moonsign > t.moonsignMax) return [];
       if (t?.hexerei && hexerei < t.hexerei) return [];
       if (t?.only && !elements.every((e) => t.only!.includes(e))) return [];
       if (t?.eachOf && !t.eachOf.every((e) => elements.includes(e))) return [];

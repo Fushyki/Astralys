@@ -7,7 +7,7 @@
  * ligadas por você nas janelas em que valem; só o que é do próprio personagem e sempre vale fica estático.
  */
 import type { Element } from '../../src/data/schema';
-import type { ConvertTarget } from '../../src/effects/schema';
+import type { ConvertTarget, SpecialMove } from '../../src/effects/schema';
 import type { Val } from './sets';
 import type { ReactionKey } from './gear';
 
@@ -22,6 +22,8 @@ export interface BuffCuration {
   /** Constelação mínima (por padrão vem de `src`; num buff do kit, informe aqui, ex.: +1 stack na C2). */
   minConstellation?: number;
   forElements?: Element[];
+  /** Só membros destas facções recebem. */
+  forFactions?: ('moonsign' | 'hexerei')[];
   stats?: {
     atkPct?: Val; dmgPct?: Val; critRate?: Val; critDmg?: Val; em?: Val; hpPct?: Val; defPct?: Val;
     byType?: Partial<Record<'normal' | 'charged' | 'plunge' | 'skill' | 'burst', Val>>;
@@ -38,7 +40,7 @@ export interface BuffCuration {
     reactionBonus?: Partial<Record<ReactionKey, Val>>;
   };
   /** Dano fixo por golpe elegível (ex.: Gorou A4, 156% da DEF no dano da habilidade). */
-  flat?: { name: string; sourceStat: 'ATK' | 'HP' | 'DEF' | 'EM'; perPoint: Val; cap?: Val; hitTypes: ('normal' | 'charged' | 'plunge' | 'skill' | 'burst')[]; stacks?: number }[];
+  flat?: { name: string; sourceStat: 'ATK' | 'HP' | 'DEF' | 'EM' | 'BaseATK'; perPoint: Val; cap?: Val; hitTypes: ('normal' | 'charged' | 'plunge' | 'skill' | 'burst')[]; stacks?: number; targets?: 'self' | 'team' | 'others'; elements?: Element[] }[];
   resShred?: { value: Val; elements: (Element | 'Physical')[] };
   /** Redução de DEF do inimigo, em fração (vale o tempo todo). */
   defShred?: Val;
@@ -48,7 +50,7 @@ export interface BuffCuration {
    */
   kit?: { talent: 'normal' | 'skill' | 'burst'; key?: string };
   /** Regras de composição do time (ver `BuffTeamRulesSchema`); `scale.table` vem de parâmetros do Lunaris. */
-  team?: { only?: Element[]; eachOf?: Element[]; scale?: { of: 'distinct' | 'same' | 'different' | Element[]; table: Val[] } };
+  team?: { only?: Element[]; eachOf?: Element[]; scale?: { of: 'distinct' | 'same' | 'different' | Element[]; table: Val[] }; /** Mínimo de membros Moonsign / Hexerei no time. */ moonsign?: number; moonsignMax?: number; hexerei?: number };
   /** Bônus que depende de um stat da fonte (ver `BuffConvertSchema`). Substitui `stats`. */
   convert?: {
     from: 'atk' | 'baseAtk' | 'hp' | 'def' | 'em' | 'er';
@@ -83,6 +85,10 @@ export interface ProcCuration {
   scale: { atk?: Val; hp?: Val; def?: Val; em?: Val };
   element?: Element | 'Physical';
   hitType?: 'normal' | 'charged' | 'plunge' | 'skill' | 'burst';
+  /** Dano Lunar/Estelar (Genshin Optimizer `lunarDmgNode`/`stellarDmgNode`, base = stat do dono). */
+  special?: SpecialMove;
+  /** Fração do dano de outro golpe do kit (Lunaris), no nível de talento do dono; `fraction` vem de `p`/`lit`. */
+  of?: { talent: 'normal' | 'skill' | 'burst'; label: string; variant?: number; fraction: Val };
   expect: string;
   note: string;
 }

@@ -35,10 +35,11 @@ import { CHARACTERS_16 } from './curation/characters12';
 import type { BuffCuration } from './curation/characters';
 import { CHARACTER_NOTES } from './curation/charnotes';
 import { CHARACTER_PROCS, CHARACTERS_PROC_BUFFS } from './curation/procs';
+import { FACTIONS, LUNAR_BUFFS, LUNAR_PROCS, SPECIAL_MOVES } from './curation/lunar';
 
 /** Junta os lotes: o mesmo personagem pode aparecer em mais de um e as listas se somam. */
 const CHARACTER_BUFFS: Record<string, BuffCuration[]> = {};
-for (const batch of [CHARACTERS_1, CHARACTERS_2, CHARACTERS_3, CHARACTERS_4, CHARACTERS_5, CHARACTERS_6, CHARACTERS_7, CHARACTERS_8, CHARACTERS_9, CHARACTERS_10, CHARACTERS_11, CHARACTERS_12, CHARACTERS_13, CHARACTERS_14, CHARACTERS_15, CHARACTERS_16, CHARACTERS_PROC_BUFFS]) {
+for (const batch of [CHARACTERS_1, CHARACTERS_2, CHARACTERS_3, CHARACTERS_4, CHARACTERS_5, CHARACTERS_6, CHARACTERS_7, CHARACTERS_8, CHARACTERS_9, CHARACTERS_10, CHARACTERS_11, CHARACTERS_12, CHARACTERS_13, CHARACTERS_14, CHARACTERS_15, CHARACTERS_16, CHARACTERS_PROC_BUFFS, LUNAR_BUFFS]) {
   for (const [name, list] of Object.entries(batch)) CHARACTER_BUFFS[name] = [...(CHARACTER_BUFFS[name] ?? []), ...list];
 }
 
@@ -171,7 +172,7 @@ function buildProc(p: ProcCur, c: Ctx): Proc {
   if (!Object.keys(scale).length) throw new Error(`${c.where}: golpe extra ${p.id} sem escala`);
   return ProcSchema.parse({
     id: p.id, label: p.label, scale, ...(p.element ? { element: p.element } : {}), ...(p.hitType ? { hitType: p.hitType } : {}),
-    ...(p.note ? { note: p.note } : {}),
+    ...(p.special ? { special: p.special } : {}), ...(p.note ? { note: p.note } : {}),
   });
 }
 
@@ -195,6 +196,7 @@ function buildBuff(b: BuffCur, c: Ctx): CharacterBuff {
 const buildFlat = (f: FlatCur, c: Ctx): WeaponFlat => ({
   name: f.name, sourceStat: f.sourceStat, perPoint: sm(f.perPoint, c),
   ...(f.cap !== undefined ? { capPerHit: sm(f.cap, c) } : {}), hitTypes: f.hitTypes, ...(f.stacks !== undefined ? { stacks: f.stacks } : {}),
+  ...(f.targets ? { targets: f.targets } : {}), ...(f.elements ? { elements: f.elements } : {}),
 });
 
 /** Números de um refinamento: os campos simples vão na raiz; o resto vira buffs (crítico por golpe, conversões, regras de time). */
@@ -288,9 +290,10 @@ function buildCharacters(): CharacterEffect[] {
   const out: CharacterEffect[] = [...existing];
   const errors: string[] = [];
   const source = `Lunaris ${meta.gameVersion} (passivas e constelações)`;
-  const strip = (t: string) => t.replace(/<[^>]*>/g, '').replace(/\n/g, ' ').replace(/\s+/g, ' ');
+  const strip = (t: string) => t.replace(/<[^>]*>/g, '').replace(/\{\/?LINK[^}]*\}/g, '').replace(/\n/g, ' ').replace(/\s+/g, ' ');
 
-  const names = [...new Set([...Object.keys(CHARACTER_BUFFS), ...Object.keys(CHARACTER_NOTES), ...Object.keys(CHARACTER_PROCS)])];
+  const moves = read<{ character: string; talent: string; label: string; variant: number }[]>('src/data/generated/moves.json');
+  const names = [...new Set([...Object.keys(CHARACTER_BUFFS), ...Object.keys(CHARACTER_NOTES), ...Object.keys(CHARACTER_PROCS), ...Object.keys(LUNAR_PROCS), ...Object.keys(FACTIONS), ...Object.keys(SPECIAL_MOVES)])];
   for (const name of names) {
     const list = CHARACTER_BUFFS[name] ?? [];
     const handMadeEntry = existing.find((e) => e.character === name);
@@ -333,6 +336,7 @@ function buildCharacters(): CharacterEffect[] {
         scope: b.scope,
         timed: b.timed,
         ...(b.forElements ? { forElements: b.forElements } : {}),
+        ...(b.forFactions ? { forFactions: b.forFactions } : {}),
         ...(s
           ? {
               stats: {
@@ -353,6 +357,7 @@ function buildCharacters(): CharacterEffect[] {
               flat: b.flat.map((f) => ({
                 name: f.name, sourceStat: f.sourceStat, perPoint: v(f.perPoint), ...(f.cap !== undefined ? { capPerHit: v(f.cap) } : {}),
                 hitTypes: f.hitTypes, ...(f.stacks !== undefined ? { stacks: f.stacks } : {}),
+                ...(f.targets ? { targets: f.targets } : {}), ...(f.elements ? { elements: f.elements } : {}),
               })),
             }
           : {}),
@@ -362,6 +367,9 @@ function buildCharacters(): CharacterEffect[] {
                 ...(b.team.only ? { only: b.team.only } : {}),
                 ...(b.team.eachOf ? { eachOf: b.team.eachOf } : {}),
                 ...(b.team.scale ? { scale: { of: b.team.scale.of, table: b.team.scale.table.map((x) => v(x)) } } : {}),
+                ...(b.team.moonsign ? { moonsign: b.team.moonsign } : {}),
+                ...(b.team.moonsignMax ? { moonsignMax: b.team.moonsignMax } : {}),
+                ...(b.team.hexerei ? { hexerei: b.team.hexerei } : {}),
               },
             }
           : {}),
@@ -384,24 +392,38 @@ function buildCharacters(): CharacterEffect[] {
       };
     });
     const notes = Object.entries(CHARACTER_NOTES[name] ?? {}).map(([src, n]) => ({ src, kind: n!.kind, note: n!.note }));
-    const procs = (CHARACTER_PROCS[name] ?? []).map((p) => {
+    const procs = [...(CHARACTER_PROCS[name] ?? []), ...(LUNAR_PROCS[name] ?? [])].map((p) => {
       const isConst = p.src.startsWith('const');
       const node = (isConst ? raw.constellations : raw.passives)?.[p.src];
       if (!node) throw new Error(`${name} ${p.id}: ${p.src} não existe`);
       if (!strip(node.description).includes(p.expect)) errors.push(`${name} ${p.id}: a descrição de ${p.src} não contém "${p.expect}" (o Lunaris mudou?)`);
       const scale = Object.fromEntries(Object.entries(p.scale).map(([k, x]) => [k, valueOf(x, node.params, `${name} ${p.id}`)]));
-      if (Object.values(scale).some((x) => !(x > 0))) errors.push(`${name} ${p.id}: escala zerada ou negativa (parâmetro errado?)`);
+      if (Object.values(scale).some((x) => !(x > 0)) || (!p.of && !Object.keys(scale).length)) errors.push(`${name} ${p.id}: escala zerada ou negativa (parâmetro errado?)`);
+      let of;
+      if (p.of) {
+        const orig = moves.find((m) => m.character === name && m.talent === p.of!.talent && m.label === p.of!.label && m.variant === (p.of!.variant ?? 0));
+        if (!orig) errors.push(`${name} ${p.id}: o golpe "${p.of.label}" (${p.of.talent}) não existe no Lunaris`);
+        of = { talent: p.of.talent, label: p.of.label, variant: p.of.variant ?? 0, fraction: valueOf(p.of.fraction, node.params, `${name} ${p.id}`) };
+      }
       return ProcSchema.parse({
         id: p.id, label: p.label, scale, src: p.src, minConstellation: isConst ? Number(p.src.slice(5)) : 0,
-        ...(p.element ? { element: p.element } : {}), ...(p.hitType ? { hitType: p.hitType } : {}), note: p.note,
+        ...(p.element ? { element: p.element } : {}), ...(p.hitType ? { hitType: p.hitType } : {}),
+        ...(p.special ? { special: p.special } : {}), ...(of ? { of } : {}), note: p.note,
       });
     });
     const procIds = procs.map((p) => p.id).filter((id, i, all) => all.indexOf(id) !== i);
     if (procIds.length) errors.push(`${name}: ids de golpe extra repetidos: ${procIds.join(', ')}`);
+    const factions = FACTIONS[name] ?? [];
+    const specialMoves = SPECIAL_MOVES[name] ?? [];
+    for (const s of specialMoves) {
+      if (!moves.some((m) => m.character === name && m.talent === s.talent && m.label === s.label && (s.variant === undefined || m.variant === s.variant))) {
+        errors.push(`${name}: golpe Lunar/Estelar "${s.label}" (${s.talent}) não existe no Lunaris`);
+      }
+    }
     if (handMadeEntry) {
       // Personagem que já veio da planilha de referência: os efeitos dela ficam e a curadoria soma os buffs e as notas.
       const at = out.findIndex((e) => e.character === name);
-      out[at] = CharacterEffectSchema.parse({ ...handMadeEntry, buffs: [...(handMadeEntry.buffs ?? []).filter((old) => !buffs.some((n) => n.id === old.id)), ...buffs], notes, procs });
+      out[at] = CharacterEffectSchema.parse({ ...handMadeEntry, buffs: [...(handMadeEntry.buffs ?? []).filter((old) => !buffs.some((n) => n.id === old.id)), ...buffs], notes, procs, factions, specialMoves });
       continue;
     }
     out.push(CharacterEffectSchema.parse({
@@ -410,6 +432,8 @@ function buildCharacters(): CharacterEffect[] {
       buffs,
       notes,
       procs,
+      factions,
+      specialMoves,
       fonte_info: `${source}; curadoria em scripts/curation/characters.ts.`,
     }));
   }

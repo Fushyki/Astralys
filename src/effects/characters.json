@@ -10369,33 +10369,191 @@
         },
         "flat": [],
         "note": "Maestria = 8% do ATK, até 160."
+      },
+      {
+        "id": "a1",
+        "label": "Flins A1",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "lunarcharged": 0.2
+          }
+        },
+        "team": {
+          "moonsign": 2
+        },
+        "flat": [],
+        "note": "Com Moonsign: Ascendant Gleam, +20% de DMG Lunar-Carregado do Flins (Genshin Optimizer aplica a todo dano Lunar-Carregado dele)."
+      },
+      {
+        "id": "a0",
+        "label": "Flins: base do Lunar-Carregado",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": false,
+        "convert": {
+          "from": "atk",
+          "source": "self",
+          "perPoint": 0.00007,
+          "threshold": 0,
+          "cap": 0.14,
+          "to": [
+            "lunarchargedBase"
+          ]
+        },
+        "flat": [],
+        "note": "Moonsign Benediction: base das reações Lunares da equipe pelo stat, com teto (Genshin Optimizer soma as de vários membros)."
+      },
+      {
+        "id": "c2res",
+        "label": "Flins C2 (RES Electro)",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": false,
+        "team": {
+          "moonsign": 2
+        },
+        "resShred": {
+          "value": 0.25,
+          "elements": [
+            "Electro"
+          ]
+        },
+        "flat": [],
+        "note": "Com Moonsign: Ascendant Gleam, -25% de RES Electro (assumida sempre ativa)."
+      },
+      {
+        "id": "c6",
+        "label": "Flins C6",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "lunarchargedSpecial": 0.35
+          }
+        },
+        "flat": [],
+        "note": "Dano Lunar-Carregado do Flins elevado em 35%."
+      },
+      {
+        "id": "c6t",
+        "label": "Flins C6 (equipe)",
+        "minConstellation": 6,
+        "scope": "team",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "lunarchargedSpecial": 0.1
+          }
+        },
+        "team": {
+          "moonsign": 2
+        },
+        "flat": [],
+        "note": "Com Moonsign: Ascendant Gleam, dano Lunar-Carregado da equipe elevado em 10%."
       }
     ],
     "notes": [
       {
-        "src": "p1",
-        "kind": "partial",
-        "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
-      },
-      {
         "src": "const1",
         "kind": "utility",
         "note": "Só recarga e energia."
-      },
-      {
-        "src": "const2",
-        "kind": "partial",
-        "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
-      },
-      {
-        "src": "const6",
-        "kind": "partial",
-        "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
       }
     ],
-    "procs": [],
-    "factions": [],
-    "specialMoves": [],
+    "procs": [
+      {
+        "id": "c2",
+        "label": "Flins C2: Normal depois do Spearstorm",
+        "scale": {
+          "atk": 0.5
+        },
+        "minConstellation": 2,
+        "src": "const2",
+        "special": {
+          "reaction": "lunarcharged"
+        },
+        "note": "50% do ATK como dano Lunar-Carregado no próximo Normal depois do Northland Spearstorm."
+      }
+    ],
+    "factions": [
+      "moonsign"
+    ],
+    "specialMoves": [
+      {
+        "reaction": "lunarcharged",
+        "talent": "burst",
+        "label": "Middle Phase Lunar-Charged DMG"
+      },
+      {
+        "reaction": "lunarcharged",
+        "talent": "burst",
+        "label": "Final Phase Lunar-Charged DMG"
+      },
+      {
+        "reaction": "lunarcharged",
+        "talent": "burst",
+        "label": "Thunderous Symphony DMG"
+      },
+      {
+        "reaction": "lunarcharged",
+        "talent": "burst",
+        "label": "Thunderous Symphony Additional DMG"
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -10453,23 +10611,91 @@
           }
         ],
         "note": "Soma 50% da Maestria ao dano base do Supremo."
+      },
+      {
+        "id": "c6",
+        "label": "Aino C6",
+        "minConstellation": 6,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "electrocharged": 0.15,
+            "bloom": 0.15,
+            "lunarcharged": 0.15,
+            "lunarbloom": 0.15,
+            "lunarcrystallize": 0.15
+          }
+        },
+        "flat": [],
+        "note": "+15% de dano de Eletrocarregado, Florescer e das reações Lunares por 15 s depois do Supremo: ligue nas janelas."
+      },
+      {
+        "id": "c6g",
+        "label": "Aino C6 (Ascendant)",
+        "minConstellation": 6,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "electrocharged": 0.2,
+            "bloom": 0.2,
+            "lunarcharged": 0.2,
+            "lunarbloom": 0.2,
+            "lunarcrystallize": 0.2
+          }
+        },
+        "team": {
+          "moonsign": 2
+        },
+        "flat": [],
+        "note": "Com Moonsign: Ascendant Gleam, mais 20% nas mesmas reações (mesma janela)."
       }
     ],
     "notes": [
       {
         "src": "p1",
-        "kind": "partial",
-        "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
+        "kind": "utility",
+        "note": "Só deixa as bolas do Supremo mais frequentes e maiores: ajuste as execuções do golpe na rotação."
       },
       {
         "src": "const4",
         "kind": "utility",
         "note": "Só energia."
-      },
-      {
-        "src": "const6",
-        "kind": "partial",
-        "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
       }
     ],
     "procs": [
@@ -10486,7 +10712,9 @@
         "note": "25% do ATK + 100% da Maestria a cada 5 s com a Aino fora de campo (conta como Supremo)."
       }
     ],
-    "factions": [],
+    "factions": [
+      "moonsign"
+    ],
     "specialMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
@@ -10542,33 +10770,158 @@
         },
         "flat": [],
         "note": "Assume a redução de RES Dendro durante o Shadow Dance sempre ativa."
+      },
+      {
+        "id": "a0",
+        "label": "Nefer: base do Lunar-Florescer",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": false,
+        "convert": {
+          "from": "em",
+          "source": "self",
+          "perPoint": 0.000175,
+          "threshold": 0,
+          "cap": 0.14,
+          "to": [
+            "lunarbloomBase"
+          ]
+        },
+        "flat": [],
+        "note": "Moonsign Benediction: base das reações Lunares da equipe pelo stat, com teto (Genshin Optimizer soma as de vários membros)."
+      },
+      {
+        "id": "c2",
+        "label": "Nefer C2",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 100,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "team": {
+          "moonsign": 2
+        },
+        "flat": [],
+        "note": "Com 5 stacks de Veil of Falsehood, a Maestria do A1 vira 200: soma os 100 que faltam (200 − 100 do A1) na mesma janela. Os 140% do Phantasm Performance NÃO entram."
+      },
+      {
+        "id": "c6",
+        "label": "Nefer C6",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "lunarbloomSpecial": 0.15
+          }
+        },
+        "team": {
+          "moonsign": 2
+        },
+        "flat": [],
+        "note": "Com Moonsign: Ascendant Gleam, dano Lunar-Florescer da Nefer elevado em 15%."
       }
     ],
     "notes": [
       {
         "src": "p2",
-        "kind": "partial",
-        "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
+        "kind": "utility",
+        "note": "Só gera mais Verdant Dew (recurso do Phantasm Performance)."
       },
       {
         "src": "const1",
         "kind": "partial",
-        "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
+        "note": "Os +60% da Maestria na base do Lunar-Florescer do Phantasm Performance (e o reforço do Veil of Falsehood) não entram: o motor não soma escala só a alguns golpes do kit."
       },
       {
         "src": "const2",
         "kind": "partial",
-        "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
-      },
-      {
-        "src": "const6",
-        "kind": "partial",
-        "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
+        "note": "A Maestria extra (200 no lugar de 100) entra; o Phantasm Performance com até 140% do dano original não entra (depende dos stacks de Veil of Falsehood)."
       }
     ],
-    "procs": [],
-    "factions": [],
-    "specialMoves": [],
+    "procs": [
+      {
+        "id": "c6a",
+        "label": "Nefer C6: 2º golpe convertido",
+        "scale": {
+          "em": 0.85
+        },
+        "minConstellation": 6,
+        "src": "const6",
+        "special": {
+          "reaction": "lunarbloom"
+        },
+        "note": "Na C6 o 2º golpe dela no Phantasm Performance vira 85% da Maestria como Lunar-Florescer: use no lugar do golpe original. Os bônus do C1 e de Veil of Falsehood não entram."
+      },
+      {
+        "id": "c6b",
+        "label": "Nefer C6: golpe final",
+        "scale": {
+          "em": 1.2
+        },
+        "minConstellation": 6,
+        "src": "const6",
+        "special": {
+          "reaction": "lunarbloom"
+        },
+        "note": "120% da Maestria como Lunar-Florescer no fim do Phantasm Performance."
+      }
+    ],
+    "factions": [
+      "moonsign"
+    ],
+    "specialMoves": [
+      {
+        "reaction": "lunarbloom",
+        "talent": "skill",
+        "label": "Phantasm Performance 1-Hit DMG (Shades)"
+      },
+      {
+        "reaction": "lunarbloom",
+        "talent": "skill",
+        "label": "Phantasm Performance 2-Hit DMG (Shades)"
+      },
+      {
+        "reaction": "lunarbloom",
+        "talent": "skill",
+        "label": "Phantasm Performance 3-Hit DMG (Shades)"
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -10761,6 +11114,41 @@
         },
         "flat": [],
         "note": "+100 de Maestria do personagem curado (HP acima de 70%) por 6 s: ligue nas janelas."
+      },
+      {
+        "id": "c6",
+        "label": "Jahoda C6",
+        "minConstellation": 6,
+        "scope": "team",
+        "timed": true,
+        "forFactions": [
+          "moonsign"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0.05,
+          "critDmg": 0.4,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "team": {
+          "moonsign": 2
+        },
+        "flat": [],
+        "note": "Com Moonsign: Ascendant Gleam, +5% de Taxa e +40% de Dano Crítico dos membros Moonsign por 20 s: ligue nas janelas."
       }
     ],
     "notes": [
@@ -10777,21 +11165,18 @@
       {
         "src": "const2",
         "kind": "partial",
-        "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
+        "note": "Só amplia o A1 (robôs melhorados pelos elementos do time), que não entra."
       },
       {
         "src": "const4",
         "kind": "utility",
         "note": "Só energia."
-      },
-      {
-        "src": "const6",
-        "kind": "partial",
-        "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
       }
     ],
     "procs": [],
-    "factions": [],
+    "factions": [
+      "moonsign"
+    ],
     "specialMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
@@ -10861,33 +11246,476 @@
         },
         "flat": [],
         "note": "+40% de HP máximo por 8 s depois do Gravity Interference: ligue na janela."
+      },
+      {
+        "id": "a0",
+        "label": "Columbina: base das reações Lunares",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": false,
+        "convert": {
+          "from": "hp",
+          "source": "self",
+          "perPoint": 0.000002,
+          "threshold": 0,
+          "cap": 0.07,
+          "to": [
+            "lunarchargedBase",
+            "lunarbloomBase",
+            "lunarcrystallizeBase"
+          ]
+        },
+        "flat": [],
+        "note": "Moonsign Benediction: base das reações Lunares da equipe pelo stat, com teto (Genshin Optimizer soma as de vários membros)."
+      },
+      {
+        "id": "c1",
+        "label": "Columbina C1",
+        "minConstellation": 1,
+        "scope": "team",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "lunarchargedSpecial": 0.015,
+            "lunarbloomSpecial": 0.015,
+            "lunarcrystallizeSpecial": 0.015
+          }
+        },
+        "flat": [],
+        "note": "Dano das reações Lunares da equipe elevado em 1,5%. O resto só dá energia, resistência a interrupção ou escudo."
+      },
+      {
+        "id": "c2lc",
+        "label": "Columbina C2 (Lunar-Carregado)",
+        "minConstellation": 2,
+        "scope": "team",
+        "timed": true,
+        "convert": {
+          "from": "hp",
+          "source": "self",
+          "perPoint": 0.01,
+          "threshold": 0,
+          "to": [
+            "atkFlat"
+          ]
+        },
+        "team": {
+          "moonsign": 2
+        },
+        "flat": [],
+        "note": "Com Moonsign: Ascendant Gleam e Lunar Brilliance, o personagem ativo ganha ATK = 1% do HP máximo dela, se o Lunar-Carregado acumulou mais Gravity: ligue só a faixa da reação certa."
+      },
+      {
+        "id": "c2lb",
+        "label": "Columbina C2 (Lunar-Florescer)",
+        "minConstellation": 2,
+        "scope": "team",
+        "timed": true,
+        "convert": {
+          "from": "hp",
+          "source": "self",
+          "perPoint": 0.0035,
+          "threshold": 0,
+          "to": [
+            "em"
+          ]
+        },
+        "team": {
+          "moonsign": 2
+        },
+        "flat": [],
+        "note": "Idem, Maestria = 0,35% do HP máximo dela (Lunar-Florescer)."
+      },
+      {
+        "id": "c2lcr",
+        "label": "Columbina C2 (Lunar-Cristalizar)",
+        "minConstellation": 2,
+        "scope": "team",
+        "timed": true,
+        "convert": {
+          "from": "hp",
+          "source": "self",
+          "perPoint": 0.01,
+          "threshold": 0,
+          "to": [
+            "defFlat"
+          ]
+        },
+        "team": {
+          "moonsign": 2
+        },
+        "flat": [],
+        "note": "Idem, DEF = 1% do HP máximo dela (Lunar-Cristalizar)."
+      },
+      {
+        "id": "c2s",
+        "label": "Columbina C2 (reações Lunares)",
+        "minConstellation": 2,
+        "scope": "team",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "lunarchargedSpecial": 0.07,
+            "lunarbloomSpecial": 0.07,
+            "lunarcrystallizeSpecial": 0.07
+          }
+        },
+        "flat": [],
+        "note": "Dano das reações Lunares da equipe elevado em 7% (Genshin Optimizer: sempre)."
+      },
+      {
+        "id": "c3",
+        "label": "Columbina C3",
+        "minConstellation": 3,
+        "scope": "team",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "lunarchargedSpecial": 0.015,
+            "lunarbloomSpecial": 0.015,
+            "lunarcrystallizeSpecial": 0.015
+          }
+        },
+        "flat": [],
+        "note": "Dano das reações Lunares da equipe elevado em 1,5% (além do +3 de talento)."
+      },
+      {
+        "id": "c4lc",
+        "label": "Columbina C4 (Lunar-Carregado)",
+        "minConstellation": 4,
+        "scope": "self",
+        "timed": true,
+        "convert": {
+          "from": "hp",
+          "source": "self",
+          "perPoint": 0.125,
+          "threshold": 0,
+          "to": [
+            "lunarchargedFlat"
+          ]
+        },
+        "flat": [],
+        "note": "Gravity Interference de Lunar-Carregado com +12,5% do HP máximo dela (1 vez a cada 15 s): ligue na janela do golpe. Vale para todo dano Lunar-Carregado dela na janela."
+      },
+      {
+        "id": "c4lb",
+        "label": "Columbina C4 (Lunar-Florescer)",
+        "minConstellation": 4,
+        "scope": "self",
+        "timed": true,
+        "convert": {
+          "from": "hp",
+          "source": "self",
+          "perPoint": 0.025,
+          "threshold": 0,
+          "to": [
+            "lunarbloomFlat"
+          ]
+        },
+        "flat": [],
+        "note": "Idem, +2,5% do HP no Lunar-Florescer (vale também no Moondew Cleanse dentro da janela)."
+      },
+      {
+        "id": "c4lcr",
+        "label": "Columbina C4 (Lunar-Cristalizar)",
+        "minConstellation": 4,
+        "scope": "self",
+        "timed": true,
+        "convert": {
+          "from": "hp",
+          "source": "self",
+          "perPoint": 0.125,
+          "threshold": 0,
+          "to": [
+            "lunarcrystallizeFlat"
+          ]
+        },
+        "flat": [],
+        "note": "Idem, +12,5% do HP no Lunar-Cristalizar."
+      },
+      {
+        "id": "c4s",
+        "label": "Columbina C4 (reações Lunares)",
+        "minConstellation": 4,
+        "scope": "team",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "lunarchargedSpecial": 0.015,
+            "lunarbloomSpecial": 0.015,
+            "lunarcrystallizeSpecial": 0.015
+          }
+        },
+        "flat": [],
+        "note": "Dano das reações Lunares da equipe elevado em 1,5%."
+      },
+      {
+        "id": "c5",
+        "label": "Columbina C5",
+        "minConstellation": 5,
+        "scope": "team",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "lunarchargedSpecial": 0.015,
+            "lunarbloomSpecial": 0.015,
+            "lunarcrystallizeSpecial": 0.015
+          }
+        },
+        "flat": [],
+        "note": "Dano das reações Lunares da equipe elevado em 1,5% (além do +3 de talento)."
+      },
+      {
+        "id": "c6lc",
+        "label": "Columbina C6 (Lunar-Carregado)",
+        "minConstellation": 6,
+        "scope": "team",
+        "timed": true,
+        "forElements": [
+          "Hydro",
+          "Electro"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0.8,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "note": "+80% de Dano Crítico do dano Hydro e Electro por 8 s depois de um Lunar-Carregado no Lunar Domain: ligue nas janelas. O motor dá o bônus aos membros desses elementos (o número 80% está só no texto)."
+      },
+      {
+        "id": "c6lb",
+        "label": "Columbina C6 (Lunar-Florescer)",
+        "minConstellation": 6,
+        "scope": "team",
+        "timed": true,
+        "forElements": [
+          "Hydro",
+          "Dendro"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0.8,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "note": "Idem para Hydro e Dendro (Lunar-Florescer). Não ligue duas faixas no mesmo elemento: no jogo não se somam."
+      },
+      {
+        "id": "c6lcr",
+        "label": "Columbina C6 (Lunar-Cristalizar)",
+        "minConstellation": 6,
+        "scope": "team",
+        "timed": true,
+        "forElements": [
+          "Hydro",
+          "Geo"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0.8,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "note": "Idem para Hydro e Geo (Lunar-Cristalizar)."
+      },
+      {
+        "id": "c6s",
+        "label": "Columbina C6 (reações Lunares)",
+        "minConstellation": 6,
+        "scope": "team",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "lunarchargedSpecial": 0.07,
+            "lunarbloomSpecial": 0.07,
+            "lunarcrystallizeSpecial": 0.07
+          }
+        },
+        "flat": [],
+        "note": "Dano das reações Lunares da equipe elevado em 7%."
       }
     ],
     "notes": [
       {
         "src": "p2",
         "kind": "partial",
-        "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
-      },
-      {
-        "src": "const1",
-        "kind": "partial",
-        "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
-      },
-      {
-        "src": "const4",
-        "kind": "partial",
-        "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
-      },
-      {
-        "src": "const6",
-        "kind": "partial",
-        "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
+        "note": "Os golpes extras por chance (33%) do Lunar-Carregado e do Lunar-Cristalizar e o Moonridge Dew não entram: dependem de chance; ponha os golpes a mais na rotação."
       }
     ],
     "procs": [],
-    "factions": [],
-    "specialMoves": [],
+    "factions": [
+      "moonsign"
+    ],
+    "specialMoves": [
+      {
+        "reaction": "lunarbloom",
+        "talent": "normal",
+        "label": "Moondew Cleanse DMG"
+      },
+      {
+        "reaction": "lunarcharged",
+        "talent": "skill",
+        "label": "Gravity Interference: Lunar-Charged DMG"
+      },
+      {
+        "reaction": "lunarbloom",
+        "talent": "skill",
+        "label": "Gravity Interference: Lunar-Bloom DMG"
+      },
+      {
+        "reaction": "lunarcrystallize",
+        "talent": "skill",
+        "label": "Gravity Interference: Lunar-Crystallize DMG"
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -10962,23 +11790,113 @@
         },
         "flat": [],
         "note": "A C6 troca o bônus da A1 por +10% de Taxa e +30% de Dano Crítico; este buff soma só a diferença (+5% e +20%) sobre o da A1. Ligue nas mesmas janelas."
+      },
+      {
+        "id": "a4geo",
+        "label": "Illuga A4 (Nightingale's Song)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "team": {
+          "scale": {
+            "of": [
+              "Hydro",
+              "Geo"
+            ],
+            "table": [
+              0.07,
+              0.14,
+              0.24
+            ]
+          }
+        },
+        "flat": [
+          {
+            "name": "Nightingale's Song por Maestria",
+            "sourceStat": "EM",
+            "perPoint": 1,
+            "hitTypes": [
+              "normal",
+              "charged",
+              "plunge",
+              "skill",
+              "burst"
+            ],
+            "stacks": 21,
+            "targets": "team",
+            "elements": [
+              "Geo"
+            ]
+          }
+        ],
+        "note": "Dano Geo da equipe +7%/14%/24% da Maestria dele com 1/2/3 membros Hydro ou Geo, nos 21 golpes Geo da rotação (21 stacks do Supremo; os 15 extras por construto Geo NÃO entram)."
+      },
+      {
+        "id": "a4lcr",
+        "label": "Illuga A4 (Lunar-Cristalizar)",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "convert": {
+          "from": "em",
+          "source": "self",
+          "perPoint": 1,
+          "threshold": 0,
+          "to": [
+            "lunarcrystallizeFlat"
+          ]
+        },
+        "team": {
+          "scale": {
+            "of": [
+              "Hydro",
+              "Geo"
+            ],
+            "table": [
+              0.48,
+              0.96,
+              1.6
+            ]
+          }
+        },
+        "flat": [],
+        "note": "Dano Lunar-Cristalizar +48%/96%/160% da Maestria dele por golpe durante o Supremo: ligue nas janelas (o motor não conta os 21 stacks nesta parte)."
+      },
+      {
+        "id": "c4",
+        "label": "Illuga C4",
+        "minConstellation": 4,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 200,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "note": "+200 de DEF do personagem ativo durante o Supremo: ligue nas janelas."
       }
     ],
     "notes": [
       {
-        "src": "p2",
-        "kind": "partial",
-        "note": "O bônus do Nightingale's Song por Maestria (e de Lunar-Cristalizar) não entra."
-      },
-      {
         "src": "const1",
         "kind": "utility",
         "note": "Só energia."
-      },
-      {
-        "src": "const4",
-        "kind": "partial",
-        "note": "+200 de DEF dos aliados: o motor não tem DEF fixa de buff de equipe neste caso (em breve)."
       }
     ],
     "procs": [
@@ -10995,7 +11913,9 @@
         "note": "400% da Maestria + 200% da DEF a cada 7 stacks de Nightingale's Song (conta como Supremo)."
       }
     ],
-    "factions": [],
+    "factions": [
+      "moonsign"
+    ],
     "specialMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
@@ -12323,23 +13243,114 @@
         },
         "flat": [],
         "note": "Maestria = 5% da DEF dela para o personagem ativo (ou ela mesma): entra como buff de equipe, ligue só em quem recebe."
-      }
-    ],
-    "notes": [
-      {
-        "src": "const1",
-        "kind": "partial",
-        "note": "O bônus de Lunar-Cristalizar por Field Catalog (75% da DEF) não entra."
       },
       {
-        "src": "const6",
-        "kind": "partial",
-        "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
+        "id": "a0",
+        "label": "Linnea: base do Lunar-Cristalizar",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": false,
+        "convert": {
+          "from": "def",
+          "source": "self",
+          "perPoint": 0.00007,
+          "threshold": 0,
+          "cap": 0.14,
+          "to": [
+            "lunarcrystallizeBase"
+          ]
+        },
+        "flat": [],
+        "note": "Moonsign Benediction: base das reações Lunares da equipe pelo stat, com teto (Genshin Optimizer soma as de vários membros)."
+      },
+      {
+        "id": "c1",
+        "label": "Linnea C1 (Field Catalog)",
+        "minConstellation": 1,
+        "scope": "team",
+        "timed": true,
+        "convert": {
+          "from": "def",
+          "source": "self",
+          "perPoint": 0.75,
+          "threshold": 0,
+          "to": [
+            "lunarcrystallizeFlat"
+          ]
+        },
+        "flat": [],
+        "note": "Cada golpe Lunar-Cristalizar da equipe gasta 1 stack e ganha 75% da DEF dela: ligue nas janelas com stacks (6 por habilidade). O consumo maior do Million Ton Crush NÃO entra."
+      },
+      {
+        "id": "c6",
+        "label": "Linnea C6 (Field Catalog)",
+        "minConstellation": 6,
+        "scope": "team",
+        "timed": true,
+        "convert": {
+          "from": "def",
+          "source": "self",
+          "perPoint": 0.375,
+          "threshold": 0,
+          "to": [
+            "lunarcrystallizeFlat"
+          ]
+        },
+        "flat": [],
+        "note": "O C6 leva o bônus do C1 a 150%: soma 50% de 75% da DEF na mesma janela do C1."
+      },
+      {
+        "id": "c6s",
+        "label": "Linnea C6 (Ascendant)",
+        "minConstellation": 6,
+        "scope": "team",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "lunarcrystallizeSpecial": 0.25
+          }
+        },
+        "team": {
+          "moonsign": 2
+        },
+        "flat": [],
+        "note": "Com Moonsign: Ascendant Gleam, dano Lunar-Cristalizar da equipe elevado em 25%."
       }
     ],
+    "notes": [],
     "procs": [],
-    "factions": [],
-    "specialMoves": [],
+    "factions": [
+      "moonsign"
+    ],
+    "specialMoves": [
+      {
+        "reaction": "lunarcrystallize",
+        "talent": "skill",
+        "label": "Lumi Heavy Overdrive Hammer DMG"
+      },
+      {
+        "reaction": "lunarcrystallize",
+        "talent": "skill",
+        "label": "Lumi Million Ton Crush DMG"
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -14321,37 +15332,97 @@
         },
         "flat": [],
         "note": "+6% do ATK dela como Maestria para ela e o personagem ativo por 20 s: ligue na janela (entra para toda a equipe)."
+      },
+      {
+        "id": "a0",
+        "label": "Ineffa: base do Lunar-Carregado",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": false,
+        "convert": {
+          "from": "atk",
+          "source": "self",
+          "perPoint": 0.00007,
+          "threshold": 0,
+          "cap": 0.14,
+          "to": [
+            "lunarchargedBase"
+          ]
+        },
+        "flat": [],
+        "note": "Moonsign Benediction: base das reações Lunares da equipe pelo stat, com teto (Genshin Optimizer soma as de vários membros)."
+      },
+      {
+        "id": "c1",
+        "label": "Ineffa C1",
+        "minConstellation": 1,
+        "scope": "team",
+        "timed": true,
+        "convert": {
+          "from": "atk",
+          "source": "self",
+          "perPoint": 0.00025,
+          "threshold": 0,
+          "cap": 0.5,
+          "to": [
+            "lunarcharged"
+          ]
+        },
+        "flat": [],
+        "note": "+2,5% de DMG Lunar-Carregado da equipe por 100 de ATK (até 50%) por 20 s depois do escudo: ligue nas janelas."
       }
     ],
     "notes": [
       {
-        "src": "p1",
-        "kind": "partial",
-        "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
-      },
-      {
-        "src": "const1",
-        "kind": "partial",
-        "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
-      },
-      {
-        "src": "const2",
-        "kind": "partial",
-        "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
-      },
-      {
         "src": "const4",
         "kind": "utility",
         "note": "Só energia."
-      },
-      {
-        "src": "const6",
-        "kind": "partial",
-        "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
       }
     ],
-    "procs": [],
-    "factions": [],
+    "procs": [
+      {
+        "id": "a1",
+        "label": "Ineffa A1: ataque extra da Birgitta",
+        "scale": {
+          "atk": 0.65
+        },
+        "minConstellation": 0,
+        "src": "p1",
+        "special": {
+          "reaction": "lunarcharged"
+        },
+        "note": "65% do ATK como dano Lunar-Carregado a cada descarga da Birgitta com nuvem de Lunar-Carregado."
+      },
+      {
+        "id": "c2",
+        "label": "Ineffa C2: Punishment Edict",
+        "scale": {
+          "atk": 3
+        },
+        "minConstellation": 2,
+        "src": "const2",
+        "special": {
+          "reaction": "lunarcharged"
+        },
+        "note": "300% do ATK como dano Lunar-Carregado depois do Supremo."
+      },
+      {
+        "id": "c6",
+        "label": "Ineffa C6: descarga",
+        "scale": {
+          "atk": 1.35
+        },
+        "minConstellation": 6,
+        "src": "const6",
+        "special": {
+          "reaction": "lunarcharged"
+        },
+        "note": "135% do ATK como dano Lunar-Carregado a cada 3,5 s com o Carrier Flow Composite."
+      }
+    ],
+    "factions": [
+      "moonsign"
+    ],
     "specialMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
@@ -14382,38 +15453,257 @@
         },
         "flat": [],
         "note": "+0,04% de DMG da habilidade por ponto de Maestria, até 32%."
+      },
+      {
+        "id": "a1n",
+        "label": "Lauma A1 (Nascent Gleam)",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "bloomCritRate": 0.15,
+            "bloomCritDmg": 1,
+            "hyperbloomCritRate": 0.15,
+            "hyperbloomCritDmg": 1,
+            "burgeonCritRate": 0.15,
+            "burgeonCritDmg": 1
+          }
+        },
+        "team": {
+          "moonsignMax": 1
+        },
+        "flat": [],
+        "note": "Só com 1 membro Moonsign: Florescer, Hiperflorescer e Brotar critam (15% / 100%) por 20 s depois da habilidade: ligue nas janelas."
+      },
+      {
+        "id": "a1a",
+        "label": "Lauma A1 (Ascendant Gleam)",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "lunarbloomCritRate": 0.1,
+            "lunarbloomCritDmg": 0.2
+          }
+        },
+        "team": {
+          "moonsign": 2
+        },
+        "flat": [],
+        "note": "Com 2+ Moonsign: +10% de Taxa e +20% de Dano Crítico no Lunar-Florescer da equipe por 20 s: ligue nas janelas."
+      },
+      {
+        "id": "a0",
+        "label": "Lauma: base do Lunar-Florescer",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": false,
+        "convert": {
+          "from": "em",
+          "source": "self",
+          "perPoint": 0.000175,
+          "threshold": 0,
+          "cap": 0.14,
+          "to": [
+            "lunarbloomBase"
+          ]
+        },
+        "flat": [],
+        "note": "Moonsign Benediction: base das reações Lunares da equipe pelo stat, com teto (Genshin Optimizer soma as de vários membros)."
+      },
+      {
+        "id": "c2",
+        "label": "Lauma C2 (Pale Hymn)",
+        "minConstellation": 2,
+        "scope": "team",
+        "timed": true,
+        "convert": {
+          "from": "em",
+          "source": "self",
+          "perPoint": 5,
+          "threshold": 0,
+          "to": [
+            "bloomFlat",
+            "hyperbloomFlat",
+            "burgeonFlat"
+          ]
+        },
+        "flat": [],
+        "note": "Pale Hymn: +500% da Maestria dela no dano de Florescer, Hiperflorescer e Brotar: ligue nas janelas do Supremo (o motor não conta os stacks)."
+      },
+      {
+        "id": "c2lb",
+        "label": "Lauma C2 (Pale Hymn, Lunar-Florescer)",
+        "minConstellation": 2,
+        "scope": "team",
+        "timed": true,
+        "convert": {
+          "from": "em",
+          "source": "self",
+          "perPoint": 4,
+          "threshold": 0,
+          "to": [
+            "lunarbloomFlat"
+          ]
+        },
+        "flat": [],
+        "note": "Pale Hymn: +400% da Maestria dela no dano Lunar-Florescer: ligue nas janelas do Supremo."
+      },
+      {
+        "id": "c2a",
+        "label": "Lauma C2 (Ascendant)",
+        "minConstellation": 2,
+        "scope": "team",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "lunarbloom": 0.4
+          }
+        },
+        "team": {
+          "moonsign": 2
+        },
+        "flat": [],
+        "note": "Com Moonsign: Ascendant Gleam, +40% de DMG Lunar-Florescer da equipe."
+      },
+      {
+        "id": "c6",
+        "label": "Lauma C6 (Ascendant)",
+        "minConstellation": 6,
+        "scope": "team",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "lunarbloomSpecial": 0.25
+          }
+        },
+        "team": {
+          "moonsign": 2
+        },
+        "flat": [],
+        "note": "Com Moonsign: Ascendant Gleam, dano Lunar-Florescer da equipe elevado em 25%."
       }
     ],
     "notes": [
-      {
-        "src": "p1",
-        "kind": "partial",
-        "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
-      },
       {
         "src": "const1",
         "kind": "utility",
         "note": "Só cura."
       },
       {
-        "src": "const2",
-        "kind": "partial",
-        "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
-      },
-      {
         "src": "const4",
         "kind": "utility",
         "note": "Só energia."
-      },
-      {
-        "src": "const6",
-        "kind": "partial",
-        "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
       }
     ],
-    "procs": [],
-    "factions": [],
-    "specialMoves": [],
+    "procs": [
+      {
+        "id": "c6a",
+        "label": "Lauma C6: Frostgrove extra",
+        "scale": {
+          "em": 1.85
+        },
+        "minConstellation": 6,
+        "src": "const6",
+        "special": {
+          "reaction": "lunarbloom"
+        },
+        "note": "185% da Maestria como Lunar-Florescer a cada ataque do Frostgrove Sanctuary (até 8)."
+      },
+      {
+        "id": "c6b",
+        "label": "Lauma C6: Normal com Pale Hymn",
+        "scale": {
+          "em": 1.5
+        },
+        "minConstellation": 6,
+        "src": "const6",
+        "special": {
+          "reaction": "lunarbloom"
+        },
+        "note": "Normal convertido em 150% da Maestria como Lunar-Florescer (gasta 1 stack de Pale Hymn): use no lugar do Normal."
+      }
+    ],
+    "factions": [
+      "moonsign"
+    ],
+    "specialMoves": [
+      {
+        "reaction": "lunarbloom",
+        "talent": "skill",
+        "label": "2-Hit Hold DMG"
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -14504,38 +15794,145 @@
         },
         "flat": [],
         "note": "+60 de Maestria por membro Hydro do time."
+      },
+      {
+        "id": "a0",
+        "label": "Zibai: base do Lunar-Cristalizar",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": false,
+        "convert": {
+          "from": "def",
+          "source": "self",
+          "perPoint": 0.00007,
+          "threshold": 0,
+          "cap": 0.14,
+          "to": [
+            "lunarcrystallizeBase"
+          ]
+        },
+        "flat": [],
+        "note": "Moonsign Benediction: base das reações Lunares da equipe pelo stat, com teto (Genshin Optimizer soma as de vários membros)."
+      },
+      {
+        "id": "c2",
+        "label": "Zibai C2",
+        "minConstellation": 2,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "lunarcrystallize": 0.3
+          }
+        },
+        "flat": [],
+        "note": "+30% de DMG Lunar-Cristalizar da equipe no modo Lunar Phase Shift: ligue nas janelas."
+      },
+      {
+        "id": "c6",
+        "label": "Zibai C6",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "lunarcrystallizeSpecial": 0.48
+          }
+        },
+        "flat": [],
+        "note": "Assume 100 pontos de Phase Shift Radiance (30 acima de 70): dano Lunar-Cristalizar dela elevado em 48% por 3 s: ligue na janela."
       }
     ],
     "notes": [
       {
         "src": "p1",
         "kind": "partial",
-        "note": "O dano extra do 2º golpe do Spirit Steed's Stride (60% da DEF) depende do modo Lunar e não entra."
+        "note": "O dano extra do 2º golpe do Spirit Steed's Stride (60% da DEF) não entra: o motor não tem bônus Lunar só de um golpe."
       },
       {
         "src": "const1",
         "kind": "partial",
-        "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
+        "note": "Os +220% de DMG Lunar-Cristalizar só no 1º Spirit Steed's Stride não entram (bônus de um golpe só)."
       },
       {
         "src": "const2",
         "kind": "partial",
-        "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
-      },
-      {
-        "src": "const4",
-        "kind": "partial",
-        "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
-      },
-      {
-        "src": "const6",
-        "kind": "partial",
-        "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
+        "note": "O +30% da equipe entra (faixa); os +550% da DEF no 2º golpe do Spirit Steed's Stride não entram (bônus de um golpe só)."
       }
     ],
-    "procs": [],
-    "factions": [],
-    "specialMoves": [],
+    "procs": [
+      {
+        "id": "c4",
+        "label": "Zibai C4: Scattermoon Splendor",
+        "scale": {},
+        "minConstellation": 4,
+        "src": "const4",
+        "special": {
+          "reaction": "lunarcrystallize"
+        },
+        "of": {
+          "talent": "skill",
+          "label": "Lunar Phase Shift 4-Hit Additional DMG",
+          "variant": 0,
+          "fraction": 2.5
+        },
+        "note": "O ataque extra do 4º Normal com 250% do dano original (use no lugar do golpe do kit depois de um Spirit Steed's Stride)."
+      }
+    ],
+    "factions": [
+      "moonsign"
+    ],
+    "specialMoves": [
+      {
+        "reaction": "lunarcrystallize",
+        "talent": "skill",
+        "label": "Spirit Steed's Stride 2-Hit DMG"
+      },
+      {
+        "reaction": "lunarcrystallize",
+        "talent": "skill",
+        "label": "Lunar Phase Shift 4-Hit Additional DMG"
+      },
+      {
+        "reaction": "lunarcrystallize",
+        "talent": "burst",
+        "label": "Skill 2-Hit DMG"
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {

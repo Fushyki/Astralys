@@ -164,6 +164,8 @@ export const BuffTeamRulesSchema = z.object({
   maxBurstEnergy: z.number().positive().optional(),
   /** Só vale com ao menos tantos membros Moonsign no time (2 = "Moonsign: Ascendant Gleam"; Genshin Optimizer `tally.moonsign`). */
   moonsign: z.number().int().positive().optional(),
+  /** Só vale com no máximo tantos membros Moonsign (1 = "Moonsign: Nascent Gleam", que não se soma ao Ascendant). */
+  moonsignMax: z.number().int().positive().optional(),
   /** Só vale com ao menos tantos membros Hexerei no time (Genshin Optimizer `tally.hexerei`). */
   hexerei: z.number().int().positive().optional(),
   /**
@@ -213,6 +215,8 @@ export const CharacterBuffSchema = z.object({
   timed: z.boolean(),
   /** Só personagens destes elementos recebem (ex.: "+15% de DMG Pyro" para a equipe). */
   forElements: z.array(ElementSchema).optional(),
+  /** Só personagens destas facções recebem (ex.: Jahoda C6, "personagens Moonsign"). */
+  forFactions: z.array(z.enum(['moonsign', 'hexerei'])).optional(),
   stats: BuffStatsSchema.optional(),
   /** Bônus que depende de um stat da fonte (no lugar de `stats`). Os `timed: false` valem o tempo todo. */
   convert: BuffConvertSchema.optional(),

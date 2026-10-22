@@ -7646,7 +7646,7 @@
         "id": "onda",
         "label": "The Flute: onda",
         "scale": {
-          "atk": 2
+          "atk": 1
         },
         "element": "Physical",
         "minConstellation": 0
@@ -7671,7 +7671,7 @@
             "id": "onda",
             "label": "The Flute: onda",
             "scale": {
-              "atk": 2
+              "atk": 1
             },
             "element": "Physical",
             "minConstellation": 0
@@ -7695,7 +7695,7 @@
             "id": "onda",
             "label": "The Flute: onda",
             "scale": {
-              "atk": 2
+              "atk": 1.25
             },
             "element": "Physical",
             "minConstellation": 0
@@ -7719,7 +7719,7 @@
             "id": "onda",
             "label": "The Flute: onda",
             "scale": {
-              "atk": 2
+              "atk": 1.5
             },
             "element": "Physical",
             "minConstellation": 0
@@ -7743,7 +7743,7 @@
             "id": "onda",
             "label": "The Flute: onda",
             "scale": {
-              "atk": 2
+              "atk": 1.75
             },
             "element": "Physical",
             "minConstellation": 0
@@ -7775,7 +7775,7 @@
         ]
       }
     ],
-    "note": "Golpe extra na paleta da rotação (coloque quantas vezes ele acontece). Onda de 200% do ATK, Física, a cada 5 Harmonias (5 acertos de Normal/Carregado), fixa em todos os refinamentos como no Genshin Optimizer (confirmado pelo Davi; o texto do Lunaris diz 100% no R1).",
+    "note": "Golpe extra na paleta da rotação (coloque quantas vezes ele acontece). Onda de 100% (R1) a 200% (R5) do ATK, Física, a cada 5 Harmonias (5 acertos de Normal/Carregado). O Genshin Optimizer usa 200% fixo; vale o Lunaris (confirmado pelo Davi).",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
   {

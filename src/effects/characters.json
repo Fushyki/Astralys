@@ -13651,10 +13651,10 @@
               "charged",
               "plunge"
             ],
-            "stacks": 6
+            "stacks": 7
           }
         ],
-        "note": "Soma 18% do HP máximo aos 6 primeiros Normais, Carregados e Imersivos dela na rotação (uma ativação do Center of Attention: o texto do Lunaris diz que ele acaba depois de 6 efeitos). A conversão para Hydro já é o padrão; o extra de 25% do HP em Pneuma, a cura e a perda de HP não entram."
+        "note": "Soma 18% do HP máximo aos 7 primeiros Normais, Carregados e Imersivos dela na rotação (uma ativação do Center of Attention; 7 golpes confirmados pelo Davi: o texto do Lunaris limita a 6 os efeitos de Arkhe, e o golpe que dispara o 6º ainda recebe o bônus). A conversão para Hydro já é o padrão; o extra de 25% do HP em Pneuma, a cura e a perda de HP não entram."
       }
     ],
     "notes": [

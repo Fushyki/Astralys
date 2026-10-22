@@ -11,7 +11,7 @@ import type { ConvertTarget, SpecialMove } from '../../src/effects/schema';
 import type { Val } from './sets';
 import type { ReactionKey } from './gear';
 
-export type Src = 'kit' | 'p1' | 'p2' | 'p3' | 'const1' | 'const2' | 'const3' | 'const4' | 'const5' | 'const6';
+export type Src = 'kit' | 'p1' | 'p2' | 'p3' | 'p4' | 'const1' | 'const2' | 'const3' | 'const4' | 'const5' | 'const6';
 
 export interface BuffCuration {
   id: string;

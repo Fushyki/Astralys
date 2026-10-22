@@ -35,11 +35,22 @@ import { CHARACTERS_16 } from './curation/characters12';
 import type { BuffCuration } from './curation/characters';
 import { CHARACTER_NOTES } from './curation/charnotes';
 import { CHARACTER_PROCS, CHARACTERS_PROC_BUFFS } from './curation/procs';
-import { FACTIONS, LUNAR_BUFFS, LUNAR_PROCS, SPECIAL_MOVES } from './curation/lunar';
+import { FACTIONS as LUNAR_FACTIONS, LUNAR_BUFFS, LUNAR_PROCS as MOON_PROCS, SPECIAL_MOVES as MOON_SPECIAL } from './curation/lunar';
+import { EXTRA_BUFFS, EXTRA_FACTIONS, EXTRA_PROCS, EXTRA_SPECIAL } from './curation/extras';
+
+/** Junta listas por personagem de vários arquivos de curadoria. */
+const mergeLists = <T>(...all: Record<string, T[]>[]): Record<string, T[]> => {
+  const out: Record<string, T[]> = {};
+  for (const batch of all) for (const [k, v] of Object.entries(batch)) out[k] = [...(out[k] ?? []), ...v];
+  return out;
+};
+const FACTIONS = mergeLists(LUNAR_FACTIONS, EXTRA_FACTIONS);
+const LUNAR_PROCS = mergeLists(MOON_PROCS, EXTRA_PROCS);
+const SPECIAL_MOVES = mergeLists(MOON_SPECIAL, EXTRA_SPECIAL);
 
 /** Junta os lotes: o mesmo personagem pode aparecer em mais de um e as listas se somam. */
 const CHARACTER_BUFFS: Record<string, BuffCuration[]> = {};
-for (const batch of [CHARACTERS_1, CHARACTERS_2, CHARACTERS_3, CHARACTERS_4, CHARACTERS_5, CHARACTERS_6, CHARACTERS_7, CHARACTERS_8, CHARACTERS_9, CHARACTERS_10, CHARACTERS_11, CHARACTERS_12, CHARACTERS_13, CHARACTERS_14, CHARACTERS_15, CHARACTERS_16, CHARACTERS_PROC_BUFFS, LUNAR_BUFFS]) {
+for (const batch of [CHARACTERS_1, CHARACTERS_2, CHARACTERS_3, CHARACTERS_4, CHARACTERS_5, CHARACTERS_6, CHARACTERS_7, CHARACTERS_8, CHARACTERS_9, CHARACTERS_10, CHARACTERS_11, CHARACTERS_12, CHARACTERS_13, CHARACTERS_14, CHARACTERS_15, CHARACTERS_16, CHARACTERS_PROC_BUFFS, LUNAR_BUFFS, EXTRA_BUFFS]) {
   for (const [name, list] of Object.entries(batch)) CHARACTER_BUFFS[name] = [...(CHARACTER_BUFFS[name] ?? []), ...list];
 }
 

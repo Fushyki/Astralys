@@ -146,3 +146,15 @@ describe('curadoria Lunar (dados reais)', () => {
     expect(r.assembly.buffs.some((b) => b.description?.includes('Ascendant Gleam (Bennett)'))).toBe(true);
   });
 });
+
+describe('curadoria Estelar, golpes derivados e dano fixo de outro personagem', () => {
+  it('Odette: golpe Estelar do kit (variante Conduct/Swirl); Ayaka C2 = 20% do corte; Escoffier C2 soma ao golpe Cryo do aliado', () => {
+    const od = run([{ character: 'Odette' }], [{ talent: 'skill', label: '"Plume" Dance Move Stellar-Conduct/Stellar Swirl DMG' }]).result.actions[0];
+    expect(od.kind).toBe('stellar');
+    const ay = run([{ character: 'Kamisato Ayaka', constellation: 2 }], [{ talent: 'burst', label: 'Cutting DMG' }, { talent: 'proc', label: 'char:c2c' }]).result.actions;
+    expect(ay[1].scale.atk).toBeCloseTo(ay[0].scale.atk * 0.2, 9);
+    expect(ay[1].action.move.hitType).toBe('burst');
+    const es = run([{ character: 'Escoffier', constellation: 2 }, { character: 'Kamisato Ayaka' }], [{ member: 1, label: '1-Hit DMG' }]).result.actions[0];
+    expect(es.flatDamage).toBeGreaterThan(0);
+  });
+});

@@ -345,6 +345,30 @@
         },
         "flat": [],
         "note": "Assume 40 pontos de Cifra (+100% de DMG dela): ligue na janela."
+      },
+      {
+        "id": "c1",
+        "label": "Citlali C1 (Stellar Blade)",
+        "minConstellation": 1,
+        "scope": "self",
+        "timed": false,
+        "flat": [
+          {
+            "name": "Stellar Blade",
+            "sourceStat": "EM",
+            "perPoint": 2,
+            "hitTypes": [
+              "normal",
+              "charged",
+              "plunge",
+              "skill",
+              "burst"
+            ],
+            "stacks": 10,
+            "targets": "others"
+          }
+        ],
+        "note": "200% da Maestria dela somados aos 10 primeiros golpes dos aliados na rotação (10 stacks; os 3 extras por Derreter/Congelar NÃO entram)."
       }
     ],
     "notes": [
@@ -352,11 +376,6 @@
         "src": "p1",
         "kind": "utility",
         "note": "Já considerado na redução de RES (a energia de Nightsoul não muda o dano)."
-      },
-      {
-        "src": "const1",
-        "kind": "partial",
-        "note": "O dano extra dos Stellar Blade (200% da Maestria dela por golpe dos aliados) não entra: dano fixo que vem de outro personagem."
       }
     ],
     "procs": [
@@ -923,11 +942,6 @@
         "src": "const1",
         "kind": "utility",
         "note": "Só cargas da habilidade."
-      },
-      {
-        "src": "const6",
-        "kind": "partial",
-        "note": "O Carregado do estado Mastermind (156% do dano) não entra."
       }
     ],
     "procs": [
@@ -941,6 +955,21 @@
         "minConstellation": 2,
         "src": "const2",
         "note": "14% do HP máximo a cada ataque coordenado do Supremo (até 1 a cada 1,8 s; conta como Supremo, Genshin Optimizer)."
+      },
+      {
+        "id": "c6",
+        "label": "Yelan C6: Breakthrough Barb (Mastermind)",
+        "scale": {},
+        "hitType": "charged",
+        "minConstellation": 6,
+        "src": "const6",
+        "of": {
+          "talent": "normal",
+          "label": "Breakthrough Barb DMG",
+          "variant": 0,
+          "fraction": 1.56
+        },
+        "note": "156% do Breakthrough Barb, conta como Carregado; são até 5 (use no lugar dos Normais no Mastermind)."
       }
     ],
     "factions": [],
@@ -1391,14 +1420,38 @@
         "src": "const1",
         "kind": "utility",
         "note": "Só reduz a recarga da habilidade."
-      },
-      {
-        "src": "const2",
-        "kind": "partial",
-        "note": "Os 2 Frostflake extras (20% do dano da tempestade cada) não entram."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "c2c",
+        "label": "Ayaka C2: Frostflake (corte)",
+        "scale": {},
+        "minConstellation": 2,
+        "src": "const2",
+        "of": {
+          "talent": "burst",
+          "label": "Cutting DMG",
+          "variant": 0,
+          "fraction": 0.2
+        },
+        "note": "Cada tempestade menor vale 20% do corte da original; são 2 (use 2 × as execuções do corte)."
+      },
+      {
+        "id": "c2b",
+        "label": "Ayaka C2: Frostflake (florescer)",
+        "scale": {},
+        "minConstellation": 2,
+        "src": "const2",
+        "of": {
+          "talent": "burst",
+          "label": "Bloom DMG",
+          "variant": 0,
+          "fraction": 0.2
+        },
+        "note": "20% da explosão final da tempestade; são 2."
+      }
+    ],
     "factions": [],
     "specialMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -1636,6 +1689,24 @@
         },
         "flat": [],
         "note": "+17% de DMG de quem está no campo e protegido por escudo de Cristalizar: ligue na janela."
+      },
+      {
+        "id": "c2",
+        "label": "Albedo C2 (Fatal Reckoning)",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": false,
+        "flat": [
+          {
+            "name": "Fatal Reckoning",
+            "sourceStat": "DEF",
+            "perPoint": 1.2,
+            "hitTypes": [
+              "burst"
+            ]
+          }
+        ],
+        "note": "Assume 4 stacks: soma 120% da DEF a todo golpe do Supremo dele."
       }
     ],
     "notes": [
@@ -1643,15 +1714,24 @@
         "src": "p1",
         "kind": "partial",
         "note": "Os +25% de dano das Flores Transitórias (inimigo com menos de 50% de HP) e os +240% da DEF não entram."
-      },
-      {
-        "src": "const2",
-        "kind": "partial",
-        "note": "O dano extra por DEF (30% da DEF por stack, até 4) do Supremo e das Flores Fatais não entra."
       }
     ],
-    "procs": [],
-    "factions": [],
+    "procs": [
+      {
+        "id": "c2",
+        "label": "Albedo C2: Fatal Blossoms",
+        "scale": {
+          "def": 3
+        },
+        "hitType": "burst",
+        "minConstellation": 2,
+        "src": "const2",
+        "note": "300% da DEF por Fatal Blossom (3 quando ele está fora de campo com 4 stacks; conta como Supremo)."
+      }
+    ],
+    "factions": [
+      "hexerei"
+    ],
     "specialMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
@@ -1960,7 +2040,9 @@
         "note": "Explosão de 555% do ATK ao sair de campo ou ao fim do Supremo (o dobro com a Klee em campo não entra)."
       }
     ],
-    "factions": [],
+    "factions": [
+      "hexerei"
+    ],
     "specialMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
@@ -2114,13 +2196,7 @@
         "note": "Os Sesshou Sakura ignoram 60% da DEF: ligue só nas janelas da habilidade (vale para todos os golpes dela dentro da janela). O Dano Crítico Estelar não entra."
       }
     ],
-    "notes": [
-      {
-        "src": "p1",
-        "kind": "partial",
-        "note": "O raio extra (40% do ATK) é golpe extra na paleta. A versão Estelar-Conduct (Radiance) NÃO entra (mecânica Estelar ainda não modelada)."
-      }
-    ],
+    "notes": [],
     "procs": [
       {
         "id": "a1",
@@ -2131,6 +2207,19 @@
         "minConstellation": 0,
         "src": "p1",
         "note": "40% do ATK ao usar a habilidade com 3 Sesshou Sakura."
+      },
+      {
+        "id": "a1s",
+        "label": "Yae A1: raio extra (Estelar-Conduct)",
+        "scale": {
+          "atk": 0.5
+        },
+        "minConstellation": 0,
+        "src": "p1",
+        "special": {
+          "reaction": "stellarconduct"
+        },
+        "note": "Com Radiance: Stellar-Conduct, o raio extra vira 50% do ATK como Estelar-Conduct (use no lugar do raio de 40%)."
       }
     ],
     "factions": [],
@@ -2248,11 +2337,6 @@
     ],
     "notes": [
       {
-        "src": "p1",
-        "kind": "partial",
-        "note": "A espada de luz extra do Redemoinho (dano Físico). O golpe é 50% do dano base de outro golpe (a espada do Supremo), ainda não modelado."
-      },
-      {
         "src": "p2",
         "kind": "utility",
         "note": "Só recarga e stacks de Grimheart."
@@ -2273,7 +2357,23 @@
         "note": "Mais stacks de energia nas espadas de luz (dano Físico): não entra."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "a1",
+        "label": "Eula A1: Shattered Lightfall Sword",
+        "scale": {},
+        "element": "Physical",
+        "minConstellation": 0,
+        "src": "p1",
+        "of": {
+          "talent": "burst",
+          "label": "Lightfall Sword Base DMG",
+          "variant": 0,
+          "fraction": 0.5
+        },
+        "note": "50% do dano base da Lightfall Sword (Físico, conta como Supremo; os stacks de energia não entram)."
+      }
+    ],
     "factions": [],
     "specialMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -2813,6 +2913,37 @@
         },
         "flat": [],
         "note": "+20% de DEF por 12 s depois de Cristalizar: ligue na janela (o dano dela escala com DEF)."
+      },
+      {
+        "id": "a4",
+        "label": "Yun Jin A4 (formação)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "team": {
+          "scale": {
+            "of": "distinct",
+            "table": [
+              0.025,
+              0.05,
+              0.075,
+              0.115
+            ]
+          }
+        },
+        "flat": [
+          {
+            "name": "Flying Cloud Flag Formation (elementos)",
+            "sourceStat": "DEF",
+            "perPoint": 1,
+            "hitTypes": [
+              "normal"
+            ],
+            "stacks": 30,
+            "targets": "team"
+          }
+        ],
+        "note": "Soma 2,5% a 11,5% da DEF dela (por nº de elementos do time) aos mesmos 30 Normais do Supremo."
       }
     ],
     "notes": [
@@ -2820,11 +2951,6 @@
         "src": "p1",
         "kind": "utility",
         "note": "Só tipo de golpe da habilidade."
-      },
-      {
-        "src": "p2",
-        "kind": "partial",
-        "note": "O bônus de Normal da formação (2,5% a 11,5% da DEF por número de elementos) não entra."
       },
       {
         "src": "const1",
@@ -3191,14 +3317,21 @@
         "src": "const4",
         "kind": "utility",
         "note": "Só gotas de água."
-      },
-      {
-        "src": "const6",
-        "kind": "partial",
-        "note": "As 2 correntes extras (10% do HP máximo cada) não entram."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "c6",
+        "label": "Neuvillette C6: correntes",
+        "scale": {
+          "hp": 0.1
+        },
+        "hitType": "charged",
+        "minConstellation": 6,
+        "src": "const6",
+        "note": "10% do HP máximo por corrente, 2 a cada 2 s do Equitable Judgment (conta como Carregado). O multiplicador do A1 não entra."
+      }
+    ],
     "factions": [],
     "specialMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -3421,14 +3554,25 @@
         "src": "const1",
         "kind": "utility",
         "note": "Só chapéus e stacks."
-      },
-      {
-        "src": "const6",
-        "kind": "partial",
-        "note": "O Pyrotechnic Strike: Reprised (80% do dano, conta como Carregado) não entra."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "c6",
+        "label": "Lyney C6: Pyrotechnic Strike: Reprised",
+        "scale": {},
+        "hitType": "charged",
+        "minConstellation": 6,
+        "src": "const6",
+        "of": {
+          "talent": "normal",
+          "label": "Pyrotechnic Strike DMG",
+          "variant": 0,
+          "fraction": 0.8
+        },
+        "note": "80% do Pyrotechnic Strike a cada Prop Arrow (conta como Carregado)."
+      }
+    ],
     "factions": [],
     "specialMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -3721,6 +3865,37 @@
         },
         "flat": [],
         "note": "Assume 3 stacks de Crystal Shrapnel gastos (+36% de Taxa Crítica na habilidade): ligue na janela. O tiro do canhão não entra."
+      },
+      {
+        "id": "c6",
+        "label": "Navia C6",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {
+            "skill": 1.35
+          },
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "note": "Assume 6 stacks de Crystal Shrapnel (3 acima de 3): +135% de Dano Crítico no Ceremonial Crystalshot: ligue na janela do golpe."
       }
     ],
     "notes": [
@@ -3728,19 +3903,24 @@
         "src": "const1",
         "kind": "utility",
         "note": "Só energia e recarga."
-      },
-      {
-        "src": "const2",
-        "kind": "partial",
-        "note": "O tiro de canhão do Singing Salute não entra."
-      },
-      {
-        "src": "const6",
-        "kind": "partial",
-        "note": "O +45% de Dano Crítico por stack de Crystal Shrapnel acima de 3 não entra."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "c2",
+        "label": "Navia C2: Cannon Fire Support",
+        "scale": {},
+        "minConstellation": 2,
+        "src": "const2",
+        "of": {
+          "talent": "burst",
+          "label": "Cannon Fire Support DMG",
+          "variant": 0,
+          "fraction": 1
+        },
+        "note": "Um tiro de Cannon Fire Support (100% do golpe do Supremo, conta como Supremo) por Ceremonial Crystalshot."
+      }
+    ],
     "factions": [],
     "specialMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -3934,27 +4114,55 @@
     ],
     "notes": [
       {
-        "src": "p1",
-        "kind": "partial",
-        "note": "Os ataques coordenados do Tamoto (100% do Fluttering Hasode, contam como habilidade) e a infusão Geo não entram."
-      },
-      {
         "src": "const1",
         "kind": "partial",
         "note": "O Tamoto extra não entra."
-      },
-      {
-        "src": "const2",
-        "kind": "partial",
-        "note": "O Kinu (170% do dano do Tamoto) não entra."
-      },
-      {
-        "src": "const4",
-        "kind": "partial",
-        "note": "O Kinu dos Normais (dano extra) não entra."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "a1",
+        "label": "Chiori A1: Tamoto (Seize the Moment)",
+        "scale": {},
+        "minConstellation": 0,
+        "src": "p1",
+        "of": {
+          "talent": "skill",
+          "label": "Upward Sweep Attack DMG",
+          "variant": 0,
+          "fraction": 1
+        },
+        "note": "100% do golpe para cima do Fluttering Hasode (conta como habilidade); até 2 por Seize the Moment."
+      },
+      {
+        "id": "c2",
+        "label": "Chiori C2: Kinu",
+        "scale": {},
+        "minConstellation": 2,
+        "src": "const2",
+        "of": {
+          "talent": "skill",
+          "label": "Tamoto DMG",
+          "variant": 0,
+          "fraction": 1.7
+        },
+        "note": "170% do Tamoto (conta como habilidade), a cada 3 s por 10 s depois do Supremo."
+      },
+      {
+        "id": "c4",
+        "label": "Chiori C4: Kinu dos Normais",
+        "scale": {},
+        "minConstellation": 4,
+        "src": "const4",
+        "of": {
+          "talent": "skill",
+          "label": "Tamoto DMG",
+          "variant": 0,
+          "fraction": 1.7
+        },
+        "note": "Até 3 Kinu (170% do Tamoto, como no C2) por Tailor-Made."
+      }
+    ],
     "factions": [],
     "specialMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -4236,7 +4444,9 @@
       }
     ],
     "procs": [],
-    "factions": [],
+    "factions": [
+      "hexerei"
+    ],
     "specialMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
@@ -4341,11 +4551,6 @@
     ],
     "notes": [
       {
-        "src": "const1",
-        "kind": "partial",
-        "note": "A segunda flecha (20% da primeira) não entra."
-      },
-      {
         "src": "const2",
         "kind": "partial",
         "note": "A explosão manual do Baron Bunny (+200%) não entra."
@@ -4356,7 +4561,22 @@
         "note": "Só recarga e cargas da habilidade."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "c1",
+        "label": "Amber C1: segunda flecha",
+        "scale": {},
+        "minConstellation": 1,
+        "src": "const1",
+        "of": {
+          "talent": "normal",
+          "label": "Fully-Charged Aimed Shot",
+          "variant": 0,
+          "fraction": 0.2
+        },
+        "note": "20% do Tiro Mirado Carregado (conta como Carregado)."
+      }
+    ],
     "factions": [],
     "specialMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -4677,11 +4897,28 @@
       {
         "src": "const1",
         "kind": "partial",
-        "note": "As flechas extras (33% e 20% da original) não entram."
+        "note": "As 2 flechas extras do Windsunder Arrow (20% da original) não entram; as do Tiro Mirado entram como golpe extra."
       }
     ],
-    "procs": [],
-    "factions": [],
+    "procs": [
+      {
+        "id": "c1",
+        "label": "Venti C1: flecha extra",
+        "scale": {},
+        "minConstellation": 1,
+        "src": "const1",
+        "of": {
+          "talent": "normal",
+          "label": "Fully-Charged Aimed Shot",
+          "variant": 0,
+          "fraction": 0.33
+        },
+        "note": "33% do Tiro Mirado Carregado por flecha; são 2 (conta como Carregado). As do Windsunder Arrow NÃO entram."
+      }
+    ],
+    "factions": [
+      "hexerei"
+    ],
     "specialMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
@@ -5547,22 +5784,67 @@
         },
         "flat": [],
         "note": "DMG da equipe contra inimigos com Presságio, pelo nível do Supremo (o aumento do golpe que o aplica não entra): ligue nas janelas."
+      },
+      {
+        "id": "c1",
+        "label": "Mona C1 (reações)",
+        "minConstellation": 1,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "electrocharged": 0.15,
+            "lunarcharged": 0.15,
+            "lunarcrystallize": 0.15
+          }
+        },
+        "flat": [],
+        "note": "+15% de Eletrocarregado, Lunar-Carregado e Lunar-Cristalizar por 8 s depois de acertar inimigo com Presságio: ligue nas janelas. Vaporizar e Redemoinho Hydro NÃO entram (o bônus de Redemoinho do motor vale para todo elemento)."
       }
     ],
     "notes": [
       {
-        "src": "p1",
-        "kind": "partial",
-        "note": "A explosão do Fantasma (50% do dano do Espelho) não entra."
-      },
-      {
         "src": "const1",
         "kind": "partial",
-        "note": "Os +15% de dano de Vaporizar, Eletrocarregado e outras reações NÃO entram (o motor ainda não aceita bônus por reação vindo de constelação)."
+        "note": "Eletrocarregado, Lunar-Carregado e Lunar-Cristalizar entram (faixa); os +15% de Vaporizar e de Redemoinho Hydro e o reforço para 160% fora de campo não entram."
       }
     ],
-    "procs": [],
-    "factions": [],
+    "procs": [
+      {
+        "id": "a1",
+        "label": "Mona A1: explosão do Fantasma",
+        "scale": {},
+        "minConstellation": 0,
+        "src": "p1",
+        "of": {
+          "talent": "skill",
+          "label": "Explosion DMG",
+          "variant": 0,
+          "fraction": 0.5
+        },
+        "note": "50% da explosão do Mirror Reflection of Doom (conta como habilidade)."
+      }
+    ],
+    "factions": [
+      "hexerei"
+    ],
     "specialMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
@@ -5795,7 +6077,9 @@
       }
     ],
     "procs": [],
-    "factions": [],
+    "factions": [
+      "hexerei"
+    ],
     "specialMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
@@ -6247,17 +6531,27 @@
         "note": "Só recarga da habilidade."
       },
       {
-        "src": "const2",
-        "kind": "partial",
-        "note": "O Corvo extra (30% do dano) não entra."
-      },
-      {
         "src": "const4",
         "kind": "partial",
         "note": "Os Stormcluster extras do Supremo (de 4 para 6) não entram: ajuste as execuções do Supremo."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "c2",
+        "label": "Sara C2: Crowfeather extra",
+        "scale": {},
+        "minConstellation": 2,
+        "src": "const2",
+        "of": {
+          "talent": "skill",
+          "label": "Tengu Juurai: Ambush DMG",
+          "variant": 0,
+          "fraction": 0.3
+        },
+        "note": "30% do Tengu Juurai: Ambush (conta como habilidade)."
+      }
+    ],
     "factions": [],
     "specialMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -7688,6 +7982,32 @@
         },
         "flat": [],
         "note": "Assume a redução de RES Anemo do Supremo sempre ativa."
+      },
+      {
+        "id": "a4",
+        "label": "Faruzan A4 (Hurricane Guard)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "flat": [
+          {
+            "name": "Hurricane Guard",
+            "sourceStat": "BaseATK",
+            "perPoint": 0.32,
+            "hitTypes": [
+              "normal",
+              "charged",
+              "plunge",
+              "skill",
+              "burst"
+            ],
+            "targets": "team",
+            "elements": [
+              "Anemo"
+            ]
+          }
+        ],
+        "note": "Soma 32% do ATK base dela a todo golpe Anemo da equipe (assume todos dentro do Prayerful Wind's Benefit e respeitando o intervalo de 0,8 s)."
       }
     ],
     "notes": [
@@ -7695,11 +8015,6 @@
         "src": "p1",
         "kind": "utility",
         "note": "Só tempo de carga."
-      },
-      {
-        "src": "p2",
-        "kind": "partial",
-        "note": "O Hurricane Guard (DMG Anemo +32% do ATK base dela para os aliados, 4 s) não entra: o motor ainda não aceita dano fixo que vem de outro personagem com ATK base."
       },
       {
         "src": "const1",
@@ -7906,7 +8221,7 @@
       {
         "src": "const4",
         "kind": "partial",
-        "note": "Os +60% de Florescer entram (buff Kaveh C4, tabela de reações). O de Lunar-Florescer NÃO entra (mecânica Lunar ainda não modelada)."
+        "note": "Os +60% de Florescer entram; o de Lunar-Florescer não entra: o Genshin Optimizer não modela e o núcleo de Lunar-Florescer não tem fórmula verificável."
       }
     ],
     "procs": [
@@ -8009,14 +8324,70 @@
           }
         ],
         "note": "Soma 8% do HP máximo a cada Spiritvein (o dano do Supremo dele). Os escudos extras não mudam o dano."
+      },
+      {
+        "id": "a4",
+        "label": "Baizhu A4 (reações)",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "convert": {
+          "from": "hp",
+          "source": "self",
+          "perPoint": 0.00002,
+          "threshold": 0,
+          "cap": 1,
+          "to": [
+            "burning",
+            "bloom",
+            "hyperbloom",
+            "burgeon"
+          ]
+        },
+        "flat": [],
+        "note": "+2% de Queimadura, Florescer, Hiperflorescer e Brotar por 1.000 de HP dele (até 50.000) por 6 s depois do escudo curar: ligue nas janelas."
+      },
+      {
+        "id": "a4lb",
+        "label": "Baizhu A4 (Lunar-Florescer)",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "convert": {
+          "from": "hp",
+          "source": "self",
+          "perPoint": 0.000007,
+          "threshold": 0,
+          "cap": 0.35,
+          "to": [
+            "lunarbloom"
+          ]
+        },
+        "flat": [],
+        "note": "Idem, +0,7% de Lunar-Florescer por 1.000 de HP."
+      },
+      {
+        "id": "a4cat",
+        "label": "Baizhu A4 (Propagar/Intensificar)",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "convert": {
+          "from": "hp",
+          "source": "self",
+          "perPoint": 0.000008,
+          "threshold": 0,
+          "cap": 0.4,
+          "to": [
+            "spread",
+            "aggravate"
+          ]
+        },
+        "flat": [],
+        "note": "Idem, +0,8% no bônus de Propagar e Intensificar por 1.000 de HP."
       }
     ],
     "notes": [
-      {
-        "src": "p2",
-        "kind": "partial",
-        "note": "O bônus de dano de reação (Queimadura, Florescer, Hiperflorescer, Brotar, Propagar, Intensificar) não entra."
-      },
       {
         "src": "const1",
         "kind": "utility",
@@ -8667,14 +9038,29 @@
         },
         "flat": [],
         "note": "Assume 3 Skyladders (+70% de Dano Crítico do Driftcloud Wave): ligue na janela."
+      },
+      {
+        "id": "a4",
+        "label": "Xianyun A4 (Imersivo dos aliados)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "flat": [
+          {
+            "name": "Starwicker",
+            "sourceStat": "ATK",
+            "perPoint": 2,
+            "capPerHit": 9000,
+            "hitTypes": [
+              "plunge"
+            ],
+            "targets": "team"
+          }
+        ],
+        "note": "Soma 200% do ATK dela a todo Imersivo da equipe (Starwicker com stacks), até 9.000 (teto do Genshin Optimizer: 200% × 4.500 de ATK)."
       }
     ],
     "notes": [
-      {
-        "src": "p2",
-        "kind": "partial",
-        "note": "O dano extra do Imersivo dos aliados (200% do ATK, até 9.000) não entra: o motor ainda não aceita dano fixo que vem de outro personagem."
-      },
       {
         "src": "const1",
         "kind": "utility",
@@ -9602,6 +9988,28 @@
           }
         ],
         "note": "Soma 300% da DEF ao dano base dos Normais e Imersivos (assume o Imperishable Night sempre ativo)."
+      },
+      {
+        "id": "c4",
+        "label": "Xilonen C4 (Blooming Blessing)",
+        "minConstellation": 4,
+        "scope": "self",
+        "timed": false,
+        "flat": [
+          {
+            "name": "Blooming Blessing",
+            "sourceStat": "DEF",
+            "perPoint": 0.65,
+            "hitTypes": [
+              "normal",
+              "charged",
+              "plunge"
+            ],
+            "stacks": 6,
+            "targets": "team"
+          }
+        ],
+        "note": "65% da DEF dela somados aos 6 primeiros Normais, Carregados e Imersivos da equipe na rotação (no jogo cada membro tem 6 cargas)."
       }
     ],
     "notes": [
@@ -9614,11 +10022,6 @@
         "src": "const1",
         "kind": "utility",
         "note": "Só consumo de Nightsoul."
-      },
-      {
-        "src": "const4",
-        "kind": "partial",
-        "note": "O Blooming Blessing dos aliados (65% da DEF dela nos Normais, Carregados e Imersivos deles) não entra: dano fixo que vem de outro personagem."
       }
     ],
     "procs": [],
@@ -9882,6 +10285,114 @@
         },
         "flat": [],
         "note": "Assume a redução de RES (Pyro, Hydro, Cryo, Electro e Anemo) durante o Dreamdrifter sempre ativa. O bônus de DMG por Maestria não entra."
+      },
+      {
+        "id": "c1",
+        "label": "Mizuki C1 (Redemoinho)",
+        "minConstellation": 1,
+        "scope": "team",
+        "timed": true,
+        "convert": {
+          "from": "em",
+          "source": "self",
+          "perPoint": 11,
+          "threshold": 0,
+          "to": [
+            "swirlFlat"
+          ]
+        },
+        "flat": [],
+        "note": "Redemoinho com +1.100% da Maestria dela (1 por ativação): ligue na janela do Redemoinho."
+      },
+      {
+        "id": "c1s",
+        "label": "Mizuki C1 (Redemoinho Estelar)",
+        "minConstellation": 1,
+        "scope": "team",
+        "timed": true,
+        "convert": {
+          "from": "em",
+          "source": "self",
+          "perPoint": 5.5,
+          "threshold": 0,
+          "to": [
+            "stellarswirlFlat"
+          ]
+        },
+        "flat": [],
+        "note": "Redemoinho Estelar com +550% da Maestria dela: ligue na janela."
+      },
+      {
+        "id": "c6",
+        "label": "Mizuki C6 (crítico do Redemoinho)",
+        "minConstellation": 6,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "swirlCritRate": 0.3,
+            "swirlCritDmg": 1,
+            "stellarswirlCritRate": 0.1,
+            "stellarswirlCritDmg": 0.2
+          }
+        },
+        "flat": [],
+        "note": "No Dreamdrifter: Redemoinho crita (30% / 100%) e o Redemoinho Estelar ganha +10% / +20%: ligue nas janelas."
+      },
+      {
+        "id": "c6cr",
+        "label": "Mizuki C6 (Taxa Crítica)",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": false,
+        "convert": {
+          "from": "em",
+          "source": "self",
+          "perPoint": 0.0004,
+          "threshold": 500,
+          "cap": 0.2,
+          "to": [
+            "critRate"
+          ]
+        },
+        "flat": [],
+        "note": "+0,04% de Taxa Crítica por ponto de Maestria acima de 500, até 20%."
+      },
+      {
+        "id": "c6cd",
+        "label": "Mizuki C6 (Dano Crítico)",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": false,
+        "convert": {
+          "from": "em",
+          "source": "self",
+          "perPoint": 0.0016,
+          "threshold": 500,
+          "cap": 0.8,
+          "to": [
+            "critDmg"
+          ]
+        },
+        "flat": [],
+        "note": "+0,16% de Dano Crítico por ponto de Maestria acima de 500, até 80%."
       }
     ],
     "notes": [
@@ -9891,22 +10402,36 @@
         "note": "Só duração do Dreamdrifter."
       },
       {
-        "src": "const1",
-        "kind": "partial",
-        "note": "O bônus de dano de Espalhar (reação) não entra."
-      },
-      {
         "src": "const4",
         "kind": "utility",
         "note": "Só cura e energia."
-      },
-      {
-        "src": "const6",
-        "kind": "partial",
-        "note": "O crítico das reações de Espalhar e o bônus por Maestria não entram."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "c1",
+        "label": "Mizuki C1: ataque extra",
+        "scale": {
+          "em": 10
+        },
+        "minConstellation": 1,
+        "src": "const1",
+        "note": "1.000% da Maestria (Anemo) ao consumir o Twenty-Three Nights' Awaiting."
+      },
+      {
+        "id": "c1s",
+        "label": "Mizuki C1: ataque extra (Redemoinho Estelar)",
+        "scale": {
+          "em": 4
+        },
+        "minConstellation": 1,
+        "src": "const1",
+        "special": {
+          "reaction": "stellarswirl"
+        },
+        "note": "Com Radiance: Stellar Swirl, vira 400% da Maestria como Redemoinho Estelar (use no lugar do golpe acima)."
+      }
+    ],
     "factions": [],
     "specialMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -10118,23 +10643,83 @@
         },
         "flat": [],
         "note": "+100 de Maestria por 15 s depois do Supremo: ligue nas janelas."
+      },
+      {
+        "id": "a1",
+        "label": "Ifa A1 (Rescue Essentials)",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "swirl": 2.25,
+            "electrocharged": 2.25,
+            "stellarswirl": 0.36
+          }
+        },
+        "flat": [],
+        "note": "Assume 150 pontos de Rescue Essentials (o máximo): +1,5% por ponto no Redemoinho e Eletrocarregado e +0,24% no Redemoinho Estelar (parâmetros do Lunaris): ligue nas janelas. O de Lunar-Carregado NÃO entra (o Genshin Optimizer usa 0,2% por ponto, número que não aparece no Lunaris)."
+      },
+      {
+        "id": "c2",
+        "label": "Ifa C2 (limite +50)",
+        "minConstellation": 2,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "swirl": 0.75,
+            "electrocharged": 0.75
+          }
+        },
+        "flat": [],
+        "note": "Os 50 pontos a mais de Rescue Essentials (1,5% cada, do A1) no Redemoinho e Eletrocarregado, na mesma janela do A1. O Redemoinho Estelar e o Lunar-Carregado destes pontos NÃO entram."
       }
     ],
     "notes": [
       {
         "src": "p1",
         "kind": "partial",
-        "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
+        "note": "Redemoinho, Eletrocarregado e Redemoinho Estelar entram (faixa); o de Lunar-Carregado não: o Genshin Optimizer usa 0,2% por ponto, número que não está no Lunaris."
       },
       {
         "src": "const1",
         "kind": "utility",
         "note": "Só energia."
-      },
-      {
-        "src": "const2",
-        "kind": "partial",
-        "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
       }
     ],
     "procs": [
@@ -11058,22 +11643,95 @@
         },
         "flat": [],
         "note": "Ignora 30% da DEF do inimigo no Supremo: ligue só na janela do Supremo. A redução extra de DEF não entra."
-      }
-    ],
-    "notes": [
-      {
-        "src": "const1",
-        "kind": "partial",
-        "note": "Os stacks de Cycle of Enlightenment dos aliados (dano extra por golpe) não entram: dano fixo que vem de outro personagem."
       },
       {
-        "src": "const6",
-        "kind": "partial",
-        "note": "A redução de 30% de DEF do inimigo (6 s) e o dano extra do Principle of Darkness não entram."
+        "id": "c1p",
+        "label": "Durin C1 (Purity)",
+        "minConstellation": 1,
+        "scope": "self",
+        "timed": false,
+        "flat": [
+          {
+            "name": "Cycle of Enlightenment (aliados)",
+            "sourceStat": "ATK",
+            "perPoint": 0.6,
+            "hitTypes": [
+              "normal",
+              "charged",
+              "plunge",
+              "skill",
+              "burst"
+            ],
+            "stacks": 20,
+            "targets": "others"
+          }
+        ],
+        "note": "Principle of Purity: 60% do ATK dele nos 20 primeiros golpes dos aliados na rotação (no jogo cada um tem 20 stacks)."
+      },
+      {
+        "id": "c1d",
+        "label": "Durin C1 (Darkness)",
+        "minConstellation": 1,
+        "scope": "self",
+        "timed": false,
+        "flat": [
+          {
+            "name": "Cycle of Enlightenment (Supremo)",
+            "sourceStat": "ATK",
+            "perPoint": 1.5,
+            "hitTypes": [
+              "burst"
+            ],
+            "stacks": 10
+          }
+        ],
+        "note": "Principle of Darkness: 150% do ATK nos 10 primeiros golpes de Supremo dele (20 stacks, 2 por golpe). As duas formas valem juntas na rotação."
+      },
+      {
+        "id": "c6def",
+        "label": "Durin C6 (DEF do inimigo)",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": false,
+        "defShred": 0.3,
+        "flat": [],
+        "note": "Assume a redução de 30% de DEF (6 s depois do Principle of Purity) sempre ativa."
+      },
+      {
+        "id": "c6dark",
+        "label": "Durin C6 (Darkness)",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0.4,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "note": "Principle of Darkness e Dragon of Dark Decay ignoram mais 40% da DEF: ligue na janela desses golpes."
       }
     ],
+    "notes": [],
     "procs": [],
-    "factions": [],
+    "factions": [
+      "hexerei"
+    ],
     "specialMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
@@ -12060,7 +12718,9 @@
         "note": "800% do ATK na habilidade especial ou no Carregado especial."
       }
     ],
-    "factions": [],
+    "factions": [
+      "hexerei"
+    ],
     "specialMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
@@ -12184,7 +12844,9 @@
       }
     ],
     "procs": [],
-    "factions": [],
+    "factions": [
+      "hexerei"
+    ],
     "specialMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
@@ -12321,11 +12983,6 @@
         "note": "Só recarga da habilidade."
       },
       {
-        "src": "const2",
-        "kind": "partial",
-        "note": "A explosão do meteorito (dano igual ao da Starfell Sword) não entra."
-      },
-      {
         "src": "const4",
         "kind": "utility",
         "note": "Só energia."
@@ -12346,6 +13003,20 @@
         "minConstellation": 0,
         "src": "p2",
         "note": "60% do ATK no último Normal."
+      },
+      {
+        "id": "c2",
+        "label": "Viajante C2: explosão do meteorito",
+        "scale": {},
+        "minConstellation": 2,
+        "src": "const2",
+        "of": {
+          "talent": "skill",
+          "label": "Skill DMG",
+          "variant": 0,
+          "fraction": 1
+        },
+        "note": "Explosão igual ao dano da Starfell Sword (conta como habilidade)."
       }
     ],
     "factions": [],
@@ -12397,14 +13068,24 @@
         "src": "const4",
         "kind": "utility",
         "note": "Só energia."
-      },
-      {
-        "src": "const6",
-        "kind": "partial",
-        "note": "O Falling Thunder reforçado (200% do dano) não entra."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "c6",
+        "label": "Viajante C6: Falling Thunder reforçado",
+        "scale": {},
+        "minConstellation": 6,
+        "src": "const6",
+        "of": {
+          "talent": "burst",
+          "label": "Falling Thunder DMG",
+          "variant": 0,
+          "fraction": 2
+        },
+        "note": "A cada 2 Falling Thunder, o próximo causa 200%: use no lugar de 1 em cada 3."
+      }
+    ],
     "factions": [],
     "specialMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -12797,11 +13478,6 @@
         "note": "Só recarga da habilidade."
       },
       {
-        "src": "const2",
-        "kind": "partial",
-        "note": "A explosão do meteorito (dano igual ao da Starfell Sword) não entra."
-      },
-      {
         "src": "const4",
         "kind": "utility",
         "note": "Só energia."
@@ -12822,6 +13498,20 @@
         "minConstellation": 0,
         "src": "p2",
         "note": "60% do ATK no último Normal."
+      },
+      {
+        "id": "c2",
+        "label": "Viajante C2: explosão do meteorito",
+        "scale": {},
+        "minConstellation": 2,
+        "src": "const2",
+        "of": {
+          "talent": "skill",
+          "label": "Skill DMG",
+          "variant": 0,
+          "fraction": 1
+        },
+        "note": "Explosão igual ao dano da Starfell Sword (conta como habilidade)."
       }
     ],
     "factions": [],
@@ -12873,14 +13563,24 @@
         "src": "const4",
         "kind": "utility",
         "note": "Só energia."
-      },
-      {
-        "src": "const6",
-        "kind": "partial",
-        "note": "O Falling Thunder reforçado (200% do dano) não entra."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "c6",
+        "label": "Viajante C6: Falling Thunder reforçado",
+        "scale": {},
+        "minConstellation": 6,
+        "src": "const6",
+        "of": {
+          "talent": "burst",
+          "label": "Falling Thunder DMG",
+          "variant": 0,
+          "fraction": 2
+        },
+        "note": "A cada 2 Falling Thunder, o próximo causa 200%: use no lugar de 1 em cada 3."
+      }
+    ],
     "factions": [],
     "specialMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
@@ -13470,7 +14170,9 @@
         "note": "80% do ATK no ricochete do martelo. Escolha o elemento absorvido/convertido no campo \"Elemento do dano\" do golpe (o padrão é Anemo)."
       }
     ],
-    "factions": [],
+    "factions": [
+      "hexerei"
+    ],
     "specialMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
@@ -13585,6 +14287,56 @@
         },
         "flat": [],
         "note": "Assume 4 stacks (+20% de Taxa Crítica) depois de criar Gradient Beacons: ligue na janela."
+      },
+      {
+        "id": "a0",
+        "label": "Mitya: base do Estelar-Conduct",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": false,
+        "convert": {
+          "from": "em",
+          "source": "self",
+          "perPoint": 0.00028,
+          "threshold": 0,
+          "cap": 0.14,
+          "to": [
+            "stellarconductBase"
+          ]
+        },
+        "flat": [],
+        "note": "Base das reações Estelares da equipe pela Maestria, com teto (Genshin Optimizer: `passive3`)."
+      },
+      {
+        "id": "c6",
+        "label": "Mitya C6",
+        "minConstellation": 6,
+        "scope": "team",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "stellarconductSpecial": 0.2
+          }
+        },
+        "flat": [],
+        "note": "Dano Estelar-Conduct da equipe elevado em 20% (o Mitya não tem ficha no Genshin Optimizer; vale a fórmula Estelar dele)."
       }
     ],
     "notes": [
@@ -13592,21 +14344,45 @@
         "src": "p1",
         "kind": "partial",
         "note": "A Maestria por Gradient Beacon (30 cada) depende do número de Beacons e não entra."
-      },
-      {
-        "src": "const4",
-        "kind": "partial",
-        "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
-      },
-      {
-        "src": "const6",
-        "kind": "partial",
-        "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "c4",
+        "label": "Mitya C4: Detection Core",
+        "scale": {
+          "em": 3
+        },
+        "minConstellation": 4,
+        "src": "const4",
+        "special": {
+          "reaction": "stellarconduct"
+        },
+        "note": "300% da Maestria como Estelar-Conduct a cada 5 Gradient Beacons consumidos."
+      },
+      {
+        "id": "c6",
+        "label": "Mitya C6: Steady State (+15%)",
+        "scale": {},
+        "minConstellation": 6,
+        "src": "const6",
+        "of": {
+          "talent": "skill",
+          "label": "Steady State Core DMG",
+          "variant": 0,
+          "fraction": 0.15
+        },
+        "note": "No Steady State o núcleo causa 115% do dano: este golpe soma os 15% a mais (ponha junto do golpe do kit)."
+      }
+    ],
     "factions": [],
-    "specialMoves": [],
+    "specialMoves": [
+      {
+        "reaction": "stellarconduct",
+        "talent": "normal",
+        "label": "Gradient Detonation Stellar-Conduct DMG"
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -13646,6 +14422,40 @@
         },
         "flat": [],
         "note": "+100 de Maestria da equipe por 18 s depois da habilidade: ligue nas janelas."
+      },
+      {
+        "id": "c6",
+        "label": "Valeriy C6 (Electro)",
+        "minConstellation": 6,
+        "scope": "team",
+        "timed": true,
+        "forElements": [
+          "Electro"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0.1,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "stellarconductCritDmg": 0.4
+          }
+        },
+        "flat": [],
+        "note": "+10% de Taxa Crítica no dano Electro (dado aos membros Electro) e +40% de Dano Crítico no Estelar-Conduct por 7 s: ligue nas janelas. O +100% do Carregado especial e dos Thunderburst Shells NÃO entra."
       }
     ],
     "notes": [
@@ -13672,7 +14482,7 @@
       {
         "src": "const6",
         "kind": "partial",
-        "note": "Os +100% de dano do Carregado especial e dos Thunderburst Shells e o crítico do Electro não entram."
+        "note": "O crítico entra (faixa); os +100% de dano do Carregado especial e dos Thunderburst Shells não entram (bônus de um golpe só)."
       }
     ],
     "procs": [],
@@ -13903,6 +14713,232 @@
         },
         "flat": [],
         "note": "+40% de ATK com o máximo de stacks de Ação Disciplinar (modo Armed for Action): ligue nas janelas."
+      },
+      {
+        "id": "a4atk",
+        "label": "Vesna A4 (ATK)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0.06,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "team": {
+          "scale": {
+            "of": [
+              "Cryo",
+              "Anemo"
+            ],
+            "table": [
+              1,
+              2,
+              3,
+              4
+            ]
+          }
+        },
+        "flat": [],
+        "note": "Radiance: Stellar Swirl: +6% de ATK por membro Cryo ou Anemo (ela conta): ligue nas janelas."
+      },
+      {
+        "id": "a4em",
+        "label": "Vesna A4 (Maestria)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 25,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "team": {
+          "scale": {
+            "of": [
+              "Pyro",
+              "Hydro",
+              "Electro",
+              "Dendro",
+              "Geo"
+            ],
+            "table": [
+              1,
+              2,
+              3
+            ]
+          }
+        },
+        "flat": [],
+        "note": "Radiance: Stellar Swirl: +25 de Maestria por membro de outro elemento: ligue nas janelas."
+      },
+      {
+        "id": "a0",
+        "label": "Vesna: base do Redemoinho Estelar",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": false,
+        "convert": {
+          "from": "atk",
+          "source": "self",
+          "perPoint": 0.00007,
+          "threshold": 0,
+          "cap": 0.14,
+          "to": [
+            "stellarswirlBase"
+          ]
+        },
+        "flat": [],
+        "note": "Base das reações Estelares da equipe pelo ATK, com teto (Genshin Optimizer: `passive3`)."
+      },
+      {
+        "id": "c4atk",
+        "label": "Vesna C4 (ATK)",
+        "minConstellation": 4,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0.06,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "team": {
+          "scale": {
+            "of": [
+              "Cryo",
+              "Anemo"
+            ],
+            "table": [
+              2,
+              4,
+              6,
+              8
+            ]
+          }
+        },
+        "flat": [],
+        "note": "O A4 vale 3 vezes: soma 2 × 6% por membro Cryo/Anemo (6% do texto do A4) na mesma janela."
+      },
+      {
+        "id": "c4em",
+        "label": "Vesna C4 (Maestria)",
+        "minConstellation": 4,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 25,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "team": {
+          "scale": {
+            "of": [
+              "Pyro",
+              "Hydro",
+              "Electro",
+              "Dendro",
+              "Geo"
+            ],
+            "table": [
+              2,
+              4,
+              6
+            ]
+          }
+        },
+        "flat": [],
+        "note": "O A4 vale 3 vezes: soma 2 × 25 de Maestria por membro de outro elemento (25 do texto do A4) na mesma janela."
+      },
+      {
+        "id": "c6",
+        "label": "Vesna C6",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "stellarswirlSpecial": 0.2
+          }
+        },
+        "flat": [],
+        "note": "Dano de Redemoinho Estelar da Vesna elevado em 20%."
       }
     ],
     "notes": [
@@ -13912,29 +14948,69 @@
         "note": "O dano extra dos Spirit Blades por stack não entra."
       },
       {
-        "src": "p2",
-        "kind": "partial",
-        "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
-      },
-      {
         "src": "const1",
         "kind": "utility",
         "note": "Só uso extra da habilidade (e dano Estelar, que não entra)."
-      },
-      {
-        "src": "const4",
-        "kind": "partial",
-        "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
-      },
-      {
-        "src": "const6",
-        "kind": "partial",
-        "note": "O Windborne Sword: Transpose (150% do ATK + 200% dos Spirit Blades) não entra."
       }
     ],
-    "procs": [],
+    "procs": [
+      {
+        "id": "c6t",
+        "label": "Vesna C6: Transpose",
+        "scale": {
+          "atk": 1.5
+        },
+        "minConstellation": 6,
+        "src": "const6",
+        "note": "150% do ATK no Windborne Sword: Transpose."
+      },
+      {
+        "id": "c6b",
+        "label": "Vesna C6: Spirit Blades",
+        "scale": {
+          "atk": 2
+        },
+        "minConstellation": 6,
+        "src": "const6",
+        "note": "200% do ATK das Spirit Blades do Transpose."
+      },
+      {
+        "id": "c6bs",
+        "label": "Vesna C6: Spirit Blades (Redemoinho Estelar)",
+        "scale": {
+          "atk": 2
+        },
+        "minConstellation": 6,
+        "src": "const6",
+        "special": {
+          "reaction": "stellarswirl"
+        },
+        "note": "Com Radiance: Stellar Swirl, as Spirit Blades do Transpose como Redemoinho Estelar (Genshin Optimizer); use no lugar do golpe acima."
+      }
+    ],
     "factions": [],
-    "specialMoves": [],
+    "specialMoves": [
+      {
+        "reaction": "stellarswirl",
+        "talent": "skill",
+        "label": "Windborne Sword Lv. 2 Spirit Blade Stellar Swirl DMG"
+      },
+      {
+        "reaction": "stellarswirl",
+        "talent": "skill",
+        "label": "Windborne Sword Lv. 3 Spirit Blade Stellar Swirl DMG"
+      },
+      {
+        "reaction": "stellarswirl",
+        "talent": "skill",
+        "label": "Windborne Sword Lv. 3 Spirit Blade Final Hit Stellar Swirl DMG"
+      },
+      {
+        "reaction": "stellarswirl",
+        "talent": "burst",
+        "label": "Spirit Blade Stellar Swirl DMG"
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -14119,6 +15195,33 @@
         },
         "flat": [],
         "note": "+60% de Dano Crítico do dano Cryo da equipe por 15 s (só com 4 membros Hydro ou Cryo): ligue na janela. Só personagens Cryo recebem."
+      },
+      {
+        "id": "c2",
+        "label": "Escoffier C2 (Cold Dish)",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": false,
+        "flat": [
+          {
+            "name": "Cold Dish",
+            "sourceStat": "ATK",
+            "perPoint": 2.4,
+            "hitTypes": [
+              "normal",
+              "charged",
+              "plunge",
+              "skill",
+              "burst"
+            ],
+            "stacks": 5,
+            "targets": "others",
+            "elements": [
+              "Cryo"
+            ]
+          }
+        ],
+        "note": "240% do ATK dela somados aos 5 primeiros golpes Cryo dos aliados na rotação (5 stacks por Cold Storage)."
       }
     ],
     "notes": [
@@ -14126,11 +15229,6 @@
         "src": "p1",
         "kind": "utility",
         "note": "Só cura."
-      },
-      {
-        "src": "const2",
-        "kind": "partial",
-        "note": "O dano extra dos aliados por Cold Dish (240% do ATK da Escoffier por golpe Cryo) não entra: dano fixo que vem de outro personagem."
       },
       {
         "src": "const4",
@@ -16030,6 +17128,30 @@
         },
         "flat": [],
         "note": "Ignora 40% da DEF do inimigo para quem tem Guidance of Theosis: ligue na janela."
+      },
+      {
+        "id": "c4",
+        "label": "Nicole C4 (Pathfinder's Blessing)",
+        "minConstellation": 4,
+        "scope": "self",
+        "timed": false,
+        "flat": [
+          {
+            "name": "Pathfinder's Blessing",
+            "sourceStat": "ATK",
+            "perPoint": 0.7,
+            "hitTypes": [
+              "normal",
+              "charged",
+              "plunge",
+              "skill",
+              "burst"
+            ],
+            "stacks": 8,
+            "targets": "team"
+          }
+        ],
+        "note": "70% do ATK dela somados aos 8 primeiros golpes da equipe na rotação (no jogo cada membro tem as próprias 8 cargas)."
       }
     ],
     "notes": [
@@ -16042,15 +17164,12 @@
         "src": "const1",
         "kind": "partial",
         "note": "A Arcane Projection (600% do ATK do personagem ativo) não entra."
-      },
-      {
-        "src": "const4",
-        "kind": "partial",
-        "note": "O bônus de dano do Pathfinder's Blessing (valor dependente do elemento) não entra."
       }
     ],
     "procs": [],
-    "factions": [],
+    "factions": [
+      "hexerei"
+    ],
     "specialMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
@@ -16081,33 +17200,102 @@
         },
         "flat": [],
         "note": "Maestria = 8 por 100 de ATK, até 160."
+      },
+      {
+        "id": "a0",
+        "label": "Sandrone: base Estelar",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": false,
+        "convert": {
+          "from": "atk",
+          "source": "self",
+          "perPoint": 0.00007,
+          "threshold": 0,
+          "cap": 0.14,
+          "to": [
+            "stellarconductBase",
+            "stellarswirlBase"
+          ]
+        },
+        "flat": [],
+        "note": "Base das reações Estelares da equipe pelo ATK, com teto (Genshin Optimizer: `passive3`)."
+      },
+      {
+        "id": "c1",
+        "label": "Sandrone C1",
+        "minConstellation": 1,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "stellarconduct": 0.3,
+            "stellarswirl": 0.3
+          }
+        },
+        "flat": [],
+        "note": "+30% de DMG Estelar da equipe no modo Decoding: ligue nas janelas."
+      },
+      {
+        "id": "c6",
+        "label": "Sandrone C6",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "stellarconductSpecial": 0.2,
+            "stellarswirlSpecial": 0.2
+          }
+        },
+        "flat": [],
+        "note": "Dano Estelar da Sandrone elevado em 20%."
       }
     ],
     "notes": [
       {
         "src": "p1",
         "kind": "partial",
-        "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
-      },
-      {
-        "src": "const1",
-        "kind": "partial",
-        "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
+        "note": "O Prism Shot com 400% e o Convective Inhibition Ray com +10% por stack (Decoding Power e Refined Tactics) não entram: dependem do estado do Fagio."
       },
       {
         "src": "const2",
         "kind": "partial",
-        "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
-      },
-      {
-        "src": "const4",
-        "kind": "partial",
-        "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
-      },
-      {
-        "src": "const6",
-        "kind": "partial",
-        "note": "As 4 instâncias de 100% do ATK são golpe extra na paleta. A versão Estelar (Radiance) NÃO entra (mecânica Estelar ainda não modelada)."
+        "note": "O Dano Crítico só dos feixes do Carregado (+40% e +20% por stack) não entra: o motor não tem crítico só de um golpe Estelar."
       }
     ],
     "procs": [
@@ -16120,10 +17308,93 @@
         "minConstellation": 6,
         "src": "const6",
         "note": "Cada instância vale 100% do ATK; até 4 (use 4 execuções)."
+      },
+      {
+        "id": "c4sc",
+        "label": "Sandrone C4: canhão (Estelar-Conduct)",
+        "scale": {
+          "atk": 1.25
+        },
+        "minConstellation": 4,
+        "src": "const4",
+        "special": {
+          "reaction": "stellarconduct"
+        },
+        "note": "125% do ATK como Estelar-Conduct a cada 4 s."
+      },
+      {
+        "id": "c4ss",
+        "label": "Sandrone C4: canhão (Redemoinho Estelar)",
+        "scale": {
+          "atk": 1.875
+        },
+        "minConstellation": 4,
+        "src": "const4",
+        "special": {
+          "reaction": "stellarswirl"
+        },
+        "note": "187,5% do ATK como Redemoinho Estelar a cada 4 s."
+      },
+      {
+        "id": "c6sc",
+        "label": "Sandrone C6: feixe (Estelar-Conduct)",
+        "scale": {
+          "atk": 0.8
+        },
+        "minConstellation": 6,
+        "src": "const6",
+        "special": {
+          "reaction": "stellarconduct"
+        },
+        "note": "Cada instância vale 80% do ATK como Estelar-Conduct; são 4 (use 4 execuções)."
+      },
+      {
+        "id": "c6ss",
+        "label": "Sandrone C6: feixe (Redemoinho Estelar)",
+        "scale": {
+          "atk": 1.2
+        },
+        "minConstellation": 6,
+        "src": "const6",
+        "special": {
+          "reaction": "stellarswirl"
+        },
+        "note": "Cada instância vale 120% do ATK como Redemoinho Estelar; são 4."
       }
     ],
     "factions": [],
-    "specialMoves": [],
+    "specialMoves": [
+      {
+        "reaction": "stellarconduct",
+        "talent": "normal",
+        "label": "Charged Attack Condensed Beam Stellar-Conduct DMG"
+      },
+      {
+        "reaction": "stellarswirl",
+        "talent": "normal",
+        "label": "Charged Attack Condensed Beam Stellar Swirl DMG"
+      },
+      {
+        "reaction": "stellarconduct",
+        "talent": "skill",
+        "label": "Prism Shot Stellar-Conduct DMG"
+      },
+      {
+        "reaction": "stellarswirl",
+        "talent": "skill",
+        "label": "Prism Shot Stellar Swirl DMG"
+      },
+      {
+        "reaction": "stellarconduct",
+        "talent": "burst",
+        "label": "Convective Inhibition Ray Stellar-Conduct DMG"
+      },
+      {
+        "reaction": "stellarswirl",
+        "talent": "burst",
+        "label": "Convective Inhibition Ray Stellar Swirl DMG"
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -16286,14 +17557,81 @@
         },
         "flat": [],
         "note": "+60 de Maestria do personagem ativo por 5 s: ligue na janela."
+      },
+      {
+        "id": "a1",
+        "label": "Viajante A1 (Radiance)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "flat": [
+          {
+            "name": "Frostpierce Star",
+            "sourceStat": "ATK",
+            "perPoint": 0.8,
+            "hitTypes": [
+              "normal",
+              "charged",
+              "plunge"
+            ]
+          }
+        ],
+        "note": "Assume Radiance: Stellar-Conduct com Frostpierce Star em campo: soma 80% do ATK a todo Normal, Carregado e Imersivo (a conversão para Cryo já é o padrão)."
+      },
+      {
+        "id": "a0",
+        "label": "Viajante: base Estelar",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": false,
+        "convert": {
+          "from": "atk",
+          "source": "self",
+          "perPoint": 0.000035,
+          "threshold": 0,
+          "cap": 0.07,
+          "to": [
+            "stellarconductBase",
+            "stellarswirlBase"
+          ]
+        },
+        "flat": [],
+        "note": "Base das reações Estelares da equipe pelo ATK, com teto (Genshin Optimizer: `passive3`)."
+      },
+      {
+        "id": "c6",
+        "label": "Viajante C6",
+        "minConstellation": 6,
+        "scope": "others",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "stellarconduct": 0.4,
+            "stellarswirl": 0.4
+          }
+        },
+        "flat": [],
+        "note": "Assume 8 stacks de Frostglow (o máximo de 40%): DMG Estelar dos outros membros por 15 s depois do Supremo: ligue nas janelas."
       }
     ],
     "notes": [
-      {
-        "src": "p1",
-        "kind": "partial",
-        "note": "O dano extra dos Normais (80% do ATK) e a conversão para Cryo dependem do Radiance: Stellar-Conduct. Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
-      },
       {
         "src": "const1",
         "kind": "utility",
@@ -16303,16 +17641,22 @@
         "src": "const4",
         "kind": "utility",
         "note": "Só duração."
-      },
-      {
-        "src": "const6",
-        "kind": "partial",
-        "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
       }
     ],
     "procs": [],
     "factions": [],
-    "specialMoves": [],
+    "specialMoves": [
+      {
+        "reaction": "stellarconduct",
+        "talent": "burst",
+        "label": "Stellar-Conduct Ice Javelin Single Strike DMG"
+      },
+      {
+        "reaction": "stellarswirl",
+        "talent": "burst",
+        "label": "Stellar Swirl Ice Javelin Single Strike DMG"
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -16371,14 +17715,81 @@
         },
         "flat": [],
         "note": "+60 de Maestria do personagem ativo por 5 s: ligue na janela."
+      },
+      {
+        "id": "a1",
+        "label": "Viajante A1 (Radiance)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "flat": [
+          {
+            "name": "Frostpierce Star",
+            "sourceStat": "ATK",
+            "perPoint": 0.8,
+            "hitTypes": [
+              "normal",
+              "charged",
+              "plunge"
+            ]
+          }
+        ],
+        "note": "Assume Radiance: Stellar-Conduct com Frostpierce Star em campo: soma 80% do ATK a todo Normal, Carregado e Imersivo (a conversão para Cryo já é o padrão)."
+      },
+      {
+        "id": "a0",
+        "label": "Viajante: base Estelar",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": false,
+        "convert": {
+          "from": "atk",
+          "source": "self",
+          "perPoint": 0.000035,
+          "threshold": 0,
+          "cap": 0.07,
+          "to": [
+            "stellarconductBase",
+            "stellarswirlBase"
+          ]
+        },
+        "flat": [],
+        "note": "Base das reações Estelares da equipe pelo ATK, com teto (Genshin Optimizer: `passive3`)."
+      },
+      {
+        "id": "c6",
+        "label": "Viajante C6",
+        "minConstellation": 6,
+        "scope": "others",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "stellarconduct": 0.4,
+            "stellarswirl": 0.4
+          }
+        },
+        "flat": [],
+        "note": "Assume 8 stacks de Frostglow (o máximo de 40%): DMG Estelar dos outros membros por 15 s depois do Supremo: ligue nas janelas."
       }
     ],
     "notes": [
-      {
-        "src": "p1",
-        "kind": "partial",
-        "note": "O dano extra dos Normais (80% do ATK) e a conversão para Cryo dependem do Radiance: Stellar-Conduct. Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
-      },
       {
         "src": "const1",
         "kind": "utility",
@@ -16388,16 +17799,398 @@
         "src": "const4",
         "kind": "utility",
         "note": "Só duração."
-      },
-      {
-        "src": "const6",
-        "kind": "partial",
-        "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
       }
     ],
     "procs": [],
     "factions": [],
-    "specialMoves": [],
+    "specialMoves": [
+      {
+        "reaction": "stellarconduct",
+        "talent": "burst",
+        "label": "Stellar-Conduct Ice Javelin Single Strike DMG"
+      },
+      {
+        "reaction": "stellarswirl",
+        "talent": "burst",
+        "label": "Stellar Swirl Ice Javelin Single Strike DMG"
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Odette",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "a1",
+        "label": "Odette A1 (Marvelous Splendor)",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "stellarconduct": 0.6,
+            "stellarswirl": 0.6
+          }
+        },
+        "flat": [],
+        "note": "Assume 4 stacks de Marvelous Splendor (15% cada, parâmetro do Lunaris e Genshin Optimizer): +60% de DMG Estelar: ligue nas janelas."
+      },
+      {
+        "id": "a4",
+        "label": "Odette A4",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "convert": {
+          "from": "atk",
+          "source": "self",
+          "perPoint": 0.00015,
+          "threshold": 1000,
+          "cap": 0.3,
+          "to": [
+            "stellarconductMult",
+            "stellarswirlMult"
+          ]
+        },
+        "flat": [],
+        "note": "Golpes Estelares dela com +1,5% do dano original por 100 de ATK acima de 1.000, até 30% (Genshin Optimizer: `stellar_mult_`)."
+      },
+      {
+        "id": "a0",
+        "label": "Odette: base Estelar",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": false,
+        "convert": {
+          "from": "atk",
+          "source": "self",
+          "perPoint": 0.00007,
+          "threshold": 0,
+          "cap": 0.14,
+          "to": [
+            "stellarconductBase",
+            "stellarswirlBase"
+          ]
+        },
+        "flat": [],
+        "note": "Base das reações Estelares da equipe pelo ATK, com teto (Genshin Optimizer: `passive3`)."
+      },
+      {
+        "id": "c1",
+        "label": "Odette C1 (stacks extras)",
+        "minConstellation": 1,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "stellarconduct": 0.3,
+            "stellarswirl": 0.3
+          }
+        },
+        "flat": [],
+        "note": "Os 2 stacks a mais de Marvelous Splendor (15% cada, como no A1) na mesma janela do A1."
+      },
+      {
+        "id": "c2",
+        "label": "Odette C2",
+        "minConstellation": 2,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0.28,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "note": "Assume 4 stacks: +28% de ATK: ligue nas janelas do A1."
+      },
+      {
+        "id": "c2res",
+        "label": "Odette C2 (RES Cryo)",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": false,
+        "resShred": {
+          "value": 0.2,
+          "elements": [
+            "Cryo"
+          ]
+        },
+        "flat": [],
+        "note": "Assume Radiance com o Dance Double em campo: -20% de RES Cryo. A de Electro ou Anemo (depende do Radiance) NÃO entra."
+      },
+      {
+        "id": "c4",
+        "label": "Odette C4 (Snow Swan para a equipe)",
+        "minConstellation": 4,
+        "scope": "others",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "stellarconduct": 0.5,
+            "stellarswirl": 0.5
+          }
+        },
+        "level": {
+          "talent": "burst",
+          "table": [
+            0.14,
+            0.18,
+            0.22,
+            0.26,
+            0.3,
+            0.34,
+            0.38,
+            0.42,
+            0.46,
+            0.5,
+            0.54,
+            0.58,
+            0.62,
+            0.66,
+            0.7
+          ]
+        },
+        "flat": [],
+        "note": "C4: os outros membros ganham 50% do bônus Estelar do Snow Swan's Dream (nível do Supremo): ligue nas janelas."
+      },
+      {
+        "id": "c6",
+        "label": "Odette C6 (equipe)",
+        "minConstellation": 6,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "stellarconductSpecial": 0.25,
+            "stellarswirlSpecial": 0.25
+          }
+        },
+        "flat": [],
+        "note": "Dano Estelar elevado em 25% com Marvelous Splendor: ligue nas janelas."
+      },
+      {
+        "id": "c6s",
+        "label": "Odette C6",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "stellarconductSpecial": 0.2,
+            "stellarswirlSpecial": 0.2
+          }
+        },
+        "flat": [],
+        "note": "Dano Estelar da Odette elevado em mais 20%."
+      }
+    ],
+    "notes": [
+      {
+        "src": "const2",
+        "kind": "partial",
+        "note": "O ATK por stack e a RES Cryo entram; a redução de RES Electro ou Anemo (depende do Radiance) não entra."
+      }
+    ],
+    "procs": [
+      {
+        "id": "c1sc",
+        "label": "Odette C1 (Estelar-Conduct)",
+        "scale": {
+          "atk": 3
+        },
+        "minConstellation": 1,
+        "src": "const1",
+        "special": {
+          "reaction": "stellarconduct"
+        },
+        "note": "300% do ATK como Estelar-Conduct no fim do dueto."
+      },
+      {
+        "id": "c1ss",
+        "label": "Odette C1 (Redemoinho Estelar)",
+        "scale": {
+          "atk": 4.5
+        },
+        "minConstellation": 1,
+        "src": "const1",
+        "special": {
+          "reaction": "stellarswirl"
+        },
+        "note": "450% do ATK como Redemoinho Estelar no fim do dueto."
+      },
+      {
+        "id": "c4sc",
+        "label": "Odette C4 (Estelar-Conduct)",
+        "scale": {
+          "atk": 0.66
+        },
+        "minConstellation": 4,
+        "src": "const4",
+        "special": {
+          "reaction": "stellarconduct"
+        },
+        "note": "66% do ATK como Estelar-Conduct a cada 3,5 s."
+      },
+      {
+        "id": "c4ss",
+        "label": "Odette C4 (Redemoinho Estelar)",
+        "scale": {
+          "atk": 0.99
+        },
+        "minConstellation": 4,
+        "src": "const4",
+        "special": {
+          "reaction": "stellarswirl"
+        },
+        "note": "99% do ATK como Redemoinho Estelar a cada 3,5 s."
+      }
+    ],
+    "factions": [],
+    "specialMoves": [
+      {
+        "reaction": "stellarconduct",
+        "talent": "skill",
+        "label": "Coda at Dawn's Tolling Stellar-Conduct/Stellar Swirl DMG",
+        "variant": 0
+      },
+      {
+        "reaction": "stellarswirl",
+        "talent": "skill",
+        "label": "Coda at Dawn's Tolling Stellar-Conduct/Stellar Swirl DMG",
+        "variant": 1
+      },
+      {
+        "reaction": "stellarconduct",
+        "talent": "skill",
+        "label": "\"Plume\" Dance Move Stellar-Conduct/Stellar Swirl DMG",
+        "variant": 0
+      },
+      {
+        "reaction": "stellarswirl",
+        "talent": "skill",
+        "label": "\"Plume\" Dance Move Stellar-Conduct/Stellar Swirl DMG",
+        "variant": 1
+      },
+      {
+        "reaction": "stellarconduct",
+        "talent": "skill",
+        "label": "\"Wing\" Dance Move Stellar-Conduct/Stellar Swirl DMG",
+        "variant": 0
+      },
+      {
+        "reaction": "stellarswirl",
+        "talent": "skill",
+        "label": "\"Wing\" Dance Move Stellar-Conduct/Stellar Swirl DMG",
+        "variant": 1
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -16408,19 +18201,137 @@
     "critDmg": 0,
     "em": 0,
     "appliesToSelf": false,
-    "buffs": [],
-    "notes": [
+    "buffs": [
       {
-        "src": "p1",
-        "kind": "partial",
-        "note": "O dano do raio do Oz (152,7% da flecha) não entra."
+        "id": "hex-atk",
+        "label": "Fischl: Secret Rite (Sobrecarga)",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0.225,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "team": {
+          "hexerei": 2
+        },
+        "flat": [],
+        "note": "Hexerei (2+ membros Hexerei, Witch's Homework concluída): +22,5% de ATK por 10 s depois de uma Sobrecarga com o Oz: ligue nas janelas."
       },
       {
-        "src": "const6",
-        "kind": "partial",
-        "note": "O ataque coordenado do Oz (30% do ATK) é golpe extra na paleta. O ATK e a Maestria extras do Witch's Eve Rite NÃO entram (Hexerei ainda não modelado)."
+        "id": "hex-em",
+        "label": "Fischl: Secret Rite (Eletrocarregado)",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 90,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "team": {
+          "hexerei": 2
+        },
+        "flat": [],
+        "note": "Hexerei: +90 de Maestria por 10 s depois de Eletrocarregado ou Lunar-Carregado com o Oz: ligue nas janelas."
+      },
+      {
+        "id": "c6atk",
+        "label": "Fischl C6 (Secret Rite, Sobrecarga)",
+        "minConstellation": 6,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0.225,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "team": {
+          "hexerei": 2
+        },
+        "flat": [],
+        "note": "Depois de um ataque coordenado do Oz, o ATK do Secret Rite dobra: soma mais 22,5% (valor do texto do Secret Rite) na mesma janela."
+      },
+      {
+        "id": "c6em",
+        "label": "Fischl C6 (Secret Rite, Eletrocarregado)",
+        "minConstellation": 6,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 90,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "team": {
+          "hexerei": 2
+        },
+        "flat": [],
+        "note": "Idem para a Maestria: mais 90 na mesma janela."
       }
     ],
+    "notes": [],
     "procs": [
       {
         "id": "a4",
@@ -16477,9 +18388,26 @@
         "minConstellation": 6,
         "src": "const6",
         "note": "Ataque coordenado de 30% do ATK com o personagem ativo (conta como habilidade, Genshin Optimizer)."
+      },
+      {
+        "id": "a1o",
+        "label": "Fischl A1: Thundering Retribution (flecha)",
+        "scale": {},
+        "element": "Electro",
+        "minConstellation": 0,
+        "src": "p1",
+        "of": {
+          "talent": "normal",
+          "label": "Fully-Charged Aimed Shot",
+          "variant": 0,
+          "fraction": 1.527
+        },
+        "note": "152,7% do Tiro Mirado Carregado que acerta o Oz, Electro (conta como Carregado, Genshin Optimizer)."
       }
     ],
-    "factions": [],
+    "factions": [
+      "hexerei"
+    ],
     "specialMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
@@ -16666,52 +18594,6 @@
         "src": "const6",
         "kind": "utility",
         "note": "Só velocidade de ataque e reviver."
-      }
-    ],
-    "procs": [],
-    "factions": [],
-    "specialMoves": [],
-    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
-  },
-  {
-    "character": "Odette",
-    "atkPct": 0,
-    "dmgPct": 0,
-    "critRate": 0,
-    "critDmg": 0,
-    "em": 0,
-    "appliesToSelf": false,
-    "buffs": [],
-    "notes": [
-      {
-        "src": "p1",
-        "kind": "partial",
-        "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
-      },
-      {
-        "src": "p2",
-        "kind": "partial",
-        "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
-      },
-      {
-        "src": "const1",
-        "kind": "partial",
-        "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
-      },
-      {
-        "src": "const2",
-        "kind": "partial",
-        "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
-      },
-      {
-        "src": "const4",
-        "kind": "partial",
-        "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
-      },
-      {
-        "src": "const6",
-        "kind": "partial",
-        "note": "Depende das mecânicas Lunar, Estelar ou Moonsign, que o motor ainda não modela."
       }
     ],
     "procs": [],

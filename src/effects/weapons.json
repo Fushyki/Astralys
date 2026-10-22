@@ -9996,7 +9996,39 @@
     "hpPct": 0.16,
     "defPct": 0,
     "dmgPctByType": {},
-    "buffs": [],
+    "buffs": [
+      {
+        "id": "moonsign",
+        "label": "HP extra (Moonsign)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0.16,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "team": {
+          "moonsign": 2
+        },
+        "flat": []
+      }
+    ],
     "flat": [],
     "procs": [],
     "weapon": "Serenity's Call",
@@ -10011,7 +10043,39 @@
         "hpPct": 0.16,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "moonsign",
+            "label": "HP extra (Moonsign)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0.16,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "team": {
+              "moonsign": 2
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -10025,7 +10089,39 @@
         "hpPct": 0.2,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "moonsign",
+            "label": "HP extra (Moonsign)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0.2,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "team": {
+              "moonsign": 2
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -10039,7 +10135,39 @@
         "hpPct": 0.24,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "moonsign",
+            "label": "HP extra (Moonsign)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0.24,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "team": {
+              "moonsign": 2
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -10053,7 +10181,39 @@
         "hpPct": 0.28,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "moonsign",
+            "label": "HP extra (Moonsign)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0.28,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "team": {
+              "moonsign": 2
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -10067,13 +10227,44 @@
         "hpPct": 0.32,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "moonsign",
+            "label": "HP extra (Moonsign)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0.32,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "team": {
+              "moonsign": 2
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       }
     ],
-    "note": "Só os +16% (R1) de HP depois de reação. O extra do Moonsign: Ascendant Gleam NÃO entra.",
-    "partial": true,
+    "note": "HP depois de reação (assumido ativo) e, com Moonsign: Ascendant Gleam (2+ membros Moonsign), mais 16% (R1).",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
   {
@@ -10678,7 +10869,39 @@
     "hpPct": 0,
     "defPct": 0,
     "dmgPctByType": {},
-    "buffs": [],
+    "buffs": [
+      {
+        "id": "estelar",
+        "label": "DMG Estelar",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "stellarconduct": 0.16,
+            "stellarswirl": 0.16
+          }
+        },
+        "flat": []
+      }
+    ],
     "flat": [],
     "procs": [],
     "weapon": "Emberwell",
@@ -10693,7 +10916,39 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "estelar",
+            "label": "DMG Estelar",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "stellarconduct": 0.16,
+                "stellarswirl": 0.16
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -10707,7 +10962,39 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "estelar",
+            "label": "DMG Estelar",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "stellarconduct": 0.2,
+                "stellarswirl": 0.2
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -10721,7 +11008,39 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "estelar",
+            "label": "DMG Estelar",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "stellarconduct": 0.24,
+                "stellarswirl": 0.24
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -10735,7 +11054,39 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "estelar",
+            "label": "DMG Estelar",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "stellarconduct": 0.28,
+                "stellarswirl": 0.28
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -10749,13 +11100,44 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "estelar",
+            "label": "DMG Estelar",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "stellarconduct": 0.32,
+                "stellarswirl": 0.32
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       }
     ],
-    "note": "Só o ATK depois de reação. O dano de reação Estelar NÃO entra (mecânica nova ainda não modelada).",
-    "partial": true,
+    "note": "ATK depois de reação (assumido ativo); +16% (R1) de DMG Estelar por 12 s depois de uma reação Estelar: faixa na linha do tempo.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
   {
@@ -10768,7 +11150,39 @@
     "hpPct": 0,
     "defPct": 0,
     "dmgPctByType": {},
-    "buffs": [],
+    "buffs": [
+      {
+        "id": "radiance",
+        "label": "Verdant (Radiance)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "stellarconduct": 0.24,
+            "stellarswirl": 0.24
+          }
+        },
+        "flat": []
+      }
+    ],
     "flat": [],
     "procs": [],
     "weapon": "New Bough",
@@ -10783,7 +11197,39 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "radiance",
+            "label": "Verdant (Radiance)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "stellarconduct": 0.24,
+                "stellarswirl": 0.24
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -10797,7 +11243,39 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "radiance",
+            "label": "Verdant (Radiance)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "stellarconduct": 0.3,
+                "stellarswirl": 0.3
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -10811,7 +11289,39 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "radiance",
+            "label": "Verdant (Radiance)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "stellarconduct": 0.36,
+                "stellarswirl": 0.36
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -10825,7 +11335,39 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "radiance",
+            "label": "Verdant (Radiance)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "stellarconduct": 0.42,
+                "stellarswirl": 0.42
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -10839,12 +11381,44 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "radiance",
+            "label": "Verdant (Radiance)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "stellarconduct": 0.48,
+                "stellarswirl": 0.48
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       }
     ],
-    "note": "Assume 3 stacks de ATK e Maestria. A versão \"Radiance: Stellar Glimmer\" NÃO entra.",
+    "note": "Assume 3 stacks de ATK e Maestria. Com Radiance: Stellar Glimmer, +8% (R1) de DMG Estelar por stack (3) numa faixa; a troca do ATK (6% no lugar de 4%) e a perda da Maestria nessa versão NÃO entram.",
     "partial": true,
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
@@ -11398,6 +11972,68 @@
           "reactionBonus": {}
         },
         "flat": []
+      },
+      {
+        "id": "hex",
+        "label": "Secret Rite (ATK do dono)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "stats": {
+          "atkPct": 0.15,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "team": {
+          "hexerei": 2
+        },
+        "flat": []
+      },
+      {
+        "id": "hext",
+        "label": "Secret Rite (ATK dos aliados)",
+        "minConstellation": 0,
+        "scope": "others",
+        "timed": true,
+        "stats": {
+          "atkPct": 0.12,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "team": {
+          "hexerei": 2
+        },
+        "flat": []
       }
     ],
     "flat": [],
@@ -11470,6 +12106,68 @@
               "physDmgPct": 0,
               "physCritDmg": 0,
               "reactionBonus": {}
+            },
+            "flat": []
+          },
+          {
+            "id": "hex",
+            "label": "Secret Rite (ATK do dono)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0.15,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "team": {
+              "hexerei": 2
+            },
+            "flat": []
+          },
+          {
+            "id": "hext",
+            "label": "Secret Rite (ATK dos aliados)",
+            "minConstellation": 0,
+            "scope": "others",
+            "timed": true,
+            "stats": {
+              "atkPct": 0.12,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "team": {
+              "hexerei": 2
             },
             "flat": []
           }
@@ -11545,6 +12243,68 @@
               "reactionBonus": {}
             },
             "flat": []
+          },
+          {
+            "id": "hex",
+            "label": "Secret Rite (ATK do dono)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0.1875,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "team": {
+              "hexerei": 2
+            },
+            "flat": []
+          },
+          {
+            "id": "hext",
+            "label": "Secret Rite (ATK dos aliados)",
+            "minConstellation": 0,
+            "scope": "others",
+            "timed": true,
+            "stats": {
+              "atkPct": 0.15,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "team": {
+              "hexerei": 2
+            },
+            "flat": []
           }
         ],
         "flat": [],
@@ -11616,6 +12376,68 @@
               "physDmgPct": 0,
               "physCritDmg": 0,
               "reactionBonus": {}
+            },
+            "flat": []
+          },
+          {
+            "id": "hex",
+            "label": "Secret Rite (ATK do dono)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0.225,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "team": {
+              "hexerei": 2
+            },
+            "flat": []
+          },
+          {
+            "id": "hext",
+            "label": "Secret Rite (ATK dos aliados)",
+            "minConstellation": 0,
+            "scope": "others",
+            "timed": true,
+            "stats": {
+              "atkPct": 0.18,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "team": {
+              "hexerei": 2
             },
             "flat": []
           }
@@ -11691,6 +12513,68 @@
               "reactionBonus": {}
             },
             "flat": []
+          },
+          {
+            "id": "hex",
+            "label": "Secret Rite (ATK do dono)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0.2625,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "team": {
+              "hexerei": 2
+            },
+            "flat": []
+          },
+          {
+            "id": "hext",
+            "label": "Secret Rite (ATK dos aliados)",
+            "minConstellation": 0,
+            "scope": "others",
+            "timed": true,
+            "stats": {
+              "atkPct": 0.21,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "team": {
+              "hexerei": 2
+            },
+            "flat": []
           }
         ],
         "flat": [],
@@ -11764,14 +12648,75 @@
               "reactionBonus": {}
             },
             "flat": []
+          },
+          {
+            "id": "hex",
+            "label": "Secret Rite (ATK do dono)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0.3,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "team": {
+              "hexerei": 2
+            },
+            "flat": []
+          },
+          {
+            "id": "hext",
+            "label": "Secret Rite (ATK dos aliados)",
+            "minConstellation": 0,
+            "scope": "others",
+            "timed": true,
+            "stats": {
+              "atkPct": 0.24,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "team": {
+              "hexerei": 2
+            },
+            "flat": []
           }
         ],
         "flat": [],
         "procs": []
       }
     ],
-    "note": "Dano Crítico do Supremo e ATK do dono (assumido ativo); o ATK dos aliados (3 s) vale nas janelas de buff. O bônus de Hexerei NÃO entra.",
-    "partial": true,
+    "note": "Dano Crítico do Supremo e ATK do dono (assumido ativo); o ATK dos aliados (3 s) vale nas janelas de buff. Com Hexerei: Secret Rite (2+ membros Hexerei) os dois ATK sobem 75% (parâmetro do Lunaris).",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
   {
@@ -11784,7 +12729,38 @@
     "hpPct": 0,
     "defPct": 0.2,
     "dmgPctByType": {},
-    "buffs": [],
+    "buffs": [
+      {
+        "id": "lcr",
+        "label": "DMG Lunar-Cristalizar",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "lunarcrystallize": 0.64
+          }
+        },
+        "flat": []
+      }
+    ],
     "flat": [],
     "procs": [],
     "weapon": "Lightbearing Moonshard",
@@ -11799,7 +12775,38 @@
         "hpPct": 0,
         "defPct": 0.2,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "lcr",
+            "label": "DMG Lunar-Cristalizar",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "lunarcrystallize": 0.64
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -11813,7 +12820,38 @@
         "hpPct": 0,
         "defPct": 0.2,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "lcr",
+            "label": "DMG Lunar-Cristalizar",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "lunarcrystallize": 0.8
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -11827,7 +12865,38 @@
         "hpPct": 0,
         "defPct": 0.2,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "lcr",
+            "label": "DMG Lunar-Cristalizar",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "lunarcrystallize": 0.96
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -11841,7 +12910,38 @@
         "hpPct": 0,
         "defPct": 0.2,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "lcr",
+            "label": "DMG Lunar-Cristalizar",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "lunarcrystallize": 1.12
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -11855,13 +12955,43 @@
         "hpPct": 0,
         "defPct": 0.2,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "lcr",
+            "label": "DMG Lunar-Cristalizar",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "lunarcrystallize": 1.28
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       }
     ],
-    "note": "Só a DEF. O dano de Lunar-Cristalizar (+64% no R1) NÃO entra (mecânica Lunar ainda não modelada).",
-    "partial": true,
+    "note": "DEF e +64% (R1) de DMG Lunar-Cristalizar por 5 s depois da habilidade: faixa na linha do tempo.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
   {
@@ -11874,7 +13004,39 @@
     "hpPct": 0,
     "defPct": 0,
     "dmgPctByType": {},
-    "buffs": [],
+    "buffs": [
+      {
+        "id": "crit",
+        "label": "Dano Crítico Estelar",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "stellarconductCritDmg": 0.5,
+            "stellarswirlCritDmg": 0.5
+          }
+        },
+        "flat": []
+      }
+    ],
     "flat": [],
     "procs": [],
     "weapon": "Whitelake Frostfeather",
@@ -11889,7 +13051,39 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "crit",
+            "label": "Dano Crítico Estelar",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "stellarconductCritDmg": 0.5,
+                "stellarswirlCritDmg": 0.5
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -11903,7 +13097,39 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "crit",
+            "label": "Dano Crítico Estelar",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "stellarconductCritDmg": 0.65,
+                "stellarswirlCritDmg": 0.65
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -11917,7 +13143,39 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "crit",
+            "label": "Dano Crítico Estelar",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "stellarconductCritDmg": 0.8,
+                "stellarswirlCritDmg": 0.8
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -11931,7 +13189,39 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "crit",
+            "label": "Dano Crítico Estelar",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "stellarconductCritDmg": 0.95,
+                "stellarswirlCritDmg": 0.95
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -11945,13 +13235,44 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "crit",
+            "label": "Dano Crítico Estelar",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "stellarconductCritDmg": 1.1,
+                "stellarswirlCritDmg": 1.1
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       }
     ],
-    "note": "Só o ATK (3 stacks). O dano crítico e a energia da reação Estelar NÃO entram.",
-    "partial": true,
+    "note": "ATK e, com 3 stacks (assumidos), +50% (R1) de Dano Crítico no dano Estelar. A energia não entra.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
   {
@@ -12053,7 +13374,38 @@
     "hpPct": 0,
     "defPct": 0,
     "dmgPctByType": {},
-    "buffs": [],
+    "buffs": [
+      {
+        "id": "defiance",
+        "label": "Winds of Defiance",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "stellarswirl": 0.36
+          }
+        },
+        "flat": []
+      }
+    ],
     "flat": [],
     "procs": [],
     "weapon": "Beyond the Chrysalis",
@@ -12068,7 +13420,38 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "defiance",
+            "label": "Winds of Defiance",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "stellarswirl": 0.36
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -12082,7 +13465,38 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "defiance",
+            "label": "Winds of Defiance",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "stellarswirl": 0.45
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -12096,7 +13510,38 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "defiance",
+            "label": "Winds of Defiance",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "stellarswirl": 0.54
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -12110,7 +13555,38 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "defiance",
+            "label": "Winds of Defiance",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "stellarswirl": 0.63
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -12124,13 +13600,43 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "defiance",
+            "label": "Winds of Defiance",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "stellarswirl": 0.72
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       }
     ],
-    "note": "Só o Dano Crítico da fase Devotion (assumida ativa). O dano Estelar-Swirl e a energia NÃO entram.",
-    "partial": true,
+    "note": "Dano Crítico da fase Devotion (assumida ativa); a fase Defiance (+36% de Redemoinho Estelar no R1) é faixa na linha do tempo. A energia não entra.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
   {
@@ -14821,7 +16327,39 @@
     "hpPct": 0,
     "defPct": 0,
     "dmgPctByType": {},
-    "buffs": [],
+    "buffs": [
+      {
+        "id": "moonsign",
+        "label": "Maestria extra (Moonsign)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 60,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "team": {
+          "moonsign": 2
+        },
+        "flat": []
+      }
+    ],
     "flat": [],
     "procs": [],
     "weapon": "Master Key",
@@ -14836,7 +16374,39 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "moonsign",
+            "label": "Maestria extra (Moonsign)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 60,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "team": {
+              "moonsign": 2
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -14850,7 +16420,39 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "moonsign",
+            "label": "Maestria extra (Moonsign)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 75,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "team": {
+              "moonsign": 2
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -14864,7 +16466,39 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "moonsign",
+            "label": "Maestria extra (Moonsign)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 90,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "team": {
+              "moonsign": 2
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -14878,7 +16512,39 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "moonsign",
+            "label": "Maestria extra (Moonsign)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 105,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "team": {
+              "moonsign": 2
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -14892,13 +16558,44 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "moonsign",
+            "label": "Maestria extra (Moonsign)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 120,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "team": {
+              "moonsign": 2
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       }
     ],
-    "note": "Só os +60 (R1) de Maestria depois de reação. O extra do Moonsign NÃO entra.",
-    "partial": true,
+    "note": "Maestria depois de reação (assumida ativa) e, com Moonsign: Ascendant Gleam (2+ membros Moonsign), mais 60 (R1).",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
   {
@@ -14911,7 +16608,67 @@
     "hpPct": 0,
     "defPct": 0,
     "dmgPctByType": {},
-    "buffs": [],
+    "buffs": [
+      {
+        "id": "em",
+        "label": "Harmonic Movement (Maestria)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 120,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": []
+      },
+      {
+        "id": "estelar",
+        "label": "Harmonic Movement (Estelar)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "stellarconduct": 0.28,
+            "stellarswirl": 0.28
+          }
+        },
+        "flat": []
+      }
+    ],
     "flat": [],
     "procs": [],
     "weapon": "Forged by the Golden Melody",
@@ -14926,7 +16683,67 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "em",
+            "label": "Harmonic Movement (Maestria)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 120,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          },
+          {
+            "id": "estelar",
+            "label": "Harmonic Movement (Estelar)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "stellarconduct": 0.28,
+                "stellarswirl": 0.28
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -14940,7 +16757,67 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "em",
+            "label": "Harmonic Movement (Maestria)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 150,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          },
+          {
+            "id": "estelar",
+            "label": "Harmonic Movement (Estelar)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "stellarconduct": 0.35,
+                "stellarswirl": 0.35
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -14954,7 +16831,67 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "em",
+            "label": "Harmonic Movement (Maestria)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 180,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          },
+          {
+            "id": "estelar",
+            "label": "Harmonic Movement (Estelar)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "stellarconduct": 0.42,
+                "stellarswirl": 0.42
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -14968,7 +16905,67 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "em",
+            "label": "Harmonic Movement (Maestria)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 210,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          },
+          {
+            "id": "estelar",
+            "label": "Harmonic Movement (Estelar)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "stellarconduct": 0.49,
+                "stellarswirl": 0.49
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -14982,12 +16979,72 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "em",
+            "label": "Harmonic Movement (Maestria)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 240,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          },
+          {
+            "id": "estelar",
+            "label": "Harmonic Movement (Estelar)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "stellarconduct": 0.56,
+                "stellarswirl": 0.56
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       }
     ],
-    "note": "Só o +ATK (a primeira fase do ciclo de 10 s). Maestria e dano Estelar NÃO entram.",
+    "note": "O +ATK da primeira fase fica sempre; as fases de Maestria e de DMG Estelar são faixas. O Contrapuntal (cópia extra da fase depois de uma reação Estelar) NÃO entra.",
     "partial": true,
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
@@ -15001,7 +17058,36 @@
     "hpPct": 0,
     "defPct": 0,
     "dmgPctByType": {},
-    "buffs": [],
+    "buffs": [
+      {
+        "id": "atk",
+        "label": "ATK depois de reação Estelar",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0.16,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": []
+      }
+    ],
     "flat": [],
     "procs": [],
     "weapon": "Blade of Atonement",
@@ -15016,7 +17102,36 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "atk",
+            "label": "ATK depois de reação Estelar",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0.16,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -15030,7 +17145,36 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "atk",
+            "label": "ATK depois de reação Estelar",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0.2,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -15044,7 +17188,36 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "atk",
+            "label": "ATK depois de reação Estelar",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0.24,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -15058,7 +17231,36 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "atk",
+            "label": "ATK depois de reação Estelar",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0.28,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -15072,13 +17274,41 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "atk",
+            "label": "ATK depois de reação Estelar",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0.32,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       }
     ],
-    "note": "Só a Maestria depois de reação. O ATK da reação Estelar NÃO entra.",
-    "partial": true,
+    "note": "Maestria depois de reação (assumida ativa) e +16% (R1) de ATK por 12 s depois de uma reação Estelar (faixa).",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
   {
@@ -17559,8 +19789,42 @@
           "physDmgPct": 0,
           "physCritDmg": 0,
           "reactionBonus": {
-            "electrocharged": 0.48
+            "electrocharged": 0.48,
+            "lunarcharged": 0.12
           }
+        },
+        "flat": []
+      },
+      {
+        "id": "moonsign",
+        "label": "Lunar-Carregado (Moonsign)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "lunarcharged": 0.12
+          }
+        },
+        "team": {
+          "moonsign": 2
         },
         "flat": []
       }
@@ -17605,8 +19869,42 @@
               "physDmgPct": 0,
               "physCritDmg": 0,
               "reactionBonus": {
-                "electrocharged": 0.48
+                "electrocharged": 0.48,
+                "lunarcharged": 0.12
               }
+            },
+            "flat": []
+          },
+          {
+            "id": "moonsign",
+            "label": "Lunar-Carregado (Moonsign)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "lunarcharged": 0.12
+              }
+            },
+            "team": {
+              "moonsign": 2
             },
             "flat": []
           }
@@ -17650,8 +19948,42 @@
               "physDmgPct": 0,
               "physCritDmg": 0,
               "reactionBonus": {
-                "electrocharged": 0.6
+                "electrocharged": 0.6,
+                "lunarcharged": 0.15
               }
+            },
+            "flat": []
+          },
+          {
+            "id": "moonsign",
+            "label": "Lunar-Carregado (Moonsign)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "lunarcharged": 0.15
+              }
+            },
+            "team": {
+              "moonsign": 2
             },
             "flat": []
           }
@@ -17695,8 +20027,42 @@
               "physDmgPct": 0,
               "physCritDmg": 0,
               "reactionBonus": {
-                "electrocharged": 0.72
+                "electrocharged": 0.72,
+                "lunarcharged": 0.18
               }
+            },
+            "flat": []
+          },
+          {
+            "id": "moonsign",
+            "label": "Lunar-Carregado (Moonsign)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "lunarcharged": 0.18
+              }
+            },
+            "team": {
+              "moonsign": 2
             },
             "flat": []
           }
@@ -17740,8 +20106,42 @@
               "physDmgPct": 0,
               "physCritDmg": 0,
               "reactionBonus": {
-                "electrocharged": 0.84
+                "electrocharged": 0.84,
+                "lunarcharged": 0.21
               }
+            },
+            "flat": []
+          },
+          {
+            "id": "moonsign",
+            "label": "Lunar-Carregado (Moonsign)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "lunarcharged": 0.21
+              }
+            },
+            "team": {
+              "moonsign": 2
             },
             "flat": []
           }
@@ -17785,8 +20185,42 @@
               "physDmgPct": 0,
               "physCritDmg": 0,
               "reactionBonus": {
-                "electrocharged": 0.96
+                "electrocharged": 0.96,
+                "lunarcharged": 0.24
               }
+            },
+            "flat": []
+          },
+          {
+            "id": "moonsign",
+            "label": "Lunar-Carregado (Moonsign)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "lunarcharged": 0.24
+              }
+            },
+            "team": {
+              "moonsign": 2
             },
             "flat": []
           }
@@ -17795,8 +20229,7 @@
         "procs": []
       }
     ],
-    "note": "+48% (R1) de dano de Eletrocarregado (tabela de reações). O bônus de Lunar-Carregado NÃO entra (mecânica Lunar ainda não modelada).",
-    "partial": true,
+    "note": "+48% (R1) de Eletrocarregado e +12% de Lunar-Carregado; com Moonsign: Ascendant Gleam, mais 12% de Lunar-Carregado.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
   {
@@ -17987,7 +20420,36 @@
     "hpPct": 0,
     "defPct": 0,
     "dmgPctByType": {},
-    "buffs": [],
+    "buffs": [
+      {
+        "id": "atk",
+        "label": "ATK depois de reação Estelar",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0.2,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": []
+      }
+    ],
     "flat": [],
     "procs": [],
     "weapon": "Song of the Vigil",
@@ -18002,7 +20464,36 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "atk",
+            "label": "ATK depois de reação Estelar",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0.2,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -18016,7 +20507,36 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "atk",
+            "label": "ATK depois de reação Estelar",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0.25,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -18030,7 +20550,36 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "atk",
+            "label": "ATK depois de reação Estelar",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0.3,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -18044,7 +20593,36 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "atk",
+            "label": "ATK depois de reação Estelar",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0.35,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -18058,14 +20636,41 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "atk",
+            "label": "ATK depois de reação Estelar",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0.4,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       }
     ],
-    "note": "Só energia e ATK de reação Estelar (mecânica nova ainda não modelada).",
-    "noDamage": true,
-    "partial": true,
+    "note": "+20% (R1) de ATK por 12 s depois de uma reação Estelar (faixa). A energia não entra.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
   {
@@ -18275,7 +20880,66 @@
     "hpPct": 0,
     "defPct": 0,
     "dmgPctByType": {},
-    "buffs": [],
+    "buffs": [
+      {
+        "id": "lc",
+        "label": "Lunar-Carregado depois do Supremo",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "lunarcharged": 0.36
+          }
+        },
+        "flat": []
+      },
+      {
+        "id": "requiem",
+        "label": "Requiem of Ruin",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0.28,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": []
+      }
+    ],
     "flat": [],
     "procs": [],
     "weapon": "Bloodsoaked Ruins",
@@ -18290,7 +20954,66 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "lc",
+            "label": "Lunar-Carregado depois do Supremo",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "lunarcharged": 0.36
+              }
+            },
+            "flat": []
+          },
+          {
+            "id": "requiem",
+            "label": "Requiem of Ruin",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0.28,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -18304,7 +21027,66 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "lc",
+            "label": "Lunar-Carregado depois do Supremo",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "lunarcharged": 0.48
+              }
+            },
+            "flat": []
+          },
+          {
+            "id": "requiem",
+            "label": "Requiem of Ruin",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0.35,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -18318,7 +21100,66 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "lc",
+            "label": "Lunar-Carregado depois do Supremo",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "lunarcharged": 0.6
+              }
+            },
+            "flat": []
+          },
+          {
+            "id": "requiem",
+            "label": "Requiem of Ruin",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0.42,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -18332,7 +21173,66 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "lc",
+            "label": "Lunar-Carregado depois do Supremo",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "lunarcharged": 0.72
+              }
+            },
+            "flat": []
+          },
+          {
+            "id": "requiem",
+            "label": "Requiem of Ruin",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0.49,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -18346,13 +21246,71 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "lc",
+            "label": "Lunar-Carregado depois do Supremo",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "lunarcharged": 0.84
+              }
+            },
+            "flat": []
+          },
+          {
+            "id": "requiem",
+            "label": "Requiem of Ruin",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0.56,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       }
     ],
-    "note": "O dano Lunar-Carregado e o Dano Crítico da reação NÃO entram (mecânica Lunar ainda não modelada).",
-    "partial": true,
+    "note": "+36% (R1) de DMG Lunar-Carregado por 3,5 s depois do Supremo e +28% de Dano Crítico por 6 s depois de um Lunar-Carregado: faixas. A energia não entra.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
   {
@@ -18370,7 +21328,44 @@
       "skill": 0.4,
       "burst": 0.4
     },
-    "buffs": [],
+    "buffs": [
+      {
+        "id": "hex",
+        "label": "Secret Rite",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {
+            "normal": 0.3,
+            "charged": 0.3,
+            "skill": 0.3,
+            "burst": 0.3
+          },
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "team": {
+          "hexerei": 2
+        },
+        "flat": []
+      }
+    ],
     "flat": [],
     "procs": [],
     "weapon": "Disaster and Remorse",
@@ -18390,7 +21385,44 @@
           "skill": 0.4,
           "burst": 0.4
         },
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "hex",
+            "label": "Secret Rite",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {
+                "normal": 0.3,
+                "charged": 0.3,
+                "skill": 0.3,
+                "burst": 0.3
+              },
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "team": {
+              "hexerei": 2
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -18409,7 +21441,44 @@
           "skill": 0.5,
           "burst": 0.5
         },
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "hex",
+            "label": "Secret Rite",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {
+                "normal": 0.375,
+                "charged": 0.375,
+                "skill": 0.375,
+                "burst": 0.375
+              },
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "team": {
+              "hexerei": 2
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -18428,7 +21497,44 @@
           "skill": 0.6,
           "burst": 0.6
         },
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "hex",
+            "label": "Secret Rite",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {
+                "normal": 0.45,
+                "charged": 0.45,
+                "skill": 0.45,
+                "burst": 0.45
+              },
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "team": {
+              "hexerei": 2
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -18447,7 +21553,44 @@
           "skill": 0.7,
           "burst": 0.7
         },
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "hex",
+            "label": "Secret Rite",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {
+                "normal": 0.525,
+                "charged": 0.525,
+                "skill": 0.525,
+                "burst": 0.525
+              },
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "team": {
+              "hexerei": 2
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -18466,13 +21609,49 @@
           "skill": 0.8,
           "burst": 0.8
         },
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "hex",
+            "label": "Secret Rite",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {
+                "normal": 0.6,
+                "charged": 0.6,
+                "skill": 0.6,
+                "burst": 0.6
+              },
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "team": {
+              "hexerei": 2
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       }
     ],
-    "note": "Assume Unforgivable (Normal e Carregado) e Irreparable (habilidade e Supremo) ativos juntos. O bônus de Hexerei NÃO entra.",
-    "partial": true,
+    "note": "Assume Unforgivable (Normal e Carregado) e Irreparable (habilidade e Supremo) ativos juntos; com Hexerei: Secret Rite os bônus sobem 75%.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
   {
@@ -22774,8 +25953,42 @@
           "physDmgPct": 0,
           "physCritDmg": 0,
           "reactionBonus": {
-            "bloom": 0.48
+            "bloom": 0.48,
+            "lunarbloom": 0.12
           }
+        },
+        "flat": []
+      },
+      {
+        "id": "moonsign",
+        "label": "Lunar-Florescer (Moonsign)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "lunarbloom": 0.12
+          }
+        },
+        "team": {
+          "moonsign": 2
         },
         "flat": []
       }
@@ -22820,8 +26033,42 @@
               "physDmgPct": 0,
               "physCritDmg": 0,
               "reactionBonus": {
-                "bloom": 0.48
+                "bloom": 0.48,
+                "lunarbloom": 0.12
               }
+            },
+            "flat": []
+          },
+          {
+            "id": "moonsign",
+            "label": "Lunar-Florescer (Moonsign)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "lunarbloom": 0.12
+              }
+            },
+            "team": {
+              "moonsign": 2
             },
             "flat": []
           }
@@ -22865,8 +26112,42 @@
               "physDmgPct": 0,
               "physCritDmg": 0,
               "reactionBonus": {
-                "bloom": 0.6
+                "bloom": 0.6,
+                "lunarbloom": 0.15
               }
+            },
+            "flat": []
+          },
+          {
+            "id": "moonsign",
+            "label": "Lunar-Florescer (Moonsign)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "lunarbloom": 0.15
+              }
+            },
+            "team": {
+              "moonsign": 2
             },
             "flat": []
           }
@@ -22910,8 +26191,42 @@
               "physDmgPct": 0,
               "physCritDmg": 0,
               "reactionBonus": {
-                "bloom": 0.72
+                "bloom": 0.72,
+                "lunarbloom": 0.18
               }
+            },
+            "flat": []
+          },
+          {
+            "id": "moonsign",
+            "label": "Lunar-Florescer (Moonsign)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "lunarbloom": 0.18
+              }
+            },
+            "team": {
+              "moonsign": 2
             },
             "flat": []
           }
@@ -22955,8 +26270,42 @@
               "physDmgPct": 0,
               "physCritDmg": 0,
               "reactionBonus": {
-                "bloom": 0.84
+                "bloom": 0.84,
+                "lunarbloom": 0.21
               }
+            },
+            "flat": []
+          },
+          {
+            "id": "moonsign",
+            "label": "Lunar-Florescer (Moonsign)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "lunarbloom": 0.21
+              }
+            },
+            "team": {
+              "moonsign": 2
             },
             "flat": []
           }
@@ -23000,8 +26349,42 @@
               "physDmgPct": 0,
               "physCritDmg": 0,
               "reactionBonus": {
-                "bloom": 0.96
+                "bloom": 0.96,
+                "lunarbloom": 0.24
               }
+            },
+            "flat": []
+          },
+          {
+            "id": "moonsign",
+            "label": "Lunar-Florescer (Moonsign)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "lunarbloom": 0.24
+              }
+            },
+            "team": {
+              "moonsign": 2
             },
             "flat": []
           }
@@ -23010,8 +26393,7 @@
         "procs": []
       }
     ],
-    "note": "+48% (R1) de dano de Florescer (tabela de reações). O bônus de Lunar-Florescer NÃO entra (mecânica Lunar ainda não modelada).",
-    "partial": true,
+    "note": "+48% (R1) de Florescer e +12% de Lunar-Florescer; com Moonsign: Ascendant Gleam, mais 12% de Lunar-Florescer.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
   {
@@ -23202,7 +26584,39 @@
     "hpPct": 0,
     "defPct": 0,
     "dmgPctByType": {},
-    "buffs": [],
+    "buffs": [
+      {
+        "id": "estelar",
+        "label": "DMG Estelar",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "stellarconduct": 0.16,
+            "stellarswirl": 0.16
+          }
+        },
+        "flat": []
+      }
+    ],
     "flat": [],
     "procs": [],
     "weapon": "Echoes of the Heart",
@@ -23217,7 +26631,39 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "estelar",
+            "label": "DMG Estelar",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "stellarconduct": 0.16,
+                "stellarswirl": 0.16
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -23231,7 +26677,39 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "estelar",
+            "label": "DMG Estelar",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "stellarconduct": 0.2,
+                "stellarswirl": 0.2
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -23245,7 +26723,39 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "estelar",
+            "label": "DMG Estelar",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "stellarconduct": 0.24,
+                "stellarswirl": 0.24
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -23259,7 +26769,39 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "estelar",
+            "label": "DMG Estelar",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "stellarconduct": 0.28,
+                "stellarswirl": 0.28
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -23273,13 +26815,44 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "estelar",
+            "label": "DMG Estelar",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "stellarconduct": 0.32,
+                "stellarswirl": 0.32
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       }
     ],
-    "note": "Só a Maestria depois de reação. O dano Estelar NÃO entra.",
-    "partial": true,
+    "note": "Maestria depois de reação (assumida ativa) e +16% (R1) de DMG Estelar por 12 s depois de uma reação Estelar (faixa).",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
   {
@@ -24744,7 +28317,38 @@
       "normal": 0.48,
       "charged": 0.42
     },
-    "buffs": [],
+    "buffs": [
+      {
+        "id": "dono",
+        "label": "Bônus Físico/de reação",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "stellarconduct": 0.42
+          }
+        },
+        "flat": []
+      }
+    ],
     "flat": [],
     "procs": [],
     "weapon": "Cashflow Supervision",
@@ -24762,7 +28366,38 @@
           "normal": 0.48,
           "charged": 0.42
         },
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "dono",
+            "label": "Bônus Físico/de reação",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "stellarconduct": 0.42
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -24779,7 +28414,38 @@
           "normal": 0.6,
           "charged": 0.525
         },
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "dono",
+            "label": "Bônus Físico/de reação",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "stellarconduct": 0.525
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -24796,7 +28462,38 @@
           "normal": 0.72,
           "charged": 0.63
         },
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "dono",
+            "label": "Bônus Físico/de reação",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "stellarconduct": 0.63
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -24813,7 +28510,38 @@
           "normal": 0.84,
           "charged": 0.735
         },
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "dono",
+            "label": "Bônus Físico/de reação",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "stellarconduct": 0.735
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -24830,13 +28558,43 @@
           "normal": 0.96,
           "charged": 0.84
         },
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "dono",
+            "label": "Bônus Físico/de reação",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "stellarconduct": 0.84
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       }
     ],
-    "note": "ATK e 3 stacks de Normal e Carregado (HP mudando, assumido). O dano Estelar-Conduct NÃO entra.",
-    "partial": true,
+    "note": "ATK e 3 stacks de Normal, Carregado e Estelar-Conduct (HP mudando, assumido).",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
   {
@@ -25617,7 +29375,8 @@
           "reactionBonus": {
             "bloom": 1.2,
             "hyperbloom": 0.8,
-            "burgeon": 0.8
+            "burgeon": 0.8,
+            "lunarbloom": 0.4
           }
         },
         "flat": []
@@ -25665,7 +29424,8 @@
               "reactionBonus": {
                 "bloom": 1.2,
                 "hyperbloom": 0.8,
-                "burgeon": 0.8
+                "burgeon": 0.8,
+                "lunarbloom": 0.4
               }
             },
             "flat": []
@@ -25712,7 +29472,8 @@
               "reactionBonus": {
                 "bloom": 1.5,
                 "hyperbloom": 1,
-                "burgeon": 1
+                "burgeon": 1,
+                "lunarbloom": 0.5
               }
             },
             "flat": []
@@ -25759,7 +29520,8 @@
               "reactionBonus": {
                 "bloom": 1.8,
                 "hyperbloom": 1.2,
-                "burgeon": 1.2
+                "burgeon": 1.2,
+                "lunarbloom": 0.6
               }
             },
             "flat": []
@@ -25806,7 +29568,8 @@
               "reactionBonus": {
                 "bloom": 2.1,
                 "hyperbloom": 1.4,
-                "burgeon": 1.4
+                "burgeon": 1.4,
+                "lunarbloom": 0.7
               }
             },
             "flat": []
@@ -25853,7 +29616,8 @@
               "reactionBonus": {
                 "bloom": 2.4,
                 "hyperbloom": 1.6,
-                "burgeon": 1.6
+                "burgeon": 1.6,
+                "lunarbloom": 0.8
               }
             },
             "flat": []
@@ -25863,8 +29627,7 @@
         "procs": []
       }
     ],
-    "note": "A Maestria dos dois efeitos (assumidos ativos) e, com os dois, +120% de Florescer e +80% de Hiperflorescer e Brotar para a equipe (faixa na linha do tempo; vale na tabela de reações). O bônus de Lunar-Florescer NÃO entra (mecânica Lunar ainda não modelada).",
-    "partial": true,
+    "note": "A Maestria dos dois efeitos (assumidos ativos) e, com os dois, +120% de Florescer, +80% de Hiperflorescer e Brotar e +40% de Lunar-Florescer para a equipe (faixa na linha do tempo).",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
   {
@@ -25877,7 +29640,40 @@
     "hpPct": 0.24,
     "defPct": 0,
     "dmgPctByType": {},
-    "buffs": [],
+    "buffs": [
+      {
+        "id": "dono",
+        "label": "Bônus Físico/de reação",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "lunarchargedCritDmg": 0.6,
+            "lunarbloomCritDmg": 0.6,
+            "lunarcrystallizeCritDmg": 0.6
+          }
+        },
+        "flat": []
+      }
+    ],
     "flat": [],
     "procs": [],
     "weapon": "Nocturne's Curtain Call",
@@ -25892,7 +29688,40 @@
         "hpPct": 0.24,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "dono",
+            "label": "Bônus Físico/de reação",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "lunarchargedCritDmg": 0.6,
+                "lunarbloomCritDmg": 0.6,
+                "lunarcrystallizeCritDmg": 0.6
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -25906,7 +29735,40 @@
         "hpPct": 0.28,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "dono",
+            "label": "Bônus Físico/de reação",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "lunarchargedCritDmg": 0.8,
+                "lunarbloomCritDmg": 0.8,
+                "lunarcrystallizeCritDmg": 0.8
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -25920,7 +29782,40 @@
         "hpPct": 0.32,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "dono",
+            "label": "Bônus Físico/de reação",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "lunarchargedCritDmg": 1,
+                "lunarbloomCritDmg": 1,
+                "lunarcrystallizeCritDmg": 1
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -25934,7 +29829,40 @@
         "hpPct": 0.36,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "dono",
+            "label": "Bônus Físico/de reação",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "lunarchargedCritDmg": 1.2,
+                "lunarbloomCritDmg": 1.2,
+                "lunarcrystallizeCritDmg": 1.2
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -25948,13 +29876,45 @@
         "hpPct": 0.4,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "dono",
+            "label": "Bônus Físico/de reação",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "lunarchargedCritDmg": 1.4,
+                "lunarbloomCritDmg": 1.4,
+                "lunarcrystallizeCritDmg": 1.4
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       }
     ],
-    "note": "HP base e o extra depois de reação Lunar (assumido ativo). O Dano Crítico das reações Lunares NÃO entra.",
-    "partial": true,
+    "note": "HP base, o extra depois de reação Lunar e +60% (R1) de Dano Crítico do dano Lunar (assumidos ativos).",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
   {
@@ -25980,6 +29940,52 @@
           "perPoint": 0.000004,
           "threshold": 40000,
           "cap": 0.08,
+          "to": [
+            "atkPct"
+          ]
+        },
+        "flat": []
+      },
+      {
+        "id": "reforco-hp",
+        "label": "Vatsamonga +75% (HP)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0.09,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": []
+      },
+      {
+        "id": "reforco-atk",
+        "label": "Vatsamonga +75% (ATK da equipe)",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "convert": {
+          "from": "hp",
+          "source": "self",
+          "perPoint": 0.000003,
+          "threshold": 40000,
+          "cap": 0.06,
           "to": [
             "atkPct"
           ]
@@ -26019,6 +30025,52 @@
               ]
             },
             "flat": []
+          },
+          {
+            "id": "reforco-hp",
+            "label": "Vatsamonga +75% (HP)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0.09,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          },
+          {
+            "id": "reforco-atk",
+            "label": "Vatsamonga +75% (ATK da equipe)",
+            "minConstellation": 0,
+            "scope": "team",
+            "timed": true,
+            "convert": {
+              "from": "hp",
+              "source": "self",
+              "perPoint": 0.000003,
+              "threshold": 40000,
+              "cap": 0.06,
+              "to": [
+                "atkPct"
+              ]
+            },
+            "flat": []
           }
         ],
         "flat": [],
@@ -26047,6 +30099,52 @@
               "perPoint": 0.000005,
               "threshold": 40000,
               "cap": 0.1,
+              "to": [
+                "atkPct"
+              ]
+            },
+            "flat": []
+          },
+          {
+            "id": "reforco-hp",
+            "label": "Vatsamonga +75% (HP)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0.1125,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          },
+          {
+            "id": "reforco-atk",
+            "label": "Vatsamonga +75% (ATK da equipe)",
+            "minConstellation": 0,
+            "scope": "team",
+            "timed": true,
+            "convert": {
+              "from": "hp",
+              "source": "self",
+              "perPoint": 0.000004,
+              "threshold": 40000,
+              "cap": 0.075,
               "to": [
                 "atkPct"
               ]
@@ -26085,6 +30183,52 @@
               ]
             },
             "flat": []
+          },
+          {
+            "id": "reforco-hp",
+            "label": "Vatsamonga +75% (HP)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0.135,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          },
+          {
+            "id": "reforco-atk",
+            "label": "Vatsamonga +75% (ATK da equipe)",
+            "minConstellation": 0,
+            "scope": "team",
+            "timed": true,
+            "convert": {
+              "from": "hp",
+              "source": "self",
+              "perPoint": 0.000005,
+              "threshold": 40000,
+              "cap": 0.09,
+              "to": [
+                "atkPct"
+              ]
+            },
+            "flat": []
           }
         ],
         "flat": [],
@@ -26113,6 +30257,52 @@
               "perPoint": 0.000007,
               "threshold": 40000,
               "cap": 0.14,
+              "to": [
+                "atkPct"
+              ]
+            },
+            "flat": []
+          },
+          {
+            "id": "reforco-hp",
+            "label": "Vatsamonga +75% (HP)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0.1575,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          },
+          {
+            "id": "reforco-atk",
+            "label": "Vatsamonga +75% (ATK da equipe)",
+            "minConstellation": 0,
+            "scope": "team",
+            "timed": true,
+            "convert": {
+              "from": "hp",
+              "source": "self",
+              "perPoint": 0.000005,
+              "threshold": 40000,
+              "cap": 0.105,
               "to": [
                 "atkPct"
               ]
@@ -26151,14 +30341,59 @@
               ]
             },
             "flat": []
+          },
+          {
+            "id": "reforco-hp",
+            "label": "Vatsamonga +75% (HP)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0.18,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          },
+          {
+            "id": "reforco-atk",
+            "label": "Vatsamonga +75% (ATK da equipe)",
+            "minConstellation": 0,
+            "scope": "team",
+            "timed": true,
+            "convert": {
+              "from": "hp",
+              "source": "self",
+              "perPoint": 0.000006,
+              "threshold": 40000,
+              "cap": 0.12,
+              "to": [
+                "atkPct"
+              ]
+            },
+            "flat": []
           }
         ],
         "flat": [],
         "procs": []
       }
     ],
-    "note": "HP (3 stacks) e +ATK por HP acima de 40.000 para o membro ativo. O aumento de 75% depois de Congelado ou Swirl Estelar NÃO entra.",
-    "partial": true,
+    "note": "HP (3 stacks) e +ATK por HP acima de 40.000 para o membro ativo; os +75% por 5 s depois de Congelado ou Redemoinho Estelar viram faixas (3 stacks × 4% × 75% de HP e 75% do ATK).",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
   {
@@ -26171,7 +30406,38 @@
     "hpPct": 0,
     "defPct": 0,
     "dmgPctByType": {},
-    "buffs": [],
+    "buffs": [
+      {
+        "id": "radiance",
+        "label": "Law of Combustion (Radiance)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "stellarconductCritDmg": 0.36
+          }
+        },
+        "flat": []
+      }
+    ],
     "flat": [],
     "procs": [],
     "weapon": "Starsealed Edict",
@@ -26186,7 +30452,38 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "radiance",
+            "label": "Law of Combustion (Radiance)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "stellarconductCritDmg": 0.36
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -26200,7 +30497,38 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "radiance",
+            "label": "Law of Combustion (Radiance)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "stellarconductCritDmg": 0.45
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -26214,7 +30542,38 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "radiance",
+            "label": "Law of Combustion (Radiance)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "stellarconductCritDmg": 0.54
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -26228,7 +30587,38 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "radiance",
+            "label": "Law of Combustion (Radiance)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "stellarconductCritDmg": 0.63
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -26242,13 +30632,43 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "radiance",
+            "label": "Law of Combustion (Radiance)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "stellarconductCritDmg": 0.72
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       }
     ],
-    "note": "Dano Crítico, Maestria e 3 stacks de Law of Combustion. O Dano Crítico Estelar-Conduct NÃO entra.",
-    "partial": true,
+    "note": "Dano Crítico, Maestria e 3 stacks de Law of Combustion; com Radiance: Stellar-Conduct, +12% (R1) de Dano Crítico Estelar-Conduct por stack (faixa).",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
   {
@@ -28957,7 +33377,39 @@
     "hpPct": 0,
     "defPct": 0,
     "dmgPctByType": {},
-    "buffs": [],
+    "buffs": [
+      {
+        "id": "moonsign",
+        "label": "Maestria extra (Moonsign)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 60,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "team": {
+          "moonsign": 2
+        },
+        "flat": []
+      }
+    ],
     "flat": [],
     "procs": [],
     "weapon": "Snare Hook",
@@ -28972,7 +33424,39 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "moonsign",
+            "label": "Maestria extra (Moonsign)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 60,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "team": {
+              "moonsign": 2
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -28986,7 +33470,39 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "moonsign",
+            "label": "Maestria extra (Moonsign)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 75,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "team": {
+              "moonsign": 2
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -29000,7 +33516,39 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "moonsign",
+            "label": "Maestria extra (Moonsign)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 90,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "team": {
+              "moonsign": 2
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -29014,7 +33562,39 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "moonsign",
+            "label": "Maestria extra (Moonsign)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 105,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "team": {
+              "moonsign": 2
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -29028,13 +33608,44 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "moonsign",
+            "label": "Maestria extra (Moonsign)",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 120,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "team": {
+              "moonsign": 2
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       }
     ],
-    "note": "Só os +60 (R1) de Maestria depois de reação. O extra do Moonsign NÃO entra.",
-    "partial": true,
+    "note": "Maestria depois de reação (assumida ativa) e, com Moonsign: Ascendant Gleam (2+ membros Moonsign), mais 60 (R1).",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
   {
@@ -29776,7 +34387,39 @@
     "hpPct": 0,
     "defPct": 0,
     "dmgPctByType": {},
-    "buffs": [],
+    "buffs": [
+      {
+        "id": "viper",
+        "label": "Thus Lied the Viper",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "stellarconduct": 0.24,
+            "stellarswirl": 0.24
+          }
+        },
+        "flat": []
+      }
+    ],
     "flat": [],
     "procs": [],
     "weapon": "Breezeborne Refrain",
@@ -29791,7 +34434,39 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "viper",
+            "label": "Thus Lied the Viper",
+            "minConstellation": 0,
+            "scope": "team",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "stellarconduct": 0.24,
+                "stellarswirl": 0.24
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -29805,7 +34480,39 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "viper",
+            "label": "Thus Lied the Viper",
+            "minConstellation": 0,
+            "scope": "team",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "stellarconduct": 0.3,
+                "stellarswirl": 0.3
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -29819,7 +34526,39 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "viper",
+            "label": "Thus Lied the Viper",
+            "minConstellation": 0,
+            "scope": "team",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "stellarconduct": 0.36,
+                "stellarswirl": 0.36
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -29833,7 +34572,39 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "viper",
+            "label": "Thus Lied the Viper",
+            "minConstellation": 0,
+            "scope": "team",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "stellarconduct": 0.42,
+                "stellarswirl": 0.42
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       },
@@ -29847,13 +34618,44 @@
         "hpPct": 0,
         "defPct": 0,
         "dmgPctByType": {},
-        "buffs": [],
+        "buffs": [
+          {
+            "id": "viper",
+            "label": "Thus Lied the Viper",
+            "minConstellation": 0,
+            "scope": "team",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "stellarconduct": 0.48,
+                "stellarswirl": 0.48
+              }
+            },
+            "flat": []
+          }
+        ],
         "flat": [],
         "procs": []
       }
     ],
-    "note": "Só a Recarga. O DMG Estelar da equipe NÃO entra.",
-    "partial": true,
+    "note": "Recarga e +24% (R1) de DMG Estelar da equipe por 12 s (faixa).",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
   {
@@ -30816,8 +35618,7 @@
         "procs": []
       }
     ],
-    "note": "Assume o DMG máximo (60% no R1) em Normal, habilidade e Supremo, sempre. No jogo ele cai 10% por segundo em combate e sobe 10% por acerto. O bônus de Hexerei NÃO entra.",
-    "partial": true,
+    "note": "Assume o DMG máximo (60% no R1) em Normal, habilidade e Supremo, sempre. No jogo ele cai 10% por segundo em combate e sobe 10% por acerto; o Hexerei só acelera a subida (20% por acerto), o máximo não muda.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   }
 ]

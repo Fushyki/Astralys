@@ -86,7 +86,7 @@ export const WEAPONS_2: Record<string, GearCur> = {
     expect: 'protected by a Shield',
     note: 'Assume o personagem protegido por escudo o tempo todo.',
   },
-  "Serenity's Call": { hpPct: { p: 0 }, partial: true, expect: 'increases Max HP by', note: 'Só os +16% (R1) de HP depois de reação. O extra do Moonsign: Ascendant Gleam NÃO entra.' },
+  "Serenity's Call": { hpPct: { p: 0 }, buffs: [{ id: 'moonsign', label: 'HP extra (Moonsign)', team: { moonsign: 2 }, stats: { hpPct: { p: 2 } } }], expect: 'increases Max HP by', note: 'HP depois de reação (assumido ativo) e, com Moonsign: Ascendant Gleam (2+ membros Moonsign), mais 16% (R1).' },
   "Moonweaver's Dawn": {
     byType: { burst: { p: 0 } },
     buffs: [
@@ -97,8 +97,8 @@ export const WEAPONS_2: Record<string, GearCur> = {
     note: 'DMG do Supremo base e o extra conforme o custo de energia do Supremo do dono (até 60: +16%; até 40: +28%, R1).',
   },
   "Heretic's Molten Blade": { atkPct: { p: 2 }, expect: 'Gleam of First Light', note: 'Usa o MÍNIMO do ATK (18% no R1); o valor real vai até o dobro conforme a distância percorrida.' },
-  Emberwell: { atkPct: { p: 0 }, partial: true, expect: "ATK by 16% for 12s", note: 'Só o ATK depois de reação. O dano de reação Estelar NÃO entra (mecânica nova ainda não modelada).' },
-  'New Bough': { atkPct: { p: 3, x: 3 }, em: { p: 5, x: 3 }, partial: true, expect: 'Verdant', note: 'Assume 3 stacks de ATK e Maestria. A versão "Radiance: Stellar Glimmer" NÃO entra.' },
+  Emberwell: { atkPct: { p: 0 }, buffs: [{ id: 'estelar', label: 'DMG Estelar', timed: true, stats: { reactionBonus: { stellarconduct: { p: 2 }, stellarswirl: { p: 2 } } } }], expect: "ATK by 16% for 12s", note: 'ATK depois de reação (assumido ativo); +16% (R1) de DMG Estelar por 12 s depois de uma reação Estelar: faixa na linha do tempo.' },
+  'New Bough': { atkPct: { p: 3, x: 3 }, em: { p: 5, x: 3 }, buffs: [{ id: 'radiance', label: 'Verdant (Radiance)', timed: true, stats: { reactionBonus: { stellarconduct: { p: 6, x: 3 }, stellarswirl: { p: 6, x: 3 } } } }], partial: true, expect: 'Verdant', note: 'Assume 3 stacks de ATK e Maestria. Com Radiance: Stellar Glimmer, +8% (R1) de DMG Estelar por stack (3) numa faixa; a troca do ATK (6% no lugar de 4%) e a perda da Maestria nessa versão NÃO entram.' },
   'Silver Light': { em: { p: 0, x: 2 }, expect: 'Elemental Mastery by', note: 'Assume 2 stacks.' },
   'Splendor of Tranquil Waters': {
     byType: { skill: { p: 0, x: 3 } },
@@ -119,15 +119,18 @@ export const WEAPONS_2: Record<string, GearCur> = {
   'Athame Artis': {
     critDmgByType: { burst: { p: 0 } },
     atkPct: { p: 2 },
-    buffs: [{ id: 'time', label: 'ATK dos aliados', scope: 'others', timed: true, stats: { atkPct: { p: 3 } } }],
-    partial: true,
+    buffs: [
+      { id: 'time', label: 'ATK dos aliados', scope: 'others', timed: true, stats: { atkPct: { p: 3 } } },
+      { id: 'hex', label: 'Secret Rite (ATK do dono)', team: { hexerei: 2 }, stats: { atkPct: { p: 2, x: 0.75 } } },
+      { id: 'hext', label: 'Secret Rite (ATK dos aliados)', scope: 'others', timed: true, team: { hexerei: 2 }, stats: { atkPct: { p: 3, x: 0.75 } } },
+    ],
     expect: 'Blade of the Daylight Hours',
-    note: 'Dano Crítico do Supremo e ATK do dono (assumido ativo); o ATK dos aliados (3 s) vale nas janelas de buff. O bônus de Hexerei NÃO entra.',
+    note: 'Dano Crítico do Supremo e ATK do dono (assumido ativo); o ATK dos aliados (3 s) vale nas janelas de buff. Com Hexerei: Secret Rite (2+ membros Hexerei) os dois ATK sobem 75% (parâmetro do Lunaris).',
   },
-  'Lightbearing Moonshard': { defPct: { lit: 0.2 }, partial: true, expect: 'Lunar-Crystallize', note: 'Só a DEF. O dano de Lunar-Cristalizar (+64% no R1) NÃO entra (mecânica Lunar ainda não modelada).' },
-  'Whitelake Frostfeather': { atkPct: { p: 1, x: 3 }, partial: true, expect: 'Lake-Hued Lament', note: 'Só o ATK (3 stacks). O dano crítico e a energia da reação Estelar NÃO entram.' },
+  'Lightbearing Moonshard': { defPct: { lit: 0.2 }, buffs: [{ id: 'lcr', label: 'DMG Lunar-Cristalizar', timed: true, stats: { reactionBonus: { lunarcrystallize: { p: 0 } } } }], expect: 'Lunar-Crystallize', note: 'DEF e +64% (R1) de DMG Lunar-Cristalizar por 5 s depois da habilidade: faixa na linha do tempo.' },
+  'Whitelake Frostfeather': { atkPct: { p: 1, x: 3 }, buffs: [{ id: 'crit', label: 'Dano Crítico Estelar', stats: { reactionBonus: { stellarconductCritDmg: { p: 4 }, stellarswirlCritDmg: { p: 4 } } } }], expect: 'Lake-Hued Lament', note: 'ATK e, com 3 stacks (assumidos), +50% (R1) de Dano Crítico no dano Estelar. A energia não entra.' },
   'Exaiphanes Blade': { atkPct: { p: 0 }, expect: 'Traveler equips', note: 'Só o ATK (assumido ativo). A energia devolvida não entra.' },
-  'Beyond the Chrysalis': { critDmg: { p: 0 }, partial: true, expect: 'Winds of Devotion', note: 'Só o Dano Crítico da fase Devotion (assumida ativa). O dano Estelar-Swirl e a energia NÃO entram.' },
+  'Beyond the Chrysalis': { critDmg: { p: 0 }, buffs: [{ id: 'defiance', label: 'Winds of Defiance', timed: true, stats: { reactionBonus: { stellarswirl: { p: 1 } } } }], expect: 'Winds of Devotion', note: 'Dano Crítico da fase Devotion (assumida ativa); a fase Defiance (+36% de Redemoinho Estelar no R1) é faixa na linha do tempo. A energia não entra.' },
 
   // ---- Montantes ----
   'Favonius Greatsword': fav(),
@@ -153,9 +156,9 @@ export const WEAPONS_2: Record<string, GearCur> = {
   },
   'Earth Shaker': { byType: { skill: { p: 0 } }, expect: 'Pyro-related reaction', note: 'Assume reação relacionada a Pyro causada por um aliado.' },
   'Flame-Forged Insight': { em: { p: 1 }, expect: 'restore 12 Elemental Energy', note: 'Assume a reação (Eletrocarregado, Florescer, Cristalizar...) feita e a Maestria ativa. A energia não entra.' },
-  'Master Key': { em: { p: 0 }, partial: true, expect: 'Moonsign: Ascendant Gleam', note: 'Só os +60 (R1) de Maestria depois de reação. O extra do Moonsign NÃO entra.' },
-  'Forged by the Golden Melody': { atkPct: { p: 0 }, partial: true, expect: 'Harmonic Movement', note: 'Só o +ATK (a primeira fase do ciclo de 10 s). Maestria e dano Estelar NÃO entram.' },
-  'Blade of Atonement': { em: { p: 0 }, partial: true, expect: 'Stellar Glimmer', note: 'Só a Maestria depois de reação. O ATK da reação Estelar NÃO entra.' },
+  'Master Key': { em: { p: 0 }, buffs: [{ id: 'moonsign', label: 'Maestria extra (Moonsign)', team: { moonsign: 2 }, stats: { em: { p: 2 } } }], expect: 'Moonsign: Ascendant Gleam', note: 'Maestria depois de reação (assumida ativa) e, com Moonsign: Ascendant Gleam (2+ membros Moonsign), mais 60 (R1).' },
+  'Forged by the Golden Melody': { atkPct: { p: 0 }, buffs: [{ id: 'em', label: 'Harmonic Movement (Maestria)', timed: true, stats: { em: { p: 1 } } }, { id: 'estelar', label: 'Harmonic Movement (Estelar)', timed: true, stats: { reactionBonus: { stellarconduct: { p: 2 }, stellarswirl: { p: 2 } } } }], partial: true, expect: 'Harmonic Movement', note: 'O +ATK da primeira fase fica sempre; as fases de Maestria e de DMG Estelar são faixas. O Contrapuntal (cópia extra da fase depois de uma reação Estelar) NÃO entra.' },
+  'Blade of Atonement': { em: { p: 0 }, buffs: [{ id: 'atk', label: 'ATK depois de reação Estelar', timed: true, stats: { atkPct: { p: 2 } } }], expect: 'Stellar Glimmer', note: 'Maestria depois de reação (assumida ativa) e +16% (R1) de ATK por 12 s depois de uma reação Estelar (faixa).' },
   Verdict: {
     atkPct: { re: 'Increases ATK by (\\d+(?:\\.\\d+)?)%' },
     byType: { skill: { p: 0, x: 2 } },
@@ -186,21 +189,21 @@ export const WEAPONS_2: Record<string, GearCur> = {
   'Dialogues of the Desert Sages': { noDamage: true, expect: 'When the wielder performs healing, restore', note: 'Só devolve energia ao curar: não muda o dano.' },
   "Prospector's Drill": struggle(),
   'Mountain-Bracing Bolt': { byType: { skill: [{ p: 1 }, { p: 2 }] }, expect: 'increases Elemental Skill DMG by', note: 'DMG da habilidade base e o extra depois da habilidade de um aliado (assumido ativo).' },
-  "Prospector's Shovel": { reactionBonus: { electrocharged: { p: 0 } }, partial: true, expect: 'Electro-Charged DMG is increased', note: '+48% (R1) de dano de Eletrocarregado (tabela de reações). O bônus de Lunar-Carregado NÃO entra (mecânica Lunar ainda não modelada).' },
+  "Prospector's Shovel": { reactionBonus: { electrocharged: { p: 0 }, lunarcharged: { p: 1 } }, buffs: [{ id: 'moonsign', label: 'Lunar-Carregado (Moonsign)', team: { moonsign: 2 }, stats: { reactionBonus: { lunarcharged: { p: 2 } } } }], expect: 'Electro-Charged DMG is increased', note: '+48% (R1) de Eletrocarregado e +12% de Lunar-Carregado; com Moonsign: Ascendant Gleam, mais 12% de Lunar-Carregado.' },
   "Sacrificer's Staff": { atkPct: { p: 1, x: 3 }, er: { p: 2, x: 3 }, expect: 'ATK is increased by', note: 'Assume 3 stacks de ATK e Recarga.' },
   Frostbreath: { atkPct: { p: 0 }, expect: 'Cryo or Hydro-related elemental reaction', note: 'Assume reação Cryo ou Hydro e o ATK ativo. A energia dos aliados não entra.' },
-  'Song of the Vigil': { noDamage: true, partial: true, expect: 'regenerates 4 Elemental Energy', note: 'Só energia e ATK de reação Estelar (mecânica nova ainda não modelada).' },
+  'Song of the Vigil': { buffs: [{ id: 'atk', label: 'ATK depois de reação Estelar', timed: true, stats: { atkPct: { p: 1 } } }], expect: 'regenerates 4 Elemental Energy', note: '+20% (R1) de ATK por 12 s depois de uma reação Estelar (faixa). A energia não entra.' },
   'Staff of the Scarlet Sands': {
     buffs: [{ id: 'em-atk', label: 'ATK por Maestria', convert: { from: 'em', perPoint: [{ p: 0 }, { p: 1, x: 3 }], to: ['atkFlat'] } }],
     expect: 'of their Elemental Mastery as bonus ATK',
     note: 'ATK fixo = 52% da Maestria (R1) + 3 stacks de 28% (depois da habilidade), sempre ativo.',
   },
-  'Bloodsoaked Ruins': { partial: true, expect: 'Lunar-Charged DMG', note: 'O dano Lunar-Carregado e o Dano Crítico da reação NÃO entram (mecânica Lunar ainda não modelada).' },
+  'Bloodsoaked Ruins': { buffs: [{ id: 'lc', label: 'Lunar-Carregado depois do Supremo', timed: true, stats: { reactionBonus: { lunarcharged: { p: 1 } } } }, { id: 'requiem', label: 'Requiem of Ruin', timed: true, stats: { critDmg: { p: 3 } } }], expect: 'Lunar-Charged DMG', note: '+36% (R1) de DMG Lunar-Carregado por 3,5 s depois do Supremo e +28% de Dano Crítico por 6 s depois de um Lunar-Carregado: faixas. A energia não entra.' },
   'Disaster and Remorse': {
     byType: { normal: { p: 2 }, charged: { p: 2 }, skill: { p: 3 }, burst: { p: 3 } },
-    partial: true,
+    buffs: [{ id: 'hex', label: 'Secret Rite', team: { hexerei: 2 }, stats: { byType: { normal: { p: 2, x: 0.75 }, charged: { p: 2, x: 0.75 }, skill: { p: 3, x: 0.75 }, burst: { p: 3, x: 0.75 } } } }],
     expect: 'Path of Conflict',
-    note: 'Assume Unforgivable (Normal e Carregado) e Irreparable (habilidade e Supremo) ativos juntos. O bônus de Hexerei NÃO entra.',
+    note: 'Assume Unforgivable (Normal e Carregado) e Irreparable (habilidade e Supremo) ativos juntos; com Hexerei: Secret Rite os bônus sobem 75%.',
   },
 
   // ---- Catalisadores ----
@@ -251,10 +254,10 @@ export const WEAPONS_2: Record<string, GearCur> = {
     note: 'DMG do Normal = 0,6% (R1) por 1.000 de HP máximo, até o teto do Lunaris. Assume a habilidade usada antes.',
   },
   'Etherlight Spindlelute': { em: { p: 0 }, expect: 'Elemental Mastery is increased by', note: 'Assume a habilidade usada nos últimos 20 s.' },
-  'Blackmarrow Lantern': { reactionBonus: { bloom: { p: 0 } }, partial: true, expect: 'Bloom DMG is increased', note: '+48% (R1) de dano de Florescer (tabela de reações). O bônus de Lunar-Florescer NÃO entra (mecânica Lunar ainda não modelada).' },
+  'Blackmarrow Lantern': { reactionBonus: { bloom: { p: 0 }, lunarbloom: { p: 1 } }, buffs: [{ id: 'moonsign', label: 'Lunar-Florescer (Moonsign)', team: { moonsign: 2 }, stats: { reactionBonus: { lunarbloom: { p: 2 } } } }], expect: 'Bloom DMG is increased', note: '+48% (R1) de Florescer e +12% de Lunar-Florescer; com Moonsign: Ascendant Gleam, mais 12% de Lunar-Florescer.' },
   'Dawning Frost': { em: [{ p: 0 }, { p: 2 }], expect: 'For 10s after a Charged Attack hits', note: 'Assume Carregado e habilidade acertados (as duas Maestrias ativas).' },
   'Clash of Kings': { atkPct: { p: 0 }, em: { p: 1 }, expect: 'Laws of the Board', note: 'ATK e Maestria depois da habilidade (assumidos ativos).' },
-  'Echoes of the Heart': { em: { p: 0 }, partial: true, expect: 'Stellar Glimmer', note: 'Só a Maestria depois de reação. O dano Estelar NÃO entra.' },
+  'Echoes of the Heart': { em: { p: 0 }, buffs: [{ id: 'estelar', label: 'DMG Estelar', timed: true, stats: { reactionBonus: { stellarconduct: { p: 1 }, stellarswirl: { p: 1 } } } }], expect: 'Stellar Glimmer', note: 'Maestria depois de reação (assumida ativa) e +16% (R1) de DMG Estelar por 12 s depois de uma reação Estelar (faixa).' },
   "Winter's Heavy Heart": {
     buffs: [
       { id: 'cryo', label: 'Maestria por membro Cryo', stats: { em: { p: 0 } }, team: { scale: { of: ['Cryo'], table: [1, 2, 3, 4] } } },
@@ -280,9 +283,9 @@ export const WEAPONS_2: Record<string, GearCur> = {
   'Cashflow Supervision': {
     atkPct: { re: 'ATK is increased by (\\d+(?:\\.\\d+)?)%' },
     byType: { normal: { p: 2, x: 3 }, charged: { p: 3, x: 3 } },
-    partial: true,
+    reactionBonus: { stellarconduct: { p: 5, x: 3 } },
     expect: 'When current HP increases or decreases',
-    note: 'ATK e 3 stacks de Normal e Carregado (HP mudando, assumido). O dano Estelar-Conduct NÃO entra.',
+    note: 'ATK e 3 stacks de Normal, Carregado e Estelar-Conduct (HP mudando, assumido).',
   },
   'Tome of the Eternal Flow': {
     hpPct: { re: 'HP is increased by (\\d+(?:\\.\\d+)?)%' },
@@ -304,30 +307,32 @@ export const WEAPONS_2: Record<string, GearCur> = {
   },
   "Nightweaver's Looking Glass": {
     em: [{ p: 0 }, { p: 2 }],
-    buffs: [{ id: 'florescer', label: 'Florescer da equipe', scope: 'team', timed: true, stats: { reactionBonus: { bloom: { p: 4 }, hyperbloom: { p: 5 }, burgeon: { p: 5 } } } }],
-    partial: true,
+    buffs: [{ id: 'florescer', label: 'Florescer da equipe', scope: 'team', timed: true, stats: { reactionBonus: { bloom: { p: 4 }, hyperbloom: { p: 5 }, burgeon: { p: 5 }, lunarbloom: { p: 6 } } } }],
     expect: 'Prayer of the Far North',
-    note: 'A Maestria dos dois efeitos (assumidos ativos) e, com os dois, +120% de Florescer e +80% de Hiperflorescer e Brotar para a equipe (faixa na linha do tempo; vale na tabela de reações). O bônus de Lunar-Florescer NÃO entra (mecânica Lunar ainda não modelada).',
+    note: 'A Maestria dos dois efeitos (assumidos ativos) e, com os dois, +120% de Florescer, +80% de Hiperflorescer e Brotar e +40% de Lunar-Florescer para a equipe (faixa na linha do tempo).',
   },
   "Nocturne's Curtain Call": {
     hpPct: [{ re: 'Max HP increases by (\\d+(?:\\.\\d+)?)%' }, { p: 0 }],
-    partial: true,
+    reactionBonus: { lunarchargedCritDmg: { p: 1 }, lunarbloomCritDmg: { p: 1 }, lunarcrystallizeCritDmg: { p: 1 } },
     expect: 'Bountiful Sea',
-    note: 'HP base e o extra depois de reação Lunar (assumido ativo). O Dano Crítico das reações Lunares NÃO entra.',
+    note: 'HP base, o extra depois de reação Lunar e +60% (R1) de Dano Crítico do dano Lunar (assumidos ativos).',
   },
   'Hymn of the Maelstrom': {
     hpPct: { p: 0, x: 3 },
-    buffs: [{ id: 'hp-atk', label: 'ATK por HP (equipe)', scope: 'team', convert: { from: 'hp', perPoint: { p: 2, x: 0.001 }, threshold: { p: 1 }, cap: { p: 3 }, to: ['atkPct'] } }],
-    partial: true,
+    buffs: [
+      { id: 'hp-atk', label: 'ATK por HP (equipe)', scope: 'team', convert: { from: 'hp', perPoint: { p: 2, x: 0.001 }, threshold: { p: 1 }, cap: { p: 3 }, to: ['atkPct'] } },
+      { id: 'reforco-hp', label: 'Vatsamonga +75% (HP)', timed: true, stats: { hpPct: { p: 0, x: 2.25 } } },
+      { id: 'reforco-atk', label: 'Vatsamonga +75% (ATK da equipe)', scope: 'team', timed: true, convert: { from: 'hp', perPoint: { p: 2, x: 0.00075 }, threshold: { p: 1 }, cap: { p: 3, x: 0.75 }, to: ['atkPct'] } },
+    ],
     expect: 'Vatsamonga',
-    note: 'HP (3 stacks) e +ATK por HP acima de 40.000 para o membro ativo. O aumento de 75% depois de Congelado ou Swirl Estelar NÃO entra.',
+    note: 'HP (3 stacks) e +ATK por HP acima de 40.000 para o membro ativo; os +75% por 5 s depois de Congelado ou Redemoinho Estelar viram faixas (3 stacks × 4% × 75% de HP e 75% do ATK).',
   },
   'Starsealed Edict': {
     critDmg: { re: 'Increases CRIT DMG by (\\d+(?:\\.\\d+)?)%' },
     em: [{ p: 0 }, { p: 1, x: 3 }],
-    partial: true,
+    buffs: [{ id: 'radiance', label: 'Law of Combustion (Radiance)', timed: true, stats: { reactionBonus: { stellarconductCritDmg: { p: 2, x: 3 } } } }],
     expect: 'Crystal Compounding',
-    note: 'Dano Crítico, Maestria e 3 stacks de Law of Combustion. O Dano Crítico Estelar-Conduct NÃO entra.',
+    note: 'Dano Crítico, Maestria e 3 stacks de Law of Combustion; com Radiance: Stellar-Conduct, +12% (R1) de Dano Crítico Estelar-Conduct por stack (faixa).',
   },
 
   // ---- Arcos ----
@@ -357,7 +362,7 @@ export const WEAPONS_2: Record<string, GearCur> = {
     note: 'Conta os OUTROS membros de Natlan ou de elemento diferente (até 3). A lista de Natlan está em scripts/curation/gear.ts.',
   },
   'Sequence of Solitude': { procs: [{ id: 'golpe', label: "Sequence of Solitude: golpe", scale: { hp: { p: 0 } } }], expect: 'AoE DMG equal to 40% of Max HP', note: 'Golpe extra na paleta da rotação (coloque quantas vezes ele acontece). 40% (R1) do HP máximo, do elemento do personagem (Genshin Optimizer), a cada 15 s.' },
-  'Snare Hook': { em: { p: 0 }, partial: true, expect: 'Moonsign: Ascendant Gleam', note: 'Só os +60 (R1) de Maestria depois de reação. O extra do Moonsign NÃO entra.' },
+  'Snare Hook': { em: { p: 0 }, buffs: [{ id: 'moonsign', label: 'Maestria extra (Moonsign)', team: { moonsign: 2 }, stats: { em: { p: 2 } } }], expect: 'Moonsign: Ascendant Gleam', note: 'Maestria depois de reação (assumida ativa) e, com Moonsign: Ascendant Gleam (2+ membros Moonsign), mais 60 (R1).' },
   "Rainbow Serpent's Rain Bow": { atkPct: { p: 1 }, expect: 'off-field', note: 'Assume o ATK ativo (depois de acertar fora de campo).' },
   'Jade Vista': {
     buffs: [
@@ -368,7 +373,7 @@ export const WEAPONS_2: Record<string, GearCur> = {
     note: 'Conta os 3 OUTROS membros: mesmo elemento dá Maestria e elemento diferente dá ATK.',
   },
   'Covenant of Frost and Snow': { em: { p: 0 }, expect: 'Elemental Mastery is increased by', note: 'Assume a habilidade usada nos últimos 12 s.' },
-  'Breezeborne Refrain': { er: { p: 0 }, partial: true, expect: 'Hymn of the Pure', note: 'Só a Recarga. O DMG Estelar da equipe NÃO entra.' },
+  'Breezeborne Refrain': { er: { p: 0 }, buffs: [{ id: 'viper', label: 'Thus Lied the Viper', scope: 'team', timed: true, stats: { reactionBonus: { stellarconduct: { p: 0 }, stellarswirl: { p: 0 } } } }], expect: 'Hymn of the Pure', note: 'Recarga e +24% (R1) de DMG Estelar da equipe por 12 s (faixa).' },
   'Silvershower Heartstrings': {
     hpPct: { p: 2 },
     critRateByType: { burst: { p: 6 } },
@@ -386,9 +391,8 @@ export const WEAPONS_2: Record<string, GearCur> = {
   },
   'The Daybreak Chronicles': {
     byType: { normal: { p: 1 }, skill: { p: 1 }, burst: { p: 1 } },
-    partial: true,
     expect: 'Stirring Dawn Breeze',
-    note: 'Assume o DMG máximo (60% no R1) em Normal, habilidade e Supremo, sempre. No jogo ele cai 10% por segundo em combate e sobe 10% por acerto. O bônus de Hexerei NÃO entra.',
+    note: 'Assume o DMG máximo (60% no R1) em Normal, habilidade e Supremo, sempre. No jogo ele cai 10% por segundo em combate e sobe 10% por acerto; o Hexerei só acelera a subida (20% por acerto), o máximo não muda.',
   },
 };
 

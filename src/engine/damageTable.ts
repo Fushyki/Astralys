@@ -5,6 +5,7 @@
 import type { Move } from '../data/schema';
 import type { ElementOrPhysical } from './constants/reactions';
 import { evaluateRotation, type ReactionChoice, type ResolvedMove, type RotationAction, type RotationContext } from './rotation';
+import { withSpecial } from './project';
 import type { Rolls } from './artifacts';
 import type { TeamAssembly, TeamInput } from './team';
 
@@ -47,7 +48,8 @@ export function damageTable(input: DamageTableInput): DamageRow[] {
   const actions: RotationAction[] = own.map((m) => ({
     id: m.id,
     member,
-    move: toResolved(m),
+    // Golpes que no jogo causam dano Lunar/Estelar usam a fórmula deles (curadoria `specialMoves`).
+    move: withSpecial(toResolved(m), m.variant, team.members[member].characterEffect),
     executions: 1,
     reaction,
     activeTags: tags,

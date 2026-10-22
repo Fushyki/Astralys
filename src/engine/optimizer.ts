@@ -134,10 +134,13 @@ export function optimizeMember(ctx: OptimizerContext, memberIndex: number, flatB
 
   ctx.actions.forEach((a, idx) => {
     if (a.member !== memberIndex) return;
+    // Reação posta na rotação: só depende da Maestria e dos bônus de reação; a busca de substats não a enxerga.
+    if (a.move.reactionHit || a.move.talent === 'reaction') return;
     const { key, team } = profileOf(a.activeTags);
     const stats = minStats(a.activeTags); // só para os bônus de DMG% (não dependem dos rolls)
     const element = a.move.element ?? m.character.element;
-    const dmg = 1 + hitDmgBonus(stats, element, m.character.element, a.move.hitType) + a.dmgAdjust;
+    // Golpe Lunar/Estelar: sem DMG% comum (a parte da Maestria dele a busca não enxerga; o dano final usa a fórmula certa).
+    const dmg = a.move.special ? 1 : 1 + hitDmgBonus(stats, element, m.character.element, a.move.hitType) + a.dmgAdjust;
     const def = defMultiplier(config.characterLevel, config.enemyLevel, assembly.enemyDefRed, config.enemyDefIgnore ?? 0);
     const res = resMultiplier(enemyRes({ level: config.enemyLevel, res: assembly.enemyRes }, element));
     const w = a.executions * dmg * def * res;

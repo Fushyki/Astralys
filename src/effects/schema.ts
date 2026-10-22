@@ -9,7 +9,31 @@ import { z } from 'zod';
 import { ElementSchema, HitTypeSchema, WeaponTypeSchema } from '../data/schema';
 
 const frac = z.number().default(0);
-const ReactionBonusKeySchema = z.enum(['overloaded', 'shattered', 'electrocharged', 'superconduct', 'swirl', 'burning', 'bloom', 'burgeon', 'hyperbloom', 'spread', 'aggravate']);
+/** Reações que causam dano próprio com nível × coeficiente (Lunares e Estelares; Genshin Optimizer `special.ts`). */
+export const SPECIAL_REACTIONS = ['lunarcharged', 'lunarbloom', 'lunarcrystallize', 'stellarconduct', 'stellarswirl'] as const;
+export type SpecialReactionKey = (typeof SPECIAL_REACTIONS)[number];
+/** Transformativas que podem causar crítico (só com bônus próprio da reação, Genshin Optimizer `trans.ts`). */
+export const CRIT_TRANSFORMATIVE = ['swirl', 'burning', 'bloom', 'burgeon', 'hyperbloom'] as const;
+/**
+ * Chaves de bônus de reação. Para cada Lunar/Estelar há as mesmas partes do Genshin Optimizer
+ * (`libs/gi/wr/src/reaction/special.ts`): `<r>` = `<r>_dmg_` (soma ao multiplicador de Maestria), `<r>Base` =
+ * `<r>_baseDmg_`, `<r>Special` = `<r>_specialDmg_` (multiplicador final), `<r>CritRate`/`<r>CritDmg`, `<r>Flat` =
+ * `<r>_dmgInc` (dano fixo somado à base); nas Estelares, `<r>Mult` = `<r>_mult_` (soma ao multiplicador 1 dos golpes).
+ * Nas transformativas que podem critar, `<r>CritRate`/`<r>CritDmg` = `<r>_critRate_`/`<r>_critDMG_`; em todas,
+ * `<r>Flat` = `<r>_dmgInc` (dano fixo somado à base da reação).
+ */
+export const REACTION_BONUS_KEYS = [
+  'overloaded', 'shattered', 'electrocharged', 'superconduct', 'swirl', 'burning', 'bloom', 'burgeon', 'hyperbloom', 'spread', 'aggravate',
+  'swirlCritRate', 'swirlCritDmg', 'burningCritRate', 'burningCritDmg', 'bloomCritRate', 'bloomCritDmg', 'burgeonCritRate', 'burgeonCritDmg', 'hyperbloomCritRate', 'hyperbloomCritDmg',
+  'overloadedFlat', 'shatteredFlat', 'electrochargedFlat', 'superconductFlat', 'swirlFlat', 'burningFlat', 'bloomFlat', 'burgeonFlat', 'hyperbloomFlat',
+  'lunarcharged', 'lunarchargedBase', 'lunarchargedSpecial', 'lunarchargedCritRate', 'lunarchargedCritDmg', 'lunarchargedFlat',
+  'lunarbloom', 'lunarbloomBase', 'lunarbloomSpecial', 'lunarbloomCritRate', 'lunarbloomCritDmg', 'lunarbloomFlat',
+  'lunarcrystallize', 'lunarcrystallizeBase', 'lunarcrystallizeSpecial', 'lunarcrystallizeCritRate', 'lunarcrystallizeCritDmg', 'lunarcrystallizeFlat',
+  'stellarconduct', 'stellarconductBase', 'stellarconductSpecial', 'stellarconductCritRate', 'stellarconductCritDmg', 'stellarconductFlat', 'stellarconductMult',
+  'stellarswirl', 'stellarswirlBase', 'stellarswirlSpecial', 'stellarswirlCritRate', 'stellarswirlCritDmg', 'stellarswirlFlat', 'stellarswirlMult',
+] as const;
+export type ReactionBonusKey = (typeof REACTION_BONUS_KEYS)[number];
+const ReactionBonusKeySchema = z.enum(REACTION_BONUS_KEYS);
 const FonteInfo = z.string().min(1, 'fonte_info é obrigatório: de onde veio este número?');
 
 /** Buff que aumenta o ATK fixo de quem o recebe, calculado a partir do ATK do doador. */
@@ -54,6 +78,13 @@ export type BuffStats = z.infer<typeof BuffStatsSchema>;
 /** Elemento de um golpe, incluindo o Físico. */
 export const ElementOrPhysicalSchema = z.union([ElementSchema, z.literal('Physical')]);
 
+/** Golpe que causa dano Lunar/Estelar: a reação e, nas Estelares, o elemento cuja RES vale (padrão: o do personagem). */
+export const SpecialMoveSchema = z.object({
+  reaction: z.enum(SPECIAL_REACTIONS),
+  resist: ElementSchema.optional(),
+});
+export type SpecialMove = z.infer<typeof SpecialMoveSchema>;
+
 /**
  * Golpe extra de proc (arma, set, passiva ou constelação): um dano próprio, com escala no stat do dono, que você coloca
  * na linha do tempo como qualquer golpe. Sem `element`, é do elemento do personagem; sem `hitType`, não conta como
@@ -71,12 +102,30 @@ export const ProcSchema = z.object({
   minConstellation: z.number().int().min(0).max(6).default(0),
   /** De qual passiva/constelação vem (para a cobertura do kit). */
   src: z.enum(['p1', 'p2', 'p3', 'const1', 'const2', 'const3', 'const4', 'const5', 'const6']).optional(),
+  /** Dano Lunar/Estelar (fórmula do Genshin Optimizer `lunarDmgNode`/`stellarDmgNode`, base = stat do dono). */
+  special: SpecialMoveSchema.optional(),
+  /**
+   * Golpe que é uma fração do dano de outro golpe do kit (ex.: Amber C1, segunda flecha = 20% da primeira): a escala é
+   * `fraction` × a escala daquele golpe no nível de talento do dono. Sem `hitType`, herda o tipo do golpe original.
+   */
+  of: z.object({ talent: z.enum(['normal', 'skill', 'burst']), label: z.string().min(1), variant: z.number().int().min(0).default(0), fraction: z.number().positive() }).optional(),
   note: z.string().optional(),
 });
 export type Proc = z.infer<typeof ProcSchema>;
 
+/** Golpe do kit (Lunaris) que no jogo causa dano Lunar/Estelar (o Genshin Optimizer usa `lunarDmgNode`/`stellarDmgNode`). */
+export const KitSpecialMoveSchema = SpecialMoveSchema.extend({
+  talent: z.enum(['normal', 'skill', 'burst']),
+  label: z.string().min(1),
+  /** Variante do golpe ("a%/b%"); ausente = todas. */
+  variant: z.number().int().min(0).optional(),
+  /** Multiplicador extra do golpe (ex.: Lauma, 3 Verdant Dew consumidos). */
+  times: z.number().positive().optional(),
+});
+export type KitSpecialMove = z.infer<typeof KitSpecialMoveSchema>;
+
 /** Stats que uma conversão pode alimentar (fixos ou em fração). */
-export const ConvertTargetSchema = z.enum(['atkFlat', 'hpFlat', 'defFlat', 'atkPct', 'hpPct', 'defPct', 'em', 'dmgPct', 'critRate', 'critDmg', 'er', 'normal', 'charged', 'plunge', 'skill', 'burst']);
+export const ConvertTargetSchema = z.enum(['atkFlat', 'hpFlat', 'defFlat', 'atkPct', 'hpPct', 'defPct', 'em', 'dmgPct', 'critRate', 'critDmg', 'er', 'normal', 'charged', 'plunge', 'skill', 'burst', ...REACTION_BONUS_KEYS]);
 export type ConvertTarget = z.infer<typeof ConvertTargetSchema>;
 
 /**
@@ -113,6 +162,10 @@ export const BuffTeamRulesSchema = z.object({
   onlyWeapons: z.array(WeaponTypeSchema).optional(),
   /** Só vale se o Supremo do dono custa até tanta energia (ex.: Moonweaver's Dawn, 60 e 40). */
   maxBurstEnergy: z.number().positive().optional(),
+  /** Só vale com ao menos tantos membros Moonsign no time (2 = "Moonsign: Ascendant Gleam"; Genshin Optimizer `tally.moonsign`). */
+  moonsign: z.number().int().positive().optional(),
+  /** Só vale com ao menos tantos membros Hexerei no time (Genshin Optimizer `tally.hexerei`). */
+  hexerei: z.number().int().positive().optional(),
   /**
    * `of`: 'distinct' = elementos diferentes no time; lista de elementos ou `{ names }` (nomes de personagem) = quantos
    * membros são desses; 'same' / 'different' = quantos OUTROS membros têm o mesmo elemento / outro elemento que o dono.
@@ -134,11 +187,16 @@ export type BuffLevel = z.infer<typeof BuffLevelSchema>;
 /** Dano plano de arma/set: `perPoint` × stat do dono por golpe elegível, até `capPerHit` e `stacks` golpes. */
 export const WeaponFlatSchema = z.object({
   name: z.string().min(1),
-  sourceStat: z.enum(['ATK', 'HP', 'DEF', 'EM']),
+  /** 'BaseATK' = ATK base do dono (personagem + arma; ex.: Faruzan A4). */
+  sourceStat: z.enum(['ATK', 'HP', 'DEF', 'EM', 'BaseATK']),
   perPoint: z.number(),
   capPerHit: z.number().optional(),
   hitTypes: z.array(HitTypeSchema).default([]),
   stacks: z.number().int().positive().optional(),
+  /** Quem recebe: o dono (padrão), a equipe inteira ou só os outros (ex.: Xilonen C4, nos Normais dos aliados). */
+  targets: z.enum(['self', 'team', 'others']).optional(),
+  /** Só golpes destes elementos (ex.: Faruzan A4, dano Anemo). */
+  elements: z.array(ElementSchema).optional(),
 });
 export type WeaponFlat = z.infer<typeof WeaponFlatSchema>;
 
@@ -199,6 +257,10 @@ export const CharacterEffectSchema = z.object({
   notes: z.array(CharacterNoteSchema).default([]),
   /** Golpes extras de passiva/constelação (a partir de `minConstellation`), para pôr na linha do tempo. */
   procs: z.array(ProcSchema).default([]),
+  /** Facções que contam para regras de time (Genshin Optimizer `flags.isMoonsign` / `flags.isHexerei`). */
+  factions: z.array(z.enum(['moonsign', 'hexerei'])).default([]),
+  /** Golpes do kit que causam dano Lunar/Estelar no lugar do dano direto. */
+  specialMoves: z.array(KitSpecialMoveSchema).default([]),
   fonte_info: FonteInfo,
 });
 export type CharacterEffect = z.infer<typeof CharacterEffectSchema>;
@@ -301,7 +363,7 @@ export const SetEffectSchema = z.object({
 });
 export type SetEffect = z.infer<typeof SetEffectSchema>;
 
-export const FlatDamageStatSchema = z.enum(['ATK', 'HP', 'DEF', 'EM']);
+export const FlatDamageStatSchema = z.enum(['ATK', 'HP', 'DEF', 'EM', 'BaseATK']);
 
 /** Dano plano somado por hit (ex.: Lead Vocal da Vodyanitsa, quills da Shenhe). */
 export const FlatDamageEffectSchema = z.object({

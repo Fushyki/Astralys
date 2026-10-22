@@ -7,7 +7,7 @@
  * as janelas de tempo dos buffs preenchem isso.
  */
 import type { Character, HitType, Weapon } from '../data/schema';
-import { weaponStatsAt, type BuffStats, type CharacterBuff, type CharacterEffect, type SetEffect, type WeaponEffect } from '../effects/schema';
+import { REACTION_BONUS_KEYS, weaponStatsAt, type BuffStats, type CharacterBuff, type CharacterEffect, type ReactionBonusKey, type SetEffect, type WeaponEffect } from '../effects/schema';
 import {
   FLOWER_HP,
   MAIN_STAT_VALUES,
@@ -63,9 +63,8 @@ export interface StatBlock {
   reactionBonus: Record<ReactionBonusKey, number>;
 }
 
-/** Reações com bônus de dano próprio além de Derreter/Vaporizar (que têm campo separado). */
-export const REACTION_BONUS_KEYS = ['overloaded', 'shattered', 'electrocharged', 'superconduct', 'swirl', 'burning', 'bloom', 'burgeon', 'hyperbloom', 'spread', 'aggravate'] as const;
-export type ReactionBonusKey = (typeof REACTION_BONUS_KEYS)[number];
+/** Reações com bônus de dano próprio além de Derreter/Vaporizar (que têm campo separado); ver `REACTION_BONUS_KEYS`. */
+export { REACTION_BONUS_KEYS, type ReactionBonusKey };
 const zeroReactions = () => Object.fromEntries(REACTION_BONUS_KEYS.map((k) => [k, 0])) as Record<ReactionBonusKey, number>;
 
 type ByType = Partial<Record<HitType, number>>;

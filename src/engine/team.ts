@@ -253,7 +253,8 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
           delta.dmgBonus = value;
           if (b.forElements) delta.eleDmg = value;
         }
-        else delta.dmgByType![to] = value;
+        else if (to === 'normal' || to === 'charged' || to === 'plunge' || to === 'skill' || to === 'burst') delta.dmgByType![to] = value;
+        else delta.reactionBonus = { ...delta.reactionBonus, [to]: value };
       }
       buffs.push({
         id, tag: labelTag(b.label), targets, delta, description: `${names[i]}: ${b.label}`, derived: true,

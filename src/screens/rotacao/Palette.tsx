@@ -2,7 +2,7 @@
 import { useMemo, useState } from 'react';
 import type { ProjectView } from '../../app/ProjectContext';
 import { Panel } from '../../design/primitives';
-import { memberProcs } from '../../engine';
+import { REACTION_ACTIONS, memberProcs } from '../../engine';
 import { cleanMoveName } from '../../features/character/characterModel';
 import { useRotationStore } from '../../features/rotation/store';
 import { formatDecimal } from '../../ui/format';
@@ -30,8 +30,13 @@ export function Palette({ v }: { v: ProjectView }) {
   const procs = useMemo(() => {
     const m = v.resolved.team.members[member];
     const q = query.trim().toLowerCase();
-    return m ? memberProcs(m).filter((p) => !q || p.proc.label.toLowerCase().includes(q) || p.origin.toLowerCase().includes(q)) : [];
-  }, [v.resolved, member, query]);
+    return m ? memberProcs(m, v.data.game.moves).filter((p) => !q || p.proc.label.toLowerCase().includes(q) || p.origin.toLowerCase().includes(q)) : [];
+  }, [v.resolved, v.data.game.moves, member, query]);
+  // Reações que o membro dispara: dano da própria reação, com a Maestria e os bônus de reação dele.
+  const reactions = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return REACTION_ACTIONS.filter((r) => !q || r.label.toLowerCase().includes(q) || 'reação'.includes(q));
+  }, [query]);
 
   return (
     <Panel title={`Inserir em ${formatDecimal(playhead, 1)} s`} aside={<input className="dz-input" style={{ maxWidth: 220 }} type="search" placeholder="Buscar golpe" aria-label="Buscar golpe" value={query} onChange={(e) => setQuery(e.target.value)} />}>
@@ -54,6 +59,18 @@ export function Palette({ v }: { v: ProjectView }) {
             onClick={() => add({ member, move: { character, talent: 'proc', label: p.key, variant: 0 }, displayName: `${character} - ${p.proc.label}`, time: playhead })}
           >
             + · {p.proc.label}
+          </button>
+        ))}
+        {(all || query) && reactions.map((r) => (
+          <button
+            key={`r-${r.key}`}
+            type="button"
+            className="chip"
+            style={{ ['--c' as string]: v.colors[member] }}
+            title="Dano da própria reação (Maestria e bônus de reação deste personagem)"
+            onClick={() => add({ member, move: { character, talent: 'reaction', label: r.key, variant: 0 }, displayName: `${character} - ${r.label}`, time: playhead })}
+          >
+            ⚛ · {r.label}
           </button>
         ))}
         {list.map((m) => {
@@ -79,9 +96,9 @@ export function Palette({ v }: { v: ProjectView }) {
           );
         })}
       </div>
-      {!query && moves.length > SHOWN && (
+      {!query && (moves.length > SHOWN || reactions.length > 0) && (
         <button type="button" className="dz-link" style={{ alignSelf: 'flex-start' }} onClick={() => setAll(!all)}>
-          {all ? 'Mostrar só os principais' : `Mostrar os ${moves.length} golpes`}
+          {all ? 'Mostrar só os principais' : `Mostrar os ${moves.length} golpes e as reações`}
         </button>
       )}
     </Panel>

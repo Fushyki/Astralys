@@ -170,6 +170,8 @@ export interface MemberInput {
   /** Níveis EFETIVOS (já com o +3 das constelações). */
   talents: { normal: number; skill: number; burst: number };
   constellation?: number;
+  /** Facções ligadas pelo usuário neste membro (só as que o personagem pode ter). */
+  factions?: ('moonsign' | 'hexerei')[];
   /** ER mínimo desejado (1 = 100%). */
   minER?: number;
   /** Rolls totais de substat (padrão: 9 por peça 5★ + 7 por peça 4★). */

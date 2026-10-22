@@ -16,7 +16,13 @@ const SUBSTAT_LABEL: Record<Substat, string> = {
 const clamp = (v: number) => Math.max(1, Math.min(15, Math.round(v)));
 const SPLASH = 'https://api.lunaris.moe/data/assets/gachaimg';
 
-export function CharacterCard({ character, memberRef, index, color, level, share }: { character: Character; memberRef: MemberRef; index: number; color: string; level: number; share: number }) {
+const FACTION_LABEL = { moonsign: 'Moonsign', hexerei: 'Hexerei' } as const;
+const FACTION_HINT = {
+  moonsign: 'Conta como membro Moonsign (regras "Nascent/Ascendant Gleam" do time).',
+  hexerei: "Conta como Hexerei (Witch's Homework concluída; 2+ membros dão o Hexerei: Secret Rite).",
+} as const;
+
+export function CharacterCard({ character, memberRef, index, color, level, share, eligible = [] }: { character: Character; memberRef: MemberRef; index: number; color: string; level: number; share: number; eligible?: readonly ('moonsign' | 'hexerei')[] }) {
   const update = useRotationStore((s) => s.updateMember);
   const talents = effectiveTalents(memberRef.talents, memberRef.constellation, character);
   const c = memberRef.constellation ?? 0;
@@ -38,6 +44,22 @@ export function CharacterCard({ character, memberRef, index, color, level, share
           ))}
         </div>
       </div>
+      {eligible.length > 0 && (
+        <div className="pc-cons">
+          <span className="lbl">Facção</span>
+          <div className="row" role="group" aria-label="Facção">
+            {eligible.map((f) => {
+              const on = memberRef.factions?.includes(f) ?? false;
+              const rest = (memberRef.factions ?? []).filter((x) => x !== f);
+              return (
+                <button key={f} type="button" aria-pressed={on} title={FACTION_HINT[f]} onClick={() => update(index, { factions: on ? (rest.length ? rest : undefined) : [...rest, f] })}>
+                  {FACTION_LABEL[f]}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
       <div className="pc-talents">
         <span className="lbl">Talentos</span>
         <div className="row">

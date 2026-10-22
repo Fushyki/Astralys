@@ -28,7 +28,7 @@ const effect = (character: string, extra: Partial<CharacterEffect>): CharacterEf
   fonte_info: 'teste', ...extra,
 });
 
-type MemberSpec = { character: string; weapon?: string; constellation?: number };
+type MemberSpec = { character: string; weapon?: string; constellation?: number; factions?: ('moonsign' | 'hexerei')[] };
 type ActionSpec = { member?: number; talent?: 'normal' | 'skill' | 'burst' | 'proc' | 'reaction'; label: string; element?: string; tags?: string[] };
 
 function run(members: MemberSpec[], actions: ActionSpec[], override: CharacterEffect[] = []) {
@@ -100,13 +100,20 @@ describe('reações na rotação', () => {
 describe('Moonsign e golpes derivados', () => {
   it('com 2 membros Moonsign, quem não é Moonsign ganha a faixa Ascendant Gleam (DMG Lunar por stat, teto 36%)', () => {
     const override = [effect('Flins', { factions: ['moonsign'] }), effect('Ineffa', { factions: ['moonsign'] })];
-    const two = run([{ character: 'Flins' }, { character: 'Ineffa' }, { character: 'Bennett' }], [], override);
-    const one = run([{ character: 'Flins' }, { character: 'Bennett' }], [], override);
+    const M = ['moonsign' as const];
+    const two = run([{ character: 'Flins', factions: M }, { character: 'Ineffa', factions: M }, { character: 'Bennett' }], [], override);
+    const one = run([{ character: 'Flins', factions: M }, { character: 'Bennett' }], [], override);
+    // Interruptor desligado (padrão): os mesmos personagens não contam como Moonsign.
+    const off = run([{ character: 'Flins' }, { character: 'Ineffa' }, { character: 'Bennett' }], [], override);
+    // Facção que o personagem não tem é ignorada (Bennett não é Moonsign).
+    const fake = run([{ character: 'Flins', factions: M }, { character: 'Bennett', factions: M }], [], override);
     const gleam = (x: typeof two) => x.r.team.members.flatMap((m) => m.characterEffect?.buffs ?? []).filter((b) => b.id === 'moonsign-gleam');
     expect(gleam(two)).toHaveLength(1);
     expect(gleam(two)[0].convert).toMatchObject({ from: 'atk', cap: 0.36 });
     expect(gleam(two)[0].convert!.perPoint).toBeCloseTo(0.00009, 12);
     expect(gleam(one)).toHaveLength(0);
+    expect(gleam(off)).toHaveLength(0);
+    expect(gleam(fake)).toHaveLength(0);
     const buff = two.assembly.buffs.find((b) => b.description?.includes('Ascendant Gleam'))!;
     expect(buff.delta.reactionBonus?.lunarcharged).toBeGreaterThan(0);
     expect(buff.delta.reactionBonus?.lunarcharged).toBeLessThanOrEqual(0.36);
@@ -133,7 +140,7 @@ describe('Moonsign e golpes derivados', () => {
 
 describe('curadoria Lunar (dados reais)', () => {
   it('Flins: o Supremo Lunar-Carregado usa a fórmula Lunar; Ineffa A1 é golpe extra Lunar-Carregado; Moonsign com os dois', () => {
-    const r = run([{ character: 'Flins' }, { character: 'Ineffa' }, { character: 'Bennett' }], [
+    const r = run([{ character: 'Flins', factions: ['moonsign'] }, { character: 'Ineffa', factions: ['moonsign'] }, { character: 'Bennett' }], [
       { talent: 'burst', label: 'Middle Phase Lunar-Charged DMG' },
       { member: 1, talent: 'proc', label: 'char:a1' },
     ]);

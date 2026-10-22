@@ -174,7 +174,7 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
       const targets = names.filter((n, j) => {
         if (b.scope === 'self' && j !== i) return false;
         if (b.scope === 'others' && j === i) return false;
-        if (b.forFactions && !b.forFactions.some((f) => members[j].characterEffect?.factions?.includes(f))) return false;
+        if (b.forFactions && !b.forFactions.some((f) => members[j].factions?.includes(f))) return false;
         return !b.forElements || b.forElements.includes(members[j].character.element);
       });
       if (targets.length === 0) continue;
@@ -245,7 +245,7 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
       const targets = names.filter((_, j) => {
         if (b.scope === 'self' && j !== i) return false;
         if (b.scope === 'others' && j === i) return false;
-        if (b.forFactions && !b.forFactions.some((f) => members[j].characterEffect?.factions?.includes(f))) return false;
+        if (b.forFactions && !b.forFactions.some((f) => members[j].factions?.includes(f))) return false;
         return !b.forElements || b.forElements.includes(members[j].character.element);
       });
       if (targets.length === 0) continue;

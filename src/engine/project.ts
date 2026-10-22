@@ -60,6 +60,11 @@ export const MemberRefSchema = z.object({
   talents: z.object({ normal: TalentLevel, skill: TalentLevel, burst: TalentLevel }),
   /** Constelação (0 a 6). Ausente = C0. Sobe em 3 o nível dos talentos da C3 e da C5. */
   constellation: z.number().int().min(0).max(6).optional(),
+  /**
+   * Facções ligadas neste membro (Moonsign, Hexerei). O usuário escolhe: só contam as que o personagem pode ter
+   * (`CharacterEffect.factions`). Ausente = nenhuma (projetos antigos abrem sem facção).
+   */
+  factions: z.array(z.enum(['moonsign', 'hexerei'])).optional(),
   minER: z.number().min(0).optional(),
   totalRolls: z.number().int().min(0).optional(),
   forcedCritRolls: z.number().int().min(0).optional(),
@@ -460,6 +465,7 @@ export function resolveMember(ref: MemberRef, data: GameData, effects: EffectsDa
     artifacts: ref.artifacts,
     talents: effectiveTalents(ref.talents, ref.constellation, character),
     constellation: ref.constellation,
+    factions: (ref.factions ?? []).filter((f) => own?.factions?.includes(f)),
     minER: ref.minER,
     totalRolls: ref.totalRolls,
     forcedCritRolls: ref.forcedCritRolls,
@@ -490,7 +496,7 @@ export interface ResolvedProject {
  */
 export function applyTeamRules(members: MemberInput[]): MemberInput[] {
   const elements = members.map((m) => m.character.element);
-  const faction = (f: 'moonsign' | 'hexerei') => members.filter((m) => m.characterEffect?.factions?.includes(f)).length;
+  const faction = (f: 'moonsign' | 'hexerei') => members.filter((m) => m.factions?.includes(f)).length;
   const moonsign = faction('moonsign');
   const hexerei = faction('hexerei');
   return withMoonsignGleam(members, moonsign).map((m, self) => {
@@ -561,7 +567,7 @@ export const MOONSIGN_GLEAM: Record<string, { from: 'atk' | 'hp' | 'def' | 'em';
 function withMoonsignGleam(members: MemberInput[], moonsign: number): MemberInput[] {
   if (moonsign < 2) return members;
   return members.map((m) => {
-    if (m.characterEffect?.factions?.includes('moonsign')) return m;
+    if (m.factions?.includes('moonsign')) return m;
     const g = MOONSIGN_GLEAM[m.character.element];
     if (!g) return m;
     const buff: CharacterBuff = {

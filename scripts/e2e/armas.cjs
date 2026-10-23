@@ -39,7 +39,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   const names = await page.locator('.dz-panel:has(h2:text("Armas de")) tbody tr .ar-name').allTextContents();
   check('"Só 5★" deixa apenas armas 5★ (e a atual)', names.length > 0 && names.every((n) => n.startsWith('5★') || n.length > 0) && names.filter((n) => !n.startsWith('5★')).length <= 1, `${names.length} armas`);
   await page.click('.dz-seg button:has-text("R5")');
-  await page.waitForTimeout(1200);
+  await page.waitForSelector(".dz-panel:has(h2:text(\"Armas de\")) tbody tr", { timeout: 15000 }); await page.waitForTimeout(3000);
   check('trocar para R5 recalcula a lista', (await page.locator('.dz-panel:has(h2:text("Armas de")) tbody tr').count()) > 0 && first.length > 0);
 
   // Usar uma arma muda o projeto e o DPS

@@ -87,3 +87,16 @@
 .ot-chip small { display: block; font-size: 11px; opacity: .75; margin: 0; }
 .ot-buffs .ot-chip { border-radius: 12px; text-align: left; }
 .ot-chip.warm[aria-pressed='true'] { background: color-mix(in srgb, var(--el-pyro) 24%, var(--bg-header)); color: var(--text); }
+
+/* Painéis de filtro densos, no estilo do Genshin Optimizer */
+.dz-panel.fx-panel { padding: 12px; gap: 12px; }
+.dz-panel.fx-panel > .head .h2 { font-size: 17px; }
+.ot-goals button { min-height: 40px; align-items: center; justify-content: center; text-align: center; padding: 6px 10px; }
+.ot-focus button { min-height: 36px; }
+.ot-mins { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+.ot-mins .dz-input { min-height: 34px; padding: 4px 8px; }
+.ot-mins i { bottom: 8px; right: 8px; }
+.ot-go .dz-btn.big { min-height: 44px; font-size: 16px; }
+.ot-set { border-radius: 10px; opacity: .35; filter: grayscale(.8); }
+.ot-set[aria-pressed='true'] { filter: none; border-color: var(--good); background: color-mix(in srgb, var(--good) 14%, var(--bg-header)); }
+.ot-sets { grid-template-columns: repeat(auto-fill, minmax(44px, 1fr)); gap: 6px; }

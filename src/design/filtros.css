@@ -1,0 +1,36 @@
+/* Estilo de filtros do Genshin Optimizer: painel denso, chips verde/cinza, selos de contagem. */
+.fx-head { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.fx-head b { font-family: var(--font-display); font-weight: 700; font-size: 17px; letter-spacing: .02em; color: var(--text); }
+.fx-badge { font-size: 12px; font-weight: 600; padding: 1px 8px; border-radius: 999px; background: var(--bg); border: 1px solid var(--border-ctl); color: var(--text-2); }
+.fx-aside { margin-left: auto; display: inline-flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); }
+.fx-box { display: flex; flex-direction: column; gap: 8px; }
+.fx-grid { display: flex; flex-wrap: wrap; gap: 5px; }
+
+.fx-chip { --fx-c: var(--good); display: inline-flex; align-items: center; gap: 6px; min-height: 30px; padding: 3px 9px 3px 4px; border-radius: 8px; border: 1px solid var(--border-ctl); background: var(--bg-header); color: var(--faint); font: 500 13px var(--font-body); cursor: pointer; }
+.fx-chip i { font-style: normal; font-size: 11px; font-weight: 700; min-width: 26px; padding: 2px 5px; border-radius: 6px; background: var(--border); color: var(--muted); text-align: center; letter-spacing: .02em; }
+.fx-chip .num { font-weight: 600; }
+.fx-chip[aria-pressed='true'], .fx-chip.static[data-on='true'] { color: var(--text); border-color: color-mix(in srgb, var(--fx-c) 70%, var(--border-ctl)); background: color-mix(in srgb, var(--fx-c) 16%, var(--bg-header)); }
+.fx-chip[aria-pressed='true'] i, .fx-chip.static[data-on='true'] i { background: var(--fx-c); color: #0a0e1c; }
+.fx-chip:not(.static):hover { border-color: var(--fx-c); }
+.fx-chip.static { cursor: default; }
+
+.fx-slot { display: flex; flex-direction: column; gap: 6px; padding: 8px; background: var(--bg-header); border: 1px solid var(--border); border-radius: 10px; }
+
+/* botões largos de rodapé (cinza, como os checkboxes do GO) */
+.fx-wide { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 40px; padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border-ctl); background: var(--surface-2); color: var(--text-2); font: 500 14px var(--font-body); cursor: pointer; text-align: left; }
+.fx-wide[aria-pressed='true'] { border-color: var(--good); background: color-mix(in srgb, var(--good) 14%, var(--surface-2)); color: var(--text); }
+.fx-wide .fx-badge { margin-left: auto; }
+.fx-wide .box { width: 16px; height: 16px; border-radius: 4px; border: 2px solid var(--faint); display: grid; place-items: center; font-size: 11px; line-height: 1; color: transparent; flex: none; }
+.fx-wide[aria-pressed='true'] .box { border-color: var(--good); background: var(--good); color: #0a0e1c; }
+
+/* slider duplo */
+.fx-range { display: grid; grid-template-columns: 28px minmax(0, 1fr) 28px; align-items: center; gap: 8px; }
+.fx-end { text-align: center; font-weight: 600; color: var(--text-2); }
+.fx-track { position: relative; height: 24px; }
+.fx-track > i { position: absolute; top: 10px; height: 4px; left: 0; right: 0; border-radius: 2px; background: linear-gradient(to right, var(--border-ctl) var(--lo), var(--el-hydro) var(--lo) var(--hi), var(--border-ctl) var(--hi)); }
+.fx-track input { position: absolute; inset: 0; width: 100%; margin: 0; background: none; pointer-events: none; -webkit-appearance: none; appearance: none; }
+.fx-track input::-webkit-slider-runnable-track { background: none; height: 24px; }
+.fx-track input::-moz-range-track { background: none; }
+.fx-track input::-webkit-slider-thumb { pointer-events: auto; -webkit-appearance: none; width: 16px; height: 16px; margin-top: 4px; border-radius: 50%; background: var(--el-hydro); border: 2px solid var(--bg); cursor: grab; }
+.fx-track input::-moz-range-thumb { pointer-events: auto; width: 12px; height: 12px; border-radius: 50%; background: var(--el-hydro); border: 2px solid var(--bg); cursor: grab; }
+.fx-track input:focus-visible::-webkit-slider-thumb { outline: 2px solid var(--gold); }

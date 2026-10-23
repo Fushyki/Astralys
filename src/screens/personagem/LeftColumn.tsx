@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { NumberInput } from '../../design/fields';
 import { CharacterAvatar, Panel, Segmented } from '../../design/primitives';
+import { SecHead, StatChip } from '../../design/filtros';
 import { SUBSTATS, defaultTotalRolls, effectiveTalents, maxRollsFor, rollValues, type AnalysisBundle, type MemberRef, type Substat } from '../../engine';
 import { SUB_LABEL, formatSub } from '../../features/good/labels';
 import type { Character } from '../../data/schema';
@@ -13,6 +14,7 @@ const WEAPON_LABEL: Record<string, string> = { Sword: 'ESPADA', Claymore: 'ESPAD
 const SUBSTAT_LABEL: Record<Substat, string> = {
   CR: 'Taxa crít.', CD: 'Dano crít.', 'ATK%': 'ATK%', EM: 'Maestria', ER: 'Recarga', ATK: 'ATK fixo', 'HP%': 'HP%', HP: 'HP fixo', 'DEF%': 'DEF%', DEF: 'DEF fixo',
 };
+const SUBSTAT_TAG: Record<Substat, string> = { CR: 'CR', CD: 'CD', 'ATK%': 'ATK%', EM: 'EM', ER: 'ER', ATK: 'ATK', 'HP%': 'HP%', HP: 'HP', 'DEF%': 'DEF%', DEF: 'DEF' };
 const clamp = (v: number) => Math.max(1, Math.min(15, Math.round(v)));
 const SPLASH = 'https://api.lunaris.moe/data/assets/gachaimg';
 
@@ -95,16 +97,13 @@ export function SubstatsPanel({ memberRef, index, bundle, onGood, bases }: { mem
     for (const p of memberRef.pieces) for (const sub of p.substats) sums.set(sub.key, (sums.get(sub.key) ?? 0) + sub.value);
     const rows = SUBSTATS.filter((k) => (sums.get(GOOD_OF[k]) ?? 0) > 0);
     return (
-      <Panel title="Substats das peças">
-        <div className="pc-rolls">
+      <Panel title="Substats das peças" className="fx-panel" aside={<span className="fx-badge num">{memberRef.pieces.length}/5 peças</span>}>
+        <div className="pc-rolls fx-grid">
           {rows.map((k) => (
-            <div className="r" key={k}>
-              <span className="k">{SUB_LABEL[GOOD_OF[k]] ?? k}</span>
-              <span className="num n">{formatSub(GOOD_OF[k], sums.get(GOOD_OF[k]) ?? 0)}</span>
-            </div>
+            <StatChip key={k} tag={SUBSTAT_TAG[k]} n={formatSub(GOOD_OF[k], sums.get(GOOD_OF[k]) ?? 0)} on label={SUB_LABEL[GOOD_OF[k]] ?? k} className="wide" />
           ))}
         </div>
-        <span className="muted small">Soma exata dos substats das {memberRef.pieces.length} peças do inventário. Para mudar, troque as peças ou volte ao build genérico.</span>
+        <span className="muted small">Soma exata dos substats das {memberRef.pieces.length} peças.</span>
       </Panel>
     );
   }
@@ -114,7 +113,6 @@ export function SubstatsPanel({ memberRef, index, bundle, onGood, bases }: { mem
   const manual = !!memberRef.manualRolls;
   const used = Math.round(SUBSTATS.reduce((s, k) => s + rolls[k], 0) * 100) / 100;
   const budget = memberRef.totalRolls ?? defaultTotalRolls(memberRef.artifacts);
-  const max = Math.max(1, ...SUBSTATS.map((s) => rolls[s]));
   const forced = memberRef.forcedCritRolls;
   const finals = bundle.memberStats[index];
   const FINALS: { key: FinalStatKey; label: string; value: number; shown: number; step: number; pct: boolean }[] = finals
@@ -148,7 +146,15 @@ export function SubstatsPanel({ memberRef, index, bundle, onGood, bases }: { mem
   };
 
   return (
-    <Panel title="Substats (rolls)">
+    <Panel
+      title="Substats (rolls)"
+      className="fx-panel"
+      aside={
+        <span className={`fx-badge num${used > budget ? ' over' : ''}`} title="Rolls usados do total">
+          {used} de {budget} rolls{forced ? ` · ${forced} fixos em crítico` : ''}
+        </span>
+      }
+    >
       <Segmented
         label="Modo dos substats"
         value={manual ? 'manual' : 'auto'}
@@ -170,48 +176,47 @@ export function SubstatsPanel({ memberRef, index, bundle, onGood, bases }: { mem
         />
       )}
       <button type="button" className="dz-link" style={{ alignSelf: 'flex-start' }} onClick={onGood}>Usar o inventário GOOD</button>
-      <div className="pc-rolls">
-        {SUBSTATS.filter((s) => manual || rolls[s] > 0).map((s) => {
-          const cap = maxRollsFor(memberRef.artifacts, s);
-          return (
-            <div className="r" key={s}>
-              <span className="k">{SUBSTAT_LABEL[s]}</span>
-              {manual && unit === 'valores' ? (
-                <NumberInput
-                  label={`${SUBSTAT_LABEL[s]} (valor total${PCT_SUBSTAT.has(s) ? ' em %' : ''})`}
-                  value={Math.round((memberRef.manualRolls![s] ?? rolls[s]) * perRoll[s] * factor(s) * 100) / 100}
-                  min={0}
-                  step={PCT_SUBSTAT.has(s) ? 0.1 : s === 'EM' ? 1 : 10}
-                  invalid={rolls[s] > cap}
-                  onCommit={(v) => setRoll(index, s, v / factor(s) / perRoll[s])}
-                />
-              ) : manual ? (
-                <NumberInput label={`${SUBSTAT_LABEL[s]} (máx. ${cap})`} value={memberRef.manualRolls![s] ?? rolls[s]} min={0} max={cap} step={1} invalid={rolls[s] > cap} onCommit={(v) => setRoll(index, s, v)} />
-              ) : (
-                <>
-                  <div className="dz-bar"><i style={{ width: `${(rolls[s] / max) * 100}%`, ['--c' as string]: rolls[s] >= 6 ? 'var(--gold)' : '#4a5585' }} /></div>
-                  <span className="num n">{formatInt(rolls[s])}</span>
-                </>
-              )}
-            </div>
-          );
-        })}
-      </div>
+      {manual ? (
+        <div className="pc-rolls">
+          {SUBSTATS.map((s) => {
+            const cap = maxRollsFor(memberRef.artifacts, s);
+            return (
+              <div className="r" key={s}>
+                <span className="k">{SUBSTAT_LABEL[s]}</span>
+                {unit === 'valores' ? (
+                  <NumberInput
+                    label={`${SUBSTAT_LABEL[s]} (valor total${PCT_SUBSTAT.has(s) ? ' em %' : ''})`}
+                    value={Math.round((memberRef.manualRolls![s] ?? rolls[s]) * perRoll[s] * factor(s) * 100) / 100}
+                    min={0}
+                    step={PCT_SUBSTAT.has(s) ? 0.1 : s === 'EM' ? 1 : 10}
+                    invalid={rolls[s] > cap}
+                    onCommit={(v) => setRoll(index, s, v / factor(s) / perRoll[s])}
+                  />
+                ) : (
+                  <NumberInput label={`${SUBSTAT_LABEL[s]} (máx. ${cap})`} value={memberRef.manualRolls![s] ?? rolls[s]} min={0} max={cap} step={1} invalid={rolls[s] > cap} onCommit={(v) => setRoll(index, s, v)} />
+                )}
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <div className="pc-rolls fx-grid">
+          {SUBSTATS.filter((s) => rolls[s] > 0).map((s) => (
+            <StatChip key={s} tag={SUBSTAT_TAG[s]} n={formatInt(rolls[s])} on color={rolls[s] >= 6 ? 'var(--gold)' : undefined} label={`${SUBSTAT_LABEL[s]}: ${formatInt(rolls[s])} rolls`} className="wide" />
+          ))}
+        </div>
+      )}
       {manual && finals && (
         <>
-          <span className="lbl">Stats finais (com buffs ativos)</span>
+          <SecHead title="Stats finais" aside="com buffs ativos" />
           <div className="pc-form two">
             {FINALS.map((f) => (
               <NumberInput key={f.key} label={f.label} value={f.shown} min={0} step={f.step} onCommit={(v) => setFinal(f, v)} />
             ))}
           </div>
-          <span className="muted small">Digite o valor final: o painel ajusta os substats que faltam (ATK, HP e DEF pelo % e depois pelo fixo).</span>
           {finalNote && <p className="dz-error" role="alert">{finalNote}</p>}
         </>
       )}
-      <span className={`muted small num${used > budget ? ' over' : ''}`}>
-        {used} de {budget} rolls{forced ? ` · ${forced} fixos em crítico` : ''}
-      </span>
       {!manual && (
         <div className="pc-form two">
           <NumberInput label="Rolls totais" value={budget} min={0} step={1} onCommit={(v) => update(index, { totalRolls: Math.round(v) === defaultTotalRolls(memberRef.artifacts) ? undefined : Math.max(0, Math.round(v)) })} />

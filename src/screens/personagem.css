@@ -177,3 +177,8 @@
 .pp-others { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-2); }
 .pc-piece.real .main { color: var(--gold-hi); }
 .pc-piece.empty { opacity: .55; border-style: dashed; }
+
+/* substats no estilo do Genshin Optimizer: chips densos com a contagem */
+.dz-panel.fx-panel { padding: 14px; gap: 10px; }
+.pc-rolls.fx-grid { flex-direction: row; gap: 5px; }
+.fx-badge.over { color: var(--warn); border-color: var(--warn-border); }

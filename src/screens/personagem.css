@@ -191,3 +191,35 @@
   .pc-page.opt .pc-views, .pc-page.opt .pc-hint, .pc-page.opt .ot-top, .pc-page.opt .ot > .dz-panel, .pc-page.opt .ot > .ot-empty { grid-column: 2; }
   .pc-page.opt .ot-bar, .pc-page.opt .ot-results { grid-column: 1 / -1; }
 }
+
+/* Aba Otimizar: a coluna do personagem acompanha a altura dos três painéis (rola se passar) e traz arma e buffs do time */
+@media (min-width: 1101px) { .pc-page.opt .pc-aside { align-self: stretch; contain: size; overflow-y: auto; scrollbar-width: thin; } }
+.ax-weapon-body { display: grid; grid-template-columns: 84px minmax(0, 1fr); grid-template-areas: 'art n' 'art sub'; gap: 2px 14px; align-items: center; padding: 10px; border-radius: 12px; border: 1px solid var(--border-ctl); background: var(--bg-header); }
+.ax-weapon-body[data-rarity='5'] { border-color: #8a6a2e; background: linear-gradient(160deg, #3a2f18 0%, var(--bg-header) 70%); }
+.ax-weapon-body[data-rarity='4'] { border-color: #5a4a8a; background: linear-gradient(160deg, #2b2547 0%, var(--bg-header) 70%); }
+.ax-weapon-body .art { grid-area: art; width: 84px; height: 84px; display: grid; place-items: center; }
+.ax-weapon-body .art img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.ax-weapon-body .n { grid-area: n; align-self: end; font-weight: 600; overflow-wrap: anywhere; }
+.ax-weapon-body .sub { grid-area: sub; align-self: start; font-size: 12px; color: var(--muted); }
+.ax-buffs ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.ax-buffs li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0 10px; padding: 7px 0; border-bottom: 1px solid var(--divider); font-size: 13px; }
+.ax-buffs li:last-child { border-bottom: 0; }
+.ax-buffs .val { font-weight: 600; color: var(--gold-hi); }
+.ax-buffs .src { grid-column: 1 / -1; font-size: 11px; }
+@media (min-width: 1101px) {
+  .pc-page.opt .pc-portrait { aspect-ratio: 16 / 7; }
+  .pc-page.opt .pc-aside { gap: 12px; }
+  .pc-page.opt .ax-weapon-body { grid-template-columns: 64px minmax(0, 1fr); }
+  .pc-page.opt .ax-weapon-body .art { width: 64px; height: 64px; }
+}
+@media (min-width: 1101px) {
+  .pc-page.opt .pc-aside > .dz-panel:first-child { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 10px 12px; padding: 12px; align-items: center; }
+  .pc-page.opt .pc-aside > .dz-panel:first-child > * { grid-column: 1 / -1; }
+  .pc-page.opt .pc-aside > .dz-panel:first-child > .pc-portrait { grid-column: 1; aspect-ratio: 1; }
+  .pc-page.opt .pc-aside > .dz-panel:first-child > .pc-id { grid-column: 2; }
+  .pc-page.opt .pc-aside > .dz-panel:first-child .pc-id .n { font-size: 28px; }
+  .pc-page.opt .pc-portrait .lvl { right: 4px; bottom: 4px; font-size: 11px; padding: 1px 6px; }
+  .pc-page.opt .pc-cons button { min-height: 30px; }
+  .pc-page.opt .pc-aside .dz-panel { padding: 12px; }
+}
+@media (min-width: 1101px) { .pc-page.opt .pc-aside .pc-talents .muted.small { display: none; } .pc-page.opt .pc-aside .pc-talents { gap: 6px; } }

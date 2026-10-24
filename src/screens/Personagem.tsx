@@ -9,6 +9,7 @@ import { CharacterCard, SubstatsPanel } from './personagem/LeftColumn';
 import { Attributes, DamageTablePanel, ReactionsPanel, ReceivedBuffsPanel } from './personagem/MainColumn';
 import { ToolsPanel, type ToolTab } from './personagem/ToolsPanel';
 import { OtimizadorPanel } from './Otimizador';
+import { AsideExtras } from './personagem/AsideExtras';
 import './personagem.css';
 
 type View = 'resumo' | 'avancado' | 'otimizar';
@@ -73,6 +74,7 @@ export default function Personagem() {
       <main className={`pc-page${view === 'otimizar' ? ' opt' : ''}`}>
         <aside className="pc-aside">
           <CharacterCard character={character} memberRef={ref} index={index} color={v.colors[index]} level={v.project.config.characterLevel} share={share} eligible={v.data.effects.characters.find((c) => c.character === character.name)?.factions ?? []} />
+          {view === 'otimizar' && <AsideExtras v={v} index={index} />}
         </aside>
 
         <div className="pc-main">

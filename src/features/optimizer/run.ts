@@ -18,8 +18,13 @@ export interface OptimizerConfig {
   levelMax: number;
   /** Main stats permitidos em areia, cálice e tiara (chaves GOOD, ex.: "atk_", "eleMas", "pyro_dmg_"). Vazio/ausente = todos. */
   mainStats: Partial<Record<'sands' | 'goblet' | 'circlet', string[]>>;
-  /** Sets permitidos (chaves GOOD). Ausente = todos. */
+  /** Sets que podem dar bônus (chaves GOOD). Ausente = todos. */
   allowedSets?: string[];
+  /**
+   * Peças de sets fora de `allowedSets` continuam valendo como peça extra, sem bônus (padrão). Com `false` elas saem do
+   * inventário e a busca só usa peças dos sets permitidos (isso força 5 peças do mesmo set quando só um está marcado).
+   */
+  fillerSets?: boolean;
   /** Peças que estão em outros personagens: 'none' (padrão), 'all' ou a lista das chaves dos personagens que "emprestam". */
   borrowFrom: 'none' | 'all' | string[];
   /** Quantos builds devolver. */
@@ -48,6 +53,8 @@ export interface FilteredInventory {
   removed: { level: number; main: number; set: number; equippedByOthers: number };
   /** Peças que o personagem tem equipadas (cada posição), se tiver as 5. */
   equipped: GoodArtifact[] | null;
+  /** Nomes dos sets que podem dar bônus (undefined = todos): restringe os padrões de set do solver. */
+  onlySets?: Set<string>;
 }
 
 export function filterInventory(good: Good, characterKey: string, element: Element, config: OptimizerConfig, setName: (key: string) => string): FilteredInventory {
@@ -56,6 +63,7 @@ export function filterInventory(good: Good, characterKey: string, element: Eleme
   const artifacts: GoodArtifact[] = [];
   const slots: Piece[][] = [[], [], [], [], []];
   const allowedSets = config.allowedSets ? new Set(config.allowedSets.map(norm)) : undefined;
+  const strictSets = config.fillerSets === false;
 
   for (const a of good.artifacts) {
     if (a.rarity < 4) continue;
@@ -66,7 +74,7 @@ export function filterInventory(good: Good, characterKey: string, element: Eleme
       const borrowed = config.borrowFrom === 'all' || (Array.isArray(config.borrowFrom) && config.borrowFrom.some((k) => norm(k) === loc));
       if (!borrowed) { removed.equippedByOthers++; continue; }
     }
-    if (allowedSets && !allowedSets.has(norm(a.setKey))) { removed.set++; continue; }
+    if (allowedSets && strictSets && !allowedSets.has(norm(a.setKey))) { removed.set++; continue; }
     const slot = a.slotKey as SlotKey;
     if (slot === 'sands' || slot === 'goblet' || slot === 'circlet') {
       const allowed = config.mainStats[slot];
@@ -82,7 +90,8 @@ export function filterInventory(good: Good, characterKey: string, element: Eleme
   const eq = good.artifacts.filter((a) => norm(a.location) === mine);
   const bySlot = Object.fromEntries(eq.map((a) => [a.slotKey, a]));
   const equipped = SLOT_ORDER.every((s) => bySlot[s]) ? SLOT_ORDER.map((s) => bySlot[s]) : null;
-  return { artifacts, slots, removed, equipped };
+  const onlySets = allowedSets && !strictSets ? new Set(good.artifacts.filter((a) => allowedSets.has(norm(a.setKey))).map((a) => setName(a.setKey))) : undefined;
+  return { artifacts, slots, removed, equipped, onlySets };
 }
 
 export interface OptimizedBuild {
@@ -104,6 +113,8 @@ export interface OptimizerResult {
   inventory: Pick<FilteredInventory, 'removed'> & { pieces: number };
   stats: SolveStats & { combinations: number };
   stopped: boolean;
+  /** O build equipado usa peças que os filtros (nível, main stat, set, dono) deixam de fora: ele não entra na busca. */
+  equippedOutside: boolean;
 }
 
 export interface RunInput extends Omit<EvaluatorInput, 'objective' | 'constraints'> {
@@ -168,7 +179,9 @@ export function startOptimizer(input: RunInput, control: RunControl = {}): RunHa
       for (const p of pieces) addInto(vec, p.vec);
       const cfg = loadoutFromPieces(inv.equipped, game);
       const config = { primarySet: cfg.primarySet, secondarySet: cfg.secondarySet, fourPiece: cfg.fourPiece };
-      seeds.push({ pieces, config, value: evaluator.evaluate(vec, config) });
+      const providers = [config.primarySet, config.secondarySet].filter((x): x is string => !!x).map(setName);
+      // O equipado só entra como ponto de partida se o bônus dele vem de sets permitidos.
+      if (!inv.onlySets || providers.every((x) => inv.onlySets!.has(x))) seeds.push({ pieces, config, value: evaluator.evaluate(vec, config) });
     }
   }
 
@@ -212,7 +225,7 @@ export function startOptimizer(input: RunInput, control: RunControl = {}): RunHa
     slots: inv.slots,
     evaluate: evaluator.evaluate,
     topN: input.config.topN,
-    patterns: allPatterns(inv.slots),
+    patterns: allPatterns(inv.slots, inv.onlySets),
     onProgress: input.onProgress,
     onPattern: input.onPattern,
     shouldStop: input.shouldStop,
@@ -239,6 +252,7 @@ export function startOptimizer(input: RunInput, control: RunControl = {}): RunHa
     const cfg = loadoutFromPieces(inv.equipped, game);
     equipped = reportOf(inv.equipped, { primarySet: cfg.primarySet, secondarySet: cfg.secondarySet, fourPiece: cfg.fourPiece });
   }
+  const equippedOutside = !!inv.equipped && !inv.equipped.every((a) => inv.artifacts.includes(a));
   const combinations = inv.slots.reduce((n, l) => n * Math.max(1, l.length), 1);
   void latest;
   const result = (): OptimizerResult => {
@@ -249,6 +263,7 @@ export function startOptimizer(input: RunInput, control: RunControl = {}): RunHa
       inventory: { removed: inv.removed, pieces: inv.artifacts.length },
       stats: { ...done.stats, combinations },
       stopped: done.stats.stopped,
+      equippedOutside,
     };
   };
   return { steps: steps(), result };

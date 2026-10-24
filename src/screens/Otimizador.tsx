@@ -66,11 +66,13 @@ interface UiState {
   /** Main stats desmarcados por posição (guarda o que sai, para novos main stats do inventário entrarem sozinhos). */
   offMains: Record<'sands' | 'goblet' | 'circlet', string[]>;
   offSets: string[];
+  /** Peças de sets desmarcados continuam entrando como peça extra, sem bônus. */
+  fillerSets: boolean;
 }
 
 const initial: UiState = {
   goal: 'dano', scope: 'team', moveId: '', reaction: 'none', crit: 'avg', buffId: '', stat: 'hp', mins: { er: '', cr: '', cd: '', em: '', hp: '', atk: '', def: '' },
-  levelMin: 0, levelMax: 20, topN: 5, borrow: false, offMains: { sands: [], goblet: [], circlet: [] }, offSets: [],
+  levelMin: 0, levelMax: 20, topN: 5, borrow: false, offMains: { sands: [], goblet: [], circlet: [] }, offSets: [], fillerSets: true,
 };
 
 const STORAGE = 'astralys.otimizador';
@@ -193,6 +195,7 @@ export function OtimizadorPanel({ index }: { index: number }) {
       ...DEFAULT_CONFIG, levelMin: ui.levelMin, levelMax: ui.levelMax, topN: ui.topN, objective, mainStats,
       constraints: Object.fromEntries(Object.entries(constraints).filter(([, x]) => x !== undefined)) as Constraints,
       allowedSets: ui.offSets.length ? setInfo.map((s) => s.key).filter((k) => !ui.offSets.includes(k)) : undefined,
+      fillerSets: ui.fillerSets,
       borrowFrom: ui.borrow ? 'all' : 'none',
     };
   };
@@ -323,6 +326,7 @@ export function OtimizadorPanel({ index }: { index: number }) {
               }
               className="fx-panel ot-sets-panel"
             >
+              <p className="ot-tip" style={{ margin: 0 }}>Marcados: os sets que podem dar bônus de 2 ou 4 peças.</p>
               <div className="ot-sets">
                 {setInfo.map((x) => (
                   <button key={x.key} type="button" className="ot-set" aria-pressed={!ui.offSets.includes(x.key)} onClick={() => setUi({ ...ui, offSets: toggle(ui.offSets, x.key) })} title={x.name}>
@@ -331,6 +335,9 @@ export function OtimizadorPanel({ index }: { index: number }) {
                   </button>
                 ))}
               </div>
+              <button type="button" className="fx-wide" aria-pressed={ui.fillerSets} title="Ligado: só os sets marcados dão bônus, mas as outras peças podem completar o build (ex.: 4 peças de um set e a quinta de outro). Desligado: só entram peças dos sets marcados." onClick={() => setUi({ ...ui, fillerSets: !ui.fillerSets })}>
+                <span className="box" aria-hidden="true">✓</span>Aceitar peças de outros sets, sem bônus
+              </button>
               <button type="button" className="fx-wide" aria-pressed={ui.borrow} onClick={() => setUi({ ...ui, borrow: !ui.borrow })}>
                 <span className="box" aria-hidden="true">✓</span>Usar artefatos de outros personagens
                 <span className="fx-badge num">{ui.borrow ? othersCount : 0}/{othersCount}</span>
@@ -454,6 +461,7 @@ export function OtimizadorPanel({ index }: { index: number }) {
               <div className="ot-summary">
                 <b>{result.builds.length > 0 && result.equipped && result.builds[0].key === result.equipped.key ? 'Seu build equipado já é o melhor com estes filtros.' : result.stopped ? 'Busca parada: estes são os melhores achados até aqui.' : 'Busca completa: nenhum conjunto melhor existe com estes filtros.'}</b>
                 <span className="muted small">{formatInt(result.stats.evaluations)} avaliações de {result.stats.combinations.toExponential(1)} combinações</span>
+                {result.equippedOutside && <span className="ot-warn">Seu build equipado usa peças que os filtros deixam de fora (nível, main stat, set ou dono); por isso ele não entra na busca.</span>}
                 {result.equipped && <span className="ot-now">Equipado hoje <b className="num">{focusValue(result.equipped.report)}</b></span>}
               </div>
             )}

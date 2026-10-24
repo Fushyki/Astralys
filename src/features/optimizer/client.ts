@@ -43,6 +43,7 @@ export function mergeResults(results: OptimizerResult[], topN: number): Optimize
       combinations: first.stats.combinations,
     },
     stopped: results.some((r) => r.stopped),
+    equippedOutside: first.equippedOutside,
   };
 }
 

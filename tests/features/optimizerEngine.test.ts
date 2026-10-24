@@ -94,6 +94,43 @@ describe('otimizador com o motor real', () => {
     expect(some.removed.main + some.removed.set).toBeGreaterThan(0);
   });
 
+  it('com um set marcado, as peças dos outros sets completam o build sem bônus (não força 5 do mesmo set)', () => {
+    const good = inventory(5);
+    const config: OptimizerConfig = { ...DEFAULT_CONFIG, topN: 5, allowedSets: ['ObsidianCodex'] };
+    const inv = filterInventory(good, 'Mavuika', 'Pyro', config, setName);
+    // as peças dos outros sets continuam no inventário filtrado
+    expect(inv.artifacts.some((a) => a.setKey !== 'ObsidianCodex')).toBe(true);
+    expect(inv.removed.set).toBe(0);
+    const evaluator = createEvaluator({ ...base, objective: config.objective, constraints: config.constraints });
+    const allowedOnly = (vec: Float64Array, cfg: { primarySet?: string; secondarySet?: string; fourPiece?: boolean }) =>
+      [cfg.primarySet, cfg.secondarySet].every((x) => !x || x === 'Obsidian Codex') ? evaluator.evaluate(vec, cfg) : -Infinity;
+    const expected = bruteForce(inv.slots, allowedOnly, 5);
+    const got = runOptimizer({ ...base, good, characterKey: 'Mavuika', config });
+    expect(got.builds.length).toBe(expected.length);
+    got.builds.forEach((b, i) => expect(b.report.value).toBeCloseTo(expected[i].value, 3));
+    // nenhum build usa bônus de set que não foi marcado
+    for (const b of got.builds) for (const k of [b.config.primarySet, b.config.secondarySet]) expect(!k || k === 'Obsidian Codex').toBe(true);
+    // modo estrito (como antes): só peças do set marcado
+    const strict = filterInventory(good, 'Mavuika', 'Pyro', { ...config, fillerSets: false }, setName);
+    expect(strict.artifacts.every((a) => a.setKey === 'ObsidianCodex')).toBe(true);
+    expect(strict.removed.set).toBeGreaterThan(0);
+  });
+
+  it('avisa quando o build equipado usa peças que os filtros deixam de fora', () => {
+    const good = inventory(3);
+    for (const slotKey of ['flower', 'plume', 'sands', 'goblet', 'circlet']) {
+      const a = good.artifacts.find((x) => x.slotKey === slotKey)!;
+      a.location = 'Mavuika';
+      a.setKey = slotKey === 'flower' ? 'GladiatorsFinale' : 'ObsidianCodex';
+    }
+    const strict = runOptimizer({ ...base, good, characterKey: 'Mavuika', config: { ...DEFAULT_CONFIG, topN: 2, allowedSets: ['ObsidianCodex'], fillerSets: false } });
+    expect(strict.equippedOutside).toBe(true);
+    const loose = runOptimizer({ ...base, good, characterKey: 'Mavuika', config: { ...DEFAULT_CONFIG, topN: 2, allowedSets: ['ObsidianCodex'] } });
+    expect(loose.equippedOutside).toBe(false);
+    // com a peça de outro set permitida como extra, o build equipado (4 Obsidian + 1 outra) volta a ser achável
+    expect(loose.builds[0].report.value).toBeGreaterThanOrEqual(loose.equipped!.report.value - 1e-6);
+  });
+
   it('peças de outros personagens só entram se o usuário deixar', () => {
     const good = inventory(3);
     good.artifacts[0].location = 'Citlali';

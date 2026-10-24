@@ -36,6 +36,11 @@
   --el-geo: #e7b75c;
   --el-dendro: #a5cf5a;
   --el-physical: #c9cfea;
+  /* famílias de dano que não são elementais: Lunar e Estelar */
+  --dmg-lunar: #9ba8ff;
+  --dmg-lunar-bg: #1d2250;
+  --dmg-stellar: #f58ad6;
+  --dmg-stellar-bg: #3a1a38;
   /* tipografia */
   --font-display: 'Saira Condensed', 'Arial Narrow', sans-serif;
   --font-body: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;

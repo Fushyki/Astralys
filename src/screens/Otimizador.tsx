@@ -22,6 +22,8 @@ import { formatDecimal, formatInt } from '../ui/format';
 import './otimizador.css';
 import { Button, ButtonLink } from '../design/Button';
 import { TeamBuffsStrip } from './personagem/AsideExtras';
+import { FamilyBadge, damageColor } from '../design/damageFamily';
+import { specialOfMove } from '../engine/project';
 import { MovePickerDialog, KindBadge, kindOf } from './otimizador/MovePicker';
 import { elementColor } from '../design/elements';
 
@@ -455,7 +457,8 @@ export function OtimizadorPanel({ index }: { index: number }) {
                         <span className="lbl">Golpe</span>
                         <button type="button" className="ot-movebtn" aria-haspopup="dialog" aria-label="Escolher o golpe a otimizar" onClick={() => setPickingMove(true)}>
                           {moveChosen && <KindBadge kind={kindOf(moveChosen)} />}
-                          <span className="n" style={moveElement && moveElement !== 'Physical' ? { color: elementColor(moveElement) } : undefined}>{moveChosen ? displayName(moveChosen) : 'Escolher o golpe'}</span>
+                          <span className="n" style={{ color: damageColor(moveElement, moveChosen ? specialOfMove(moveChosen, 0, effect) : undefined) }}>{moveChosen ? displayName(moveChosen) : 'Escolher o golpe'}</span>
+                          {moveChosen && <FamilyBadge special={specialOfMove(moveChosen, 0, effect)} />}
                           <span className="chev" aria-hidden="true">▾</span>
                         </button>
                       </div>
@@ -536,6 +539,7 @@ export function OtimizadorPanel({ index }: { index: number }) {
                 character={character}
                 elementMode={kitMode ? 'kit' : 'character'}
                 infusion={infusion}
+                effect={effect}
                 onPick={(id) => { setUi({ ...ui, moveId: id }); setPickingMove(false); }}
                 onClose={() => setPickingMove(false)}
               />

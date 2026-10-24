@@ -233,3 +233,10 @@ body { font-family: var(--font-body); font-size: 15px; line-height: 1.5; -webkit
 .dz-panel.bar > .bar-foot { margin-top: auto; padding: 0 var(--panel-pad) var(--panel-pad); }
 .dz-badge { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-1); letter-spacing: .06em; text-transform: uppercase; border-radius: 5px; padding: 2px var(--sp-2); white-space: nowrap; background: #1a2450; color: var(--text-2); }
 .dz-badge.gold { background: #3a3016; color: var(--gold); }
+
+/* ---- Família do dano: Lunar e Estelar se distinguem do dano elemental por cor, glifo e etiqueta ---- */
+.fam { display: inline-flex; align-items: center; gap: var(--sp-1); padding: 1px var(--sp-2); border-radius: 5px; font: 600 var(--fs-1) var(--font-display); letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
+.fam[data-family='lunar'] { background: var(--dmg-lunar-bg); color: var(--dmg-lunar); }
+.fam[data-family='stellar'] { background: var(--dmg-stellar-bg); color: var(--dmg-stellar); }
+.fam-legend { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--sp-1) var(--sp-4); font-size: var(--fs-1); color: var(--muted); }
+.fam-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: var(--sp-1); vertical-align: -1px; }

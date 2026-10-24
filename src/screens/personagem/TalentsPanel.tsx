@@ -7,6 +7,7 @@ import { useEffect, useMemo, useState } from 'react';
 import type { ProjectView } from '../../app/ProjectContext';
 import { Button } from '../../design/Button';
 import { elementColor } from '../../design/elements';
+import { DamageLegend, FamilyBadge, damageColor } from '../../design/damageFamily';
 import { Segmented, StarIcon } from '../../design/primitives';
 import type { CharacterBuff } from '../../effects/schema';
 import { KIT_INFUSIONS, assembleTeam, characterBuffDelta, effectiveTalents } from '../../engine';
@@ -170,11 +171,11 @@ export function TalentsPanel({ v, index }: { v: ProjectView; index: number }) {
     buffs.filter(pred).map((b) => <Condition key={b.id} buff={b} index={index} constellation={constellation} disabled={disabled} chips={chipsOf(b)} onToggle={setSourceEnabled} />);
   const noteOf = (src: string) => notes.find((n) => n.src === src);
   const valueOf = (l: MoveLine) => `${l.hits > 1 ? `${l.hits}× ` : ''}${formatInt(l[crit])}`;
-  const rowsOf = (lines: MoveLine[]) => lines.map((l) => ({ key: l.id, name: l.name, value: valueOf(l), tone: l.element === 'Physical' ? undefined : elementColor(l.element) }));
+  const rowsOf = (lines: MoveLine[]) => lines.map((l) => ({ key: l.id, name: l.name, value: valueOf(l), tone: damageColor(l.element, l.special), special: l.special }));
   const setTalent = (k: 'normal' | 'skill' | 'burst', d: number) => updateMember(index, { talents: { ...ref.talents, [k]: Math.max(1, Math.min(15, ref.talents[k] + d)) } });
   const setCons = (n: number) => updateMember(index, { constellation: Math.max(0, Math.min(6, n)) || undefined });
 
-  type Group = { title: string; rows: { key: string; name: string; value: string; tone?: string }[] };
+  type Group = { title: string; rows: { key: string; name: string; value: string; tone?: string; special?: string }[] };
   const groupsOf = (talent: 'normal' | 'skill' | 'burst'): Group[] => {
     const lines = groups.find((g) => g.talent === talent)?.lines ?? [];
     const by = (types: string[]) => lines.filter((l) => types.includes(l.hitType));
@@ -212,7 +213,7 @@ export function TalentsPanel({ v, index }: { v: ProjectView; index: number }) {
             <div className="grp" key={g.title}>
               <div className="gh">{g.title}</div>
               {g.rows.map((r) => (
-                <div className="r" key={r.key}><span className="k" style={r.tone ? { color: r.tone } : undefined}>{r.name}</span><span className="v num">{r.value}</span></div>
+                <div className="r" key={r.key}><span className="k" style={r.tone ? { color: r.tone } : undefined}>{r.name} <FamilyBadge special={r.special} /></span><span className="v num">{r.value}</span></div>
               ))}
             </div>
           ))}
@@ -262,6 +263,7 @@ export function TalentsPanel({ v, index }: { v: ProjectView; index: number }) {
   return (
     <div className="tl" style={{ ['--e' as string]: color }}>
       <div className="tl-bar">
+        <DamageLegend />
         <span className="grow" />
         <Segmented label="Crítico" value={crit} options={CRIT_OPTIONS} onChange={setCrit} />
         <Segmented label="Reação da tabela de dano" value={activeReaction} options={options.map((o) => ({ value: o, label: REACTION_LABEL[o] }))} onChange={setReaction} />

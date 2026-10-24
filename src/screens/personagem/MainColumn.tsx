@@ -11,6 +11,7 @@ import {
   receivedBuffs,
 } from '../../features/character/characterModel';
 import { elementColor } from '../../design/elements';
+import { FamilyBadge, damageColor } from '../../design/damageFamily';
 import { useRotationStore } from '../../features/rotation/store';
 import { formatDecimal, formatInt, formatPercent } from '../../ui/format';
 
@@ -114,8 +115,8 @@ function GroupRows({ g, color }: { g: ReturnType<typeof moveGroups>[number]; col
     <>
       <tr className="grp"><td colSpan={4}>{g.title} · nv {g.level}</td></tr>
       {g.lines.map((l) => (
-        <tr key={l.id} style={{ ['--e' as string]: elementColor(l.element) || color }}>
-          <td className="el" title={`Dano ${l.element === 'Physical' ? 'Físico' : l.element}`}>{l.name}{l.hits > 1 ? <span className="muted"> · {l.hits}×</span> : null}</td>
+        <tr key={l.id} style={{ ['--e' as string]: damageColor(l.element, l.special) ?? elementColor(l.element) ?? color }}>
+          <td className="el" title={l.special ? undefined : `Dano ${l.element === 'Physical' ? 'Físico' : l.element}`}>{l.name}{l.hits > 1 ? <span className="muted"> · {l.hits}×</span> : null} <FamilyBadge special={l.special} /></td>
           <td>{formatInt(l.noCrit)}</td>
           <td>{formatInt(l.crit)}</td>
           <td className="avg">{formatInt(l.avg)}</td>

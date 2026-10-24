@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { assembleTeam, computeSpecial, computeTransformative, damageBySource, evaluateRotation, memberProcs, resolveProject, type EffectsData, type GameData } from '../../src/engine';
+import { specialOfMove } from '../../src/engine/project';
 import { minimumRolls } from '../../src/engine/stats';
 import { sampleProject } from '../../src/features/rotation/persistence';
 import { defaultMember } from '../../src/features/rotation/teamOps';
@@ -72,6 +73,16 @@ describe('golpes Lunar/Estelar do kit', () => {
     expect(a.noCrit).toBeCloseTo(expected, 6);
     expect(a.avg).toBeCloseTo(expected * (1 + Math.min(s.critRate, 1) * s.critDmg), 6);
     expect(damageBySource(lunar.result).bySource.lunar).toBeCloseTo(a.avg, 6);
+  });
+});
+
+describe('distinção Lunar/Estelar nas listas de golpes', () => {
+  it('specialOfMove devolve a reação do golpe curado e nada para o elemental', () => {
+    const label = 'Middle Phase Lunar-Charged DMG';
+    const e = effect('Flins', { specialMoves: [{ talent: 'burst', label, reaction: 'lunarcharged' }] });
+    expect(specialOfMove({ talent: 'burst', label }, 0, e)).toBe('lunarcharged');
+    expect(specialOfMove({ talent: 'skill', label }, 0, e)).toBeUndefined();
+    expect(specialOfMove({ talent: 'burst', label }, 0, undefined)).toBeUndefined();
   });
 });
 

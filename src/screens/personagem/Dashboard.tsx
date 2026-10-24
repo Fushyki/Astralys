@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import type { ProjectView } from '../../app/ProjectContext';
 import { Segmented } from '../../design/primitives';
 import { elementColor } from '../../design/elements';
+import { DamageLegend, FamilyBadge, damageColor } from '../../design/damageFamily';
 import { SUBSTATS, assembleTeam, effectiveTalents, rollValues, type MemberRef, type Substat } from '../../engine';
 import {
   REACTION_LABEL,
@@ -72,8 +73,8 @@ function MovePanel({ title, badge, tone, lines, crit }: { title: string; badge: 
       <ul className="db-rows">
         {lines.map((l) => (
           <li key={l.id}>
-            <span className="k" style={{ color: l.element === 'Physical' ? undefined : elementColor(l.element) }} title={`Dano ${l.element === 'Physical' ? 'Físico' : l.element}`}>
-              {l.name}{l.hits > 1 ? <i className="muted"> · {l.hits}×</i> : null}
+            <span className="k" style={{ color: damageColor(l.element, l.special) }} title={l.special ? undefined : `Dano ${l.element === 'Physical' ? 'Físico' : l.element}`}>
+              {l.name}{l.hits > 1 ? <i className="muted"> · {l.hits}×</i> : null} <FamilyBadge special={l.special} />
             </span>
             <b className="num">{formatInt(l[crit])}</b>
           </li>
@@ -253,6 +254,8 @@ export function Dashboard({ v, index, onGood }: { v: ProjectView; index: number;
         <Link className="dz-btn" to={`/projeto/${v.id}/armas/${encodeURIComponent(ref.character)}`} title="Compara armas, refinos e constelações">Comparar build</Link>
         <Link className="dz-btn gold" to={`?aba=otimizar`}>Otimizar</Link>
       </div>
+
+      <DamageLegend />
 
       <div className="db-cols">
         <div className="db-col">

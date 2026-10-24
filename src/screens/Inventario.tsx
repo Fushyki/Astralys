@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { AppHeader } from '../app/AppHeader';
 import '../design/design.css';
 import { pieceIconUrl, weaponIconUrl } from '../design/images';
-import { pieceLevel } from '../engine';
+import { mainStatValue, pieceLevel } from '../engine';
 import { Chip, Panel, Segmented } from '../design/primitives';
 import { enkaToGood, mergeGood } from '../features/enka/enkaImport';
 import { norm, parseGood, type Good, type GoodArtifact } from '../features/good/goodImport';
@@ -12,21 +12,14 @@ import { clearGood, loadGood, saveGood } from '../features/good/goodStore';
 import { useGameData } from '../features/rotation/data';
 import { ONLINE_ENABLED } from '../online/config';
 import { fetchEnka } from '../online/enka';
-import { formatDecimal, formatInt } from '../ui/format';
+import { MAIN_LABEL, SUB_LABEL, formatMain, formatSub } from '../features/good/labels';
+import { formatInt } from '../ui/format';
 import './otimizador.css';
 import './inventario.css';
 
 const SLOTS = [
   { key: 'flower', label: 'Flor' }, { key: 'plume', label: 'Pluma' }, { key: 'sands', label: 'Areia' }, { key: 'goblet', label: 'Cálice' }, { key: 'circlet', label: 'Tiara' },
 ] as const;
-const MAIN_LABEL: Record<string, string> = {
-  hp: 'HP', atk: 'ATK', hp_: 'HP%', atk_: 'ATK%', def_: 'DEF%', eleMas: 'Maestria', enerRech_: 'Recarga', critRate_: 'Taxa Crítica',
-  critDMG_: 'Dano Crítico', heal_: 'Cura', pyro_dmg_: 'DMG Pyro', hydro_dmg_: 'DMG Hydro', cryo_dmg_: 'DMG Cryo', electro_dmg_: 'DMG Electro',
-  anemo_dmg_: 'DMG Anemo', geo_dmg_: 'DMG Geo', dendro_dmg_: 'DMG Dendro', physical_dmg_: 'DMG Físico',
-};
-const SUB_LABEL: Record<string, string> = { hp: 'HP', hp_: 'HP%', atk: 'ATK', atk_: 'ATK%', def: 'DEF', def_: 'DEF%', eleMas: 'EM', enerRech_: 'ER', critRate_: 'CR', critDMG_: 'CD' };
-const PERCENT = new Set(['hp_', 'atk_', 'def_', 'enerRech_', 'critRate_', 'critDMG_']);
-const fmt = (k: string, v: number) => (PERCENT.has(k) ? `${formatDecimal(v, 1)}%` : formatInt(v));
 const PAGE = 48;
 
 type Tab = 'artefatos' | 'armas';
@@ -182,7 +175,7 @@ export default function Inventario() {
             {tab === 'artefatos' ? (
               <>
                 <p className="muted small">{formatInt(artifacts.length)} peças</p>
-                <div className="inv-grid">
+                <div className="inv-grid arts">
                   {artifacts.slice(0, shown).map((a, i) => <ArtifactTile key={i} a={a} setInfo={setName(a.setKey)} />)}
                 </div>
                 {artifacts.length > shown && <button type="button" className="dz-btn" onClick={() => setShown(shown + PAGE)}>Mostrar mais ({artifacts.length - shown})</button>}
@@ -212,13 +205,33 @@ export default function Inventario() {
 
 function ArtifactTile({ a, setInfo }: { a: GoodArtifact; setInfo?: { name: string; id: number } }) {
   const [failed, setFailed] = useState(false);
+  const level = pieceLevel(a);
+  const slot = SLOTS.find((x) => x.key === a.slotKey)?.label ?? a.slotKey;
+  const mainKey = a.slotKey === 'flower' ? 'hp' : a.slotKey === 'plume' ? 'atk' : a.mainStatKey;
+  const mainValue = formatMain(mainKey, mainStatValue(mainKey, a.rarity, level));
   return (
-    <div className="piece" data-rarity={a.rarity}>
-      <span className="art">{setInfo && !failed ? <img src={pieceIconUrl(setInfo.id, a.slotKey as 'flower')} alt="" loading="lazy" crossOrigin="anonymous" onError={() => setFailed(true)} /> : <b className="ph">◆</b>}</span>
-      <span className="main">{MAIN_LABEL[a.mainStatKey] ?? a.mainStatKey} <small>+{pieceLevel(a)}</small></span>
-      <span className="muted small">{setInfo?.name ?? a.setKey}</span>
-      <ul>{a.substats.map((s) => <li key={s.key}><span>{SUB_LABEL[s.key] ?? s.key}</span><b className="num">{fmt(s.key, s.value)}</b></li>)}</ul>
-      {a.location && <span className="loc">de {a.location}</span>}
-    </div>
+    <article className="inv-art" data-rarity={a.rarity}>
+      <header>
+        <span className="slot">{slot}</span>
+        <span className="lvl num">+{level}</span>
+      </header>
+      <div className="face">
+        <span className="art">{setInfo && !failed ? <img src={pieceIconUrl(setInfo.id, a.slotKey as 'flower')} alt="" loading="lazy" crossOrigin="anonymous" onError={() => setFailed(true)} /> : <b className="ph">◆</b>}</span>
+        <div className="mainstat">
+          <span className="k">{MAIN_LABEL[mainKey] ?? mainKey}</span>
+          <b className="v num">{mainValue}</b>
+          <span className="stars" aria-label={`${a.rarity} estrelas`}>{'★'.repeat(a.rarity)}</span>
+        </div>
+      </div>
+      <ul className="subs">
+        {a.substats.map((s) => (
+          <li key={s.key} data-crit={s.key === 'critRate_' || s.key === 'critDMG_'}><span>{SUB_LABEL[s.key] ?? s.key}</span><b className="num">{formatSub(s.key, s.value)}</b></li>
+        ))}
+      </ul>
+      <footer>
+        <span className="set" title={setInfo?.name ?? a.setKey}>{setInfo?.name ?? a.setKey}</span>
+        {a.location && <span className="loc">{a.location}</span>}
+      </footer>
+    </article>
   );
 }

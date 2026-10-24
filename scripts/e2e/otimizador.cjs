@@ -35,15 +35,15 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   // ---- Inventário ----
   check('sem inventário, a tela oferece importar o arquivo', (await page.locator('button:has-text("Escolher arquivo")').count()) === 1);
   await page.setInputFiles('input[type=file]', FIXTURE);
-  await page.waitForSelector('.inv-grid .piece');
+  await page.waitForSelector('.inv-grid .inv-art');
   const counts = await page.textContent('.inv-import .opt.now b');
   check('importa o arquivo GOOD e mostra a contagem', /40 artefatos/.test(counts), counts);
-  check('a grade mostra as peças com imagem do set', (await page.locator('.inv-grid .piece').count()) === 40 && (await page.locator('.inv-grid .piece img').count()) > 0);
+  check('a grade mostra as peças com imagem do set', (await page.locator('.inv-grid .inv-art').count()) === 40 && (await page.locator('.inv-grid .inv-art img').count()) > 0);
   await page.click('.ot-chip:has-text("Areia")');
-  check('filtrar por posição deixa só as Areias', (await page.locator('.inv-grid .piece').count()) === 8);
+  check('filtrar por posição deixa só as Areias', (await page.locator('.inv-grid .inv-art').count()) === 8);
   await page.click('.ot-chip:has-text("Areia")');
   await page.selectOption('select[aria-label="Set"]', { index: 1 });
-  check('filtrar por set reduz a lista', (await page.locator('.inv-grid .piece').count()) < 40);
+  check('filtrar por set reduz a lista', (await page.locator('.inv-grid .inv-art').count()) < 40);
   await page.screenshot({ path: path.join(OUT, 'inventario.png') });
 
   // ---- Otimizar: aba dentro do personagem ----

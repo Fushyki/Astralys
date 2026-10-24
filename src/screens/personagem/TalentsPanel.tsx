@@ -23,6 +23,11 @@ import '../talentos.css';
 type Crit = 'noCrit' | 'avg' | 'crit';
 const CRIT_OPTIONS: { value: Crit; label: string }[] = [{ value: 'noCrit', label: 'Não crítico' }, { value: 'avg', label: 'Médio' }, { value: 'crit', label: 'Crítico' }];
 const INFUSIONS = ['Pyro', 'Hydro', 'Electro', 'Cryo', 'Anemo', 'Geo', 'Dendro'] as const;
+/** Personagens com dois Supremos diferentes (o especial troca o normal por um tempo): o segundo ganha grupo próprio. */
+const BURST_FORMS: Record<string, { base: string; title: string; match: RegExp }> = {
+  Flins: { base: 'Ritual Antigo: Visita Noturna', title: 'Sinfonia Trovejante (Supremo especial, após a Lança Tempestuosa)', match: /Thunderous Symphony/ },
+};
+
 const TALENT_TYPE = { normal: 'Ataque normal', skill: 'Habilidade elemental', burst: 'Supremo' } as const;
 const UNLOCK: Record<string, string> = { p1: 'Ascensão 1', p2: 'Ascensão 4' };
 /** Pontos do mapa de estrelas (viewBox 250 × 120) e a ramificação final. */
@@ -185,7 +190,11 @@ export function TalentsPanel({ v, index }: { v: ProjectView; index: number }) {
     } else {
       const basics = by(['normal', 'charged', 'plunge']);
       const rest = lines.filter((l) => !basics.includes(l));
-      out.push({ title: talent === 'skill' ? 'Habilidade' : 'Supremo', rows: rowsOf(rest) });
+      const form = talent === 'burst' ? BURST_FORMS[character.name] : undefined;
+      const special = form ? rest.filter((l) => form.match.test(l.id)) : [];
+      const main = rest.filter((l) => !special.includes(l));
+      out.push({ title: form ? form.base : talent === 'skill' ? 'Habilidade' : 'Supremo', rows: rowsOf(main) });
+      if (form && special.length) out.push({ title: form.title, rows: rowsOf(special) });
       if (basics.length) out.push({ title: 'Golpes de ataque normal neste modo', rows: rowsOf(basics) });
     }
     return out.filter((g) => g.rows.length > 0);

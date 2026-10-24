@@ -167,3 +167,46 @@ describe('buffs ligados e desligados por personagem', () => {
     expect(other?.active ?? true).toBe(true);
   });
 });
+
+describe('buffs de arma e set começam desligados (gearManual)', () => {
+  const names = resolved.team.members.map((m) => m.character.name);
+  const manual = { ...project, compat: 'none' as const, members: project.members.map((m) => ({ ...m, gearManual: true })) };
+  const dps = (p: typeof project) => {
+    const r = resolveProject(p, game, effects);
+    return analyzeProject({ team: r.team, actions: r.actions, flatEffects: r.flatEffects, ampCoefficient: r.ampCoefficient }).optimization.result.totals.avg;
+  };
+
+  it('sem a marca tudo vale como antes; com ela os efeitos de arma e set saem do cálculo', () => {
+    const legacy = { ...project, compat: 'none' as const };
+    expect(dps(manual)).toBeLessThan(dps(legacy));
+    expect(resolveProject(manual, game, effects).gearIds.length).toBeGreaterThan(0);
+    expect(resolveProject(legacy, game, effects).gearIds).toEqual([]);
+  });
+
+  it('ligar um buff de arma pela Equipe volta o dano daquele efeito só quando o usuário liga', async () => {
+    const { setBuffEnabled } = await import('../../src/features/rotation/projectOps');
+    const r = resolveProject(manual, game, effects);
+    const b = analyzeProject({ team: r.team, actions: r.actions, flatEffects: r.flatEffects, ampCoefficient: r.ampCoefficient });
+    const weapon = memberBuffCards(manual, r, b, 0).find((c) => c.tag === 'Arma')!;
+    expect(weapon.gear).toBe(true);
+    expect(weapon.active).toBe(false);
+    const on = setBuffEnabled(manual, { toggleId: weapon.toggleId, baseId: weapon.toggleId, gear: true, receiver: names[0], receivers: [names[0]] }, true);
+    expect(on.enabled).toContain(weapon.toggleId);
+    expect(dps(on)).toBeGreaterThan(dps(manual));
+    const r2 = resolveProject(on, game, effects);
+    const b2 = analyzeProject({ team: r2.team, actions: r2.actions, flatEffects: r2.flatEffects, ampCoefficient: r2.ampCoefficient });
+    expect(memberBuffCards(on, r2, b2, 0).find((c) => c.tag === 'Arma')!.active).toBe(true);
+    const off = setBuffEnabled(on, { toggleId: weapon.toggleId, baseId: weapon.toggleId, gear: true, receiver: names[0], receivers: [names[0]] }, false);
+    expect(off.enabled).not.toContain(weapon.toggleId);
+    expect(dps(off)).toBeCloseTo(dps(manual), 3);
+  });
+
+  it('ligar um buff de equipe de arma/set para um personagem não o liga para os outros', async () => {
+    const { setBuffEnabled } = await import('../../src/features/rotation/projectOps');
+    const t = { toggleId: `gear-1@${names[0]}`, baseId: 'gear-1', gear: true, receiver: names[0], receivers: names };
+    const on = setBuffEnabled(manual, t, true);
+    expect(on.enabled).toContain('gear-1');
+    expect(on.disabled).toEqual(expect.arrayContaining(names.filter((n) => n !== names[0]).map((n) => `gear-1@${n}`)));
+    expect(on.disabled).not.toContain(`gear-1@${names[0]}`);
+  });
+});

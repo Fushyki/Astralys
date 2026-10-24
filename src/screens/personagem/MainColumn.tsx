@@ -10,6 +10,7 @@ import {
   reactionOptions,
   receivedBuffs,
 } from '../../features/character/characterModel';
+import { elementColor } from '../../design/elements';
 import { useRotationStore } from '../../features/rotation/store';
 import { formatDecimal, formatInt, formatPercent } from '../../ui/format';
 
@@ -61,7 +62,7 @@ export function Attributes({ v, index }: { v: ProjectView; index: number }) {
 }
 
 /** Golpes do kit do personagem com o build e os buffs atuais, para a reação escolhida. */
-function useDamageGroups(v: ProjectView, index: number, reaction: ReactionChoice) {
+export function useDamageGroups(v: ProjectView, index: number, reaction: ReactionChoice) {
   const ref = v.project.members[index];
   const member = v.resolved.team.members[index];
   const assembly = useMemo(() => assembleTeam(v.resolved.team, { rolls: v.bundle.optimization.rolls }), [v.resolved.team, v.bundle.optimization.rolls]);
@@ -98,7 +99,7 @@ export function DamageTablePanel({ v, index }: { v: ProjectView; index: number }
           </thead>
           <tbody>
             {groups.map((g) => (
-              <GroupRows key={g.talent} g={g} />
+              <GroupRows key={g.talent} g={g} color={elementColor(member.character.element)} />
             ))}
           </tbody>
         </table>
@@ -108,13 +109,13 @@ export function DamageTablePanel({ v, index }: { v: ProjectView; index: number }
   );
 }
 
-function GroupRows({ g }: { g: ReturnType<typeof moveGroups>[number] }) {
+function GroupRows({ g, color }: { g: ReturnType<typeof moveGroups>[number]; color: string }) {
   return (
     <>
       <tr className="grp"><td colSpan={4}>{g.title} · nv {g.level}</td></tr>
       {g.lines.map((l) => (
-        <tr key={l.id}>
-          <td>{l.name}{l.hits > 1 ? <span className="muted"> · {l.hits}×</span> : null}</td>
+        <tr key={l.id} style={{ ['--e' as string]: color }}>
+          <td className="el">{l.name}{l.hits > 1 ? <span className="muted"> · {l.hits}×</span> : null}</td>
           <td>{formatInt(l.noCrit)}</td>
           <td>{formatInt(l.crit)}</td>
           <td className="avg">{formatInt(l.avg)}</td>
@@ -163,7 +164,7 @@ export function ReactionsPanel({ v, index }: { v: ProjectView; index: number }) 
 }
 
 export function ReceivedBuffsPanel({ v, index }: { v: ProjectView; index: number }) {
-  const setEnabled = useRotationStore((s) => s.setSourceEnabled);
+  const setBuff = useRotationStore((s) => s.setBuff);
   const list = useMemo(() => receivedBuffs(v.project, v.resolved, v.bundle, index), [v.project, v.resolved, v.bundle, index]);
   const name = v.project.members[index].character;
   return (
@@ -172,7 +173,7 @@ export function ReceivedBuffsPanel({ v, index }: { v: ProjectView; index: number
       <div className="pc-buffs">
         {list.map((b) => (
           <label className="b" key={b.id} data-active={b.active}>
-            <input type="checkbox" checked={b.active} disabled={b.lockedOff} title={b.lockedOff ? 'Desligado para o time todo em Rotação e buffs' : undefined} onChange={(e) => setEnabled(b.toggleId, e.target.checked)} aria-label={`${b.name} (${b.giverName})`} />
+            <input type="checkbox" checked={b.active} disabled={b.lockedOff} title={b.lockedOff ? 'Desligado para o time todo em Rotação e buffs' : undefined} onChange={(e) => setBuff({ toggleId: b.toggleId, baseId: b.toggleId.split('@')[0], gear: b.gear, receiver: name, receivers: b.receivers }, e.target.checked)} aria-label={`${b.name} (${b.giverName})`} />
             <span className="info">
               <span className="n">{b.name}{b.needsConfirmation ? <Chip warn>A CONFIRMAR</Chip> : null}</span>
               <span className="src" style={{ color: b.giver !== null ? v.colors[b.giver] : undefined }}>{b.giverName} · {b.window}</span>

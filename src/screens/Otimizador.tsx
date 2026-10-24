@@ -199,6 +199,12 @@ export function OtimizadorPanel({ index }: { index: number }) {
 
   const preview = good && character ? countCandidates(good, characterKey, character.element, config(), data.game) : null;
 
+  /** Para escolher artefatos o motor avalia os efeitos de arma e set (que começam desligados) como ligados; o que o usuário desligou de propósito continua desligado. */
+  const optimizerTeam = {
+    ...v.resolved.team,
+    disabled: (v.resolved.team.disabled ?? []).filter((id) => !v.resolved.gearIds.includes(id) || project.disabled.includes(id)),
+  };
+
   const run = () => {
     if (!good) return;
     setRunning(true);
@@ -209,7 +215,7 @@ export function OtimizadorPanel({ index }: { index: number }) {
     const j = startOptimizerJob(
       {
         good, characterKey, config: config(), member: index, rolls: v.bundle.optimization.rolls, ref,
-        resolved: { team: v.resolved.team, actions: v.resolved.actions, flatEffects: v.resolved.flatEffects, ampCoefficient: v.resolved.ampCoefficient },
+        resolved: { team: optimizerTeam, actions: v.resolved.actions, flatEffects: v.resolved.flatEffects, ampCoefficient: v.resolved.ampCoefficient },
         planilha: project.compat === 'planilha', game: data.game, effects: data.effects,
       },
       setProgress,

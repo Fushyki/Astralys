@@ -2,6 +2,7 @@
 import { useMemo, useState } from 'react';
 import type { ProjectView } from '../../app/ProjectContext';
 import { Panel } from '../../design/primitives';
+import { elementColor } from '../../design/elements';
 import { REACTION_ACTIONS, memberProcs } from '../../engine';
 import { cleanMoveName } from '../../features/character/characterModel';
 import { useRotationStore } from '../../features/rotation/store';
@@ -18,6 +19,9 @@ export function Palette({ v }: { v: ProjectView }) {
   const add = useRotationStore((s) => s.addAction);
   const names = v.project.members.map((m) => m.character);
   const character = names[member] ?? names[0];
+  /** Cor do elemento do golpe: o do personagem (os golpes só mudam de elemento por escolha na rotação). */
+  const charElement = v.data.game.characters.find((c) => c.name === character)?.element;
+  const moveColor = elementColor(charElement);
 
   const moves = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -47,6 +51,7 @@ export function Palette({ v }: { v: ProjectView }) {
           </button>
         ))}
       </div>
+      <p className="note" style={{ margin: 0 }}>A barra colorida de cada golpe é o elemento que ele causa ({charElement ?? '—'}); o Físico se escolhe em Editar golpe.</p>
       <div className="rt-chips">
         {list.length === 0 && procs.length === 0 && <p className="note">Nenhum golpe encontrado.</p>}
         {procs.map((p) => (
@@ -54,7 +59,7 @@ export function Palette({ v }: { v: ProjectView }) {
             key={p.key}
             type="button"
             className="chip"
-            style={{ ['--c' as string]: v.colors[member] }}
+            style={{ ['--c' as string]: elementColor(p.proc.element ?? charElement) }}
             title={`${p.origin}${p.proc.note ? `: ${p.proc.note}` : ''}`}
             onClick={() => add({ member, move: { character, talent: 'proc', label: p.key, variant: 0 }, displayName: `${character} - ${p.proc.label}`, time: playhead })}
           >
@@ -80,7 +85,7 @@ export function Palette({ v }: { v: ProjectView }) {
               key={m.id}
               type="button"
               className="chip"
-              style={{ ['--c' as string]: v.colors[member] }}
+              style={{ ['--c' as string]: moveColor }}
               title={m.label}
               onClick={() =>
                 add({

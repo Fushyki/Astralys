@@ -179,6 +179,10 @@ export interface ReceivedBuff {
   toggleId: string;
   /** O buff está desligado para todo o time (em "Rotação e buffs"): daqui não dá para religar só um. */
   lockedOff: boolean;
+  /** Vem de arma ou set de um membro com `gearManual` (começa desligado). */
+  gear: boolean;
+  /** Quem recebe este buff (nomes), para o interruptor. */
+  receivers: string[];
   name: string;
   /** Quem dá o buff (índice do membro) ou null para fontes do time. */
   giver: number | null;
@@ -227,11 +231,14 @@ export function receivedBuffs(project: RotationProject, resolved: ResolvedProjec
       const flagged = NEEDS_CONFIRMATION.test(label);
       const lockedOff = project.disabled.includes(b.id);
       const toggleId = `${b.id}@${name}`;
-      const active = !lockedOff && !project.disabled.includes(toggleId);
+      const gear = resolved.gearIds.includes(b.id);
+      const active = !lockedOff && !(gear && !project.enabled.includes(b.id)) && !project.disabled.includes(toggleId);
       return {
         id: b.id,
         toggleId,
         lockedOff,
+        gear,
+        receivers: b.targets === 'all' ? names : b.targets,
         name: flagged ? 'Buff sem origem conhecida' : label,
         giver,
         giverName: giver !== null ? names[giver] : 'Time',
@@ -256,6 +263,8 @@ export function receivedBuffs(project: RotationProject, resolved: ResolvedProjec
         id: src.id,
         toggleId: src.id,
         lockedOff: false,
+        gear: false,
+        receivers: [name],
         name: flagged ? 'Buff sem origem conhecida' : src.label,
         giver: null,
         giverName: 'Projeto',
@@ -291,6 +300,10 @@ export interface BuffCard {
   active: boolean;
   /** Desligado para o time todo em "Rotação e buffs": aqui o interruptor fica travado. */
   lockedOff: boolean;
+  /** Buff de arma ou set que começa desligado (o usuário escolhe quais ligar). */
+  gear: boolean;
+  /** Quem recebe o buff, para o interruptor por personagem. */
+  receivers: string[];
   /** Fração do dano dele que some sem o buff (null se desligado). */
   share: number | null;
   needsConfirmation: boolean;
@@ -325,7 +338,8 @@ export function memberBuffCards(project: RotationProject, resolved: ResolvedProj
     if (!(src.kind in STATIC_TAG)) continue;
     const isResonance = src.kind === 'resonance';
     const toggleId = isResonance ? src.id.replace(/^m\d+:/, '') : src.id;
-    const active = !project.disabled.includes(toggleId);
+    const gear = resolved.gearIds.includes(toggleId);
+    const active = !project.disabled.includes(toggleId) && !(gear && !project.enabled.includes(toggleId));
     const cb = /^m\d+:cbuff-(.+)$/.exec(src.id);
     const flagged = NEEDS_CONFIRMATION.test(src.label);
     cards.push({
@@ -339,6 +353,8 @@ export function memberBuffCards(project: RotationProject, resolved: ResolvedProj
       chips: deltaChips(src.delta),
       active,
       lockedOff: false,
+      gear,
+      receivers: [name],
       share: shareOf(src.id, active),
       needsConfirmation: flagged,
       timed: false,
@@ -348,7 +364,7 @@ export function memberBuffCards(project: RotationProject, resolved: ResolvedProj
     const active = !project.disabled.includes('resonance-pyro');
     cards.push({
       id: 'resonance-pyro', toggleId: 'resonance-pyro', name: 'Ressonância Pyro (+25% de ATK)', tag: 'Ressonância', giver: null, giverName: 'Time',
-      window: 'o tempo todo', chips: [`ATK +${Math.round(full.resonanceAtkPct * 100)}%`], active, lockedOff: false, share: shareOf('resonance-pyro', active), needsConfirmation: false, timed: false,
+      window: 'o tempo todo', chips: [`ATK +${Math.round(full.resonanceAtkPct * 100)}%`], active, lockedOff: false, gear: false, receivers: [name], share: shareOf('resonance-pyro', active), needsConfirmation: false, timed: false,
     });
   }
 
@@ -357,7 +373,7 @@ export function memberBuffCards(project: RotationProject, resolved: ResolvedProj
     const tag = b.id.startsWith('gear-') ? 'Arma/set' : b.id.startsWith('flat-atk-') ? 'Passiva' : idMatch ? characterBuffTag(resolved, Number(idMatch[1]), idMatch[2]) : 'Extra';
     cards.push({
       id: b.id, toggleId: b.toggleId, name: b.name, tag, giver: b.giver, giverName: b.giverName, window: b.window, chips: b.value === '—' ? [] : b.value.split(', '),
-      active: b.active, lockedOff: b.lockedOff, share: b.share, needsConfirmation: b.needsConfirmation, timed: b.window !== 'o tempo todo',
+      active: b.active, lockedOff: b.lockedOff, gear: b.gear, receivers: b.receivers, share: b.share, needsConfirmation: b.needsConfirmation, timed: b.window !== 'o tempo todo',
     });
   }
   return cards;

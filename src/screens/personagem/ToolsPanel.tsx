@@ -277,7 +277,7 @@ function GoodView({ v, index }: { v: ProjectView; index: number }) {
         <div className="pc-uid">
           <p className="note">Pelo UID do jogo: traz os personagens da sua vitrine (até 8), com arma e artefatos reais. É a mesma fonte do akasha.cv (Enka.Network). A vitrine precisa estar com os detalhes visíveis.</p>
           <form className="pc-acts" onSubmit={(e) => { e.preventDefault(); void fromGame(); }}>
-            <input className="dz-input" inputMode="numeric" placeholder="UID (9 ou 10 números)" aria-label="UID do jogo" value={uid} onChange={(e) => setUid(e.target.value.replace(/\D/g, '').slice(0, 10))} />
+            <input className="dz-input" inputMode="numeric" placeholder="UID" aria-label="UID do jogo" value={uid} onChange={(e) => setUid(e.target.value.replace(/\D/g, '').slice(0, 10))} />
             <button type="submit" className="dz-btn sm" disabled={fetching || !UID_PATTERN.test(uid.trim())}>{fetching ? 'Buscando…' : 'Buscar pelo UID'}</button>
           </form>
         </div>

@@ -33,7 +33,7 @@ function run(members: MemberSpec[], actions: ActionSpec[]) {
     compat: 'none',
     members: members.map((m) => {
       const d = defaultMember(m.character, game);
-      return { ...d, ...m, weapon: m.weapon ?? d.weapon };
+      return { ...d, gearManual: undefined, ...m, weapon: m.weapon ?? d.weapon };
     }),
     actions: actions.map((a, i) => ({
       id: `a${i}`, member: a.member ?? 0, move: { character: members[a.member ?? 0].character, talent: a.talent ?? 'normal', label: a.label, variant: 0 },

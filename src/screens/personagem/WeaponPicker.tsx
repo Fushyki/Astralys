@@ -63,12 +63,14 @@ export function WeaponPickerDialog({
         </header>
         <div className="tools">
           <input ref={searchRef} className="dz-input" type="search" placeholder="Nome da arma" aria-label="Buscar arma" value={query} onChange={(e) => setQuery(e.target.value)} />
-          <div className="dz-seg" role="group" aria-label="Raridade">
-            {rarities.map((r) => (
-              <button key={r} type="button" aria-pressed={stars.has(r)} onClick={() => toggle(r)}>{r}★</button>
-            ))}
+          <div className="tools-row">
+            <div className="dz-seg" role="group" aria-label="Raridade">
+              {rarities.map((r) => (
+                <button key={r} type="button" aria-pressed={stars.has(r)} onClick={() => toggle(r)}>{r}★</button>
+              ))}
+            </div>
+            <span className="muted small">Mostrando {list.length} de {weapons.length} armas</span>
           </div>
-          <span className="muted small">Mostrando {list.length} de {weapons.length} armas</span>
         </div>
         <div className="grid weapons">
           {list.length === 0 && <p className="note">Nenhuma arma encontrada.</p>}

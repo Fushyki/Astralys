@@ -65,6 +65,11 @@ export const MemberRefSchema = z.object({
    * (`CharacterEffect.factions`). Ausente = nenhuma (projetos antigos abrem sem facção).
    */
   factions: z.array(z.enum(['moonsign', 'hexerei'])).optional(),
+  /**
+   * Os buffs de arma e de artefatos (passiva da arma, set de 2 e 4 peças) começam DESLIGADOS e o usuário liga os que quiser
+   * (`RotationProject.enabled`). Ausente = como antes: ligados (projetos antigos e o gabarito da planilha).
+   */
+  gearManual: z.boolean().optional(),
   minER: z.number().min(0).optional(),
   totalRolls: z.number().int().min(0).optional(),
   forcedCritRolls: z.number().int().min(0).optional(),
@@ -165,6 +170,8 @@ export const RotationProjectSchema = z
     buffWindows: z.array(BuffWindowSchema).default([]),
     /** Ids de buffs/fontes desligados pelo usuário (checkbox em "Buffs recebidos"). */
     disabled: z.array(z.string()).default([]),
+    /** Buffs de arma/set que o usuário ligou em membros com `gearManual` (os demais começam desligados). */
+    enabled: z.array(z.string()).default([]),
     /** Perfis nomeados (conjuntos de etiquetas), úteis para aplicar rápido a várias ações. */
     profiles: z.record(z.array(z.string())).default({}),
     meta: z
@@ -484,6 +491,8 @@ export function manualToRolls(partial: Partial<Record<(typeof SUBSTATS)[number],
 
 export interface ResolvedProject {
   team: TeamInput;
+  /** Ids de buffs de arma e set de membros com `gearManual` (começam desligados; os ligados estão em `project.enabled`). */
+  gearIds: string[];
   actions: RotationAction[];
   flatEffects: FlatDamageEffect[];
   /** Coeficiente de EM das amplificadoras (undefined = o padrão do motor, 25/9). */
@@ -601,6 +610,16 @@ export function finalizeMembers(members: MemberInput[], planilha: boolean): Memb
   );
 }
 
+/**
+ * Ids (do motor) dos buffs que vêm da arma e do set de um membro: as fontes estáticas, o buff de time `gear-<i>`
+ * e os buffs de passiva gerados por `gearBuffs` (com as reduções de RES e DEF deles).
+ */
+export function gearSourceIds(m: MemberInput, i: number): string[] {
+  const ids = [`m${i}:weapon`, `m${i}:set2p-primary`, `m${i}:set2p-secondary`, `m${i}:set4p`, `gear-${i}`, `set-res-shred-${i}`];
+  for (const b of gearBuffs(m)) ids.push(`m${i}:cbuff-${b.id}`, `cbuff-${i}-${b.id}`, `cbuff-res-${i}-${b.id}`, `cbuff-def-${i}-${b.id}`);
+  return ids;
+}
+
 /** Transforma o projeto salvo nas entradas do motor. Lança ProjectResolveError se algo não existir nos dados. */
 export function resolveProject(project: RotationProject, data: GameData, effects: EffectsData): ResolvedProject {
   const planilha = project.compat === 'planilha';
@@ -631,8 +650,11 @@ export function resolveProject(project: RotationProject, data: GameData, effects
     };
   });
 
+  const gearIds = members.flatMap((m, i) => (project.members[i]?.gearManual ? gearSourceIds(m, i) : []));
+  const gearOff = gearIds.filter((id) => !project.enabled.includes(id));
   return {
-    team: { members, extras: project.extras, config, disabled: project.disabled },
+    team: { members, extras: project.extras, config, disabled: [...project.disabled, ...gearOff] },
+    gearIds,
     actions,
     flatEffects: [...applyFlatLevels(effects.flatDamage, members), ...gearFlat(members)],
     ampCoefficient: project.compat === 'planilha' ? AMP_EM_COEFFICIENT_SHEET : undefined,

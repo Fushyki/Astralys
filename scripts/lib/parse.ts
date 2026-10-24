@@ -149,7 +149,7 @@ export function isNonDamageLabel(label: string): boolean {
 /** Tipo de golpe para os bônus de DMG% por tipo (Normal/Carregado/Imersivo/Habilidade/Supremo). */
 export function hitTypeFor(label: string, talent: Talent): HitType {
   if (/plunge/i.test(label)) return 'plunge';
-  if (/charged|aimed shot/i.test(label)) return 'charged';
+  if (/(?<!lunar-)charged|aimed shot/i.test(label)) return 'charged';
   if (talent === 'normal') return 'normal';
   if (/\bnormal attack\b|\b\d+-hit\b/i.test(label)) return 'normal';
   return talent;

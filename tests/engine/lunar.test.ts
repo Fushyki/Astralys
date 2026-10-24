@@ -77,6 +77,11 @@ describe('golpes Lunar/Estelar do kit', () => {
 });
 
 describe('distinção Lunar/Estelar nas listas de golpes', () => {
+  it('Lunar-Carregado do Supremo do Flins não é Ataque Carregado', () => {
+    const fl = game.moves.filter((m) => m.character === 'Flins' && m.talent === 'burst');
+    expect(fl.length).toBe(5);
+    expect(fl.every((m) => m.hitType === 'burst')).toBe(true);
+  });
   it('specialOfMove devolve a reação do golpe curado e nada para o elemental', () => {
     const label = 'Middle Phase Lunar-Charged DMG';
     const e = effect('Flins', { specialMoves: [{ talent: 'burst', label, reaction: 'lunarcharged' }] });

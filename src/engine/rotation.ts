@@ -4,6 +4,7 @@
  *
  * Modelo derivado da aba "Rotação" da planilha de referência, sem o limite de 4 reações e 5 perfis.
  */
+import { kitElement } from './kitElement';
 import type { Element, HitType, Move, Talent } from '../data/schema';
 import type { FlatDamageEffect, SpecialMove } from '../effects/schema';
 import { SPECIAL_RESIST, TRANSFORMATIVE, type AdditiveReaction, type AmplifyingReaction, type ElementOrPhysical, type LunarReaction, type SpecialReaction, type TransformativeReaction } from './constants/reactions';
@@ -285,7 +286,8 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
       };
     }
 
-    const element: ElementOrPhysical = move.element ?? member.character.element;
+    // Sem elemento escolhido, vale o do kit (Físico nos ataques normais de arma, elemento nas habilidades) ou, no modo antigo, o do personagem.
+    const element: ElementOrPhysical = move.element ?? (config.elementMode === 'kit' ? kitElement(member.character, move, member.normalInfusion) : member.character.element);
 
     // Dano fixo desta linha
     const hitsOfAction = action.executions * Math.max(1, move.hits);

@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react';
 import type { ProjectView } from '../../app/ProjectContext';
 import { Panel } from '../../design/primitives';
 import { elementColor } from '../../design/elements';
-import { REACTION_ACTIONS, memberProcs } from '../../engine';
+import { REACTION_ACTIONS, kitElement, memberProcs } from '../../engine';
 import { cleanMoveName } from '../../features/character/characterModel';
 import { useRotationStore } from '../../features/rotation/store';
 import { formatDecimal } from '../../ui/format';
@@ -20,8 +20,12 @@ export function Palette({ v }: { v: ProjectView }) {
   const names = v.project.members.map((m) => m.character);
   const character = names[member] ?? names[0];
   /** Cor do elemento do golpe: o do personagem (os golpes só mudam de elemento por escolha na rotação). */
-  const charElement = v.data.game.characters.find((c) => c.name === character)?.element;
-  const moveColor = elementColor(charElement);
+  const charInfo = v.data.game.characters.find((c) => c.name === character);
+  const charElement = charInfo?.element;
+  const kitMode = v.resolved.team.config.elementMode === 'kit';
+  const infusion = v.resolved.team.members[member]?.normalInfusion;
+  /** Elemento do golpe: pelo kit (Físico no ataque normal de arma) ou o do personagem no modo antigo. */
+  const colorOfMove = (m: { talent: string; hitType: string; label: string }) => elementColor(kitMode && charInfo ? kitElement(charInfo, m, infusion) : charElement);
 
   const moves = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -51,7 +55,7 @@ export function Palette({ v }: { v: ProjectView }) {
           </button>
         ))}
       </div>
-      <p className="note" style={{ margin: 0 }}>A barra colorida de cada golpe é o elemento que ele causa ({charElement ?? '—'}); o Físico se escolhe em Editar golpe.</p>
+      <p className="note" style={{ margin: 0 }}>A barra colorida de cada golpe é o elemento do dano ({kitMode ? 'pelo kit; branco = Físico' : `${charElement ?? '—'}, modo antigo`}). Troque o elemento de um golpe em Editar golpe.</p>
       <div className="rt-chips">
         {list.length === 0 && procs.length === 0 && <p className="note">Nenhum golpe encontrado.</p>}
         {procs.map((p) => (
@@ -85,8 +89,8 @@ export function Palette({ v }: { v: ProjectView }) {
               key={m.id}
               type="button"
               className="chip"
-              style={{ ['--c' as string]: moveColor }}
-              title={m.label}
+              style={{ ['--c' as string]: colorOfMove(m) }}
+              title={m.talent !== 'normal' && ['normal', 'charged', 'plunge'].includes(m.hitType) ? `${m.label}: golpe de Ataque Normal feito durante a habilidade ou o supremo (usa o nível dessa habilidade)` : m.label}
               onClick={() =>
                 add({
                   member,

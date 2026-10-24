@@ -303,6 +303,7 @@ export function projectFromPlanilha(imported: PlanilhaImport, options: ProjectFr
     buffWindows: [],
     disabled: [],
     enabled: [],
+    elementMode: 'personagem',
     profiles: imported.profiles,
     meta: { tags: [], createdAt: now, updatedAt: now },
   };

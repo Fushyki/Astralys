@@ -114,8 +114,8 @@ function GroupRows({ g, color }: { g: ReturnType<typeof moveGroups>[number]; col
     <>
       <tr className="grp"><td colSpan={4}>{g.title} · nv {g.level}</td></tr>
       {g.lines.map((l) => (
-        <tr key={l.id} style={{ ['--e' as string]: color }}>
-          <td className="el">{l.name}{l.hits > 1 ? <span className="muted"> · {l.hits}×</span> : null}</td>
+        <tr key={l.id} style={{ ['--e' as string]: elementColor(l.element) || color }}>
+          <td className="el" title={`Dano ${l.element === 'Physical' ? 'Físico' : l.element}`}>{l.name}{l.hits > 1 ? <span className="muted"> · {l.hits}×</span> : null}</td>
           <td>{formatInt(l.noCrit)}</td>
           <td>{formatInt(l.crit)}</td>
           <td className="avg">{formatInt(l.avg)}</td>

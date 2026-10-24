@@ -1,6 +1,6 @@
 /** Configurações da rotação: duração, inimigo, realinhar golpes, converter perfis em janelas e restaurar o exemplo. */
 import { useEffect, useState } from 'react';
-import { NumberInput } from '../../design/fields';
+import { NumberInput, SelectField } from '../../design/fields';
 import type { RotationProject } from '../../engine';
 import { DEFAULT_REALIGN_STEP, MIN_REALIGN_STEP, lastActionTime } from '../../features/rotation/projectOps';
 import { SAMPLE_ID, sampleForApp } from '../../features/rotation/persistence';
@@ -11,6 +11,7 @@ export function SettingsDialog({ project, onClose }: { project: RotationProject;
   const updateConfig = useRotationStore((s) => s.updateConfig);
   const realign = useRotationStore((s) => s.realign);
   const convert = useRotationStore((s) => s.convertProfilesToWindows);
+  const setElementMode = useRotationStore((s) => s.setElementMode);
   const open = useRotationStore((s) => s.open);
   const [step, setStep] = useState(String(DEFAULT_REALIGN_STEP));
   const stepNum = Number(step.replace(',', '.'));
@@ -43,6 +44,19 @@ export function SettingsDialog({ project, onClose }: { project: RotationProject;
             <NumberInput label="Nível do inimigo" value={cfg.enemyLevel} min={1} max={200} step={1} onCommit={(v) => updateConfig({ enemyLevel: v })} />
             <NumberInput label="RES base do inimigo" value={Math.round(cfg.enemyBaseRes * 1000) / 10} step={1} suffix="%" onCommit={(v) => updateConfig({ enemyBaseRes: v / 100 })} />
             <NumberInput label="Redução de DEF" value={Math.round(cfg.enemyDefRed * 1000) / 10} min={0} max={90} step={1} suffix="%" onCommit={(v) => updateConfig({ enemyDefRed: v / 100 })} />
+          </div>
+
+          <div style={{ display: 'grid', gap: 8 }}>
+            <SelectField<'kit' | 'personagem'>
+              label="Elemento dos golpes sem elemento escolhido"
+              value={project.compat === 'planilha' ? 'personagem' : project.elementMode}
+              onChange={setElementMode}
+              options={[{ value: 'kit', label: 'Pelo kit do jogo (ataque normal de arma é Físico)' }, { value: 'personagem', label: 'Sempre o do personagem (modo antigo)' }]}
+            />
+            <p className="note">
+              No jogo, o ataque normal, carregado e de queda de quem usa espada, montante, lança ou arco é Físico, e só a habilidade, o supremo e os golpes elementais do kit têm elemento.
+              Infusões (Hu Tao, Xiao, Yoimiya…) se escolhem na aba Talentos do personagem ou em cada golpe. {project.compat === 'planilha' ? 'O modo planilha usa sempre o elemento do personagem.' : ''}
+            </p>
           </div>
 
           <div style={{ display: 'grid', gap: 8 }}>

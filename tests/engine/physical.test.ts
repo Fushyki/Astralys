@@ -31,6 +31,7 @@ function run(members: MemberSpec[], actions: ActionSpec[]) {
   const p = {
     ...base,
     compat: 'none',
+    elementMode: 'personagem',
     members: members.map((m) => {
       const d = defaultMember(m.character, game);
       return { ...d, gearManual: undefined, ...m, weapon: m.weapon ?? d.weapon };

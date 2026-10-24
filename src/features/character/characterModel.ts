@@ -30,6 +30,8 @@ export interface MoveLine {
   avg: number;
   /** A reação escolhida se aplicou a este golpe. */
   reacted: boolean;
+  /** Elemento do dano (o do kit; Físico nos ataques normais de arma). */
+  element: string;
 }
 
 export interface MoveGroup {
@@ -87,7 +89,7 @@ export function moveGroups(rows: DamageRow[], levels: Record<Talent, number>): M
     const lines: MoveLine[] = rows
       .map((r, i) => ({ r, name: finalNames[i] }))
       .filter(({ r }) => r.move.talent === talent)
-      .map(({ r, name }) => ({ id: r.move.id, name, hits: r.move.hits, noCrit: r.noCrit, crit: r.crit, avg: r.avg, reacted: r.reactionApplied }));
+      .map(({ r, name }) => ({ id: r.move.id, name, hits: r.move.hits, noCrit: r.noCrit, crit: r.crit, avg: r.avg, reacted: r.reactionApplied, element: r.element }));
     if (lines.length) groups.push({ talent, title: TALENT_TITLE[talent], level: levels[talent], lines });
   }
   return groups;

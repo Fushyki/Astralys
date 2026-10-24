@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Astralys · Otimizar Mavuika</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;600;700&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#060914}
+a{color:#F1C96B}a:hover{color:#F8DE9E}
+.num{font-variant-numeric:tabular-nums}
+.disp{font-family:'Saira Condensed',sans-serif}
+.nav a{color:#A7B0D6;text-decoration:none;font-family:'Saira Condensed',sans-serif;font-weight:600;font-size:16px;letter-spacing:.08em;text-transform:uppercase;padding:20px 0 18px;border-bottom:2px solid transparent}
+.nav a.on{color:#EEF1FF;border-bottom-color:#F1C96B}
+.pn{background:#0C1128;border:1px solid #232D5C;border-radius:14px;min-width:0;display:flex;flex-direction:column}
+.ph{display:flex;align-items:center;gap:8px;padding:11px 16px;border-bottom:1px solid #18204A;background:#0F1532;border-radius:14px 14px 0 0}
+.pt{font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:16px;letter-spacing:.08em;text-transform:uppercase;color:#EEF1FF;margin:0;flex:1}
+.bd{font-family:'Saira Condensed',sans-serif;font-weight:600;font-size:12px;letter-spacing:.06em;text-transform:uppercase;border-radius:5px;padding:2px 8px;white-space:nowrap}
+.lb{font-family:'Saira Condensed',sans-serif;font-weight:600;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#A7B0D6}
+.in{display:flex;align-items:center;background:#080C1D;border:1px solid #232D5C;border-radius:8px;height:36px;padding:0 10px;color:#7E88B6;font-size:13px;box-sizing:border-box}
+.seg{display:inline-flex;border:1px solid #2A356A;border-radius:8px;overflow:hidden;background:#0C1128}
+.seg button{font-family:'Saira Condensed',sans-serif;font-weight:600;font-size:15px;letter-spacing:.04em;padding:0 14px;min-height:38px;background:transparent;color:#A7B0D6;border:0;border-right:1px solid #2A356A}
+.seg button:last-child{border-right:0}
+.seg button.on{background:#F1C96B;color:#1A1405}
+.ch{display:inline-flex;align-items:center;gap:6px;font-size:12px;border-radius:6px;padding:3px 8px;border:1px solid #232D5C;background:#0E1430;color:#A7B0D6}
+.ch b{font-weight:600;color:#C3CAEA}
+.ch.on{border-color:#F1C96B;background:#2A2312;color:#F1C96B}
+.ch.on b{color:#F8DE9E}
+.btn{font-family:'Saira Condensed',sans-serif;font-weight:600;font-size:14px;letter-spacing:.08em;text-transform:uppercase;padding:0 16px;border-radius:8px;border:1px solid #2A356A;background:#121A3A;color:#EEF1FF;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;min-height:40px;box-sizing:border-box}
+.btn.gold{background:#F1C96B;color:#1A1405;border-color:#F1C96B}
+</style>
+</helmet>
+<div style="min-height:100vh;background:#060914;color:#EEF1FF;font-family:'IBM Plex Sans',sans-serif;font-size:14px">
+
+<header style="display:flex;flex-wrap:wrap;align-items:center;gap:36px;padding:0 32px;border-bottom:1px solid #18204A;background:#080C1D">
+<a href="Otimizar.dc.html" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:#EEF1FF">
+<svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5l2.3 8.2 8.2 2.3-8.2 2.3L12 22.5l-2.3-8.2L1.5 12l8.2-2.3z" fill="#F1C96B"></path></svg>
+<span class="disp" style="font-weight:700;font-size:22px;letter-spacing:.18em">ASTRALYS</span>
+</a>
+<nav class="nav" style="display:flex;gap:26px;flex:1 1 500px;flex-wrap:wrap">
+<a class="on" href="Otimizar.dc.html">Times</a><a href="Otimizar.dc.html">Personagens</a><a href="Otimizar.dc.html">Inventário</a><a href="Otimizar.dc.html">Ferramentas</a>
+</nav>
+<a class="btn" href="Otimizar.dc.html">Entrar</a>
+</header>
+
+<main style="max-width:1400px;margin:0 auto;padding:22px 32px 48px;display:flex;flex-direction:column;gap:16px">
+
+<div style="display:flex;flex-wrap:wrap;gap:16px;align-items:stretch">
+
+<aside class="pn" style="flex:1 1 240px;max-width:260px;overflow:hidden;display:flex;flex-direction:column">
+<div style="height:220px;background:#140C14;border-bottom:1px solid #3A2026;position:relative;display:flex;align-items:center;justify-content:center">
+<svg aria-hidden="true" viewBox="0 0 260 220" width="260" height="220" style="position:absolute;inset:0;width:100%;height:100%"><path d="M130 30l9 61 61 9-61 9-9 61-9-61-61-9 61-9z" fill="none" stroke="#F08A5D" stroke-opacity=".35"></path><circle cx="130" cy="100" r="80" fill="none" stroke="#F08A5D" stroke-opacity=".12"></circle></svg>
+<span style="position:relative;font-size:12px;color:#7E88B6">[ARTE · Lunaris]</span>
+<span class="num" style="position:absolute;right:10px;bottom:10px;font-size:12px;font-weight:600;background:#060914;border:1px solid #2A356A;border-radius:6px;padding:2px 8px">Nv 90/90</span>
+</div>
+<div style="padding:14px 16px;display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;flex-direction:column;gap:2px"><span class="disp" style="font-weight:700;font-size:28px;line-height:1">Mavuika</span><span class="lb" style="color:#F7A783">Pyro · Espadão</span></div>
+<div style="display:flex;flex-direction:column;gap:6px"><span class="lb">Constelação</span>
+<div style="display:flex;gap:4px"><sc-for list="{{cons}}" as="c" hint-placeholder-count="7"><button type="button" style="{{c.s}}">{{c.n}}</button></sc-for></div></div>
+<div style="display:flex;flex-direction:column;gap:6px"><span class="lb">Talentos</span>
+<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px">
+<span class="in num" style="color:#EEF1FF;justify-content:center">10</span><span class="in num" style="color:#EEF1FF;justify-content:center">10</span><span class="in num" style="color:#EEF1FF;justify-content:center">10</span>
+</div>
+<span style="font-size:12px;color:#A7B0D6">Normal · Habilidade · Supremo · 95,3% do dano do time</span></div>
+</div>
+</aside>
+
+<div style="flex:999 1 900px;min-width:0;display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:16px">
+<div class="seg"><button type="button">Resumo e build</button><button class="on" type="button">Otimizar</button><button type="button">Avançado</button></div>
+<span style="font-size:13px;color:#A7B0D6;flex:1 1 300px">Busca no seu inventário os 5 artefatos que mais aumentam o alvo escolhido na barra de foco.</span>
+</div>
+
+<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;align-items:stretch;flex:1">
+
+<section class="pn">
+<div class="ph"><svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5l2.3 8.2 8.2 2.3-8.2 2.3L12 22.5l-2.3-8.2L1.5 12l8.2-2.3z" fill="#F1C96B"></path></svg><h2 class="pt">Mínimos nos stats</h2><span class="bd" style="background:#1A2450;color:#C3CAEA">0 ativos</span></div>
+<div style="padding:14px 16px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 12px">
+<sc-for list="{{mins}}" as="m" hint-placeholder-count="7">
+<label style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:#A7B0D6">{{m.k}}<span class="in"><span style="flex:1">—</span><span>{{m.u}}</span></span></label>
+</sc-for>
+</div>
+<p style="margin:auto 0 0;padding:0 16px 14px;font-size:12px;color:#7E88B6;line-height:1.45">Ex.: Recarga ≥ 120% para não faltar energia na rotação.</p>
+</section>
+
+<section class="pn">
+<div class="ph"><svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5l2.3 8.2 8.2 2.3-8.2 2.3L12 22.5l-2.3-8.2L1.5 12l8.2-2.3z" fill="#F1C96B"></path></svg><h2 class="pt">Filtro de artefatos</h2><span class="bd num" style="background:#1A2450;color:#C3CAEA">728/728</span></div>
+<div style="padding:14px 16px;display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;flex-direction:column;gap:6px">
+<span class="lb">Nível</span>
+<div style="display:flex;align-items:center;gap:10px"><span class="num" style="font-size:12px;color:#A7B0D6">+0</span><div style="flex:1;height:4px;border-radius:2px;background:#F1C96B;position:relative"><span style="position:absolute;left:-6px;top:-6px;width:16px;height:16px;border-radius:50%;background:#F1C96B;border:2px solid #060914"></span><span style="position:absolute;right:-6px;top:-6px;width:16px;height:16px;border-radius:50%;background:#F1C96B;border:2px solid #060914"></span></div><span class="num" style="font-size:12px;color:#A7B0D6">+20</span></div>
+</div>
+<div style="display:flex;flex-direction:column;gap:6px">
+<span class="lb">Peças disponíveis</span>
+<div style="display:flex;flex-wrap:wrap;gap:4px">
+<span class="ch">Flor <b class="num">156</b></span><span class="ch">Pena <b class="num">154</b></span><span class="ch">Areia <b class="num">137</b></span><span class="ch">Cálice <b class="num">136</b></span><span class="ch">Tiara <b class="num">145</b></span>
+</div>
+</div>
+<sc-for list="{{mains}}" as="g" hint-placeholder-count="3">
+<div style="display:flex;flex-direction:column;gap:6px;padding-top:10px;border-top:1px solid #18204A">
+<div style="display:flex;justify-content:space-between;align-items:center"><span class="lb">{{g.slot}} · <span class="num">{{g.sel}}</span></span><a href="Otimizar.dc.html" style="font-size:12px">Todos</a></div>
+<div style="display:flex;flex-wrap:wrap;gap:4px">
+<sc-for list="{{g.opts}}" as="o" hint-placeholder-count="6"><span class="{{o.cls}}">{{o.k}} <b class="num">{{o.n}}</b></span></sc-for>
+</div>
+</div>
+</sc-for>
+</div>
+</section>
+
+<section class="pn">
+<div class="ph"><svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5l2.3 8.2 8.2 2.3-8.2 2.3L12 22.5l-2.3-8.2L1.5 12l8.2-2.3z" fill="#F1C96B"></path></svg><h2 class="pt">Sets</h2><span class="bd num" style="background:#3A3016;color:#F1C96B">1/38</span><a href="Otimizar.dc.html" style="font-size:12px;margin-left:6px">Marcar todos</a></div>
+<div style="padding:14px 16px;display:flex;flex-direction:column;gap:12px;flex:1">
+<div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid #F1C96B;background:#2A2312;border-radius:10px">
+<span style="width:36px;height:36px;border-radius:8px;background:#121A3A;display:flex;align-items:center;justify-content:center;flex:none"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5l2.3 8.2 8.2 2.3-8.2 2.3L12 22.5l-2.3-8.2L1.5 12l8.2-2.3z" fill="#F1C96B"></path></svg></span>
+<span style="display:flex;flex-direction:column;line-height:1.25"><span style="font-weight:600">Obsidian Codex</span><span class="num" style="font-size:12px;color:#C3CAEA">45 peças · 4 peças obrigatório</span></span>
+</div>
+<div style="display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px">
+<sc-for list="{{sets}}" as="s" hint-placeholder-count="18">
+<button type="button" style="aspect-ratio:1;border-radius:8px;border:1px solid #232D5C;background:#0E1430;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:0" aria-label="{{s.label}}"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5l2.3 8.2 8.2 2.3-8.2 2.3L12 22.5l-2.3-8.2L1.5 12l8.2-2.3z" fill="#3A4680"></path></svg><span class="num" style="font-size:11px;color:#A7B0D6">{{s.n}}</span></button>
+</sc-for>
+</div>
+<span style="font-size:12px;color:#7E88B6">+20 sets com menos peças · passe o mouse para ver o nome</span>
+<label style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid #232D5C;border-radius:10px;background:#080C1D;font-size:13px;margin-top:auto">
+<input type="checkbox" style="width:18px;height:18px;accent-color:#F1C96B">
+<span style="flex:1">Usar artefatos de outros personagens</span><span class="bd num" style="background:#1A2450;color:#C3CAEA">0/325</span>
+</label>
+</div>
+</section>
+
+</div>
+</div>
+</div>
+
+<section class="pn" style="padding:16px 18px;display:flex;flex-direction:column;gap:14px;border-color:#3A3220">
+<div style="display:flex;flex-wrap:wrap;align-items:flex-end;gap:18px">
+<div style="display:flex;flex-direction:column;gap:6px"><span class="lb">Otimizar</span><div class="seg"><button class="on" type="button">Dano</button><button type="button">Buff</button><button type="button">Stat</button></div></div>
+<div style="display:flex;flex-direction:column;gap:6px"><span class="lb">Alvo</span><div class="seg"><button type="button">Rotação do time</button><button type="button">Só Mavuika</button><button class="on" type="button">Um golpe</button></div></div>
+<label style="display:flex;flex-direction:column;gap:6px;min-width:200px;flex:1 1 200px"><span class="lb">Golpe</span><select style="height:40px;border-radius:8px;border:1px solid #2A356A;background:#080C1D;color:#EEF1FF;font-size:14px;padding:0 10px"><option>Dano de Habilidade</option></select></label>
+<div style="display:flex;flex-direction:column;gap:6px"><span class="lb">Reação</span><div class="seg"><button type="button">Sem reação</button><button class="on" type="button">Derreter</button></div></div>
+<div style="display:flex;flex-direction:column;gap:6px"><span class="lb">Crítico</span><div class="seg"><button class="on" type="button">Média</button><button type="button">Sempre</button><button type="button">Nunca</button></div></div>
+<label style="display:flex;flex-direction:column;gap:6px;width:90px"><span class="lb">Mostrar</span><select style="height:40px;border-radius:8px;border:1px solid #2A356A;background:#080C1D;color:#EEF1FF;font-size:14px;padding:0 10px"><option>3</option></select></label>
+<button class="btn gold" type="button" style="min-width:180px;min-height:44px;font-size:16px">Otimizar</button>
+</div>
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:14px;padding:12px 14px;border-radius:10px;background:#121A3A;border:1px solid #232D5C">
+<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" style="flex:none"><path d="M12 1.5l2.3 8.2 8.2 2.3-8.2 2.3L12 22.5l-2.3-8.2L1.5 12l8.2-2.3z" fill="#F1C96B"></path></svg>
+<span style="font-weight:600">Seu build equipado já é o melhor com estes filtros.</span>
+<span class="num" style="font-size:13px;color:#A7B0D6">Busca completa · 11.220 avaliações de 4,3 mil combinações · 30 peças entram (9 / 8 / 5 / 2 / 6), 325 de outros personagens ficaram de fora</span>
+<span style="margin-left:auto;display:flex;align-items:baseline;gap:8px"><span class="lb">Equipado hoje</span><span class="disp num" style="font-weight:700;font-size:24px;color:#F1C96B">824.421</span></span>
+</div>
+</section>
+
+<section style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px">
+<sc-for list="{{builds}}" as="b" hint-placeholder-count="4">
+<article style="{{b.card}}">
+<div style="display:flex;align-items:center;gap:14px;padding:14px 18px;border-bottom:1px solid #18204A;flex-wrap:wrap">
+<span class="disp" style="{{b.rankStyle}}">{{b.rank}}</span>
+<div style="display:flex;flex-direction:column;line-height:1.15">
+<span class="disp num" style="font-weight:700;font-size:30px">{{b.val}}</span>
+<span style="font-size:12px;color:#A7B0D6">Dano de Habilidade · Derreter · 4 pç Obsidian Codex</span>
+</div>
+<span class="num" style="{{b.deltaStyle}}">{{b.delta}}</span>
+<span style="margin-left:auto"></span>
+<sc-if value="{{b.canEquip}}" hint-placeholder-val="{{true}}"><button class="btn gold" type="button">Equipar</button></sc-if>
+<sc-if value="{{b.isEquipped}}" hint-placeholder-val="{{false}}"><span class="bd" style="background:#1A2450;color:#C3CAEA">em uso</span></sc-if>
+</div>
+<div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;padding:14px 18px">
+<sc-for list="{{b.pieces}}" as="p" hint-placeholder-count="5">
+<div style="{{p.box}}">
+<div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:11px;color:#A7B0D6">{{p.slot}}</span><span style="{{p.tagStyle}}">{{p.tag}}</span></div>
+<span style="font-weight:600;font-size:13px;color:#F1C96B">{{p.main}}</span>
+<div style="display:flex;flex-direction:column;gap:3px">
+<sc-for list="{{p.subs}}" as="s" hint-placeholder-count="4"><div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:#A7B0D6">{{s.k}}</span><span class="num" style="{{s.vs}}">{{s.v}}</span></div></sc-for>
+</div>
+</div>
+</sc-for>
+</div>
+<div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px 16px;padding:12px 18px 16px;border-top:1px solid #18204A;margin-top:auto">
+<sc-for list="{{b.stats}}" as="s" hint-placeholder-count="8">
+<div style="display:flex;flex-direction:column;gap:1px"><span style="font-size:11px;color:#7E88B6">{{s.k}}</span><span class="num" style="font-weight:600">{{s.v}} <span style="{{s.ds}}">{{s.d}}</span></span></div>
+</sc-for>
+</div>
+</article>
+</sc-for>
+</section>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1220}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const cons = [0,1,2,3,4,5,6].map((n) => ({ n: 'C' + n, s: 'flex:1;min-height:32px;padding:0;border-radius:6px;font-family:Saira Condensed,sans-serif;font-weight:700;font-size:13px;border:1px solid ' + (n === 0 ? '#F1C96B' : '#232D5C') + ';background:' + (n === 0 ? '#F1C96B' : '#080C1D') + ';color:' + (n === 0 ? '#1A1405' : '#A7B0D6') }));
+    const mins = [['Recarga','%'],['Taxa crítica','%'],['Dano crítico','%'],['Maestria',''],['HP',''],['ATK',''],['DEF','']].map(([k,u]) => ({ k, u }));
+    const G = (slot, sel, list) => ({ slot, sel, opts: list.map(([k, n, on]) => ({ k, n, cls: on ? 'ch on' : 'ch' })) });
+    const mains = [
+      G('Areia', '1/5', [['EM',24,1],['ATK%',51],['HP%',27],['ER',25],['DEF%',10]]),
+      G('Cálice', '2/12', [['Pyro',15,1],['ATK%',16,1],['HP%',24],['Electro',18],['Cryo',13],['Hydro',12],['Geo',9],['Anemo',9],['EM',6],['Dendro',6],['DEF%',5],['Fís.',3]]),
+      G('Tiara', '2/7', [['CR',60,1],['CD',49,1],['HP%',10],['ATK%',9],['EM',7],['Cura',7],['DEF%',3]])
+    ];
+    const sets = [63,49,44,42,38,32,31,31,28,25,24,20,20,19,18,18,15,15].map((n) => ({ n, label: 'Set com ' + n + ' peças' }));
+    const gold = 'color:#F1C96B;font-weight:600', norm = 'color:#EEF1FF;font-weight:600';
+    const sub = (arr) => arr.map(([k, v]) => ({ k, v, vs: (k === 'CR' || k === 'CD') ? gold : norm }));
+    const E = {
+      hp: ['Flor', 'HP 4.780', [['CR','7,0%'],['ER','4,5%'],['CD','26,4%'],['EM','42']]],
+      atk: ['Pena', 'ATK 311', [['ER','5,8%'],['HP','269'],['CR','7,0%'],['CD','28,8%']]],
+      em: ['Areia', 'Maestria 187', [['CR','7,0%'],['CD','18,7%'],['ATK%','14,0%'],['HP','209']]],
+      py: ['Cálice', 'Pyro 46,6%', [['ATK%','11,7%'],['CR','10,1%'],['HP%','4,1%'],['CD','15,5%']]],
+      cd: ['Tiara', 'Dano crít. 62,2%', [['CR','13,2%'],['EM','21'],['ATK%','9,3%'],['HP%','4,7%']]]
+    };
+    const N = {
+      hpA: ['Flor', 'HP 4.780', [['EM','49'],['CD','21,0%'],['ATK','14'],['CR','6,6%']]],
+      hpB: ['Flor', 'HP 4.780', [['CR','5,8%'],['CD','21,0%'],['HP%','5,3%'],['EM','54']]],
+      atkA: ['Pena', 'ATK 311', [['HP%','4,1%'],['CD','13,2%'],['CR','16,3%'],['EM','21']]],
+      cdA: ['Tiara', 'Dano crít. 62,2%', [['CR','3,9%'],['EM','75'],['ATK','39'],['DEF','44']]]
+    };
+    const piece = ([slot, main, subs], isNew) => ({ slot, main, subs: sub(subs), tag: isNew ? 'troca' : 'equipada',
+      tagStyle: 'font-family:Saira Condensed,sans-serif;font-weight:600;font-size:11px;letter-spacing:.06em;text-transform:uppercase;border-radius:4px;padding:0 6px;' + (isNew ? 'background:#F1C96B;color:#1A1405' : 'color:#7E88B6'),
+      box: 'display:flex;flex-direction:column;gap:6px;padding:10px;border-radius:10px;min-width:0;background:' + (isNew ? '#17140E' : '#0E1430') + ';border:1px solid ' + (isNew ? '#6B5524' : '#232D5C') });
+    const base = { ATK: 3270, HP: 18915, DEF: 792, CR: 100.3, CD: 275.0, EM: 250, ER: 110 };
+    const fmtI = (n) => n.toLocaleString('pt-BR');
+    const fmtP = (n) => n.toFixed(1).replace('.', ',') + '%';
+    const stats = (s, dpr, dprDelta, ref) => {
+      const row = (k, key, pct) => { const d = s[key] - base[key]; const zero = Math.abs(d) < 0.05; return { k, v: pct ? fmtP(s[key]) : fmtI(s[key]), d: ref || zero ? '' : (d > 0 ? '+' : '−') + (pct ? Math.abs(d).toFixed(1).replace('.', ',') : fmtI(Math.abs(Math.round(d)))), ds: 'font-size:11px;font-weight:600;color:' + (d > 0 ? '#9FD68A' : '#E89A9A') }; };
+      return [row('ATK','ATK'), row('HP','HP'), row('DEF','DEF'), row('Maestria','EM'), row('Taxa crít.','CR',1), row('Dano crít.','CD',1), row('Recarga','ER',1), { k: 'DPR do time', v: dpr, d: dprDelta, ds: 'font-size:11px;font-weight:600;color:' + (ref ? '#7E88B6' : '#E89A9A') }];
+    };
+    const card = (best, ref) => 'display:flex;flex-direction:column;height:100%;box-sizing:border-box;border-radius:14px;min-width:0;background:' + (ref ? '#0A0F22' : '#0C1128') + ';border:1px solid ' + (best ? '#5A4720' : (ref ? '#2A356A' : '#232D5C')) + (ref ? ';border-style:dashed' : '');
+    const mk = (rank, val, delta, pieces, s, dpr, dprDelta, opt) => ({ rank, val, delta, pieces, stats: stats(s, dpr, dprDelta, opt.ref), canEquip: !opt.ref, isEquipped: !!opt.ref,
+      card: card(opt.best, opt.ref),
+      rankStyle: 'font-weight:700;font-size:34px;line-height:1;color:' + (opt.ref ? '#A7B0D6' : '#F1C96B'),
+      deltaStyle: 'font-size:13px;font-weight:600;border-radius:999px;padding:4px 12px;' + (opt.ref ? 'background:#1A2450;color:#C3CAEA' : 'background:#2A1418;color:#E89A9A;border:1px solid #5A2830') });
+    const builds = [
+      mk('#1', '818.877', '−0,67% contra o equipado', [piece(N.hpA,1), piece(N.atkA,1), piece(E.em), piece(E.py), piece(N.cdA,1)], { ATK:3221, HP:18570, DEF:836, CR:99.9, CD:254.0, EM:332, ER:100 }, '4.253.674', '−1,73%', { best: true }),
+      mk('#2', '818.304', '−0,74% contra o equipado', [piece(N.hpA,1), piece(E.atk), piece(E.em), piece(E.py), piece(E.cd)], { ATK:3284, HP:18915, DEF:792, CR:99.9, CD:269.6, EM:257, ER:106 }, '4.293.667', '−0,80%', {}),
+      mk('#3', '815.008', '−1,14% contra o equipado', [piece(N.hpB,1), piece(N.atkA,1), piece(E.em), piece(E.py), piece(N.cdA,1)], { ATK:3207, HP:19236, DEF:836, CR:99.1, CD:254.0, EM:337, ER:100 }, '4.231.622', '−2,24%', {}),
+      mk('Hoje', '824.421', 'referência', [piece(E.hp), piece(E.atk), piece(E.em), piece(E.py), piece(E.cd)], base, '4.328.424', '', { ref: true })
+    ];
+    return { cons, mins, mains, sets, builds };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Astralys · Guia da linguagem estelar</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;600;700&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#060914}
+.num{font-variant-numeric:tabular-nums}
+.disp{font-family:'Saira Condensed',sans-serif}
+.sec{font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:15px;letter-spacing:.16em;text-transform:uppercase;color:#F1C96B;margin:0;display:flex;align-items:center;gap:10px}
+.pn{background:#0C1128;border:1px solid #232D5C;border-radius:14px;overflow:hidden;min-width:0}
+.ph{display:flex;align-items:center;gap:8px;padding:11px 14px;border-bottom:1px solid #18204A;background:#0F1532}
+.pt{font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:16px;letter-spacing:.08em;text-transform:uppercase;color:#EEF1FF;margin:0;flex:1}
+.bd{font-family:'Saira Condensed',sans-serif;font-weight:600;font-size:12px;letter-spacing:.06em;text-transform:uppercase;border-radius:5px;padding:2px 8px;white-space:nowrap}
+.r{display:flex;align-items:center;gap:10px;padding:6px 14px;font-size:14px;border-bottom:1px solid #131B40}
+.r:nth-child(even){background:#0E1430}
+.r .v{margin-left:auto;font-variant-numeric:tabular-nums;font-weight:600;color:#EEF1FF}
+.r .k{color:#C3CAEA}
+.cap{font-size:12px;color:#A7B0D6;line-height:1.45}
+.seg{display:inline-flex;border:1px solid #2A356A;border-radius:8px;overflow:hidden;background:#0C1128}
+.seg button{font-family:'Saira Condensed',sans-serif;font-weight:600;font-size:14px;letter-spacing:.05em;padding:0 14px;min-height:38px;background:transparent;color:#A7B0D6;border:0;border-right:1px solid #2A356A}
+.seg button:last-child{border-right:0}
+.seg button.on{background:#F1C96B;color:#1A1405}
+.btn{font-family:'Saira Condensed',sans-serif;font-weight:600;font-size:14px;letter-spacing:.08em;text-transform:uppercase;padding:0 16px;border-radius:8px;border:1px solid #2A356A;background:#121A3A;color:#EEF1FF;display:inline-flex;align-items:center;min-height:40px;box-sizing:border-box}
+.btn.gold{background:#F1C96B;color:#1A1405;border-color:#F1C96B}
+</style>
+</helmet>
+<div style="width:1440px;height:1760px;box-sizing:border-box;background:#060914;color:#EEF1FF;font-family:'IBM Plex Sans',sans-serif;font-size:14px;padding:64px 72px;display:flex;flex-direction:column;gap:44px;position:relative;overflow:hidden">
+
+<svg aria-hidden="true" width="1440" height="1760" viewBox="0 0 1440 1760" style="position:absolute;inset:0;pointer-events:none">
+<circle cx="1300" cy="70" r="1.5" fill="#F1C96B" opacity=".7"></circle><circle cx="1180" cy="160" r="1" fill="#EEF1FF" opacity=".4"></circle><circle cx="1380" cy="260" r="1.2" fill="#EEF1FF" opacity=".5"></circle><circle cx="980" cy="40" r="1" fill="#EEF1FF" opacity=".35"></circle>
+<path d="M1060 0 A 560 560 0 0 1 1440 380" fill="none" stroke="#18204A"></path>
+</svg>
+
+<section style="display:flex;gap:56px;align-items:flex-end;position:relative">
+<div style="display:flex;flex-direction:column;gap:12px;flex:1">
+<span class="sec"><svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5l2.3 8.2 8.2 2.3-8.2 2.3L12 22.5l-2.3-8.2L1.5 12l8.2-2.3z" fill="#F1C96B"></path></svg>Astralys · guia visual</span>
+<h1 class="disp" style="margin:0;font-weight:700;font-size:84px;line-height:.9;letter-spacing:.01em">Linguagem<br>estelar</h1>
+</div>
+<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;flex:1.4">
+<div style="border-top:1px solid #F1C96B;padding-top:12px;display:flex;flex-direction:column;gap:6px"><span class="disp" style="font-weight:700;font-size:20px">Céu escuro, dado brilha</span><span class="cap">O fundo é sempre noite. Só o que importa acende: números, a ação principal e o que está ativo.</span></div>
+<div style="border-top:1px solid #F1C96B;padding-top:12px;display:flex;flex-direction:column;gap:6px"><span class="disp" style="font-weight:700;font-size:20px">A estrela é a unidade</span><span class="cap">Uma estrela de 4 pontas conta coisas: raridade, rolls, constelação, golpes na linha do tempo.</span></div>
+<div style="border-top:1px solid #F1C96B;padding-top:12px;display:flex;flex-direction:column;gap:6px"><span class="disp" style="font-weight:700;font-size:20px">Denso como o GO</span><span class="cap">Painéis pequenos, várias colunas, uma linha por valor, ícone por stat. Nada de blocos gigantes.</span></div>
+</div>
+</section>
+
+<section style="display:flex;flex-direction:column;gap:16px;position:relative">
+<span class="sec">Cores</span>
+<div style="display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:10px">
+<sc-for list="{{sky}}" as="s" hint-placeholder-count="10">
+<div style="display:flex;flex-direction:column;gap:6px"><div style="{{s.sw}}"></div><span style="font-size:13px;font-weight:600">{{s.n}}</span><span class="num" style="font-size:12px;color:#A7B0D6">{{s.hex}}</span></div>
+</sc-for>
+</div>
+<div style="display:grid;grid-template-columns:repeat(11,minmax(0,1fr));gap:10px">
+<sc-for list="{{els}}" as="s" hint-placeholder-count="11">
+<div style="display:flex;flex-direction:column;gap:6px"><div style="{{s.sw}}"><span style="{{s.txt}}">{{s.n}}</span></div><span class="num" style="font-size:12px;color:#A7B0D6">{{s.hex}}</span></div>
+</sc-for>
+</div>
+<span class="cap">Elementos: cor cheia para pontos, barras e ícones; versão clara (texto dentro do bloco) para nomes de golpe e fontes de buff sobre o painel escuro. Raridade 5★ e 4★ só em molduras de arma e artefato.</span>
+</section>
+
+<section style="display:grid;grid-template-columns:1.1fr 1fr;gap:40px;position:relative">
+<div style="display:flex;flex-direction:column;gap:16px">
+<span class="sec">Tipografia</span>
+<div style="display:flex;align-items:baseline;gap:24px;border-bottom:1px solid #18204A;padding-bottom:14px">
+<span class="disp num" style="font-weight:700;font-size:72px;line-height:1;color:#F1C96B">216.600</span>
+<span class="cap">Saira Condensed 700<br>KPIs e números grandes<br>sempre tabulares</span>
+</div>
+<div style="display:flex;align-items:baseline;gap:24px;border-bottom:1px solid #18204A;padding-bottom:14px">
+<span class="disp" style="font-weight:700;font-size:30px;letter-spacing:.02em">Mavuika · Citlali · Iansan · Bennett</span>
+<span class="cap">Títulos de página</span>
+</div>
+<div style="display:flex;align-items:baseline;gap:24px;border-bottom:1px solid #18204A;padding-bottom:14px">
+<span class="disp" style="font-weight:700;font-size:16px;letter-spacing:.08em;text-transform:uppercase">Ataque normal</span>
+<span class="cap">Cabeçalho de painel · caixa alta, espaçado</span>
+</div>
+<div style="display:flex;align-items:baseline;gap:24px">
+<span style="font-size:14px;color:#C3CAEA;max-width:380px;line-height:1.5">IBM Plex Sans 400–600 para rótulos, valores e textos. Valores em 600 branco; rótulos em 400 cinza-azulado.</span>
+<span class="cap">Texto e dados</span>
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:16px">
+<span class="sec">Motivos</span>
+<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px">
+<div class="pn" style="padding:16px;display:flex;flex-direction:column;gap:10px">
+<span class="disp" style="font-weight:700;font-size:15px;letter-spacing:.08em;text-transform:uppercase">Estrela de 4 pontas</span>
+<div style="display:flex;align-items:center;gap:16px">
+<svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5l2.3 8.2 8.2 2.3-8.2 2.3L12 22.5l-2.3-8.2L1.5 12l8.2-2.3z" fill="#F1C96B"></path></svg>
+<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5l2.3 8.2 8.2 2.3-8.2 2.3L12 22.5l-2.3-8.2L1.5 12l8.2-2.3z" fill="#F1C96B"></path></svg>
+<svg width="32" height="32" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5l2.3 8.2 8.2 2.3-8.2 2.3L12 22.5l-2.3-8.2L1.5 12l8.2-2.3z" fill="#F1C96B"></path></svg>
+<svg width="48" height="48" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5l2.3 8.2 8.2 2.3-8.2 2.3L12 22.5l-2.3-8.2L1.5 12l8.2-2.3z" fill="none" stroke="#F1C96B" stroke-width=".8"></path></svg>
+</div>
+<span class="cap">Logo, marcador de seção, raridade e ícone de dano crítico. Cheia = ativo; contorno = decorativo.</span>
+</div>
+<div class="pn" style="padding:16px;display:flex;flex-direction:column;gap:10px">
+<span class="disp" style="font-weight:700;font-size:15px;letter-spacing:.08em;text-transform:uppercase">Rolls em estrelas</span>
+<div style="display:flex;gap:3px">
+<sc-for list="{{pips}}" as="p" hint-placeholder-count="13"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5l2.3 8.2 8.2 2.3-8.2 2.3L12 22.5l-2.3-8.2L1.5 12l8.2-2.3z" fill="{{p}}"></path></svg></sc-for>
+</div>
+<span class="cap">Dourada = roll escolhido, azul-apagada = mínimo obrigatório, quase invisível = espaço livre.</span>
+</div>
+<div class="pn" style="padding:16px;display:flex;flex-direction:column;gap:6px">
+<span class="disp" style="font-weight:700;font-size:15px;letter-spacing:.08em;text-transform:uppercase">Constelação real</span>
+<svg viewBox="0 0 250 120" width="250" height="120" role="img" aria-label="Exemplo de constelação em C2: duas estrelas acesas" style="width:100%;height:auto">
+<g fill="none" stroke-width="1.4"><path d="M24 92 L70 50 L122 68" stroke="#F1C96B"></path><path d="M122 68 L160 24 L206 40 L226 98 M122 68 L150 108" stroke="#2E3A70"></path></g>
+<circle cx="24" cy="92" r="9" fill="#F1C96B"></circle><circle cx="70" cy="50" r="9" fill="#F1C96B"></circle>
+<circle cx="122" cy="68" r="9" fill="#0C1128" stroke="#3A4680"></circle><circle cx="160" cy="24" r="9" fill="#0C1128" stroke="#3A4680"></circle><circle cx="206" cy="40" r="9" fill="#0C1128" stroke="#3A4680"></circle><circle cx="226" cy="98" r="9" fill="#0C1128" stroke="#3A4680"></circle>
+</svg>
+<span class="cap">O seletor C0–C6 é o próprio desenho da constelação do personagem.</span>
+</div>
+<div class="pn" style="padding:16px;display:flex;flex-direction:column;gap:10px">
+<span class="disp" style="font-weight:700;font-size:15px;letter-spacing:.08em;text-transform:uppercase">Céu e órbitas</span>
+<svg viewBox="0 0 250 90" width="250" height="90" aria-hidden="true" style="width:100%;height:auto;background:#060914;border-radius:8px">
+<circle cx="30" cy="20" r="1.2" fill="#EEF1FF" opacity=".6"></circle><circle cx="90" cy="60" r="1" fill="#EEF1FF" opacity=".4"></circle><circle cx="150" cy="18" r="1.5" fill="#F1C96B" opacity=".8"></circle><circle cx="210" cy="70" r="1" fill="#EEF1FF" opacity=".5"></circle><circle cx="230" cy="30" r="1" fill="#EEF1FF" opacity=".3"></circle>
+<path d="M140 90 A 110 110 0 0 1 250 0" fill="none" stroke="#232D5C"></path>
+</svg>
+<span class="cap">Poucas estrelas e arcos finos só no topo da página e nos cards. Nunca atrás de tabelas.</span>
+</div>
+</div>
+</div>
+</section>
+
+<section style="display:flex;flex-direction:column;gap:16px;position:relative">
+<span class="sec">Componentes</span>
+<div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;align-items:start">
+
+<div class="pn">
+<div class="ph"><svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5l2.3 8.2 8.2 2.3-8.2 2.3L12 22.5l-2.3-8.2L1.5 12l8.2-2.3z" fill="#F1C96B"></path></svg><h2 class="pt">Atributos</h2></div>
+<div>
+<div class="r"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c3.5 4.5 6 7.6 6 10.5a6 6 0 0 1-12 0C6 10.6 8.5 7.5 12 3z" fill="none" stroke="#A7B0D6" stroke-width="1.6"></path></svg><span class="k">HP</span><span class="v">19.083</span></div>
+<div class="r"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19L15 9 M13 4h7v7l-9 9-7-7z" fill="none" stroke="#A7B0D6" stroke-width="1.6"></path></svg><span class="k">ATK</span><span class="v">5.791</span></div>
+<div class="r"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z" fill="none" stroke="#A7B0D6" stroke-width="1.6"></path></svg><span class="k">DEF</span><span class="v">929</span></div>
+<div class="r"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="#A7B0D6" stroke-width="1.6"><circle cx="12" cy="7" r="3.2"></circle><circle cx="7" cy="15.5" r="3.2"></circle><circle cx="17" cy="15.5" r="3.2"></circle></g></svg><span class="k">Maestria</span><span class="v">424</span></div>
+<div class="r"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.7 M20 4v4h-4" fill="none" stroke="#A7B0D6" stroke-width="1.6"></path></svg><span class="k">Recarga</span><span class="v">111,0%</span></div>
+<div class="r"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="#F1C96B" stroke-width="1.6"><circle cx="12" cy="12" r="6.5"></circle><path d="M12 2v5 M12 17v5 M2 12h5 M17 12h5"></path></g></svg><span class="k">Taxa crítica</span><span class="v">98,9%</span></div>
+<div class="r"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5l2.3 8.2 8.2 2.3-8.2 2.3L12 22.5l-2.3-8.2L1.5 12l8.2-2.3z" fill="none" stroke="#F1C96B" stroke-width="1.6"></path></svg><span class="k">Dano crítico</span><span class="v">231,8%</span></div>
+</div>
+<div style="padding:10px 14px" class="cap">Ícone de traço por stat; os de crítico em dourado. Linhas zebradas bem sutis.</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:18px">
+<div class="pn">
+<div class="ph"><svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5l2.3 8.2 8.2 2.3-8.2 2.3L12 22.5l-2.3-8.2L1.5 12l8.2-2.3z" fill="#F1C96B"></path></svg><h2 class="pt">Habilidade</h2><span class="bd" style="background:#3A1E16;color:#F7A783">Habilidade · 10</span></div>
+<div>
+<div class="r"><span class="k" style="color:#F7A783">Anéis das Chamas</span><span class="v">63.284</span></div>
+<div class="r"><span class="k" style="color:#F7A783">Ignimoto · contra o chão</span><span class="v">86.850</span></div>
+<div class="r"><span class="k">Ataque carregado</span><span class="v">105.248</span></div>
+</div>
+<div style="padding:10px 14px" class="cap">Nome na cor do elemento quando o golpe é elemental; branco quando é físico. Vários hits: "2×".</div>
+</div>
+<div class="pn" style="padding:14px;display:flex;flex-direction:column;gap:10px">
+<span class="disp" style="font-weight:700;font-size:15px;letter-spacing:.08em;text-transform:uppercase">Etiquetas de golpe</span>
+<div style="display:flex;flex-wrap:wrap;gap:6px">
+<span class="bd" style="background:#1E2A5A;color:#B9C6FF">Normal</span>
+<span class="bd" style="background:#173F48;color:#9FE3EE">Carregado</span>
+<span class="bd" style="background:#262C46;color:#C9CFEA">Imersivo</span>
+<span class="bd" style="background:#3A1E16;color:#F7A783">Habilidade</span>
+<span class="bd" style="background:#3A3016;color:#F1C96B">Supremo</span>
+<span class="bd" style="background:#1E3324;color:#B5E3A3">Passiva</span>
+<span class="bd" style="background:#3A1C1C;color:#E89A9A">A confirmar</span>
+</div>
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:18px">
+<div class="pn">
+<div class="ph"><svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5l2.3 8.2 8.2 2.3-8.2 2.3L12 22.5l-2.3-8.2L1.5 12l8.2-2.3z" fill="#F1C96B"></path></svg><h2 class="pt">Buffs do time</h2><span class="bd" style="background:#1A2450;color:#C3CAEA">7</span></div>
+<div>
+<div class="r" style="align-items:flex-start"><span style="display:flex;flex-direction:column;gap:2px"><span class="k">ATK fixo</span><span style="font-size:11px;color:#F7A783">Bennett · Supremo</span></span><span class="v">+1.202</span></div>
+<div class="r" style="align-items:flex-start"><span style="display:flex;flex-direction:column;gap:2px"><span class="k">Bônus de dano Pyro</span><span style="font-size:11px;color:#C9A6F5">Iansan · Scroll</span></span><span class="v">+40%</span></div>
+<div class="r" style="align-items:flex-start"><span style="display:flex;flex-direction:column;gap:2px"><span class="k">RES Pyro do inimigo</span><span style="font-size:11px;color:#A8DDEB">Citlali · passiva</span></span><span class="v">−20%</span></div>
+</div>
+<div style="padding:10px 14px" class="cap">Como o "Received Team Buffs" do GO, mas com a fonte do buff na cor do elemento de quem dá.</div>
+</div>
+<div class="pn" style="padding:14px;display:flex;flex-direction:column;gap:12px">
+<span class="disp" style="font-weight:700;font-size:15px;letter-spacing:.08em;text-transform:uppercase">Controles</span>
+<div class="seg"><button type="button">Não crítico</button><button class="on" type="button">Médio</button><button type="button">Crítico</button></div>
+<div style="display:flex;gap:8px"><span class="btn gold">Otimizar</span><span class="btn">Comparar build</span></div>
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:18px">
+<div class="pn" style="padding:10px;display:flex;flex-direction:column;gap:6px;border-color:#5A4720;background:#120F12">
+<div style="display:flex;justify-content:space-between;align-items:center"><span class="bd" style="background:#2A2010;color:#F1C96B">+20</span><span style="font-size:11px;color:#A7B0D6">Cálice · 5★</span></div>
+<span style="font-size:12px;color:#C3CAEA">Bônus Pyro</span>
+<span class="disp num" style="font-weight:700;font-size:28px;line-height:1">46,6%</span>
+<span style="font-size:11px;color:#7E88B6">Obsidian Codex</span>
+</div>
+<div class="pn" style="padding:10px;display:flex;flex-direction:column;gap:6px;border-color:#4A3A6E;background:#110F1A">
+<div style="display:flex;justify-content:space-between;align-items:center"><span class="bd" style="background:#241B3A;color:#C9B5F2">+20</span><span style="font-size:11px;color:#A7B0D6">Cálice · 4★</span></div>
+<span style="font-size:12px;color:#C3CAEA">Bônus Cryo</span>
+<span class="disp num" style="font-weight:700;font-size:28px;line-height:1">34,8%</span>
+<span style="font-size:11px;color:#7E88B6">Instructor</span>
+</div>
+<span class="cap">Moldura dourada = 5★, lilás = 4★. A arte da peça (Lunaris) entra no topo quando existir.</span>
+<div class="pn" style="padding:14px;display:flex;flex-direction:column;gap:6px">
+<span style="font-family:'Saira Condensed',sans-serif;font-weight:600;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:#A7B0D6">DPS do time</span>
+<span class="disp num" style="font-weight:700;font-size:40px;line-height:1;color:#F1C96B">216.600</span>
+<span class="cap">KPI: rótulo pequeno, número grande em luz estelar.</span>
+</div>
+</div>
+
+</div>
+</section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1760}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const sw = (hex, light) => 'height:64px;border-radius:10px;background:' + hex + ';border:1px solid ' + (light ? 'transparent' : '#2A356A');
+    const sky = [
+      ['Céu profundo','#060914'],['Barra','#080C1D'],['Painel','#0C1128'],['Bloco','#121A3A'],['Linha','#232D5C'],
+      ['Luz estelar','#F1C96B',1],['Estrela','#EEF1FF',1],['Texto 2','#C3CAEA',1],['Poeira','#A7B0D6',1],['Distante','#7E88B6',1]
+    ].map(([n, hex, l]) => ({ n, hex, sw: sw(hex, l) }));
+    const E = [['Pyro','#F08A5D','#F7A783'],['Hydro','#5FA8F5','#9CC8F8'],['Cryo','#8FD3E8','#A8DDEB'],['Electro','#C49CF2','#C9A6F5'],['Anemo','#6FD6B3','#9BE3CB'],['Geo','#E7B75C','#EDCB86'],['Dendro','#A5CF5A','#BFDD8A'],['5★','#E7B04A','#F1C96B'],['4★','#A98BE0','#C9B5F2'],['Confirmar','#C96464','#E89A9A'],['Cura','#7DBE68','#B5E3A3']];
+    const els = E.map(([n, hex, t]) => ({ n, hex, sw: 'height:64px;border-radius:10px;background:' + hex + ';display:flex;align-items:flex-end;padding:8px;box-sizing:border-box', txt: 'font-family:Saira Condensed,sans-serif;font-weight:700;font-size:14px;color:#0A0E1C;background:' + t + ';border-radius:4px;padding:0 6px' }));
+    const pips = Array.from({ length: 13 }, (_, i) => i < 2 ? '#3A4680' : (i < 9 ? '#F1C96B' : '#161E44'));
+    return { sky, els, pips };
+  }
+}
+</script>
+</body>
+</html>

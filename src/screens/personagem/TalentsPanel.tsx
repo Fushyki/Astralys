@@ -46,8 +46,8 @@ function FullText({ text }: { text: string }) {
   );
 }
 
-/** Descrição curta (até 3 linhas); "ver tudo" abre o texto completo do jogo, com rolagem. */
-function OneLine({ title, text }: { title: string; text: string }) {
+/** Descrição (até 8 linhas; 5 nas constelações); "ver tudo" só aparece quando o texto não cabe e abre o texto completo, com rolagem. */
+function OneLine({ title, text, limit = 360 }: { title: string; text: string; limit?: number }) {
   const [open, setOpen] = useState(false);
   useEffect(() => {
     if (!open) return;
@@ -60,7 +60,7 @@ function OneLine({ title, text }: { title: string; text: string }) {
   return (
     <div className="tl-desc">
       <p>{flat}</p>
-      {flat.length > 120 && <Button variant="ghost" size="sm" onClick={() => setOpen(true)}>ver tudo</Button>}
+      {flat.length > limit && <Button variant="ghost" size="sm" onClick={() => setOpen(true)}>ver tudo</Button>}
       {open && (
         <div className="dz-modal" onMouseDown={(e) => e.target === e.currentTarget && setOpen(false)}>
           <div className="dz-dialog wide tl-dialog" role="dialog" aria-modal="true" aria-label={title}>
@@ -330,7 +330,7 @@ export function TalentsPanel({ v, index }: { v: ProjectView; index: number }) {
                     <span className="ring num">C{c.n}</span>
                     <span className="t"><b>{c.name}</b></span>
                   </button>
-                  <OneLine title={`C${c.n} · ${c.name}`} text={c.description} />
+                  <OneLine title={`C${c.n} · ${c.name}`} text={c.description} limit={230} />
                   {mine.length > 0 && <div className="body">{mine}</div>}
                   {mine.length === 0 && lit && note && <span className="empty">{note.kind === 'utility' ? `Sem efeito no dano: ${note.note}` : `Parcial: ${note.note}`}</span>}
                 </div>

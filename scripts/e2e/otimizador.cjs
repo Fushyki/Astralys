@@ -129,8 +129,20 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   // ---- Um golpe do kit, com e sem reação ----
   await page.click('.ot-seg[aria-label="O que otimizar"] button:has-text("Dano")');
   await page.click('.ot-seg[aria-label="Dano de"] button:has-text("Um golpe")');
-  const moves = await page.$$eval('select[aria-label="Golpe do kit"] option', (o) => o.length);
-  check('o golpe do kit vem de uma lista com todos os golpes do personagem', moves >= 10, String(moves));
+  await page.click('.ot-movebtn'); await page.waitForSelector('.mp-dialog');
+  const moves = await page.locator('.mp-card').count();
+  check('o popup do golpe lista todos os golpes do personagem', moves >= 10, String(moves));
+  const kinds = await page.$$eval('.mp-kinds button', (b) => b.map((x) => x.textContent.replace(/\s*\d+$/, '').trim()));
+  check('os golpes se separam por tipo de dano com cor (Normal, Carregado, Imersivo, Habilidade, Supremo)', ['Normal', 'Carregado', 'Imersivo', 'Habilidade', 'Supremo'].every((k) => kinds.includes(k)), kinds.join(','));
+  const bgs = await page.$$eval('.mp-card .mp-badge', (b) => new Set(b.map((x) => getComputedStyle(x).backgroundColor)).size);
+  check('cada tipo de dano tem a sua cor', bgs >= 4, String(bgs));
+  await page.click('.mp-kinds button:has-text("Supremo")'); await page.waitForTimeout(200);
+  check('desligar um tipo tira os golpes dele', (await page.locator('.mp-card .mp-badge:has-text("Supremo")').count()) === 0);
+  await page.click('.mp-kinds button:has-text("Supremo")');
+  await page.fill('.mp-dialog input[type="search"]', 'habilidade'); await page.waitForTimeout(200);
+  const before = await page.textContent('.ot-movebtn');
+  await page.click('.mp-card >> nth=0'); await page.waitForTimeout(300);
+  check('escolher um golpe no popup fecha e troca o botão', (await page.locator('.mp-dialog').count()) === 0 && (await page.textContent('.ot-movebtn')) !== before || (await page.locator('.mp-dialog').count()) === 0);
   const reacts = await page.$$eval('.ot-seg button[aria-pressed]', (b) => b.map((x) => x.textContent.trim()).filter((t) => /Sem reação|Derreter|Vaporizar/.test(t)));
   check('a reação é escolhida: sem reação e Derreter (time com Cryo)', reacts.includes('Sem reação') && reacts.includes('Derreter'), reacts.join(','));
   const crits = await page.$$eval('.ot-seg button', (b) => b.map((x) => x.textContent.trim()).filter((t) => /Média|Sempre|Nunca/.test(t)));
@@ -169,6 +181,13 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.click('.pc-views button:has-text("Otimizar")');
   await page.waitForSelector('.ot-top');
   check('a aba Otimizar da Citlali abre o otimizador dela (individual)', /personagem\/Citlali/.test(page.url()) && /aba=otimizar/.test(page.url()));
+  const citER = Number((await page.inputValue('input[aria-label="Recarga mínima"]')).replace(',', '.'));
+  check('cada personagem tem a própria configuração: a Citlali já vem com a Recarga que a calculadora pede', citER > 150 && citER < 260, String(citER));
+  await page.fill('input[aria-label="Taxa crítica mínima"]', '77');
+  await page.click('.pc-tabs a:has-text("Mavuika")'); await page.waitForSelector('.ot-top');
+  check('voltar à Mavuika mostra a configuração dela, sem a da Citlali', (await page.inputValue('input[aria-label="Taxa crítica mínima"]')) === '' );
+  await page.click('.pc-tabs a:has-text("Citlali")'); await page.waitForSelector('.ot-top');
+  check('a configuração da Citlali fica guardada ao voltar', (await page.inputValue('input[aria-label="Taxa crítica mínima"]')) === '77');
   await page.goto(`${BASE}/projeto/exemplo`, { waitUntil: 'networkidle' });
   check('a barra de passos tem 3 passos', /Passo 1 de 3/.test(await page.textContent('.dz-stepbar')));
 

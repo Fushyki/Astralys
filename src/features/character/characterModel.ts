@@ -65,7 +65,7 @@ export function topHits(groups: MoveGroup[], n = 5): (MoveLine & { talent: Talen
 const PLUNGE_VARIANT = ['(baixa altitude)', '(alta altitude)'];
 
 /** Nome de exibição de um golpe, em português quando o Lunaris traz. */
-function displayName(m: Move): string {
+export function displayName(m: Move): string {
   if (m.hitType === 'plunge' && m.variants === 2) return `Queda ${PLUNGE_VARIANT[m.variant]}`;
   const base = cleanMoveName(m.labelPt ?? m.label);
   if (m.variants > 1) return `${base} (${m.variant + 1}/${m.variants})`;

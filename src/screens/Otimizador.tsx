@@ -4,7 +4,7 @@
  */
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
-import { useProjectView } from '../app/ProjectContext';
+import { useProjectView, type ProjectView } from '../app/ProjectContext';
 import { Chip, Panel, StarIcon } from '../design/primitives';
 import { DualRange, SecHead, StatChip, STAT_COLOR, STAT_TAG } from '../design/filtros';
 import { pieceIconUrl } from '../design/images';
@@ -13,15 +13,17 @@ import { loadGood } from '../features/good/goodStore';
 import { startOptimizerJob, type OptimizerJob, type OptimizerProgress } from '../features/optimizer/client';
 import type { Constraints, Objective } from '../features/optimizer/evaluator';
 import { DEFAULT_CONFIG, countCandidates, type OptimizedBuild, type OptimizerConfig, type OptimizerResult } from '../features/optimizer/run';
-import { REACTION_LABEL, reactionOptions } from '../features/character/characterModel';
+import { REACTION_LABEL, displayName, reactionOptions } from '../features/character/characterModel';
 import { useRotationStore } from '../features/rotation/store';
 import { energyMembers, energyResults } from '../features/energy/energyModel';
-import type { ReactionChoice } from '../engine';
+import { kitElement, type ElementOrPhysical, type ReactionChoice } from '../engine';
 import { mainStatValue } from '../engine/pieces';
 import { formatDecimal, formatInt } from '../ui/format';
 import './otimizador.css';
 import { Button, ButtonLink } from '../design/Button';
 import { TeamBuffsStrip } from './personagem/AsideExtras';
+import { MovePickerDialog, KindBadge, kindOf } from './otimizador/MovePicker';
+import { elementColor } from '../design/elements';
 
 /** Número grande em português: 4,3 mil, 3,3 bi. */
 function bigNumber(n: number): string {
@@ -90,13 +92,28 @@ const initial: UiState = {
   levelMin: 0, levelMax: 20, topN: 5, borrow: false, offMains: { sands: [], goblet: [], circlet: [] }, offSets: [], fillerSets: true,
 };
 
+/** Cada personagem de cada projeto guarda a própria configuração do otimizador (alvo, mínimos, filtros e sets). */
 const STORAGE = 'astralys.otimizador';
-const readUi = (): UiState => {
+const storageKey = (projectId: string, character: string) => `${STORAGE}:${projectId}:${character}`;
+
+/**
+ * Padrão de um personagem que ainda não tem configuração salva: suporte com buff que cresce com os stats dele
+ * (ex.: ATK fixo do Bennett) começa em "Buff"; os demais, em "Dano". A Recarga mínima vem da calculadora de recarga quando ele usa o Supremo.
+ */
+function roleDefaults(v: ProjectView, index: number, erNeeded: number | null): UiState {
+  const ref = v.project.members[index];
+  const share = v.summary.members[index]?.fraction ?? 0;
+  const effect = v.resolved.team.members[index]?.characterEffect;
+  const hasBuff = !!effect?.teamFlatAtk || (effect?.buffs ?? []).some((b) => b.convert && b.convert.from !== 'partyEnergy' && (b.minConstellation ?? 0) <= (ref?.constellation ?? 0));
+  return { ...initial, goal: share < 0.1 && hasBuff ? 'buff' : 'dano', mins: { ...initial.mins, er: erNeeded !== null && share < 0.5 ? String(erNeeded) : '' } };
+}
+
+const readUi = (key: string, fallback: () => UiState): UiState => {
   try {
-    const raw = localStorage.getItem(STORAGE);
-    return raw ? { ...initial, ...(JSON.parse(raw) as Partial<UiState>) } : initial;
+    const raw = localStorage.getItem(key);
+    return raw ? { ...initial, ...(JSON.parse(raw) as Partial<UiState>) } : fallback();
   } catch {
-    return initial;
+    return fallback();
   }
 };
 
@@ -120,28 +137,41 @@ export function OtimizadorPanel({ index }: { index: number }) {
   const character = data.game.characters.find((c) => c.name === ref?.character);
 
   const [good, setGood] = useState<Good | null>(() => loadGood());
-  const [ui, setUi] = useState<UiState>(readUi);
+  const key = storageKey(v.id, ref?.character ?? '');
+  const erDefault = (() => {
+    if (!ref) return null;
+    const r = energyResults(project, energyMembers(project, data.game.characters, data.particles))[index];
+    return r && r.status !== 'ignored' ? Math.ceil(r.neededER * 1000) / 10 : null;
+  })();
+  const [store, setStore] = useState<{ key: string; ui: UiState }>(() => ({ key, ui: readUi(key, () => roleDefaults(v, index, erDefault)) }));
+  // Ao trocar de personagem lê a configuração dele; enquanto o usuário não mexe, nada é gravado na chave nova.
+  const ui = store.key === key ? store.ui : readUi(key, () => roleDefaults(v, index, erDefault));
+  const setUi = (next: UiState) => setStore({ key, ui: next });
   const [progress, setProgress] = useState<OptimizerProgress | null>(null);
   const [result, setResult] = useState<OptimizerResult | null>(null);
   const [running, setRunning] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [equippedKey, setEquippedKey] = useState<string | null>(null);
   const [showAllSets, setShowAllSets] = useState(false);
+  const [pickingMove, setPickingMove] = useState(false);
   const [showAllMains, setShowAllMains] = useState<Record<'sands' | 'goblet' | 'circlet', boolean>>({ sands: false, goblet: false, circlet: false });
   const job = useRef<OptimizerJob | null>(null);
 
   useEffect(() => {
+    if (store.key !== key) return;
     try {
-      localStorage.setItem(STORAGE, JSON.stringify(ui));
+      localStorage.setItem(key, JSON.stringify(store.ui));
     } catch {
       /* sem armazenamento: a tela continua */
     }
-  }, [ui]);
+  }, [store, key]);
   useEffect(() => () => job.current?.stop(), []);
   useEffect(() => {
     setResult(null);
     setError(null);
-  }, [index]);
+    setEquippedKey(null);
+    setShowAllSets(false);
+  }, [key]);
   useEffect(() => {
     const refresh = () => setGood(loadGood());
     window.addEventListener('focus', refresh);
@@ -180,6 +210,9 @@ export function OtimizadorPanel({ index }: { index: number }) {
 
   const moves = data.game.moves.filter((m) => m.character === ref.character);
   const moveChosen = moves.find((m) => m.id === ui.moveId) ?? moves.find((m) => m.talent === 'burst') ?? moves[0];
+  const kitMode = v.resolved.team.config.elementMode === 'kit';
+  const infusion = v.resolved.team.members[index]?.normalInfusion;
+  const moveElement: ElementOrPhysical | undefined = moveChosen && character ? (kitMode ? kitElement(character, moveChosen, infusion) : (character.element as ElementOrPhysical)) : undefined;
   const teamElements = v.resolved.team.members.map((m) => m.character.element);
   const reactions = character ? reactionOptions(character.element, teamElements) : (['none'] as ReactionChoice[]);
   const reaction = (reactions.includes(ui.reaction as ReactionChoice) ? ui.reaction : 'none') as ReactionChoice;
@@ -420,13 +453,11 @@ export function OtimizadorPanel({ index }: { index: number }) {
                     <>
                       <div className="ot-field grow">
                         <span className="lbl">Golpe</span>
-                        <select className="dz-input" aria-label="Golpe do kit" value={moveChosen?.id ?? ''} onChange={(e) => setUi({ ...ui, moveId: e.target.value })}>
-                          {(['normal', 'skill', 'burst'] as const).map((t) => (
-                            <optgroup key={t} label={TALENT_LABEL[t]}>
-                              {moves.filter((m) => m.talent === t).map((m) => <option key={m.id} value={m.id}>{m.labelPt ?? m.label}</option>)}
-                            </optgroup>
-                          ))}
-                        </select>
+                        <button type="button" className="ot-movebtn" aria-haspopup="dialog" aria-label="Escolher o golpe a otimizar" onClick={() => setPickingMove(true)}>
+                          {moveChosen && <KindBadge kind={kindOf(moveChosen)} />}
+                          <span className="n" style={moveElement && moveElement !== 'Physical' ? { color: elementColor(moveElement) } : undefined}>{moveChosen ? displayName(moveChosen) : 'Escolher o golpe'}</span>
+                          <span className="chev" aria-hidden="true">▾</span>
+                        </button>
                       </div>
                       <div className="ot-field">
                         <span className="lbl">Reação</span>
@@ -498,6 +529,17 @@ export function OtimizadorPanel({ index }: { index: number }) {
             </div>
 
             <TeamBuffsStrip v={v} index={index} />
+            {pickingMove && character && (
+              <MovePickerDialog
+                moves={moves}
+                current={moveChosen?.id}
+                character={character}
+                elementMode={kitMode ? 'kit' : 'character'}
+                infusion={infusion}
+                onPick={(id) => { setUi({ ...ui, moveId: id }); setPickingMove(false); }}
+                onClose={() => setPickingMove(false)}
+              />
+            )}
             {running && (
               <div className="ot-progress" role="status" aria-live="polite">
                 <div className="bar"><i /></div>

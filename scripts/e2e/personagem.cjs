@@ -28,11 +28,13 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
   const field = (label) => page.locator(`label.dz-field:has(span:text-is("${label}"))`);
   const firstAvg = async () => page.$eval('.pc-dmg tbody tr:nth-child(2) td.avg', (e) => e.textContent);
   const eff = () => page.textContent('[data-testid="effective-talents"]');
+  const openSubs = async () => { if (await page.locator('.db-subs button:has-text("Editar substats")').count()) { await page.click('.db-subs button:has-text("Editar substats")'); await page.waitForTimeout(300); } };
+  const openMore = async () => { if (!(await page.locator('.gr-more[open]').count())) { await page.click('.gr-more summary'); await page.waitForTimeout(200); } };
 
   await page.goto(`${BASE}/projeto/exemplo/personagem/Mavuika`, { waitUntil: 'networkidle' });
   await page.evaluate(() => localStorage.clear());
   await page.reload({ waitUntil: 'networkidle' });
-  await page.waitForSelector('.pc-hint');
+  await page.waitForSelector('.db-cols');
   // Resumo e build são a mesma aba; os nomes antigos continuam valendo nos passos abaixo.
   const view = async (name) => { const tab = /^(Resumo|Build)$/.test(name) ? 'Resumo e build' : name; await page.click(`.pc-views button:has-text("${tab}")`); await page.waitForTimeout(250); };
 
@@ -49,9 +51,9 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
   check('desligar um buff do personagem na aba Talentos o marca como desligado', (await page.locator('.tl-buff[data-active="true"]').count()) === tlBefore - 1);
   await page.locator('.tl-buff[data-active="false"]:not([data-locked="true"])').first().locator('input').check(); await page.waitForTimeout(600);
   await page.click('.pc-views button:has-text("Resumo e build")');
-  check('abre no Resumo, com uma frase que explica a aba', (await page.getAttribute('.pc-views button:has-text("Resumo e build")', 'aria-selected')) === 'true' && /build \(arma, artefatos e substats\)/.test(await page.textContent('.pc-hint')));
+  check('abre no Resumo, com o painel de colunas', (await page.getAttribute('.pc-views button:has-text("Resumo e build")', 'aria-selected')) === 'true' && (await page.locator('.db-cols').count()) === 1);
   check('o Resumo não tem o bloco "Maiores golpes" nem a tabela inteira', (await page.locator('.dz-panel:has(h2:text-is("Maiores golpes"))').count()) === 0 && (await page.locator('.dz-panel:has(h2:text-is("Tabela de dano"))').count()) === 0);
-  check('Resumo e build na mesma página: faixa de build, substats e atributos', (await page.locator('.pc-weapon').count()) === 1 && (await page.locator('.pc-rolls').count()) === 1 && (await page.locator('.dz-panel:has(h2:text-is("Atributos"))').count()) === 1);
+  check('Resumo e build na mesma página: faixa de build, substats e atributos', (await page.locator('.gt-weapon').count()) === 1 && (await page.locator('.gt-piece').count()) === 5 && (await page.locator('.db-subs').count()) === 1 && (await page.locator('.db-panel:has(h3:text-is("Atributos"))').count()) === 1);
   check('as ferramentas ficam só no Avançado', (await page.locator('.dz-panel:has(h2:text-is("Ferramentas"))').count()) === 0);
 
   // Abas e cabeçalho
@@ -60,9 +62,9 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
   check('a aba Equipe do time está marcada (o personagem fica dentro dela)', (await page.getAttribute('.dz-subnav a:has-text("Equipe")', 'aria-current')) === 'page');
 
   // Atributos do gabarito
-  const attrs = await page.locator('.dz-panel:has(h2:text-is("Atributos"))').textContent();
+  const attrs = await page.locator('.db-panel:has(h3:text-is("Atributos"))').textContent();
   check('atributos finais do gabarito (ATK 5.791, EM 424, Taxa 98,9%, Dano 231,8%)', /5\.791/.test(attrs) && /424/.test(attrs) && /98,9%/.test(attrs) && /231,8%/.test(attrs));
-  check('mostra o valor base ao lado do ATK', /1\.100 base/.test(attrs));
+  check('mostra o valor base ao lado do ATK', /1\.100 ATK base/.test(attrs));
 
   // Tabela de dano (aba Avançado): sem nomes repetidos, reação filtrada
   await view('Avançado');
@@ -97,39 +99,38 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
 
   // Constelação e talentos
   check('talentos efetivos iniciais 10/10/10', /10\/10\/10/.test(await eff()));
-  await page.click('button[aria-label="Constelação 3"]'); await settle();
+  await page.click('g[aria-label^="Constelação 3"]'); await settle();
   check('C3 soma +3 ao Supremo (10/10/13)', /10\/10\/13/.test(await eff()), await eff());
-  check('o botão C3 fica marcado', (await page.getAttribute('button[aria-label="Constelação 3"]', 'aria-pressed')) === 'true');
-  await page.click('button[aria-label="Constelação 0"]'); await settle();
-  await field('Habilidade').locator('input').fill('13'); await field('Habilidade').locator('input').blur(); await settle();
+  check('a estrela C3 fica acesa e o selo mostra C3', (await page.getAttribute('g[aria-label^="Constelação 3"]', 'aria-pressed')) === 'true' && /C3/.test(await page.textContent('.sc-cons .badge')));
+  await page.keyboard.press('Control+z'); await settle();
+  await page.fill('input[aria-label="Nível de talento: Habilidade"]', '13'); await page.locator('input[aria-label="Nível de talento: Habilidade"]').blur(); await settle();
   check('subir o nível da habilidade para 13', /10\/13\/10/.test(await eff()), await eff());
   await page.keyboard.press('Control+z'); await settle();
 
   // Rolls manuais (aba Build)
   await view('Build');
+  await openSubs();
+  check('o painel de substats mostra as estrelas (otimizado)', (await page.locator('.db-subs .sr').count()) === 10 && /OTIMIZADO/.test(await page.textContent('.db-subs .badge')));
   check('modo Otimizar mostra o orçamento de rolls (40 de 40)', /40 de 40 rolls · 20 fixos em crítico/.test(await page.locator('.dz-panel:has(h2:text-is("Substats (rolls)"))').textContent()));
   await page.click('.dz-seg[aria-label="Modo dos substats"] button:has-text("À mão")'); await settle();
   check('o modo à mão mostra os valores brutos (em %) por padrão', (await field('Taxa crít. (valor total em %)').count()) === 1);
   await field('Taxa crít. (valor total em %)').locator('input').fill('33'); await field('Taxa crít. (valor total em %)').locator('input').blur(); await settle();
   check('33% de Taxa Crítica vira 10 rolls (33 ÷ 3,3)', (await page.click('.dz-seg[aria-label="Unidade dos substats"] button:has-text("Rolls")'), await field('Taxa crít. (máx. 30)').locator('input').inputValue()) === '10');
-  await view('Resumo');
-  const crit = await page.locator('.dz-panel:has(h2:text-is("Atributos"))').textContent();
-  await view('Build');
+  const crit = await page.locator('.db-panel:has(h3:text-is("Atributos"))').textContent();
   check('editar rolls à mão muda a Taxa crítica', !/98,9%/.test(crit), crit.match(/Taxa crítica\s*[\d,]+%/)?.[0]);
   await page.click('.dz-seg[aria-label="Modo dos substats"] button:has-text("Otimizar")'); await settle();
-  await view('Resumo');
-  check('voltar ao Otimizar restaura os 98,9%', /98,9%/.test(await page.locator('.dz-panel:has(h2:text-is("Atributos"))').textContent()));
-  await view('Build');
+  check('voltar ao Otimizar restaura os 98,9%', /98,9%/.test(await page.locator('.db-panel:has(h3:text-is("Atributos"))').textContent()));
 
   // Editor de build
-  await page.click('.dz-panel:has(h2:text-is("Equipamento")) button:has-text("Editar build")'); await page.waitForSelector('.dz-dialog');
+  await page.click('.db-toolbar button:has-text("Editar build")'); await page.waitForSelector('.dz-dialog');
   check('o editor só traz os atributos das peças (arma e set têm seletores próprios)', (await page.locator('.dz-dialog label.dz-field:has(span:text-is("Arma"))').count()) === 0 && (await page.locator('.dz-dialog .fx-slot[data-slot="sands"]').count()) === 1);
   await page.keyboard.press('Escape');
   check('Esc fecha o editor', (await page.locator('.dz-dialog').count()) === 0);
-  check('a faixa de build mostra a arma e as 5 peças', (await page.$$('.pc-piece')).length === 5 && /A Thousand Blazing Suns/.test(await page.textContent('.pc-weapon')));
+  check('a faixa de build mostra a arma e as 5 peças', (await page.$$('.gt-piece')).length === 5 && /A Thousand Blazing Suns/.test(await page.textContent('.gt-weapon')));
 
   // Equipamento com imagens e passivas em português
-  check('as peças e a arma têm imagem', (await page.locator('.pc-gear .art img').count()) >= 5, String(await page.locator('.pc-gear .art img').count()));
+  check('a arma tem imagem e cada peça mostra o set', (await page.locator('.gt-weapon .art img').count()) === 1 && /Obsidian Codex/.test(await page.textContent('.gt-piece')));
+  await openMore();
   const passive = await page.textContent('.pc-pcard[aria-label="Passiva da arma"]');
   check('a passiva da arma aparece em português, com o nome', /Brilho Escaldante/.test(passive), passive.replace(/\s+/g, ' ').slice(0, 110));
   const setCard = await page.textContent('.pc-pcard[aria-label="Bônus dos sets"]');
@@ -140,7 +141,7 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
   await page.click('.pc-refine button:has-text("R1")'); await settle();
 
   // Trocar arma: grade com imagens, filtro por raridade e busca
-  await page.click('.pc-weapon'); await page.waitForSelector('.dz-dialog .wcard');
+  await page.click('.gt-weapon'); await page.waitForSelector('.dz-dialog .wcard');
   check('o seletor de armas é uma grade de cards com imagem', (await page.locator('.dz-dialog .wcard').count()) > 10 && (await page.locator('.dz-dialog .wcard img').count()) > 5);
   check('a arma atual vem marcada como Equipada', (await page.locator('.dz-dialog .wcard[data-current="true"]').count()) === 1);
   await page.click('.dz-dialog .dz-seg button:has-text("4★")'); await settle();
@@ -151,12 +152,12 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
   check('a busca filtra as armas pelo nome', (await page.locator('.dz-dialog .wcard').count()) < before && (await page.locator('.dz-dialog .wcard').count()) >= 1);
   await page.keyboard.press('Escape');
   check('Esc fecha o seletor de armas', (await page.locator('.dz-dialog').count()) === 0);
-  await page.click('.pc-weapon'); await page.waitForSelector('.dz-dialog .wcard');
+  await page.click('.gt-weapon'); await page.waitForSelector('.dz-dialog .wcard');
   await page.fill('.dz-dialog input[type="search"]', 'Royal Greatsword'); await settle();
   await page.click('.dz-dialog .wcard:has-text("Royal Greatsword")'); await settle();
-  check('escolher uma arma troca a arma e fecha o seletor', /Royal Greatsword/.test(await page.textContent('.pc-weapon')) && (await page.locator('.dz-dialog').count()) === 0);
+  check('escolher uma arma troca a arma e fecha o seletor', /Royal Greatsword/.test(await page.textContent('.gt-weapon')) && (await page.locator('.dz-dialog').count()) === 0);
   await page.keyboard.press('Control+z'); await settle();
-  check('Ctrl+Z devolve a arma anterior', /A Thousand Blazing Suns/.test(await page.textContent('.pc-weapon')));
+  check('Ctrl+Z devolve a arma anterior', /A Thousand Blazing Suns/.test(await page.textContent('.gt-weapon')));
 
   // Trocar set: grade com imagem e o bônus de 2 peças
   await page.click('.pc-pcard[aria-label="Bônus dos sets"] button:has-text("Trocar set")'); await page.waitForSelector('.dz-dialog .scard');
@@ -184,6 +185,7 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
   check('o controle do otimizador muda a distribuição mostrada', (await page.textContent('[data-testid="opt-rolls"]')) !== optStart && /-/.test(await page.textContent('[data-testid="opt-vs-current"]')));
   await page.click('button:has-text("Usar 4 rolls em crítico")'); await settle();
   await view('Build');
+  await openSubs();
   check('aplicar fixa os rolls em crítico do build', /4 fixos em crítico/.test(await page.locator('.dz-panel:has(h2:text-is("Substats (rolls)"))').textContent()));
   await view('Avançado');
   await page.keyboard.press('Control+z'); await settle();
@@ -195,6 +197,7 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
 
   // Inventário GOOD (pela ligação do painel de substats)
   await view('Build');
+  await openSubs();
   await page.click('.dz-panel:has(h2:text-is("Substats (rolls)")) button:has-text("Usar o inventário GOOD")'); await page.waitForTimeout(800);
   check('o link do Build leva à aba Avançado', (await page.getAttribute('.pc-views button:has-text("Avançado")', 'aria-selected')) === 'true');
   check('o link abre a ferramenta Inventário GOOD', (await page.getAttribute('.dz-seg[aria-label="Ferramenta"] button:has-text("Inventário GOOD")', 'aria-pressed')) === 'true');
@@ -203,6 +206,7 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
   await page.click('.pc-good button:has-text("Aplicar o build de Mavuika")'); await page.waitForTimeout(1500);
   const appliedNote = /Build de Mavuika aplicado/.test(await page.textContent('.pc-notes'));
   await view('Build');
+  await openSubs();
   check('aplicar o build do inventário avisa e passa ao modo manual', appliedNote && (await page.getAttribute('.dz-seg[aria-label="Modo dos substats"] button:has-text("À mão")', 'aria-pressed')) === 'true');
   await view('Avançado');
   check('os níveis de talento vêm do inventário (9/8/7)', /9\/8\/7/.test(await eff()), await eff());
@@ -214,7 +218,7 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
   await page.click('.pc-tabs a:has-text("Citlali")');
   await page.waitForURL(/personagem\/Citlali/);
   await page.waitForSelector('.pc-dmg');
-  check('trocar de aba abre a calculadora da Citlali (reações Cryo)', /Citlali/.test(await page.textContent('.pc-id')) && /Derreter \(Cryo\)/.test(await page.textContent('.dz-panel:has(h2:text-is("Reações deste time"))')));
+  check('trocar de aba abre a calculadora da Citlali (reações Cryo)', /Citlali/.test(await page.textContent('.sc-art h2')) && /Derreter \(Cryo\)/.test(await page.textContent('.dz-panel:has(h2:text-is("Reações deste time"))')));
   await page.goto(`${BASE}/projeto/exemplo/personagem/Fantasma`, { waitUntil: 'networkidle' });
   await page.waitForURL(/personagem\/Mavuika/);
   check('personagem que não está no time volta para o primeiro', true);

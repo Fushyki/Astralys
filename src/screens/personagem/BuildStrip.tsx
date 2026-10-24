@@ -66,8 +66,13 @@ function Img({ src, fallback }: { src: string | undefined; fallback: string }) {
   return src && !failed ? <img src={src} alt="" loading="lazy" crossOrigin="anonymous" onError={() => setFailed(true)} /> : <b className="ph" aria-hidden="true">{fallback}</b>;
 }
 
-export function BuildStrip({ data, index, member: memberRef, projectId }: { data: LoadedData; index: number; member: MemberRef; projectId: string }) {
-  const [open, setOpen] = useState(false);
+export function BuildStrip({ data, index, member: memberRef, projectId, compact, editOpen, onEditClose }: { data: LoadedData; index: number; member: MemberRef; projectId: string; compact?: boolean; editOpen?: boolean; onEditClose?: () => void }) {
+  const [openLocal, setOpenLocal] = useState(false);
+  const open = openLocal || !!editOpen;
+  const setOpen = (x: boolean) => {
+    setOpenLocal(x);
+    if (!x) onEditClose?.();
+  };
   const [pickWeapon, setPickWeapon] = useState(false);
   const [pickSet, setPickSet] = useState(false);
   const [pickPiece, setPickPiece] = useState<PieceSlot | null>(null);
@@ -103,33 +108,53 @@ export function BuildStrip({ data, index, member: memberRef, projectId }: { data
   // Com dois sets (2+2), a 1ª, 2ª e 5ª peça ilustram o principal; as outras, o segundo.
   const setFor = (i: number) => (sets.length === 2 && (i === 2 || i === 3) ? sets[1] : sets[0]);
 
-  return (
-    <Panel
-      title="Equipamento"
-      aside={
-        <span className="pc-gearacts">
-          {memberRef.pieces ? (
-            <button type="button" className="dz-btn sm" onClick={() => update(index, { pieces: undefined })} title="Volta ao build genérico (rolls e main stats)">Voltar ao build genérico</button>
-          ) : inventoryPieces ? (
-            <button type="button" className="dz-btn sm" onClick={() => update(index, { pieces: inventoryPieces })} title="Usa as 5 peças que ele tem equipadas no inventário importado">Usar as peças dele do inventário</button>
-          ) : null}
-          <button type="button" className="dz-btn sm" onClick={() => setOpen(true)}>Editar build</button>
-        </span>
-      }
-    >
+  const acts = (editBtn: boolean) => (
+    <span className="pc-gearacts">
+      {memberRef.pieces ? (
+        <button type="button" className="dz-btn sm" onClick={() => update(index, { pieces: undefined })} title="Volta ao build genérico (rolls e main stats)">Voltar ao build genérico</button>
+      ) : inventoryPieces ? (
+        <button type="button" className="dz-btn sm" onClick={() => update(index, { pieces: inventoryPieces })} title="Usa as 5 peças que ele tem equipadas no inventário importado">Usar as peças dele do inventário</button>
+      ) : null}
+      {editBtn && <button type="button" className="dz-btn sm" onClick={() => setOpen(true)}>Editar build</button>}
+    </span>
+  );
+
+  const body = (
+    <>
       <div className="pc-gear">
-        <button type="button" className="pc-weapon gear-tile" data-rarity={weapon?.rarity ?? 5} onClick={() => setPickWeapon(true)} aria-label={`Trocar a arma ${memberRef.weapon}`}>
-          <span className="art"><Img src={weapon?.icon ? weaponIconUrl(weapon.icon) : undefined} fallback="⚔" /></span>
-          <span className="lv num">Nv 90</span>
-          <span className="rf num">R{refine}</span>
-          <span className="n">{memberRef.weapon}</span>
-          <span className="num sub">{weapon ? `ATK ${formatInt(weapon.baseAtk)}` : ''}{substat ? ` · ${substat}` : ''}</span>
-        </button>
+        {compact ? (
+          <button type="button" className="gt-weapon" data-rarity={weapon?.rarity ?? 5} onClick={() => setPickWeapon(true)} aria-label={`Trocar a arma ${memberRef.weapon}`}>
+            <span className="art"><Img src={weapon?.icon ? weaponIconUrl(weapon.icon) : undefined} fallback="⚔" /><b className="rf num">R{refine}</b></span>
+            <span className="txt">
+              <b className="n">{memberRef.weapon}</b>
+              <span className="num sub">{weapon ? `ATK ${formatInt(weapon.baseAtk)}` : ''}{substat ? ` · ${substat}` : ''}</span>
+              <span className="num sub">Nv 90</span>
+            </span>
+          </button>
+        ) : (
+          <button type="button" className="pc-weapon gear-tile" data-rarity={weapon?.rarity ?? 5} onClick={() => setPickWeapon(true)} aria-label={`Trocar a arma ${memberRef.weapon}`}>
+            <span className="art"><Img src={weapon?.icon ? weaponIconUrl(weapon.icon) : undefined} fallback="⚔" /></span>
+            <span className="lv num">Nv 90</span>
+            <span className="rf num">R{refine}</span>
+            <span className="n">{memberRef.weapon}</span>
+            <span className="num sub">{weapon ? `ATK ${formatInt(weapon.baseAtk)}` : ''}{substat ? ` · ${substat}` : ''}</span>
+          </button>
+        )}
         {PIECE_SLOTS.map((slot, i) => {
           const piece = memberRef.pieces?.find((p) => p.slotKey === slot);
           if (memberRef.pieces) {
             const pset = piece ? data.game.artifacts.find((x) => norm(x.name) === norm(piece.setKey)) : undefined;
             const main = piece ? mainStatOf(piece) : null;
+            if (compact) {
+              return (
+                <button type="button" key={slot} className={`gt-piece real${piece ? "" : " empty"}`} data-rarity={piece?.rarity ?? 4} onClick={() => setPickPiece(slot)} aria-label={`${SLOT_LABEL[slot]}: ${piece ? (pset?.name ?? piece.setKey) : 'sem peça'}. Tocar para escolher do inventário`}>
+                  <span className="top"><span className="lv num">{piece && main ? `+${main.level}` : ''}</span><span className="slot">{SLOT_LABEL[slot]}</span></span>
+                  <span className="main">{piece && main ? (MAIN_LABEL[main.key] ?? main.key) : 'Sem peça'}</span>
+                  <b className="val num">{piece && main ? formatMain(main.key, main.value) : '—'}</b>
+                  <span className="setname">{piece ? (pset?.name ?? piece.setKey) : ''}</span>
+                </button>
+              );
+            }
             return (
               <button type="button" key={slot} className={`pc-piece gear-tile real${piece ? '' : ' empty'}`} data-rarity={piece?.rarity ?? 4} onClick={() => setPickPiece(slot)} aria-label={`${SLOT_LABEL[slot]}: ${piece ? (pset?.name ?? piece.setKey) : 'sem peça'}. Tocar para escolher do inventário`}>
                 <span className="art"><Img src={pset ? pieceIconUrl(pset.id, slot) : undefined} fallback={piece ? '◆' : '+'} /></span>
@@ -142,6 +167,16 @@ export function BuildStrip({ data, index, member: memberRef, projectId }: { data
           }
           const m = mainValue(slot, memberRef);
           const set = setFor(i);
+          if (compact) {
+            return (
+              <button type="button" key={slot} className="gt-piece" data-rarity={memberRef.artifacts.rarity[slot]} onClick={() => setPickPiece(slot)} aria-label={`${SLOT_LABEL[slot]}: tocar para escolher uma peça do inventário`}>
+                <span className="top"><span className="lv num">+{memberRef.artifacts.rarity[slot] === 5 ? 20 : 16}</span><span className="slot">{SLOT_LABEL[slot]}</span></span>
+                <span className="main">{m.label}</span>
+                <b className="val num">{m.value}</b>
+                <span className="setname">{set?.name ?? 'Sem set'}</span>
+              </button>
+            );
+          }
           return (
             <button type="button" key={slot} className="pc-piece gear-tile" data-rarity={memberRef.artifacts.rarity[slot]} onClick={() => setPickPiece(slot)} aria-label={`${SLOT_LABEL[slot]}: tocar para escolher uma peça do inventário`}>
               <span className="art"><Img src={set ? pieceIconUrl(set.id, slot) : undefined} fallback={SLOT_LABEL[slot].charAt(0)} /></span>
@@ -154,6 +189,9 @@ export function BuildStrip({ data, index, member: memberRef, projectId }: { data
         })}
       </div>
 
+      {compact ? (
+        <details className="gr-more">
+          <summary>Passiva da arma e bônus do set</summary>
       <div className="pc-passives">
         <section className="pc-pcard" aria-label="Passiva da arma">
           <header>
@@ -202,6 +240,57 @@ export function BuildStrip({ data, index, member: memberRef, projectId }: { data
           ))}
         </section>
       </div>
+        </details>
+      ) : (
+      <div className="pc-passives">
+        <section className="pc-pcard" aria-label="Passiva da arma">
+          <header>
+            <span className="art sm"><Img src={weapon?.icon ? weaponIconUrl(weapon.icon) : undefined} fallback="⚔" /></span>
+            <div>
+              <h3>{weapon?.passive?.name ?? 'Passiva da arma'}{weapon?.passive?.namePt && weapon.passive.namePt !== weapon.passive.name ? <small> · {weapon.passive.namePt}</small> : null}</h3>
+              <span className="muted small">{memberRef.weapon}</span>
+            </div>
+            <div className="pc-refine" role="group" aria-label="Refino da arma">
+              {[1, 2, 3, 4, 5].map((r) => (
+                <button key={r} type="button" aria-pressed={refine === r} onClick={() => update(index, { refinement: r === 1 ? undefined : r })}>R{r}</button>
+              ))}
+            </div>
+            {weaponStatus !== 'full' && (
+              <span className={`dz-chip ${weaponStatus === 'none' ? '' : 'warn'}`} title={weaponFx?.note ?? 'Sem cadastro: só ATK base e substat contam'}>
+                {EFFECT_STATUS_LABEL[weaponStatus]}
+              </span>
+            )}
+          </header>
+          <Passive text={cleanText(weapon?.passive?.refinements[refine - 1]?.descriptionPt ?? weapon?.passive?.refinements[refine - 1]?.description)} />
+        </section>
+
+        <section className="pc-pcard" aria-label="Bônus dos sets">
+          <header>
+            <span className="art sm"><Img src={sets[0] ? pieceIconUrl(sets[0].id, 'flower') : undefined} fallback="◆" /></span>
+            <div>
+              <h3>{sets.length ? sets.map((x) => x.name).join(' + ') : 'Sem set'}</h3>
+              <span className="muted small">{sets.length === 2 ? '2 + 2 peças' : fourPiece ? '4 peças' : sets.length ? '2 peças' : 'Nenhum set escolhido'}</span>
+            </div>
+            {!memberRef.pieces && <button type="button" className="dz-btn sm" onClick={() => setPickSet(true)}>Trocar set</button>}
+          </header>
+          {sets.length === 0 && <p className="muted small">Sem bônus de set.</p>}
+          {sets.map((x) => (
+            <div className="pc-bonus" key={x.id}>
+              <div className="head">
+                <b>{x.name}{x.namePt && x.namePt !== x.name ? <small> · {x.namePt}</small> : null}</b>
+                {effectStatus(setFx(x.name)) !== 'full' && (
+                  <span className={`dz-chip ${effectStatus(setFx(x.name)) === 'none' ? '' : 'warn'}`} title={setFx(x.name)?.note}>{EFFECT_STATUS_LABEL[effectStatus(setFx(x.name))]}</span>
+                )}
+              </div>
+              {x.bonuses.twoPiece && <p><span className="pcs">2 peças</span> {cleanText(x.bonuses.twoPiece.descriptionPt ?? x.bonuses.twoPiece.description)}</p>}
+              {fourPiece && x.bonuses.fourPiece && (
+                <div className="four"><span className="pcs">4 peças</span> <Passive text={cleanText(x.bonuses.fourPiece.descriptionPt ?? x.bonuses.fourPiece.description)} /></div>
+              )}
+            </div>
+          ))}
+        </section>
+      </div>
+      )}
       {pickWeapon && character && (
         <WeaponPickerDialog
           weapons={weaponsFor(character, data.game.weapons)}
@@ -233,7 +322,15 @@ export function BuildStrip({ data, index, member: memberRef, projectId }: { data
         />
       )}
       {open && character && <BuildDialog data={data} index={index} memberRef={memberRef} onClose={() => setOpen(false)} />}
-    </Panel>
+    </>
+  );
+  return compact ? (
+    <div className="gr">
+      {body}
+      {(memberRef.pieces || inventoryPieces) && <div className="gr-foot">{acts(false)}</div>}
+    </div>
+  ) : (
+    <Panel title="Equipamento" aside={acts(true)}>{body}</Panel>
   );
 }
 

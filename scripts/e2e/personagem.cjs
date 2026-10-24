@@ -121,7 +121,7 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
   // Equipamento com imagens e passivas em português
   check('as peças e a arma têm imagem', (await page.locator('.pc-gear .art img').count()) >= 5, String(await page.locator('.pc-gear .art img').count()));
   const passive = await page.textContent('.pc-pcard[aria-label="Passiva da arma"]');
-  check('a passiva da arma aparece em português, com o nome', /Brilho Escaldante/.test(passive) && /No cálculo/.test(passive), passive.replace(/\s+/g, ' ').slice(0, 110));
+  check('a passiva da arma aparece em português, com o nome', /Brilho Escaldante/.test(passive), passive.replace(/\s+/g, ' ').slice(0, 110));
   const setCard = await page.textContent('.pc-pcard[aria-label="Bônus dos sets"]');
   check('os bônus do set (2 e 4 peças) aparecem em português', /2 peças/.test(setCard) && /4 peças/.test(setCard) && /Obsidian Codex/.test(setCard));
   const r1 = await page.textContent('.pc-pcard[aria-label="Passiva da arma"] p');

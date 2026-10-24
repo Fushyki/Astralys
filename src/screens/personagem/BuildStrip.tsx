@@ -167,9 +167,11 @@ export function BuildStrip({ data, index, member: memberRef, projectId }: { data
                 <button key={r} type="button" aria-pressed={refine === r} onClick={() => update(index, { refinement: r === 1 ? undefined : r })}>R{r}</button>
               ))}
             </div>
-            <span className={`dz-chip ${weaponStatus === 'full' ? 'ok' : weaponStatus === 'none' ? '' : 'warn'}`} title={weaponFx?.note ?? 'Sem cadastro: só ATK base e substat contam'}>
-              {EFFECT_STATUS_LABEL[weaponStatus]}
-            </span>
+            {weaponStatus !== 'full' && (
+              <span className={`dz-chip ${weaponStatus === 'none' ? '' : 'warn'}`} title={weaponFx?.note ?? 'Sem cadastro: só ATK base e substat contam'}>
+                {EFFECT_STATUS_LABEL[weaponStatus]}
+              </span>
+            )}
           </header>
           <Passive text={cleanText(weapon?.passive?.refinements[refine - 1]?.descriptionPt ?? weapon?.passive?.refinements[refine - 1]?.description)} />
         </section>
@@ -188,7 +190,9 @@ export function BuildStrip({ data, index, member: memberRef, projectId }: { data
             <div className="pc-bonus" key={x.id}>
               <div className="head">
                 <b>{x.name}{x.namePt && x.namePt !== x.name ? <small> · {x.namePt}</small> : null}</b>
-                <span className={`dz-chip ${effectStatus(setFx(x.name)) === 'full' ? 'ok' : effectStatus(setFx(x.name)) === 'none' ? '' : 'warn'}`} title={setFx(x.name)?.note}>{EFFECT_STATUS_LABEL[effectStatus(setFx(x.name))]}</span>
+                {effectStatus(setFx(x.name)) !== 'full' && (
+                  <span className={`dz-chip ${effectStatus(setFx(x.name)) === 'none' ? '' : 'warn'}`} title={setFx(x.name)?.note}>{EFFECT_STATUS_LABEL[effectStatus(setFx(x.name))]}</span>
+                )}
               </div>
               {x.bonuses.twoPiece && <p><span className="pcs">2 peças</span> {cleanText(x.bonuses.twoPiece.descriptionPt ?? x.bonuses.twoPiece.description)}</p>}
               {fourPiece && x.bonuses.fourPiece && (

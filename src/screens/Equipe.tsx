@@ -10,6 +10,7 @@ import type { LoadedData } from '../features/rotation/data';
 import { effectStatus } from '../features/rotation/teamInfo';
 import { weaponsFor } from '../features/rotation/teamOps';
 import { SetPickerDialog } from './personagem/SetPicker';
+import { MemberBuffs } from './equipe/MemberBuffs';
 import { WeaponPickerDialog } from './personagem/WeaponPicker';
 import { downloadProject } from '../features/rotation/importFile';
 import { cloneProject, saveProject } from '../features/rotation/persistence';
@@ -83,6 +84,7 @@ export default function Equipe() {
   const replaceMember = useRotationStore((s) => s.replaceMember);
   const addMember = useRotationStore((s) => s.addMember);
   const removeMember = useRotationStore((s) => s.removeMember);
+  const setCompat = useRotationStore((s) => s.setCompat);
   const [picker, setPicker] = useState<{ mode: 'replace'; index: number } | { mode: 'add' } | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -153,6 +155,19 @@ export default function Equipe() {
 
       {error && <p className="dz-error" role="alert">{error}</p>}
 
+      {project.compat === 'planilha' && (
+        <section className="dz-panel eq-compat" role="note" aria-label="Modo planilha">
+          <div>
+            <b>Modo planilha</b>
+            <p>
+              Este time reproduz a planilha original: Mavuika, Citlali, Iansan e Bennett usam só os efeitos dela, sem constelações e passivas curadas. Por isso mudar a constelação
+              não muda os buffs. Desligar o modo libera todos os efeitos, mas o DPS deixa de bater com a planilha.
+            </p>
+          </div>
+          <button type="button" className="dz-btn gold" onClick={() => setCompat('none')}>Usar todos os efeitos</button>
+        </section>
+      )}
+
       <section className="dz-grid c4" aria-label="Personagens do time">
         {project.members.map((ref, i) => {
           const character = characters.find((c) => c.name === ref.character);
@@ -197,6 +212,8 @@ export default function Equipe() {
                     {(gives[i] ?? []).map((g) => <Chip key={g}>{g}</Chip>)}
                   </div>
                 </div>
+
+                <MemberBuffs v={v} index={i} />
 
                 <div className="acts">
                   <Link className="dz-btn gold" to={`/projeto/${v.id}/personagem/${encodeURIComponent(ref.character)}`}>Ajustar build</Link>

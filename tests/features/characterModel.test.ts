@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { assembleTeam, analyzeProject, damageTable, effectiveTalents, resolveProject, type EffectsData, type GameData } from '../../src/engine';
-import { characterReactions, cleanMoveName, moveGroups, reactionOptions, receivedBuffs } from '../../src/features/character/characterModel';
+import { characterReactions, cleanMoveName, memberBuffCards, moveGroups, reactionOptions, receivedBuffs } from '../../src/features/character/characterModel';
 import { sampleProject } from '../../src/features/rotation/persistence';
 
 const root = path.resolve(__dirname, '../..');
@@ -123,5 +123,47 @@ describe('buffs recebidos', () => {
 
   it('sem janelas (perfis da planilha) a janela aparece como "sem janela"', () => {
     expect(list.every((b) => typeof b.window === 'string')).toBe(true);
+  });
+});
+
+describe('buffs ligados e desligados por personagem', () => {
+  const names = resolved.team.members.map((m) => m.character.name);
+
+  it('desligar `<buff>@<Nome>` tira o buff só desse personagem', () => {
+    const off = assembleTeam({ ...resolved.team, disabled: [`gear-1@${names[2]}`] });
+    const base = assembleTeam(resolved.team);
+    const gearOf = (a: typeof base) => a.buffs.find((b) => b.id === 'gear-1');
+    expect(gearOf(base)?.targets).toBe('all');
+    const targets = gearOf(off)?.targets as string[];
+    expect(targets).toEqual(names.filter((n) => n !== names[2]));
+  });
+
+  it('se todos os que recebem desligam, o buff some', () => {
+    const disabled = names.map((n) => `gear-1@${n}`);
+    expect(assembleTeam({ ...resolved.team, disabled }).buffs.some((b) => b.id === 'gear-1')).toBe(false);
+  });
+
+  it('a lista da Equipe traz equipamento, ressonância e buffs de aliados, cada um com o interruptor certo', () => {
+    const cards = memberBuffCards(project, resolved, bundle, 0);
+    expect(cards.some((c) => c.tag === 'Arma')).toBe(true);
+    expect(cards.some((c) => c.tag === 'Set · 4 peças')).toBe(true);
+    expect(cards.some((c) => c.tag === 'Ressonância')).toBe(true);
+    const bennett = cards.find((c) => c.id === 'flat-atk-3')!;
+    expect(bennett.toggleId).toBe(`flat-atk-3@${names[0]}`);
+    expect(bennett.giverName).toBe('Bennett');
+    // equipamento dele é de uma fonte própria (vale só para ele)
+    expect(cards.find((c) => c.tag === 'Arma')!.toggleId).toMatch(/^m0:/);
+  });
+
+  it('desligar só para um personagem não desliga para os outros e baixa o dano dele', () => {
+    const disabled = [`flat-atk-3@${names[0]}`];
+    const p2 = { ...project, disabled };
+    const r2 = resolveProject(p2, game, effects);
+    const b2 = analyzeProject({ team: r2.team, actions: r2.actions, flatEffects: r2.flatEffects, ampCoefficient: r2.ampCoefficient });
+    expect(b2.optimization.result.members[0].avg).toBeLessThan(bundle.optimization.result.members[0].avg);
+    const mine = memberBuffCards(p2, r2, b2, 0).find((c) => c.id === 'flat-atk-3')!;
+    expect(mine.active).toBe(false);
+    const other = memberBuffCards(p2, r2, b2, 1).find((c) => c.id === 'flat-atk-3');
+    expect(other?.active ?? true).toBe(true);
   });
 });

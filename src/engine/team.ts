@@ -60,7 +60,7 @@ export interface TeamInput {
 }
 
 export interface AssembleOptions {
-  /** Ids a desligar: fontes estáticas (`m0:set4p`), buffs de time (`gear-0`, `extra-1`, `flat-atk-2`), `resonance-pyro`, `res-shred-<membro>`. */
+  /** Ids a desligar (`<buff>@<Nome>` desliga um buff de time só para esse personagem): fontes estáticas (`m0:set4p`), buffs de time (`gear-0`, `extra-1`, `flat-atk-2`), `resonance-pyro`, `res-shred-<membro>`. */
   disabled?: ReadonlySet<string>;
   /** Rolls totais de cada membro, para calcular as conversões de stat (padrão: os rolls mínimos). */
   rolls?: readonly Rolls[];
@@ -151,6 +151,13 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
 
   const resonanceAtkPct = off('resonance-pyro') ? 0 : pyroResonanceAtkPct(members);
   const buffs: TeamBuff[] = [];
+  /** Põe um buff de time na lista, tirando quem o desligou só para si (id `<buff>@<Nome>`); sem ninguém, o buff some. */
+  const addBuff = (b: TeamBuff) => {
+    const all = b.targets === 'all' ? names : b.targets;
+    const kept = all.filter((n) => !off(`${b.id}@${n}`));
+    if (kept.length === 0) return;
+    buffs.push(kept.length === all.length ? b : { ...b, targets: kept });
+  };
 
   // 2) Buffs de arma e de 4 peças que vão ao time (valem para todos, inclusive o dono)
   members.forEach((m, i) => {
@@ -160,7 +167,7 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
     const dmgBonus = (w?.dmgPct ?? 0) + (s?.dmgPct ?? 0);
     const em = (w?.em ?? 0) + (s?.em ?? 0);
     if ((atkPct || dmgBonus || em) && !off(`gear-${i}`)) {
-      buffs.push({ id: `gear-${i}`, tag: gearTag(i), targets: 'all', delta: { atkPct, dmgBonus, em }, description: `Arma/set de ${names[i]}` });
+      addBuff({ id: `gear-${i}`, tag: gearTag(i), targets: 'all', delta: { atkPct, dmgBonus, em }, description: `Arma/set de ${names[i]}` });
     }
   });
 
@@ -178,7 +185,7 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
         return !b.forElements || b.forElements.includes(members[j].character.element);
       });
       if (targets.length === 0) continue;
-      buffs.push({ id: `cbuff-${i}-${b.id}`, tag: labelTag(b.label), targets, delta, description: `${names[i]}: ${b.label}`, ...(b.timed ? {} : { always: true as const }) });
+      addBuff({ id: `cbuff-${i}-${b.id}`, tag: labelTag(b.label), targets, delta, description: `${names[i]}: ${b.label}`, ...(b.timed ? {} : { always: true as const }) });
     }
   });
 
@@ -191,7 +198,7 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
       return;
     }
     if (off(`extra-${n}`)) return;
-    buffs.push({
+    addBuff({
       id: `extra-${n}`, tag: labelTag(e.label), targets: e.target === 'all' ? 'all' : [e.target], delta,
       description: e.description,
     });
@@ -214,7 +221,7 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
     const value = fromBase + fromTotal;
     if (!value || off(`flat-atk-${i}`)) return;
     const self = m.characterEffect?.appliesToSelf === true;
-    buffs.push({
+    addBuff({
       id: `flat-atk-${i}`, tag: characterTag(i), targets: names.filter((_, j) => self || j !== i),
       delta: { atkFlat: value }, description: `ATK fixo de ${names[i]}`,
     });
@@ -259,7 +266,7 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
         else if (to === 'normal' || to === 'charged' || to === 'plunge' || to === 'skill' || to === 'burst') delta.dmgByType![to] = value;
         else delta.reactionBonus = { ...delta.reactionBonus, [to]: value };
       }
-      buffs.push({
+      addBuff({
         id, tag: labelTag(b.label), targets, delta, description: `${names[i]}: ${b.label}`, derived: true,
         ...(b.timed ? {} : { always: true }),
       });

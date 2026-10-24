@@ -175,6 +175,10 @@ export function characterReactions(args: {
 
 export interface ReceivedBuff {
   id: string;
+  /** Id que liga/desliga o buff SÓ para este personagem (`<buff>@<Nome>`); fontes dele mesmo usam o próprio id. */
+  toggleId: string;
+  /** O buff está desligado para todo o time (em "Rotação e buffs"): daqui não dá para religar só um. */
+  lockedOff: boolean;
   name: string;
   /** Quem dá o buff (índice do membro) ou null para fontes do time. */
   giver: number | null;
@@ -221,9 +225,13 @@ export function receivedBuffs(project: RotationProject, resolved: ResolvedProjec
       const mine = attribution?.perMember.find((p) => p.name === name);
       const label = b.description ?? b.id;
       const flagged = NEEDS_CONFIRMATION.test(label);
-      const active = !project.disabled.includes(b.id);
+      const lockedOff = project.disabled.includes(b.id);
+      const toggleId = `${b.id}@${name}`;
+      const active = !lockedOff && !project.disabled.includes(toggleId);
       return {
         id: b.id,
+        toggleId,
+        lockedOff,
         name: flagged ? 'Buff sem origem conhecida' : label,
         giver,
         giverName: giver !== null ? names[giver] : 'Time',
@@ -246,6 +254,8 @@ export function receivedBuffs(project: RotationProject, resolved: ResolvedProjec
       const active = !project.disabled.includes(src.id);
       return {
         id: src.id,
+        toggleId: src.id,
+        lockedOff: false,
         name: flagged ? 'Buff sem origem conhecida' : src.label,
         giver: null,
         giverName: 'Projeto',
@@ -260,3 +270,95 @@ export function receivedBuffs(project: RotationProject, resolved: ResolvedProjec
   return [...fromBuffs, ...extras].sort((a, b) => (b.share ?? -1) - (a.share ?? -1));
 }
 
+
+
+// ---------- Buffs do personagem na tela de Equipe ----------
+
+export interface BuffCard {
+  /** Id da fonte (para achar o valor no cálculo). */
+  id: string;
+  /** Id que o interruptor grava em `disabled`. */
+  toggleId: string;
+  name: string;
+  /** De onde vem: Arma, Set · 4 peças, Passiva, C2, Ressonância… */
+  tag: string;
+  /** Quem dá o buff (índice do membro) ou null para fontes do time/projeto. */
+  giver: number | null;
+  giverName: string;
+  /** "o tempo todo" ou as janelas da rotação em que ele vale. */
+  window: string;
+  chips: string[];
+  active: boolean;
+  /** Desligado para o time todo em "Rotação e buffs": aqui o interruptor fica travado. */
+  lockedOff: boolean;
+  /** Fração do dano dele que some sem o buff (null se desligado). */
+  share: number | null;
+  needsConfirmation: boolean;
+  /** Vale só enquanto uma janela da rotação o liga (senão vale o tempo todo). */
+  timed: boolean;
+}
+
+const STATIC_TAG: Record<string, string> = { weapon: 'Arma', 'set-2p': 'Set · 2 peças', 'set-4p': 'Set · 4 peças', character: 'Passiva', resonance: 'Ressonância', extra: 'Extra' };
+
+/** Tag do buff de personagem (`cbuff-<membro>-<id>`): constelação (C2) ou passiva. */
+function characterBuffTag(resolved: ResolvedProject, memberIndex: number, buffId: string): string {
+  const b = resolved.team.members[memberIndex]?.characterEffect?.buffs.find((x) => x.id === buffId);
+  return b && b.minConstellation > 0 ? `C${b.minConstellation}` : 'Passiva';
+}
+
+/**
+ * Tudo que o personagem recebe, para ligar e desligar na Equipe: o que vem do equipamento e das passivas dele
+ * (arma, set, passivas), as ressonâncias e os buffs de equipe dos aliados, cada um com a janela e os números.
+ */
+export function memberBuffCards(project: RotationProject, resolved: ResolvedProject, bundle: AnalysisBundle, member: number): BuffCard[] {
+  const names = resolved.team.members.map((m) => m.character.name);
+  const name = names[member];
+  const memberAvg = bundle.optimization.result.members[member]?.avg || 1;
+  const full = assembleTeam({ ...resolved.team, disabled: [] }, { rolls: bundle.optimization.rolls });
+  const shareOf = (id: string, active: boolean) => {
+    const mine = bundle.attribution.items.find((i) => i.id === id)?.perMember.find((p) => p.name === name);
+    return active && mine ? mine.contribution / memberAvg : null;
+  };
+
+  const cards: BuffCard[] = [];
+  for (const src of full.sources[member]) {
+    if (!(src.kind in STATIC_TAG)) continue;
+    const isResonance = src.kind === 'resonance';
+    const toggleId = isResonance ? src.id.replace(/^m\d+:/, '') : src.id;
+    const active = !project.disabled.includes(toggleId);
+    const cb = /^m\d+:cbuff-(.+)$/.exec(src.id);
+    const flagged = NEEDS_CONFIRMATION.test(src.label);
+    cards.push({
+      id: src.id,
+      toggleId,
+      name: flagged ? 'Buff sem origem conhecida' : src.label,
+      tag: cb ? characterBuffTag(resolved, member, cb[1]) : STATIC_TAG[src.kind],
+      giver: isResonance || src.kind === 'extra' ? null : member,
+      giverName: isResonance ? 'Time' : src.kind === 'extra' ? 'Projeto' : name,
+      window: 'o tempo todo',
+      chips: deltaChips(src.delta),
+      active,
+      lockedOff: false,
+      share: shareOf(src.id, active),
+      needsConfirmation: flagged,
+      timed: false,
+    });
+  }
+  if (full.resonanceAtkPct > 0) {
+    const active = !project.disabled.includes('resonance-pyro');
+    cards.push({
+      id: 'resonance-pyro', toggleId: 'resonance-pyro', name: 'Ressonância Pyro (+25% de ATK)', tag: 'Ressonância', giver: null, giverName: 'Time',
+      window: 'o tempo todo', chips: [`ATK +${Math.round(full.resonanceAtkPct * 100)}%`], active, lockedOff: false, share: shareOf('resonance-pyro', active), needsConfirmation: false, timed: false,
+    });
+  }
+
+  for (const b of receivedBuffs(project, resolved, bundle, member)) {
+    const idMatch = /^cbuff-(\d+)-(.+)$/.exec(b.id);
+    const tag = b.id.startsWith('gear-') ? 'Arma/set' : b.id.startsWith('flat-atk-') ? 'Passiva' : idMatch ? characterBuffTag(resolved, Number(idMatch[1]), idMatch[2]) : 'Extra';
+    cards.push({
+      id: b.id, toggleId: b.toggleId, name: b.name, tag, giver: b.giver, giverName: b.giverName, window: b.window, chips: b.value === '—' ? [] : b.value.split(', '),
+      active: b.active, lockedOff: b.lockedOff, share: b.share, needsConfirmation: b.needsConfirmation, timed: b.window !== 'o tempo todo',
+    });
+  }
+  return cards;
+}

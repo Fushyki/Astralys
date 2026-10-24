@@ -108,6 +108,30 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.reload({ waitUntil: 'networkidle' }); await page.waitForSelector('.eq-card');
   check('a cópia sobrevive ao recarregar', (await cards()).length === 4);
 
+  // Buffs recebidos: ligar e desligar por personagem
+  const mavCard = page.locator('.eq-card:has(.name:text-is("Mavuika"))');
+  const citCard = page.locator('.eq-card:has(.name:text-is("Citlali"))');
+  check('cada cartão tem "Buffs recebidos" com a contagem de ativos', (await page.locator('.eq-buffs .bc-head').count()) === 4 && /\d+\/\d+/.test(await mavCard.locator('.bc-badge').textContent()));
+  await mavCard.locator('.bc-head').click();
+  const mavOn0 = Number((await mavCard.locator('.bc-badge').textContent()).split('/')[0]);
+  const dps0 = await kpi('DPS do time');
+  await mavCard.locator('.bcard:has(.bc-tag:text-is("Arma")) input').uncheck(); await settle();
+  check('desligar a arma da Mavuika baixa o DPS e o contador', (await kpi('DPS do time')) !== dps0 && Number((await mavCard.locator('.bc-badge').textContent()).split('/')[0]) === mavOn0 - 1, `${dps0} -> ${await kpi('DPS do time')}`);
+  await mavCard.locator('.bcard:has(.bc-tag:text-is("Arma")) input').check(); await settle();
+  check('religar volta ao DPS de antes', (await kpi('DPS do time')) === dps0);
+  // um buff de equipe desligado só para a Mavuika continua ligado para a Citlali
+  await citCard.locator('.bc-head').click();
+  const citBefore = await citCard.locator('.bcard[data-active="true"]').count();
+  await mavCard.locator('.bcard:has(.bc-n:text-is("ATK fixo de Bennett")) input').uncheck(); await settle();
+  check('desligar o ATK do Bennett só para a Mavuika não mexe nos buffs da Citlali', (await citCard.locator('.bcard[data-active="true"]').count()) === citBefore);
+  await mavCard.locator('.bc-bulk button:text-is("Desligar todos")').click(); await settle();
+  check('"Desligar todos" zera os ativos dele', (await mavCard.locator('.bc-badge').textContent()).startsWith('0/'));
+  await mavCard.locator('.bc-bulk button:text-is("Ligar todos")').click(); await settle();
+  check('"Ligar todos" volta ao DPS do exemplo', (await kpi('DPS do time')) === dps0);
+  check('o exemplo avisa que está no modo planilha', (await page.locator('.eq-compat').count()) === 1);
+  await page.click('.eq-compat button'); await settle();
+  check('"Usar todos os efeitos" libera as constelações e some o aviso', (await page.locator('.eq-compat').count()) === 0 && (await kpi('DPS do time')) !== dps0);
+
   // Celular
   await page.setViewportSize({ width: 390, height: 900 }); await page.waitForTimeout(400);
   check('celular sem rolagem horizontal da página', !(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1)));

@@ -172,7 +172,7 @@ export function ReceivedBuffsPanel({ v, index }: { v: ProjectView; index: number
       <div className="pc-buffs">
         {list.map((b) => (
           <label className="b" key={b.id} data-active={b.active}>
-            <input type="checkbox" checked={b.active} onChange={(e) => setEnabled(b.id, e.target.checked)} aria-label={`${b.name} (${b.giverName})`} />
+            <input type="checkbox" checked={b.active} disabled={b.lockedOff} title={b.lockedOff ? 'Desligado para o time todo em Rotação e buffs' : undefined} onChange={(e) => setEnabled(b.toggleId, e.target.checked)} aria-label={`${b.name} (${b.giverName})`} />
             <span className="info">
               <span className="n">{b.name}{b.needsConfirmation ? <Chip warn>A CONFIRMAR</Chip> : null}</span>
               <span className="src" style={{ color: b.giver !== null ? v.colors[b.giver] : undefined }}>{b.giverName} · {b.window}</span>

@@ -258,3 +258,8 @@ export function setSourceEnabled(project: RotationProject, id: string, enabled: 
   if (enabled === !has) return project;
   return touch({ ...project, disabled: enabled ? project.disabled.filter((x) => x !== id) : [...project.disabled, id] });
 }
+
+/** Liga ou desliga o modo planilha (os 4 personagens da planilha só com os efeitos dela, para o gabarito bater). */
+export function setCompat(project: RotationProject, compat: RotationProject['compat']): RotationProject {
+  return project.compat === compat ? project : touch({ ...project, compat });
+}

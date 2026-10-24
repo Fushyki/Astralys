@@ -7,7 +7,7 @@
  * as janelas de tempo dos buffs preenchem isso.
  */
 import type { Character, HitType, Weapon } from '../data/schema';
-import { weaponStatsAt, type BuffStats, type CharacterBuff, type CharacterEffect, type SetEffect, type WeaponEffect } from '../effects/schema';
+import { REACTION_BONUS_KEYS, weaponStatsAt, type BuffStats, type CharacterBuff, type CharacterEffect, type ReactionBonusKey, type SetEffect, type WeaponEffect } from '../effects/schema';
 import {
   FLOWER_HP,
   MAIN_STAT_VALUES,
@@ -50,29 +50,45 @@ export interface StatBlock {
   vaporizeBonus: number;
   /** Fração da DEF do inimigo ignorada pelos golpes deste membro. */
   defIgnore: number;
+  /** Bônus de DMG Físico (só golpes Físicos). */
+  physDmg: number;
+  /** Dano Crítico extra só em golpes Físicos. */
+  physCritDmg: number;
+  /**
+   * Parte de `dmgBonus` que é bônus do ELEMENTO do personagem (ascensão, cálice, 2 peças elementais, buffs com
+   * `forElements`). Golpes de outro elemento ou Físicos não a recebem.
+   */
+  eleDmg: number;
+  /** Bônus de dano de reação (ex.: +40% de Sobrecarga do Thundering Fury), em fração. */
+  reactionBonus: Record<ReactionBonusKey, number>;
 }
 
-type ByType = Partial<Record<HitType, number>>;
-const BY_TYPE_KEYS = ['dmgByType', 'critRateByType', 'critDmgByType'] as const;
+/** Reações com bônus de dano próprio além de Derreter/Vaporizar (que têm campo separado); ver `REACTION_BONUS_KEYS`. */
+export { REACTION_BONUS_KEYS, type ReactionBonusKey };
+const zeroReactions = () => Object.fromEntries(REACTION_BONUS_KEYS.map((k) => [k, 0])) as Record<ReactionBonusKey, number>;
 
-export type StatDelta = Partial<Omit<StatBlock, 'dmgByType' | 'critRateByType' | 'critDmgByType'>> & {
+type ByType = Partial<Record<HitType, number>>;
+const BY_TYPE_KEYS = ['dmgByType', 'critRateByType', 'critDmgByType', 'reactionBonus'] as const;
+
+export type StatDelta = Partial<Omit<StatBlock, 'dmgByType' | 'critRateByType' | 'critDmgByType' | 'reactionBonus'>> & {
   dmgByType?: ByType;
   critRateByType?: ByType;
   critDmgByType?: ByType;
+  reactionBonus?: Partial<Record<ReactionBonusKey, number>>;
 };
 
 export const zeroBlock = (): StatBlock => ({
   atkPct: 0, atkFlat: 0, hpPct: 0, hpFlat: 0, defPct: 0, defFlat: 0, em: 0, er: 0, critRate: 0, critDmg: 0,
   dmgBonus: 0, dmgByType: { normal: 0, charged: 0, plunge: 0, skill: 0, burst: 0 },
   critRateByType: { normal: 0, charged: 0, plunge: 0, skill: 0, burst: 0 }, critDmgByType: { normal: 0, charged: 0, plunge: 0, skill: 0, burst: 0 },
-  meltBonus: 0, vaporizeBonus: 0, defIgnore: 0,
+  meltBonus: 0, vaporizeBonus: 0, defIgnore: 0, physDmg: 0, physCritDmg: 0, eleDmg: 0, reactionBonus: zeroReactions(),
 });
 
 export function addDelta(target: StatBlock, delta: StatDelta): StatBlock {
   for (const [k, v] of Object.entries(delta)) {
     if ((BY_TYPE_KEYS as readonly string[]).includes(k)) {
-      const into = target[k as (typeof BY_TYPE_KEYS)[number]];
-      for (const [t, x] of Object.entries(v as object)) into[t as HitType] += x as number;
+      const into = target[k as (typeof BY_TYPE_KEYS)[number]] as Record<string, number>;
+      for (const [t, x] of Object.entries(v as object)) into[t] = (into[t] ?? 0) + (x as number);
     } else if (typeof v === 'number') {
       (target as unknown as Record<string, number>)[k] += v;
     }
@@ -93,6 +109,9 @@ const NAMED: Record<string, (v: number) => StatDelta> = {
   CR: (v) => ({ critRate: v }),
   CD: (v) => ({ critDmg: v }),
   'DMG%': (v) => ({ dmgBonus: v }),
+  /** Cálice e 2 peças elementais: DMG do elemento do personagem (não vale para golpes Físicos nem de outro elemento). */
+  'DMG% Elemental': (v) => ({ dmgBonus: v, eleDmg: v }),
+  'Physical DMG%': (v) => ({ physDmg: v }),
   'DMG% Normal': (v) => ({ dmgByType: { normal: v } }),
   'DMG% Carregado': (v) => ({ dmgByType: { charged: v } }),
   'DMG% Charged': (v) => ({ dmgByType: { charged: v } }),
@@ -113,8 +132,9 @@ export function namedStatDelta(name: string, value: number): StatDelta | null {
 /** Stat de ascensão/substat do Lunaris ('CD', 'Pyro%', 'Healing'...) → delta. Bônus elementais só valem para o próprio elemento. */
 export function lunarisStatDelta(stat: string, value: number, element: string): StatDelta | null {
   if (stat === 'Healing') return null;
-  if (stat.endsWith('%') && /^(Physical|Pyro|Hydro|Anemo|Electro|Dendro|Cryo|Geo)%$/.test(stat)) {
-    return stat === `${element}%` ? { dmgBonus: value } : null;
+  if (stat === 'Physical%') return { physDmg: value };
+  if (stat.endsWith('%') && /^(Pyro|Hydro|Anemo|Electro|Dendro|Cryo|Geo)%$/.test(stat)) {
+    return stat === `${element}%` ? { dmgBonus: value, eleDmg: value } : null;
   }
   return namedStatDelta(stat, value);
 }
@@ -150,6 +170,8 @@ export interface MemberInput {
   /** Níveis EFETIVOS (já com o +3 das constelações). */
   talents: { normal: number; skill: number; burst: number };
   constellation?: number;
+  /** Facções ligadas pelo usuário neste membro (só as que o personagem pode ter). */
+  factions?: ('moonsign' | 'hexerei')[];
   /** ER mínimo desejado (1 = 100%). */
   minER?: number;
   /** Rolls totais de substat (padrão: 9 por peça 5★ + 7 por peça 4★). */
@@ -214,13 +236,16 @@ function mainStatValue(slot: 'sands' | 'goblet' | 'circlet', stat: string, rarit
 }
 
 /** Delta de um buff de personagem (passiva/constelação). Os campos podem faltar: os JSON não passam pelo Zod. */
-export function characterBuffDelta(stats: BuffStats | undefined): StatDelta {
+export function characterBuffDelta(stats: BuffStats | undefined, elemental = false): StatDelta {
   if (!stats) return {};
   return {
     atkPct: stats.atkPct ?? 0, dmgBonus: stats.dmgPct ?? 0, critRate: stats.critRate ?? 0, critDmg: stats.critDmg ?? 0,
     em: stats.em ?? 0, er: stats.er ?? 0, hpPct: stats.hpPct ?? 0, defPct: stats.defPct ?? 0, dmgByType: stats.dmgPctByType ?? {},
     critRateByType: stats.critRateByType ?? {}, critDmgByType: stats.critDmgByType ?? {}, defIgnore: stats.defIgnore ?? 0,
     atkFlat: stats.atkFlat ?? 0, hpFlat: stats.hpFlat ?? 0, defFlat: stats.defFlat ?? 0,
+    physDmg: stats.physDmgPct ?? 0, physCritDmg: stats.physCritDmg ?? 0, reactionBonus: stats.reactionBonus ?? {},
+    // Buff só para certos elementos ("DMG Pyro +X%" para membros Pyro): é bônus elemental, não vale em golpe Físico.
+    ...(elemental ? { eleDmg: stats.dmgPct ?? 0 } : {}),
   };
 }
 
@@ -236,7 +261,8 @@ function twoPieceDelta(set: SetSelection | undefined, element: string): StatDelt
   let any = false;
   for (const tp of [effect.twoPiece, ...(effect.twoPieceMore ?? [])]) {
     if (!tp || (tp.element && tp.element !== element)) continue;
-    const d = namedStatDelta(tp.stat, tp.value);
+    // "DMG%" de 2 peças é sempre bônus elemental no jogo: não vale para golpes Físicos.
+    const d = namedStatDelta(tp.stat === 'DMG%' ? 'DMG% Elemental' : tp.stat, tp.value);
     if (d) {
       addDelta(out, d);
       any = true;
@@ -301,7 +327,7 @@ export function staticSources(m: MemberInput, member = 0): StatSource[] {
   }
 
   for (const b of activeCharacterBuffs(m)) {
-    if (!b.timed && b.scope === 'self') add(`cbuff-${b.id}`, b.label, 'character', characterBuffDelta(b.stats));
+    if (!b.timed && b.scope === 'self') add(`cbuff-${b.id}`, b.label, 'character', characterBuffDelta(b.stats, !!b.forElements));
   }
 
   const we = m.weaponEffect ? weaponStatsAt(m.weaponEffect, m.refinement) : undefined;
@@ -317,7 +343,7 @@ export function staticSources(m: MemberInput, member = 0): StatSource[] {
     add('set4p', `${m.primarySet?.name} (4 peças)`, 'set-4p', {
       atkPct: four.atkPct, dmgBonus: four.dmgPct, critRate: four.critRate, critDmg: four.critDmg, em: four.em,
       meltBonus: four.meltBonus, vaporizeBonus: four.vaporizeBonus, dmgByType: four.dmgPctByType,
-      er: four.er, hpPct: four.hpPct, defPct: four.defPct,
+      er: four.er, hpPct: four.hpPct, defPct: four.defPct, reactionBonus: four.reactionBonus ?? {},
     });
   }
 
@@ -327,7 +353,7 @@ export function staticSources(m: MemberInput, member = 0): StatSource[] {
     return out;
   }
   for (const [slot, stat] of [['sands', a.sands], ['goblet', a.goblet], ['circlet', a.circlet]] as const) {
-    add(`main-${slot}`, `Main stat: ${stat}`, 'main-stat', namedStatDelta(stat, mainStatValue(slot, stat, a.rarity[slot])));
+    add(`main-${slot}`, `Main stat: ${stat}`, 'main-stat', namedStatDelta(slot === 'goblet' && stat === 'DMG%' ? 'DMG% Elemental' : stat, mainStatValue(slot, stat, a.rarity[slot])));
   }
   return out;
 }
@@ -397,6 +423,11 @@ export interface FinalStats {
   meltBonus: number;
   vaporizeBonus: number;
   defIgnore: number;
+  /** Bônus de DMG Físico e a parte elemental de `dmgBonus` (ver `StatBlock`). */
+  physDmg: number;
+  physCritDmg: number;
+  eleDmg: number;
+  reactionBonus: Record<ReactionBonusKey, number>;
   /** Bônus de ATK% que a arma ganha com ER (ex.: Engulfing Lightning). */
   weaponErAtkPct: number;
 }
@@ -451,8 +482,28 @@ export function finalStats(m: MemberInput, statics: StatBlock, rolls: Rolls, tea
     meltBonus: statics.meltBonus + team.meltBonus,
     vaporizeBonus: statics.vaporizeBonus + team.vaporizeBonus,
     defIgnore: statics.defIgnore + team.defIgnore,
+    physDmg: (statics.physDmg ?? 0) + (team.physDmg ?? 0),
+    physCritDmg: (statics.physCritDmg ?? 0) + (team.physCritDmg ?? 0),
+    eleDmg: (statics.eleDmg ?? 0) + (team.eleDmg ?? 0),
+    reactionBonus: Object.fromEntries(REACTION_BONUS_KEYS.map((k) => [k, (statics.reactionBonus?.[k] ?? 0) + (team.reactionBonus?.[k] ?? 0)])) as Record<ReactionBonusKey, number>,
     weaponErAtkPct: erAtk,
   };
+}
+
+/**
+ * DMG% que vale para um golpe: o geral, menos a parte elemental se o golpe não é do elemento do personagem, mais o
+ * bônus Físico se o golpe é Físico, mais o do tipo de golpe (golpe extra sem tipo não recebe bônus de tipo).
+ */
+export function hitDmgBonus(
+  stats: Pick<FinalStats, 'dmgBonus' | 'dmgByType' | 'physDmg' | 'eleDmg'>,
+  element: string,
+  ownElement: string,
+  hitType: string,
+): number {
+  const typed = (stats.dmgByType as Record<string, number>)[hitType] ?? 0;
+  const ele = element === ownElement ? 0 : stats.eleDmg ?? 0;
+  const phys = element === 'Physical' ? stats.physDmg ?? 0 : 0;
+  return stats.dmgBonus - ele + phys + typed;
 }
 
 /** Rolls mínimos: `min` em cada um dos 10 substats. */

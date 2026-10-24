@@ -7,8 +7,9 @@ import { loadGood } from '../../features/good/goodStore';
 import { norm, type GoodArtifact } from '../../features/good/goodImport';
 import { MAIN_LABEL, formatMain } from '../../features/good/labels';
 import { PiecePickerDialog } from './PiecePicker';
-import { NumberInput, SelectField } from '../../design/fields';
+import { NumberInput } from '../../design/fields';
 import { Panel } from '../../design/primitives';
+import { SecHead, StatChip, STAT_COLOR } from '../../design/filtros';
 import { cleanText, pieceIconUrl, weaponIconUrl } from '../../design/images';
 import { FLOWER_HP, MAIN_STAT_VALUES, PLUME_ATK, PIECE_SLOTS, buildFromPieces, mainStatOf, type MemberRef, type PieceSlot, type RealPiece } from '../../engine';
 import { weaponsFor } from '../../features/rotation/teamOps';
@@ -24,6 +25,14 @@ const STAT_LABEL: Record<string, string> = {
   'ATK%': 'ATK%', EM: 'Maestria Elemental', ER: 'Recarga de Energia', 'HP%': 'HP%', 'DEF%': 'DEF%', 'DMG%': 'DMG% elemental',
   CR: 'Taxa Crítica', CD: 'Dano Crítico', Healing: 'Bônus de Cura',
 };
+
+const MAIN_TAG: Record<string, string> = { 'ATK%': 'ATK%', EM: 'EM', ER: 'ER', 'HP%': 'HP%', 'DEF%': 'DEF%', 'DMG%': 'DMG%', CR: 'CR', CD: 'CD', Healing: 'Cura' };
+
+/** Valor do main stat no nível máximo, para o número do chip. */
+function mainShown(slot: 'sands' | 'goblet' | 'circlet', stat: string, rarity: 4 | 5): string {
+  const v = (MAIN_STAT_VALUES[slot] as Record<string, readonly [number, number]>)[stat]?.[rarity === 5 ? 0 : 1] ?? 0;
+  return stat === 'EM' ? formatInt(v) : `${formatDecimal(v * 100, 1)}%`;
+}
 
 /** Valor do main stat da peça no nível máximo (flor e pena são fixos). */
 function mainValue(slot: PieceSlot, ref: MemberRef): { label: string; value: string } {
@@ -124,7 +133,7 @@ export function BuildStrip({ data, index, member: memberRef, projectId }: { data
             return (
               <button type="button" key={slot} className={`pc-piece gear-tile real${piece ? '' : ' empty'}`} data-rarity={piece?.rarity ?? 4} onClick={() => setPickPiece(slot)} aria-label={`${SLOT_LABEL[slot]}: ${piece ? (pset?.name ?? piece.setKey) : 'sem peça'}. Tocar para escolher do inventário`}>
                 <span className="art"><Img src={pset ? pieceIconUrl(pset.id, slot) : undefined} fallback={piece ? '◆' : '+'} /></span>
-                {piece && <span className="lv num">+{piece.level ?? 20}</span>}
+                {piece && main && <span className="lv num">+{main.level}</span>}
                 <span className="n">{SLOT_LABEL[slot]}</span>
                 <span className="main">{piece && main ? (MAIN_LABEL[main.key] ?? main.key) : 'Sem peça'}</span>
                 <span className="num val">{piece && main ? formatMain(main.key, main.value) : ''}</span>
@@ -235,6 +244,7 @@ function BuildDialog({ data, index, memberRef, onClose }: { data: LoadedData; in
     { value: '', label: 'Nenhum' },
     ...data.game.artifacts.map((s) => ({ value: s.name, label: `${s.name}${data.effects.sets.some((e) => e.set === s.name) ? '' : ' (sem efeito)'}` })),
   ];
+  const elementTone = STAT_COLOR[`${character.element.toLowerCase()}_dmg_`];
   const missing = missingEffects(memberRef, data.effects);
   const cover = effectCoverage(memberRef, data.effects);
 
@@ -252,22 +262,43 @@ function BuildDialog({ data, index, memberRef, onClose }: { data: LoadedData; in
           <button type="button" className="dz-btn sm" onClick={onClose}>Fechar</button>
         </header>
         <div className="pc-dialog-body">
-          <p className="muted small">A arma e o set têm seletores próprios: clique na arma ou em <b>Trocar set</b>. Aqui ficam os atributos principais das peças.</p>
-          <div className="pc-form three">
-            <SelectField label="Areia" value={memberRef.artifacts.sands} onChange={(v) => setArtifacts({ sands: v })} options={mainOptions('sands')} />
-            <SelectField label="Cálice" value={memberRef.artifacts.goblet} onChange={(v) => setArtifacts({ goblet: v })} options={mainOptions('goblet')} />
-            <SelectField label="Tiara" value={memberRef.artifacts.circlet} onChange={(v) => setArtifacts({ circlet: v })} options={mainOptions('circlet')} />
-          </div>
-          <div className="pc-form five">
-            {PIECE_SLOTS.map((slot) => (
-              <SelectField
-                key={slot}
-                label={`${SLOT_LABEL[slot]}`}
-                value={String(memberRef.artifacts.rarity[slot])}
-                onChange={(v) => setArtifacts({ rarity: { ...memberRef.artifacts.rarity, [slot]: Number(v) as 4 | 5 } })}
-                options={[{ value: '5', label: '5★' }, { value: '4', label: '4★' }]}
-              />
-            ))}
+          {(['sands', 'goblet', 'circlet'] as const).map((slot) => {
+            const opts = mainOptions(slot);
+            return (
+              <div className="fx-slot" key={slot} data-slot={slot}>
+                <SecHead title={SLOT_LABEL[slot]} count={1} total={opts.length} />
+                <div className="fx-grid">
+                  {opts.map((o) => (
+                    <StatChip
+                      key={o.value}
+                      tag={MAIN_TAG[o.value] ?? o.value}
+                      n={mainShown(slot, o.value, memberRef.artifacts.rarity[slot])}
+                      on={memberRef.artifacts[slot] === o.value}
+                      color={o.value === 'DMG%' ? elementTone : undefined}
+                      label={o.label}
+                      onClick={() => setArtifacts({ [slot]: o.value })}
+                    />
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+          <div className="fx-slot">
+            <SecHead title="Raridade" />
+            <div className="fx-grid">
+              {PIECE_SLOTS.map((slot) => (
+                <button
+                  key={slot}
+                  type="button"
+                  className="fx-chip"
+                  aria-pressed={memberRef.artifacts.rarity[slot] === 5}
+                  title={`${SLOT_LABEL[slot]}: ${memberRef.artifacts.rarity[slot]}★ (tocar alterna 5★ e 4★)`}
+                  onClick={() => setArtifacts({ rarity: { ...memberRef.artifacts.rarity, [slot]: memberRef.artifacts.rarity[slot] === 5 ? 4 : 5 } })}
+                >
+                  <i>{SLOT_LABEL[slot]}</i><span className="num">{memberRef.artifacts.rarity[slot]}★</span>
+                </button>
+              ))}
+            </div>
           </div>
           <div className="pc-form two">
             <NumberInput label="ER mínimo" value={Math.round((memberRef.minER ?? 0) * 1000) / 10} min={0} step={5} suffix="%" onCommit={(v) => update(index, { minER: Math.max(0, v) / 100 })} />

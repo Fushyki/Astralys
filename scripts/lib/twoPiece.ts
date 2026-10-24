@@ -22,6 +22,7 @@ export function parseTwoPiece(description: string): TwoPiece[] | null {
   if ((m = d.match(/^Gain an? (\d+(?:\.\d+)?)% (Pyro|Hydro|Anemo|Electro|Dendro|Cryo|Geo) DMG Bonus/))) {
     return [{ stat: 'DMG%', value: round(Number(m[1]) / 100), element: m[2] as (typeof ELEMENTS)[number] }];
   }
+  if ((m = d.match(/^Physical DMG (?:\+|is increased by )(\d+(?:\.\d+)?)%/))) return [{ stat: 'Physical DMG%', value: pct(m) }];
   if ((m = d.match(/^Normal and Charged Attack DMG \+(\d+(?:\.\d+)?)%/))) {
     return [{ stat: 'DMG% Normal', value: pct(m) }, { stat: 'DMG% Charged', value: pct(m) }];
   }

@@ -4,13 +4,14 @@
  *
  * Modelo derivado da aba "Rotação" da planilha de referência, sem o limite de 4 reações e 5 perfis.
  */
-import type { HitType, Move, Talent } from '../data/schema';
-import type { FlatDamageEffect } from '../effects/schema';
-import type { AdditiveReaction, AmplifyingReaction, ElementOrPhysical } from './constants/reactions';
-import { computeHit, type HitBreakdown } from './damage';
+import type { Element, HitType, Move, Talent } from '../data/schema';
+import type { FlatDamageEffect, SpecialMove } from '../effects/schema';
+import { SPECIAL_RESIST, TRANSFORMATIVE, type AdditiveReaction, type AmplifyingReaction, type ElementOrPhysical, type LunarReaction, type SpecialReaction, type TransformativeReaction } from './constants/reactions';
+import { computeHit, type EnemyStats, type HitBreakdown } from './damage';
 import { critFactor } from './formulas';
+import { computeLunarReaction, computeSpecial, computeStellarSwirlReaction, computeTransformative, type SpecialBreakdown } from './reactions';
 import type { Rolls } from './artifacts';
-import { activeTeamDelta, finalStats, type FinalStats, type MemberInput } from './stats';
+import { activeTeamDelta, finalStats, hitDmgBonus, type FinalStats, type MemberInput } from './stats';
 import type { GlobalConfig, TeamAssembly } from './team';
 
 export type ReactionChoice = 'none' | AmplifyingReaction | AdditiveReaction;
@@ -24,12 +25,32 @@ export interface ExtraScale {
   flat?: number;
 }
 
+/** Tipo do golpe para os bônus: os 5 do jogo ou 'other' (golpe extra de proc, sem bônus de tipo). */
+export type MoveHitType = HitType | 'other';
+
+/**
+ * Reação que causa dano por si, posta na rotação como uma ação (`talent: 'reaction'`), com a Maestria e os bônus de
+ * reação de quem a dispara. Fórmulas do Genshin Optimizer (`libs/gi/wr/src/reaction/{trans,lunar,stellar}.ts`).
+ */
+export type ReactionHit =
+  | { kind: 'transformative'; reaction: TransformativeReaction; /** Redemoinho: elemento espalhado. */ element?: Element }
+  | { kind: 'lunar'; reaction: Exclude<LunarReaction, 'lunarbloom'> }
+  | { kind: 'stellarswirl'; vortex?: 'vortex1' | 'vortex2' };
+
 export interface ResolvedMove {
   id: string;
   /** Nome do personagem dono do golpe (igual a `character.name`). */
   character: string;
-  talent: Talent;
-  hitType: HitType;
+  /**
+   * 'proc' = golpe extra de arma, set, passiva ou constelação (escala fixa, não depende do nível de talento);
+   * 'reaction' = dano da própria reação (`reactionHit`).
+   */
+  talent: Talent | 'proc' | 'reaction';
+  /** Golpe que causa dano Lunar/Estelar (base = stat do dono): ignora DMG% e dano fixo comuns, usa os bônus da reação. */
+  special?: SpecialMove;
+  /** Só com `talent: 'reaction'`. */
+  reactionHit?: ReactionHit;
+  hitType: MoveHitType;
   label: string;
   displayName: string;
   /** Acertos que o golpe contém (importa para os stacks de dano fixo). */
@@ -75,9 +96,98 @@ export interface ActionResult {
   scale: { atk: number; em: number; hp: number; def: number; flat: number };
   flatDamage: number;
   breakdown: HitBreakdown;
+  /** Família do dano: golpe direto, reação transformativa, Lunar ou Estelar. */
+  kind: DamageKind;
+  /** Taxa e Dano Crítico que valeram neste golpe (nas transformativas, só os da reação). */
+  critRate: number;
+  critDmg: number;
   noCrit: number;
   crit: number;
   avg: number;
+}
+
+export type DamageKind = 'direct' | 'transformative' | 'lunar' | 'stellar';
+
+const isLunar = (r: SpecialReaction) => r.startsWith('lunar');
+
+/** Família do dano de um golpe resolvido. */
+export function damageKind(move: ResolvedMove): DamageKind {
+  if (move.reactionHit) return move.reactionHit.kind === 'transformative' ? 'transformative' : move.reactionHit.kind === 'lunar' ? 'lunar' : 'stellar';
+  if (move.special) return isLunar(move.special.reaction) ? 'lunar' : 'stellar';
+  return 'direct';
+}
+
+/** Breakdown de dano Lunar/Estelar no formato do golpe direto (o DMG% vira o multiplicador `specialDmg_`). */
+function specialToHit(b: SpecialBreakdown, executions: number): HitBreakdown {
+  const baseTotal = b.base * executions;
+  return {
+    base: b.base, executions, flatDamage: 0, additive: 0, baseTotal, dmgMultiplier: b.specialDmgMultiplier, crit: 1,
+    def: b.def, res: b.res, amp: 1, reactionApplied: true, total: baseTotal * b.specialDmgMultiplier * b.def * b.res,
+  };
+}
+
+interface ReactionActionInput {
+  move: ResolvedMove;
+  executions: number;
+  ownElement: Element;
+  stats: FinalStats;
+  /** Escala do golpe no nível de talento (golpes Lunar/Estelar). */
+  scale: { atk: number; em: number; hp: number; def: number; flat: number };
+  characterLevel: number;
+  enemy: EnemyStats;
+}
+
+/** Dano de um golpe Lunar/Estelar ou de uma reação posta na rotação (sem crítico: ele vem em `critRate`/`critDmg`). */
+function reactionAction(i: ReactionActionInput): { element: ElementOrPhysical; breakdown: HitBreakdown; critRate: number; critDmg: number } {
+  const rb = (k: string) => (i.stats.reactionBonus as Record<string, number>)[k] ?? 0;
+  const special = (r: SpecialReaction) => ({
+    bonuses: { dmgBonus: rb(r), baseDmgBonus: rb(`${r}Base`), specialDmgBonus: rb(`${r}Special`), flatDamage: rb(`${r}Flat`), stellarMultiBonus: rb(`${r}Mult`) },
+    critRate: i.stats.critRate + rb(`${r}CritRate`),
+    critDmg: i.stats.critDmg + rb(`${r}CritDmg`),
+    critMode: 'hit' as const,
+    characterLevel: i.characterLevel,
+    em: i.stats.em,
+    enemy: i.enemy,
+  });
+  const hit = i.move.reactionHit;
+  if (!hit) {
+    const sp = i.move.special!;
+    const resist = isLunar(sp.reaction) ? SPECIAL_RESIST[sp.reaction as LunarReaction] : sp.resist ?? i.ownElement;
+    const s = i.stats;
+    const statValue = s.atk * i.scale.atk + s.em * i.scale.em + s.hp * i.scale.hp + s.def * i.scale.def + i.scale.flat;
+    const c = special(sp.reaction);
+    const b = computeSpecial({ ...c, reaction: sp.reaction, resistElement: resist, base: { statValue }, multiplier: 1 });
+    return { element: resist, breakdown: specialToHit(b, i.executions), critRate: c.critRate, critDmg: c.critDmg };
+  }
+  if (hit.kind === 'lunar') {
+    const c = special(hit.reaction);
+    const b = computeLunarReaction(hit.reaction, c);
+    return { element: SPECIAL_RESIST[hit.reaction], breakdown: specialToHit(b, i.executions), critRate: c.critRate, critDmg: c.critDmg };
+  }
+  if (hit.kind === 'stellarswirl') {
+    // Genshin Optimizer: o Redemoinho Estelar usa a RES Anemo; os vórtices, a RES Cryo.
+    const resistElement: Element = hit.vortex ? 'Cryo' : 'Anemo';
+    const c = special('stellarswirl');
+    const b = computeStellarSwirlReaction({ ...c, resistElement }, hit.vortex);
+    return { element: resistElement, breakdown: specialToHit(b, i.executions), critRate: c.critRate, critDmg: c.critDmg };
+  }
+  const info = TRANSFORMATIVE[hit.reaction];
+  const r = hit.reaction;
+  const critRate = info.canCrit ? rb(`${r}CritRate`) : 0;
+  const critDmg = info.canCrit ? rb(`${r}CritDmg`) : 0;
+  const t = computeTransformative({
+    reaction: r, characterLevel: i.characterLevel, em: i.stats.em, enemy: i.enemy, critMode: 'hit',
+    bonuses: { dmgBonus: rb(r), flatDamage: rb(`${r}Flat`) },
+    ...(r === 'swirl' ? { swirl: { element: hit.element ?? 'Pyro' } } : {}),
+  });
+  const element: ElementOrPhysical = r === 'swirl' ? hit.element ?? 'Pyro' : info.resist;
+  const baseTotal = t.base * i.executions;
+  return {
+    element,
+    breakdown: { base: t.base, executions: i.executions, flatDamage: 0, additive: 0, baseTotal, dmgMultiplier: 1, crit: 1, def: t.def, res: t.res, amp: t.amp, reactionApplied: true, total: baseTotal * t.def * t.res * t.amp },
+    critRate,
+    critDmg,
+  };
 }
 
 export interface MemberTotals {
@@ -97,8 +207,8 @@ export interface RotationResult {
 
 const TALENT_MAX = 15;
 
-export function scaleAt(move: ResolvedMove, level: number) {
-  const i = Math.min(Math.max(Math.trunc(level), 1), TALENT_MAX) - 1;
+export function scaleAt(move: ResolvedMove, level: number | undefined) {
+  const i = Math.min(Math.max(Math.trunc(level ?? 1) || 1, 1), TALENT_MAX) - 1;
   const x = move.extra ?? {};
   return {
     atk: (move.scale.atk?.[i] ?? 0) + (x.atk ?? 0),
@@ -112,12 +222,13 @@ export function scaleAt(move: ResolvedMove, level: number) {
 /** Elementos de alvo/estilo de cada efeito de dano fixo vêm como texto; compara sem diferenciar maiúsculas. */
 const sameEl = (a: string, b: string) => a.toLowerCase() === b.toLowerCase();
 
-function sourceStatValue(effect: FlatDamageEffect, stats: FinalStats): number {
+function sourceStatValue(effect: FlatDamageEffect, stats: FinalStats, source: MemberInput): number {
   switch (effect.sourceStat) {
     case 'ATK': return stats.atk;
     case 'HP': return stats.hp;
     case 'DEF': return stats.def;
     case 'EM': return stats.em;
+    case 'BaseATK': return source.character.baseAtk + source.weapon.baseAtk;
   }
 }
 
@@ -144,7 +255,7 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
       !e.active || src < 0
         ? 0
         : (() => {
-            const raw = e.perPoint * Math.max(0, sourceStatValue(e, statsFor(src, 'all')) - e.threshold);
+            const raw = e.perPoint * Math.max(0, sourceStatValue(e, statsFor(src, 'all'), members[src]) - e.threshold);
             return e.capPerHit === undefined ? raw : Math.min(raw, e.capPerHit);
           })();
     return { effect: e, perHit, remaining: e.stacks ?? Infinity };
@@ -155,6 +266,25 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
     const move = action.move;
     const tags = new Set(action.activeTags);
     const stats = statsFor(action.member, tags);
+    const enemy: EnemyStats = {
+      level: config.enemyLevel,
+      res: assembly.enemyRes,
+      defRed: assembly.enemyDefRed,
+      defIgnore: Math.min(1, (config.enemyDefIgnore ?? 0) + (stats.defIgnore ?? 0)),
+    };
+    const kind = damageKind(move);
+
+    // Golpe Lunar/Estelar ou reação: fórmula própria, sem DMG% nem dano fixo comuns (não consome stacks).
+    if (kind !== 'direct') {
+      const scale = move.reactionHit ? { atk: 0, em: 0, hp: 0, def: 0, flat: 0 } : scaleAt(move, move.talent === 'proc' || move.talent === 'reaction' ? 1 : member.talents[move.talent]);
+      const r = reactionAction({ move, executions: action.executions, ownElement: member.character.element, stats, scale, characterLevel: config.characterLevel, enemy });
+      const noCrit = r.breakdown.total;
+      return {
+        action, element: r.element, stats, scale, flatDamage: 0, breakdown: r.breakdown, kind, critRate: r.critRate, critDmg: r.critDmg,
+        noCrit, crit: noCrit * critFactor('crit', r.critRate, r.critDmg), avg: noCrit * critFactor('avg', r.critRate, r.critDmg),
+      };
+    }
+
     const element: ElementOrPhysical = move.element ?? member.character.element;
 
     // Dano fixo desta linha
@@ -165,40 +295,39 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
       const e = f.effect;
       const targetOk = e.targets === 'all' || e.targets.includes(member.character.name);
       const elementOk = e.elements.length === 0 || (element !== 'Physical' && e.elements.some((x) => sameEl(x, element)));
-      const typeOk = e.hitTypes.length === 0 || e.hitTypes.includes(move.hitType);
+      const typeOk = e.hitTypes.length === 0 || (move.hitType !== 'other' && e.hitTypes.includes(move.hitType));
       if (!(targetOk && elementOk && typeOk)) continue;
       const covered = Math.min(hitsOfAction, f.remaining);
       f.remaining -= covered;
       flatDamage += covered * f.perHit;
     }
 
-    const level = member.talents[move.talent];
+    const level = move.talent === 'proc' || move.talent === 'reaction' ? 1 : member.talents[move.talent];
     const scale = scaleAt(move, level);
     const base = stats.atk * scale.atk + stats.em * scale.em + stats.hp * scale.hp + stats.def * scale.def + scale.flat;
 
-    const critRate = stats.critRate + (stats.critRateByType?.[move.hitType] ?? 0);
-    const critDmg = stats.critDmg + (stats.critDmgByType?.[move.hitType] ?? 0);
+    const byType = <T,>(r: Record<HitType, T> | undefined) => (move.hitType === 'other' ? undefined : r?.[move.hitType]);
+    const critRate = stats.critRate + ((byType(stats.critRateByType) as number | undefined) ?? 0);
+    const critDmg = stats.critDmg + ((byType(stats.critDmgByType) as number | undefined) ?? 0) + (element === 'Physical' ? stats.physCritDmg ?? 0 : 0);
 
     const reactionBonus =
-      action.reaction === 'melt' ? stats.meltBonus : action.reaction === 'vaporize' ? stats.vaporizeBonus : 0;
+      action.reaction === 'melt' ? stats.meltBonus
+      : action.reaction === 'vaporize' ? stats.vaporizeBonus
+      : action.reaction === 'spread' || action.reaction === 'aggravate' ? stats.reactionBonus?.[action.reaction] ?? 0
+      : 0;
 
     const breakdown = computeHit({
       element,
       base,
       executions: action.executions,
       flatDamage,
-      dmgBonus: stats.dmgBonus + stats.dmgByType[move.hitType] + action.dmgAdjust,
+      dmgBonus: hitDmgBonus(stats, element, member.character.element, move.hitType) + action.dmgAdjust,
       critRate,
       critDmg,
       critMode: 'hit',
       characterLevel: config.characterLevel,
       em: stats.em,
-      enemy: {
-        level: config.enemyLevel,
-        res: assembly.enemyRes,
-        defRed: assembly.enemyDefRed,
-        defIgnore: Math.min(1, (config.enemyDefIgnore ?? 0) + (stats.defIgnore ?? 0)),
-      },
+      enemy,
       reaction: action.reaction === 'none' ? undefined : { kind: action.reaction, bonus: reactionBonus },
       ampCoefficient: ctx.ampCoefficient,
     });
@@ -211,6 +340,9 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
       scale,
       flatDamage,
       breakdown,
+      kind,
+      critRate,
+      critDmg,
       noCrit,
       crit: noCrit * critFactor('crit', critRate, critDmg),
       avg: noCrit * critFactor('avg', critRate, critDmg),

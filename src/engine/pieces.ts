@@ -5,7 +5,7 @@
  */
 import { z } from 'zod';
 import type { Element } from '../data/schema';
-import { FLOWER_HP, MAIN_STAT_VALUES, PLUME_ATK } from './artifacts';
+import { ARTIFACT_MAIN_STAT, type MainStatKey } from './constants/artifactMainStat';
 import type { StatDelta } from './stats';
 
 /** Um artefato real (formato do GOOD): o que o personagem guarda quando você coloca peças do inventário nele. */
@@ -36,14 +36,9 @@ const SUB_DIM: Record<string, number> = {
 /** Substats em % chegam em unidades de percentual (10,5 = 10,5%). */
 const PERCENT = new Set(['hp_', 'atk_', 'def_', 'enerRech_', 'critRate_', 'critDMG_']);
 
-const MAIN_NAME: Record<string, { name: string; dim: number }> = {
-  hp_: { name: 'HP%', dim: DIM.hpPct },
-  atk_: { name: 'ATK%', dim: DIM.atkPct },
-  def_: { name: 'DEF%', dim: DIM.defPct },
-  eleMas: { name: 'EM', dim: DIM.em },
-  enerRech_: { name: 'ER', dim: DIM.er },
-  critRate_: { name: 'CR', dim: DIM.cr },
-  critDMG_: { name: 'CD', dim: DIM.cd },
+/** Dimensão do vetor de cada main stat de areia/cálice/tiara (cura e DMG% ficam de fora). */
+const MAIN_DIM: Record<string, number> = {
+  hp_: DIM.hpPct, atk_: DIM.atkPct, def_: DIM.defPct, eleMas: DIM.em, enerRech_: DIM.er, critRate_: DIM.cr, critDMG_: DIM.cd,
 };
 
 const ELEMENT_OF_DMG: Record<string, Element | 'Physical'> = {
@@ -53,28 +48,42 @@ const ELEMENT_OF_DMG: Record<string, Element | 'Physical'> = {
 /** Posição da peça no vetor de slots. */
 export const slotIndex = (slot: SlotKey) => SLOT_ORDER.indexOf(slot);
 
-/** Valor do main stat com a peça no nível máximo (como o motor assume). Nível mais baixo não é modelado. */
-function mainValue(slot: SlotKey, key: string, rarity: number): number {
-  const r = rarity >= 5 ? 0 : 1;
-  if (slot === 'flower') return FLOWER_HP[r];
-  if (slot === 'plume') return PLUME_ATK[r];
-  const table = MAIN_STAT_VALUES[slot] as Record<string, readonly [number, number]>;
-  const name = key.endsWith('_dmg_') ? 'DMG%' : MAIN_NAME[key]?.name;
-  const pair = name ? table[name] : undefined;
-  return pair ? pair[r] : 0;
+/** Nível máximo de uma peça da raridade dada (4 por estrela: 5★ = +20, 4★ = +16, 3★ = +12). */
+export const maxPieceLevel = (rarity: number): number => 4 * Math.min(5, Math.max(1, Math.round(rarity)));
+
+/** Nível efetivo da peça: o do inventário, limitado a 0..máximo da raridade; sem nível, assume o máximo. */
+export const pieceLevel = (p: { rarity: number; level?: number }): number => {
+  const max = maxPieceLevel(p.rarity);
+  return p.level === undefined ? max : Math.min(max, Math.max(0, Math.round(p.level)));
+};
+
+/**
+ * Valor do main stat de uma peça da `rarity` no `level` dado (tabela real do jogo, via Genshin Optimizer).
+ * `key` é a chave do GOOD (`hp`, `atk`, `atk_`, `pyro_dmg_`...); chave desconhecida vale 0.
+ */
+export function mainStatValue(key: string, rarity: number, level?: number): number {
+  const r = Math.min(5, Math.max(1, Math.round(rarity))) as 1 | 2 | 3 | 4 | 5;
+  const table = ARTIFACT_MAIN_STAT[r][key as MainStatKey];
+  return table ? table[pieceLevel({ rarity: r, level })] : 0;
+}
+
+/** Valor do main stat da peça no nível dela (flor = HP, pluma = ATK, qualquer que seja o `mainStatKey`). */
+function mainValue(a: Pick<GoodArtifact, 'slotKey' | 'mainStatKey' | 'rarity' | 'level'>): number {
+  const key = a.slotKey === 'flower' ? 'hp' : a.slotKey === 'plume' ? 'atk' : a.mainStatKey;
+  return mainStatValue(key, a.rarity, a.level);
 }
 
 /** Vetor de stats da peça para um personagem do `element` dado (bônus elementais de outros elementos não valem). */
 export function pieceVector(a: GoodArtifact, element: Element): Vec {
   const v = new Float64Array(DIMS);
   const slot = a.slotKey as SlotKey;
-  if (slot === 'flower') v[DIM.hpFlat] += mainValue(slot, a.mainStatKey, a.rarity);
-  else if (slot === 'plume') v[DIM.atkFlat] += mainValue(slot, a.mainStatKey, a.rarity);
+  if (slot === 'flower') v[DIM.hpFlat] += mainValue(a);
+  else if (slot === 'plume') v[DIM.atkFlat] += mainValue(a);
   else if (a.mainStatKey.endsWith('_dmg_')) {
-    if (ELEMENT_OF_DMG[a.mainStatKey] === element) v[DIM.dmg] += mainValue(slot, a.mainStatKey, a.rarity);
+    if (ELEMENT_OF_DMG[a.mainStatKey] === element) v[DIM.dmg] += mainValue(a);
   } else {
-    const m = MAIN_NAME[a.mainStatKey];
-    if (m) v[m.dim] += mainValue(slot, a.mainStatKey, a.rarity);
+    const m = MAIN_DIM[a.mainStatKey];
+    if (m !== undefined) v[m] += mainValue(a);
   }
   for (const s of a.substats) {
     const d = SUB_DIM[s.key];
@@ -94,7 +103,7 @@ export function vecToDelta(v: Vec): StatDelta {
   return {
     hpFlat: v[DIM.hpFlat], hpPct: v[DIM.hpPct], atkFlat: v[DIM.atkFlat], atkPct: v[DIM.atkPct],
     defFlat: v[DIM.defFlat], defPct: v[DIM.defPct], em: v[DIM.em], er: v[DIM.er],
-    critRate: v[DIM.cr], critDmg: v[DIM.cd], dmgBonus: v[DIM.dmg],
+    critRate: v[DIM.cr], critDmg: v[DIM.cd], dmgBonus: v[DIM.dmg], eleDmg: v[DIM.dmg],
   };
 }
 
@@ -123,7 +132,9 @@ export function buildFromPieces(pieces: readonly RealPiece[], element: Element, 
   const counts = new Map<string, number>();
   for (const p of pieces) counts.set(nameOf(p.setKey), (counts.get(nameOf(p.setKey)) ?? 0) + 1);
   const ranked = [...counts.entries()].sort((a, b) => b[1] - a[1] || (a[0] < b[0] ? -1 : 1));
-  const out: PiecesBuild = { stats: vecToDelta(vec) };
+  // O cálice Físico fica fora do vetor (o otimizador não o enxerga), mas entra na soma das peças reais.
+  const physDmg = pieces.reduce((s, p) => s + (p.slotKey === 'goblet' && p.mainStatKey === 'physical_dmg_' ? mainValue(p) : 0), 0);
+  const out: PiecesBuild = { stats: { ...vecToDelta(vec), ...(physDmg ? { physDmg } : {}) } };
   if (ranked[0] && ranked[0][1] >= 4) out.primarySet = ranked[0][0];
   else if (ranked[0] && ranked[0][1] >= 2 && ranked[1] && ranked[1][1] >= 2) {
     out.primarySet = ranked[0][0];
@@ -135,8 +146,8 @@ export function buildFromPieces(pieces: readonly RealPiece[], element: Element, 
   return out;
 }
 
-/** Main stat da peça (chave do GOOD e valor: fração para %, pontos para o resto), no nível máximo. */
-export function mainStatOf(p: RealPiece): { key: string; value: number } {
+/** Main stat da peça (chave do GOOD e valor: fração para %, pontos para o resto) no nível real dela. */
+export function mainStatOf(p: RealPiece): { key: string; value: number; level: number } {
   const key = p.slotKey === 'flower' ? 'hp' : p.slotKey === 'plume' ? 'atk' : p.mainStatKey;
-  return { key, value: mainValue(p.slotKey as SlotKey, key, p.rarity) };
+  return { key, value: mainValue(p), level: pieceLevel(p) };
 }

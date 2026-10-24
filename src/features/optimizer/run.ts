@@ -7,7 +7,7 @@ import type { Element } from '../../data/schema';
 import type { GameData } from '../../engine';
 import { createEvaluator, elementOf, type BuildReport, type Constraints, type EvaluatorInput, type Objective } from './evaluator';
 import { allPatterns, patternLabel, solveSteps, type Build, type Piece, type SetConfig, type SolveOptions, type SolveStats } from './solver';
-import { addInto, pieceVector, DIM, DIMS, SLOT_ORDER, type SlotKey } from './vector';
+import { addInto, pieceLevel, pieceVector, DIM, DIMS, SLOT_ORDER, type SlotKey } from './vector';
 
 export { GoodSchema };
 
@@ -59,7 +59,7 @@ export function filterInventory(good: Good, characterKey: string, element: Eleme
 
   for (const a of good.artifacts) {
     if (a.rarity < 4) continue;
-    const level = a.level ?? (a.rarity >= 5 ? 20 : 16);
+    const level = pieceLevel(a);
     if (level < config.levelMin || level > config.levelMax) { removed.level++; continue; }
     const loc = norm(a.location);
     if (loc !== '' && loc !== mine) {
@@ -115,6 +115,10 @@ export interface RunInput extends Omit<EvaluatorInput, 'objective' | 'constraint
   shouldStop?: () => boolean;
 }
 
+/** Build com exatamente uma peça em cada uma das 5 posições. */
+export const isComplete = (b: Pick<Build, 'pieces'>): boolean =>
+  b.pieces.length === SLOT_ORDER.length && SLOT_ORDER.every((_, i) => b.pieces.some((p) => p.slot === i));
+
 function patternOf(config: SetConfig): { kind: 'four' | 'two-two' | 'two' | 'none'; sets: string[] } {
   if (config.primarySet && config.secondarySet) return { kind: 'two-two', sets: [config.primarySet, config.secondarySet] };
   if (config.primarySet && config.fourPiece === false) return { kind: 'two', sets: [config.primarySet] };
@@ -141,8 +145,9 @@ export function startOptimizer(input: RunInput, control: RunControl = {}): RunHa
   const element = elementOf(input.resolved, input.member);
   const setName = (key: string) => game.artifacts.find((x) => norm(x.name) === norm(key))?.name ?? key;
   const inv = filterInventory(good, input.characterKey, element, input.config, setName);
+  // Só builds completos: sem peça em alguma posição não há build (nada de builds parciais).
   const empty = SLOT_ORDER.filter((_, i) => inv.slots[i].length === 0);
-  if (empty.length) throw new Error(`Depois dos filtros não sobrou nenhuma peça para: ${empty.join(', ')}.`);
+  if (empty.length) throw new Error(`Depois dos filtros não sobrou nenhuma peça para: ${empty.join(', ')}. O otimizador só monta builds com as 5 peças.`);
 
   const evaluator = createEvaluator({ ...input, objective: input.config.objective, constraints: input.config.constraints });
   const reportOf = (pieces: GoodArtifact[], config: SetConfig): OptimizedBuild => {
@@ -239,7 +244,7 @@ export function startOptimizer(input: RunInput, control: RunControl = {}): RunHa
   const result = (): OptimizerResult => {
     const done = solved ?? { builds: seeds, stats: { evaluations: 0, dominated: 0, patterns: 0, patternsDone: 0, stopped: true } };
     return {
-      builds: done.builds.map(toBuild),
+      builds: done.builds.filter(isComplete).map(toBuild),
       equipped,
       inventory: { removed: inv.removed, pieces: inv.artifacts.length },
       stats: { ...done.stats, combinations },

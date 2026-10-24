@@ -3,7 +3,7 @@
  * assumido. Só entram efeitos que o motor sabe aplicar; o resto fica de fora e a `note` diz o que falta.
  */
 import type { Element } from '../../src/data/schema';
-import type { BuffCur, FlatCur } from './gear';
+import type { BuffCur, FlatCur, ProcCur, ReactionKey, Sum } from './gear';
 
 /** Um parâmetro do Lunaris (`p` = índice, `x` = multiplicador, ex.: stacks) ou um literal tirado da descrição. */
 export type Val = number | { p: number; x?: number } | { lit: number } | { re: string; x?: number };
@@ -25,6 +25,10 @@ export interface FourCuration {
   /** Conversões, regras de time e faixas (mesmo formato dos buffs de arma). */
   buffs?: BuffCur[];
   flat?: FlatCur[];
+  /** Bônus de dano de reação do dono. */
+  reactionBonus?: Partial<Record<ReactionKey, Sum>>;
+  /** Golpes extras do set. */
+  procs?: ProcCur[];
   /** Só energia, cura, recarga ou resistência: nada a calcular em dano. */
   noDamage?: true;
   /** Parte que mexe em dano (reação, Lunar, Estelar, golpe extra) ainda fora do cálculo. */
@@ -48,7 +52,8 @@ export const FOUR_PIECE: Record<string, FourCuration> = {
   'Glacier and Snowfield': {
     dmgPct: { p: 3 },
     meltBonus: { p: 1 },
-    note: 'Assume o +30% de dano Cryo do Supremo (10 s) sempre ativo. Os +100% de Supercondutor NÃO entram.',
+    reactionBonus: { superconduct: { p: 0 } },
+    note: 'Assume o +30% de dano Cryo do Supremo (10 s) sempre ativo. Os +100% de Supercondutor entram na tabela de reações.',
   },
   'Retracing Bolide': { byType: { normal: { p: 0 }, charged: { p: 0 } }, note: 'Assume personagem protegido por escudo.' },
   'Heart of Depth': { byType: { normal: { p: 0 }, charged: { p: 0 } }, note: 'Assume o bônus de 15 s depois da habilidade sempre ativo.' },
@@ -58,7 +63,8 @@ export const FOUR_PIECE: Record<string, FourCuration> = {
   },
   'Pale Flame': {
     atkPct: { p: 0, x: 2 },
-    note: 'Assume 2 stacks (9% cada). O dobro do bônus de dano Físico de 2 peças com 2 stacks NÃO entra.',
+    buffs: [{ id: 'fisico', label: '2 stacks: dobro do DMG Físico', stats: { physDmgPct: { p: 3 } } }],
+    note: 'Assume 2 stacks (9% de ATK cada) e, com eles, o bônus Físico de 2 peças dobrado (+25%).',
   },
   'Vermillion Hereafter': {
     atkPct: { p: 1 },

@@ -81,7 +81,7 @@ export interface CascadeStep {
 /** Dano base → ×Bônus de dano → ×DEF → ×RES → ×Reação → ×Crítico médio = dano médio do golpe. */
 export function hitCascade(r: ActionResult): CascadeStep[] {
   const b = r.breakdown;
-  const crit = critFactor('avg', r.stats.critRate, r.stats.critDmg);
+  const crit = critFactor('avg', r.critRate, r.critDmg);
   const steps: [string, string, number][] = [
     ['dmg', 'Bônus de dano', b.dmgMultiplier],
     ['def', 'DEF', b.def],

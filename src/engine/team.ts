@@ -5,6 +5,7 @@
 import type { Element } from '../data/schema';
 import { weaponStatsAt } from '../effects/schema';
 import type { ResistanceMap } from './damage';
+import type { ElementOrPhysical } from './constants/reactions';
 import type { Rolls } from './artifacts';
 import {
   activeCharacterBuffs,
@@ -82,7 +83,7 @@ export interface TeamAssembly {
   warnings: string[];
 }
 
-const ELEMENTS: Element[] = ['Pyro', 'Hydro', 'Anemo', 'Electro', 'Dendro', 'Cryo', 'Geo'];
+const ELEMENTS: ElementOrPhysical[] = ['Pyro', 'Hydro', 'Anemo', 'Electro', 'Dendro', 'Cryo', 'Geo', 'Physical'];
 export const labelTag = (label?: string) => `label:${label?.trim() ? label.trim() : '_geral'}`;
 export const gearTag = (memberIndex: number) => `gear:${memberIndex}`;
 export const characterTag = (memberIndex: number) => `char:${memberIndex}`;
@@ -166,16 +167,18 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
   // 2b) Buffs de passivas e constelações em janela: viram faixas na linha do tempo
   members.forEach((m, i) => {
     for (const b of activeCharacterBuffs(m)) {
-      if (!b.timed || !b.stats) continue;
-      const delta = characterBuffDelta(b.stats);
+      // Sem `timed`, o buff do próprio membro já está no bloco estático; o de equipe vale em toda ação (`always`).
+      if (!b.stats || (!b.timed && b.scope === 'self')) continue;
+      const delta = characterBuffDelta(b.stats, !!b.forElements);
       if (isEmptyDelta(delta) || off(`cbuff-${i}-${b.id}`)) continue;
       const targets = names.filter((n, j) => {
         if (b.scope === 'self' && j !== i) return false;
         if (b.scope === 'others' && j === i) return false;
+        if (b.forFactions && !b.forFactions.some((f) => members[j].factions?.includes(f))) return false;
         return !b.forElements || b.forElements.includes(members[j].character.element);
       });
       if (targets.length === 0) continue;
-      buffs.push({ id: `cbuff-${i}-${b.id}`, tag: labelTag(b.label), targets, delta, description: `${names[i]}: ${b.label}` });
+      buffs.push({ id: `cbuff-${i}-${b.id}`, tag: labelTag(b.label), targets, delta, description: `${names[i]}: ${b.label}`, ...(b.timed ? {} : { always: true as const }) });
     }
   });
 
@@ -242,14 +245,19 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
       const targets = names.filter((_, j) => {
         if (b.scope === 'self' && j !== i) return false;
         if (b.scope === 'others' && j === i) return false;
+        if (b.forFactions && !b.forFactions.some((f) => members[j].factions?.includes(f))) return false;
         return !b.forElements || b.forElements.includes(members[j].character.element);
       });
       if (targets.length === 0) continue;
       const delta: StatDelta = { dmgByType: {} };
       for (const to of c.to) {
         if (to === 'atkFlat' || to === 'hpFlat' || to === 'defFlat' || to === 'atkPct' || to === 'hpPct' || to === 'defPct' || to === 'em' || to === 'critRate' || to === 'critDmg' || to === 'er') delta[to] = value;
-        else if (to === 'dmgPct') delta.dmgBonus = value;
-        else delta.dmgByType![to] = value;
+        else if (to === 'dmgPct') {
+          delta.dmgBonus = value;
+          if (b.forElements) delta.eleDmg = value;
+        }
+        else if (to === 'normal' || to === 'charged' || to === 'plunge' || to === 'skill' || to === 'burst') delta.dmgByType![to] = value;
+        else delta.reactionBonus = { ...delta.reactionBonus, [to]: value };
       }
       buffs.push({
         id, tag: labelTag(b.label), targets, delta, description: `${names[i]}: ${b.label}`, derived: true,
@@ -258,8 +266,8 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
     }
   });
 
-  // 6) RES do inimigo por elemento (redução de RES de personagens; vale o tempo todo)
-  const enemyRes: ResistanceMap = { Physical: config.enemyBaseRes };
+  // 6) RES do inimigo por elemento, Físico incluído (redução de RES de personagens; vale o tempo todo)
+  const enemyRes: ResistanceMap = {};
   const resonanceShred = resonanceEffects(members).filter((r) => r.resShred && !off(`resonance-${r.element.toLowerCase()}`));
   for (const el of ELEMENTS) {
     let shred = 0;

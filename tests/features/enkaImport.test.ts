@@ -36,7 +36,7 @@ describe('vitrine do Enka (a fonte do akasha.cv) como inventário GOOD', () => {
 
   it('converte main stats e substats para as chaves do GOOD (percentuais em unidades de %)', () => {
     const flower = r.good.artifacts.find((a) => a.location === 'Amber' && a.slotKey === 'flower')!;
-    expect(flower).toMatchObject({ setKey: 'Bloodstained Chivalry', rarity: 5, mainStatKey: 'hp', level: 21 });
+    expect(flower).toMatchObject({ setKey: 'Bloodstained Chivalry', rarity: 5, mainStatKey: 'hp', level: 20 });
     expect(flower.substats).toEqual([
       { key: 'def', value: 37 },
       { key: 'atk_', value: 11.1 },

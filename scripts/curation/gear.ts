@@ -3,7 +3,7 @@
  * descrição (`lit`) ou de uma expressão regular sobre o texto de CADA refinamento (`re`, grupo 1; "16%" vira 0,16).
  */
 import type { Element, HitType } from '../../src/data/schema';
-import type { BuffTeamRules, ConvertTarget } from '../../src/effects/schema';
+import type { BuffTeamRules, ConvertTarget, ReactionBonusKey, SpecialMove } from '../../src/effects/schema';
 import type { Val } from './sets';
 
 export type { Val };
@@ -16,7 +16,30 @@ export type StatsCur = Partial<Record<StatKey, Sum>> & {
   byType?: ByType;
   critRateByType?: ByType;
   critDmgByType?: ByType;
+  /** Bônus de DMG Físico. */
+  physDmgPct?: Sum;
+  physCritDmg?: Sum;
+  /** Bônus de dano de reação (ex.: { bloom: { p: 0 } }). */
+  reactionBonus?: Partial<Record<ReactionKey, Sum>>;
 };
+
+export type ReactionKey = ReactionBonusKey;
+
+/**
+ * Golpe extra de proc: escala em fração do stat final do dono (`atk: { p: 0 }` = parâmetro 0 do Lunaris). O elemento
+ * vem do Genshin Optimizer (`customDmgNode` da arma: 'Physical' quando ele marca `ele: physical`; sem `element`, o do
+ * personagem). Sem `hitType`, não conta como Normal/Carregado/etc.
+ */
+export interface ProcCur {
+  id: string;
+  label: string;
+  scale: { atk?: Sum; hp?: Sum; def?: Sum; em?: Sum };
+  element?: Element | 'Physical';
+  hitType?: HitType;
+  /** Dano Lunar/Estelar (Genshin Optimizer `lunarDmgNode`/`stellarDmgNode`). */
+  special?: SpecialMove;
+  note?: string;
+}
 
 /** Buff com conversão, regra de time ou dono diferente de "só o próprio personagem". */
 export interface BuffCur {
@@ -33,7 +56,9 @@ export interface BuffCur {
 
 export interface FlatCur {
   name: string;
-  sourceStat: 'ATK' | 'HP' | 'DEF' | 'EM';
+  sourceStat: 'ATK' | 'HP' | 'DEF' | 'EM' | 'BaseATK';
+  targets?: 'self' | 'team' | 'others';
+  elements?: Element[];
   perPoint: Sum;
   cap?: Sum;
   hitTypes: HitType[];
@@ -45,6 +70,8 @@ export interface GearCur extends StatsCur {
   team?: { atkPct?: Sum; dmgPct?: Sum; em?: Sum };
   buffs?: BuffCur[];
   flat?: FlatCur[];
+  /** Golpes extras (ver `ProcCur`). */
+  procs?: ProcCur[];
   /** Passiva que só mexe em energia, cura, estamina ou recarga de habilidade: nada a calcular em dano. */
   noDamage?: true;
   /** Parte que mexe em dano (golpe extra, reação nova) ainda fora do cálculo. */

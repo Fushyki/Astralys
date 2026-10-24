@@ -7,11 +7,11 @@ import { z } from 'zod';
 import type { ArtifactSet, Character, Move, Talent, Weapon } from '../data/schema';
 import { planilhaEffect } from './compat/planilha';
 import { activeCharacterBuffs } from './stats';
-import { weaponStatsAt, type CharacterBuff, type CharacterEffect, type FlatDamageEffect, type SetEffect, type WeaponEffect, type WeaponFlat } from '../effects/schema';
+import { weaponStatsAt, type CharacterBuff, type CharacterEffect, type FlatDamageEffect, type Proc, type SetEffect, type WeaponEffect, type WeaponFlat } from '../effects/schema';
 import { SUBSTATS, zeroRolls, type Rolls } from './artifacts';
 import { RealPieceSchema, buildFromPieces } from './pieces';
 import { AMP_EM_COEFFICIENT_SHEET } from './constants/reactions';
-import type { ExtraScale, ReactionChoice, ResolvedMove, RotationAction } from './rotation';
+import type { ExtraScale, ReactionChoice, ReactionHit, ResolvedMove, RotationAction } from './rotation';
 import type { MemberInput } from './stats';
 import type { GlobalConfig, TeamInput } from './team';
 
@@ -60,6 +60,11 @@ export const MemberRefSchema = z.object({
   talents: z.object({ normal: TalentLevel, skill: TalentLevel, burst: TalentLevel }),
   /** Constelação (0 a 6). Ausente = C0. Sobe em 3 o nível dos talentos da C3 e da C5. */
   constellation: z.number().int().min(0).max(6).optional(),
+  /**
+   * Facções ligadas neste membro (Moonsign, Hexerei). O usuário escolhe: só contam as que o personagem pode ter
+   * (`CharacterEffect.factions`). Ausente = nenhuma (projetos antigos abrem sem facção).
+   */
+  factions: z.array(z.enum(['moonsign', 'hexerei'])).optional(),
   minER: z.number().min(0).optional(),
   totalRolls: z.number().int().min(0).optional(),
   forcedCritRolls: z.number().int().min(0).optional(),
@@ -94,7 +99,11 @@ export const ConfigSchema = z.object({
 
 export const MoveRefSchema = z.object({
   character: z.string().min(1),
-  talent: z.enum(['normal', 'skill', 'burst']),
+  /**
+   * 'proc' = golpe extra de arma, set, passiva ou constelação; `label` é a chave dele (ver `memberProcs`).
+   * 'reaction' = dano da própria reação disparada pelo membro; `label` é a chave dela (ver `REACTION_ACTIONS`).
+   */
+  talent: z.enum(['normal', 'skill', 'burst', 'proc', 'reaction']),
   label: z.string().min(1),
   variant: z.number().int().min(0).default(0),
 });
@@ -126,6 +135,8 @@ export const ActionSchema = z.object({
   extraScale: ExtraScaleSchema.optional(),
   executions: z.number().positive().default(1),
   reaction: ReactionChoiceSchema.default('none'),
+  /** Elemento do dano, se diferente do padrão (ex.: 'Physical' num Normal sem infusão). Ausente = o do golpe/personagem. */
+  element: z.enum(['Pyro', 'Hydro', 'Anemo', 'Electro', 'Dendro', 'Cryo', 'Geo', 'Physical']).optional(),
   /** Etiquetas de buff de time ativas nesta ação (usadas quando `tagSource` é 'manual'). */
   activeTags: z.array(z.string()).default([]),
   /** 'manual': usa `activeTags` (perfis da planilha). 'windows': as etiquetas vêm das janelas de buff, pelo `time`. */
@@ -248,6 +259,7 @@ export function indexMoves(moves: Move[]): MoveIndex {
 
 /** Junta a referência de um golpe com os dados do Lunaris. */
 export function resolveMove(index: MoveIndex, ref: MoveRef, displayName?: string, extra?: ExtraScale): ResolvedMove {
+  if (ref.talent === 'proc' || ref.talent === 'reaction') throw new ProjectResolveError(`Golpe extra/reação precisa do membro para ser resolvido: ${ref.label}`);
   const move = index.find(ref);
   if (!move) {
     throw new ProjectResolveError(`Golpe não encontrado nos dados do jogo: ${ref.character} / ${ref.talent} / ${ref.label}`);
@@ -301,6 +313,105 @@ export function gearBuffs(m: Pick<MemberInput, 'weapon' | 'weaponEffect' | 'refi
   return out;
 }
 
+/** Um golpe extra disponível para um membro: a chave (`MoveRef.label` com `talent: 'proc'`) e o golpe pronto. */
+export interface MemberProc {
+  key: string;
+  origin: string;
+  proc: Proc;
+  move: ResolvedMove;
+}
+
+const fifteen = (v: number | undefined) => (v ? Array.from({ length: 15 }, () => v) : undefined);
+
+/**
+ * Golpes extras do membro: da arma (no refinamento dele), do set de 4 peças e das passivas/constelações ativas.
+ * Chaves: `arma:<id>`, `set:<id>` e `char:<id>`. `moves` (golpes do jogo) resolve os golpes que são uma fração de
+ * outro golpe do kit (`Proc.of`), no nível de talento do membro; sem eles, esses golpes ficam com escala 0.
+ */
+export function memberProcs(
+  m: Pick<MemberInput, 'character' | 'weapon' | 'weaponEffect' | 'refinement' | 'primarySet' | 'secondarySet' | 'fourPiece' | 'characterEffect' | 'constellation' | 'talents'>,
+  moves?: readonly Move[],
+): MemberProc[] {
+  const out: MemberProc[] = [];
+  const add = (prefix: string, origin: string, list: readonly Proc[] | undefined) => {
+    for (const p of list ?? []) {
+      if ((m.constellation ?? 0) < (p.minConstellation ?? 0)) continue;
+      const key = `${prefix}:${p.id}`;
+      let scale: Move['scale'] = { atk: fifteen(p.scale.atk), hp: fifteen(p.scale.hp), def: fifteen(p.scale.def), em: fifteen(p.scale.em) };
+      let hitType: ResolvedMove['hitType'] = p.hitType ?? 'other';
+      let hits = 1;
+      if (p.of) {
+        const of = p.of;
+        const orig = moves?.find((x) => x.character === m.character.name && x.talent === of.talent && x.label === of.label && x.variant === of.variant);
+        const i = Math.min(15, Math.max(1, Math.round(m.talents?.[of.talent] ?? 1))) - 1;
+        const at = (arr?: number[]) => fifteen(arr?.[i] ? arr[i] * of.fraction : undefined);
+        scale = orig ? { atk: at(orig.scale.atk), hp: at(orig.scale.hp), def: at(orig.scale.def), em: at(orig.scale.em), flat: at(orig.scale.flat) } : {};
+        if (orig && !p.hitType) hitType = orig.hitType;
+        if (orig) hits = orig.hits;
+      }
+      out.push({
+        key, origin, proc: p,
+        move: {
+          id: `${m.character.name}:proc:${key}`, character: m.character.name, talent: 'proc', hitType,
+          label: key, displayName: `${m.character.name}: ${p.label}`, hits, scale,
+          ...(p.element ? { element: p.element } : {}),
+          ...(p.special ? { special: p.special } : {}),
+        },
+      });
+    }
+  };
+  if (m.weaponEffect) add('arma', m.weapon.name, weaponStatsAt(m.weaponEffect, m.refinement).procs);
+  if (m.primarySet && !m.secondarySet && m.fourPiece !== false) add('set', m.primarySet.name, m.primarySet.effect?.fourPiece?.procs);
+  add('char', m.character.name, m.characterEffect?.procs);
+  return out;
+}
+
+/** Reações que podem ser postas na rotação como ação (`talent: 'reaction'`, `label` = chave). */
+export const REACTION_ACTIONS: readonly { key: string; label: string; hit: ReactionHit }[] = [
+  { key: 'overloaded', label: 'Sobrecarga', hit: { kind: 'transformative', reaction: 'overloaded' } },
+  { key: 'electrocharged', label: 'Eletrocarregado', hit: { kind: 'transformative', reaction: 'electrocharged' } },
+  { key: 'superconduct', label: 'Supercondutor', hit: { kind: 'transformative', reaction: 'superconduct' } },
+  { key: 'shattered', label: 'Estilhaçar', hit: { kind: 'transformative', reaction: 'shattered' } },
+  ...(['Pyro', 'Hydro', 'Electro', 'Cryo'] as const).map((element) => ({ key: `swirl:${element}`, label: `Redemoinho ${element}`, hit: { kind: 'transformative' as const, reaction: 'swirl' as const, element } })),
+  { key: 'burning', label: 'Queimadura', hit: { kind: 'transformative', reaction: 'burning' } },
+  { key: 'bloom', label: 'Florescer', hit: { kind: 'transformative', reaction: 'bloom' } },
+  { key: 'burgeon', label: 'Brotar', hit: { kind: 'transformative', reaction: 'burgeon' } },
+  { key: 'hyperbloom', label: 'Hiperflorescer', hit: { kind: 'transformative', reaction: 'hyperbloom' } },
+  { key: 'lunarcharged', label: 'Lunar-Carregado', hit: { kind: 'lunar', reaction: 'lunarcharged' } },
+  { key: 'lunarcrystallize', label: 'Lunar-Cristalizar', hit: { kind: 'lunar', reaction: 'lunarcrystallize' } },
+  { key: 'stellarswirl', label: 'Redemoinho Estelar', hit: { kind: 'stellarswirl' } },
+  { key: 'stellarswirl:vortex1', label: 'Redemoinho Estelar (vórtice 1)', hit: { kind: 'stellarswirl', vortex: 'vortex1' } },
+  { key: 'stellarswirl:vortex2', label: 'Redemoinho Estelar (vórtice 2)', hit: { kind: 'stellarswirl', vortex: 'vortex2' } },
+];
+
+/** Ação de reação do membro. Chave desconhecida vira um golpe de dano 0 que avisa no nome. */
+export function reactionMove(ref: MoveRef, displayName?: string): ResolvedMove {
+  const found = REACTION_ACTIONS.find((r) => r.key === ref.label);
+  const base = { id: `${ref.character}:reaction:${ref.label}`, character: ref.character, talent: 'reaction' as const, hitType: 'other' as const, label: ref.label, hits: 1, scale: {} };
+  if (!found) return { ...base, displayName: `${ref.character}: reação desconhecida (${ref.label})` };
+  return { ...base, displayName: displayName ?? `${ref.character}: ${found.label}`, reactionHit: found.hit };
+}
+
+/** Golpe do kit com dano Lunar/Estelar (curadoria `CharacterEffect.specialMoves`): marca a reação e aplica o multiplicador extra. */
+export function withSpecial(move: ResolvedMove, variant: number, effect: CharacterEffect | undefined): ResolvedMove {
+  const s = effect?.specialMoves?.find((x) => x.talent === move.talent && x.label === move.label && (x.variant === undefined || x.variant === variant));
+  if (!s) return move;
+  const k = s.times ?? 1;
+  const mul = (arr?: number[]) => (arr && k !== 1 ? arr.map((v) => v * k) : arr);
+  const scale = k === 1 ? move.scale : { atk: mul(move.scale.atk), hp: mul(move.scale.hp), def: mul(move.scale.def), em: mul(move.scale.em), flat: mul(move.scale.flat) };
+  return { ...move, scale, special: { reaction: s.reaction, ...(s.resist ? { resist: s.resist } : {}) } };
+}
+
+/** Golpe extra de uma ação. Se o membro não o tem mais (trocou de arma ou de set), vale 0 e o nome avisa. */
+export function procMove(procs: readonly MemberProc[], ref: MoveRef, displayName?: string): ResolvedMove {
+  const found = procs.find((p) => p.key === ref.label);
+  if (found) return displayName ? { ...found.move, displayName } : found.move;
+  return {
+    id: `${ref.character}:proc:${ref.label}`, character: ref.character, talent: 'proc', hitType: 'other', label: ref.label,
+    displayName: `${ref.character}: golpe extra indisponível (${ref.label})`, hits: 1, scale: {},
+  };
+}
+
 /** Dano fixo de arma e de set de 4 peças (ex.: "Dano de Habilidade aumentado em 40% da DEF"). */
 export function gearFlat(members: MemberInput[]): FlatDamageEffect[] {
   const out: FlatDamageEffect[] = [];
@@ -311,9 +422,12 @@ export function gearFlat(members: MemberInput[]): FlatDamageEffect[] {
     for (const b of activeCharacterBuffs(m)) if (b.flat?.length) lists.push([b.label, b.flat]);
     for (const [origin, flat] of lists) {
       for (const f of flat) {
+        const others = members.map((x) => x.character.name).filter((n) => n !== m.character.name);
+        const targets = f.targets === 'team' ? 'all' as const : f.targets === 'others' ? others : [m.character.name];
+        if (Array.isArray(targets) && targets.length === 0) continue;
         out.push({
           name: `${origin}: ${f.name}`, source: m.character.name, sourceStat: f.sourceStat, perPoint: f.perPoint, threshold: 0,
-          ...(f.capPerHit !== undefined ? { capPerHit: f.capPerHit } : {}), targets: [m.character.name], elements: [], hitTypes: f.hitTypes,
+          ...(f.capPerHit !== undefined ? { capPerHit: f.capPerHit } : {}), targets, elements: f.elements ?? [], hitTypes: f.hitTypes,
           ...(f.stacks !== undefined ? { stacks: f.stacks } : {}), active: true, fonte_info: `Passiva de ${origin} (curadoria do Lunaris)`,
         });
       }
@@ -335,7 +449,7 @@ export function resolveMember(ref: MemberRef, data: GameData, effects: EffectsDa
   const own = effects.characters.find((c) => c.character === ref.character);
   const characterEffect: CharacterEffect | undefined = gear.length
     ? {
-        ...(own ?? { character: ref.character, atkPct: 0, dmgPct: 0, critRate: 0, critDmg: 0, em: 0, appliesToSelf: false, notes: [], fonte_info: 'Buffs de arma e set' }),
+        ...(own ?? { character: ref.character, atkPct: 0, dmgPct: 0, critRate: 0, critDmg: 0, em: 0, appliesToSelf: false, notes: [], procs: [], factions: [], specialMoves: [], fonte_info: 'Buffs de arma e set' }),
         buffs: [...(own?.buffs ?? []), ...gear],
       }
     : own;
@@ -351,6 +465,7 @@ export function resolveMember(ref: MemberRef, data: GameData, effects: EffectsDa
     artifacts: ref.artifacts,
     talents: effectiveTalents(ref.talents, ref.constellation, character),
     constellation: ref.constellation,
+    factions: (ref.factions ?? []).filter((f) => own?.factions?.includes(f)),
     minER: ref.minER,
     totalRolls: ref.totalRolls,
     forcedCritRolls: ref.forcedCritRolls,
@@ -381,12 +496,18 @@ export interface ResolvedProject {
  */
 export function applyTeamRules(members: MemberInput[]): MemberInput[] {
   const elements = members.map((m) => m.character.element);
-  return members.map((m, self) => {
+  const faction = (f: 'moonsign' | 'hexerei') => members.filter((m) => m.factions?.includes(f)).length;
+  const moonsign = faction('moonsign');
+  const hexerei = faction('hexerei');
+  return withMoonsignGleam(members, moonsign).map((m, self) => {
     const buffs = m.characterEffect?.buffs;
     if (!buffs?.some((b) => b.team || b.level)) return m;
     const others = members.filter((_, j) => j !== self);
     const next = buffs.flatMap((b) => {
       const t = b.team;
+      if (t?.moonsign && moonsign < t.moonsign) return [];
+      if (t?.moonsignMax && moonsign > t.moonsignMax) return [];
+      if (t?.hexerei && hexerei < t.hexerei) return [];
       if (t?.only && !elements.every((e) => t.only!.includes(e))) return [];
       if (t?.eachOf && !t.eachOf.every((e) => elements.includes(e))) return [];
       if (t?.minDistinct && new Set(elements).size < t.minDistinct) return [];
@@ -412,6 +533,7 @@ export function applyTeamRules(members: MemberInput[]): MemberInput[] {
         atkPct: b.stats.atkPct * k, dmgPct: b.stats.dmgPct * k, critRate: b.stats.critRate * k, critDmg: b.stats.critDmg * k,
         em: b.stats.em * k, er: b.stats.er * k, hpPct: b.stats.hpPct * k, defPct: b.stats.defPct * k,
         dmgPctByType: Object.fromEntries(Object.entries(b.stats.dmgPctByType ?? {}).map(([h, x]) => [h, x * k])),
+        reactionBonus: Object.fromEntries(Object.entries(b.stats.reactionBonus ?? {}).map(([h, x]) => [h, x * k])),
       };
       return [{
         ...b,
@@ -422,6 +544,39 @@ export function applyTeamRules(members: MemberInput[]): MemberInput[] {
       }];
     });
     return { ...m, characterEffect: { ...m.characterEffect!, buffs: next } };
+  });
+}
+
+/**
+ * "Moonsign: Ascendant Gleam" (2 ou mais membros Moonsign): cada membro que NÃO é Moonsign dá à equipe, depois de usar
+ * a habilidade ou o supremo, DMG das reações Lunares conforme um stat do elemento dele, até 36%. Números e regra do
+ * Genshin Optimizer (`libs/gi/sheets/src/Characters/dataUtil.tsx`, `moonsignBuff`, MIT): Pyro/Electro/Cryo 0,9% por
+ * 100 de ATK, Hydro 0,6% por 1.000 de HP, Geo 1% por 100 de DEF, Anemo/Dendro 2,25% por 100 de Maestria.
+ * No jogo o bônus não se soma entre membros (vale um só): cada membro ganha a própria faixa; ligue uma por vez.
+ */
+export const MOONSIGN_GLEAM: Record<string, { from: 'atk' | 'hp' | 'def' | 'em'; perPoint: number }> = {
+  Pyro: { from: 'atk', perPoint: 0.009 / 100 },
+  Electro: { from: 'atk', perPoint: 0.009 / 100 },
+  Cryo: { from: 'atk', perPoint: 0.009 / 100 },
+  Hydro: { from: 'hp', perPoint: 0.006 / 1000 },
+  Geo: { from: 'def', perPoint: 0.01 / 100 },
+  Anemo: { from: 'em', perPoint: 0.0225 / 100 },
+  Dendro: { from: 'em', perPoint: 0.0225 / 100 },
+};
+
+function withMoonsignGleam(members: MemberInput[], moonsign: number): MemberInput[] {
+  if (moonsign < 2) return members;
+  return members.map((m) => {
+    if (m.factions?.includes('moonsign')) return m;
+    const g = MOONSIGN_GLEAM[m.character.element];
+    if (!g) return m;
+    const buff: CharacterBuff = {
+      id: 'moonsign-gleam', label: `Moonsign: Ascendant Gleam (${m.character.name})`, minConstellation: 0, scope: 'team', timed: true, flat: [],
+      convert: { from: g.from, source: 'self', perPoint: g.perPoint, threshold: 0, cap: 0.36, to: ['lunarcharged', 'lunarbloom', 'lunarcrystallize'] },
+      note: 'Com 2+ membros Moonsign, depois da habilidade ou do supremo deste membro: DMG das reações Lunares da equipe por stat, até 36% (Genshin Optimizer). Não se soma ao de outro membro.',
+    };
+    const base: CharacterEffect = m.characterEffect ?? { character: m.character.name, atkPct: 0, dmgPct: 0, critRate: 0, critDmg: 0, em: 0, appliesToSelf: false, buffs: [], notes: [], procs: [], factions: [], specialMoves: [], fonte_info: 'Moonsign (Genshin Optimizer)' };
+    return { ...m, characterEffect: { ...base, buffs: [...base.buffs, buff] } };
   });
 }
 
@@ -455,12 +610,17 @@ export function resolveProject(project: RotationProject, data: GameData, effects
 
   // Cronológico: os stacks de dano fixo são consumidos pelos primeiros hits elegíveis NO TEMPO (ordem estável nos empates).
   const chronological = [...project.actions].sort((a, b) => a.time - b.time);
+  const procs = members.map((m) => memberProcs(m, data.moves));
   const actions: RotationAction[] = chronological.map((a) => {
-    const move = resolveMove(moves, a.move, a.displayName, a.extraScale);
+    const base =
+      a.move.talent === 'proc' ? procMove(procs[a.member] ?? [], a.move, a.displayName)
+      : a.move.talent === 'reaction' ? reactionMove(a.move, a.displayName)
+      : withSpecial(resolveMove(moves, a.move, a.displayName, a.extraScale), a.move.variant, members[a.member]?.characterEffect);
+    // Sem `element` na ação, o golpe é do elemento do personagem (no modo planilha, sempre).
+    const move = a.element ? { ...base, element: a.element } : base;
     return {
       id: a.id,
       member: a.member,
-      // No modo planilha, o elemento de todo golpe é o do personagem (o motor já usa isso por padrão).
       move,
       executions: a.executions,
       reaction: a.reaction as ReactionChoice,

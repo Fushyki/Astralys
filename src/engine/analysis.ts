@@ -14,7 +14,8 @@ import type { FlatDamageEffect } from '../effects/schema';
 
 // ---------- Dano por fonte e participação de reações ----------
 
-export type SourceKey = HitType | 'amplifying' | 'additive' | 'transformative' | 'lunar' | 'stellar';
+/** `other` = golpes extras de proc (arma, set, passiva, constelação). */
+export type SourceKey = HitType | 'other' | 'amplifying' | 'additive' | 'transformative' | 'lunar' | 'stellar';
 
 export interface SourceBreakdown {
   total: number;
@@ -26,7 +27,7 @@ export interface SourceBreakdown {
   reactionShare: number;
 }
 
-const SOURCE_KEYS: SourceKey[] = ['normal', 'charged', 'plunge', 'skill', 'burst', 'amplifying', 'additive', 'transformative', 'lunar', 'stellar'];
+const SOURCE_KEYS: SourceKey[] = ['normal', 'charged', 'plunge', 'skill', 'burst', 'other', 'amplifying', 'additive', 'transformative', 'lunar', 'stellar'];
 const emptySources = (): Record<SourceKey, number> => Object.fromEntries(SOURCE_KEYS.map((k) => [k, 0])) as Record<SourceKey, number>;
 
 /**
@@ -36,6 +37,11 @@ const emptySources = (): Record<SourceKey, number> => Object.fromEntries(SOURCE_
 export function damageBySource(result: RotationResult): SourceBreakdown {
   const by = emptySources();
   for (const r of result.actions) {
+    // Golpes Lunar/Estelar e reações postas na rotação contam inteiros na família deles.
+    if (r.kind && r.kind !== 'direct') {
+      by[r.kind] += r.avg;
+      continue;
+    }
     const b = r.breakdown;
     const withoutAmp = r.avg / b.amp;
     const additiveShare = b.baseTotal > 0 ? (b.additive * b.executions) / b.baseTotal : 0;
@@ -134,7 +140,7 @@ export interface WaterfallStep {
 /** base → bônus de dano → crítico → reação → defesa → resistência. O último valor é o dano do golpe. */
 export function hitWaterfall(r: ActionResult, mode: CritMode = 'avg'): WaterfallStep[] {
   const b = r.breakdown;
-  const crit = critFactor(mode, r.stats.critRate, r.stats.critDmg);
+  const crit = critFactor(mode, r.critRate, r.critDmg);
   const steps: [WaterfallKey, string, number][] = [
     ['base', 'Base', 1],
     ['dmg', 'Bônus de dano', b.dmgMultiplier],

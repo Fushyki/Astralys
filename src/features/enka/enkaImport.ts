@@ -142,7 +142,8 @@ export function enkaToGood(enka: EnkaResponse, game: Pick<GameData, 'characters'
             .map((s) => ({ key: PROP_KEY[s.appendPropId], value: s.statValue }))
             .filter((s): s is { key: string; value: number } => !!s.key),
           location: character.name,
-          level: e.reliquary?.level,
+          // O Enka conta o nível da peça de 1 a 21 (+0 = 1); o GOOD, de 0 a 20.
+          level: e.reliquary?.level !== undefined ? Math.max(0, e.reliquary.level - 1) : undefined,
         });
       }
     }

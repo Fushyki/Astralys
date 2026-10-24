@@ -27,7 +27,115 @@ function Face({ name, icon, color }: { name: string; icon?: string; color: strin
   );
 }
 
+const GACHA = 'https://api.lunaris.moe/data/assets/gachaicon';
+const thousands = (n: number) => formatDecimal(n, 0).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+/** Retrato alto do personagem (faixa de gacha do Lunaris); sem imagem mostra a inicial na cor dele. */
+function Strip({ name, icon, color }: { name: string; icon?: string; color: string }) {
+  const [failed, setFailed] = useState(false);
+  const src = icon ? `${GACHA}/${icon.replace('UI_AvatarIcon_', 'UI_Gacha_AvatarIcon_')}.webp` : '';
+  return src && !failed ? <img className="pw-img" src={src} alt="" crossOrigin="anonymous" onError={() => setFailed(true)} /> : <b className="pw-init" style={css({ '--c': color })}>{name.charAt(0)}</b>;
+}
+
+/** Rosca de participação no dano: um arco por personagem, começando no maior. */
+function Donut({ parts, size }: { parts: { share: number; color: string }[]; size: number }) {
+  const r = size / 2 - 14;
+  const c = 2 * Math.PI * r;
+  let acc = 0;
+  return (
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} aria-hidden="true">
+      <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="var(--track)" strokeWidth="22" />
+      {parts.map((p, i) => {
+        const len = Math.max(p.share, 0) * c;
+        const el = <circle key={i} cx={size / 2} cy={size / 2} r={r} fill="none" stroke={p.color} strokeWidth="22" strokeDasharray={`${Math.max(len - 2, 0)} ${c}`} strokeDashoffset={-acc} transform={`rotate(-90 ${size / 2} ${size / 2})`} />;
+        acc += len;
+        return el;
+      })}
+    </svg>
+  );
+}
+
+function WideCard({ model }: { model: CardModel }) {
+  const { w, h } = POSTER_SIZE.wide;
+  const sorted = [...model.members].sort((a, b) => b.share - a.share);
+  const lead = sorted[0];
+  const subtitle = [model.badge, model.tag, `rotação de ${formatDecimal(model.duration, 1)} s`].filter(Boolean).join(' · ');
+  return (
+    <article className="pc pc-wide" style={{ width: w, height: h, ...css({ '--accent': model.accent }) }} aria-label={`Card: ${model.title}`}>
+      <svg className="pc-sky" width={w} height={h} viewBox={`0 0 ${w} ${h}`} aria-hidden="true">
+        <path d={`M${w - 380} 0 A 700 700 0 0 1 ${w} 700`} fill="none" stroke="#1E2647" strokeWidth="1" />
+        <path d={`M${w - 460} 0 A 820 820 0 0 1 ${w} 820`} fill="none" stroke="#161D3B" strokeWidth="1" />
+        <circle cx={w - 60} cy="110" r="2" fill="#E9C46A" opacity=".8" />
+        <circle cx={w - 330} cy="70" r="1.5" fill="#E7EAF6" opacity=".5" />
+      </svg>
+      <header className="pc-top">
+        <span className="pc-brand">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="1.6" aria-hidden="true"><path d="M12 2l2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2z" /></svg>
+          ASTRALYS
+        </span>
+        <span className="pc-sub">{subtitle}</span>
+        {model.nick ? <span className="pc-nick">por {model.nick}</span> : <span />}
+      </header>
+      <h1 className={`pw-title${model.title.length > 44 ? ' long' : ''}`}>{model.title}</h1>
+
+      <div className="pw-main">
+        <div className="pw-strips">
+          {model.members.map((m) => (
+            <div key={m.name} className="pw-strip" style={css({ '--c': m.color })}>
+              <Strip name={m.name} icon={m.icon} color={m.color} />
+              <div className="pw-cap">
+                <span className="n">{m.name}</span>
+                <span className="w">{m.weapon}</span>
+                <span className="s num">{formatPercent(m.share, 0)} do dano</span>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="pw-right">
+          <div className="pw-dps">
+            <span className="k">DPS do time</span>
+            <span className="big num">{thousands(model.dps)}</span>
+          </div>
+          <div className="pw-kpis">
+            <div><span className="v num">{formatDecimal(model.dpr / 1e6, 2)} mi</span><span className="l">dano na rotação</span></div>
+            {model.reaction && <div><span className="v num">{formatPercent(model.reaction.fraction, 0)}</span><span className="l">vem de {model.reaction.name}</span></div>}
+            {lead && <div><span className="v num">{lead.name}</span><span className="l">maior parte do dano</span></div>}
+          </div>
+          <div className="pw-share">
+            <div className="pw-donut">
+              <Donut parts={sorted} size={190} />
+              <span className="mid num">{formatPercent(lead?.share ?? 0, 0)}<small>{lead?.name}</small></span>
+            </div>
+            <div className="pw-legend">
+              {sorted.map((m) => (
+                <div key={m.name}>
+                  <i style={{ background: m.color }} />
+                  <span className="n">{m.name}</span>
+                  <span className="p num">{formatPercent(m.share, 1)}</span>
+                  <span className="c num">CR {formatPercent(m.critRate, 0)} · CD {formatPercent(m.critDmg, 0)}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer className="pc-foot">
+        <div className="pc-line" role="img" aria-label="Golpes ao longo da rotação">
+          {model.timeline.map((hit, i) => {
+            const size = hit.burst ? 30 : 10 + hit.weight * 9;
+            return <span key={i} style={css({ left: `${hit.at * 98 + 1}%`, width: size, height: size, background: hit.burst ? model.accent : model.members[hit.member]?.color ?? '#9AA3C7' })} />;
+          })}
+        </div>
+        <div className="pc-seq"><span>{model.sequence}</span><span className="num">Nv {model.characterLevel} vs {model.enemyLevel}</span></div>
+      </footer>
+    </article>
+  );
+}
+
 export function PosterCard({ model, format = 'portrait' }: { model: CardModel; format?: PosterFormat }) {
+  if (format === 'wide') return <WideCard model={model} />;
   const { w, h } = POSTER_SIZE[format];
   const sorted = [...model.members].sort((a, b) => b.share - a.share);
   const lead = sorted[0];

@@ -33,10 +33,12 @@ describe('leitura dos bônus de 2 peças', () => {
     expect(parseTwoPiece('Normal and Charged Attack DMG +15%')).toEqual([{ stat: 'DMG% Normal', value: 0.15 }, { stat: 'DMG% Charged', value: 0.15 }]);
     expect(parseTwoPiece('Increases Elemental Skill DMG by 20%.')).toEqual([{ stat: 'DMG% Skill', value: 0.2 }]);
     expect(parseTwoPiece('CRIT Rate +12%')).toEqual([{ stat: 'CR', value: 0.12 }]);
+    expect(parseTwoPiece('Physical DMG +25%')).toEqual([{ stat: 'Physical DMG%', value: 0.25 }]);
+    expect(parseTwoPiece('Physical DMG is increased by 25%.')).toEqual([{ stat: 'Physical DMG%', value: 0.25 }]);
   });
 
-  it('o que o motor não aplica fica de fora (resistências, cura, escudo, dano físico)', () => {
-    for (const d of ['Physical DMG +25%', 'Electro RES increased by 40%.', 'Healing Bonus +15%.', 'Increases Shield Strength by 35%.']) {
+  it('o que o motor não aplica fica de fora (resistências, cura, escudo)', () => {
+    for (const d of ['Electro RES increased by 40%.', 'Healing Bonus +15%.', 'Increases Shield Strength by 35%.']) {
       expect(parseTwoPiece(d), d).toBeNull();
     }
   });

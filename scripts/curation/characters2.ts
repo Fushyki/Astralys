@@ -23,8 +23,17 @@ export const CHARACTERS_2: Record<string, BuffCuration[]> = {
     { id: 'a4', label: 'Amber A4', src: 'p2', scope: 'self', timed: true, stats: { atkPct: { p: 0 } }, expect: 'increase ATK by 15%', note: '+15% de ATK por 10 s depois de acertar ponto fraco com tiro mirado: ligue nas janelas.' },
     { id: 'c6', label: 'Amber C6', src: 'const6', scope: 'team', timed: true, stats: { atkPct: { p: 1 } }, expect: 'ATK by 15% for 10s', note: '+15% de ATK da equipe por 10 s depois da Chuva de Fogo: ligue nas janelas.' },
   ],
+  Xinyan: [
+    { id: 'a4', label: 'Xinyan A4', src: 'p2', scope: 'team', timed: true, stats: { physDmgPct: { p: 0 } }, expect: 'deal 15% increased Physical DMG', note: '+15% de DMG Físico para quem está protegido pelo escudo da habilidade: ligue nas janelas.' },
+    { id: 'c4', label: 'Xinyan C4', src: 'const4', scope: 'self', timed: false, resShred: { value: { p: 0, x: -1 }, elements: ['Physical'] }, expect: "decreases opponent's Physical RES by 15%", note: 'Assume a redução de RES Física (12 s) depois do golpe da habilidade sempre ativa.' },
+  ],
+  Mika: [
+    { id: 'a1', label: 'Mika A1', src: 'p1', scope: 'team', timed: true, stats: { physDmgPct: { p: 0, x: 3 } }, expect: 'increasing their Physical DMG by 10%', note: 'Assume os 3 stacks de Detector (+10% de DMG Físico cada) no personagem em campo durante a Soulwind: ligue nas janelas.' },
+    { id: 'a4', label: 'Mika A4', src: 'p2', scope: 'team', timed: true, stats: { physDmgPct: { lit: 0.1 } }, expect: 'maximum number of stacks that can be gained through Soulwind alone is increased by 1', note: '+1 stack de Detector (+10% de DMG Físico, o valor por stack da A1): ligue nas janelas junto com a A1.' },
+    { id: 'c6', label: 'Mika C6', src: 'const6', scope: 'team', timed: true, stats: { physDmgPct: { lit: 0.1 }, physCritDmg: { p: 0 } }, expect: 'deal 60% more Physical CRIT DMG', note: '+1 stack de Detector (+10% de DMG Físico) e +60% de Dano Crítico Físico para o personagem em campo durante a Soulwind: ligue nas janelas.' },
+  ],
   Venti: [
-    { id: 'c2', label: 'Venti C2', src: 'const2', scope: 'self', timed: false, resShred: { value: { lit: 0.24 }, elements: ['Anemo'] }, expect: 'decreases opponents\' Anemo RES and Physical RES by 24%', note: 'Assume a redução de RES Anemo (10 s) sempre ativa. A de RES Física não entra.' },
+    { id: 'c2', label: 'Venti C2', src: 'const2', scope: 'self', timed: false, resShred: { value: { lit: 0.24 }, elements: ['Anemo', 'Physical'] }, expect: 'decreases opponents\' Anemo RES and Physical RES by 24%', note: 'Assume a redução de RES Anemo e Física (10 s) sempre ativa.' },
     { id: 'c4', label: 'Venti C4', src: 'const4', scope: 'team', timed: true, forElements: ['Anemo'], stats: { dmgPct: { lit: 0.25 } }, expect: '25% Anemo DMG Bonus', note: '+25% de DMG Anemo por 10 s depois da habilidade ou do Supremo: ligue nas janelas.' },
     { id: 'c6', label: 'Venti C6', src: 'const6', scope: 'self', timed: false, resShred: { value: { lit: 0.2 }, elements: ['Anemo'] }, expect: 'Anemo RES decreased by 20%', note: 'Assume a redução de RES Anemo do Supremo sempre ativa (a do elemento absorvido não entra). Os +100% de Dano Crítico estão no buff Venti C6 (Dano Crítico).' },
     { id: 'c6cd', label: 'Venti C6 (Dano Crítico)', src: 'const6', scope: 'self', timed: true, stats: { critDmg: { p: 0 } }, expect: 'CRIT DMG Bonus of 100%', note: '+100% de Dano Crítico contra alvos atingidos pelo Supremo: ligue nas janelas.' },
@@ -69,6 +78,7 @@ export const CHARACTERS_2: Record<string, BuffCuration[]> = {
     { id: 'c6', label: 'Sucrose C6', src: 'const6', scope: 'team', timed: true, stats: { dmgPct: { p: 0 } }, expect: 'all party members gain a 20% Elemental DMG Bonus', note: '+20% de DMG do elemento absorvido durante o Supremo: ligue nas janelas em que o elemento bate com o de quem ataca.' },
   ],
   Rosaria: [
+    { id: 'c6', label: 'Rosaria C6', src: 'const6', scope: 'self', timed: false, resShred: { value: { p: 0 }, elements: ['Physical'] }, expect: "decreases opponents' Physical RES by 20%", note: 'Assume a redução de RES Física do Supremo (10 s) sempre ativa.' },
     { id: 'a1', label: 'Rosaria A1', src: 'p1', scope: 'self', timed: true, stats: { critRate: { p: 0 } }, expect: "Rosaria's CRIT Rate increases by 12%", note: '+12% de Taxa Crítica por 5 s depois de acertar pelas costas: ligue nas janelas.' },
     { id: 'a4', label: 'Rosaria A4', src: 'p2', scope: 'others', timed: true, stats: { critRate: { p: 2 } }, expect: 'cannot exceed 15%', note: 'Assume o teto de +15% de Taxa Crítica dos demais por 10 s depois do Supremo (o valor real é 15% da Taxa da Rosaria): ligue nas janelas.' },
     { id: 'c1', label: 'Rosaria C1', src: 'const1', scope: 'self', timed: true, stats: { byType: { normal: { p: 1 } } }, expect: 'Normal Attack DMG increases by 10%', note: '+10% de DMG de Normal por 4 s depois de um acerto crítico: ligue nas janelas.' },

@@ -113,7 +113,7 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
 
   // Editor de build
   await page.click('.dz-panel:has(h2:text-is("Equipamento")) button:has-text("Editar build")'); await page.waitForSelector('.dz-dialog');
-  check('o editor só traz os atributos das peças (arma e set têm seletores próprios)', (await page.locator('.dz-dialog label.dz-field:has(span:text-is("Arma"))').count()) === 0 && (await page.locator('.dz-dialog label.dz-field:has(span:text-is("Areia"))').count()) >= 1);
+  check('o editor só traz os atributos das peças (arma e set têm seletores próprios)', (await page.locator('.dz-dialog label.dz-field:has(span:text-is("Arma"))').count()) === 0 && (await page.locator('.dz-dialog .fx-slot[data-slot="sands"]').count()) === 1);
   await page.keyboard.press('Escape');
   check('Esc fecha o editor', (await page.locator('.dz-dialog').count()) === 0);
   check('a faixa de build mostra a arma e as 5 peças', (await page.$$('.pc-piece')).length === 5 && /A Thousand Blazing Suns/.test(await page.textContent('.pc-weapon')));

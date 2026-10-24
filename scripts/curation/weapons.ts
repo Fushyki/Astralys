@@ -4,6 +4,7 @@
  * `expect` é um trecho que TEM de aparecer na descrição do R1: protege contra o Lunaris mudar a ordem dos parâmetros.
  */
 import type { Val } from './sets';
+import type { ProcCur } from './gear';
 
 export type Sum = Val | Val[];
 
@@ -19,6 +20,8 @@ export interface WeaponCuration {
   byType?: Partial<Record<'normal' | 'charged' | 'plunge' | 'skill' | 'burst', Sum>>;
   /** Buff que a arma dá à equipe inteira (vale nas janelas de buff). */
   team?: { atkPct?: Sum; dmgPct?: Sum; em?: Sum };
+  /** Golpes extras (ver `ProcCur` em gear.ts). */
+  procs?: ProcCur[];
   expect: string;
   note: string;
 }
@@ -38,8 +41,8 @@ const royal = (): WeaponCuration => ({
 
 export const WEAPONS: Record<string, WeaponCuration> = {
   // ---- Espadas ----
-  'Aquila Favonia': { atkPct: { p: 0 }, expect: 'ATK is increased by', note: 'Só o ATK. A cura e o dano em área ao levar dano NÃO entram.' },
-  'Skyward Blade': { critRate: { p: 0 }, expect: 'CRIT Rate increased by', note: 'Só a Taxa Crítica. O dano extra de Normal/Carregado (% do ATK) e a velocidade NÃO entram.' },
+  'Aquila Favonia': { atkPct: { p: 0 }, procs: [{ id: 'falcao', label: "Aquila Favonia: falcão", scale: { atk: { p: 2 } }, element: 'Physical' }], expect: 'ATK is increased by', note: 'ATK. Golpe extra na paleta da rotação (coloque quantas vezes ele acontece). Dano em área de 200% (R1) do ATK, Físico, ao levar dano (a cada 15 s). A cura não muda o dano.' },
+  'Skyward Blade': { critRate: { p: 0 }, procs: [{ id: 'lamina', label: "Skyward Blade: dano extra (1 acerto)", scale: { atk: { p: 3 } }, element: 'Physical' }], expect: 'CRIT Rate increased by', note: 'Taxa Crítica. Golpe extra na paleta da rotação (coloque quantas vezes ele acontece). Cada acerto de Normal/Carregado nos 12 s depois do Supremo soma 20% (R1) do ATK como dano Físico à parte (Genshin Optimizer). A velocidade não entra.' },
   'Freedom-Sworn': {
     dmgPct: { p: 0 },
     team: { atkPct: { p: 4 } },
@@ -75,7 +78,7 @@ export const WEAPONS: Record<string, WeaponCuration> = {
   'Fleuve Cendre Ferryman': { er: { p: 1 }, expect: 'increases Energy Recharge by', note: 'Só a Recarga (5 s depois da habilidade, assumida ativa). A Taxa Crítica de habilidade NÃO entra.' },
 
   // ---- Montantes ----
-  'Skyward Pride': { dmgPct: { p: 0 }, expect: 'Increases all DMG by', note: 'Só o DMG geral. As lâminas de vácuo NÃO entram.' },
+  'Skyward Pride': { dmgPct: { p: 0 }, procs: [{ id: 'lamina', label: "Skyward Pride: lâmina de vácuo", scale: { atk: { p: 1 } }, element: 'Physical' }], expect: 'Increases all DMG by', note: 'DMG geral. Golpe extra na paleta da rotação (coloque quantas vezes ele acontece). Lâmina de vácuo de 80% (R1) do ATK, Física, até 8 depois do Supremo.' },
   'Song of Broken Pines': {
     atkPct: { p: 0 },
     team: { atkPct: { p: 4 } },
@@ -99,7 +102,7 @@ export const WEAPONS: Record<string, WeaponCuration> = {
 
   // ---- Lanças ----
   'Staff of Homa': { hpPct: { p: 0 }, expect: 'HP increased by', note: 'Só o HP. O ATK por HP máximo NÃO entra.' },
-  'Skyward Spine': { critRate: { p: 0 }, expect: 'Increases CRIT Rate by', note: 'Só a Taxa Crítica. A velocidade e a lâmina de vácuo NÃO entram.' },
+  'Skyward Spine': { critRate: { p: 0 }, procs: [{ id: 'lamina', label: "Skyward Spine: lâmina de vácuo", scale: { atk: { p: 3 } }, element: 'Physical' }], expect: 'Increases CRIT Rate by', note: 'Taxa Crítica. Golpe extra na paleta da rotação (coloque quantas vezes ele acontece). Lâmina de vácuo de 40% (R1) do ATK, Física, 50% de chance a cada 2 s. A velocidade não entra.' },
   'Vortex Vanquisher': { atkPct: { p: 1, x: 5 }, expect: 'Scoring hits on opponents increases ATK by', note: `${STACKS} (5 stacks; sem o dobro com escudo).` },
   'Primordial Jade Winged-Spear': {
     atkPct: { p: 0, x: 7 },
@@ -126,7 +129,7 @@ export const WEAPONS: Record<string, WeaponCuration> = {
   'Tamayuratei no Ohanashi': { atkPct: { p: 0 }, expect: 'Increase ATK by', note: 'Assume o ATK de 10 s depois da habilidade sempre ativo.' },
 
   // ---- Catalisadores ----
-  'Skyward Atlas': { dmgPct: { p: 0 }, expect: 'Increases Elemental DMG Bonus by', note: 'Só o DMG elemental. As nuvens (dano extra) NÃO entram.' },
+  'Skyward Atlas': { dmgPct: { p: 0 }, procs: [{ id: 'nuvem', label: "Skyward Atlas: nuvem (1 ataque)", scale: { atk: { p: 2 } }, element: 'Physical' }], expect: 'Increases Elemental DMG Bonus by', note: 'DMG elemental. Golpe extra na paleta da rotação (coloque quantas vezes ele acontece). Cada ataque das nuvens vale 160% (R1) do ATK, Físico (Genshin Optimizer); duram 15 s, 50% de chance a cada 30 s.' },
   'Lost Prayer to the Sacred Winds': { dmgPct: { p: 1, x: 4 }, expect: 'Elemental DMG Bonus every', note: 'Assume 4 stacks (+32% no R1) ativos.' },
   'Memory of Dust': { atkPct: { p: 1, x: 5 }, expect: 'Scoring hits on opponents increases ATK by', note: `${STACKS} (5 stacks; sem o dobro com escudo).` },
   "Jadefall's Splendor": { dmgPct: { p: 1 }, expect: 'Elemental DMG Bonus for their corresponding Elemental Type', note: 'Assume o teto de +12% de DMG elemental (HP máximo alto) por 3 s depois do Supremo.' },
@@ -151,7 +154,7 @@ export const WEAPONS: Record<string, WeaponCuration> = {
   'Dodoco Tales': { atkPct: { p: 2 }, byType: { charged: { p: 0 } }, expect: 'Charged Attack DMG', note: 'Assume os dois bônus (Carregado +DMG e ATK) ativos.' },
 
   // ---- Arcos ----
-  'Skyward Harp': { critDmg: { p: 0 }, expect: 'Increases CRIT DMG by', note: 'Só o CRIT DMG. O dano físico em área NÃO entra.' },
+  'Skyward Harp': { critDmg: { p: 0 }, procs: [{ id: 'area', label: "Skyward Harp: área", scale: { atk: { p: 2 } }, element: 'Physical' }], expect: 'Increases CRIT DMG by', note: 'Dano Crítico. Golpe extra na paleta da rotação (coloque quantas vezes ele acontece). Dano em área de 125% do ATK, Físico, com 60% (R1) de chance a cada 4 s (R1).' },
   "Amos' Bow": {
     byType: { normal: [{ p: 0 }, { p: 1, x: 5 }], charged: [{ p: 0 }, { p: 1, x: 5 }] },
     expect: 'Increases Normal and Charged Attack DMG by',

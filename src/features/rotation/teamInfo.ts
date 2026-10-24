@@ -110,9 +110,11 @@ export function kitCoverage(
     const buffs = (effect?.buffs ?? []).filter((b) => (src.startsWith('const') ? b.minConstellation === Number(src.slice(5)) : b.id.toLowerCase().startsWith(label.toLowerCase()) || b.label.includes(label)));
     const boost = src === 'const3' ? boosts?.c3 : src === 'const5' ? boosts?.c5 : null;
     const note = (effect?.notes ?? []).find((n) => n.src === src);
-    if (buffs.length) {
+    const procs = (effect?.procs ?? []).filter((p) => p.src === src);
+    if (buffs.length || procs.length) {
       const extra = note?.kind === 'partial' ? ` ${note.note}` : '';
-      return { label, status: note?.kind === 'partial' ? 'partial' : 'modeled', note: buffs.map((b) => b.note ?? b.label).join(' ') + extra };
+      const texts = [...buffs.map((b) => b.note ?? b.label), ...procs.map((p) => `Golpe extra na paleta da rotação: ${p.note ?? p.label}`)];
+      return { label, status: note?.kind === 'partial' ? 'partial' : 'modeled', note: texts.join(' ') + extra };
     }
     if (boost) return { label, status: 'boost', note: `+3 de nível no ${TALENT[boost] ?? boost}.` };
     if (note) return { label, status: note.kind === 'utility' ? 'utility' : 'partial', note: note.note };

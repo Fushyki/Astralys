@@ -42,7 +42,7 @@
 .step span { min-width: 52px; text-align: center; font: 700 var(--fs-3) var(--font-display); color: var(--text); }
 
 .tl-desc { display: flex; flex-direction: column; align-items: flex-start; gap: var(--sp-1); padding: var(--sp-3) var(--sp-4) 0; }
-.tl-desc p { margin: 0; font-size: var(--fs-2); color: var(--text-2); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.tl-desc p { margin: 0; font-size: var(--fs-2); color: var(--text-2); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 8; -webkit-box-orient: vertical; overflow: hidden; }
 .tl-dialog { width: min(720px, 100%); height: auto; max-height: 88vh; }
 .tl-dialog > header { flex: none; }
 .tl-full { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: var(--sp-4) var(--sp-5) var(--sp-5); display: flex; flex-direction: column; gap: var(--sp-3); }
@@ -92,3 +92,4 @@
 .tl-card.cons .cst .tl-desc p { font-size: var(--fs-1); color: #7e88b6; }
 .tl-card.cons .cst[data-lit='true'] .tl-desc p { color: var(--text-2); }
 .tl-full .tl-cut { font-size: var(--fs-2); color: var(--faint); border-top: 1px solid #18204a; padding-top: var(--sp-3); }
+.tl-card.cons .cst .tl-desc p { -webkit-line-clamp: 5; }

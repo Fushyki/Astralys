@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Astralys · Talentos da Skirk</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;600;700&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#060914}
+a{color:#F1C96B}a:hover{color:#F8DE9E}
+.num{font-variant-numeric:tabular-nums}
+.disp{font-family:'Saira Condensed',sans-serif}
+.nav a{color:#A7B0D6;text-decoration:none;font-family:'Saira Condensed',sans-serif;font-weight:600;font-size:16px;letter-spacing:.08em;text-transform:uppercase;padding:20px 0 18px;border-bottom:2px solid transparent}
+.nav a.on{color:#EEF1FF;border-bottom-color:#F1C96B}
+.pn{background:#0C1128;border:1px solid #232D5C;border-radius:14px;min-width:0;display:flex;flex-direction:column}
+.bd{font-family:'Saira Condensed',sans-serif;font-weight:600;font-size:12px;letter-spacing:.06em;text-transform:uppercase;border-radius:5px;padding:2px 8px;white-space:nowrap}
+.lb{font-family:'Saira Condensed',sans-serif;font-weight:600;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#A7B0D6}
+.r{display:flex;align-items:center;gap:10px;padding:5px 12px;font-size:13px;border-bottom:1px solid #131B40}
+.r:nth-child(even){background:#0E1430}
+.r .v{margin-left:auto;font-variant-numeric:tabular-nums;font-weight:600;color:#EEF1FF;white-space:nowrap}
+.r .k{color:#C3CAEA}
+.grp{border:1px solid #18204A;border-radius:10px;overflow:hidden;background:#0A0F24}
+.gh{font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#A7B0D6;padding:6px 12px;background:#0F1532;border-bottom:1px solid #18204A}
+.seg{display:inline-flex;border:1px solid #2A356A;border-radius:8px;overflow:hidden;background:#0C1128}
+.seg button{font-family:'Saira Condensed',sans-serif;font-weight:600;font-size:14px;letter-spacing:.05em;padding:0 14px;min-height:38px;background:transparent;color:#A7B0D6;border:0;border-right:1px solid #2A356A}
+.seg button:last-child{border-right:0}
+.seg button.on{background:#F1C96B;color:#1A1405}
+.step{display:inline-flex;align-items:center;border:1px solid #2A356A;border-radius:8px;overflow:hidden;background:#080C1D}
+.step button{width:30px;min-height:30px;border:0;background:transparent;color:#A7B0D6;font-size:16px;padding:0}
+.step span{min-width:52px;text-align:center;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:15px;color:#EEF1FF}
+.btn{font-family:'Saira Condensed',sans-serif;font-weight:600;font-size:14px;letter-spacing:.08em;text-transform:uppercase;padding:0 16px;border-radius:8px;border:1px solid #2A356A;background:#121A3A;color:#EEF1FF;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;min-height:40px;box-sizing:border-box}
+.btn.gold{background:#F1C96B;color:#1A1405;border-color:#F1C96B}
+</style>
+</helmet>
+<div style="min-height:100vh;background:#060914;color:#EEF1FF;font-family:'IBM Plex Sans',sans-serif;font-size:14px">
+
+<header style="display:flex;flex-wrap:wrap;align-items:center;gap:36px;padding:0 32px;border-bottom:1px solid #18204A;background:#080C1D">
+<a href="Talentos.dc.html" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:#EEF1FF">
+<svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5l2.3 8.2 8.2 2.3-8.2 2.3L12 22.5l-2.3-8.2L1.5 12l8.2-2.3z" fill="#F1C96B"></path></svg>
+<span class="disp" style="font-weight:700;font-size:22px;letter-spacing:.18em">ASTRALYS</span>
+</a>
+<nav class="nav" style="display:flex;gap:26px;flex:1 1 500px;flex-wrap:wrap">
+<a class="on" href="Talentos.dc.html">Times</a><a href="Talentos.dc.html">Personagens</a><a href="Talentos.dc.html">Inventário</a><a href="Talentos.dc.html">Ferramentas</a>
+</nav>
+<a class="btn" href="Talentos.dc.html">Entrar</a>
+</header>
+
+<div style="display:flex;gap:6px;padding:10px 32px 0;border-bottom:1px solid #18204A;flex-wrap:wrap;background:#080C1D">
+<sc-for list="{{tabs}}" as="t" hint-placeholder-count="4">
+<span style="{{t.style}}"><span style="{{t.ring}}">{{t.i}}</span><span style="display:flex;flex-direction:column;line-height:1.1"><span class="disp" style="font-weight:700;font-size:17px">{{t.name}}</span><span style="font-size:12px;color:#A7B0D6">{{t.role}}</span></span></span>
+</sc-for>
+</div>
+
+<main style="max-width:1400px;margin:0 auto;padding:20px 32px 48px;display:flex;flex-direction:column;gap:16px">
+
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px">
+<div class="seg"><button type="button">Resumo e build</button><button class="on" type="button">Talentos</button><button type="button">Otimizar</button><button type="button">Avançado</button></div>
+<span style="margin-left:auto"></span>
+<div class="seg"><button type="button">Não crítico</button><button class="on" type="button">Médio</button><button type="button">Crítico</button></div>
+<div class="seg"><button class="on" type="button">Sem reação</button><button type="button">Fundir</button></div>
+</div>
+
+<section class="pn" style="flex-direction:row;flex-wrap:wrap;align-items:center;gap:8px 22px;padding:10px 16px">
+<span class="lb" style="display:flex;align-items:center;gap:8px"><svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5l2.3 8.2 8.2 2.3-8.2 2.3L12 22.5l-2.3-8.2L1.5 12l8.2-2.3z" fill="#F1C96B"></path></svg>Reações da Skirk</span>
+<sc-for list="{{reacts}}" as="x" hint-placeholder-count="5"><span style="display:flex;align-items:baseline;gap:8px;font-size:13px"><span style="{{x.s}}">{{x.n}}</span><span class="num" style="font-weight:600">{{x.v}}</span></span></sc-for>
+</section>
+
+<section style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;align-items:stretch">
+
+<aside class="pn" style="grid-row:1 / span 2">
+<div style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid #18204A;background:#0F1532;border-radius:14px 14px 0 0">
+<svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5l2.3 8.2 8.2 2.3-8.2 2.3L12 22.5l-2.3-8.2L1.5 12l8.2-2.3z" fill="#F1C96B"></path></svg>
+<span class="disp" style="font-weight:700;font-size:16px;letter-spacing:.08em;text-transform:uppercase;flex:1">Constelação</span>
+<div class="step"><button type="button" aria-label="Diminuir constelação">−</button><span>C0</span><button type="button" aria-label="Aumentar constelação">+</button></div>
+</div>
+<div style="padding:8px 14px 4px">
+<svg viewBox="0 0 250 120" width="250" height="120" role="img" aria-label="Constelação da Skirk, nenhuma estrela acesa" style="width:100%;height:auto">
+<g fill="none" stroke="#2E3A70" stroke-width="1.2"><path d="M22 96 L66 58 L114 74 L150 26 L200 42 L228 100"></path><path d="M114 74 L140 108"></path></g>
+<sc-for list="{{nodes}}" as="n" hint-placeholder-count="6"><g><circle cx="{{n.x}}" cy="{{n.y}}" r="10" fill="#0C1128" stroke="#3A4680" stroke-width="1.2"></circle><text x="{{n.x}}" y="{{n.ty}}" text-anchor="middle" font-family="Saira Condensed, sans-serif" font-weight="700" font-size="10" fill="#7E88B6">{{n.c}}</text></g></sc-for>
+</svg>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px;padding:6px 12px 14px;flex:1">
+<sc-for list="{{consts}}" as="c" hint-placeholder-count="6">
+<button type="button" style="display:flex;gap:10px;align-items:flex-start;text-align:left;padding:10px;border-radius:10px;border:1px solid #1A2350;background:#0A0F24;color:#EEF1FF;font-family:'IBM Plex Sans',sans-serif">
+<span style="width:34px;height:34px;flex:none;border-radius:50%;border:1px solid #3A4680;display:flex;align-items:center;justify-content:center;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:13px;color:#7E88B6">{{c.c}}</span>
+<span style="display:flex;flex-direction:column;gap:3px;min-width:0">
+<span style="font-weight:600;font-size:14px;color:#C3CAEA">{{c.name}}</span>
+<span style="font-size:12px;color:#7E88B6;line-height:1.4">{{c.desc}}</span>
+</span>
+</button>
+</sc-for>
+<span style="font-size:12px;color:#7E88B6;margin-top:auto">Apagadas = ainda não desbloqueadas. Clique para acender até ela.</span>
+</div>
+</aside>
+
+<sc-for list="{{talents}}" as="t" hint-placeholder-count="3">
+<article class="pn">
+<div style="display:flex;gap:12px;align-items:flex-start;padding:14px;border-bottom:1px solid #18204A;background:#0F1532;border-radius:14px 14px 0 0">
+<span style="{{t.icon}}"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5l2.3 8.2 8.2 2.3-8.2 2.3L12 22.5l-2.3-8.2L1.5 12l8.2-2.3z" fill="{{t.color}}"></path></svg></span>
+<span style="display:flex;flex-direction:column;gap:4px;min-width:0;flex:1">
+<span class="disp" style="font-weight:700;font-size:19px;line-height:1.1">{{t.name}}</span>
+<span class="bd" style="{{t.badge}}">{{t.type}}</span>
+</span>
+<div class="step"><button type="button" aria-label="Diminuir nível">−</button><span class="num">Nv {{t.lv}}</span><button type="button" aria-label="Aumentar nível">+</button></div>
+</div>
+<p style="margin:0;padding:10px 14px 0;font-size:12px;color:#A7B0D6;line-height:1.45">{{t.desc}} <a href="Talentos.dc.html">ver tudo</a></p>
+<div style="display:flex;flex-direction:column;gap:10px;padding:10px 12px 14px;flex:1">
+<sc-for list="{{t.groups}}" as="g" hint-placeholder-count="2">
+<div class="grp">
+<sc-if value="{{g.title}}" hint-placeholder-val="{{true}}"><div class="gh">{{g.title}}</div></sc-if>
+<div><sc-for list="{{g.rows}}" as="r" hint-placeholder-count="4"><div class="r"><span class="k" style="{{r.ks}}">{{r.n}}</span><span class="v">{{r.v}}</span></div></sc-for></div>
+</div>
+</sc-for>
+<sc-for list="{{t.conds}}" as="c" hint-placeholder-count="1">
+<div style="border:1px solid #6B5524;border-radius:10px;overflow:hidden;background:#141108">
+<label style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:#211B0C;border-bottom:1px solid #3A3016">
+<input type="checkbox" checked="{{true}}" style="width:16px;height:16px;accent-color:#F1C96B">
+<span style="font-size:12px;color:#F8DE9E;line-height:1.35;flex:1">{{c.label}}</span>
+<span class="bd num" style="background:#F1C96B;color:#1A1405">{{c.value}}</span>
+</label>
+<div><sc-for list="{{c.rows}}" as="r" hint-placeholder-count="2"><div class="r" style="background:transparent;border-color:#2A2410"><span class="k">{{r.n}}</span><span class="v">{{r.v}}</span></div></sc-for></div>
+</div>
+</sc-for>
+</div>
+</article>
+</sc-for>
+
+<sc-for list="{{passives}}" as="p" hint-placeholder-count="3">
+<article class="pn">
+<div style="display:flex;gap:12px;align-items:flex-start;padding:14px;border-bottom:1px solid #18204A">
+<span style="width:40px;height:40px;flex:none;border-radius:50%;border:1px solid #3A4680;background:#121A3A;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5l2.3 8.2 8.2 2.3-8.2 2.3L12 22.5l-2.3-8.2L1.5 12l8.2-2.3z" fill="none" stroke="#A8DDEB" stroke-width="1.6"></path></svg></span>
+<span style="display:flex;flex-direction:column;gap:4px;min-width:0">
+<span class="disp" style="font-weight:700;font-size:18px;line-height:1.1">{{p.name}}</span>
+<span class="bd" style="background:#1E3324;color:#B5E3A3;align-self:flex-start">{{p.unlock}}</span>
+</span>
+</div>
+<p style="margin:0;padding:10px 14px 0;font-size:12px;color:#A7B0D6;line-height:1.45">{{p.desc}} <a href="Talentos.dc.html">ver tudo</a></p>
+<div style="display:flex;flex-direction:column;gap:10px;padding:10px 12px 14px;flex:1">
+<sc-for list="{{p.conds}}" as="c" hint-placeholder-count="1">
+<div style="border:1px solid #6B5524;border-radius:10px;overflow:hidden;background:#141108">
+<label style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:#211B0C;border-bottom:1px solid #3A3016">
+<input type="checkbox" checked="{{true}}" style="width:16px;height:16px;accent-color:#F1C96B">
+<span style="font-size:12px;color:#F8DE9E;line-height:1.35;flex:1">{{c.label}}</span>
+<span class="bd num" style="background:#F1C96B;color:#1A1405">{{c.value}}</span>
+</label>
+<div><sc-for list="{{c.rows}}" as="r" hint-placeholder-count="2"><div class="r" style="background:transparent;border-color:#2A2410"><span class="k">{{r.n}}</span><span class="v">{{r.v}}</span></div></sc-for></div>
+</div>
+</sc-for>
+<sc-if value="{{p.empty}}" hint-placeholder-val="{{false}}"><span style="font-size:12px;color:#7E88B6;margin-top:auto">Sem efeito numérico cadastrado para este time.</span></sc-if>
+</div>
+</article>
+</sc-for>
+
+</section>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1300}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const team = [['Skirk','S','#8FD3E8','DPS principal · Cryo'],['Escoffier','E','#8FD3E8','Suporte · Cryo'],['Furina','F','#5FA8F5','Suporte · Hydro'],['Mona','M','#5FA8F5','Suporte · Hydro']];
+    const tabs = team.map(([name, i, col, role], k) => ({ name, i, role,
+      style: 'display:flex;align-items:center;gap:10px;padding:8px 16px 10px;border-radius:10px 10px 0 0;' + (k === 0 ? 'background:#060914;border:1px solid #232D5C;border-bottom:1px solid #060914;margin-bottom:-1px' : 'border:1px solid transparent;opacity:.75'),
+      ring: 'width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:Saira Condensed,sans-serif;font-weight:700;font-size:16px;color:' + col + ';border:2px solid ' + col + ';background:#060914' }));
+    const reacts = [['Supercondutor','4.294,6','#C9A6F5'],['Estilhaçar','6.310,4','#A8DDEB'],['Redemoinho Estelar','3.784,4','#9BE3CB'],['Vórtice nv 1','13.736','#9BE3CB'],['Vórtice nv 2','20.604','#9BE3CB']].map(([n, v, c]) => ({ n, v, s: 'color:' + c }));
+    const nodes = [[22,96],[66,58],[114,74],[150,26],[200,42],[228,100]].map(([x, y], i) => ({ x, y, ty: y + 3.5, c: 'C' + (i + 1) }));
+    const consts = [
+      ['C1','Queda Longínqua','Aprimora os efeitos de Razão Além da Razão.'],
+      ['C2','Ao Abismo','Fortalece a Habilidade Elemental após o uso.'],
+      ['C3','Pecado Fortuito','+3 no nível do Supremo.'],
+      ['C4','Fluxo Fraturado','Aprimora os efeitos de Retorno à Desolação.'],
+      ['C5','Portadora de Desejos','+3 no nível da Habilidade Elemental.'],
+      ['C6','Para a Fonte','Fendas do Vazio absorvidas geram efeitos extras.']
+    ].map(([c, name, desc]) => ({ c, name, desc }));
+    const cryo = 'color:#A8DDEB';
+    const R = (n, v, el) => ({ n, v, ks: el ? cryo : '' });
+    const badge = (bg, fg) => 'align-self:flex-start;background:' + bg + ';color:' + fg;
+    const icon = (col) => 'width:44px;height:44px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#121A3A;border:1px solid ' + col;
+    const talents = [
+      { name: 'Destruição', type: 'Ataque normal', badge: badge('#1E2A5A','#B9C6FF'), color: '#B9C6FF', icon: icon('#3A4680'), lv: 1,
+        desc: 'Até 5 golpes com a espada; carregado consome Stamina.',
+        groups: [
+          { title: 'Ataque normal', rows: [R('1º golpe','6.017,9'),R('2º golpe','5.495,8'),R('3º golpe','2× 3.578,5'),R('4º golpe','6.710,8'),R('5º golpe','9.150,2')] },
+          { title: 'Ataque carregado', rows: [R('Ataque carregado','2× 5.061,4'),R('Consumo de Stamina','20')] },
+          { title: 'Ataque imersivo', rows: [R('Durante a queda','4.842,6'),R('Queda baixa','9.683,1'),R('Queda alta','12.095')] }
+        ], conds: [] },
+      { name: 'Devastação: Lampejo', type: 'Habilidade elemental', badge: badge('#173A48','#A8DDEB'), color: '#8FD3E8', icon: icon('#8FD3E8'), lv: 11,
+        desc: 'Entra no modo Lampejo de Sete Fases e ataca com dano Cryo.',
+        groups: [
+          { title: 'Modo Lampejo · normal', rows: [R('1º golpe','100.390',1),R('2º golpe','90.546',1),R('3º golpe','2× 57.232',1),R('4º golpe','2× 60.872',1),R('5º golpe','148.611',1)] },
+          { title: 'Carregado e queda', rows: [R('Ataque carregado','3× 15.363',1),R('Consumo de Stamina','20'),R('Durante a queda','22.047',1),R('Queda baixa','44.085',1),R('Queda alta','55.065',1)] },
+          { title: 'Duração e limites', rows: [R('Duração do modo','13 s'),R('Sutileza da Serpente máx.','100'),R('Recarga','8 s')] }
+        ], conds: [] },
+      { name: 'Arte Apodrecida: Obliteração', type: 'Supremo', badge: badge('#3A3016','#F1C96B'), color: '#F1C96B', icon: icon('#6B5524'), lv: 10,
+        desc: 'Não usa Energia: consome Sutileza da Serpente.',
+        groups: [
+          { title: '', rows: [R('Dano do Corte','5× 202.537',1),R('Dano do Corte Final','249.277',1),R('Recarga','15 s')] }
+        ],
+        conds: [
+          { label: 'Sutileza da Serpente consumida acima de 50', value: '12 pts', rows: [R('Aumento de dano do Supremo','20.939')] },
+          { label: 'Fendas do Vazio absorvidas usando Devastação: Extinção', value: '3', rows: [R('Bônus de dano do ataque normal','20%'),R('Ativações','10'),R('Recarga','0,1 s')] }
+        ] }
+    ];
+    const passives = [
+      { name: 'Razão Além da Razão', unlock: 'Ascensão 1', desc: 'Reações de Congelado próximas geram Fendas do Vazio.', conds: [], empty: true },
+      { name: 'Retorno à Desolação', unlock: 'Ascensão 4', desc: 'Membros Hydro ou Cryo acertando o inimigo dão acúmulos.', empty: false,
+        conds: [ { label: 'Acúmulos de Death’s Crossing', value: '3', rows: [R('Multiplicador do ataque normal','170%'),R('Multiplicador do Supremo','160%')] } ] },
+      { name: 'Mentoria Mútua de Armamentos', unlock: 'Talento passivo', desc: 'Time só com Hydro ou Cryo aumenta o nível da habilidade.', empty: false,
+        conds: [ { label: 'Todos os membros são Hydro ou Cryo', value: 'sim', rows: [R('Nível da Habilidade','+1')] } ] }
+    ];
+    return { tabs, reacts, nodes, consts, talents, passives };
+  }
+}
+</script>
+</body>
+</html>

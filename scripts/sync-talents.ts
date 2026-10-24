@@ -14,6 +14,8 @@ interface RawText {
   name?: string;
   icon?: string;
   description?: string;
+  /** Linhas de números por nível (15 valores como texto): dano, duração, recarga, consumo de Stamina… */
+  multipliers?: Record<string, unknown[]>;
 }
 interface RawChar {
   skills?: Record<string, RawText>;
@@ -62,7 +64,11 @@ async function main() {
     }
     const skills = (['normalattack', 'elementalskill', 'elementalburst'] as const).map((k, i) => {
       const s = item(raw.skills?.[k]);
-      return s ? { talent: (['normal', 'skill', 'burst'] as const)[i], ...s } : null;
+      // Linhas que não são dano (duração, recarga, Stamina, limites): o dano vem de moves.json.
+      const params = Object.entries(raw.skills?.[k]?.multipliers ?? {})
+        .filter(([label, values]) => !/dano|dmg/i.test(label) && Array.isArray(values) && values.length >= 1)
+        .map(([label, values]) => ({ label: label.trim(), values: values.map((x) => String(x)) }));
+      return s ? { talent: (['normal', 'skill', 'burst'] as const)[i], ...s, params } : null;
     });
     const passives = ['p1', 'p2', 'p3', 'p4'].map((k) => {
       const p = item(raw.passives?.[k]);

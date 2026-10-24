@@ -4,7 +4,36 @@ import './design.css';
 
 const css = (vars: Record<string, string | number | undefined>): CSSProperties => vars as CSSProperties;
 
-export function Panel({ title, aside, children, className, style }: { title?: ReactNode; aside?: ReactNode; children: ReactNode; className?: string; style?: CSSProperties }) {
+/** Estrela de 4 pontas (a unidade visual do Astralys): marcador de seção, raridade e rolls. */
+export function StarIcon({ size = 12, outline, color }: { size?: number; outline?: boolean; color?: string }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true" style={{ flex: 'none' }}>
+      <path d="M12 1.5l2.3 8.2 8.2 2.3-8.2 2.3L12 22.5l-2.3-8.2L1.5 12l8.2-2.3z" fill={outline ? 'none' : color ?? 'var(--gold)'} stroke={outline ? color ?? 'var(--gold)' : 'none'} strokeWidth={1.6} />
+    </svg>
+  );
+}
+
+/**
+ * Painel. Com `bar` (telas Otimizar, Talentos e Resumo) segue o guia visual: cabeçalho de 44 px com estrela, título e selo,
+ * corpo com o mesmo espaçamento e rodapé opcional (`foot`) que fica sempre embaixo, para painéis vizinhos de mesma altura.
+ */
+export function Panel({
+  title, aside, badge, foot, bar, children, className, style,
+}: { title?: ReactNode; aside?: ReactNode; badge?: ReactNode; foot?: ReactNode; bar?: boolean; children: ReactNode; className?: string; style?: CSSProperties }) {
+  if (bar) {
+    return (
+      <section className={`dz-panel bar${className ? ` ${className}` : ''}`} style={style}>
+        <header className="bar-head">
+          <StarIcon />
+          {title ? <h2 className="h2">{title}</h2> : null}
+          {badge}
+          {aside && <span className="bar-aside">{aside}</span>}
+        </header>
+        <div className="bar-body">{children}</div>
+        {foot && <footer className="bar-foot">{foot}</footer>}
+      </section>
+    );
+  }
   return (
     <section className={`dz-panel${className ? ` ${className}` : ''}`} style={style}>
       {(title || aside) && (

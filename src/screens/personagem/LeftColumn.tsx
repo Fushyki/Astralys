@@ -9,6 +9,7 @@ import type { Character } from '../../data/schema';
 import { useRotationStore } from '../../features/rotation/store';
 import { FINAL_STAT_SUBS, applyFinalStat, type FinalStatKey } from '../../features/character/finalStatModel';
 import { formatInt, formatPercent } from '../../ui/format';
+import { Button } from '../../design/Button';
 
 const WEAPON_LABEL: Record<string, string> = { Sword: 'ESPADA', Claymore: 'ESPADÃO', Polearm: 'LANÇA', Catalyst: 'CATALISADOR', Bow: 'ARCO' };
 const SUBSTAT_LABEL: Record<Substat, string> = {
@@ -175,7 +176,7 @@ export function SubstatsPanel({ memberRef, index, bundle, onGood, bases }: { mem
           onChange={setUnit}
         />
       )}
-      <button type="button" className="dz-link" style={{ alignSelf: 'flex-start' }} onClick={onGood}>Usar o inventário GOOD</button>
+      <Button variant="ghost" size="sm" style={{ alignSelf: 'flex-start' }} onClick={onGood}>Usar o inventário GOOD</Button>
       {manual ? (
         <div className="pc-rolls">
           {SUBSTATS.map((s) => {

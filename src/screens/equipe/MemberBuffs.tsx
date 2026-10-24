@@ -7,6 +7,7 @@ import type { ProjectView } from '../../app/ProjectContext';
 import { memberBuffCards, type BuffCard } from '../../features/character/characterModel';
 import { useRotationStore } from '../../features/rotation/store';
 import { formatPercent } from '../../ui/format';
+import { Button } from '../../design/Button';
 
 interface Group {
   key: string;
@@ -54,9 +55,9 @@ export function MemberBuffs({ v, index }: { v: ProjectView; index: number }) {
           <div className="bc-bulk">
             <span className="muted small">Desligar um buff tira só dele ({names[index]}).</span>
             <span>
-              <button type="button" className="dz-link" onClick={() => setAll(true)}>Ligar todos</button>
+              <Button variant="ghost" size="sm" onClick={() => setAll(true)}>Ligar todos</Button>
               {' · '}
-              <button type="button" className="dz-link" onClick={() => setAll(false)}>Desligar todos</button>
+              <Button variant="ghost" size="sm" onClick={() => setAll(false)}>Desligar todos</Button>
             </span>
           </div>
           {cards.some((c) => c.gear && !c.active) && <p className="bc-note">Os buffs de arma e de artefatos começam desligados: ligue só os que valem neste time.</p>}

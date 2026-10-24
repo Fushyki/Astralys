@@ -10,6 +10,7 @@ import { loadGood } from '../features/good/goodStore';
 import { useGameData } from '../features/rotation/data';
 import { listProjects } from '../features/rotation/persistence';
 import './personagens.css';
+import { ButtonLink } from '../design/Button';
 
 const ELEMENTS = ['Pyro', 'Hydro', 'Anemo', 'Electro', 'Dendro', 'Cryo', 'Geo'];
 
@@ -86,7 +87,7 @@ export default function Personagens() {
                     {teams.length > 4 && <span className="muted small">+{teams.length - 4}</span>}
                   </div>
                   {teams.length > 0 && good && (
-                    <Link className="dz-link small" to={`/projeto/${teams[0].id}/personagem/${encodeURIComponent(c.name)}?aba=otimizar`}>Otimizar artefatos</Link>
+                    <ButtonLink variant="ghost" size="sm" to={`/projeto/${teams[0].id}/personagem/${encodeURIComponent(c.name)}?aba=otimizar`}>Otimizar artefatos</ButtonLink>
                   )}
                 </article>
               );

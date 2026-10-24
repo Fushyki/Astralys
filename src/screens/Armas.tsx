@@ -8,6 +8,7 @@ import { effectStatus, kitCoverage } from '../features/rotation/teamInfo';
 import { useWeaponCompare } from '../features/rotation/useWeaponCompare';
 import { formatDecimal, formatInt } from '../ui/format';
 import './armas.css';
+import { Button } from '../design/Button';
 
 type Refine = 'r1' | 'r5';
 
@@ -99,7 +100,7 @@ export default function Armas() {
                         </td>
                         <td className="avg">{formatInt(r.teamAvg)}</td>
                         <td>{isCur || !current ? '—' : delta(r.teamAvg, current.teamAvg)}</td>
-                        <td>{!isCur && <button type="button" className="dz-link" onClick={() => update(index, { weapon: r.weapon, refinement })}>Usar</button>}</td>
+                        <td>{!isCur && <Button variant="ghost" size="sm" onClick={() => update(index, { weapon: r.weapon, refinement })}>Usar</Button>}</td>
                       </tr>
                     );
                   })}
@@ -107,7 +108,7 @@ export default function Armas() {
               </table>
             </div>
             {filtered.length > SHOWN && (
-              <button type="button" className="dz-link" onClick={() => setAll(!all)}>{all ? 'Mostrar só as melhores' : `Mostrar todas as ${filtered.length} armas`}</button>
+              <Button variant="ghost" size="sm" onClick={() => setAll(!all)}>{all ? 'Mostrar só as melhores' : `Mostrar todas as ${filtered.length} armas`}</Button>
             )}
           </Panel>
 
@@ -123,7 +124,7 @@ export default function Armas() {
                       <td>C{r.constellation}{isCur && <Chip tone="#e9c46a">atual</Chip>}</td>
                       <td className="avg">{formatInt(r.teamAvg)}</td>
                       <td>{r.constellation === 0 ? '—' : delta(r.teamAvg, conBase)}</td>
-                      <td>{!isCur && <button type="button" className="dz-link" onClick={() => update(index, { constellation: r.constellation || undefined })} title={`${delta(r.teamAvg, conNow)} contra a atual`}>Usar</button>}</td>
+                      <td>{!isCur && <Button variant="ghost" size="sm" onClick={() => update(index, { constellation: r.constellation || undefined })} title={`${delta(r.teamAvg, conNow)} contra a atual`}>Usar</Button>}</td>
                     </tr>
                   );
                 })}

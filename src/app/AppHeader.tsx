@@ -8,6 +8,7 @@ import '../design/design.css';
 import { Menu } from '../design/Menu';
 import { ONLINE_ENABLED } from '../online/config';
 import { useSession } from '../online/session';
+import { ButtonLink } from '../design/Button';
 
 export function StarMark({ size = 26 }: { size?: number }) {
   return (
@@ -88,7 +89,7 @@ export function AppHeader({ projectId, memberName, projectName, favorite, onTogg
       </header>
       {projectId && (
         <div className="dz-subnav" aria-label="Telas do time">
-          <Link to="/vault" className="back">‹ Times</Link>
+          <ButtonLink variant="ghost" size="sm" to="/vault">‹ Times</ButtonLink>
           <span className="name" title={projectName}>{projectName}</span>
           <nav aria-label="Telas do time">
             {tabs.map((t, i) => (

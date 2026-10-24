@@ -42,14 +42,31 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
   const views = await page.$$eval('.pc-views button', (b) => b.map((x) => x.textContent));
   check('o personagem tem 4 abas: Resumo e build, Talentos, Otimizar e Avançado', views.join() === 'Resumo e build,Talentos,Otimizar,Avançado', views.join());
 
-  // Talentos: textos do jogo e interruptores dos buffs
+  // Talentos e constelações: texto do jogo, passos de nível, mapa de estrelas, condições e "ver tudo"
   await page.click('.pc-views button:has-text("Talentos")');
   await page.waitForSelector('.tl-card');
-  check('Talentos mostra constelações e os três talentos com texto do jogo', (await page.locator('.tl-col').count()) === 4 && (await page.locator('.tl-card').count()) >= 10);
-  const tlBefore = await page.locator('.tl-buff[data-active="true"]').count();
-  await page.locator('.tl-buff[data-active="true"]').first().locator('input').uncheck(); await page.waitForTimeout(900);
-  check('desligar um buff do personagem na aba Talentos o marca como desligado', (await page.locator('.tl-buff[data-active="true"]').count()) === tlBefore - 1);
-  await page.locator('.tl-buff[data-active="false"]:not([data-locked="true"])').first().locator('input').check(); await page.waitForTimeout(600);
+  check('Talentos: constelação, 3 talentos e 3 passivas em cartões (7)', (await page.locator('.tl-grid > .tl-card').count()) === 7 && (await page.locator('.tl-card.cons').count()) === 1);
+  check('a coluna do personagem some nesta aba e a grade usa a largura toda', (await page.locator('.pc-aside').count()) === 0);
+  const rowTops = await page.$$eval('.tl-grid > .tl-card:not(.cons)', (c) => c.slice(0, 3).map((x) => Math.round(x.getBoundingClientRect().height)));
+  check('os 3 talentos da mesma linha têm a mesma altura', new Set(rowTops).size === 1, rowTops.join(','));
+  const underlined = await page.$$eval('.tl *', (els) => els.filter((e) => getComputedStyle(e).textDecorationLine.includes('underline')).length);
+  check('nenhum texto sublinhado na aba Talentos', underlined === 0, String(underlined));
+  await page.click('g[aria-label="Constelação 2"]'); await settle();
+  check('clicar na estrela C2 acende até ela (C2 no passo)', /C2/.test(await page.textContent('.tl-card.cons .step span')) && (await page.locator('.tl-card.cons .cst[data-lit="true"]').count()) === 2);
+  await page.click('button[aria-label="Diminuir: Constelação"]'); await settle();
+  await page.click('button[aria-label="Diminuir: Constelação"]'); await settle();
+  check('o passo − volta a C0', /C0/.test(await page.textContent('.tl-card.cons .step span')));
+  await page.click('button[aria-label="Aumentar: Nível de Habilidade elemental"]'); await settle();
+  check('o passo de nível da habilidade sobe para Nv 11', /Nv 11/.test(await page.textContent('.tl-card[aria-label="Momento do Nome"] .step span')));
+  await page.keyboard.press('Control+z'); await settle();
+  await page.click('.tl-card[aria-label="Momento do Nome"] .tl-desc button'); await page.waitForSelector('.dz-dialog');
+  check('"ver tudo" abre o texto completo do jogo e Esc fecha', (await page.textContent('.dz-dialog .tl-full')).length > 150);
+  await page.keyboard.press('Escape');
+  check('Esc fecha o texto completo', (await page.locator('.dz-dialog').count()) === 0);
+  const tlBefore = await page.locator('.tl-cond[data-active="true"]').count();
+  await page.locator('.tl-cond[data-active="true"]').first().locator('input').uncheck(); await page.waitForTimeout(900);
+  check('desligar uma condição do personagem a marca como desligada', (await page.locator('.tl-cond[data-active="true"]').count()) === tlBefore - 1);
+  await page.locator('.tl-cond[data-active="false"]:not([data-locked="true"])').first().locator('input').check(); await page.waitForTimeout(600);
   await page.click('.pc-views button:has-text("Resumo e build")');
   check('abre no Resumo, com o painel de colunas', (await page.getAttribute('.pc-views button:has-text("Resumo e build")', 'aria-selected')) === 'true' && (await page.locator('.db-cols').count()) === 1);
   check('o Resumo não tem o bloco "Maiores golpes" nem a tabela inteira', (await page.locator('.dz-panel:has(h2:text-is("Maiores golpes"))').count()) === 0 && (await page.locator('.dz-panel:has(h2:text-is("Tabela de dano"))').count()) === 0);

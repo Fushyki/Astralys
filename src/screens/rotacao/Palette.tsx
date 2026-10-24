@@ -7,6 +7,7 @@ import { REACTION_ACTIONS, kitElement, memberProcs } from '../../engine';
 import { cleanMoveName } from '../../features/character/characterModel';
 import { useRotationStore } from '../../features/rotation/store';
 import { formatDecimal } from '../../ui/format';
+import { Button } from '../../design/Button';
 
 const TALENT_ORDER = ['skill', 'burst', 'normal'] as const;
 const SHOWN = 14;
@@ -106,9 +107,9 @@ export function Palette({ v }: { v: ProjectView }) {
         })}
       </div>
       {!query && (moves.length > SHOWN || reactions.length > 0) && (
-        <button type="button" className="dz-link" style={{ alignSelf: 'flex-start' }} onClick={() => setAll(!all)}>
+        <Button variant="ghost" size="sm" style={{ alignSelf: 'flex-start' }} onClick={() => setAll(!all)}>
           {all ? 'Mostrar só os principais' : `Mostrar os ${moves.length} golpes e as reações`}
-        </button>
+        </Button>
       )}
     </Panel>
   );

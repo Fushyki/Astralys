@@ -21,6 +21,7 @@ import {
 import { withEnergy, type StoredSlot } from '../features/energy/energyModel';
 import { EnergyView } from './recarga/EnergyView';
 import './recarga.css';
+import { Button } from '../design/Button';
 
 const KEY = 'astralys.recarga-livre';
 /** Time inicial, o mesmo da calculadora antiga. */
@@ -164,7 +165,7 @@ export default function RecargaLivre() {
             {saved.length === 0 && <span className="muted small">Nenhum time salvo ainda. Dê um nome e toque em "Salvar time atual". O backup da calculadora antiga (.json) também pode ser importado.</span>}
             {saved.map((t) => (
               <span key={t.id} className="rc-saved">
-                <button type="button" className="dz-link" onClick={() => load_(t)} title={t.members.join(' · ')}>⭐ {t.name}</button>
+                <Button variant="ghost" size="sm" onClick={() => load_(t)} title={t.members.join(' · ')}>⭐ {t.name}</Button>
                 <button type="button" className="x" onClick={() => del(t.id)} aria-label={`Excluir ${t.name}`}>×</button>
               </span>
             ))}

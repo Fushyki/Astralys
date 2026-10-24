@@ -3,9 +3,9 @@
  * a otimização é individual de cada personagem. A rota antiga /projeto/:id/otimizador/:nome? redireciona para lá.
  */
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Link, Navigate, useParams } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 import { useProjectView } from '../app/ProjectContext';
-import { Chip, Panel } from '../design/primitives';
+import { Chip, Panel, StarIcon } from '../design/primitives';
 import { DualRange, SecHead, StatChip, STAT_COLOR, STAT_TAG } from '../design/filtros';
 import { pieceIconUrl } from '../design/images';
 import { norm, type Good, type GoodArtifact } from '../features/good/goodImport';
@@ -20,6 +20,16 @@ import type { ReactionChoice } from '../engine';
 import { mainStatValue } from '../engine/pieces';
 import { formatDecimal, formatInt } from '../ui/format';
 import './otimizador.css';
+import { Button, ButtonLink } from '../design/Button';
+import { TeamBuffsStrip } from './personagem/AsideExtras';
+
+/** Número grande em português: 4,3 mil, 3,3 bi. */
+function bigNumber(n: number): string {
+  if (n < 1e3) return formatInt(n);
+  const units: [number, string][] = [[1e12, 'tri'], [1e9, 'bi'], [1e6, 'mi'], [1e3, 'mil']];
+  const [d, name] = units.find(([d]) => n >= d)!;
+  return `${formatDecimal(n / d, 1)} ${name}`;
+}
 
 const SLOTS = [
   { key: 'flower', label: 'Flor' },
@@ -46,6 +56,11 @@ const STAT_LABEL: Record<StatKey, string> = { hp: 'HP máximo', atk: 'ATK', def:
 const FROM_LABEL: Record<string, string> = { atk: 'o ATK', baseAtk: 'o ATK base', hp: 'o HP', def: 'a DEF', em: 'a Maestria', er: 'a Recarga' };
 const CRIT_LABEL: Record<Crit, string> = { avg: 'Média com crítico', crit: 'Sempre crítico', noCrit: 'Sem crítico' };
 const CRIT_SHORT: Record<Crit, string> = { avg: 'Média', crit: 'Sempre', noCrit: 'Nunca' };
+/** Quantos main stats e sets aparecem antes do botão "Mostrar todos". */
+const MAINS_SHOWN = 12;
+const SETS_SHOWN = 18;
+/** Glifo da posição quando falta a imagem da peça. */
+const SLOT_GLYPH: Record<string, string> = { flower: '✿', plume: '✒', sands: '⌛', goblet: '♕', circlet: '♛' };
 const TALENT_LABEL = { normal: 'Ataque normal', skill: 'Habilidade', burst: 'Supremo' } as const;
 
 interface UiState {
@@ -111,6 +126,8 @@ export function OtimizadorPanel({ index }: { index: number }) {
   const [running, setRunning] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [equippedKey, setEquippedKey] = useState<string | null>(null);
+  const [showAllSets, setShowAllSets] = useState(false);
+  const [showAllMains, setShowAllMains] = useState<Record<'sands' | 'goblet' | 'circlet', boolean>>({ sands: false, goblet: false, circlet: false });
   const job = useRef<OptimizerJob | null>(null);
 
   useEffect(() => {
@@ -158,6 +175,8 @@ export function OtimizadorPanel({ index }: { index: number }) {
   const mineKey = norm(characterKey);
   const othersCount = allArt.filter((a) => a.location && norm(a.location) !== mineKey).length;
   const setsOn = setInfo.filter((s) => !ui.offSets.includes(s.key)).length;
+  const pickedSets = ui.offSets.length ? setInfo.filter((s) => !ui.offSets.includes(s.key)) : [];
+  const visibleSets = showAllSets ? setInfo : setInfo.filter((s, i) => i < SETS_SHOWN || pickedSets.includes(s));
 
   const moves = data.game.moves.filter((m) => m.character === ref.character);
   const moveChosen = moves.find((m) => m.id === ui.moveId) ?? moves.find((m) => m.talent === 'burst') ?? moves[0];
@@ -256,40 +275,50 @@ export function OtimizadorPanel({ index }: { index: number }) {
         <Panel title="Inventário">
           <div className="ot-empty">
             <p>Importe o inventário (arquivo do Genshin Optimizer ou UID) para otimizar.</p>
-            <Link className="dz-btn gold" to="/inventario">Importar o inventário</Link>
+            <ButtonLink variant="primary" to="/inventario">Importar o inventário</ButtonLink>
           </div>
         </Panel>
       ) : (
         <>
           <div className="ot-top">
-            <Panel title="Mínimos nos stats" aside={<span className="fx-badge num">{minsOn} ativos</span>} className="fx-panel">
+            <Panel
+              bar
+              title="Mínimos nos stats"
+              badge={<span className="dz-badge num">{minsOn} ativos</span>}
+              foot={
+                erNeeded !== null ? (
+                  <div className="ot-tip">
+                    <span>A calculadora de recarga pede <b className="num">{formatDecimal(erNeeded, 1)}%</b> para {ref.character}.</span>
+                    <span className="ot-tip-acts">
+                      <Button variant="ghost" size="sm" onClick={() => setUi({ ...ui, mins: { ...ui.mins, er: String(erNeeded) } })}>Usar como mínimo</Button>
+                      <ButtonLink variant="ghost" size="sm" to={`/projeto/${v.id}/recarga`}>Abrir a calculadora</ButtonLink>
+                    </span>
+                  </div>
+                ) : (
+                  <p className="ot-tip">Ex.: Recarga ≥ 120% para não faltar energia na rotação.</p>
+                )
+              }
+            >
               <div className="ot-mins">
                 {([['er', 'Recarga', '%'], ['cr', 'Taxa crítica', '%'], ['cd', 'Dano crítico', '%'], ['em', 'Maestria', ''], ['hp', 'HP', ''], ['atk', 'ATK', ''], ['def', 'DEF', '']] as const).map(([k, label, suf]) => (
                   <label key={k}>
                     <span>{label}</span>
-                    <input className="dz-input" inputMode="decimal" placeholder="—" value={ui.mins[k]} onChange={(e) => setUi({ ...ui, mins: { ...ui.mins, [k]: e.target.value } })} aria-label={`${label} mínima`} />
-                    {suf && <i>{suf}</i>}
+                    <span className="in">
+                      <input inputMode="decimal" placeholder="—" value={ui.mins[k]} onChange={(e) => setUi({ ...ui, mins: { ...ui.mins, [k]: e.target.value } })} aria-label={`${label} mínima`} />
+                      {suf && <i>{suf}</i>}
+                    </span>
                   </label>
                 ))}
               </div>
-              {erNeeded !== null ? (
-                <p className="ot-tip">
-                  A calculadora de recarga pede <b className="num">{formatDecimal(erNeeded, 1)}%</b> para {ref.character}.{' '}
-                  <button type="button" className="dz-link" onClick={() => setUi({ ...ui, mins: { ...ui.mins, er: String(erNeeded) } })}>Usar como mínimo</button>
-                  {' · '}<Link className="dz-link" to={`/projeto/${v.id}/recarga`}>Abrir a calculadora</Link>
-                </p>
-              ) : (
-                <p className="ot-tip">Ex.: Recarga ≥ 120% para não faltar energia na rotação.</p>
-              )}
             </Panel>
 
-            <Panel title="Filtro de artefatos" aside={<span className="fx-badge num">{levelCount}/{allArt.length}</span>} className="fx-panel">
-              <div className="fx-box">
-                <SecHead title="Nível" />
+            <Panel bar title="Filtro de artefatos" badge={<span className="dz-badge num">{levelCount}/{allArt.length}</span>}>
+              <div className="ot-sec">
+                <span className="lb">Nível</span>
                 <DualRange min={0} max={20} low={ui.levelMin} high={ui.levelMax} label="Nível" onChange={(lo, hi) => setUi({ ...ui, levelMin: lo, levelMax: hi })} />
               </div>
-              <div className="fx-box">
-                <SecHead title="Peças disponíveis" />
+              <div className="ot-sec">
+                <span className="lb">Peças disponíveis</span>
                 <div className="fx-grid">
                   {SLOTS.map((sl) => <StatChip key={sl.key} tag={sl.label} n={slotCount(sl.key)} on={slotCount(sl.key) > 0} label={`${sl.label}: ${slotCount(sl.key)} de ${slotTotal(sl.key)} no filtro de nível`} />)}
                 </div>
@@ -297,16 +326,21 @@ export function OtimizadorPanel({ index }: { index: number }) {
               {(['sands', 'goblet', 'circlet'] as const).map((slot) => {
                 const mains = mainsOf(slot);
                 const on = mains.filter(([k]) => !ui.offMains[slot].includes(k)).length;
+                const shown = showAllMains[slot] ? mains : mains.slice(0, MAINS_SHOWN);
                 return (
-                  <div className="fx-box" key={slot} data-slot={slot}>
-                    <SecHead
-                      title={SLOTS.find((x) => x.key === slot)!.label}
-                      count={on}
-                      total={mains.length}
-                      aside={<button type="button" className="dz-link" onClick={() => setUi({ ...ui, offMains: { ...ui.offMains, [slot]: on === mains.length ? mains.map(([k]) => k) : [] } })}>{on === mains.length ? 'Nenhum' : 'Todos'}</button>}
-                    />
+                  <div className="ot-sec ruled" key={slot} data-slot={slot}>
+                    <div className="ot-sec-head">
+                      <span className="lb">{SLOTS.find((x) => x.key === slot)!.label} · <span className="num">{on}/{mains.length}</span></span>
+                      <span className="ot-sec-acts">
+                        {mains.length > MAINS_SHOWN && (
+                          <Button variant="ghost" size="sm" onClick={() => setShowAllMains({ ...showAllMains, [slot]: !showAllMains[slot] })}>{showAllMains[slot] ? 'Menos' : `Mostrar todos (${mains.length})`}</Button>
+                        )}
+                        <Button variant="ghost" size="sm" onClick={() => setUi({ ...ui, offMains: { ...ui.offMains, [slot]: [] } })} disabled={on === mains.length}>Todos</Button>
+                        <Button variant="ghost" size="sm" onClick={() => setUi({ ...ui, offMains: { ...ui.offMains, [slot]: mains.map(([k]) => k) } })} disabled={on === 0}>Nenhum</Button>
+                      </span>
+                    </div>
                     <div className="fx-grid">
-                      {mains.map(([k, n]) => (
+                      {shown.map(([k, n]) => (
                         <StatChip key={k} tag={STAT_TAG[k] ?? k} n={n} on={!ui.offMains[slot].includes(k)} color={STAT_COLOR[k]} label={`${MAIN_LABEL[k] ?? k}: ${n} peças`} className="ot-chip-main"
                           onClick={() => setUi({ ...ui, offMains: { ...ui.offMains, [slot]: toggle(ui.offMains[slot], k) } })} />
                       ))}
@@ -317,31 +351,47 @@ export function OtimizadorPanel({ index }: { index: number }) {
             </Panel>
 
             <Panel
+              bar
+              className="ot-sets-panel"
               title="Sets"
-              aside={
-                <span className="ot-aside">
-                  <span className="fx-badge num">{setsOn}/{setInfo.length}</span>
-                  <button type="button" className="dz-link" onClick={() => setUi({ ...ui, offSets: ui.offSets.length ? [] : setInfo.map((x) => x.key) })}>{ui.offSets.length ? 'Marcar todos' : 'Nenhum'}</button>
-                </span>
+              badge={<span className={`dz-badge num${ui.offSets.length ? ' gold' : ''}`}>{setsOn}/{setInfo.length}</span>}
+              aside={<Button variant="ghost" size="sm" onClick={() => setUi({ ...ui, offSets: ui.offSets.length ? [] : setInfo.map((x) => x.key) })}>{ui.offSets.length ? 'Marcar todos' : 'Nenhum'}</Button>}
+              foot={
+                <div className="ot-switches">
+                  <button type="button" className="ot-switch" aria-pressed={ui.fillerSets} title="Ligado: só os sets marcados dão bônus, mas as outras peças podem completar o build (ex.: 4 peças de um set e a quinta de outro). Desligado: só entram peças dos sets marcados." onClick={() => setUi({ ...ui, fillerSets: !ui.fillerSets })}>
+                    <span className="box" aria-hidden="true">✓</span><span className="t">Aceitar peças de outros sets, sem bônus</span>
+                  </button>
+                  <button type="button" className="ot-switch" aria-pressed={ui.borrow} onClick={() => setUi({ ...ui, borrow: !ui.borrow })}>
+                    <span className="box" aria-hidden="true">✓</span><span className="t">Usar artefatos de outros personagens</span>
+                    <span className="dz-badge num">{ui.borrow ? othersCount : 0}/{othersCount}</span>
+                  </button>
+                </div>
               }
-              className="fx-panel ot-sets-panel"
             >
-              <p className="ot-tip" style={{ margin: 0 }}>Marcados: os sets que podem dar bônus de 2 ou 4 peças.</p>
+              {pickedSets.length > 0 ? (
+                <div className="ot-picked">
+                  {pickedSets.slice(0, 3).map((x) => (
+                    <div className="ot-pick" key={x.key}>
+                      <span className="ico"><Img src={x.id ? pieceIconUrl(x.id, 'flower') : undefined} fallback="◆" /></span>
+                      <span className="t"><b>{x.name}</b><small className="num">{x.count} peças · dá bônus de set</small></span>
+                    </div>
+                  ))}
+                  {pickedSets.length > 3 && <span className="ot-more num">+{pickedSets.length - 3} sets marcados</span>}
+                </div>
+              ) : (
+                <p className="ot-tip">Todos os sets podem dar bônus de 2 ou 4 peças. Marque só os que quer: as outras peças completam o build sem bônus.</p>
+              )}
               <div className="ot-sets">
-                {setInfo.map((x) => (
-                  <button key={x.key} type="button" className="ot-set" aria-pressed={!ui.offSets.includes(x.key)} onClick={() => setUi({ ...ui, offSets: toggle(ui.offSets, x.key) })} title={x.name}>
+                {visibleSets.map((x) => (
+                  <button key={x.key} type="button" className="ot-set" aria-pressed={!ui.offSets.includes(x.key)} onClick={() => setUi({ ...ui, offSets: toggle(ui.offSets, x.key) })} title={`${x.name}: ${x.count} peças`} aria-label={`${x.name}: ${x.count} peças`}>
                     <Img src={x.id ? pieceIconUrl(x.id, 'flower') : undefined} fallback="◆" />
-                    <small>{x.count}</small>
+                    <small className="num">{x.count}</small>
                   </button>
                 ))}
               </div>
-              <button type="button" className="fx-wide" aria-pressed={ui.fillerSets} title="Ligado: só os sets marcados dão bônus, mas as outras peças podem completar o build (ex.: 4 peças de um set e a quinta de outro). Desligado: só entram peças dos sets marcados." onClick={() => setUi({ ...ui, fillerSets: !ui.fillerSets })}>
-                <span className="box" aria-hidden="true">✓</span>Aceitar peças de outros sets, sem bônus
-              </button>
-              <button type="button" className="fx-wide" aria-pressed={ui.borrow} onClick={() => setUi({ ...ui, borrow: !ui.borrow })}>
-                <span className="box" aria-hidden="true">✓</span>Usar artefatos de outros personagens
-                <span className="fx-badge num">{ui.borrow ? othersCount : 0}/{othersCount}</span>
-              </button>
+              {setInfo.length > SETS_SHOWN && (
+                <Button variant="ghost" size="sm" className="ot-showall" onClick={() => setShowAllSets(!showAllSets)}>{showAllSets ? 'Mostrar menos' : `Mostrar todos (${setInfo.length})`}</Button>
+              )}
             </Panel>
           </div>
 
@@ -435,9 +485,9 @@ export function OtimizadorPanel({ index }: { index: number }) {
 
             <div className="ot-go">
               {running ? (
-                <button type="button" className="dz-btn" onClick={stop}>Parar</button>
+                <Button variant="secondary" size="lg" onClick={stop}>Parar</Button>
               ) : (
-                <button type="button" className="dz-btn gold big" onClick={run}>Otimizar</button>
+                <Button variant="primary" size="lg" onClick={run}>Otimizar</Button>
               )}
               {preview && (
                 <span className="muted small">
@@ -447,6 +497,7 @@ export function OtimizadorPanel({ index }: { index: number }) {
               )}
             </div>
 
+            <TeamBuffsStrip v={v} index={index} />
             {running && (
               <div className="ot-progress" role="status" aria-live="polite">
                 <div className="bar"><i /></div>
@@ -459,17 +510,21 @@ export function OtimizadorPanel({ index }: { index: number }) {
             {error && <p className="dz-error" role="alert">{error}</p>}
             {result && (
               <div className="ot-summary">
-                <b>{result.builds.length > 0 && result.equipped && result.builds[0].key === result.equipped.key ? 'Seu build equipado já é o melhor com estes filtros.' : result.stopped ? 'Busca parada: estes são os melhores achados até aqui.' : 'Busca completa: nenhum conjunto melhor existe com estes filtros.'}</b>
-                <span className="muted small">{formatInt(result.stats.evaluations)} avaliações de {result.stats.combinations.toExponential(1)} combinações</span>
+                <StarIcon size={20} />
+                <b className="msg">{result.builds.length > 0 && result.equipped && result.builds[0].key === result.equipped.key ? 'Seu build equipado já é o melhor com estes filtros.' : result.stopped ? 'Busca parada: estes são os melhores achados até aqui.' : 'Busca completa: nenhum conjunto melhor existe com estes filtros.'}</b>
+                <span className="stat num">
+                  {result.stopped ? 'Busca parada' : 'Busca completa'} · {formatInt(result.stats.evaluations)} avaliações de {bigNumber(result.stats.combinations)} combinações · {result.inventory.pieces} peças entram
+                  {result.inventory.removed.equippedByOthers > 0 && !ui.borrow ? `, ${result.inventory.removed.equippedByOthers} de outros personagens ficaram de fora` : ''}
+                </span>
                 {result.equippedOutside && <span className="ot-warn">Seu build equipado usa peças que os filtros deixam de fora (nível, main stat, set ou dono); por isso ele não entra na busca.</span>}
-                {result.equipped && <span className="ot-now">Equipado hoje <b className="num">{focusValue(result.equipped.report)}</b></span>}
+                {result.equipped && <span className="ot-now"><span className="lb">Equipado hoje</span><b className="num">{focusValue(result.equipped.report)}</b></span>}
               </div>
             )}
             {!running && !result && !error && <p className="ot-tip">Escolha o foco e os filtros e toque em <b>Otimizar</b>.</p>}
           </section>
 
           {result && (
-            <div className="ot-results">
+            <section className="ot-results" aria-label="Builds encontrados">
               {result.builds.length === 0 && <p className="note">Nenhum conjunto cumpre os mínimos escolhidos. Afrouxe um deles.</p>}
               {result.builds.map((b, i) => (
                 <BuildCard key={b.key} title={`#${i + 1}`} build={b} base={base} now={result.equipped?.report} equippedSig={equippedSig} focusValue={focusValue} data={data.game.artifacts} caption={goalCaption} onEquip={() => equip(b)} equipped={equippedKey === b.key} />
@@ -477,7 +532,7 @@ export function OtimizadorPanel({ index }: { index: number }) {
               {result.equipped && (
                 <BuildCard title="Hoje" build={result.equipped} equippedSig={equippedSig} focusValue={focusValue} data={data.game.artifacts} caption={goalCaption} />
               )}
-            </div>
+            </section>
           )}
         </>
       )}
@@ -533,23 +588,28 @@ function BuildCard({ title, build, base, now, equippedSig, focusValue, data, cap
         {delta !== undefined && <Chip tone={delta >= 0 ? '#7bd88f' : '#e06c75'}>{delta >= 0 ? '+' : '−'}{formatDecimal(Math.abs(delta), 2)}% contra o equipado</Chip>}
         {isNow && <Chip tone="#8a93b8">referência · em uso</Chip>}
         {onEquip && (
-          <button type="button" className="dz-btn gold" onClick={onEquip} disabled={equipped}>{equipped ? 'Equipado' : 'Equipar'}</button>
+          <Button variant="primary" onClick={onEquip} disabled={equipped}>{equipped ? 'Equipado' : 'Equipar'}</Button>
         )}
       </header>
       <div className="pieces">
         {build.pieces.map((a: GoodArtifact) => {
           const set = data.find((x) => norm(x.name) === norm(a.setKey));
           const kept = equippedSig.has(pieceSig(a));
+          const slotLabel = SLOTS.find((x) => x.key === a.slotKey)?.label ?? a.slotKey;
           return (
-            <div className="piece" key={`${a.slotKey}`} data-rarity={a.rarity} data-change={!isNow && !kept}>
+            <div className="piece" key={`${a.slotKey}`} data-rarity={a.rarity} data-change={!isNow && !kept} aria-label={`${slotLabel}: ${set?.name ?? a.setKey}`}>
               <span className="top">
-                <span>{SLOTS.find((x) => x.key === a.slotKey)?.label ?? a.slotKey}</span>
+                <span className="slot">{slotLabel}</span>
                 {!isNow && <em>{kept ? 'equipada' : 'troca'}</em>}
               </span>
-              <span className="art"><Img src={set ? pieceIconUrl(set.id, a.slotKey as 'flower') : undefined} fallback="◆" /></span>
+              <span className="art">
+                <Img src={set ? pieceIconUrl(set.id, a.slotKey as 'flower') : undefined} fallback={SLOT_GLYPH[a.slotKey] ?? '◆'} />
+                <b className="lv num">+{a.level ?? 0}</b>
+                <span className="setico" title={set?.name ?? a.setKey}><Img src={set ? pieceIconUrl(set.id, 'flower') : undefined} fallback="◆" /></span>
+              </span>
               <span className="main">{MAIN_LABEL[a.mainStatKey] ?? a.mainStatKey} <b className="num">{fmtStat(a.mainStatKey, mainStatValue(a.mainStatKey, a.rarity, a.level))}</b></span>
               <ul>
-                {a.substats.map((s) => <li key={s.key}><span>{SUB_LABEL[s.key] ?? s.key}</span><b className="num">{fmtStat(s.key, s.value)}</b></li>)}
+                {a.substats.map((s) => <li key={s.key} data-crit={s.key === 'critRate_' || s.key === 'critDMG_'}><span>{SUB_LABEL[s.key] ?? s.key}</span><b className="num">{fmtStat(s.key, s.value)}</b></li>)}
               </ul>
               {a.location && <span className="loc">de {a.location}</span>}
             </div>

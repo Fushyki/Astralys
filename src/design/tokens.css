@@ -44,8 +44,17 @@
   --radius-card: 14px;
   --radius-ctl: 8px;
   --control-h: 44px;
-  --page-max: 1920px;
-  --gutter: 32px;
+  --page-max: 2200px;
+  --gutter: 24px;
+  /* escala v2 (espelhada em src/ui/tokens.ts) */
+  --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-5: 24px; --sp-6: 32px;
+  --panel-gap: 16px; --panel-pad: 16px; --panel-head: 44px;
+  --ctl-sm: 32px; --ctl-md: 40px; --ctl-lg: 48px;
+  --r-chip: 6px; --r-ctl: 8px; --r-inner: 10px; --r-panel: 14px;
+  --fs-1: 12px; --fs-2: 13px; --fs-3: 14px; --fs-4: 16px; --fs-5: 20px; --fs-6: 28px; --fs-kpi: 40px;
+  --ico-1: 16px; --ico-2: 24px; --ico-3: 40px; --ico-4: 64px;
+  --row-h: 32px;
+  --side-col: 280px;
 }
 
 @media (max-width: 720px) {

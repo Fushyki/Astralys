@@ -25,13 +25,13 @@ function Star({ x, y, lit, size = 9 }: { x: number; y: number; lit: boolean; siz
 }
 
 export function ArtCard({
-  character, memberRef, index, color, level, eligible,
-}: { character: Character; memberRef: MemberRef; index: number; color: string; level: number; eligible: readonly ('moonsign' | 'hexerei')[] }) {
+  character, memberRef, index, color, level, eligible, compact,
+}: { character: Character; memberRef: MemberRef; index: number; color: string; level: number; eligible: readonly ('moonsign' | 'hexerei')[]; compact?: boolean }) {
   const update = useRotationStore((s) => s.updateMember);
   const [failed, setFailed] = useState(false);
   const ec = elementColor(character.element);
   return (
-    <section className="sc-art" style={{ ['--c' as string]: color, ['--e' as string]: ec }} aria-label={`${character.name}, ${character.element}`}>
+    <section className={`sc-art${compact ? ' compact' : ''}`} style={{ ['--c' as string]: color, ['--e' as string]: ec }} aria-label={`${character.name}, ${character.element}`}>
       <div className="art">
         {character.splash && !failed ? (
           <img src={`${SPLASH}/${character.splash}.webp`} alt="" crossOrigin="anonymous" loading="lazy" onError={() => setFailed(true)} />
@@ -68,7 +68,7 @@ export function ArtCard({
 /** Pontos do mapa de estrelas (viewBox 220 × 110): C1 a C6, da esquerda para a direita. */
 const POINTS: [number, number][] = [[16, 84], [54, 40], [100, 60], [136, 14], [174, 32], [206, 88]];
 
-export function ConstellationCard({ character, memberRef, index }: { character: Character; memberRef: MemberRef; index: number }) {
+export function ConstellationCard({ character, memberRef, index, compact }: { character: Character; memberRef: MemberRef; index: number; compact?: boolean }) {
   const update = useRotationStore((s) => s.updateMember);
   const { data: all } = useTalents();
   const tl = all?.find((t) => t.character === character.name);
@@ -81,6 +81,13 @@ export function ConstellationCard({ character, memberRef, index }: { character: 
         <h3>Constelação</h3>
         <span className="badge num">C{c}</span>
       </header>
+      {compact ? (
+        <div className="cons-row" role="group" aria-label="Constelação">
+          {[0, 1, 2, 3, 4, 5, 6].map((n) => (
+            <button key={n} type="button" aria-pressed={c === n} aria-label={`Constelação ${n}`} onClick={() => update(index, { constellation: n || undefined })}>C{n}</button>
+          ))}
+        </div>
+      ) : (
       <svg viewBox="0 0 220 110" role="group" aria-label="Mapa de estrelas da constelação">
         {POINTS.slice(1).map((p, i) => (
           <line key={i} x1={POINTS[i][0]} y1={POINTS[i][1]} x2={p[0]} y2={p[1]} className="cm-line" data-lit={i + 2 <= c} />
@@ -99,17 +106,18 @@ export function ConstellationCard({ character, memberRef, index }: { character: 
           );
         })}
       </svg>
-      <p className="muted small">Clique numa estrela para acender até ela. Estrelas acesas brilham em dourado.</p>
+      )}
+      {!compact && <p className="muted small">Clique numa estrela para acender até ela. Estrelas acesas brilham em dourado.</p>}
     </section>
   );
 }
 
-export function TalentsCard({ character, memberRef, index, share }: { character: Character; memberRef: MemberRef; index: number; share: number }) {
+export function TalentsCard({ character, memberRef, index, share, compact }: { character: Character; memberRef: MemberRef; index: number; share: number; compact?: boolean }) {
   const update = useRotationStore((s) => s.updateMember);
   const eff = effectiveTalents(memberRef.talents, memberRef.constellation, character);
   const rows = [['normal', 'Normal'], ['skill', 'Habilidade'], ['burst', 'Supremo']] as const;
   return (
-    <section className="sc-card sc-talents" aria-label="Talentos">
+    <section className={`sc-card sc-talents${compact ? ' compact' : ''}`} aria-label="Talentos">
       <header>
         <span className="spark" aria-hidden="true">✦</span>
         <h3>Talentos</h3>

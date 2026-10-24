@@ -32,7 +32,21 @@ function Icon({ name, color }: { name: string; color?: string }) {
   return name && !failed ? <img src={skillIconUrl(name)} alt="" loading="lazy" crossOrigin="anonymous" onError={() => setFailed(true)} style={color ? { borderColor: color } : undefined} /> : <StarIcon size={20} color={color} />;
 }
 
-/** Descrição de uma linha; "ver tudo" abre o texto completo do jogo. */
+/** Título de seção do texto do jogo: linha curta, sem ponto final. */
+const isHeading = (line: string) => line.length <= 44 && !/[.!?:]$/.test(line.trim());
+
+/** Texto completo do jogo em parágrafos, com os títulos de seção em destaque. */
+function FullText({ text }: { text: string }) {
+  const lines = text.split('\n').map((l) => l.trim());
+  return (
+    <div className="tl-full">
+      {lines.map((l, i) => (l ? (isHeading(l) && i > 0 ? <h3 key={i}>{l}</h3> : <p key={i}>{l}</p>) : null))}
+      {lines.some((l) => /(\.\.\.|…)$/.test(l)) && <p className="tl-cut">Os trechos que terminam em "..." já vêm cortados do Lunaris; o Astralys não tem a continuação.</p>}
+    </div>
+  );
+}
+
+/** Descrição curta (até 3 linhas); "ver tudo" abre o texto completo do jogo, com rolagem. */
 function OneLine({ title, text }: { title: string; text: string }) {
   const [open, setOpen] = useState(false);
   useEffect(() => {
@@ -41,18 +55,20 @@ function OneLine({ title, text }: { title: string; text: string }) {
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
   }, [open]);
+  // A prévia leva só as frases (sem os títulos de seção, que no texto corrido ficariam colados na frase seguinte).
+  const flat = text.split('\n').map((l) => l.trim()).filter((l) => l && !isHeading(l)).join(' ') || text.replace(/\s*\n+\s*/g, ' ');
   return (
     <div className="tl-desc">
-      <p>{text.replace(/\s*\n+\s*/g, ' ')}</p>
-      <Button variant="ghost" size="sm" onClick={() => setOpen(true)}>ver tudo</Button>
+      <p>{flat}</p>
+      {flat.length > 120 && <Button variant="ghost" size="sm" onClick={() => setOpen(true)}>ver tudo</Button>}
       {open && (
         <div className="dz-modal" onMouseDown={(e) => e.target === e.currentTarget && setOpen(false)}>
-          <div className="dz-dialog" role="dialog" aria-modal="true" aria-label={title}>
+          <div className="dz-dialog wide tl-dialog" role="dialog" aria-modal="true" aria-label={title}>
             <header>
               <h2 className="h2">{title}</h2>
               <Button variant="secondary" size="sm" onClick={() => setOpen(false)}>Fechar</Button>
             </header>
-            <p className="tl-full">{text}</p>
+            <FullText text={text} />
           </div>
         </div>
       )}
@@ -312,8 +328,9 @@ export function TalentsPanel({ v, index }: { v: ProjectView; index: number }) {
                 <div className="cst" key={c.n} data-lit={lit}>
                   <button type="button" className="head" aria-label={`Acender até a constelação ${c.n}`} onClick={() => setCons(c.n === constellation ? c.n - 1 : c.n)}>
                     <span className="ring num">C{c.n}</span>
-                    <span className="t"><b>{c.name}</b><small>{c.description.replace(/\s*\n+\s*/g, ' ')}</small></span>
+                    <span className="t"><b>{c.name}</b></span>
                   </button>
+                  <OneLine title={`C${c.n} · ${c.name}`} text={c.description} />
                   {mine.length > 0 && <div className="body">{mine}</div>}
                   {mine.length === 0 && lit && note && <span className="empty">{note.kind === 'utility' ? `Sem efeito no dano: ${note.note}` : `Parcial: ${note.note}`}</span>}
                 </div>

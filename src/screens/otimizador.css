@@ -118,3 +118,22 @@
 .ot-build .stats small.up { color: #9fd68a; }
 .ot-build .stats small.down { color: #e89a9a; }
 @media (max-width: 720px) { .ot-build .pieces { grid-template-columns: repeat(2, minmax(0, 1fr)); } .ot-build .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* Escolha do golpe: botão na barra de foco e popup com os tipos de dano em cores */
+.ot-movebtn { display: flex; align-items: center; gap: var(--sp-2); min-height: var(--ctl-md); padding: 0 var(--sp-3); border: 1px solid #2a356a; border-radius: var(--r-ctl); background: #080c1d; color: var(--text); font: 500 var(--fs-3) var(--font-body); text-align: left; cursor: pointer; width: 100%; }
+.ot-movebtn:hover { border-color: var(--gold); }
+.ot-movebtn .n { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ot-movebtn .chev { color: var(--muted); }
+.mp-badge { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-1); letter-spacing: .06em; text-transform: uppercase; border-radius: 5px; padding: 2px var(--sp-2); white-space: nowrap; }
+.mp-dialog { width: min(1040px, 100%); }
+.mp-tools { display: flex; flex-direction: column; gap: var(--sp-2); padding: var(--sp-3) var(--sp-4); }
+.mp-kinds { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+.mp-kinds button { min-height: var(--ctl-sm); padding: 0 var(--sp-3); border-radius: var(--r-ctl); border: 1px solid #2a356a; background: transparent; color: var(--muted); font: 600 var(--fs-3) var(--font-display); letter-spacing: .05em; text-transform: uppercase; cursor: pointer; }
+.mp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--sp-2); padding: 0 var(--sp-4) var(--sp-4); overflow-y: auto; align-content: start; flex: 1; min-height: 0; }
+.mp-card { position: relative; display: flex; flex-direction: column; gap: var(--sp-2); padding: var(--sp-3); padding-left: var(--sp-4); border-radius: var(--r-inner); border: 1px solid #232d5c; background: #0e1430; color: var(--text); font: inherit; text-align: left; cursor: pointer; overflow: hidden; }
+.mp-card::before { content: ''; position: absolute; inset: 0 auto 0 0; width: var(--sp-1); background: var(--k); }
+.mp-card:hover { border-color: var(--k); background: color-mix(in srgb, var(--kb) 55%, #0e1430); }
+.mp-card[data-current='true'] { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold); }
+.mp-card .n { font-weight: 600; font-size: var(--fs-3); line-height: 1.3; overflow-wrap: anywhere; }
+.mp-card .meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-2); font-size: var(--fs-1); }
+.mp-card .cur { position: absolute; top: var(--sp-2); right: var(--sp-2); font-size: var(--fs-1); color: var(--gold); }

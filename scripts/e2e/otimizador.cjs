@@ -51,14 +51,14 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   check('a página do personagem tem a aba Otimizar', (await page.$$eval('.pc-views button', (b) => b.map((x) => x.textContent))).includes('Otimizar'));
   check('não existe mais botão "Otimizar artefatos" no Equipamento', (await page.locator('a:has-text("Otimizar artefatos")').count()) === 0);
   await page.click('.pc-views button:has-text("Otimizar")');
-  await page.waitForSelector('.ot-grid');
+  await page.waitForSelector('.ot-top');
   check('abre o otimizador do Mavuika dentro da página dele', /aba=otimizar/.test(page.url()) && /Mavuika/.test(await page.textContent('.pc-tabs [aria-selected="true"]')));
   check('a faixa do time tem 3 telas: Equipe, Rotação e buffs, Dano do time', (await page.$$eval('.dz-subnav nav a', (a) => a.map((x) => x.textContent.replace(/^\d/, '').trim()))).join('|') === 'Equipe|Rotação e buffs|Dano do time');
-  check('"O que otimizar" tem 3 escolhas: Dano, Buff e Stat', (await page.locator('.ot-goals button').count()) === 3 && (await page.getAttribute('.ot-goals button:has-text("Dano")', 'aria-pressed')) === 'true');
-  check('em Dano há 3 alvos: rotação do time, só dele e um golpe do kit', (await page.$$eval('.ot-sub .ot-focus button', (b) => b.map((x) => x.textContent.trim()))).join('|') === 'Rotação do time|Só Mavuika|Um golpe do kit');
+  check('"O que otimizar" tem 3 escolhas: Dano, Buff e Stat', (await page.locator('.ot-seg[aria-label="O que otimizar"] button').count()) === 3 && (await page.getAttribute('.ot-seg[aria-label="O que otimizar"] button:has-text("Dano")', 'aria-pressed')) === 'true');
+  check('em Dano há 3 alvos: rotação do time, só dele e um golpe do kit', (await page.$$eval('.ot-seg[aria-label="Dano de"] button', (b) => b.map((x) => x.textContent.trim()))).join('|') === 'Rotação do time|Só Mavuika|Um golpe');
   const prev = await page.textContent('.ot-go .muted');
   check('a rota antiga /otimizador/:nome leva à aba do personagem', await (async () => { await page.goto(`${BASE}/projeto/exemplo/otimizador/Mavuika`, { waitUntil: 'networkidle' }); return /personagem\/Mavuika\?aba=otimizar/.test(page.url()); })());
-  await page.waitForSelector('.ot-grid');
+  await page.waitForSelector('.ot-top');
   check('mostra quantas peças entram por posição', /40 peças entram \(8 \/ 8 \/ 8 \/ 8 \/ 8/.test(prev), prev);
 
   // ---- Otimizar (dano do time) ----
@@ -92,39 +92,39 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.click('button:has-text("Voltar ao build genérico")');
   check('"Voltar ao build genérico" volta aos rolls e main stats', (await page.locator('.pc-piece.real').count()) === 0 && (await page.locator('.pc-rolls').count()) === 1);
   await page.click('.pc-views button:has-text("Otimizar")');
-  await page.waitForSelector('.ot-grid');
+  await page.waitForSelector('.ot-top');
 
   // ---- Restrição de Recarga ----
   await page.fill('input[aria-label="Recarga mínima"]', '125');
   await page.click('.ot-go .dz-btn.gold');
   await page.waitForSelector('.ot-build, .note', { timeout: 120000 });
   await page.waitForTimeout(500);
-  const ers = await page.$$eval('.ot-build:not([data-now="true"]) footer', (f) => f.map((x) => Number((/ER (\d+)%/.exec(x.textContent) || [])[1])));
+  const ers = await page.$$eval('.ot-build:not([data-now="true"]) .stats', (f) => f.map((x) => Number((/Recarga(\d+)/.exec(x.textContent) || [])[1])));
   check('com Recarga mínima de 125% nenhum build fica abaixo', ers.every((e) => e >= 125), ers.join(',') || 'nenhum cumpre');
 
   // ---- Foco num stat ----
   await page.fill('input[aria-label="Recarga mínima"]', '');
-  await page.click('.ot-goals button:has-text("Stat")');
-  await page.click('.ot-chip:has-text("Maestria")');
+  await page.click('.ot-seg[aria-label="O que otimizar"] button:has-text("Stat")');
+  await page.click('.ot-seg button:has-text("Maestria")');
   await page.click('.ot-go .dz-btn.gold');
   await page.waitForSelector('.ot-build:not([data-now="true"])', { timeout: 120000 });
   const em = await page.$$eval('.ot-build:not([data-now="true"]) .val b', (b) => b.map((x) => Number(x.textContent.replace(/\./g, ''))));
   check('foco em Maestria: o melhor build tem a maior Maestria', em.length > 0 && em[0] >= Math.max(...em), em.join(' > '));
 
   // ---- Um golpe do kit, com e sem reação ----
-  await page.click('.ot-goals button:has-text("Dano")');
-  await page.click('.ot-sub .ot-focus button:has-text("Um golpe do kit")');
+  await page.click('.ot-seg[aria-label="O que otimizar"] button:has-text("Dano")');
+  await page.click('.ot-seg[aria-label="Dano de"] button:has-text("Um golpe")');
   const moves = await page.$$eval('select[aria-label="Golpe do kit"] option', (o) => o.length);
   check('o golpe do kit vem de uma lista com todos os golpes do personagem', moves >= 10, String(moves));
-  const reacts = await page.$$eval('.ot-chip[aria-pressed]', (b) => b.map((x) => x.textContent.trim()).filter((t) => /Sem reação|Derreter|Vaporizar/.test(t)));
+  const reacts = await page.$$eval('.ot-seg button[aria-pressed]', (b) => b.map((x) => x.textContent.trim()).filter((t) => /Sem reação|Derreter|Vaporizar/.test(t)));
   check('a reação é escolhida: sem reação e Derreter (time com Cryo)', reacts.includes('Sem reação') && reacts.includes('Derreter'), reacts.join(','));
-  const crits = await page.$$eval('.ot-chip', (b) => b.map((x) => x.textContent.trim()).filter((t) => /crítico|Média/i.test(t)));
-  check('o tipo de crítico é escolhido', crits.includes('Média com crítico') && crits.includes('Sempre crítico') && crits.includes('Sem crítico'), crits.join(','));
-  await page.click('.ot-chip:has-text("Sem reação")');
+  const crits = await page.$$eval('.ot-seg button', (b) => b.map((x) => x.textContent.trim()).filter((t) => /Média|Sempre|Nunca/.test(t)));
+  check('o tipo de crítico é escolhido', crits.includes('Média') && crits.includes('Sempre') && crits.includes('Nunca'), crits.join(','));
+  await page.click('.ot-seg button:has-text("Sem reação")');
   await page.click('.ot-go .dz-btn.gold');
   await page.waitForSelector('.ot-build:not([data-now="true"])', { timeout: 120000 });
   const semReacao = Number((await page.textContent('.ot-build:not([data-now="true"]) .val b')).replace(/\./g, ''));
-  await page.click('.ot-chip:has-text("Derreter")');
+  await page.click('.ot-seg button:has-text("Derreter")');
   await page.click('.ot-go .dz-btn.gold');
   await page.waitForSelector('.ot-build:not([data-now="true"])', { timeout: 120000 });
   await page.waitForTimeout(400);
@@ -134,8 +134,8 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
 
   // ---- Buff de suporte (Bennett: ATK fixo que ele dá ao time) ----
   await page.goto(`${BASE}/projeto/exemplo/personagem/Bennett?aba=otimizar`, { waitUntil: 'networkidle' });
-  await page.click('.ot-goals button:has-text("Buff")');
-  check('Buff lista o que o Bennett dá ao time e cresce com o ATK dele', /ATK fixo/.test(await page.textContent('.ot-buffs')), (await page.textContent('.ot-buffs')).slice(0, 80));
+  await page.click('.ot-seg[aria-label="O que otimizar"] button:has-text("Buff")');
+  check('Buff lista o que o Bennett dá ao time e cresce com o ATK dele', /ATK fixo/.test(await page.textContent('.ot-seg[aria-label="Buff"]')), (await page.textContent('.ot-seg[aria-label="Buff"]')).slice(0, 80));
   await page.click('.ot-go .dz-btn.gold');
   await page.waitForSelector('.ot-build:not([data-now="true"])', { timeout: 120000 });
   const buffVals = await page.$$eval('.ot-build:not([data-now="true"]) .val b', (b) => b.map((x) => Number(x.textContent.replace(/\./g, ''))));
@@ -152,7 +152,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.click('.eq-card:has(.name:text-is("Citlali")) a:has-text("Ajustar build")');
   await page.waitForSelector('.pc-gear');
   await page.click('.pc-views button:has-text("Otimizar")');
-  await page.waitForSelector('.ot-grid');
+  await page.waitForSelector('.ot-top');
   check('a aba Otimizar da Citlali abre o otimizador dela (individual)', /personagem\/Citlali/.test(page.url()) && /aba=otimizar/.test(page.url()));
   await page.goto(`${BASE}/projeto/exemplo`, { waitUntil: 'networkidle' });
   check('a barra de passos tem 3 passos', /Passo 1 de 3/.test(await page.textContent('.dz-stepbar')));
@@ -175,7 +175,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   // ---- celular ----
   await page.setViewportSize({ width: 390, height: 800 });
   await page.goto(`${BASE}/projeto/exemplo/personagem/Mavuika?aba=otimizar`, { waitUntil: 'networkidle' });
-  await page.waitForSelector('.ot-grid');
+  await page.waitForSelector('.ot-top');
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1);
   check('celular sem rolagem horizontal no otimizador', !overflow);
   await page.screenshot({ path: path.join(OUT, 'otimizador-cel.png') });

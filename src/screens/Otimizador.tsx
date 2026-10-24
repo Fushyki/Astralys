@@ -16,6 +16,7 @@ import { DEFAULT_CONFIG, countCandidates, type OptimizedBuild, type OptimizerCon
 import { REACTION_LABEL, reactionOptions } from '../features/character/characterModel';
 import { useRotationStore } from '../features/rotation/store';
 import type { ReactionChoice } from '../engine';
+import { mainStatValue } from '../engine/pieces';
 import { formatDecimal, formatInt } from '../ui/format';
 import './otimizador.css';
 
@@ -43,6 +44,7 @@ type StatKey = 'hp' | 'atk' | 'def' | 'em' | 'er';
 const STAT_LABEL: Record<StatKey, string> = { hp: 'HP máximo', atk: 'ATK', def: 'DEF', em: 'Maestria', er: 'Recarga' };
 const FROM_LABEL: Record<string, string> = { atk: 'o ATK', baseAtk: 'o ATK base', hp: 'o HP', def: 'a DEF', em: 'a Maestria', er: 'a Recarga' };
 const CRIT_LABEL: Record<Crit, string> = { avg: 'Média com crítico', crit: 'Sempre crítico', noCrit: 'Sem crítico' };
+const CRIT_SHORT: Record<Crit, string> = { avg: 'Média', crit: 'Sempre', noCrit: 'Nunca' };
 const TALENT_LABEL = { normal: 'Ataque normal', skill: 'Habilidade', burst: 'Supremo' } as const;
 
 interface UiState {
@@ -229,6 +231,9 @@ export function OtimizadorPanel({ index }: { index: number }) {
     : formatInt(r.value);
   const goalCaption = ui.goal === 'stat' ? STAT_LABEL[ui.stat] : ui.goal === 'buff' ? (buffChosen?.label ?? 'buff') : ui.scope === 'move' ? `${moveChosen?.labelPt ?? moveChosen?.label ?? 'golpe'} · ${REACTION_LABEL[reaction] ?? reaction}` : ui.scope === 'member' ? `dano de ${ref.character}` : 'dano da rotação do time';
   const base = result?.equipped?.report.value;
+  const minsOn = Object.values(ui.mins).filter((x) => x.trim() !== '').length;
+
+  const equippedSig = new Set((result?.equipped?.pieces ?? []).map(pieceSig));
 
   return (
     <div className="ot">
@@ -240,80 +245,11 @@ export function OtimizadorPanel({ index }: { index: number }) {
           </div>
         </Panel>
       ) : (
-        <div className="ot-grid">
-          <div className="ot-side">
-            <Panel title="O que otimizar" className="fx-panel">
-              <div className="ot-goals" role="group" aria-label="O que otimizar">
-                <button type="button" aria-pressed={ui.goal === 'dano'} title="Dano do time, dele ou de um golpe" onClick={() => setUi({ ...ui, goal: 'dano' })}><b>Dano</b></button>
-                <button type="button" aria-pressed={ui.goal === 'buff'} title="O maior valor de um buff que ele dá ao time (foco de suportes)" onClick={() => setUi({ ...ui, goal: 'buff' })}><b>Buff</b></button>
-                <button type="button" aria-pressed={ui.goal === 'stat'} title="O maior valor final de HP, ATK, Maestria… (use os mínimos para não perder o resto)" onClick={() => setUi({ ...ui, goal: 'stat' })}><b>Stat</b></button>
-              </div>
-
-              {ui.goal === 'dano' && (
-                <div className="ot-sub">
-                  <div className="ot-focus" role="group" aria-label="Dano de" title="Rotação do time: soma o dano de todos, com os buffs que ele dá nas janelas. Um golpe: avaliado sozinho com todos os buffs ligados.">
-                    {([['team', 'Rotação do time'], ['member', `Só ${ref.character}`], ['move', 'Um golpe do kit']] as [Scope, string][]).map(([k, label]) => (
-                      <button key={k} type="button" aria-pressed={ui.scope === k} onClick={() => setUi({ ...ui, scope: k })}>{label}</button>
-                    ))}
-                  </div>
-                  {ui.scope === 'move' && (
-                    <>
-                      <select className="dz-input" aria-label="Golpe do kit" value={moveChosen?.id ?? ''} onChange={(e) => setUi({ ...ui, moveId: e.target.value })}>
-                        {(['normal', 'skill', 'burst'] as const).map((t) => (
-                          <optgroup key={t} label={TALENT_LABEL[t]}>
-                            {moves.filter((m) => m.talent === t).map((m) => <option key={m.id} value={m.id}>{m.labelPt ?? m.label}</option>)}
-                          </optgroup>
-                        ))}
-                      </select>
-                      <span className="lbl">Reação</span>
-                      <div className="ot-chips" role="group" aria-label="Reação">
-                        {reactions.map((r) => (
-                          <button key={r} type="button" className="ot-chip" aria-pressed={reaction === r} onClick={() => setUi({ ...ui, reaction: r })}>{REACTION_LABEL[r] ?? r}</button>
-                        ))}
-                      </div>
-                      <span className="lbl">Crítico</span>
-                      <div className="ot-chips" role="group" aria-label="Crítico">
-                        {(Object.keys(CRIT_LABEL) as Crit[]).map((c) => (
-                          <button key={c} type="button" className="ot-chip" aria-pressed={ui.crit === c} onClick={() => setUi({ ...ui, crit: c })}>{CRIT_LABEL[c]}</button>
-                        ))}
-                      </div>
-                    </>
-                  )}
-                </div>
-              )}
-
-              {ui.goal === 'buff' && (
-                <div className="ot-sub">
-                  {buffOptions.length === 0 ? (
-                    <p className="note">{ref.character} não tem buff que cresça com os stats dele (nesta constelação). Escolha Dano ou Stat.</p>
-                  ) : (
-                    <>
-                      <div className="ot-buffs">
-                        {buffOptions.map((b) => (
-                          <button key={b.id} type="button" className="ot-chip warm" aria-pressed={buffChosen?.id === b.id} onClick={() => setUi({ ...ui, buffId: b.id })}>
-                            {b.label}<small>{b.hint}</small>
-                          </button>
-                        ))}
-                      </div>
-                    </>
-                  )}
-                </div>
-              )}
-
-              {ui.goal === 'stat' && (
-                <div className="ot-sub">
-                  <div className="ot-chips">
-                    {(Object.keys(STAT_LABEL) as StatKey[]).map((k) => (
-                      <button key={k} type="button" className="ot-chip" aria-pressed={ui.stat === k} onClick={() => setUi({ ...ui, stat: k })}>{STAT_LABEL[k]}</button>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </Panel>
-
-            <Panel title="Mínimos nos stats finais" className="fx-panel">
+        <>
+          <div className="ot-top">
+            <Panel title="Mínimos nos stats" aside={<span className="fx-badge num">{minsOn} ativos</span>} className="fx-panel">
               <div className="ot-mins">
-                {([['er', 'Recarga', '%'], ['cr', 'Taxa Crítica', '%'], ['cd', 'Dano Crítico', '%'], ['em', 'Maestria', ''], ['hp', 'HP', ''], ['atk', 'ATK', ''], ['def', 'DEF', '']] as const).map(([k, label, suf]) => (
+                {([['er', 'Recarga', '%'], ['cr', 'Taxa crítica', '%'], ['cd', 'Dano crítico', '%'], ['em', 'Maestria', ''], ['hp', 'HP', ''], ['atk', 'ATK', ''], ['def', 'DEF', '']] as const).map(([k, label, suf]) => (
                   <label key={k}>
                     <span>{label}</span>
                     <input className="dz-input" inputMode="decimal" placeholder="—" value={ui.mins[k]} onChange={(e) => setUi({ ...ui, mins: { ...ui.mins, [k]: e.target.value } })} aria-label={`${label} mínima`} />
@@ -321,80 +257,169 @@ export function OtimizadorPanel({ index }: { index: number }) {
                   </label>
                 ))}
               </div>
+              <p className="ot-tip">Ex.: Recarga ≥ 120% para não faltar energia na rotação.</p>
             </Panel>
 
-            <Panel className="fx-panel">
+            <Panel title="Filtro de artefatos" aside={<span className="fx-badge num">{levelCount}/{allArt.length}</span>} className="fx-panel">
               <div className="fx-box">
-                <SecHead title="Filtro de Nível dos Artefatos" count={levelCount} total={allArt.length} />
+                <SecHead title="Nível" />
                 <DualRange min={0} max={20} low={ui.levelMin} high={ui.levelMax} label="Nível" onChange={(lo, hi) => setUi({ ...ui, levelMin: lo, levelMax: hi })} />
               </div>
               <div className="fx-box">
-                <SecHead title="Posição" />
+                <SecHead title="Peças disponíveis" />
                 <div className="fx-grid">
-                  {SLOTS.map((sl) => <StatChip key={sl.key} tag={sl.label} n={`${slotCount(sl.key)}/${slotTotal(sl.key)}`} on={slotCount(sl.key) > 0} label={`${sl.label}: ${slotCount(sl.key)} de ${slotTotal(sl.key)} no filtro de nível`} />)}
+                  {SLOTS.map((sl) => <StatChip key={sl.key} tag={sl.label} n={slotCount(sl.key)} on={slotCount(sl.key) > 0} label={`${sl.label}: ${slotCount(sl.key)} de ${slotTotal(sl.key)} no filtro de nível`} />)}
                 </div>
               </div>
               {(['sands', 'goblet', 'circlet'] as const).map((slot) => {
                 const mains = mainsOf(slot);
                 const on = mains.filter(([k]) => !ui.offMains[slot].includes(k)).length;
                 return (
-                  <div className="fx-slot" key={slot} data-slot={slot}>
+                  <div className="fx-box" key={slot} data-slot={slot}>
                     <SecHead
-                      title={SLOTS.find((s) => s.key === slot)!.label}
+                      title={SLOTS.find((x) => x.key === slot)!.label}
                       count={on}
                       total={mains.length}
                       aside={<button type="button" className="dz-link" onClick={() => setUi({ ...ui, offMains: { ...ui.offMains, [slot]: on === mains.length ? mains.map(([k]) => k) : [] } })}>{on === mains.length ? 'Nenhum' : 'Todos'}</button>}
                     />
                     <div className="fx-grid">
-                      {mains.map(([k, n]) => {
-                        const isOn = !ui.offMains[slot].includes(k);
-                        return (
-                          <StatChip key={k} tag={STAT_TAG[k] ?? k} n={n} on={isOn} color={STAT_COLOR[k]} label={`${MAIN_LABEL[k] ?? k}: ${n} peças`} className="ot-chip-main"
-                            onClick={() => setUi({ ...ui, offMains: { ...ui.offMains, [slot]: toggle(ui.offMains[slot], k) } })} />
-                        );
-                      })}
+                      {mains.map(([k, n]) => (
+                        <StatChip key={k} tag={STAT_TAG[k] ?? k} n={n} on={!ui.offMains[slot].includes(k)} color={STAT_COLOR[k]} label={`${MAIN_LABEL[k] ?? k}: ${n} peças`} className="ot-chip-main"
+                          onClick={() => setUi({ ...ui, offMains: { ...ui.offMains, [slot]: toggle(ui.offMains[slot], k) } })} />
+                      ))}
                     </div>
                   </div>
                 );
               })}
-              <div className="fx-box">
-                <SecHead title="Sets" count={setsOn} total={setInfo.length} aside={<button type="button" className="dz-link" onClick={() => setUi({ ...ui, offSets: ui.offSets.length ? [] : setInfo.map((s) => s.key) })}>{ui.offSets.length ? 'Marcar todos' : 'Nenhum'}</button>} />
-                <div className="ot-sets">
-                  {setInfo.map((s) => (
-                    <button key={s.key} type="button" className="ot-set" aria-pressed={!ui.offSets.includes(s.key)} onClick={() => setUi({ ...ui, offSets: toggle(ui.offSets, s.key) })} title={s.name}>
-                      <Img src={s.id ? pieceIconUrl(s.id, 'flower') : undefined} fallback="◆" />
-                      <small>{s.count}</small>
-                    </button>
-                  ))}
-                </div>
+            </Panel>
+
+            <Panel
+              title="Sets"
+              aside={
+                <span className="ot-aside">
+                  <span className="fx-badge num">{setsOn}/{setInfo.length}</span>
+                  <button type="button" className="dz-link" onClick={() => setUi({ ...ui, offSets: ui.offSets.length ? [] : setInfo.map((x) => x.key) })}>{ui.offSets.length ? 'Marcar todos' : 'Nenhum'}</button>
+                </span>
+              }
+              className="fx-panel ot-sets-panel"
+            >
+              <div className="ot-sets">
+                {setInfo.map((x) => (
+                  <button key={x.key} type="button" className="ot-set" aria-pressed={!ui.offSets.includes(x.key)} onClick={() => setUi({ ...ui, offSets: toggle(ui.offSets, x.key) })} title={x.name}>
+                    <Img src={x.id ? pieceIconUrl(x.id, 'flower') : undefined} fallback="◆" />
+                    <small>{x.count}</small>
+                  </button>
+                ))}
               </div>
               <button type="button" className="fx-wide" aria-pressed={ui.borrow} onClick={() => setUi({ ...ui, borrow: !ui.borrow })}>
                 <span className="box" aria-hidden="true">✓</span>Usar artefatos de outros personagens
                 <span className="fx-badge num">{ui.borrow ? othersCount : 0}/{othersCount}</span>
               </button>
             </Panel>
+          </div>
 
-            <div className="ot-go">
-              <label>Melhores a mostrar
-                <select className="dz-input sm" value={ui.topN} onChange={(e) => setUi({ ...ui, topN: Number(e.target.value) })}>
+          <section className="ot-bar" aria-label="Foco da otimização">
+            <div className="ot-bar-row">
+              <div className="ot-field">
+                <span className="lbl">Otimizar</span>
+                <div className="ot-seg" role="group" aria-label="O que otimizar">
+                  {([['dano', 'Dano', 'Dano do time, dele ou de um golpe'], ['buff', 'Buff', 'O maior valor de um buff que ele dá ao time (foco de suportes)'], ['stat', 'Stat', 'O maior valor final de HP, ATK, Maestria… (use os mínimos para não perder o resto)']] as [Goal, string, string][]).map(([k, label, tip]) => (
+                    <button key={k} type="button" aria-pressed={ui.goal === k} title={tip} onClick={() => setUi({ ...ui, goal: k })}>{label}</button>
+                  ))}
+                </div>
+              </div>
+
+              {ui.goal === 'dano' && (
+                <>
+                  <div className="ot-field">
+                    <span className="lbl">Alvo</span>
+                    <div className="ot-seg" role="group" aria-label="Dano de" title="Rotação do time: soma o dano de todos, com os buffs que ele dá nas janelas. Um golpe: avaliado sozinho com todos os buffs ligados.">
+                      {([['team', 'Rotação do time'], ['member', `Só ${ref.character}`], ['move', 'Um golpe']] as [Scope, string][]).map(([k, label]) => (
+                        <button key={k} type="button" aria-pressed={ui.scope === k} onClick={() => setUi({ ...ui, scope: k })}>{label}</button>
+                      ))}
+                    </div>
+                  </div>
+                  {ui.scope === 'move' && (
+                    <>
+                      <div className="ot-field grow">
+                        <span className="lbl">Golpe</span>
+                        <select className="dz-input" aria-label="Golpe do kit" value={moveChosen?.id ?? ''} onChange={(e) => setUi({ ...ui, moveId: e.target.value })}>
+                          {(['normal', 'skill', 'burst'] as const).map((t) => (
+                            <optgroup key={t} label={TALENT_LABEL[t]}>
+                              {moves.filter((m) => m.talent === t).map((m) => <option key={m.id} value={m.id}>{m.labelPt ?? m.label}</option>)}
+                            </optgroup>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="ot-field">
+                        <span className="lbl">Reação</span>
+                        <div className="ot-seg" role="group" aria-label="Reação">
+                          {reactions.map((r) => (
+                            <button key={r} type="button" aria-pressed={reaction === r} onClick={() => setUi({ ...ui, reaction: r })}>{REACTION_LABEL[r] ?? r}</button>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="ot-field">
+                        <span className="lbl">Crítico</span>
+                        <div className="ot-seg" role="group" aria-label="Crítico">
+                          {(Object.keys(CRIT_LABEL) as Crit[]).map((c) => (
+                            <button key={c} type="button" title={CRIT_LABEL[c]} aria-pressed={ui.crit === c} onClick={() => setUi({ ...ui, crit: c })}>{CRIT_SHORT[c]}</button>
+                          ))}
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </>
+              )}
+
+              {ui.goal === 'buff' && (
+                <div className="ot-field grow">
+                  <span className="lbl">Buff</span>
+                  {buffOptions.length === 0 ? (
+                    <p className="note">{ref.character} não tem buff que cresça com os stats dele (nesta constelação). Escolha Dano ou Stat.</p>
+                  ) : (
+                    <div className="ot-seg" role="group" aria-label="Buff">
+                      {buffOptions.map((b) => (
+                        <button key={b.id} type="button" title={b.hint} aria-pressed={buffChosen?.id === b.id} onClick={() => setUi({ ...ui, buffId: b.id })}>{b.label}</button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {ui.goal === 'stat' && (
+                <div className="ot-field grow">
+                  <span className="lbl">Stat</span>
+                  <div className="ot-seg" role="group" aria-label="Stat">
+                    {(Object.keys(STAT_LABEL) as StatKey[]).map((k) => (
+                      <button key={k} type="button" aria-pressed={ui.stat === k} onClick={() => setUi({ ...ui, stat: k })}>{STAT_LABEL[k]}</button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className="ot-field">
+                <span className="lbl">Mostrar</span>
+                <select className="dz-input sm" aria-label="Melhores a mostrar" value={ui.topN} onChange={(e) => setUi({ ...ui, topN: Number(e.target.value) })}>
                   {[1, 2, 3, 4, 5, 8, 10].map((n) => <option key={n} value={n}>{n}</option>)}
                 </select>
-              </label>
+              </div>
+            </div>
+
+            <div className="ot-go">
+              {running ? (
+                <button type="button" className="dz-btn" onClick={stop}>Parar</button>
+              ) : (
+                <button type="button" className="dz-btn gold big" onClick={run}>Otimizar</button>
+              )}
               {preview && (
                 <span className="muted small">
                   {preview.total} peças entram ({preview.perSlot.join(' / ')} por posição)
                   {preview.removed.equippedByOthers > 0 && !ui.borrow ? ` · ${preview.removed.equippedByOthers} em outros personagens ficam de fora` : ''}
                 </span>
               )}
-              {running ? (
-                <button type="button" className="dz-btn" onClick={stop}>Parar</button>
-              ) : (
-                <button type="button" className="dz-btn gold big" onClick={run}>Otimizar</button>
-              )}
             </div>
-          </div>
 
-          <div className="ot-main">
             {running && (
               <div className="ot-progress" role="status" aria-live="polite">
                 <div className="bar"><i /></div>
@@ -405,37 +430,50 @@ export function OtimizadorPanel({ index }: { index: number }) {
               </div>
             )}
             {error && <p className="dz-error" role="alert">{error}</p>}
-            {!running && !result && !error && (
-              <div className="ot-empty">
-                <p>Escolha o foco e os filtros e toque em <b>Otimizar</b>.</p>
+            {result && (
+              <div className="ot-summary">
+                <b>{result.builds.length > 0 && result.equipped && result.builds[0].key === result.equipped.key ? 'Seu build equipado já é o melhor com estes filtros.' : result.stopped ? 'Busca parada: estes são os melhores achados até aqui.' : 'Busca completa: nenhum conjunto melhor existe com estes filtros.'}</b>
+                <span className="muted small">{formatInt(result.stats.evaluations)} avaliações de {result.stats.combinations.toExponential(1)} combinações</span>
+                {result.equipped && <span className="ot-now">Equipado hoje <b className="num">{focusValue(result.equipped.report)}</b></span>}
               </div>
             )}
-            {result && (
-              <>
-                <div className="ot-summary">
-                  <span>{result.stopped ? 'Busca parada: estes são os melhores achados até aqui.' : 'Busca completa: nenhum conjunto melhor existe com estes filtros.'}</span>
-                  <span className="muted small">{formatInt(result.stats.evaluations)} avaliações de {result.stats.combinations.toExponential(1)} combinações</span>
-                </div>
-                {result.equipped && (
-                  <BuildCard title="Equipado hoje" build={result.equipped} base={undefined} focusValue={focusValue} data={data.game.artifacts} caption={goalCaption} />
-                )}
-                {result.builds.length === 0 && <p className="note">Nenhum conjunto cumpre os mínimos escolhidos. Afrouxe um deles.</p>}
-                {result.builds.map((b, i) => (
-                  <BuildCard key={b.key} title={`#${i + 1}`} build={b} base={base} focusValue={focusValue} data={data.game.artifacts} caption={goalCaption} onEquip={() => equip(b)} equipped={equippedKey === b.key} />
-                ))}
-              </>
-            )}
-          </div>
-        </div>
+            {!running && !result && !error && <p className="ot-tip">Escolha o foco e os filtros e toque em <b>Otimizar</b>.</p>}
+          </section>
+
+          {result && (
+            <div className="ot-results">
+              {result.builds.length === 0 && <p className="note">Nenhum conjunto cumpre os mínimos escolhidos. Afrouxe um deles.</p>}
+              {result.builds.map((b, i) => (
+                <BuildCard key={b.key} title={`#${i + 1}`} build={b} base={base} now={result.equipped?.report} equippedSig={equippedSig} focusValue={focusValue} data={data.game.artifacts} caption={goalCaption} onEquip={() => equip(b)} equipped={equippedKey === b.key} />
+              ))}
+              {result.equipped && (
+                <BuildCard title="Hoje" build={result.equipped} equippedSig={equippedSig} focusValue={focusValue} data={data.game.artifacts} caption={goalCaption} />
+              )}
+            </div>
+          )}
+        </>
       )}
     </div>
   );
 }
 
-function BuildCard({ title, build, base, focusValue, data, caption, onEquip, equipped }: {
+function pieceSig(a: GoodArtifact) {
+  return `${a.slotKey}|${a.setKey}|${a.mainStatKey}|${a.level ?? 0}|${a.substats.map((s) => `${s.key}:${s.value}`).join(',')}`;
+}
+
+function Delta({ now, prev, fmt, pct }: { now: number; prev?: number; fmt: (d: number) => string; pct?: boolean }) {
+  if (prev === undefined || !Number.isFinite(now) || Math.abs(now - prev) < 1e-9) return null;
+  const d = pct ? (now / prev - 1) * 100 : now - prev;
+  return <small className={d >= 0 ? 'up' : 'down'}>{d >= 0 ? '+' : '−'}{fmt(Math.abs(d))}</small>;
+}
+
+function BuildCard({ title, build, base, now, equippedSig, focusValue, data, caption, onEquip, equipped }: {
   title: string;
   build: OptimizedBuild;
   base?: number;
+  /** Relatório do build equipado hoje: base dos sinais de diferença nos stats. */
+  now?: OptimizedBuild['report'];
+  equippedSig: Set<string>;
   focusValue: (r: OptimizedBuild['report']) => string;
   data: { name: string; id: number }[];
   caption: string;
@@ -444,16 +482,28 @@ function BuildCard({ title, build, base, focusValue, data, caption, onEquip, equ
 }) {
   const r = build.report;
   const delta = base && Number.isFinite(r.value) ? (r.value / base - 1) * 100 : undefined;
+  const isNow = !onEquip;
+  const dec = (n: number) => formatDecimal(n, 1);
+  const stats: { label: string; value: string; d: React.ReactNode }[] = [
+    { label: 'ATK', value: formatInt(r.stats.atk), d: <Delta now={r.stats.atk} prev={now?.stats.atk} fmt={formatInt} /> },
+    { label: 'HP', value: formatInt(r.stats.hp), d: <Delta now={r.stats.hp} prev={now?.stats.hp} fmt={formatInt} /> },
+    { label: 'DEF', value: formatInt(r.stats.def), d: <Delta now={r.stats.def} prev={now?.stats.def} fmt={formatInt} /> },
+    { label: 'Maestria', value: formatInt(r.stats.em), d: <Delta now={r.stats.em} prev={now?.stats.em} fmt={formatInt} /> },
+    { label: 'Taxa crít.', value: `${dec(r.stats.critRate * 100)}%`, d: <Delta now={r.stats.critRate * 100} prev={now ? now.stats.critRate * 100 : undefined} fmt={dec} /> },
+    { label: 'Dano crít.', value: `${dec(r.stats.critDmg * 100)}%`, d: <Delta now={r.stats.critDmg * 100} prev={now ? now.stats.critDmg * 100 : undefined} fmt={dec} /> },
+    { label: 'Recarga', value: `${formatDecimal(r.stats.er * 100, 1)}%`, d: <Delta now={r.stats.er * 100} prev={now ? now.stats.er * 100 : undefined} fmt={dec} /> },
+    { label: 'DPR do time', value: formatInt(r.teamAvg), d: <Delta now={r.teamAvg} prev={now?.teamAvg} fmt={(d) => `${formatDecimal(d, 2)}%`} pct /> },
+  ];
   return (
-    <article className="ot-build" data-now={!onEquip}>
+    <article className="ot-build" data-now={isNow}>
       <header>
         <span className="rank">{title}</span>
         <div className="val">
           <b className="num">{focusValue(r)}</b>
-          <small>{caption}</small>
+          <small>{caption} · {build.setLabel}</small>
         </div>
-        {delta !== undefined && <Chip tone={delta >= 0 ? '#7bd88f' : '#e06c75'}>{delta >= 0 ? '+' : ''}{formatDecimal(delta, 2)}% contra o equipado</Chip>}
-        <span className="set">{build.setLabel}</span>
+        {delta !== undefined && <Chip tone={delta >= 0 ? '#7bd88f' : '#e06c75'}>{delta >= 0 ? '+' : '−'}{formatDecimal(Math.abs(delta), 2)}% contra o equipado</Chip>}
+        {isNow && <Chip tone="#8a93b8">referência · em uso</Chip>}
         {onEquip && (
           <button type="button" className="dz-btn gold" onClick={onEquip} disabled={equipped}>{equipped ? 'Equipado' : 'Equipar'}</button>
         )}
@@ -461,10 +511,15 @@ function BuildCard({ title, build, base, focusValue, data, caption, onEquip, equ
       <div className="pieces">
         {build.pieces.map((a: GoodArtifact) => {
           const set = data.find((x) => norm(x.name) === norm(a.setKey));
+          const kept = equippedSig.has(pieceSig(a));
           return (
-            <div className="piece" key={`${a.slotKey}`} data-rarity={a.rarity}>
+            <div className="piece" key={`${a.slotKey}`} data-rarity={a.rarity} data-change={!isNow && !kept}>
+              <span className="top">
+                <span>{SLOTS.find((x) => x.key === a.slotKey)?.label ?? a.slotKey}</span>
+                {!isNow && <em>{kept ? 'equipada' : 'troca'}</em>}
+              </span>
               <span className="art"><Img src={set ? pieceIconUrl(set.id, a.slotKey as 'flower') : undefined} fallback="◆" /></span>
-              <span className="main">{MAIN_LABEL[a.mainStatKey] ?? a.mainStatKey}</span>
+              <span className="main">{MAIN_LABEL[a.mainStatKey] ?? a.mainStatKey} <b className="num">{fmtStat(a.mainStatKey, mainStatValue(a.mainStatKey, a.rarity, a.level))}</b></span>
               <ul>
                 {a.substats.map((s) => <li key={s.key}><span>{SUB_LABEL[s.key] ?? s.key}</span><b className="num">{fmtStat(s.key, s.value)}</b></li>)}
               </ul>
@@ -473,12 +528,14 @@ function BuildCard({ title, build, base, focusValue, data, caption, onEquip, equ
           );
         })}
       </div>
-      <footer className="num">
-        <span>ATK {formatInt(r.stats.atk)}</span><span>HP {formatInt(r.stats.hp)}</span><span>DEF {formatInt(r.stats.def)}</span>
-        <span>Taxa {formatDecimal(r.stats.critRate * 100, 1)}%</span><span>Dano Crít. {formatDecimal(r.stats.critDmg * 100, 1)}%</span>
-        <span>EM {formatInt(r.stats.em)}</span><span>ER {formatDecimal(r.stats.er * 100, 0)}%</span>
-        <span className="muted">DPR do time {formatInt(r.teamAvg)}</span>
-      </footer>
+      <dl className="stats num">
+        {stats.map((s) => (
+          <div key={s.label}>
+            <dt>{s.label}</dt>
+            <dd>{s.value}{!isNow && s.d}</dd>
+          </div>
+        ))}
+      </dl>
     </article>
   );
 }

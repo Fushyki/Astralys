@@ -210,3 +210,12 @@ body { font-family: var(--font-body); font-size: 15px; line-height: 1.5; -webkit
 .dz-header .dz-account { margin-left: auto; }
 .dz-header > .dz-menu { flex: none; }
 @media (max-width: 900px) { .dz-header .dz-nav { flex: 1 1 100%; } .dz-header > .dz-menu { order: 4; } }
+
+/* Escolher o set: 4 por linha, ícone grande no topo do cartão */
+.dz-dialog .grid.sets { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.dz-dialog .scard { grid-template-columns: minmax(0, 1fr); justify-items: center; text-align: center; row-gap: 6px; }
+.dz-dialog .scard .art { grid-row: auto; width: 112px; height: 112px; }
+.dz-dialog .scard .ph { font-size: 52px; }
+.dz-dialog .scard .tags { justify-content: center; }
+@media (max-width: 900px) { .dz-dialog .grid.sets { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 520px) { .dz-dialog .grid.sets { grid-template-columns: minmax(0, 1fr); } }

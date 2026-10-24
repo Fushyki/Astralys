@@ -37,6 +37,8 @@ export interface GlobalConfig {
   /** Rolls mínimos em cada um dos 10 substats. */
   minRollsPerSubstat: number;
   rotationDuration: number;
+  /** 'kit' = elemento de cada golpe pelas regras do jogo; ausente = sempre o do personagem (modo antigo e planilha). */
+  elementMode?: 'kit' | 'character';
 }
 
 /** Buff extra definido pelo usuário (aba "Buffs extras" da planilha). */

@@ -36,6 +36,7 @@ function run(members: MemberSpec[], actions: ActionSpec[], override: CharacterEf
   const p = {
     ...sampleProject(),
     compat: 'none',
+    elementMode: 'personagem',
     members: members.map((m) => {
       const d = defaultMember(m.character, game);
       return { ...d, ...m, weapon: m.weapon ?? d.weapon };

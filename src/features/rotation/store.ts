@@ -48,6 +48,7 @@ export interface RotationState {
   updateConfig: (patch: Partial<RotationProject['config']>) => void;
   setSourceEnabled: (id: string, enabled: boolean) => void;
   setCompat: (compat: RotationProject['compat']) => void;
+  setElementMode: (mode: RotationProject['elementMode']) => void;
   setBuff: (toggle: ops.BuffToggle, enabled: boolean) => void;
   /** Grava a configuração da calculadora de recarga (`meta.energy`), sem entrar no desfazer. */
   setEnergy: (next: RotationProject) => void;
@@ -151,6 +152,7 @@ export const useRotationStore = create<RotationState>((set, get) => {
     updateConfig: (patch) => commit(get().project && ops.updateConfig(get().project!, patch)),
     setSourceEnabled: (id, enabled) => commit(get().project && ops.setSourceEnabled(get().project!, id, enabled)),
     setBuff: (toggle, enabled) => commit(get().project && ops.setBuffEnabled(get().project!, toggle, enabled)),
+    setElementMode: (mode) => commit(get().project && ops.setElementMode(get().project!, mode)),
     setCompat: (compat) => commit(get().project && ops.setCompat(get().project!, compat)),
 
     updateMember: (index, patch) => commit(get().project && team.updateMember(get().project!, index, patch)),

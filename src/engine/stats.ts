@@ -6,6 +6,7 @@
  * planilha viram ETIQUETAS (tags). Cada ação da rotação diz quais etiquetas estão ativas; no editor visual
  * as janelas de tempo dos buffs preenchem isso.
  */
+import type { ElementOrPhysical } from './constants/reactions';
 import type { Character, HitType, Weapon } from '../data/schema';
 import { REACTION_BONUS_KEYS, weaponStatsAt, type BuffStats, type CharacterBuff, type CharacterEffect, type ReactionBonusKey, type SetEffect, type WeaponEffect } from '../effects/schema';
 import {
@@ -174,6 +175,8 @@ export interface MemberInput {
   factions?: ('moonsign' | 'hexerei')[];
   /** ER mínimo desejado (1 = 100%). */
   minER?: number;
+  /** Infusão dos ataques normais, carregados e de queda (Hu Tao, Xiao, Yoimiya…): elemento no lugar do Físico. */
+  normalInfusion?: ElementOrPhysical;
   /** Rolls totais de substat (padrão: 9 por peça 5★ + 7 por peça 4★). */
   totalRolls?: number;
   /** Rolls TOTAIS em CR+CD forçados (inclui os mínimos). Vazio = otimizar. */

@@ -70,6 +70,8 @@ export const MemberRefSchema = z.object({
    * (`RotationProject.enabled`). Ausente = como antes: ligados (projetos antigos e o gabarito da planilha).
    */
   gearManual: z.boolean().optional(),
+  /** Infusão dos ataques normais, carregados e de queda (Hu Tao no Paramita, Xiao no Supremo…). Ausente = sem infusão (Físico em quem usa arma física). */
+  normalInfusion: z.enum(['Pyro', 'Hydro', 'Anemo', 'Electro', 'Dendro', 'Cryo', 'Geo']).optional(),
   minER: z.number().min(0).optional(),
   totalRolls: z.number().int().min(0).optional(),
   forcedCritRolls: z.number().int().min(0).optional(),
@@ -162,6 +164,11 @@ export const RotationProjectSchema = z
     gameVersion: z.string().default(''),
     /** 'planilha' reproduz os atalhos da planilha de referência (coeficiente de EM 2,78, elementos do personagem). */
     compat: z.enum(['none', 'planilha']).default('none'),
+    /**
+     * Elemento padrão dos golpes sem elemento escolhido: 'kit' pelas regras do jogo (ataque normal de arma física é Físico, habilidade
+     * e supremo têm o elemento do personagem) ou 'personagem' (sempre o do personagem, como os projetos antigos e a planilha).
+     */
+    elementMode: z.enum(['kit', 'personagem']).default('kit'),
     config: ConfigSchema,
     members: z.array(MemberRefSchema).min(1).max(MAX_TEAM_SIZE),
     extras: z.array(ExtraBuffSchema).default([]),
@@ -474,6 +481,7 @@ export function resolveMember(ref: MemberRef, data: GameData, effects: EffectsDa
     constellation: ref.constellation,
     factions: (ref.factions ?? []).filter((f) => own?.factions?.includes(f)),
     minER: ref.minER,
+    normalInfusion: ref.normalInfusion,
     totalRolls: ref.totalRolls,
     forcedCritRolls: ref.forcedCritRolls,
     // Com peças reais os rolls não existem (a soma exata está em externalStats) e o otimizador de substats não mexe no membro.
@@ -625,7 +633,7 @@ export function resolveProject(project: RotationProject, data: GameData, effects
   const planilha = project.compat === 'planilha';
   const members = finalizeMembers(project.members.map((m) => resolveMember(m, data, effects, project.config.minRollsPerSubstat)), planilha);
   const moves = indexMoves(data.moves);
-  const config: GlobalConfig = { ...project.config };
+  const config: GlobalConfig = { ...project.config, elementMode: planilha || project.elementMode === 'personagem' ? 'character' : 'kit' };
 
   // Cronológico: os stacks de dano fixo são consumidos pelos primeiros hits elegíveis NO TEMPO (ordem estável nos empates).
   const chronological = [...project.actions].sort((a, b) => a.time - b.time);

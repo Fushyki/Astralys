@@ -272,3 +272,6 @@
 .tl-others { display: flex; flex-direction: column; gap: 12px; }
 .tl-others-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; }
 @media (max-width: 720px) { .pc-views { flex-wrap: wrap; } .pc-views button { padding: 0 14px; font-size: 16px; } }
+.tl-infusion { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 20px; padding: 14px 16px; border-radius: 14px; border: 1px solid color-mix(in srgb, var(--gold) 40%, var(--border)); background: var(--surface); }
+.tl-infusion p { margin: 4px 0 0; font-size: 13px; color: var(--text-2); max-width: 640px; }
+.tl-infusion .dz-seg button[aria-pressed='true'] { background: var(--c, var(--gold)); color: #0a0e1c; }

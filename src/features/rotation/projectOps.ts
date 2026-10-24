@@ -297,3 +297,8 @@ export function setBuffEnabled(project: RotationProject, t: BuffToggle, enabled:
   const same = disabled.length === project.disabled.length && disabled.every((x, i) => x === project.disabled[i]) && on === project.enabled;
   return same ? project : touch({ ...project, disabled, enabled: on });
 }
+
+/** Elemento padrão dos golpes sem elemento escolhido: pelo kit do jogo ou sempre o do personagem (como os projetos antigos). */
+export function setElementMode(project: RotationProject, elementMode: RotationProject['elementMode']): RotationProject {
+  return project.elementMode === elementMode ? project : touch({ ...project, elementMode });
+}

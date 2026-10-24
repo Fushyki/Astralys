@@ -6,7 +6,8 @@ import { useState } from 'react';
 import type { ProjectView } from '../../app/ProjectContext';
 import { elementColor } from '../../design/elements';
 import type { CharacterBuff } from '../../effects/schema';
-import { characterBuffDelta, effectiveTalents } from '../../engine';
+import { KIT_INFUSIONS, characterBuffDelta, effectiveTalents } from '../../engine';
+import type { MemberRef } from '../../engine';
 import { buffHome, skillIconUrl, useTalents, type CharacterTalents, type TalentText } from '../../features/character/talents';
 import { deltaChips } from '../../features/team/teamModel';
 import { useRotationStore } from '../../features/rotation/store';
@@ -14,6 +15,7 @@ import { formatInt } from '../../ui/format';
 import { useDamageGroups } from './MainColumn';
 
 const SCOPE_TEXT = { self: 'só ele', team: 'o time todo', others: 'os aliados' } as const;
+const INFUSIONS = ['Pyro', 'Hydro', 'Electro', 'Cryo', 'Anemo', 'Geo', 'Dendro'] as const;
 const TALENT_NAME = { normal: 'Ataque normal', skill: 'Habilidade elemental', burst: 'Supremo' } as const;
 
 function Icon({ name }: { name: string }) {
@@ -98,6 +100,8 @@ export function TalentsPanel({ v, index }: { v: ProjectView; index: number }) {
   const talents = effectiveTalents(ref.talents, ref.constellation, member.character);
   const groups = useDamageGroups(v, index, 'none');
   const color = elementColor(member.character.element);
+  const infusable = member.character.weapon !== 'Catalyst' && member.character.weapon !== 'Bow' && v.resolved.team.config.elementMode === 'kit';
+  const kitInfusion = KIT_INFUSIONS[ref.character];
   const tl: CharacterTalents | undefined = all?.find((t) => t.character === ref.character);
   const buffs = v.data.effects.characters.find((c) => c.character === ref.character)?.buffs ?? [];
   const notes = v.data.effects.characters.find((c) => c.character === ref.character)?.notes ?? [];
@@ -153,6 +157,26 @@ export function TalentsPanel({ v, index }: { v: ProjectView; index: number }) {
         Cada buff de passiva ou constelação com número aparece com um interruptor: desligado, ele sai do cálculo do time inteiro. As constelações acima da dele ficam apagadas;
         toque numa constelação para mudar a dele (hoje C{constellation}).
       </p>
+      {infusable && (
+        <section className="tl-infusion" aria-label="Infusão dos ataques normais">
+          <div>
+            <b>Infusão dos ataques normais</b>
+            <p>
+              {ref.character} usa {member.character.weapon === 'Sword' ? 'espada' : member.character.weapon === 'Claymore' ? 'montante' : 'lança'}: ataque normal, carregado e de queda são <b>Físicos</b>, a não ser com infusão.
+              {kitInfusion && <> No jogo: {kitInfusion.element} {kitInfusion.when}.</>}
+            </p>
+          </div>
+          <div className="dz-seg" role="group" aria-label="Elemento da infusão">
+            <button type="button" aria-pressed={!ref.normalInfusion} onClick={() => updateMember(index, { normalInfusion: undefined })}>Nenhuma</button>
+            {INFUSIONS.map((e) => (
+              <button key={e} type="button" aria-pressed={ref.normalInfusion === e} onClick={() => updateMember(index, { normalInfusion: e })} style={{ ['--c' as string]: elementColor(e) }}>{e}</button>
+            ))}
+          </div>
+          {kitInfusion && ref.normalInfusion !== kitInfusion.element && (
+            <button type="button" className="dz-btn sm" onClick={() => updateMember(index, { normalInfusion: kitInfusion.element as NonNullable<MemberRef['normalInfusion']> })}>Ligar a infusão do kit ({kitInfusion.element})</button>
+          )}
+        </section>
+      )}
       <div className="tl-grid">
         <section aria-label="Constelações" className="tl-col">
           <h3>Constelações</h3>

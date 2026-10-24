@@ -2,6 +2,8 @@
 import { useMemo, useState } from 'react';
 import type { ProjectView } from '../../app/ProjectContext';
 import { Panel } from '../../design/primitives';
+import { FamilyBadge, damageColor } from '../../design/damageFamily';
+import { specialOfMove } from '../../engine/project';
 import { elementColor } from '../../design/elements';
 import { REACTION_ACTIONS, kitElement, memberProcs } from '../../engine';
 import { cleanMoveName } from '../../features/character/characterModel';
@@ -26,7 +28,10 @@ export function Palette({ v }: { v: ProjectView }) {
   const kitMode = v.resolved.team.config.elementMode === 'kit';
   const infusion = v.resolved.team.members[member]?.normalInfusion;
   /** Elemento do golpe: pelo kit (Físico no ataque normal de arma) ou o do personagem no modo antigo. */
-  const colorOfMove = (m: { talent: string; hitType: string; label: string }) => elementColor(kitMode && charInfo ? kitElement(charInfo, m, infusion) : charElement);
+  const effect = v.resolved.team.members[member]?.characterEffect;
+  const specialOf = (m: { talent: string; label: string; variant: number }) => specialOfMove(m, m.variant, effect);
+  const colorOfMove = (m: { talent: string; hitType: string; label: string; variant: number }) =>
+    damageColor(kitMode && charInfo ? kitElement(charInfo, m, infusion) : charElement, specialOf(m)) ?? elementColor('Physical');
 
   const moves = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -101,7 +106,7 @@ export function Palette({ v }: { v: ProjectView }) {
                 })
               }
             >
-              {m.talent === 'skill' ? 'E · ' : m.talent === 'burst' ? 'Q · ' : ''}{label}
+              {m.talent === 'skill' ? 'E · ' : m.talent === 'burst' ? 'Q · ' : ''}{label} <FamilyBadge special={specialOf(m)} />
             </button>
           );
         })}

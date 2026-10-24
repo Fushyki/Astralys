@@ -12,6 +12,7 @@ import { SUBSTATS, zeroRolls, type Rolls } from './artifacts';
 import { RealPieceSchema, buildFromPieces } from './pieces';
 import { AMP_EM_COEFFICIENT_SHEET } from './constants/reactions';
 import type { ExtraScale, ReactionChoice, ReactionHit, ResolvedMove, RotationAction } from './rotation';
+import type { SpecialReaction } from './reactions';
 import type { MemberInput } from './stats';
 import type { GlobalConfig, TeamInput } from './team';
 
@@ -404,6 +405,11 @@ export function reactionMove(ref: MoveRef, displayName?: string): ResolvedMove {
   const base = { id: `${ref.character}:reaction:${ref.label}`, character: ref.character, talent: 'reaction' as const, hitType: 'other' as const, label: ref.label, hits: 1, scale: {} };
   if (!found) return { ...base, displayName: `${ref.character}: reação desconhecida (${ref.label})` };
   return { ...base, displayName: displayName ?? `${ref.character}: ${found.label}`, reactionHit: found.hit };
+}
+
+/** Reação Lunar/Estelar de um golpe do kit (a mesma busca de `withSpecial`), ou undefined se o dano é elemental comum. */
+export function specialOfMove(move: { talent: string; label: string }, variant: number, effect: Pick<CharacterEffect, 'specialMoves'> | undefined): SpecialReaction | undefined {
+  return effect?.specialMoves?.find((x) => x.talent === move.talent && x.label === move.label && (x.variant === undefined || x.variant === variant))?.reaction;
 }
 
 /** Golpe do kit com dano Lunar/Estelar (curadoria `CharacterEffect.specialMoves`): marca a reação e aplica o multiplicador extra. */

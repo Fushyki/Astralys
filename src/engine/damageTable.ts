@@ -4,7 +4,8 @@
  */
 import type { Move } from '../data/schema';
 import type { ElementOrPhysical } from './constants/reactions';
-import { evaluateRotation, type ReactionChoice, type ResolvedMove, type RotationAction, type RotationContext } from './rotation';
+import { evaluateRotation, type DamageKind, type ReactionChoice, type ResolvedMove, type RotationAction, type RotationContext } from './rotation';
+import type { SpecialReaction } from './reactions';
 import { withSpecial } from './project';
 import type { Rolls } from './artifacts';
 import type { TeamAssembly, TeamInput } from './team';
@@ -17,6 +18,10 @@ export interface DamageRow {
   avg: number;
   /** A reação escolhida só vale para alguns elementos: false = o golpe saiu sem reação. */
   reactionApplied: boolean;
+  /** Família do dano: golpe direto (elemental ou Físico), Lunar ou Estelar. */
+  kind: DamageKind;
+  /** Reação Lunar/Estelar do golpe (ex.: lunarcharged), se for o caso. */
+  special?: SpecialReaction;
 }
 
 export interface DamageTableInput {
@@ -70,5 +75,7 @@ export function damageTable(input: DamageTableInput): DamageRow[] {
     crit: r.crit,
     avg: r.avg,
     reactionApplied: r.breakdown.reactionApplied,
+    kind: r.kind,
+    ...(r.action.move.special ? { special: r.action.move.special.reaction } : {}),
   }));
 }

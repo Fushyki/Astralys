@@ -7,6 +7,9 @@ import type { Character, Move } from '../../data/schema';
 import { Button } from '../../design/Button';
 import { elementColor } from '../../design/elements';
 import { kitElement, type ElementOrPhysical } from '../../engine';
+import { FamilyBadge, damageColor } from '../../design/damageFamily';
+import { specialOfMove } from '../../engine/project';
+import type { CharacterEffect } from '../../effects/schema';
 import { displayName } from '../../features/character/characterModel';
 
 export type DamageKind = 'normal' | 'charged' | 'plunge' | 'skill' | 'burst';
@@ -44,11 +47,12 @@ export interface MovePickerProps {
   /** 'kit' = elemento pelo kit do jogo; senão, o do personagem. */
   elementMode: 'kit' | 'character';
   infusion?: ElementOrPhysical;
+  effect?: Pick<CharacterEffect, 'specialMoves'>;
   onPick: (id: string) => void;
   onClose: () => void;
 }
 
-export function MovePickerDialog({ moves, current, character, elementMode, infusion, onPick, onClose }: MovePickerProps) {
+export function MovePickerDialog({ moves, current, character, elementMode, infusion, effect, onPick, onClose }: MovePickerProps) {
   const [query, setQuery] = useState('');
   const [off, setOff] = useState<Set<DamageKind>>(new Set());
   const search = useRef<HTMLInputElement>(null);
@@ -64,10 +68,11 @@ export function MovePickerDialog({ moves, current, character, elementMode, infus
       moves.map((m) => ({
         m,
         kind: kindOf(m),
+        special: specialOfMove(m, 0, effect),
         name: displayName(m),
         element: elementMode === 'kit' ? kitElement(character, m, infusion) : (character.element as ElementOrPhysical),
       })),
-    [moves, character, elementMode, infusion],
+    [moves, character, elementMode, infusion, effect],
   );
   const q = query.trim().toLowerCase();
   const shown = items.filter((i) => !off.has(i.kind) && (!q || i.name.toLowerCase().includes(q) || i.m.label.toLowerCase().includes(q)));
@@ -93,18 +98,18 @@ export function MovePickerDialog({ moves, current, character, elementMode, infus
               );
             })}
           </div>
-          <span className="muted small">Mostrando {shown.length} de {items.length} golpes · o nome na cor do elemento, em branco o dano Físico</span>
+          <span className="muted small">Mostrando {shown.length} de {items.length} golpes · nome na cor do elemento, branco = Físico, ☾ Lunar e ✦ Estelar têm cor própria</span>
         </div>
         <div className="mp-grid">
           {shown.length === 0 && <p className="note">Nenhum golpe encontrado.</p>}
-          {shown.map(({ m, kind, name, element }) => {
+          {shown.map(({ m, kind, name, element, special }) => {
             const st = KIND_STYLE[kind];
             return (
               <button key={m.id} type="button" className="mp-card" data-current={m.id === current} onClick={() => onPick(m.id)} style={{ ['--k' as string]: st.fg, ['--kb' as string]: st.bg }}>
-                <span className="n" style={element === 'Physical' ? undefined : { color: elementColor(element) }}>{name}{m.hits > 1 ? <i className="muted"> · {m.hits}×</i> : null}</span>
+                <span className="n" style={{ color: damageColor(element, special) }}>{name}{m.hits > 1 ? <i className="muted"> · {m.hits}×</i> : null}</span>
                 <span className="meta">
                   <KindBadge kind={kind} extra={inStateNote(m)} />
-                  <span className="el" style={{ color: element === 'Physical' ? undefined : elementColor(element) }}>{element === 'Physical' ? 'Físico' : element}</span>
+                  {special ? <FamilyBadge special={special} long /> : <span className="el" style={{ color: element === 'Physical' ? undefined : elementColor(element) }}>{element === 'Physical' ? 'Físico' : element}</span>}
                 </span>
                 {m.id === current && <span className="cur">escolhido</span>}
               </button>

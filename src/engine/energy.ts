@@ -15,6 +15,9 @@ export const CLEAR_ON = 2.0;
 export const CLEAR_OFF = 1.2;
 /** Cada ativação de arma Favonius solta 3 partículas neutras. */
 export const FAVONIUS_PARTICLES = 3;
+/** Energia fixa que os aliados recebem do Supremo da Raiden Shogun (regra da calculadora do Davi; ela mesma não recebe). */
+export const RAIDEN_TEAM_ENERGY = 24;
+export const RAIDEN_NAME = 'Raiden Shogun';
 /** Folga sobre a recarga exata, para chefes de alvo único (a mesma do app anterior). */
 export const SAFETY_MARGIN = 1.15;
 
@@ -64,7 +67,10 @@ export interface EnergyResult {
   baseFromSkills: number;
   baseFromFavonius: number;
   baseFromEnemies: number;
+  /** Energia fixa total (a do slot mais a dos efeitos do time, como a Raiden). */
   flatEnergy: number;
+  /** Parte da energia fixa que veio do time (Raiden), já somada em `flatEnergy`. */
+  teamFlat: number;
   /** Energia por partículas com 100% de recarga. */
   totalBase: number;
 }
@@ -102,9 +108,10 @@ export function calculateEnergy(input: EnergyInput): EnergyResult[] {
 
     const field = Math.min(1, Math.max(0, slot.fieldTime));
     const baseFromEnemies = Math.max(0, input.enemyParticles) * (field * CLEAR_ON + (1 - field) * CLEAR_OFF);
-    const flatEnergy = Math.max(0, slot.flat);
+    const teamFlat = target.name !== RAIDEN_NAME && members.some((m) => m.name === RAIDEN_NAME) ? RAIDEN_TEAM_ENERGY : 0;
+    const flatEnergy = Math.max(0, slot.flat) + teamFlat;
     const totalBase = baseFromSkills + baseFromFavonius + baseFromEnemies;
-    const common = { baseFromSkills, baseFromFavonius, baseFromEnemies, flatEnergy, totalBase };
+    const common = { baseFromSkills, baseFromFavonius, baseFromEnemies, flatEnergy, teamFlat, totalBase };
 
     if (!slot.useBurst || target.burstCost <= 0) {
       return { ...common, neededER: 1, safeER: 1, status: 'ignored' as const };

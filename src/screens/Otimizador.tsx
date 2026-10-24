@@ -15,6 +15,7 @@ import type { Constraints, Objective } from '../features/optimizer/evaluator';
 import { DEFAULT_CONFIG, countCandidates, type OptimizedBuild, type OptimizerConfig, type OptimizerResult } from '../features/optimizer/run';
 import { REACTION_LABEL, reactionOptions } from '../features/character/characterModel';
 import { useRotationStore } from '../features/rotation/store';
+import { energyMembers, energyResults } from '../features/energy/energyModel';
 import type { ReactionChoice } from '../engine';
 import { mainStatValue } from '../engine/pieces';
 import { formatDecimal, formatInt } from '../ui/format';
@@ -231,6 +232,11 @@ export function OtimizadorPanel({ index }: { index: number }) {
     : formatInt(r.value);
   const goalCaption = ui.goal === 'stat' ? STAT_LABEL[ui.stat] : ui.goal === 'buff' ? (buffChosen?.label ?? 'buff') : ui.scope === 'move' ? `${moveChosen?.labelPt ?? moveChosen?.label ?? 'golpe'} · ${REACTION_LABEL[reaction] ?? reaction}` : ui.scope === 'member' ? `dano de ${ref.character}` : 'dano da rotação do time';
   const base = result?.equipped?.report.value;
+  /** Recarga que a calculadora de recarga do projeto pede para este personagem (null se ele não usa o Supremo). */
+  const erNeeded = (() => {
+    const r = energyResults(project, energyMembers(project, data.game.characters, data.particles))[index];
+    return r && r.status !== 'ignored' ? Math.ceil(r.neededER * 1000) / 10 : null;
+  })();
   const minsOn = Object.values(ui.mins).filter((x) => x.trim() !== '').length;
 
   const equippedSig = new Set((result?.equipped?.pieces ?? []).map(pieceSig));
@@ -257,7 +263,15 @@ export function OtimizadorPanel({ index }: { index: number }) {
                   </label>
                 ))}
               </div>
-              <p className="ot-tip">Ex.: Recarga ≥ 120% para não faltar energia na rotação.</p>
+              {erNeeded !== null ? (
+                <p className="ot-tip">
+                  A calculadora de recarga pede <b className="num">{formatDecimal(erNeeded, 1)}%</b> para {ref.character}.{' '}
+                  <button type="button" className="dz-link" onClick={() => setUi({ ...ui, mins: { ...ui.mins, er: String(erNeeded) } })}>Usar como mínimo</button>
+                  {' · '}<Link className="dz-link" to={`/projeto/${v.id}/recarga`}>Abrir a calculadora</Link>
+                </p>
+              ) : (
+                <p className="ot-tip">Ex.: Recarga ≥ 120% para não faltar energia na rotação.</p>
+              )}
             </Panel>
 
             <Panel title="Filtro de artefatos" aside={<span className="fx-badge num">{levelCount}/{allArt.length}</span>} className="fx-panel">

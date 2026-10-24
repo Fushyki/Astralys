@@ -103,3 +103,13 @@ describe('recarga de energia: cenário Mavuika (paridade com o app anterior)', (
     expect(r[3].totalBase).toBeCloseTo(32.3, 1);
   });
 });
+
+describe('Raiden Shogun no time', () => {
+  it('dá 24 de energia fixa aos aliados (e não a si mesma)', () => {
+    const team = [m('Raiden Shogun', 'Electro', 90, 3), m('Aliado', 'Electro', 80, 3)];
+    const [raiden, ally] = calculateEnergy({ members: team, enemyParticles: 6, slots: [slot({ skillUses: 1, onFieldReceivers: [0] }), slot({ skillUses: 1, onFieldReceivers: [1] })] });
+    expect(raiden.teamFlat).toBe(0);
+    expect(ally.teamFlat).toBe(24);
+    expect(ally.flatEnergy).toBe(24);
+  });
+});

@@ -62,13 +62,36 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
   await page.goto(`${BASE}/recarga`, { waitUntil: 'networkidle' });
   await page.evaluate(() => localStorage.removeItem('astralys.recarga-livre'));
   await page.reload({ waitUntil: 'networkidle' });
-  check('avulsa começa sem personagens', (await page.locator('.rc-card').count()) === 0);
-  await page.click('button:has-text("Adicionar personagem")');
-  await page.fill('input[aria-label="Buscar personagem"]', 'Citlali');
-  await page.click('.dz-dialog button:has-text("Citlali"), .dz-dialog [role="button"]:has-text("Citlali")'); await settle();
-  check('adicionar um personagem cria o cartão', (await page.locator('.rc-card').count()) === 1);
+  check('avulsa começa com o time da calculadora antiga (Mavuika, Citlali, Iansan, Bennett)', (await page.$$eval('.rc-card .who select', (s) => s.map((x) => x.value))).join('|') === 'Mavuika|Citlali|Iansan|Bennett');
+  const needs = await page.$$eval('.rc-card .need .v', (v) => v.map((x) => x.textContent.trim()));
+  check('o cenário inicial reproduz 202,2% / 205,2% / 185,7%', needs.slice(1).join('|') === '202,2%|205,2%|185,7%', needs.join('|'));
+  check('cada cartão mostra a margem de segurança de +15%', (await page.locator('.rc-card .safe').count()) === 3);
+
+  // trocar o personagem de um slot
+  await page.selectOption('select[aria-label="Personagem do slot 2"]', 'Kamisato Ayaka'); await settle();
+  check('trocar o personagem do slot 2 atualiza o cartão', (await page.inputValue('select[aria-label="Personagem do slot 2"]')) === 'Kamisato Ayaka');
+
+  // times salvos
+  await page.fill('input[aria-label="Nome do time"]', 'Meu time'); await page.click('button:has-text("Salvar time atual")');
+  check('salvar o time o põe na lista', (await page.locator('.rc-saved').count()) === 1 && /Meu time/.test(await page.textContent('.rc-saved')));
+  await page.click('.rc-card .rc-head .x >> nth=3'); await settle();
+  check('remover um slot tira o cartão', (await page.locator('.rc-card').count()) === 3);
+  await page.click('.rc-saved .dz-link'); await settle();
+  check('carregar o time salvo traz os 4 de volta', (await page.locator('.rc-card').count()) === 4);
   await page.reload({ waitUntil: 'networkidle' });
-  check('o time avulso sobrevive ao recarregar', (await page.locator('.rc-card').count()) === 1);
+  check('o time salvo e o time atual sobrevivem ao recarregar', (await page.locator('.rc-saved').count()) === 1 && (await page.locator('.rc-card').count()) === 4);
+
+  // backup da calculadora antiga
+  const legacy = [{ id: 1, name: 'Antigo', enemyParts: 6, slots: [
+    { id: 1, name: 'Mavuika', e_uses: 1, funnel: 'Dividir (50% Slot 3 / 50% Slot 4)', fav: 0, fav_target: 'Ele mesmo (Em campo)', flat: 0, onfield: 0.5, use_burst: false },
+    { id: 2, name: 'Citlali', e_uses: 1, funnel: 'Ele mesmo (Em campo)', fav: 0, fav_target: 'Ele mesmo (Em campo)', flat: 0, onfield: 0.15, use_burst: true },
+    { id: 3, name: 'Iansan', e_uses: 1, funnel: 'Ele mesmo (Em campo)', fav: 0, fav_target: 'Ele mesmo (Em campo)', flat: 12, onfield: 0.15, use_burst: true },
+    { id: 4, name: 'Bennett', e_uses: 1, funnel: 'Ele mesmo (Em campo)', fav: 0, fav_target: 'Ele mesmo (Em campo)', flat: 0, onfield: 0.2, use_burst: true }] }];
+  const tmp = path.join(OUT, 'legacy-backup.json'); fs.writeFileSync(tmp, JSON.stringify(legacy));
+  await page.setInputFiles('input[aria-label="Arquivo de backup"]', tmp); await settle();
+  check('importar o backup da calculadora antiga adiciona o time', (await page.locator('.rc-saved').count()) === 2 && /importado/.test(await page.textContent('.dz-page')));
+  await page.click('.rc-saved:has-text("Antigo") .dz-link'); await settle();
+  check('o time importado reproduz as mesmas recargas', (await page.$$eval('.rc-card .need .v', (v) => v.map((x) => x.textContent.trim()))).slice(1).join('|') === '202,2%|205,2%|185,7%');
 
   await page.setViewportSize({ width: 390, height: 900 }); await page.waitForTimeout(400);
   check('celular sem rolagem horizontal da página', !(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1)));

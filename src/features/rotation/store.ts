@@ -47,6 +47,7 @@ export interface RotationState {
   realign: (step?: number) => void;
   updateConfig: (patch: Partial<RotationProject['config']>) => void;
   setSourceEnabled: (id: string, enabled: boolean) => void;
+  setCompat: (compat: RotationProject['compat']) => void;
   /** Grava a configuração da calculadora de recarga (`meta.energy`), sem entrar no desfazer. */
   setEnergy: (next: RotationProject) => void;
 
@@ -148,6 +149,7 @@ export const useRotationStore = create<RotationState>((set, get) => {
     realign: (step) => commit(get().project && ops.realignActions(get().project!, step)),
     updateConfig: (patch) => commit(get().project && ops.updateConfig(get().project!, patch)),
     setSourceEnabled: (id, enabled) => commit(get().project && ops.setSourceEnabled(get().project!, id, enabled)),
+    setCompat: (compat) => commit(get().project && ops.setCompat(get().project!, compat)),
 
     updateMember: (index, patch) => commit(get().project && team.updateMember(get().project!, index, patch)),
     addMember: (ref) => {

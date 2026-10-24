@@ -77,20 +77,20 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   check('Equipar marca o build como equipado', (await page.locator('.ot-build button:has-text("Equipado")').count()) === 1);
   await page.click('.pc-views button:has-text("Resumo e build")');
   await page.waitForSelector('.pc-gear');
-  check('depois de Equipar, o Equipamento mostra as 5 peças reais do inventário', (await page.locator('.pc-piece.real').count()) === 5 && (await page.locator('.pc-piece.real.empty').count()) === 0);
-  check('com peças reais os substats mostram a soma exata das peças', /Soma exata dos substats das 5 peças/.test(await page.textContent('.pc-rolls + span, .dz-panel:has(h2:text-is("Substats das peças"))')));
-  await page.locator('.pc-piece.real').nth(2).click();
+  check('depois de Equipar, o Equipamento mostra as 5 peças reais do inventário', (await page.locator('.gt-piece.real').count()) === 5 && (await page.locator('.gt-piece.real.empty').count()) === 0);
+  check('com peças reais os substats mostram a soma exata das peças', /Soma exata dos substats das 5 peças/.test(await page.textContent('.dz-panel:has(h2:text-is("Substats das peças"))')));
+  await page.locator('.gt-piece.real').nth(2).click();
   await page.waitForSelector('.dz-dialog .pp-tile');
   check('tocar numa peça abre o inventário com as peças da posição (Areia)', /Areia do inventário/.test(await page.textContent('.dz-dialog')) && (await page.locator('.dz-dialog .pp-tile').count()) === 8);
   await page.locator('.dz-dialog .pp-tile').nth(3).click();
   await page.waitForTimeout(500);
-  check('escolher outra peça troca só aquela posição', (await page.locator('.pc-piece.real').count()) === 5 && (await page.locator('.dz-dialog').count()) === 0);
-  await page.locator('.pc-piece.real').nth(0).click();
+  check('escolher outra peça troca só aquela posição', (await page.locator('.gt-piece.real').count()) === 5 && (await page.locator('.dz-dialog').count()) === 0);
+  await page.locator('.gt-piece.real').nth(0).click();
   await page.waitForSelector('.dz-dialog .pp-tile');
   await page.click('.dz-dialog button:has-text("Deixar sem peça")');
-  check('"Deixar sem peça" esvazia a posição', (await page.locator('.pc-piece.real.empty').count()) === 1);
+  check('"Deixar sem peça" esvazia a posição', (await page.locator('.gt-piece.real.empty').count()) === 1);
   await page.click('button:has-text("Voltar ao build genérico")');
-  check('"Voltar ao build genérico" volta aos rolls e main stats', (await page.locator('.pc-piece.real').count()) === 0 && (await page.locator('.pc-rolls').count()) === 1);
+  check('"Voltar ao build genérico" volta aos rolls e main stats', (await page.locator('.gt-piece.real').count()) === 0 && (await page.locator('.db-subs .sr').count()) === 10);
   await page.click('.pc-views button:has-text("Otimizar")');
   await page.waitForSelector('.ot-top');
 

@@ -4,9 +4,10 @@ import { Link, Navigate, useParams, useSearchParams } from 'react-router-dom';
 import { useProjectView } from '../app/ProjectContext';
 import { formatPercent } from '../ui/format';
 import { useRotationStore } from '../features/rotation/store';
-import { BuildStrip } from './personagem/BuildStrip';
-import { CharacterCard, SubstatsPanel } from './personagem/LeftColumn';
-import { Attributes, DamageTablePanel, ReactionsPanel, ReceivedBuffsPanel } from './personagem/MainColumn';
+import { CharacterAvatar } from '../design/primitives';
+import { Dashboard } from './personagem/Dashboard';
+import { ArtCard, ConstellationCard, TalentsCard } from './personagem/SideCards';
+import { DamageTablePanel, ReactionsPanel, ReceivedBuffsPanel } from './personagem/MainColumn';
 import { ToolsPanel, type ToolTab } from './personagem/ToolsPanel';
 import { OtimizadorPanel } from './Otimizador';
 import { TalentsPanel } from './personagem/TalentsPanel';
@@ -53,54 +54,51 @@ export default function Personagem() {
     setTimeout(() => toolsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60);
   };
 
+  const eligible = v.data.effects.characters.find((c) => c.character === character.name)?.factions ?? [];
+
   return (
     <>
       <div className="pc-tabs-wrap">
-        <div className="pc-tabs" role="tablist" aria-label="Personagens do time">
-          {v.project.members.map((m, i) => (
-            <Link
-              key={m.character}
-              role="tab"
-              aria-selected={i === index}
-              to={`/projeto/${v.id}/personagem/${encodeURIComponent(m.character)}${view === 'resumo' ? '' : `?aba=${view}`}`}
-              style={{ ['--c' as string]: v.colors[i] }}
-            >
-              <i />
-              {m.character}
-              <span className="num pct">{formatPercent(v.summary.members[i]?.fraction ?? 0, (v.summary.members[i]?.fraction ?? 0) < 0.1 ? 1 : 1)}</span>
-            </Link>
-          ))}
+        <div className="pc-tabs-in">
+          <div className="pc-tabs" role="tablist" aria-label="Personagens do time">
+            {v.project.members.map((m, i) => {
+              const info = v.data.game.characters.find((c) => c.name === m.character);
+              const f = v.summary.members[i]?.fraction ?? 0;
+              return (
+                <Link
+                  key={m.character}
+                  role="tab"
+                  aria-selected={i === index}
+                  to={`/projeto/${v.id}/personagem/${encodeURIComponent(m.character)}${view === 'resumo' ? '' : `?aba=${view}`}`}
+                  style={{ ['--c' as string]: v.colors[i] }}
+                >
+                  <CharacterAvatar name={m.character} icon={info?.icon} color={v.colors[i]} size={36} />
+                  <span className="who">
+                    <b>{m.character}</b>
+                    <span className="num pct">{formatPercent(f, 1)} do time</span>
+                  </span>
+                </Link>
+              );
+            })}
+          </div>
+          <div className="pc-views" role="tablist" aria-label="O que ver neste personagem">
+            {VIEWS.map((x) => (
+              <button key={x.id} type="button" role="tab" aria-selected={view === x.id} title={x.hint} onClick={() => goView(x.id)}>{x.label}</button>
+            ))}
+          </div>
         </div>
       </div>
 
       <main className={`pc-page${view === 'otimizar' ? ' opt' : ''}`}>
         <aside className="pc-aside">
-          <CharacterCard character={character} memberRef={ref} index={index} color={v.colors[index]} level={v.project.config.characterLevel} share={share} eligible={v.data.effects.characters.find((c) => c.character === character.name)?.factions ?? []} />
+          <ArtCard character={character} memberRef={ref} index={index} color={v.colors[index]} level={v.project.config.characterLevel} eligible={eligible} />
+          <ConstellationCard character={character} memberRef={ref} index={index} />
+          <TalentsCard character={character} memberRef={ref} index={index} share={share} />
           {view === 'otimizar' && <AsideExtras v={v} index={index} />}
         </aside>
 
         <div className="pc-main">
-          <div className="pc-views" role="tablist" aria-label="O que ver neste personagem">
-            {VIEWS.map((x) => (
-              <button key={x.id} type="button" role="tab" aria-selected={view === x.id} onClick={() => goView(x.id)}>{x.label}</button>
-            ))}
-          </div>
-          <p className="pc-hint">{VIEWS.find((x) => x.id === view)!.hint}</p>
-
-          {view === 'resumo' && (
-            <>
-              <BuildStrip data={v.data} index={index} member={ref} projectId={v.id} />
-              <div className="pc-row a">
-                <Attributes v={v} index={index} />
-                <div className="pc-col">
-                  <SubstatsPanel memberRef={ref} index={index} bundle={v.bundle} onGood={goToGood} bases={{ atk: character.baseAtk + (v.data.game.weapons.find((w) => w.name === ref.weapon)?.baseAtk ?? 0), hp: character.baseHp, def: character.baseDef }} />
-                </div>
-              </div>
-              <p className="pc-next">
-                Quer ver todos os golpes, buffs e reações? Abra <button type="button" className="dz-link" onClick={() => goView('avancado')}>Avançado</button>.
-              </p>
-            </>
-          )}
+          {view === 'resumo' && <Dashboard v={v} index={index} onGood={goToGood} />}
           {view === 'talentos' && <TalentsPanel v={v} index={index} />}
           {view === 'otimizar' && <OtimizadorPanel index={index} />}
           {view === 'avancado' && (

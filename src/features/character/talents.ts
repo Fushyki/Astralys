@@ -8,7 +8,7 @@ export interface TalentText {
 }
 export interface CharacterTalents {
   character: string;
-  skills: (TalentText & { talent: 'normal' | 'skill' | 'burst' })[];
+  skills: (TalentText & { talent: 'normal' | 'skill' | 'burst'; params?: { label: string; values: string[] }[] })[];
   passives: (TalentText & { id: string })[];
   constellations: (TalentText & { n: number })[];
 }
@@ -35,3 +35,17 @@ export function buffHome(id: string): BuffHome {
 }
 
 export const skillIconUrl = (icon: string) => `https://api.lunaris.moe/data/assets/skills/${icon}.webp`;
+
+/** Quebra um chip de buff ("+40% DMG", "ATK fixo +810", "+120 EM") em nome e valor. */
+export function splitChip(chip: string): { name: string; value: string } {
+  const first = /^([+\-−][\d.,]+%?)\s+(.+)$/.exec(chip);
+  if (first) return { name: first[2].trim(), value: first[1] };
+  const second = /^(.+?)\s+([+\-−][\d.,]+%?)$/.exec(chip);
+  if (second) return { name: second[1].trim(), value: second[2] };
+  return { name: chip, value: '' };
+}
+
+/** Linhas de parâmetro (duração, recarga, Stamina…) de um talento no nível pedido (1 a 15). */
+export function paramRows(params: { label: string; values: string[] }[] | undefined, level: number): { label: string; value: string }[] {
+  return (params ?? []).map((p) => ({ label: p.label, value: (p.values[Math.min(p.values.length, Math.max(1, level)) - 1] ?? '').replace(/\./g, ',') }));
+}

@@ -89,13 +89,15 @@ export default function Personagem() {
         </div>
       </div>
 
-      <main className={`pc-page${view === 'otimizar' ? ' opt' : ''}`}>
+      <main className={`pc-page${view === 'otimizar' ? ' opt' : ''}${view === 'talentos' ? ' solo' : ''}`}>
+        {view !== 'talentos' && (
         <aside className="pc-aside">
-          <ArtCard character={character} memberRef={ref} index={index} color={v.colors[index]} level={v.project.config.characterLevel} eligible={eligible} compact={view === 'otimizar'} />
-          <ConstellationCard character={character} memberRef={ref} index={index} compact={view === 'otimizar'} />
-          <TalentsCard character={character} memberRef={ref} index={index} share={share} compact={view === 'otimizar'} />
-          {view === 'otimizar' && <AsideExtras v={v} index={index} />}
-        </aside>
+            <ArtCard character={character} memberRef={ref} index={index} color={v.colors[index]} level={v.project.config.characterLevel} eligible={eligible} compact={view === 'otimizar'} />
+            <ConstellationCard character={character} memberRef={ref} index={index} compact={view === 'otimizar'} />
+            <TalentsCard character={character} memberRef={ref} index={index} share={share} compact={view === 'otimizar'} />
+            {view === 'otimizar' && <AsideExtras v={v} index={index} />}
+          </aside>
+        )}
 
         <div className="pc-main">
           {view === 'resumo' && <Dashboard v={v} index={index} onGood={goToGood} />}

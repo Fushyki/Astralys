@@ -1,0 +1,85 @@
+/*
+ * Aba Talentos e constelações. Só medidas de tokens.css. Grade: 4 colunas acima de 1280 px (constelação ocupa 2 linhas),
+ * 2 entre 768 e 1280 px e 1 abaixo; os cartões da mesma linha esticam juntos e o conteúdo fica em cima.
+ */
+.tl { display: flex; flex-direction: column; gap: var(--panel-gap); min-width: 0; }
+.tl-bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-3); }
+.tl-bar .grow { flex: 1; }
+.tl-reacts { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-2) var(--sp-5); padding: var(--sp-3) var(--panel-pad); background: #0c1128; border: 1px solid #232d5c; border-radius: var(--r-panel); }
+.tl-reacts .lb { display: inline-flex; align-items: center; gap: var(--sp-2); font-family: var(--font-display); font-weight: 600; font-size: var(--fs-1); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.tl-reacts .x { display: inline-flex; align-items: baseline; gap: var(--sp-2); font-size: var(--fs-2); }
+.tl-reacts .x b { font-weight: 600; }
+
+.tl-infusion { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--sp-3) var(--sp-5); padding: var(--sp-3) var(--panel-pad); border-radius: var(--r-panel); border: 1px solid color-mix(in srgb, var(--gold) 40%, var(--border)); background: #0c1128; }
+.tl-infusion p { margin: var(--sp-1) 0 0; font-size: var(--fs-2); color: var(--text-2); max-width: 640px; }
+.tl-infusion .dz-seg button[aria-pressed='true'] { background: var(--c, var(--gold)); color: #0a0e1c; }
+
+.tl-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--panel-gap); align-items: stretch; }
+@media (max-width: 1280px) { .tl-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 768px) { .tl-grid { grid-template-columns: minmax(0, 1fr); } }
+.tl-card { display: flex; flex-direction: column; min-width: 0; background: #0c1128; border: 1px solid #232d5c; border-radius: var(--r-panel); }
+.tl-card.cons { grid-row: 1 / span 2; }
+@media (max-width: 1280px) { .tl-card.cons { grid-row: auto; grid-column: 1 / -1; } }
+.tl-card > header, .tl-card .pas > header { display: flex; align-items: flex-start; gap: var(--sp-3); padding: var(--sp-4); border-bottom: 1px solid #18204a; background: #0f1532; border-radius: var(--r-panel) var(--r-panel) 0 0; }
+.tl-card .pas > header { border-bottom: 1px solid #18204a; }
+.tl-card > header.bar { align-items: center; min-height: var(--panel-head); padding: 0 var(--panel-pad); box-sizing: border-box; }
+.tl-card > header.bar .h2 { flex: 1; margin: 0; font-size: var(--fs-4); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.tl-card .ico { width: 44px; height: 44px; flex: none; display: grid; place-items: center; overflow: hidden; border-radius: 50%; background: #121a3a; border: 1px solid #3a4680; }
+.tl-card .ico img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+.tl-card .who { display: flex; flex-direction: column; gap: var(--sp-1); min-width: 0; flex: 1; align-items: flex-start; }
+.tl-card .who b { font: 700 var(--fs-5) var(--font-display); line-height: 1.1; overflow-wrap: anywhere; }
+.tl-card.passive { background: #0c1128; }
+.tl-card.passive .pas { display: flex; flex-direction: column; flex: 1; }
+.tl-card.passive .pas > header { border-radius: 0; }
+.tl-card.passive .pas:first-child > header { border-radius: var(--r-panel) var(--r-panel) 0 0; }
+.tl-card.passive .pas .body { flex: 1; }
+.tl-card.passive hr { border: 0; border-top: 1px solid #18204a; margin: 0; }
+
+.step { display: inline-flex; align-items: center; border: 1px solid #2a356a; border-radius: var(--r-ctl); overflow: hidden; background: #080c1d; flex: none; }
+.step button { width: var(--ctl-sm); height: var(--ctl-sm); border: 0; background: transparent; color: var(--muted); font-size: var(--fs-4); padding: 0; cursor: pointer; }
+.step button:hover:not(:disabled) { color: var(--gold-hi); }
+.step button:disabled { opacity: .3; cursor: not-allowed; }
+.step span { min-width: 52px; text-align: center; font: 700 var(--fs-3) var(--font-display); color: var(--text); }
+
+.tl-desc { display: flex; align-items: center; gap: var(--sp-2); padding: var(--sp-3) var(--sp-4) 0; }
+.tl-desc p { margin: 0; flex: 1; min-width: 0; font-size: var(--fs-1); color: var(--muted); line-height: 1.45; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tl-full { margin: 0; padding: var(--sp-4); white-space: pre-line; font-size: var(--fs-3); line-height: 1.6; color: var(--text-2); overflow-y: auto; }
+
+.tl-card .body { display: flex; flex-direction: column; gap: var(--sp-3); padding: var(--sp-3) var(--sp-3) var(--sp-4); flex: 1; }
+.tl-card .grp { border: 1px solid #18204a; border-radius: var(--r-inner); overflow: hidden; background: #0a0f24; }
+.tl-card .gh { padding: var(--sp-1) var(--sp-3); background: #0f1532; border-bottom: 1px solid #18204a; font: 700 var(--fs-2) var(--font-display); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.tl-card .r { display: flex; align-items: center; gap: var(--sp-3); min-height: var(--row-h); padding: 0 var(--sp-3); font-size: var(--fs-2); border-bottom: 1px solid #131b40; box-sizing: border-box; }
+.tl-card .r:last-child { border-bottom: 0; }
+.tl-card .grp .r:nth-child(even) { background: #0e1430; }
+.tl-card .r .k { color: var(--text-2); min-width: 0; overflow-wrap: anywhere; }
+.tl-card .r .v { margin-left: auto; font-weight: 600; color: var(--text); white-space: nowrap; }
+.tl-card .empty { margin-top: auto; font-size: var(--fs-1); color: var(--faint); line-height: 1.4; }
+
+/* Condição: caixa dourada */
+.tl-cond { border: 1px solid #6b5524; border-radius: var(--r-inner); overflow: hidden; background: #141108; }
+.tl-cond[data-active='false'] { border-color: #3a3016; }
+.tl-cond[data-locked='true'] { opacity: .6; }
+.tl-cond > label { display: flex; align-items: center; gap: var(--sp-3); padding: var(--sp-2) var(--sp-3); background: #211b0c; border-bottom: 1px solid #3a3016; cursor: pointer; }
+.tl-cond[data-locked='true'] > label { cursor: not-allowed; }
+.tl-cond input { width: var(--ico-1); height: var(--ico-1); accent-color: var(--gold); }
+.tl-cond .txt { flex: 1; min-width: 0; font-size: var(--fs-1); line-height: 1.35; color: #f8de9e; }
+.tl-cond[data-active='false'] .txt { color: var(--muted); text-decoration: line-through; }
+.tl-cond[data-active='false'] .dz-badge { opacity: .45; }
+.tl-cond .rows .r { background: transparent; border-color: #2a2410; }
+
+/* Constelação */
+.tl-card.cons > svg { width: calc(100% - var(--sp-5)); height: auto; margin: var(--sp-2) var(--sp-3) 0; }
+.tl-card.cons .node { cursor: pointer; outline: none; }
+.tl-card.cons .node text { font: 700 10px var(--font-display); pointer-events: none; }
+.tl-card.cons .node:focus-visible circle { stroke: var(--gold-hi); stroke-width: 2.4; }
+.tl-card.cons .list { display: flex; flex-direction: column; gap: var(--sp-2); padding: var(--sp-2) var(--sp-3) var(--sp-4); flex: 1; }
+.tl-card.cons .cst { display: flex; flex-direction: column; gap: var(--sp-2); padding: var(--sp-3); border-radius: var(--r-inner); border: 1px solid #1a2350; background: #0a0f24; }
+.tl-card.cons .cst[data-lit='true'] { border-color: #6b5524; background: #141108; }
+.tl-card.cons .cst .head { display: flex; align-items: flex-start; gap: var(--sp-3); padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.tl-card.cons .cst .ring { width: 34px; height: 34px; flex: none; display: grid; place-items: center; border-radius: 50%; border: 1px solid #3a4680; font: 700 var(--fs-2) var(--font-display); color: #7e88b6; }
+.tl-card.cons .cst[data-lit='true'] .ring { background: var(--gold); border-color: var(--gold); color: #1a1405; }
+.tl-card.cons .cst .t { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.tl-card.cons .cst .t b { font-size: var(--fs-3); color: #7e88b6; }
+.tl-card.cons .cst[data-lit='true'] .t b { color: var(--text); }
+.tl-card.cons .cst .t small { font-size: var(--fs-1); color: #7e88b6; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.tl-card.cons .cst .body { padding: 0; }

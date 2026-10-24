@@ -123,3 +123,12 @@ API não oficial `https://api.lunaris.moe/data/` (descoberta lendo o bundle do s
 - Decisões em aberto do redesign: `docs/DECISOES_PENDENTES.md` (itens 15 a 26).
 
 Plano completo: `C:\Users\dabiv\.claude\plans\hashed-nibbling-island.md`. Strix (pentest) só no fim, em `localhost`, com um LLM que não seja o Claude.
+
+
+## Guia visual v2 (telas Otimizar e Talentos)
+- Mockups de referência em `reference/design/` (`Estilo`, `Otimizar`, `Talentos` `.dc.html`): são especificação, não código.
+- Medidas únicas: `src/ui/tokens.ts` espelha as variáveis de `src/design/tokens.css` (`--sp-*`, `--ctl-*`, `--r-*`, `--fs-*`, `--ico-*`, `--panel-*`, `--row-h`, `--side-col`); `tests/design/tokens.test.ts` falha se os dois se afastarem. CSS novo usa só essas variáveis.
+- Ação nunca é texto sublinhado: use `Button`/`ButtonLink` (`src/design/Button.tsx`). Painel novo: `<Panel bar title badge foot>`; blocos da mesma linha ficam com a mesma altura (`align-items: stretch`) e o rodapé do painel desce com `margin-top: auto`.
+- Imagens de artefato: `pieceIconUrl(setId, slot)` em `src/design/images.ts` (Lunaris `assets/artifacts/UI_RelicIcon_<set>_<n>.webp`, sem cache local, lazy-load, glifo da posição se faltar). Ícones de talento, passiva e constelação: `assets/skills/<icon>.webp`.
+- Textos de talentos: `src/data/generated/talents.json`, gerado do cache do Lunaris por `npx tsx scripts/sync-talents.ts` (texto, ícone e as linhas que não são dano: duração, recarga, Stamina).
+- Verificação: `npx vite preview --port 4173` (não abre mais o navegador: `preview.open: false`) e os roteiros de `scripts/e2e/` (Otimizar e Personagem conferem alturas iguais, grade de builds, imagens e ausência de sublinhado).

@@ -45,7 +45,8 @@ body { font-family: var(--font-body); font-size: 15px; line-height: 1.5; -webkit
 .dz-btn.gold:hover { background: var(--gold-hi); }
 .dz-btn.sm { min-height: 36px; padding: 6px 12px; font-size: 13px; }
 .dz-btn:disabled { opacity: .4; cursor: not-allowed; }
-.dz-link { background: none; border: 0; padding: 0; color: var(--gold); font: inherit; text-decoration: underline; cursor: pointer; }
+.dz-link { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 30px; padding: 3px 12px; border-radius: 8px; border: 1px solid var(--border-ctl); background: var(--bg-header); color: var(--gold-hi); font: 600 13px var(--font-body); text-decoration: none; cursor: pointer; vertical-align: middle; }
+.dz-link:hover:not(:disabled) { border-color: var(--gold); background: color-mix(in srgb, var(--gold) 12%, var(--bg-header)); }
 .dz-link:disabled { opacity: .4; cursor: not-allowed; }
 .dz-field { display: grid; gap: 4px; font-size: 13px; color: var(--muted); min-width: 0; }
 .dz-field input, .dz-field select, .dz-input { width: 100%; min-width: 0; min-height: var(--control-h); background: var(--bg-header); color: var(--text); border: 1px solid var(--border-ctl); border-radius: var(--radius-ctl); padding: 8px 12px; font: inherit; font-variant-numeric: tabular-nums; }
@@ -219,3 +220,7 @@ body { font-family: var(--font-body); font-size: 15px; line-height: 1.5; -webkit
 .dz-dialog .scard .tags { justify-content: center; }
 @media (max-width: 900px) { .dz-dialog .grid.sets { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 520px) { .dz-dialog .grid.sets { grid-template-columns: minmax(0, 1fr); } }
+
+/* Diálogos de escolha: filtros e contagem na mesma linha, e mais altura para as grades */
+.dz-dialog .tools-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; }
+.dz-dialog.wide { height: min(780px, 92vh); max-height: 92vh; }

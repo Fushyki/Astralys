@@ -38,7 +38,17 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
 
   // Duas abas: Resumo e build (padrão) e Avançado
   const views = await page.$$eval('.pc-views button', (b) => b.map((x) => x.textContent));
-  check('o personagem tem 3 abas: Resumo e build, Otimizar e Avançado', views.join() === 'Resumo e build,Otimizar,Avançado', views.join());
+  check('o personagem tem 4 abas: Resumo e build, Talentos, Otimizar e Avançado', views.join() === 'Resumo e build,Talentos,Otimizar,Avançado', views.join());
+
+  // Talentos: textos do jogo e interruptores dos buffs
+  await page.click('.pc-views button:has-text("Talentos")');
+  await page.waitForSelector('.tl-card');
+  check('Talentos mostra constelações e os três talentos com texto do jogo', (await page.locator('.tl-col').count()) === 4 && (await page.locator('.tl-card').count()) >= 10);
+  const tlBefore = await page.locator('.tl-buff[data-active="true"]').count();
+  await page.locator('.tl-buff[data-active="true"]').first().locator('input').uncheck(); await page.waitForTimeout(900);
+  check('desligar um buff do personagem na aba Talentos o marca como desligado', (await page.locator('.tl-buff[data-active="true"]').count()) === tlBefore - 1);
+  await page.locator('.tl-buff[data-active="false"]:not([data-locked="true"])').first().locator('input').check(); await page.waitForTimeout(600);
+  await page.click('.pc-views button:has-text("Resumo e build")');
   check('abre no Resumo, com uma frase que explica a aba', (await page.getAttribute('.pc-views button:has-text("Resumo e build")', 'aria-selected')) === 'true' && /build \(arma, artefatos e substats\)/.test(await page.textContent('.pc-hint')));
   check('o Resumo não tem o bloco "Maiores golpes" nem a tabela inteira', (await page.locator('.dz-panel:has(h2:text-is("Maiores golpes"))').count()) === 0 && (await page.locator('.dz-panel:has(h2:text-is("Tabela de dano"))').count()) === 0);
   check('Resumo e build na mesma página: faixa de build, substats e atributos', (await page.locator('.pc-weapon').count()) === 1 && (await page.locator('.pc-rolls').count()) === 1 && (await page.locator('.dz-panel:has(h2:text-is("Atributos"))').count()) === 1);

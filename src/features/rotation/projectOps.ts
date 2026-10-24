@@ -263,3 +263,37 @@ export function setSourceEnabled(project: RotationProject, id: string, enabled: 
 export function setCompat(project: RotationProject, compat: RotationProject['compat']): RotationProject {
   return project.compat === compat ? project : touch({ ...project, compat });
 }
+
+/** Qual interruptor de buff o usuário mexeu. */
+export interface BuffToggle {
+  /** Id gravado em `disabled`: o da fonte (estática) ou `<buff>@<Nome>` (buff de time só para quem recebe). */
+  toggleId: string;
+  /** Id do buff no motor (sem o `@Nome`). */
+  baseId: string;
+  /** Vem de arma/set de um membro com `gearManual` (começa desligado e o religar vai para `enabled`). */
+  gear: boolean;
+  /** Quem recebe (para o `@Nome`) e todos os membros que recebem o buff. */
+  receiver: string;
+  receivers: string[];
+}
+
+/**
+ * Liga ou desliga um buff. Buff de arma/set (que começa desligado) ao ser ligado entra em `enabled`; como o buff de time
+ * vale para todos os que recebem, ligá-lo para um personagem desliga o mesmo buff para os outros (só ele passa a recebê-lo).
+ */
+export function setBuffEnabled(project: RotationProject, t: BuffToggle, enabled: boolean): RotationProject {
+  let disabled = project.disabled.filter((x) => x !== t.toggleId);
+  let on = project.enabled;
+  const perReceiver = t.toggleId !== t.baseId;
+  if (enabled) {
+    if (t.gear && !on.includes(t.baseId)) {
+      on = [...on, t.baseId];
+      if (perReceiver) for (const r of t.receivers) if (r !== t.receiver && !disabled.includes(`${t.baseId}@${r}`)) disabled = [...disabled, `${t.baseId}@${r}`];
+    }
+  } else {
+    disabled = [...disabled, t.toggleId];
+    if (t.gear && !perReceiver) on = on.filter((x) => x !== t.baseId);
+  }
+  const same = disabled.length === project.disabled.length && disabled.every((x, i) => x === project.disabled[i]) && on === project.enabled;
+  return same ? project : touch({ ...project, disabled, enabled: on });
+}

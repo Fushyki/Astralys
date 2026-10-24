@@ -110,7 +110,8 @@
 .ot-mins-panel, .ot-top > .dz-panel:first-child { display: flex; flex-direction: column; }
 .ot-mins { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 14px; }
 .ot-sets-panel { display: flex; flex-direction: column; }
-.ot-sets-panel .ot-sets { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; }
+.ot-sets-panel .ot-sets { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.ot-sets-panel .ot-set { padding: 8px; border-radius: 14px; }
 .ot-sets-panel .fx-wide { margin-top: auto; }
 
 .ot-bar { display: flex; flex-direction: column; gap: 14px; padding: 16px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-panel); }

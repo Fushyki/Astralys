@@ -302,6 +302,7 @@ export function projectFromPlanilha(imported: PlanilhaImport, options: ProjectFr
     })),
     buffWindows: [],
     disabled: [],
+    enabled: [],
     profiles: imported.profiles,
     meta: { tags: [], createdAt: now, updatedAt: now },
   };

@@ -30,7 +30,7 @@ function groupCards(cards: BuffCard[], member: number, names: string[], colors: 
 }
 
 export function MemberBuffs({ v, index }: { v: ProjectView; index: number }) {
-  const setEnabled = useRotationStore((s) => s.setSourceEnabled);
+  const setBuff = useRotationStore((s) => s.setBuff);
   const [open, setOpen] = useState(false);
   const cards = useMemo(() => (v.inSync ? memberBuffCards(v.project, v.resolved, v.bundle, index) : []), [v.project, v.resolved, v.bundle, index, v.inSync]);
   const names = v.project.members.map((m) => m.character);
@@ -38,7 +38,9 @@ export function MemberBuffs({ v, index }: { v: ProjectView; index: number }) {
   const toggleable = cards.filter((c) => !c.lockedOff);
   const activeCount = cards.filter((c) => c.active).length;
 
-  const setAll = (on: boolean) => toggleable.forEach((c) => c.active !== on && setEnabled(c.toggleId, on));
+  const setEnabled = (c: BuffCard, on: boolean) =>
+    setBuff({ toggleId: c.toggleId, baseId: c.toggleId.split('@')[0], gear: c.gear, receiver: names[index], receivers: c.receivers }, on);
+  const setAll = (on: boolean) => toggleable.forEach((c) => c.active !== on && setEnabled(c, on));
 
   return (
     <div className="eq-buffs" data-open={open}>
@@ -57,13 +59,14 @@ export function MemberBuffs({ v, index }: { v: ProjectView; index: number }) {
               <button type="button" className="dz-link" onClick={() => setAll(false)}>Desligar todos</button>
             </span>
           </div>
+          {cards.some((c) => c.gear && !c.active) && <p className="bc-note">Os buffs de arma e de artefatos começam desligados: ligue só os que valem neste time.</p>}
           {cards.length === 0 && <p className="muted small">Nenhum buff com número cadastrado chega a este personagem.</p>}
           {groups.map((g) => (
             <section key={g.key} className="bc-grp" style={{ ['--g' as string]: g.color ?? 'var(--muted)' }}>
               <h4>{g.title}</h4>
               {g.cards.map((c) => (
                 <label key={c.toggleId} className="bcard" data-active={c.active} data-locked={c.lockedOff} title={c.lockedOff ? 'Desligado para o time todo em Rotação e buffs' : undefined}>
-                  <input type="checkbox" checked={c.active} disabled={c.lockedOff} onChange={(e) => setEnabled(c.toggleId, e.target.checked)} aria-label={`${c.name} (${c.giverName})`} />
+                  <input type="checkbox" checked={c.active} disabled={c.lockedOff} onChange={(e) => setEnabled(c, e.target.checked)} aria-label={`${c.name} (${c.giverName})`} />
                   <span className="bc-body">
                     <span className="bc-top">
                       <span className="bc-n">{c.needsConfirmation ? 'Buff sem origem conhecida' : c.name}</span>

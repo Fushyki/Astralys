@@ -83,3 +83,4 @@
 .dz-panel.eq-compat { flex-direction: row; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px; border-color: color-mix(in srgb, var(--gold) 45%, var(--border)); }
 .eq-compat p { margin: 4px 0 0; font-size: 13px; color: var(--text-2); max-width: 760px; }
 .eq-card:has(.eq-buffs) .acts { margin-top: 0; }
+.eq-buffs .bc-note { margin: 0; padding: 8px 10px; border-radius: 8px; background: color-mix(in srgb, var(--gold) 10%, var(--bg-header)); border: 1px solid color-mix(in srgb, var(--gold) 35%, var(--border)); font-size: 12px; color: var(--text-2); }

@@ -9,12 +9,14 @@ import { CharacterCard, SubstatsPanel } from './personagem/LeftColumn';
 import { Attributes, DamageTablePanel, ReactionsPanel, ReceivedBuffsPanel } from './personagem/MainColumn';
 import { ToolsPanel, type ToolTab } from './personagem/ToolsPanel';
 import { OtimizadorPanel } from './Otimizador';
+import { TalentsPanel } from './personagem/TalentsPanel';
 import { AsideExtras } from './personagem/AsideExtras';
 import './personagem.css';
 
-type View = 'resumo' | 'avancado' | 'otimizar';
+type View = 'resumo' | 'talentos' | 'avancado' | 'otimizar';
 const VIEWS: { id: View; label: string; hint: string }[] = [
   { id: 'resumo', label: 'Resumo e build', hint: 'Quanto este personagem rende, os golpes que mais pesam e o build (arma, artefatos e substats).' },
+  { id: 'talentos', label: 'Talentos', hint: 'O que cada talento, passiva e constelação faz, os números dos golpes e os interruptores dos buffs que este personagem dá.' },
   { id: 'otimizar', label: 'Otimizar', hint: 'Os melhores artefatos do seu inventário para este personagem: escolha o que otimizar (dano, um golpe, um buff ou um stat) e o programa busca o melhor build.' },
   { id: 'avancado', label: 'Avançado', hint: 'Tabela de dano completa, reações, buffs recebidos e ferramentas (crítico, inventário GOOD).' },
 ];
@@ -99,6 +101,7 @@ export default function Personagem() {
               </p>
             </>
           )}
+          {view === 'talentos' && <TalentsPanel v={v} index={index} />}
           {view === 'otimizar' && <OtimizadorPanel index={index} />}
           {view === 'avancado' && (
             <>

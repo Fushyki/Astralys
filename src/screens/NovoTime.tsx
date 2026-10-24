@@ -182,7 +182,7 @@ export default function NovoTime() {
             </div>
             {source === 'uid' && ONLINE_ENABLED && (
               <form className="nt-uid" onSubmit={(e) => { e.preventDefault(); void fromGame(); }}>
-                <input className="dz-input" inputMode="numeric" placeholder="UID (9 ou 10 números)" aria-label="UID do jogo" value={uid} onChange={(e) => setUid(e.target.value.replace(/\D/g, '').slice(0, 10))} />
+                <input className="dz-input" inputMode="numeric" placeholder="UID" aria-label="UID do jogo" value={uid} onChange={(e) => setUid(e.target.value.replace(/\D/g, '').slice(0, 10))} />
                 <button type="submit" className="dz-btn" disabled={fetching || !UID_PATTERN.test(uid.trim())}>{fetching ? 'Buscando…' : 'Buscar'}</button>
                 {uidNote && <p className="note" role="status">{uidNote}</p>}
                 <p className="muted small">Os personagens precisam estar na vitrine do jogo, com os detalhes visíveis.</p>

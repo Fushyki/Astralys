@@ -114,6 +114,7 @@ export function defaultMember(characterName: string, data: Pick<GameData, 'chara
     },
     talents: { normal: 10, skill: 10, burst: 10 },
     minER: 0,
+    gearManual: true,
   };
 }
 

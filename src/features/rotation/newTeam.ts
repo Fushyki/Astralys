@@ -49,6 +49,7 @@ export function buildNewTeam(input: NewTeamInput, game: Pick<GameData, 'characte
     actions: [],
     buffWindows: [],
     disabled: [],
+    enabled: [],
     profiles: {},
     meta: { tags: [], createdAt: now, updatedAt: now },
   };

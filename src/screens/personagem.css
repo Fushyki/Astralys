@@ -182,3 +182,12 @@
 .dz-panel.fx-panel { padding: 14px; gap: 10px; }
 .pc-rolls.fx-grid { flex-direction: row; gap: 5px; }
 .fx-badge.over { color: var(--warn); border-color: var(--warn-border); }
+
+/* Aba Otimizar: o cartão do personagem fica só ao lado das abas e dos três painéis de filtro;
+   a barra de foco e os resultados ocupam a largura toda, por baixo dele. */
+.pc-page.opt .pc-main, .pc-page.opt .ot { display: contents; }
+@media (min-width: 1101px) {
+  .pc-page.opt .pc-aside { grid-column: 1; grid-row: 1 / span 3; }
+  .pc-page.opt .pc-views, .pc-page.opt .pc-hint, .pc-page.opt .ot-top, .pc-page.opt .ot > .dz-panel, .pc-page.opt .ot > .ot-empty { grid-column: 2; }
+  .pc-page.opt .ot-bar, .pc-page.opt .ot-results { grid-column: 1 / -1; }
+}

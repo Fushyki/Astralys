@@ -70,7 +70,7 @@ export default function Personagem() {
         </div>
       </div>
 
-      <main className="pc-page">
+      <main className={`pc-page${view === 'otimizar' ? ' opt' : ''}`}>
         <aside className="pc-aside">
           <CharacterCard character={character} memberRef={ref} index={index} color={v.colors[index]} level={v.project.config.characterLevel} share={share} eligible={v.data.effects.characters.find((c) => c.character === character.name)?.factions ?? []} />
         </aside>

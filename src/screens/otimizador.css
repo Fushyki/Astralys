@@ -158,3 +158,5 @@
   .ot-results { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 720px) { .ot-build .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } .ot-seg button { padding: 6px 10px; } }
+.ot-build header { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; column-gap: 12px; row-gap: 12px; }
+.ot-build header .dz-btn { grid-column: 1 / -1; justify-self: start; flex-basis: auto; min-width: 120px; }

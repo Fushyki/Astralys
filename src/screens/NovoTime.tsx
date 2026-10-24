@@ -14,6 +14,7 @@ import { saveProject } from '../features/rotation/persistence';
 import { ONLINE_ENABLED } from '../online/config';
 import { fetchEnka, UID_PATTERN } from '../online/enka';
 import './novoTime.css';
+import { Button } from '../design/Button';
 
 type Step = 1 | 2 | 3;
 const STEPS: { n: Step; label: string }[] = [
@@ -139,8 +140,8 @@ export default function NovoTime() {
                         <b>{n}</b>
                         <span className="muted small">{c.element}</span>
                         <div className="nt-slot-acts">
-                          <button type="button" className="dz-link" onClick={() => setPicking(i)}>Trocar</button>
-                          <button type="button" className="dz-link" onClick={() => remove(i)}>Remover</button>
+                          <Button variant="ghost" size="sm" onClick={() => setPicking(i)}>Trocar</Button>
+                          <Button variant="ghost" size="sm" onClick={() => remove(i)}>Remover</Button>
                         </div>
                       </>
                     ) : (

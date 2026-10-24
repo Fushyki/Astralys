@@ -235,7 +235,7 @@
 .pc-views button:hover { color: var(--text); }
 .pc-views button[aria-selected="true"] { background: var(--gold); color: var(--on-gold); }
 
-.pc-page { max-width: var(--page-max); margin: 0 auto; padding: 16px var(--gutter) 56px; display: grid; grid-template-columns: clamp(250px, 17vw, 320px) minmax(0, 1fr); gap: 16px; align-items: start; }
+.pc-page { max-width: var(--page-max); margin: 0 auto; padding: var(--sp-4) var(--gutter) var(--sp-6); display: grid; grid-template-columns: var(--side-col) minmax(0, 1fr); gap: var(--panel-gap); align-items: start; }
 .pc-aside { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
 .pc-main { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
 
@@ -307,7 +307,7 @@
 .db-rows.buffs small { font-size: 11px; color: var(--muted); }
 .db-rows.buffs b { color: var(--gold-hi); }
 .db-sub { margin: 0; padding: 0 14px 10px; font-size: 11px; color: var(--faint); }
-.db-panel > .dz-link { margin: 0 14px 12px; }
+.db-panel > .dz-btn { margin: 0 14px 12px; align-self: flex-start; }
 .db-panel > p { margin: 0; padding: 0 14px 12px; }
 
 /* equipamento em uma linha */
@@ -360,7 +360,8 @@
 /* Aba Otimizar: coluna lateral ao lado dos filtros; a barra de foco e os builds ocupam a largura toda */
 .pc-page.opt .pc-main, .pc-page.opt .ot { display: contents; }
 @media (min-width: 1101px) {
-  .pc-page.opt .pc-aside { grid-column: 1; grid-row: 1; }
+  .pc-page.opt .pc-aside { grid-column: 1; grid-row: 1; align-self: stretch; }
+  .pc-page.opt .pc-aside > :last-child { flex: 1; }
   .pc-page.opt .ot-top, .pc-page.opt .ot > .dz-panel, .pc-page.opt .ot > .ot-empty { grid-column: 2; grid-row: 1; }
   .pc-page.opt .ot-top { align-self: stretch; }
   .pc-page.opt .ot-bar, .pc-page.opt .ot-results { grid-column: 1 / -1; }
@@ -384,3 +385,17 @@
 .db-rows.buffs .n { color: var(--text); font-weight: 600; font-size: 14px; }
 .db-rows.buffs .top b { color: var(--gold-hi); font-size: 15px; }
 .db-rows.buffs small { color: var(--muted); font-size: 11px; line-height: 1.3; }
+
+/* Coluna do personagem compacta (aba Otimizar): arte baixa, constelação em botões, talentos em linha */
+.sc-art.compact .art { aspect-ratio: 4 / 2.6; }
+.sc-art.compact h2 { font-size: var(--fs-6); }
+.cons-row { display: flex; gap: var(--sp-1); }
+.cons-row button { flex: 1; min-height: var(--ctl-sm); padding: 0; border-radius: var(--r-chip); border: 1px solid #232d5c; background: #080c1d; color: var(--muted); font: 700 var(--fs-2) var(--font-display); cursor: pointer; }
+.cons-row button[aria-pressed="true"] { background: var(--gold); border-color: var(--gold); color: var(--on-gold); }
+.sc-talents.compact .circles { padding: 0; }
+.sc-talents.compact .ring { width: var(--ctl-lg); height: var(--ctl-lg); }
+.sc-talents.compact .ring input { width: 36px; font-size: var(--fs-5); }
+.ax-strip { display: flex; flex-direction: column; gap: var(--sp-2); align-items: flex-start; }
+.ax-chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+.ax-chips li { display: inline-flex; align-items: baseline; gap: var(--sp-2); padding: var(--sp-1) var(--sp-3); border-radius: var(--r-chip); background: #0e1430; border: 1px solid #232d5c; font-size: var(--fs-2); color: var(--text-2); }
+.ax-chips li b { color: var(--gold-hi); }

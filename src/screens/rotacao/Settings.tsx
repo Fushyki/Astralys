@@ -6,6 +6,7 @@ import { DEFAULT_REALIGN_STEP, MIN_REALIGN_STEP, lastActionTime } from '../../fe
 import { SAMPLE_ID, sampleForApp } from '../../features/rotation/persistence';
 import { useRotationStore } from '../../features/rotation/store';
 import { formatDecimal } from '../../ui/format';
+import { Button } from '../../design/Button';
 
 export function SettingsDialog({ project, onClose }: { project: RotationProject; onClose: () => void }) {
   const updateConfig = useRotationStore((s) => s.updateConfig);
@@ -37,9 +38,9 @@ export function SettingsDialog({ project, onClose }: { project: RotationProject;
           <div className="pc-form two">
             <NumberInput label="Duração da rotação" value={cfg.rotationDuration} min={0.5} step={0.5} suffix="s" onCommit={(v) => updateConfig({ rotationDuration: v })} />
             <div style={{ alignSelf: 'end' }}>
-              <button type="button" className="dz-link" disabled={last <= 0 || Math.abs(last - cfg.rotationDuration) < 0.005} onClick={() => updateConfig({ rotationDuration: last })}>
+              <Button variant="ghost" size="sm" disabled={last <= 0 || Math.abs(last - cfg.rotationDuration) < 0.005} onClick={() => updateConfig({ rotationDuration: last })}>
                 usar o fim do último golpe ({formatDecimal(last, 1)} s)
-              </button>
+              </Button>
             </div>
             <NumberInput label="Nível do inimigo" value={cfg.enemyLevel} min={1} max={200} step={1} onCommit={(v) => updateConfig({ enemyLevel: v })} />
             <NumberInput label="RES base do inimigo" value={Math.round(cfg.enemyBaseRes * 1000) / 10} step={1} suffix="%" onCommit={(v) => updateConfig({ enemyBaseRes: v / 100 })} />

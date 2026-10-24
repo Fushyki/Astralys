@@ -13,6 +13,7 @@ import { deltaChips } from '../../features/team/teamModel';
 import { useRotationStore } from '../../features/rotation/store';
 import { formatInt } from '../../ui/format';
 import { useDamageGroups } from './MainColumn';
+import { Button } from '../../design/Button';
 
 const SCOPE_TEXT = { self: 'só ele', team: 'o time todo', others: 'os aliados' } as const;
 const INFUSIONS = ['Pyro', 'Hydro', 'Electro', 'Cryo', 'Anemo', 'Geo', 'Dendro'] as const;
@@ -31,7 +32,7 @@ function Description({ text }: { text: string }) {
     <div className="tl-desc">
       <p data-clamp={long && !open}>{text}</p>
       {long && (
-        <button type="button" className="dz-link" onClick={() => setOpen(!open)}>{open ? 'Ler menos' : 'Ler tudo'}</button>
+        <Button variant="ghost" size="sm" onClick={() => setOpen(!open)}>{open ? 'Ler menos' : 'Ler tudo'}</Button>
       )}
     </div>
   );

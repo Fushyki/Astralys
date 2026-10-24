@@ -20,6 +20,7 @@ import { BuildStrip } from './BuildStrip';
 import { SubstatsPanel } from './LeftColumn';
 import { useDamageGroups } from './MainColumn';
 import type { ReactionChoice } from '../../engine';
+import { Button, ButtonLink } from '../../design/Button';
 
 type Crit = 'noCrit' | 'avg' | 'crit';
 const CRIT_OPTIONS: { value: Crit; label: string }[] = [
@@ -129,7 +130,7 @@ function SubstatStars({ v, index, bases, onGood }: { v: ProjectView; index: numb
         <h3>Substats · {used} rolls</h3>
         <span className="badge num" data-tone="gold">{manual ? 'À MÃO' : 'OTIMIZADO'}</span>
         <span className="legend">cada estrela = 1 roll · dourada = escolhida {manual ? 'por você' : 'pelo otimizador'}, apagada = mínimo obrigatório</span>
-        <button type="button" className="dz-link" aria-expanded={edit} onClick={() => setEdit(!edit)}>{edit ? 'Fechar edição' : 'Editar substats'}</button>
+        <Button variant="ghost" size="sm" aria-expanded={edit} onClick={() => setEdit(!edit)}>{edit ? 'Fechar edição' : 'Editar substats'}</Button>
       </header>
       <div className="cols">
         <div>{LEFT.map(row)}</div>
@@ -319,7 +320,7 @@ export function Dashboard({ v, index, onGood }: { v: ProjectView; index: number;
                 ))}
               </ul>
             )}
-            <Link className="dz-link" to={`/projeto/${v.id}`}>Ligar e desligar na Equipe</Link>
+            <ButtonLink variant="ghost" size="sm" to={`/projeto/${v.id}`}>Ligar e desligar na Equipe</ButtonLink>
           </Panel>
         </div>
       </div>

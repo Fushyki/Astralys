@@ -19,6 +19,7 @@ import { useRotationStore } from '../../features/rotation/store';
 import { EFFECT_STATUS_LABEL, effectCoverage, effectStatus, missingEffects } from '../../features/rotation/teamInfo';
 import type { LoadedData } from '../../features/rotation/data';
 import { formatDecimal, formatInt } from '../../ui/format';
+import { Button } from '../../design/Button';
 
 const SLOT_LABEL: Record<PieceSlot, string> = { flower: 'Flor', plume: 'Pena', sands: 'Areia', goblet: 'Cálice', circlet: 'Tiara' };
 const STAT_LABEL: Record<string, string> = {
@@ -55,7 +56,7 @@ function Passive({ text }: { text: string }) {
     <div className="pc-ptext">
       <p className={more ? '' : 'clamp'}>{text}</p>
       {text.length > 150 && (
-        <button type="button" className="dz-link" onClick={() => setMore((m) => !m)}>{more ? 'Mostrar menos' : 'Ler tudo'}</button>
+        <Button variant="ghost" size="sm" onClick={() => setMore((m) => !m)}>{more ? 'Mostrar menos' : 'Ler tudo'}</Button>
       )}
     </div>
   );

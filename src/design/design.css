@@ -39,15 +39,15 @@ body { font-family: var(--font-body); font-size: 15px; line-height: 1.5; -webkit
 @media (max-width: 720px) { .dz .h1 { font-size: 30px; } }
 
 /* ---- Botões e campos ---- */
-.dz-btn { font-family: var(--font-display); font-weight: 600; font-size: 15px; letter-spacing: .08em; text-transform: uppercase; padding: 10px 18px; border-radius: var(--radius-ctl); border: 1px solid var(--border-ctl-hi); background: #141b38; color: var(--text) !important; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: var(--control-h); cursor: pointer; }
+.dz-btn { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-3); letter-spacing: .08em; text-transform: uppercase; padding: 0 var(--sp-4); border-radius: var(--r-ctl); border: 1px solid var(--border-ctl-hi); background: #141b38; color: var(--text) !important; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: var(--sp-2); min-height: var(--ctl-md); cursor: pointer; box-sizing: border-box; }
 .dz-btn:hover { border-color: var(--gold); }
 .dz-btn.gold { background: var(--gold); color: var(--on-gold) !important; border-color: var(--gold); }
 .dz-btn.gold:hover { background: var(--gold-hi); }
-.dz-btn.sm { min-height: 36px; padding: 6px 12px; font-size: 13px; }
+.dz-btn.ghost { background: transparent; border-color: var(--border-ctl); color: var(--gold-hi) !important; }
+.dz-btn.ghost:hover:not(:disabled) { border-color: var(--gold); background: color-mix(in srgb, var(--gold) 12%, transparent); }
+.dz-btn.sm { min-height: var(--ctl-sm); padding: 0 var(--sp-3); font-size: var(--fs-2); }
+.dz-btn.lg { min-height: var(--ctl-lg); padding: 0 var(--sp-5); font-size: var(--fs-4); }
 .dz-btn:disabled { opacity: .4; cursor: not-allowed; }
-.dz-link { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 30px; padding: 3px 12px; border-radius: 8px; border: 1px solid var(--border-ctl); background: var(--bg-header); color: var(--gold-hi); font: 600 13px var(--font-body); text-decoration: none; cursor: pointer; vertical-align: middle; }
-.dz-link:hover:not(:disabled) { border-color: var(--gold); background: color-mix(in srgb, var(--gold) 12%, var(--bg-header)); }
-.dz-link:disabled { opacity: .4; cursor: not-allowed; }
 .dz-field { display: grid; gap: 4px; font-size: 13px; color: var(--muted); min-width: 0; }
 .dz-field input, .dz-field select, .dz-input { width: 100%; min-width: 0; min-height: var(--control-h); background: var(--bg-header); color: var(--text); border: 1px solid var(--border-ctl); border-radius: var(--radius-ctl); padding: 8px 12px; font: inherit; font-variant-numeric: tabular-nums; }
 .dz-field input:focus, .dz-field select:focus, .dz-input:focus { border-color: var(--gold); outline: none; }
@@ -198,8 +198,6 @@ body { font-family: var(--font-body); font-size: 15px; line-height: 1.5; -webkit
 
 /* Faixa do time (abaixo do cabeçalho): voltar, nome e as 3 telas do time. */
 .dz-subnav { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; padding: 8px var(--gutter); background: var(--surface); border-bottom: 1px solid var(--border); }
-.dz-subnav .back { color: var(--muted); text-decoration: none; font-size: 14px; white-space: nowrap; }
-.dz-subnav .back:hover { color: var(--gold-hi); }
 .dz-subnav .name { font-family: var(--font-display); font-weight: 700; font-size: 20px; max-width: 28ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .dz-subnav nav { display: flex; gap: 8px; flex: 1; flex-wrap: wrap; }
 .dz-subnav nav a { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; min-height: 40px; border-radius: 999px; border: 1px solid var(--border-ctl); background: var(--bg-header); color: var(--text-2); text-decoration: none; font-family: var(--font-display); font-weight: 600; font-size: 16px; letter-spacing: .04em; }
@@ -224,3 +222,14 @@ body { font-family: var(--font-body); font-size: 15px; line-height: 1.5; -webkit
 /* Diálogos de escolha: filtros e contagem na mesma linha, e mais altura para as grades */
 .dz-dialog .tools-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; }
 .dz-dialog.wide { height: min(780px, 92vh); max-height: 92vh; }
+
+/* ---- Painel com barra (guia visual v2): cabeçalho de 44 px, corpo e rodapé; blocos da mesma linha esticam juntos ---- */
+.dz-panel.bar { padding: 0; gap: 0; border-radius: var(--r-panel); background: #0c1128; border-color: #232d5c; height: 100%; box-sizing: border-box; }
+.dz-panel.fx-panel.bar { padding: 0; gap: 0; }
+.dz-panel.bar > .bar-head { display: flex; align-items: center; gap: var(--sp-2); min-height: var(--panel-head); padding: 0 var(--panel-pad); border-bottom: 1px solid #18204a; background: #0f1532; border-radius: var(--r-panel) var(--r-panel) 0 0; box-sizing: border-box; }
+.dz-panel.bar > .bar-head .h2 { margin: 0; flex: 1; min-width: 0; font-size: var(--fs-4); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #eef1ff; }
+.dz-panel.bar > .bar-head .bar-aside { display: inline-flex; align-items: center; gap: var(--sp-2); }
+.dz-panel.bar > .bar-body { display: flex; flex-direction: column; gap: var(--sp-3); padding: var(--panel-pad); flex: 1; min-height: 0; }
+.dz-panel.bar > .bar-foot { margin-top: auto; padding: 0 var(--panel-pad) var(--panel-pad); }
+.dz-badge { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-1); letter-spacing: .06em; text-transform: uppercase; border-radius: 5px; padding: 2px var(--sp-2); white-space: nowrap; background: #1a2450; color: var(--text-2); }
+.dz-badge.gold { background: #3a3016; color: var(--gold); }

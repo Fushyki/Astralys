@@ -91,9 +91,9 @@ export default function Personagem() {
 
       <main className={`pc-page${view === 'otimizar' ? ' opt' : ''}`}>
         <aside className="pc-aside">
-          <ArtCard character={character} memberRef={ref} index={index} color={v.colors[index]} level={v.project.config.characterLevel} eligible={eligible} />
-          <ConstellationCard character={character} memberRef={ref} index={index} />
-          <TalentsCard character={character} memberRef={ref} index={index} share={share} />
+          <ArtCard character={character} memberRef={ref} index={index} color={v.colors[index]} level={v.project.config.characterLevel} eligible={eligible} compact={view === 'otimizar'} />
+          <ConstellationCard character={character} memberRef={ref} index={index} compact={view === 'otimizar'} />
+          <TalentsCard character={character} memberRef={ref} index={index} share={share} compact={view === 'otimizar'} />
           {view === 'otimizar' && <AsideExtras v={v} index={index} />}
         </aside>
 

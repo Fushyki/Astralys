@@ -76,7 +76,7 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
   check('salvar o time o põe na lista', (await page.locator('.rc-saved').count()) === 1 && /Meu time/.test(await page.textContent('.rc-saved')));
   await page.click('.rc-card .rc-head .x >> nth=3'); await settle();
   check('remover um slot tira o cartão', (await page.locator('.rc-card').count()) === 3);
-  await page.click('.rc-saved .dz-link'); await settle();
+  await page.click('.rc-saved .dz-btn'); await settle();
   check('carregar o time salvo traz os 4 de volta', (await page.locator('.rc-card').count()) === 4);
   await page.reload({ waitUntil: 'networkidle' });
   check('o time salvo e o time atual sobrevivem ao recarregar', (await page.locator('.rc-saved').count()) === 1 && (await page.locator('.rc-card').count()) === 4);
@@ -90,7 +90,7 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
   const tmp = path.join(OUT, 'legacy-backup.json'); fs.writeFileSync(tmp, JSON.stringify(legacy));
   await page.setInputFiles('input[aria-label="Arquivo de backup"]', tmp); await settle();
   check('importar o backup da calculadora antiga adiciona o time', (await page.locator('.rc-saved').count()) === 2 && /importado/.test(await page.textContent('.dz-page')));
-  await page.click('.rc-saved:has-text("Antigo") .dz-link'); await settle();
+  await page.click('.rc-saved:has-text("Antigo") .dz-btn'); await settle();
   check('o time importado reproduz as mesmas recargas', (await page.$$eval('.rc-card .need .v', (v) => v.map((x) => x.textContent.trim()))).slice(1).join('|') === '202,2%|205,2%|185,7%');
 
   await page.setViewportSize({ width: 390, height: 900 }); await page.waitForTimeout(400);

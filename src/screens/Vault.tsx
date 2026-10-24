@@ -17,6 +17,7 @@ import { useSession } from '../online/session';
 import { summaryText, syncNow } from '../online/syncNow';
 import { NO_FILTERS, NO_PATCH, filterProjects, patchesOf, type VaultFilters } from '../features/vault/vaultModel';
 import './vault.css';
+import { Button } from '../design/Button';
 
 const ELEMENTS = ['Pyro', 'Hydro', 'Anemo', 'Electro', 'Dendro', 'Cryo', 'Geo'];
 
@@ -182,7 +183,7 @@ export default function Vault() {
             </select>
           )}
           <button type="button" className="dz-btn" aria-pressed={filters.favoritesOnly} onClick={() => set({ favoritesOnly: !filters.favoritesOnly })}>★ Favoritos</button>
-          {filtered && <button type="button" className="dz-link" onClick={() => setFilters(NO_FILTERS)}>Limpar filtros</button>}
+          {filtered && <Button variant="ghost" size="sm" onClick={() => setFilters(NO_FILTERS)}>Limpar filtros</Button>}
         </section>
 
         {visible.length === 0 ? (

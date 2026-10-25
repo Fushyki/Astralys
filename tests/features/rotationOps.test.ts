@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { tagsAt } from '../../src/engine';
+import { effectiveDuration, tagsAt } from '../../src/engine';
 import {
   addWindow, chainOf, insertAction, insertTime, makeChain, moveAction, reactionEveryN, rebuildChain, removeAction, removeChain,
   reorderActions, setWindowAnchor, setWindowMode, addExecution, dissolveChain,
@@ -73,6 +73,17 @@ describe('golpe contínuo', () => {
     const cid = p.actions.find((a) => a.chainId)!.chainId!;
     p = rebuildChain(p, cid, { start: 1, every: 2, until: 1 + 4 });
     expect(chainOf(p, cid).map((a) => a.time)).toEqual([1, 3]);
+  });
+
+  it('a rotação cresce com a duração escolhida para o contínuo', () => {
+    let p = empty();
+    p = insertAction(p, { member: 0, move: move('c') }, { mode: 'marker', gap: 0.4, marker: 1 });
+    p = makeChain(p, p.actions[0].id, { every: 2, until: 1 + 20 });
+    const cid = p.actions[0].chainId!;
+    expect(effectiveDuration(p)).toBe(21);
+    p = rebuildChain(p, cid, { start: 1, every: 2, until: 1 + 30 });
+    expect(effectiveDuration(p)).toBe(31);
+    expect(effectiveDuration(removeChain(p, cid))).toBe(0.5);
   });
 
   it('remover a última execução some com o grupo', () => {

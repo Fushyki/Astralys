@@ -647,10 +647,13 @@ export function gearSourceIds(m: MemberInput, i: number): string[] {
 /** Menor duração automática (s): evita dividir por zero quando só há um golpe em 0 s. */
 export const MIN_AUTO_DURATION = 0.5;
 
-/** Duração da rotação: a manual (Configurações, ou modo planilha) ou o instante do último golpe. */
-export function effectiveDuration(project: Pick<RotationProject, 'config' | 'actions' | 'compat'>): number {
+/** Duração da rotação: a manual (Configurações, ou modo planilha) ou o fim do último golpe (ou do golpe contínuo, o que for maior). */
+export function effectiveDuration(project: Pick<RotationProject, 'config' | 'actions' | 'compat'> & Partial<Pick<RotationProject, 'chains'>>): number {
   if (project.config.durationManual === true || project.compat === 'planilha') return project.config.rotationDuration;
-  const last = project.actions.reduce((m, a) => Math.max(m, a.time), 0);
+  let last = project.actions.reduce((m, a) => Math.max(m, a.time), 0);
+  // A linha cresce com a duração escolhida para o golpe contínuo (início + duração), mesmo que a última execução caia antes.
+  const live = new Set(project.actions.map((a) => a.chainId).filter(Boolean));
+  for (const [id, c] of Object.entries(project.chains ?? {})) if (live.has(id)) last = Math.max(last, c.until);
   return Math.max(MIN_AUTO_DURATION, Math.round(last * 100) / 100);
 }
 

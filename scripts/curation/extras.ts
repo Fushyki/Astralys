@@ -26,6 +26,7 @@ export const EXTRA_SPECIAL: Record<string, KitSpecialMove[]> = {
     { talent: 'burst', label: 'Convective Inhibition Ray Stellar-Conduct DMG', ...SC },
     { talent: 'burst', label: 'Convective Inhibition Ray Stellar Swirl DMG', ...SS },
   ],
+  Qiqi: [{ talent: 'burst', label: 'Stellar-Conduct DMG', ...SC }],
   Odette: [
     { talent: 'skill', label: "Coda at Dawn's Tolling Stellar-Conduct/Stellar Swirl DMG", variant: 0, ...SC },
     { talent: 'skill', label: "Coda at Dawn's Tolling Stellar-Conduct/Stellar Swirl DMG", variant: 1, ...SS },

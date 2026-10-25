@@ -5431,7 +5431,13 @@
     ],
     "procs": [],
     "factions": [],
-    "specialMoves": [],
+    "specialMoves": [
+      {
+        "reaction": "stellarconduct",
+        "talent": "burst",
+        "label": "Stellar-Conduct DMG"
+      }
+    ],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {

@@ -3,7 +3,7 @@
  * A lógica de edição está em projectOps.ts; aqui só se orquestra histórico e seleção.
  */
 import { create } from 'zustand';
-import type { ActionRef, MemberRef, RotationProject, Substat } from '../../engine';
+import { effectiveDuration, type ActionRef, type MemberRef, type RotationProject, type Substat } from '../../engine';
 import * as ops from './projectOps';
 import * as team from './teamOps';
 
@@ -21,6 +21,25 @@ export interface RotationState {
   playhead: number;
   /** Há alterações desde que o projeto foi aberto ou salvo. */
   dirty: boolean;
+  /** Painel "Golpes": como inserir (em ordem no fim ou no instante marcado) e o espaço entre golpes (s). Não entra no desfazer. */
+  insertMode: ops.InsertMode;
+  gap: number;
+  setInsertMode: (mode: ops.InsertMode) => void;
+  setGap: (gap: number) => void;
+  /** Insere um golpe pelo modo e espaço atuais; devolve o id. */
+  insertAction: (input: Omit<ops.NewAction, 'time'>) => string | null;
+  reorderActions: (from: number, to: number) => void;
+  removeActions: (ids: string[]) => void;
+  makeChain: (id: string, params: { every: number; until: number }) => void;
+  rebuildChain: (chainId: string, params: { start: number; every: number; until: number }) => void;
+  addExecution: (chainId: string) => void;
+  dissolveChain: (chainId: string) => void;
+  removeChain: (chainId: string) => void;
+  reactionEveryN: (chainId: string, n: number, reaction: ActionRef['reaction']) => void;
+  setWindowMode: (id: string, mode: ops.WindowMode) => void;
+  setWindowAnchor: (id: string, anchor: { actionId: string; delay: number }) => void;
+  setWindowLength: (id: string, length: number) => void;
+  duplicateWindow: (id: string) => void;
 
   open: (project: RotationProject) => void;
   markSaved: () => void;
@@ -88,13 +107,61 @@ export const useRotationStore = create<RotationState>((set, get) => {
     selectedMember: 0,
     playhead: 0,
     dirty: false,
+    insertMode: 'order',
+    gap: ops.DEFAULT_GAP,
 
-    open: (project) => set({ project, past: [], future: [], selectedActionId: null, selectedWindowId: null, selectedMember: 0, playhead: 0, dirty: false }),
+    open: (project) => set({ project, past: [], future: [], selectedActionId: null, selectedWindowId: null, selectedMember: 0, playhead: 0, dirty: false, insertMode: 'order' }),
     markSaved: () => set({ dirty: false }),
     select: (id) => set({ selectedActionId: id, ...(id ? { selectedWindowId: null } : {}) }),
     selectWindow: (id) => set({ selectedWindowId: id, ...(id ? { selectedActionId: null } : {}) }),
     selectMember: (index) => set({ selectedMember: index }),
     setPlayhead: (t) => set({ playhead: ops.clampTime(t) }),
+
+    setInsertMode: (insertMode) => set({ insertMode }),
+    setGap: (gap) => set({ gap: Number.isFinite(gap) ? Math.max(0.05, Math.round(gap * 100) / 100) : ops.DEFAULT_GAP }),
+    insertAction: (input) => {
+      const { project, insertMode, gap, playhead } = get();
+      if (!project) return null;
+      const next = ops.insertAction(project, input, { mode: insertMode, gap, marker: playhead });
+      const created = next.actions.find((a) => !project.actions.some((b) => b.id === a.id));
+      commit(next, created?.id ?? null);
+      return created?.id ?? null;
+    },
+    reorderActions: (from, to) => {
+      const { project, insertMode, gap } = get();
+      if (project) commit(ops.reorderActions(project, from, to, insertMode, gap));
+    },
+    removeActions: (ids) => {
+      const project = get().project;
+      if (!project || ids.length === 0) return;
+      let next = project;
+      for (const id of ids) next = ops.removeAction(next, id);
+      commit(next, ids.includes(get().selectedActionId ?? '') ? null : undefined);
+    },
+    makeChain: (id, params) => commit(get().project && ops.makeChain(get().project!, id, params)),
+    rebuildChain: (chainId, params) => commit(get().project && ops.rebuildChain(get().project!, chainId, params)),
+    addExecution: (chainId) => commit(get().project && ops.addExecution(get().project!, chainId)),
+    dissolveChain: (chainId) => commit(get().project && ops.dissolveChain(get().project!, chainId)),
+    removeChain: (chainId) => {
+      const project = get().project;
+      if (!project) return;
+      const ids = new Set(project.actions.filter((a) => a.chainId === chainId).map((a) => a.id));
+      commit(ops.removeChain(project, chainId), ids.has(get().selectedActionId ?? '') ? null : undefined);
+    },
+    reactionEveryN: (chainId, n, reaction) => commit(get().project && ops.reactionEveryN(get().project!, chainId, n, reaction)),
+    setWindowMode: (id, mode) => {
+      const project = get().project;
+      if (project) commit(ops.setWindowMode(project, id, mode, effectiveDuration(project)));
+    },
+    setWindowAnchor: (id, anchor) => commit(get().project && ops.setWindowAnchor(get().project!, id, anchor)),
+    setWindowLength: (id, length) => commit(get().project && ops.setWindowLength(get().project!, id, length)),
+    duplicateWindow: (id) => {
+      const project = get().project;
+      if (!project) return;
+      const { project: next, newId } = ops.duplicateWindow(project, id);
+      commit(next);
+      if (newId) set({ selectedWindowId: newId, selectedActionId: null });
+    },
 
     addAction: (input) => {
       const project = get().project;

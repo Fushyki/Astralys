@@ -58,14 +58,32 @@ export function updateAction(project: RotationProject, id: string, patch: Partia
     ...(patch.time !== undefined ? { time: clampTime(patch.time) } : {}),
     ...(patch.executions !== undefined ? { executions: Math.max(MIN_EXECUTIONS, patch.executions) } : {}),
   };
-  return touch({ ...project, actions: project.actions.map((a) => (a.id === id ? { ...a, ...next } : a)) });
+  const actions = project.actions.map((a) => (a.id === id ? { ...a, ...next } : a));
+  return touch({ ...project, actions, buffWindows: followAnchors(project.buffWindows, actions, new Set([id])) });
+}
+
+/** Janelas "Por golpe": começam `delay` s depois do golpe-gatilho e acompanham se ele mudar de lugar (a duração fica). */
+function followAnchors(windows: BuffWindow[], actions: ActionRef[], moved: Set<string>): BuffWindow[] {
+  return windows.map((w) => {
+    if (!w.anchor || !moved.has(w.anchor.actionId)) return w;
+    const trigger = actions.find((a) => a.id === w.anchor!.actionId);
+    if (!trigger) return w;
+    const start = clampTime(trigger.time + w.anchor.delay);
+    const len = Math.max(MIN_WINDOW, w.end - w.start);
+    return { ...w, start, end: clampTime(start + len) };
+  });
 }
 
 export const moveAction = (project: RotationProject, id: string, time: number) => updateAction(project, id, { time });
 
 export function removeAction(project: RotationProject, id: string): RotationProject {
-  if (!project.actions.some((a) => a.id === id)) return project;
-  return touch({ ...project, actions: project.actions.filter((a) => a.id !== id) });
+  const gone = project.actions.find((a) => a.id === id);
+  if (!gone) return project;
+  const actions = project.actions.filter((a) => a.id !== id);
+  const chains = { ...project.chains };
+  if (gone.chainId && !actions.some((a) => a.chainId === gone.chainId)) delete chains[gone.chainId];
+  const buffWindows = project.buffWindows.map((w) => (w.anchor?.actionId === id ? { ...w, anchor: undefined } : w));
+  return touch({ ...project, actions, chains, buffWindows });
 }
 
 /** Duplica uma ação logo depois dela (+0,5 s). Devolve o projeto e o id da cópia. */
@@ -73,7 +91,7 @@ export function duplicateAction(project: RotationProject, id: string): { project
   const src = project.actions.find((a) => a.id === id);
   if (!src) return { project, newId: null };
   const newId = nextActionId(project);
-  const copy: ActionRef = { ...src, id: newId, time: clampTime(src.time + 0.5), activeTags: [...src.activeTags] };
+  const copy: ActionRef = { ...src, id: newId, chainId: undefined, time: clampTime(src.time + 0.5), activeTags: [...src.activeTags] };
   return { project: touch({ ...project, actions: [...project.actions, copy] }), newId };
 }
 
@@ -305,4 +323,189 @@ export function setBuffEnabled(project: RotationProject, t: BuffToggle, enabled:
 /** Elemento padrão dos golpes sem elemento escolhido: pelo kit do jogo ou sempre o do personagem (como os projetos antigos). */
 export function setElementMode(project: RotationProject, elementMode: RotationProject['elementMode']): RotationProject {
   return project.elementMode === elementMode ? project : touch({ ...project, elementMode });
+}
+
+
+// ---------- Inserção de golpes (painel "Golpes") ----------
+
+/** Espaço padrão entre golpes inseridos (s). */
+export const DEFAULT_GAP = 0.4;
+export type InsertMode = 'order' | 'marker';
+
+/**
+ * Instante onde o próximo golpe de `member` entra.
+ * Em ordem: depois do último golpe, com o espaço. No instante marcado: o do marcador, empurrado para depois de um golpe
+ * do MESMO personagem que esteja a menos de `gap` dali (golpes nunca ficam sobrepostos).
+ */
+export function insertTime(project: RotationProject, opts: { mode: InsertMode; gap: number; marker: number; member: number }): number {
+  const gap = Math.max(0.05, opts.gap);
+  if (opts.mode === 'order') return project.actions.length === 0 ? 0 : clampTime(lastActionTime(project) + gap);
+  let t = clampTime(opts.marker);
+  for (let guard = 0; guard < 200; guard++) {
+    const clash = project.actions.find((a) => a.member === opts.member && Math.abs(a.time - t) < gap - 1e-9);
+    if (!clash) break;
+    t = clampTime(clash.time + gap);
+  }
+  return t;
+}
+
+/** Insere o golpe no instante calculado; no modo marcado ele entra na posição cronológica da lista. */
+export function insertAction(project: RotationProject, input: Omit<NewAction, 'time'>, opts: { mode: InsertMode; gap: number; marker: number }): RotationProject {
+  const time = insertTime(project, { ...opts, member: input.member });
+  const added = addAction(project, { ...input, time });
+  if (opts.mode === 'order') return added;
+  const created = added.actions[added.actions.length - 1];
+  const rest = added.actions.slice(0, -1);
+  let at = rest.length;
+  while (at > 0 && rest[at - 1].time > time) at--;
+  return { ...added, actions: [...rest.slice(0, at), created, ...rest.slice(at)] };
+}
+
+/** Move o golpe de posição na lista. Em ordem, os tempos são refeitos em sequência (com o espaço); no marcado, só a ordem muda. */
+export function reorderActions(project: RotationProject, from: number, to: number, mode: InsertMode, gap: number): RotationProject {
+  if (from === to || from < 0 || to < 0 || from >= project.actions.length || to >= project.actions.length) return project;
+  const list = [...project.actions];
+  const [item] = list.splice(from, 1);
+  list.splice(to, 0, item);
+  if (mode === 'marker') return touch({ ...project, actions: list });
+  const singles = list.filter((a) => !a.chainId);
+  if (singles.length === 0) return touch({ ...project, actions: list });
+  const first = Math.min(...project.actions.filter((a) => !a.chainId).map((a) => a.time));
+  const g = Math.max(0.05, gap);
+  const times = new Map(singles.map((a, i) => [a.id, clampTime(first + i * g)]));
+  const actions = list.map((a) => (times.has(a.id) ? { ...a, time: times.get(a.id)! } : a));
+  return touch({ ...project, actions, buffWindows: followAnchors(project.buffWindows, actions, new Set(times.keys())) });
+}
+
+// ---------- Golpe contínuo (grupo de execuções) ----------
+
+export function nextChainId(project: RotationProject): string {
+  const used = new Set([...Object.keys(project.chains), ...project.actions.map((a) => a.chainId).filter(Boolean)]);
+  for (let n = 1; ; n++) if (!used.has(`c${n}`)) return `c${n}`;
+}
+
+/** Instantes das execuções: de `start`, a cada `every`, até `until` (o fim não entra). Sempre pelo menos um. */
+export function chainTimes(start: number, every: number, until: number): number[] {
+  const step = Math.max(0.1, every);
+  const out: number[] = [];
+  for (let t = start; t < until - 1e-6 && out.length < 200; t += step) out.push(clampTime(t));
+  return out.length ? out : [clampTime(start)];
+}
+
+/** As execuções do grupo, em ordem de tempo. */
+export const chainOf = (project: RotationProject, chainId: string): ActionRef[] => project.actions.filter((a) => a.chainId === chainId).sort((a, b) => a.time - b.time);
+
+/** Transforma o golpe em contínuo: a ação original vira a 1ª execução e as outras são cópias, a cada `every` até `until`. */
+export function makeChain(project: RotationProject, id: string, params: { every: number; until: number }): RotationProject {
+  const src = project.actions.find((a) => a.id === id);
+  if (!src) return project;
+  const chainId = src.chainId ?? nextChainId(project);
+  return rebuildChain({ ...project, actions: project.actions.map((a) => (a.id === id ? { ...a, chainId } : a)) }, chainId, { start: src.time, ...params });
+}
+
+/** "Refazer pelo intervalo": recria as execuções a partir de Começa em / A cada / Até (a 1ª execução e a reação-base ficam). */
+export function rebuildChain(project: RotationProject, chainId: string, params: { start: number; every: number; until: number }): RotationProject {
+  const members = chainOf(project, chainId);
+  const head = members[0];
+  if (!head) return project;
+  const times = chainTimes(params.start, params.every, params.until);
+  let next: RotationProject = { ...project, actions: project.actions.filter((a) => a.chainId !== chainId || a.id === head.id) };
+  next = { ...next, actions: next.actions.map((a) => (a.id === head.id ? { ...a, time: times[0] } : a)) };
+  for (const t of times.slice(1)) {
+    next = { ...next, actions: [...next.actions, { ...head, id: nextActionId(next), time: t, activeTags: [...head.activeTags] }] };
+  }
+  return touch({ ...next, chains: { ...next.chains, [chainId]: { every: Math.max(0.1, params.every), until: params.until } } });
+}
+
+/** + Execução: uma nova execução depois da última (a cada `every`). */
+export function addExecution(project: RotationProject, chainId: string): RotationProject {
+  const list = chainOf(project, chainId);
+  const last = list[list.length - 1];
+  if (!last) return project;
+  const every = project.chains[chainId]?.every ?? DEFAULT_GAP;
+  const copy: ActionRef = { ...last, id: nextActionId(project), time: clampTime(last.time + every), activeTags: [...last.activeTags] };
+  const until = Math.max(project.chains[chainId]?.until ?? 0, copy.time + 0.01);
+  return touch({ ...project, actions: [...project.actions, copy], chains: { ...project.chains, [chainId]: { every, until } } });
+}
+
+/** Volta a ser golpe único: fica só a 1ª execução. */
+export function dissolveChain(project: RotationProject, chainId: string): RotationProject {
+  const list = chainOf(project, chainId);
+  if (list.length === 0) return project;
+  const keep = list[0].id;
+  const chains = { ...project.chains };
+  delete chains[chainId];
+  return touch({ ...project, chains, actions: project.actions.filter((a) => a.chainId !== chainId || a.id === keep).map((a) => (a.id === keep ? { ...a, chainId: undefined } : a)) });
+}
+
+/** Remove o golpe contínuo inteiro. */
+export function removeChain(project: RotationProject, chainId: string): RotationProject {
+  const ids = new Set(project.actions.filter((a) => a.chainId === chainId).map((a) => a.id));
+  if (ids.size === 0) return project;
+  const chains = { ...project.chains };
+  delete chains[chainId];
+  return touch({
+    ...project,
+    chains,
+    actions: project.actions.filter((a) => !ids.has(a.id)),
+    buffWindows: project.buffWindows.map((w) => (w.anchor && ids.has(w.anchor.actionId) ? { ...w, anchor: undefined } : w)),
+  });
+}
+
+/** "Reação em 1 de N": a reação vai a 1 execução a cada N, começando pela primeira; as demais ficam sem reação. */
+export function reactionEveryN(project: RotationProject, chainId: string, n: number, reaction: ActionRef['reaction']): RotationProject {
+  const step = Math.max(1, Math.round(n));
+  const order = new Map(chainOf(project, chainId).map((a, i) => [a.id, i]));
+  if (order.size === 0) return project;
+  return touch({ ...project, actions: project.actions.map((a) => (order.has(a.id) ? { ...a, reaction: order.get(a.id)! % step === 0 ? reaction : 'none' } : a)) });
+}
+
+// ---------- Janelas: rotação inteira / janela / por golpe ----------
+
+export type WindowMode = 'whole' | 'window' | 'anchor';
+
+export const windowMode = (w: BuffWindow): WindowMode => (w.whole ? 'whole' : w.anchor ? 'anchor' : 'window');
+
+export function setWindowMode(project: RotationProject, id: string, mode: WindowMode, duration: number): RotationProject {
+  const w = project.buffWindows.find((x) => x.id === id);
+  if (!w) return project;
+  let next: BuffWindow;
+  if (mode === 'whole') {
+    next = { ...w, whole: true, anchor: undefined, start: 0, end: Math.max(MIN_WINDOW, clampTime(duration)) };
+  } else if (mode === 'window') {
+    next = { ...w, whole: undefined, anchor: undefined };
+  } else {
+    const before = chronological(project).filter((a) => a.time <= w.start + 1e-9);
+    const trigger = before[before.length - 1] ?? chronological(project)[0];
+    if (!trigger) return project;
+    next = { ...w, whole: undefined, anchor: { actionId: trigger.id, delay: clampTime(Math.max(0, w.start - trigger.time)) } };
+  }
+  return touch({ ...project, buffWindows: project.buffWindows.map((x) => (x.id === id ? next : x)) });
+}
+
+/** "Começa depois de" + Atraso: ancora a janela a um golpe e a reposiciona (a duração fica). */
+export function setWindowAnchor(project: RotationProject, id: string, anchor: { actionId: string; delay: number }): RotationProject {
+  const w = project.buffWindows.find((x) => x.id === id);
+  const trigger = project.actions.find((a) => a.id === anchor.actionId);
+  if (!w || !trigger) return project;
+  const delay = Math.round(anchor.delay * 100) / 100;
+  const start = clampTime(trigger.time + delay);
+  const len = Math.max(MIN_WINDOW, w.end - w.start);
+  return touch({ ...project, buffWindows: project.buffWindows.map((x) => (x.id === id ? { ...x, whole: undefined, anchor: { actionId: anchor.actionId, delay }, start, end: clampTime(start + len) } : x)) });
+}
+
+/** Duração da janela: mexe no fim, mantendo o início. */
+export function setWindowLength(project: RotationProject, id: string, length: number): RotationProject {
+  const w = project.buffWindows.find((x) => x.id === id);
+  return w ? updateWindow(project, id, { end: w.start + Math.max(MIN_WINDOW, length) }) : project;
+}
+
+/** Duplica a janela logo depois dela (mesma duração, sem âncora). */
+export function duplicateWindow(project: RotationProject, id: string): { project: RotationProject; newId: string | null } {
+  const w = project.buffWindows.find((x) => x.id === id);
+  if (!w) return { project, newId: null };
+  const newId = nextWindowId(project);
+  const len = Math.max(MIN_WINDOW, w.end - w.start);
+  const copy: BuffWindow = { id: newId, tag: w.tag, start: clampTime(w.end), end: clampTime(w.end + len) };
+  return { project: touch({ ...project, buffWindows: [...project.buffWindows, copy] }), newId };
 }

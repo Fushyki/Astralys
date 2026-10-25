@@ -48,6 +48,7 @@ export function buildNewTeam(input: NewTeamInput, game: Pick<GameData, 'characte
     extras: [],
     actions: [],
     buffWindows: [],
+    chains: {},
     disabled: [],
     enabled: [],
     elementMode: 'kit',

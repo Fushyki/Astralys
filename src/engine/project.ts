@@ -130,6 +130,10 @@ export const BuffWindowSchema = z
     tag: z.string().min(1),
     start: z.number().min(0),
     end: z.number().min(0),
+    /** 'Rotação inteira': vale em qualquer instante, até onde a rotação for estendida. */
+    whole: z.boolean().optional(),
+    /** 'Por golpe': a janela começa `delay` s depois do golpe `actionId` e o acompanha se ele mudar de lugar. */
+    anchor: z.object({ actionId: z.string().min(1), delay: z.number() }).optional(),
   })
   .refine((w) => w.end > w.start, { message: 'O fim da janela deve ser depois do início.', path: ['end'] });
 export type BuffWindow = z.infer<typeof BuffWindowSchema>;
@@ -152,6 +156,8 @@ export const ActionSchema = z.object({
   /** 'manual': usa `activeTags` (perfis da planilha). 'windows': as etiquetas vêm das janelas de buff, pelo `time`. */
   tagSource: z.enum(['manual', 'windows']).default('manual'),
   dmgAdjust: z.number().default(0),
+  /** Golpe contínuo: as execuções com o mesmo `chainId` são irmãs (cada uma é uma ação com instante e reação próprios). */
+  chainId: z.string().optional(),
   /** Instante da rotação, em segundos. */
   time: z.number().min(0),
   note: z.string().optional(),
@@ -178,6 +184,8 @@ export const RotationProjectSchema = z
     actions: z.array(ActionSchema).default([]),
     /** Janelas de buff no tempo; dão as etiquetas das ações com `tagSource: 'windows'`. */
     buffWindows: z.array(BuffWindowSchema).default([]),
+    /** Golpes contínuos: intervalo e fim com que cada grupo (`ActionRef.chainId`) foi criado. */
+    chains: z.record(z.object({ every: z.number().positive(), until: z.number().min(0) })).default({}),
     /** Ids de buffs/fontes desligados pelo usuário (checkbox em "Buffs recebidos"). */
     disabled: z.array(z.string()).default([]),
     /** Buffs de arma/set que o usuário ligou em membros com `gearManual` (os demais começam desligados). */
@@ -251,7 +259,7 @@ export const parseProject = (raw: unknown): RotationProject => RotationProjectSc
 /** Etiquetas ativas no instante `t`: as das janelas que o cobrem. Resultado ordenado e sem repetição. */
 export function tagsAt(windows: readonly BuffWindow[], t: number): string[] {
   const tags = new Set<string>();
-  for (const w of windows) if (t >= w.start && t < w.end) tags.add(w.tag);
+  for (const w of windows) if (w.whole || (t >= w.start && t < w.end)) tags.add(w.tag);
   return [...tags].sort();
 }
 

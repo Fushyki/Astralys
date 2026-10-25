@@ -301,6 +301,7 @@ export function projectFromPlanilha(imported: PlanilhaImport, options: ProjectFr
       note: a.note,
     })),
     buffWindows: [],
+    chains: {},
     disabled: [],
     enabled: [],
     elementMode: 'personagem',

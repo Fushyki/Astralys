@@ -86,6 +86,14 @@ describe('golpe contínuo', () => {
     expect(effectiveDuration(removeChain(p, cid))).toBe(0.5);
   });
 
+  it('com duração manual ou modo planilha, o contínuo também estica a rotação', () => {
+    let p = { ...sampleProject(), actions: [] as ReturnType<typeof sampleProject>['actions'], buffWindows: [], chains: {} };
+    expect(p.compat).toBe('planilha');
+    p = insertAction(p, { member: 0, move: move('c') }, { mode: 'marker', gap: 0.4, marker: 1 });
+    p = makeChain(p, p.actions[0].id, { every: 2, until: 26 });
+    expect(effectiveDuration(p)).toBe(26);
+  });
+
   it('remover a última execução some com o grupo', () => {
     let p = empty();
     p = insertAction(p, { member: 0, move: move('c') }, { mode: 'order', gap: 0.4, marker: 0 });

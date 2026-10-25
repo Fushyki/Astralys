@@ -65,6 +65,13 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
   const familyColor = familyOf(special) ? FAMILY_COLOR[familyOf(special)!] : undefined;
   const hitsEach = action.executions;
 
+  /** Mudou início, intervalo ou duração: as execuções são refeitas na hora (a duração estica a rotação). */
+  const redo = (patch: { start?: number; every?: number; length?: number }) => {
+    if (!chainId) return;
+    const s = patch.start ?? start;
+    st().rebuildChain(chainId, { start: s, every: patch.every ?? every, until: s + (patch.length ?? length) });
+  };
+
   const setAll = (patch: Partial<ActionRef>) => execs.forEach((e) => update(e.id, patch));
 
   return (
@@ -78,9 +85,9 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
       {chainId ? (
         <>
           <div className="rt-three">
-            <Num label="Começa em" value={start} unit="s" onCommit={setStart} min={0} />
-            <Num label="A cada" value={every} unit="s" className="gold" onCommit={setEvery} min={0.1} />
-            <Num label="Duração" value={length} unit="s" onCommit={setLength} min={0.1} />
+            <Num label="Começa em" value={start} unit="s" onCommit={(n) => { setStart(n); redo({ start: n }); }} min={0} />
+            <Num label="A cada" value={every} unit="s" className="gold" onCommit={(n) => { setEvery(n); redo({ every: n }); }} min={0.1} />
+            <Num label="Duração" value={length} unit="s" onCommit={(n) => { setLength(n); redo({ length: n }); }} min={0.1} />
           </div>
           <div className="rt-two">
             <Num label="Hits por vez" value={hitsEach} digits={0} onCommit={(n) => setAll({ executions: Math.max(1, Math.round(n)) })} min={1} />

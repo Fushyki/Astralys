@@ -100,6 +100,17 @@ export function Charts({ v }: { v: ProjectView }) {
             </div>
           ))}
         </div>
+        <div>
+          <span className="rt-lbl">Por tipo de dano</span>
+          {v.summary.sources.map((src) => (
+            <div className="rt-split" key={src.key} data-testid={`source-${src.key}`}>
+              <span className="dot" style={{ background: src.key === 'lunar' ? 'var(--dmg-lunar)' : src.key === 'stellar' ? 'var(--dmg-stellar)' : src.color }} />
+              <span>{src.label}</span>
+              <span className="num" style={{ color: '#a7b0d6' }}>{formatInt(src.fraction * total)}</span>
+              <span className="num p">{formatPercent(src.fraction)}</span>
+            </div>
+          ))}
+        </div>
         {note && <span className="rt-note" style={{ marginTop: 'auto' }}>{note}</span>}
       </Panel>
     </section>

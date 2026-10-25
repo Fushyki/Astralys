@@ -163,8 +163,9 @@ const num = (s) => Number(String(s).replace(/\./g, '').replace(',', '.'));
 
   // ---- Gráficos ----
   check('o gráfico tem 6 pontos numerados e legenda', (await page.locator('.rt-mark').count()) === 6 && (await page.locator('.rt-legend > span').count()) === 6);
-  check('a divisão do dano lista os 4 personagens e a frase Hipercarry', (await page.locator('.rt-split').count()) === 4 && /Hipercarry: Mavuika/.test(await panel('Divisão do dano').textContent()));
+  check('a divisão do dano lista os 4 personagens e a frase Hipercarry', (await page.locator('.rt-split:not([data-testid])').count()) === 4 && /Hipercarry: Mavuika/.test(await panel('Divisão do dano').textContent()));
 
+  check('"Por tipo de dano" lista de onde vem o dano (Supremo, Habilidade…)', (await panel('Divisão do dano').locator('[data-testid^="source-"]').count()) >= 3);
   // ---- Configurações ----
   await page.click('button:has-text("Configurações")');
   const dlg = page.locator('.rt-dialog');

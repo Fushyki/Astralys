@@ -40,6 +40,18 @@ export function Timeline({ v, lanes }: { v: ProjectView; lanes: LaneInfo[] }) {
   const dragRef = useRef<Drag | null>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
+  const lowRef = useRef<HTMLDivElement>(null);
+  const [scroll, setScroll] = useState({ left: 0, max: 0 });
+  const measure = (el: HTMLDivElement) => setScroll({ left: Math.round(el.scrollLeft), max: Math.max(0, el.scrollWidth - el.clientWidth) });
+  const syncFromTop = (e: React.UIEvent<HTMLDivElement>) => {
+    if (lowRef.current) lowRef.current.scrollLeft = e.currentTarget.scrollLeft;
+    measure(e.currentTarget);
+  };
+  const scrollTo = (x: number) => { if (wrapRef.current) wrapRef.current.scrollLeft = x; };
+  const wheelLow = (e: React.WheelEvent<HTMLDivElement>) => {
+    const amount = e.deltaX || (e.shiftKey ? e.deltaY : 0);
+    if (amount && wrapRef.current) wrapRef.current.scrollLeft += amount;
+  };
   const [wrapW, setWrapW] = useState(800);
 
   const selectedActionId = useRotationStore((s) => s.selectedActionId);
@@ -52,7 +64,7 @@ export function Timeline({ v, lanes }: { v: ProjectView; lanes: LaneInfo[] }) {
   useEffect(() => {
     const el = wrapRef.current;
     if (!el) return;
-    const ro = new ResizeObserver(() => setWrapW(el.clientWidth));
+    const ro = new ResizeObserver(() => { setWrapW(el.clientWidth); measure(el); });
     ro.observe(el);
     setWrapW(el.clientWidth);
     return () => ro.disconnect();
@@ -65,6 +77,7 @@ export function Timeline({ v, lanes }: { v: ProjectView; lanes: LaneInfo[] }) {
   const labelW = 200;
   const fitW = Math.max(300, wrapW - labelW);
   const trackW = zoom === 'fit' ? fitW : Math.max(fitW, tmax * PX_PER_S * (zoom === '2' ? 2 : 1));
+  useEffect(() => { if (wrapRef.current) measure(wrapRef.current); }, [trackW, wrapW]); // eslint-disable-line react-hooks/exhaustive-deps
   const x = (t: number) => (t / tmax) * 100;
   const byId = useMemo(() => new Map(results.map((r) => [r.action.id, r])), [results]);
   const maxAvg = useMemo(() => results.reduce((m, r) => Math.max(m, r.avg), 0), [results]);
@@ -149,7 +162,7 @@ export function Timeline({ v, lanes }: { v: ProjectView; lanes: LaneInfo[] }) {
 
   return (
     <Panel bar title="Linha do tempo" aside={<Seg label="Zoom" value={zoom} onChange={setZoom} options={[{ value: 'fit', label: 'Ajustar' }, { value: '1', label: '1×' }, { value: '2', label: '2×' }]} />} className="rt-p0">
-      <div className="rt-zoomscroll" ref={wrapRef}>
+      <div className="rt-zoomscroll" ref={wrapRef} onScroll={syncFromTop}>
         <div className="rt-tlw" style={{ width: labelW + trackW }}>
           {/* Tempo */}
           <div className="rt-lane ruler" style={{ gridTemplateColumns: `${labelW}px ${trackW}px` }}>
@@ -247,14 +260,32 @@ export function Timeline({ v, lanes }: { v: ProjectView; lanes: LaneInfo[] }) {
             );
           })}
 
+        </div>
+      </div>
+      {scroll.max > 0 && (
+        <input
+          type="range"
+          className="rt-hscroll"
+          aria-label="Rolar a linha do tempo na horizontal"
+          min={0}
+          max={scroll.max}
+          step={1}
+          value={Math.min(scroll.left, scroll.max)}
+          style={{ ['--p' as string]: `${(Math.min(scroll.left, scroll.max) / scroll.max) * 100}%` }}
+          onChange={(e) => scrollTo(Number(e.target.value))}
+        />
+      )}
+      {/* A barra de rolagem fica aqui, logo acima de "Buffs no time"; a parte de baixo anda junto com ela. */}
+      <div className="rt-zoomscroll rt-zoomlow" ref={lowRef} onWheel={wheelLow}>
+        <div className="rt-tlw" style={{ width: labelW + trackW }}>
           {/* Buffs no time */}
-          <div className="rt-sect">
+          <div className="rt-sect rt-stick" style={{ width: wrapW }}>
             <span className="rt-lbl">Buffs no time</span>
             <Seg label="Buffs" value={buffMode} onChange={setBuffMode} options={[{ value: 'group', label: 'Agrupar por quem dá' }, { value: 'active', label: 'Só os ativos' }]} />
           </div>
           {groups.map((g) => (
             <div key={g.name}>
-              <div className="rt-giver">
+              <div className="rt-giver rt-stick" style={{ width: wrapW }}>
                 <span className="dot" style={{ background: g.giver !== null ? v.colors[g.giver] : GOLD }} />
                 <span className="nm">{g.name}</span>
                 <span className="ct num">{g.lanes.length} {g.lanes.length === 1 ? 'buff' : 'buffs'}</span>
@@ -312,8 +343,8 @@ export function Timeline({ v, lanes }: { v: ProjectView; lanes: LaneInfo[] }) {
               })}
             </div>
           ))}
-          {groups.length === 0 && <p className="rt-empty">Nenhum buff {buffMode === 'active' ? 'ativo' : 'de time'} nesta equipe.</p>}
-          <div className="rt-help">Arraste golpes e pontas das barras · Shift + setas move 0,5 s · Delete apaga o item selecionado.</div>
+          {groups.length === 0 && <p className="rt-empty rt-stick" style={{ width: wrapW }}>Nenhum buff {buffMode === 'active' ? 'ativo' : 'de time'} nesta equipe.</p>}
+          <div className="rt-help rt-stick" style={{ width: wrapW }}>Arraste golpes e pontas das barras · Shift + setas move 0,5 s · Delete apaga o item selecionado.</div>
         </div>
       </div>
     </Panel>

@@ -111,6 +111,16 @@ const num = (s) => Number(String(s).replace(/\./g, '').replace(',', '.'));
   await sel.locator('button:has-text("Remover golpe")').click(); await settle();
   check('"Remover golpe" apaga o contínuo inteiro', (await hits()).length === 24 && (await page.locator('.rt-diamond').count()) === 0);
 
+  // ---- Rolagem lateral ----
+  await page.click('.rt-seg button:has-text("2×")'); await settle();
+  const sb = await page.locator('.rt-hscroll').boundingBox();
+  const bh = await page.locator('.rt-sect').boundingBox();
+  check('a barra de rolagem lateral fica logo acima de "Buffs no time"', !!sb && !!bh && sb.y < bh.y && bh.y - (sb.y + sb.height) < 8, `${sb && Math.round(sb.y)} / ${bh && Math.round(bh.y)}`);
+  await page.locator('.rt-hscroll').fill('300'); await settle();
+  const lefts = await page.$$eval('.rt-zoomscroll', (e) => e.map((x) => Math.round(x.scrollLeft)));
+  check('a rolagem move as faixas de cima e os buffs juntos', lefts.length === 2 && lefts[0] === 300 && lefts[1] === 300, lefts.join('/'));
+  await page.click('.rt-seg button:has-text("1×")'); await settle();
+
   // ---- Janela de buff ----
   await page.locator('.rt-bar >> nth=0').click(); await settle();
   const bp = panel('Buff selecionado');

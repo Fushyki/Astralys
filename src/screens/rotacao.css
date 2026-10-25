@@ -187,3 +187,16 @@
 .rt-grid > .rt-moves { height: 0; min-height: 100%; }
 .rt-grid > .rt-moves > .bar-body { min-height: 0; overflow: hidden; }
 @media (max-width: 1280px) { .rt-grid > .rt-moves { height: auto; min-height: 0; max-height: 640px; } }
+/* Rolagem horizontal: a barra aparece no bloco de cima (acima de "Buffs no time"); a parte de baixo só acompanha. */
+.rt-zoomlow { overflow-x: hidden; }
+.rt-stick { position: sticky; left: 0; box-sizing: border-box; }
+/* barra de rolagem própria (sempre visível, acima de "Buffs no time"); a nativa fica escondida */
+.rt-zoomscroll { scrollbar-width: none; }
+.rt-zoomscroll::-webkit-scrollbar { display: none; }
+.rt-hscroll { -webkit-appearance: none; appearance: none; display: block; width: 100%; height: 14px; margin: 0; padding: 0 var(--sp-3); box-sizing: border-box; background: transparent; cursor: pointer; border-top: 1px solid #18204a; }
+.rt-hscroll::-webkit-slider-runnable-track { height: 6px; border-radius: 3px; background: linear-gradient(90deg, #2a356a var(--p), #121a3a var(--p)); }
+.rt-hscroll::-webkit-slider-thumb { -webkit-appearance: none; width: 28px; height: 10px; margin-top: -2px; border-radius: 5px; background: var(--gold); border: 0; }
+.rt-hscroll::-moz-range-track { height: 6px; border-radius: 3px; background: #121a3a; }
+.rt-hscroll::-moz-range-progress { height: 6px; border-radius: 3px; background: #2a356a; }
+.rt-hscroll::-moz-range-thumb { width: 28px; height: 10px; border-radius: 5px; background: var(--gold); border: 0; }
+.rt-hscroll:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }

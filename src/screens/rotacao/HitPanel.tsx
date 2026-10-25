@@ -148,12 +148,12 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
                   {result.contributors.map((c) => (
                     <div className="r" key={c.member}>
                       <span>{project.members[c.member]?.character}</span>
-                      <span className="num">{formatInt(c.avg)} × {Math.round(c.weight * 100)}%</span>
+                      <span className="num">{formatInt(c.avg)} × {c.weight === 1 ? '100%' : c.weight === 0.5 ? '1/2' : '1/12'}</span>
                     </div>
                   ))}
                 </div>
               )}
-              <span className="rt-note">O dano é 60% do maior valor + 30% do 2º + 5% + 5%, cada um com a Maestria e o crítico dele. A ação conta para {memberLabel}.</span>
+              <span className="rt-note">O dano é o maior valor inteiro + metade do 2º + 1/12 do 3º + 1/12 do 4º, cada um com a Maestria e o crítico dele. A ação conta para {memberLabel}.</span>
             </div>
           )}
           <Sel label="Elemento do dano" value={(action.element ?? '') as (typeof ELEMENTS)[number]} options={ELEMENTS.map((e) => ({ value: e, label: ELEMENT_LABEL[e] }))} onChange={(e) => update(action.id, { element: e === '' ? undefined : e })} />

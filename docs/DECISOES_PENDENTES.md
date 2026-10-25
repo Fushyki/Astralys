@@ -103,7 +103,7 @@ Lunar e Estelar não são elemento: usam outra fórmula. Em toda lista de golpes
 - Etapa "3 · Dano do time" removida; `/time` redireciona para a Rotação.
 
 ## 81. Dano de reação Lunar/Estelar com contribuintes (regra passada pelo Davi, 25/10/2026)
-- Lunar-Charged, Lunar-Crystallize e Stellar-Swirl (reação do time): cada contribuinte (quem aplicou os elementos) vale Coef × nível × (1+BaseDMG%) × (1+6·EM/(EM+2000)+Lunar%) × RES × crítico, com o EM e o crítico DELE; ordenados do maior para o menor, o total é 60% do 1º + 30% do 2º + 5% + 5%. Ausente = peso descartado. Com um contribuinte: 0,6 × coeficiente (1,8 no LC). Multiplicado pelos procs (campo Hits/Procs).
+- Lunar-Charged, Lunar-Crystallize e Stellar-Swirl (reação do time): cada contribuinte (quem aplicou os elementos) vale Coef × nível × (1+BaseDMG%) × (1+6·EM/(EM+2000)+Lunar%) × RES × crítico, com o EM e o crítico DELE; ordenados do maior para o menor, o total é 100% do 1º + 1/2 do 2º + 1/12 + 1/12 (mesma proporção do 60/30/5/5 do texto original, mas o maior vale inteiro; corrigido pelo Davi). Ausente = peso descartado. Com um contribuinte: o coeficiente cheio (3 no LC). Multiplicado pelos procs (campo Hits/Procs).
 - `ActionRef.contributors` (membros, até 4; sem lista = só o dono). A ação conta para o membro dono (`action.member`), não é repartida entre os contribuintes.
-- Mudança de resultado: reações Lunar/Estelar postas na rotação ou na tabela de reações antes valiam o coeficiente cheio (peso 1); agora 0,6 com um contribuinte.
+- Um contribuinte mantém o resultado antigo (coeficiente cheio); os demais somam 1/2, 1/12 e 1/12.
 - Não modelado: quantos procs cada rotação gera (LC ≈ tempo com a nuvem ativa ÷ 2; LCrys = reações ÷ 3), dano das reações Lunar-Bloom/Stellar-Conduct (não têm dano de reação) e a escolha automática dos contribuintes.

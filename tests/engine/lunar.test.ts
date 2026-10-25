@@ -91,11 +91,11 @@ describe('distinção Lunar/Estelar nas listas de golpes', () => {
   });
 });
 
-describe('reação Lunar de time: contribuintes 60/30/5/5', () => {
+describe('reação Lunar de time: contribuintes 1, 1/2, 1/12, 1/12', () => {
   const team = [{ character: 'Flins' }, { character: 'Ineffa' }, { character: 'Columbina' }];
   const one = (c?: number[]) => run(team, [{ talent: 'reaction', label: 'lunarcharged', ...(c ? { contributors: c } : {}) }]).result.actions[0];
 
-  it('um contribuinte vale 60% do coeficiente (1,8 no Lunar-Charged)', () => {
+  it('um contribuinte vale o coeficiente cheio (3 no Lunar-Charged)', () => {
     const a = one();
     const { r } = run(team, [{ talent: 'reaction', label: 'lunarcharged' }]);
     const s = a.stats;
@@ -105,25 +105,25 @@ describe('reação Lunar de time: contribuintes 60/30/5/5', () => {
       bonuses: { dmgBonus: rb('lunarcharged'), baseDmgBonus: rb('lunarchargedBase'), specialDmgBonus: rb('lunarchargedSpecial'), flatDamage: rb('lunarchargedFlat') },
       enemy: { level: r.team.config.enemyLevel, res: run(team, []).assembly.enemyRes, defRed: 0 },
     });
-    expect(a.noCrit).toBeCloseTo(direct.total * 0.6, 4);
+    expect(a.noCrit).toBeCloseTo(direct.total, 4);
     expect(a.contributors).toHaveLength(1);
-    expect(a.contributors![0].avg).toBeCloseTo(a.avg / 0.6, 6);
-    expect(a.contributors![0].weight).toBe(0.6);
+    expect(a.contributors![0].avg).toBeCloseTo(a.avg, 6);
+    expect(a.contributors![0].weight).toBe(1);
   });
 
-  it('dois contribuintes: 60% do maior valor + 30% do outro (ordenados pelo valor, não pela ordem da equipe)', () => {
+  it('dois contribuintes: o maior valor + 1/2 do outro (ordenados pelo valor, não pela ordem da equipe)', () => {
     const solo0 = one([0]).contributors![0].avg; // valor cheio do Flins
     const solo1 = one([1]).contributors![0].avg; // valor cheio da Ineffa
     const both = one([0, 1]);
     const [hi, lo] = [Math.max(solo0, solo1), Math.min(solo0, solo1)];
-    expect(both.avg).toBeCloseTo(hi * 0.6 + lo * 0.3, 3);
-    expect(both.contributors!.map((c) => c.weight)).toEqual([0.6, 0.3]);
+    expect(both.avg).toBeCloseTo(hi + lo / 2, 3);
+    expect(both.contributors!.map((c) => c.weight)).toEqual([1, 1 / 2]);
     expect(both.contributors![0].avg).toBeGreaterThanOrEqual(both.contributors![1].avg);
   });
 
   it('o contribuinte ausente descarta o peso (os outros não são reescalonados) e o total soma por proc', () => {
     const three = one([0, 1, 2]);
-    expect(three.contributors!.map((c) => c.weight)).toEqual([0.6, 0.3, 0.05]);
+    expect(three.contributors!.map((c) => c.weight)).toEqual([1, 1 / 2, 1 / 12]);
     const twice = run(team, [{ talent: 'reaction', label: 'lunarcharged', contributors: [0, 1] }]);
     expect(twice.result.actions[0].avg).toBeCloseTo(one([0, 1]).avg, 6);
   });

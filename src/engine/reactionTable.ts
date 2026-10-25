@@ -1,10 +1,10 @@
 /**
  * Dano das reações em si (transformativas, Lunares e Estelares) para um personagem, com a Maestria Elemental do build.
  * Complementa a tabela de dano dos golpes. Os bônus de dano de reação do personagem (sets, armas, passivas) entram nas
- * transformativas clássicas (`reactionBonus`); as Lunares e Estelares saem sem bônus e sem crítico, com UM contribuinte (60% do coeficiente: 1,8 no Lunar-Charged).
+ * transformativas clássicas (`reactionBonus`); as Lunares e Estelares saem sem bônus e sem crítico, com UM contribuinte (o coeficiente cheio: 3 no Lunar-Charged).
  */
 import type { Element } from '../data/schema';
-import { CONTRIBUTOR_WEIGHTS, TRANSFORMATIVE, type ElementOrPhysical, type TransformativeReaction } from './constants/reactions';
+import { TRANSFORMATIVE, type ElementOrPhysical, type TransformativeReaction } from './constants/reactions';
 import type { EnemyStats } from './damage';
 import type { ReactionBonusKey } from './stats';
 import { computeLunarReaction, computeStellarSwirlReaction, computeTransformative } from './reactions';
@@ -43,11 +43,11 @@ export function reactionTable({ characterLevel, em, enemy, reactionBonus = {} }:
   }
 
   const common = { characterLevel, em, critRate: 0, critDmg: 0, critMode: 'hit' as const, enemy };
-  rows.push({ id: 'lunarcharged', name: 'Lunar-Carregado', group: 'lunar', element: 'Electro', total: computeLunarReaction('lunarcharged', common).total * CONTRIBUTOR_WEIGHTS[0] });
-  rows.push({ id: 'lunarcrystallize', name: 'Lunar-Cristalizar', group: 'lunar', element: 'Geo', total: computeLunarReaction('lunarcrystallize', common).total * CONTRIBUTOR_WEIGHTS[0] });
+  rows.push({ id: 'lunarcharged', name: 'Lunar-Carregado', group: 'lunar', element: 'Electro', total: computeLunarReaction('lunarcharged', common).total });
+  rows.push({ id: 'lunarcrystallize', name: 'Lunar-Cristalizar', group: 'lunar', element: 'Geo', total: computeLunarReaction('lunarcrystallize', common).total });
   for (const element of SWIRL_ELEMENTS) {
     for (const vortex of ['vortex1', 'vortex2'] as const) {
-      const total = computeStellarSwirlReaction({ ...common, resistElement: element }, vortex).total * CONTRIBUTOR_WEIGHTS[0];
+      const total = computeStellarSwirlReaction({ ...common, resistElement: element }, vortex).total;
       rows.push({ id: `stellarswirl-${element}-${vortex}`, name: `Redemoinho Estelar ${element} (vórtice ${vortex === 'vortex1' ? 1 : 2})`, group: 'stellar', element, total });
     }
   }

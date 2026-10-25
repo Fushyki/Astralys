@@ -2,7 +2,7 @@
  * Operações puras sobre o projeto (sem React, sem estado). Sempre devolvem um projeto NOVO; nunca mutam.
  * O estado (Zustand) só orquestra histórico e persistência em cima disto.
  */
-import type { ActionRef, BuffWindow, MoveRef, RotationProject } from '../../engine';
+import { effectiveDuration, type ActionRef, type BuffWindow, type MoveRef, type RotationProject } from '../../engine';
 
 const MIN_EXECUTIONS = 1;
 
@@ -268,7 +268,18 @@ export function updateConfig(project: RotationProject, patch: Partial<Config>): 
   if (num(patch.enemyDefRed)) next.enemyDefRed = Math.min(0.9, Math.max(0, Math.round(patch.enemyDefRed * 1000) / 1000));
   if (num(patch.minRollsPerSubstat)) next.minRollsPerSubstat = Math.min(6, Math.max(0, Math.round(patch.minRollsPerSubstat)));
   if (JSON.stringify(next) === JSON.stringify(project.config)) return project;
-  return touch({ ...project, config: next });
+  let out = touch({ ...project, config: next });
+  // A duração escolhida manda: golpe contínuo que passa dela é cortado nela, e o que ia até o fim da rotação acompanha.
+  if (next.rotationDuration !== project.config.rotationDuration && next.durationManual) {
+    const was = effectiveDuration(project);
+    const target = next.rotationDuration;
+    for (const [id, c] of Object.entries(project.chains)) {
+      const head = chainOf(out, id)[0];
+      if (!head || !(c.until > target + 1e-9 || Math.abs(c.until - was) < 1e-9)) continue;
+      out = rebuildChain(out, id, { start: head.time, every: c.every, until: Math.max(target, head.time + 0.01) });
+    }
+  }
+  return out;
 }
 
 

@@ -110,7 +110,7 @@ export interface ActionResult {
   noCrit: number;
   crit: number;
   avg: number;
-  /** Reação de time: o valor de cada contribuinte (média) e o peso que ele teve (60/30/5/5, do maior para o menor). */
+  /** Reação de time: o valor de cada contribuinte (média) e o peso que ele teve (pesos 1, 1/2, 1/12, 1/12, do maior para o menor). */
   contributors?: { member: number; avg: number; weight: number }[];
 }
 
@@ -288,7 +288,7 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
       const r = reactionAction({ move, executions: action.executions, ownElement: member.character.element, stats, scale, characterLevel: config.characterLevel, enemy });
       const hit = move.reactionHit;
       if (hit && (hit.kind === 'lunar' || hit.kind === 'stellarswirl')) {
-        // Reação do time: cada contribuinte vale por si (EM e crítico próprios) e o total é a soma ponderada 60/30/5/5.
+        // Reação do time: cada contribuinte vale por si (EM e crítico próprios) e o total é a soma ponderada 1 + 1/2 + 1/12 + 1/12.
         const who = [...new Set(action.contributors?.length ? action.contributors : [action.member])].filter((i) => i >= 0 && i < members.length).slice(0, CONTRIBUTOR_WEIGHTS.length);
         const each = who.map((i) => {
           const st = statsFor(i, tags);

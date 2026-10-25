@@ -62,7 +62,7 @@ export function SettingsDialog({ project, dps, onClose }: { project: RotationPro
               options={[{ value: 'auto', label: `Automática (${dec(Math.max(last, 0.5), 1)} s)` }, { value: 'manual', label: 'Manual' }]}
             />
             <div className="rt-cfg-row">
-              <Num label="Duração" value={duration} unit="s" min={0.5} onCommit={(v) => updateConfig({ rotationDuration: v })} />
+              <Num label="Duração" value={duration} unit="s" min={0.5} onCommit={(v) => updateConfig({ rotationDuration: v, durationManual: true })} />
               {planilha && <p className="rt-note">Projeto no modo planilha: a duração é a da planilha, por isso é manual.</p>}
             </div>
           </Section>

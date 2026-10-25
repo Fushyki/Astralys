@@ -89,8 +89,8 @@ const num = (s) => Number(String(s).replace(/\./g, '').replace(',', '.'));
   const one = num(await page.textContent('[data-testid="hit-avg"]'));
   await panel('Golpe selecionado').locator('.rt-contrib button:has-text("Mavuika")').click(); await settle();
   const two = num(await page.textContent('[data-testid="hit-avg"]'));
-  check('Lunar-Carregado: um 2º contribuinte soma 30% do valor dele ao dano da reação', one > 0 && two > one, `${one} → ${two}`);
-  check('o painel mostra o peso de cada contribuinte (60% e 30%)', /60%/.test(await panel('Golpe selecionado').locator('.rt-contrib .list').textContent()) && /30%/.test(await panel('Golpe selecionado').locator('.rt-contrib .list').textContent()));
+  check('Lunar-Carregado: um 2º contribuinte soma 1/2 do valor dele ao dano da reação', one > 0 && two > one, `${one} → ${two}`);
+  check('o painel mostra o peso de cada contribuinte (100% e 1/2)', /100%/.test(await panel('Golpe selecionado').locator('.rt-contrib .list').textContent()) && /1\/2/.test(await panel('Golpe selecionado').locator('.rt-contrib .list').textContent()));
   await page.keyboard.press('Control+z'); await page.keyboard.press('Control+z'); await settle();
 
   // ---- Contínuo ----

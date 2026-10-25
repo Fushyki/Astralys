@@ -1,6 +1,6 @@
 /**
- * Redesign, tela Rotação e buffs (/projeto/:id/rotacao): linha do tempo, cascata, buffs que cobrem o golpe, edição,
- * paleta, janelas, configurações, realinhar e persistência.
+ * Rotação e buffs (/projeto/:id/rotacao), mockup RotacaoEstelar: blocos, inserção em ordem, golpe contínuo, janelas de
+ * buff, sequência, gráficos, duração automática e celular.
  *   1) npm run build && npx vite preview --port 4173
  *   2) node scripts/e2e/rotacao.cjs
  */
@@ -15,139 +15,157 @@ fs.mkdirSync(OUT, { recursive: true });
 
 const results = [];
 const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 'OK  ' : 'FALHA'} ${name}${extra ? ' — ' + extra : ''}`); };
-const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.'));
+const num = (s) => Number(String(s).replace(/\./g, '').replace(',', '.'));
 
 (async () => {
   const browser = await chromium.launch({ channel: CHANNEL, headless: true });
-  const page = await (await browser.newContext({ viewport: { width: 1440, height: 1000 } })).newPage();
+  const page = await (await browser.newContext({ viewport: { width: 1600, height: 1000 } })).newPage();
   const problems = [];
   page.on('console', (m) => { if (['error', 'warning'].includes(m.type())) problems.push(`console.${m.type()}: ${m.text().slice(0, 200)}`); });
   page.on('pageerror', (e) => problems.push(`pageerror: ${e.message.slice(0, 200)}`));
-  const settle = () => page.waitForTimeout(500);
+  const settle = () => page.waitForTimeout(450);
   const dps = () => page.textContent('[data-testid="live-dps"]');
   const hits = () => page.$$('.rt-hit');
-  const hitTimes = () => page.$$eval('.rt-hit', (g) => g.map((x) => { const m = /aos ([\d,]+) segundos/.exec(x.getAttribute('aria-label')); return m ? Number(m[1].replace(',', '.')) : -1; }));
-  const bigHit = () => page.locator('.rt-hit[aria-label*="Supremo (200 FS)"]').first();
-  const center = async (loc) => { const b = await loc.boundingBox(); return { x: b.x + b.width / 2, y: b.y + b.height / 2 }; };
+  const panel = (t) => page.locator(`.dz-panel.bar:has(h2:text-is("${t}"))`);
+  const rows = () => page.locator('.rt-table tbody tr');
 
   await page.goto(`${BASE}/projeto/exemplo/rotacao`, { waitUntil: 'networkidle' });
   await page.evaluate(() => localStorage.clear());
   await page.reload({ waitUntil: 'networkidle' });
   await page.waitForSelector('.rt-hit');
 
+  // ---- Estrutura ----
+  const titles = await page.$$eval('.dz-panel.bar > .bar-head h2', (e) => e.map((x) => x.textContent.trim()));
+  check('os painéis da tela, na ordem do mockup', ['Golpes', 'Linha do tempo', 'Golpe selecionado', 'Buff selecionado', 'Sequência', 'Dano acumulado na rotação', 'Divisão do dano'].join() === titles.join(), titles.join(' | '));
   check('24 golpes na linha do tempo', (await hits()).length === 24, String((await hits()).length));
-  check('DPS ao vivo do exemplo é 216.600', (await dps()) === '216.600', await dps());
-  check('o cabeçalho conta golpes e buffs com janela', /24 golpes · \d+ buffs com janela/.test(await page.textContent('.dz-pagehead')));
-  const lanes = await page.$$eval('.rt-svg .buff-src', (e) => e.map((x) => x.textContent));
-  check('o exemplo abre com as faixas de buff preenchidas (6 ou mais, com fonte)', lanes.length >= 6 && lanes.some((l) => /Citlali · TTDS/.test(l)) && lanes.some((l) => /ATK fixo Bennett/.test(l)), lanes.join(' | '));
-  const wins = await page.$$eval('.rt-win', (e) => e.length);
-  check('há barras de buff nas janelas de tempo', wins >= 10, `${wins} barras`);
-  check('desfazer e refazer começam desativados', (await page.isDisabled('button:has-text("Desfazer")')) && (await page.isDisabled('button:has-text("Refazer")')));
+  check('DPS ao vivo do exemplo é 216.600 (gabarito)', (await dps()) === '216.600', await dps());
+  check('o cabeçalho conta golpes e buffs com janela', /24 golpes · \d+ buffs? com janela/.test(await page.textContent('.rt-head .sub')));
+  check('a etapa 3 saiu: só 1 e 2 na faixa do time', (await page.$$eval('.dz-subnav nav a', (a) => a.map((x) => x.textContent.trim()))).join('|') === '1 · Equipe|2 · Rotação e buffs');
+  const lanes = await page.$$eval('.rt-lane', (e) => e.map((x) => x.querySelector('.lname')?.textContent?.trim() ?? ''));
+  check('faixas: Tempo, Em campo e uma por personagem', /^Tempo/.test(lanes[0]) && /^Em campo/.test(lanes[1]) && /Mavuika/.test(lanes[2]) && /Bennett/.test(lanes[5]), lanes.slice(0, 6).join(' | '));
+  check('buffs agrupados por quem dá, com faixa tracejada para o que não tem janela ou barras', (await page.locator('.rt-giver').count()) >= 3 && (await page.locator('.rt-bar').count()) >= 10);
+  check('"Em campo" não tem texto dentro dos segmentos', (await page.$$eval('.rt-lane.field .seg', (e) => e.every((x) => x.textContent === '' && x.getAttribute('title')))));
+  const colW = await page.$$eval('.rt-lane', (e) => e.slice(0, 8).map((x) => getComputedStyle(x).gridTemplateColumns.split(' ')[0]));
+  check('todas as faixas usam a coluna de rótulo de 200 px', colW.every((c) => c === '200px'), colW.join(','));
+  check('Desfazer e Refazer começam desativados', (await page.isDisabled('button:has-text("Desfazer")')) && (await page.isDisabled('button:has-text("Refazer")')));
   await page.screenshot({ path: path.join(OUT, 'r-rotacao.png'), fullPage: true });
 
-  // Selecionar o Supremo: cascata e buffs que cobrem
-  await bigHit().click({ force: true }); await settle();
-  check('selecionar mostra o nome do golpe e o dano médio 1.239.638', /Supremo \(200 FS\)/.test(await page.textContent('.rt-hitname')) && (await page.textContent('[data-testid="hit-avg"]')) === '1.239.638');
+  // ---- Selecionar golpe ----
+  await page.locator('.rt-hit[aria-label*="Supremo (200 FS)"]').first().click({ force: true }); await settle();
+  check('selecionar mostra o golpe e o dano médio 1.239.638', /Supremo \(200 FS\)/.test(await panel('Golpe selecionado').locator('.rt-title b').textContent()) && (await page.textContent('[data-testid="hit-avg"]')) === '1.239.638');
   const cascade = await page.$$eval('.rt-cascade .step .k', (e) => e.map((x) => x.textContent));
   check('cascata na ordem do mockup', cascade.join() === 'Dano base,Bônus de dano,DEF,RES,Reação,Crítico médio', cascade.join());
-  const cov = await page.$$eval('.rt-cov', (e) => e.map((x) => x.textContent));
-  check('os buffs que cobrem o golpe começam pelo ATK fixo do Bennett (15 a 30%)', /ATK fixo de Bennett/.test(cov[0]) && num(cov[0].match(/\+([\d,]+)%/)[1]) > 15 && num(cov[0].match(/\+([\d,]+)%/)[1]) < 30, cov[0]);
-  await page.locator('.rt-hit[aria-label*="aos 0,4 segundos"]').first().click({ force: true }); await settle();
-  const dimmed = await page.$$eval('.rt-win', (g) => g.filter((x) => x.getAttribute('opacity') === '0.35').length);
-  check('as barras que não cobrem o golpe selecionado (o 1º, aos 0,4 s) ficam esmaecidas', dimmed > 0, `${dimmed} esmaecidas`);
-  await bigHit().click({ force: true }); await settle();
-
-  // Reação: tirar o Derreter reduz o dano
   const before = num(await dps());
-  await page.selectOption('.dz-panel:has(h2:text-is("Editar golpe")) select', 'none'); await settle();
-  check('trocar a reação do golpe para "Sem reação" reduz o DPS ao vivo', num(await dps()) < before * 0.8, `${before} → ${await dps()}`);
+  await panel('Golpe selecionado').locator('select[aria-label="Reação"]').selectOption('none'); await settle();
+  check('trocar a reação para "Sem reação" reduz o DPS ao vivo', num(await dps()) < before * 0.8, `${before} → ${await dps()}`);
   await page.keyboard.press('Control+z'); await settle();
   check('Ctrl+Z restaura o DPS', (await dps()) === '216.600');
   check('agora Refazer fica ativo', !(await page.isDisabled('button:has-text("Refazer")')));
   await page.click('button:has-text("Refazer")'); await settle();
   await page.click('button:has-text("Desfazer")'); await settle();
 
-  // Arrastar o Supremo
-  const t0 = (await hitTimes()).filter((t) => t > 0);
-  await bigHit().scrollIntoViewIfNeeded();
-  const c = await center(bigHit());
-  await page.mouse.move(c.x, c.y); await page.mouse.down(); await page.mouse.move(c.x + 40, c.y, { steps: 4 }); await page.mouse.move(c.x + 110, c.y, { steps: 6 }); await page.mouse.up(); await settle();
-  const t1 = (await hitTimes()).filter((t) => t > 0);
-  check('arrastar muda o tempo do golpe', JSON.stringify(t0) !== JSON.stringify(t1), `${t0.join(',').slice(0, 30)} → ${t1.join(',').slice(0, 30)}`);
-  check('o golpe arrastado fica selecionado', (await page.locator('.rt-hit[aria-pressed="true"]').count()) === 1);
-  await page.mouse.click(5, 5);
-  await page.keyboard.press('Control+z'); await settle();
-  check('Ctrl+Z devolve o tempo', JSON.stringify((await hitTimes()).filter((t) => t > 0)) === JSON.stringify(t0));
+  // ---- Inserir em ordem ----
+  const n0 = (await hits()).length;
+  const nextVal = async () => parseFloat((await page.locator('.rt-mv-box .rt-fld:has-text("Próximo golpe entra em") .rt-inp').textContent()).replace(',', '.'));
+  const nextTxt = await nextVal();
+  await page.click('.rt-tabs button:has-text("Bennett")');
+  for (let i = 0; i < 3; i++) { await page.click('.rt-mvgroup .rt-mv >> nth=0'); await page.waitForTimeout(150); }
+  await settle();
+  check('"Em ordem": 3 golpes seguidos entram espaçados em 0,4 s', (await hits()).length === n0 + 3);
+  const nextAfter = await nextVal();
+  check('o "próximo golpe entra em" avança 0,4 s por golpe', Math.abs(nextAfter - (nextTxt + 1.2)) < 0.06, `${nextTxt} → ${nextAfter}`);
+  await page.keyboard.press('Control+z'); await page.keyboard.press('Control+z'); await page.keyboard.press('Control+z'); await settle();
+  check('desfazer 3 vezes volta aos 24 golpes', (await hits()).length === 24);
 
-  // Paleta
-  const ruler = await page.$('.rt-svg rect[style*="crosshair"]');
-  const rb = await ruler.boundingBox();
-  await page.mouse.click(rb.x + rb.width * 0.5, rb.y + 10); await page.waitForTimeout(200);
-  check('clicar na régua marca o instante de inserção', /Inserir em \d+,\d s/.test(await page.textContent('.dz-panel:has(.rt-pal-tabs) h2')), await page.textContent('.dz-panel:has(.rt-pal-tabs) h2'));
-  await page.click('.rt-pal-tabs button:has-text("Bennett")');
-  const nBefore = (await hits()).length;
-  await page.click('.rt-chips .chip >> nth=0'); await settle();
-  check('a paleta insere um golpe do Bennett', (await hits()).length === nBefore + 1);
-  await page.keyboard.press('Control+z'); await settle();
+  // ---- Contínuo ----
+  await page.click('.rt-tabs button:has-text("Mavuika")');
+  await page.click('.rt-mvgroup .rt-mv >> nth=0'); await settle();
+  const sel = panel('Golpe selecionado');
+  await sel.locator('.rt-seg button:has-text("Contínuo")').click(); await settle();
+  const execLabel = await sel.locator('.rt-exec .rt-lbl').textContent();
+  check('"Contínuo" cria execuções editáveis uma a uma', /Execuções · \d+/.test(execLabel) && (await sel.locator('.rt-exec .er').count()) >= 2, execLabel);
+  check('a linha do tempo mostra losangos', (await page.locator('.rt-diamond').count()) >= 2);
+  const total = await sel.locator('.rt-exec .er').count();
+  await sel.locator('.rt-exec .er button[aria-label="Remover esta execução"]').nth(1).click(); await settle();
+  check('remover uma execução não apaga as outras', (await sel.locator('.rt-exec .er').count()) === total - 1);
+  await sel.locator('button:has-text("+ Execução")').click(); await settle();
+  check('+ Execução adiciona uma execução', (await sel.locator('.rt-exec .er').count()) === total);
+  await sel.locator('select[aria-label="Reação em 1 de N"]').selectOption('2'); await settle();
+  const reactions = await sel.locator('.rt-exec .er select').evaluateAll((e) => e.map((x) => x.value));
+  check('"Reação em 1 de 2" põe reação em 1 execução a cada 2 (a 1ª com reação)', reactions[0] !== 'none' && reactions[1] === 'none', reactions.join(','));
+  check('a Sequência junta o contínuo em uma linha com "a cada … · ×N"', /a cada [\d,]+ s · ×\d+/.test(await page.locator('.rt-table td.rep.on').first().textContent()));
+  await sel.locator('button:has-text("Remover golpe")').click(); await settle();
+  check('"Remover golpe" apaga o contínuo inteiro', (await hits()).length === 24 && (await page.locator('.rt-diamond').count()) === 0);
 
-  // Duplo clique numa faixa de buff cria janela
-  const winsBefore = await page.$$eval('.rt-win', (e) => e.length);
-  const lastLane = (await page.$$('.rt-svg rect.lane-bg')).pop();
-  const lb = await lastLane.boundingBox();
-  await page.mouse.dblclick(lb.x + lb.width * 0.985, lb.y + lb.height / 2); await settle();
-  check('duplo clique numa faixa cria uma barra de buff', (await page.$$eval('.rt-win', (e) => e.length)) === winsBefore + 1);
-  check('a nova janela fica selecionada e pode ser editada', (await page.locator('.dz-panel:has(h2:text-matches("Janela"))').count()) === 1);
-  await page.keyboard.press('Control+z'); await settle();
-
-  // Teclado
-  const target = (await hits())[5];
-  await target.focus();
-  const label0 = await target.getAttribute('aria-label');
-  await page.keyboard.press('ArrowRight'); await settle();
-  check('seta move o golpe focado', label0 !== (await (await hits())[5].getAttribute('aria-label')));
-  const countBefore = (await hits()).length;
-  await page.keyboard.press('Delete'); await settle();
-  check('Delete apaga o golpe focado', (await hits()).length === countBefore - 1);
+  // ---- Janela de buff ----
+  await page.locator('.rt-bar >> nth=0').click(); await settle();
+  const bp = panel('Buff selecionado');
+  check('selecionar uma barra de buff mostra o tipo de janela', (await bp.locator('.rt-seg button').allTextContents()).join('|') === 'Rotação inteira|Janela|Por golpe');
+  const dur = bp.locator('.rt-fld:has-text("Duração") input');
+  const ini = num(await bp.locator('.rt-fld:has-text("Início") input').inputValue());
+  await dur.fill('3'); await dur.blur(); await settle();
+  check('mudar a duração recalcula o fim', Math.abs(num(await bp.locator('.rt-fld:has-text("Fim") input').inputValue()) - (ini + 3)) < 0.06);
+  await bp.locator('.rt-seg button:has-text("Rotação inteira")').click(); await settle();
+  check('"Rotação inteira" estende a barra', /rotação inteira/.test(await page.locator('.rt-bar[aria-pressed="true"]').first().textContent()));
   await page.keyboard.press('Control+z'); await page.keyboard.press('Control+z'); await settle();
+  await bp.locator('button:has-text("Duplicar janela")').click(); await settle();
+  const barsAfterDup = await page.locator('.rt-bar').count();
+  await bp.locator('button:has-text("Remover janela")').click(); await settle();
+  check('duplicar e remover janela', (await page.locator('.rt-bar').count()) === barsAfterDup - 1);
 
-  // Configurações: duração, realinhar
+  // ---- Arrastar ----
+  const hit = page.locator('.rt-hit[aria-label*="Supremo (200 FS)"]').first();
+  await hit.scrollIntoViewIfNeeded();
+  const b = await hit.boundingBox();
+  const lbl0 = await hit.getAttribute('aria-label');
+  await page.mouse.move(b.x + b.width / 2, b.y + b.height / 2); await page.mouse.down();
+  await page.mouse.move(b.x + b.width / 2 + 30, b.y + b.height / 2, { steps: 4 }); await page.mouse.move(b.x + b.width / 2 + 90, b.y + b.height / 2, { steps: 6 }); await page.mouse.up(); await settle();
+  check('arrastar muda o tempo do golpe', (await page.locator('.rt-hit[aria-pressed="true"]').first().getAttribute('aria-label')) !== lbl0);
+  await page.keyboard.press('Control+z'); await settle();
+
+  // ---- Sequência ----
+  check('a Sequência mostra 8 linhas e "Mostrar os 24"', (await rows().count()) === 8 && (await page.locator('button:has-text("Mostrar os 24")').count()) === 1);
+  const heads = await page.$$eval('.rt-table th', (e) => e.map((x) => x.textContent.trim()));
+  check('colunas da Sequência', heads.join('|') === '||#|Tempo|Personagem|Golpe|Repetição|Hits|Reação|Buffs|', heads.join('|'));
+  await page.click('button:has-text("Mostrar os 24")'); await settle();
+  check('"Mostrar os 24" lista todas', (await rows().count()) === 24);
+  await rows().nth(1).locator('input[type=checkbox]').check();
+  await rows().nth(2).locator('input[type=checkbox]').check();
+  check('Remover selecionados (2) aparece e apaga', (await page.locator('button:has-text("Remover selecionados (2)")').count()) === 1);
+  await page.click('button:has-text("Remover selecionados (2)")'); await settle();
+  check('as 2 linhas foram removidas', (await hits()).length === 22);
+  await page.keyboard.press('Control+z'); await settle();
+  check('Desfazer traz as linhas de volta', (await hits()).length === 24);
+
+  // ---- Gráficos ----
+  check('o gráfico tem 6 pontos numerados e legenda', (await page.locator('.rt-mark').count()) === 6 && (await page.locator('.rt-legend > span').count()) === 6);
+  check('a divisão do dano lista os 4 personagens e a frase Hipercarry', (await page.locator('.rt-split').count()) === 4 && /Hipercarry: Mavuika/.test(await panel('Divisão do dano').textContent()));
+
+  // ---- Duração e configurações ----
   await page.click('button:has-text("Configurações")');
-  const dur = page.locator('.dz-dialog label.dz-field:has(span:text-is("Duração da rotação")) input');
-  await dur.fill('35'); await dur.blur(); await settle();
-  check('dobrar a duração divide o DPS por 2', num(await dps()) === 108300 || Math.abs(num(await dps()) - 108300) < 2, await dps());
+  const d = page.locator('.dz-dialog label.dz-field:has(span:text-is("Duração da rotação")) input');
+  await d.fill('35'); await d.blur(); await settle();
+  check('duração manual (35 s) divide o DPS por 2 (exemplo é modo planilha)', Math.abs(num(await dps()) - 108300) < 2, await dps());
   await page.keyboard.press('Escape');
   await page.keyboard.press('Control+z'); await settle();
-  check('Ctrl+Z restaura a duração', (await dps()) === '216.600');
-  await page.click('button:has-text("Configurações")');
-  await page.click('.dz-dialog button:has-text("Realinhar")'); await settle();
-  await page.keyboard.press('Escape');
-  const times = (await hitTimes()).sort((a, b) => a - b);
-  check('realinhar deixa os golpes seguidos a partir de 0 s (0, 0,5, 1…)', times.slice(0, 3).join() === '0,0.5,1' && times[23] === 11.5, times.slice(0, 4).join(',') + ' … ' + times[23]);
-  await page.keyboard.press('Control+z'); await settle();
-
-  // Apertar a linha: um clique, sem abrir as configurações
-  const tighten = page.locator('.dz-pagehead button:has-text("Apertar a linha")');
-  check('o botão "Apertar a linha" está no topo da rotação', (await tighten.count()) === 1 && !(await tighten.isDisabled()));
+  check('Ctrl+Z restaura', (await dps()) === '216.600');
+  const tighten = page.locator('.rt-head button:has-text("Apertar a linha")');
+  check('"Apertar a linha" no cabeçalho', (await tighten.count()) === 1 && !(await tighten.isDisabled()));
   await tighten.click(); await settle();
-  const tight = (await hitTimes()).sort((a, b) => a - b);
-  check('apertar a linha tira os espaços (0, 0,5, 1… até 11,5 s)', tight.slice(0, 3).join() === '0,0.5,1' && tight[23] === 11.5, tight.slice(0, 4).join(',') + ' … ' + tight[23]);
-  check('com a linha já apertada o botão fica desligado', await tighten.isDisabled());
+  check('com a linha apertada o botão fica desligado', await tighten.isDisabled());
   await page.keyboard.press('Control+z'); await settle();
-  check('Ctrl+Z desfaz o aperto e o botão volta a funcionar', !(await tighten.isDisabled()) && (await hitTimes()).sort((a, b) => a - b)[23] > 11.5);
 
-  // Persistência e restaurar
+  // ---- Persistência ----
   await page.waitForTimeout(700);
   await page.reload({ waitUntil: 'networkidle' }); await page.waitForSelector('.rt-hit');
   check('recarregar mantém o projeto (24 golpes e 216.600)', (await hits()).length === 24 && (await dps()) === '216.600');
-  await page.click('button:has-text("Configurações")');
-  await page.click('.dz-dialog button:has-text("Restaurar exemplo")'); await settle();
-  await page.keyboard.press('Escape');
-  check('restaurar exemplo volta ao original com as faixas de buff', (await hits()).length === 24 && (await dps()) === '216.600' && (await page.$$eval('.rt-win', (e) => e.length)) >= 10);
 
-  // Celular
-  await page.setViewportSize({ width: 390, height: 900 }); await page.waitForTimeout(400);
-  check('celular sem rolagem horizontal da página', !(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1)));
-  await page.screenshot({ path: path.join(OUT, 'r-rotacao-mobile.png'), fullPage: true });
+  // ---- Larguras ----
+  for (const w of [1366, 390]) {
+    await page.setViewportSize({ width: w, height: 900 }); await page.waitForTimeout(500);
+    check(`${w}px sem rolagem horizontal da página`, !(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1)));
+    await page.screenshot({ path: path.join(OUT, `r-rotacao-${w}.png`), fullPage: true });
+  }
 
   await browser.close();
   console.log('\nProblemas de consola:', problems.length ? '\n' + problems.join('\n') : 'nenhum');

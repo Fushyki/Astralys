@@ -94,3 +94,10 @@ caminho mais seguro e anotei aqui para você revisar. Nada foi mesclado no `main
 
 ## 79. Dano Lunar e Estelar distinto do elemental (24/10/2026)
 Lunar e Estelar não são elemento: usam outra fórmula. Em toda lista de golpes (Resumo, Talentos, Avançado, popup do Otimizar, paleta da Rotação) o golpe ganha cor própria (☾ Lunar lilás, ✦ Estelar rosa, tokens `--dmg-lunar/--dmg-stellar`), etiqueta com o nome da família e legenda. Elemental segue a cor do elemento; Físico, branco. Origem: `CharacterEffect.specialMoves` (`specialOfMove`). Sem mudança no motor.
+
+## 80. Tela Rotação nova (mockup RotacaoEstelar) — o que difere do mockup
+- Sem seção "Debuffs no inimigo" nem "+ Debuff": o Davi decidiu que debuff é buff comum do personagem que o ativa.
+- Sem a linha "Duração padrão do jogo · Usar padrão": não há duração nos dados de efeitos.
+- Mantidos além do mockup, para não perder função: grupos "Golpes extras" e "Reações" no painel Golpes, e o seletor "Elemento do dano" no golpe único.
+- Removidos de propósito: "Ajuste de DMG%" e a escolha "seguir janelas / perfil fixo" do antigo painel Editar golpe (o perfil fixo continua convertível em janelas em Configurações).
+- Etapa "3 · Dano do time" removida; `/time` redireciona para a Rotação.

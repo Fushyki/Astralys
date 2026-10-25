@@ -1,16 +1,22 @@
-/** Rotação e buffs (/projeto/:id/rotacao): linha do tempo editável, paleta de golpes e o golpe selecionado. */
-import { useMemo, useState } from 'react';
+/** Rotação e buffs (/projeto/:id/rotacao): golpes, linha do tempo, golpe e buff selecionados, sequência e gráficos de dano. */
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { effectiveDuration } from '../engine';
 import { useProjectView } from '../app/ProjectContext';
+import { Button } from '../design/Button';
+import { effectiveDuration } from '../engine';
 import { realignActions } from '../features/rotation/projectOps';
 import { laneInfos } from '../features/rotation/rotationModel';
+import { countActions, windowedBuffs } from '../features/rotation/screenModel';
 import { useRotationStore } from '../features/rotation/store';
 import { formatInt } from '../ui/format';
-import { Palette } from './rotacao/Palette';
+import { BuffPanel } from './rotacao/BuffPanel';
+import { Charts } from './rotacao/Charts';
+import { HitPanel } from './rotacao/HitPanel';
+import { Moves } from './rotacao/Moves';
+import { Sequence } from './rotacao/Sequence';
 import { SettingsDialog } from './rotacao/Settings';
-import { SelectedHit } from './rotacao/Side';
 import { Timeline } from './rotacao/Timeline';
+import { dec } from './rotacao/ui';
 import './rotacao.css';
 
 export default function Rotacao() {
@@ -23,8 +29,8 @@ export default function Rotacao() {
   const realign = useRotationStore((s) => s.realign);
 
   const lanes = useMemo(() => laneInfos(v.project, v.resolved), [v.project, v.resolved]);
-  const names = v.project.members.map((m) => m.character);
-  const windowed = new Set(v.project.buffWindows.map((w) => w.tag)).size;
+  const counts = countActions(v.project);
+  const buffs = windowedBuffs(v.project);
   // "Apertar a linha" só faz sentido se algum golpe sairia do lugar (há espaços vazios entre eles).
   const canTighten = useMemo(() => {
     if (v.project.actions.length === 0) return false;
@@ -33,41 +39,59 @@ export default function Rotacao() {
     return next.actions.some((a) => Math.abs((was.get(a.id) ?? a.time) - a.time) > 1e-6);
   }, [v.project]);
 
+  // Delete apaga o item selecionado quando o foco não está num campo.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const t = e.target as HTMLElement;
+      if (/^(INPUT|SELECT|TEXTAREA)$/.test(t.tagName) || e.key !== 'Delete') return;
+      const s = useRotationStore.getState();
+      if (s.selectedActionId) s.removeAction(s.selectedActionId);
+      else if (s.selectedWindowId) s.removeWindow(s.selectedWindowId);
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, []);
+
   return (
     <main className="dz-page">
-      <section className="dz-pagehead">
+      <section className="rt-head">
         <div className="titles">
-          <h1 className="h1" style={{ fontSize: 36 }}>Rotação · {effectiveDuration(v.project).toString().replace('.', ',')} s</h1>
-          <span className="num muted">{v.project.actions.length} golpes · {windowed} buffs com janela</span>
+          <h1>Rotação · {dec(effectiveDuration(v.project), 1)} s</h1>
+          <span className="sub num">
+            {counts.total} golpes{counts.continuous > 0 ? ` (${counts.continuous} contínuo)` : ''} · {buffs} {buffs === 1 ? 'buff' : 'buffs'} com janela
+          </span>
         </div>
-        <div className="actions rt-actions">
-          <button type="button" className="dz-btn" onClick={undo} disabled={!canUndo} title="Ctrl+Z">Desfazer</button>
-          <button type="button" className="dz-btn" onClick={redo} disabled={!canRedo} title="Ctrl+Y">Refazer</button>
-          <button type="button" className="dz-btn" onClick={() => realign()} disabled={!canTighten} title="Tira os espaços vazios entre os golpes, mantendo a ordem. Ctrl+Z desfaz.">Apertar a linha</button>
-          <Link className="dz-btn" to={`/comparar?a=${v.id}`}>Comparar A / B</Link>
-          <button type="button" className="dz-btn" onClick={() => setSettings(true)}>Configurações</button>
-          <div className="rt-live" aria-live="polite">
-            <span className="lbl">DPS ao vivo</span>
-            <span className="num" data-testid="live-dps">{formatInt(v.summary.dps)}</span>
-          </div>
+        <div className="acts">
+          <Button variant="secondary" size="sm" onClick={undo} disabled={!canUndo}>Desfazer</Button>
+          <Button variant="secondary" size="sm" onClick={redo} disabled={!canRedo}>Refazer</Button>
+          <Button variant="secondary" size="sm" onClick={() => realign()} disabled={!canTighten}>Apertar a linha</Button>
+          <Link className="dz-btn sm" to={`/comparar?a=${v.id}`}>Comparar A / B</Link>
+          <Button variant="secondary" size="sm" onClick={() => setSettings(true)}>Configurações</Button>
+        </div>
+        <div className="rt-live" aria-live="polite">
+          <span className="lbl">DPS ao vivo</span>
+          <span className="num" data-testid="live-dps">{formatInt(v.summary.dps)}</span>
         </div>
       </section>
 
-      <div className="rt-grid">
-        <div className="rt-left">
-          <section className="dz-panel">
-            {v.inSync ? (
-              <Timeline project={v.project} results={v.bundle.optimization.result.actions} names={names} colors={v.colors} lanes={lanes} total={v.summary.avg} />
-            ) : (
-              <p className="note" role="status">Atualizando a equipe…</p>
-            )}
-          </section>
-          <Palette v={v} />
-        </div>
-        <aside className="rt-right">
-          <SelectedHit v={v} lanes={lanes} />
-        </aside>
-      </div>
+      {v.inSync ? (
+        <>
+          <div className="rt-grid">
+            <Moves v={v} />
+            <Timeline v={v} lanes={lanes} />
+            <div className="rt-col">
+              <HitPanel v={v} />
+              <BuffPanel v={v} lanes={lanes} />
+            </div>
+          </div>
+          <div style={{ height: 'var(--panel-gap)' }} />
+          <Sequence v={v} lanes={lanes} />
+          <div style={{ height: 'var(--panel-gap)' }} />
+          <Charts v={v} />
+        </>
+      ) : (
+        <p className="note" role="status">Atualizando a equipe…</p>
+      )}
 
       {settings && <SettingsDialog project={v.project} onClose={() => setSettings(false)} />}
     </main>

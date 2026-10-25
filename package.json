@@ -12,7 +12,7 @@
     "sync:data": "tsx scripts/sync-data.ts",
     "build:conta": "tsc && vite build --outDir dist-conta",
     "e2e:conta": "node scripts/e2e/conta.cjs",
-    "e2e": "node scripts/e2e/equipe.cjs && node scripts/e2e/personagem.cjs && node scripts/e2e/rotacao.cjs && node scripts/e2e/time.cjs && node scripts/e2e/armas.cjs && node scripts/e2e/recarga.cjs && node scripts/e2e/vault.cjs && node scripts/e2e/card.cjs && node scripts/e2e/importar.cjs && node scripts/e2e/novo.cjs && node scripts/e2e/passos.cjs && node scripts/e2e/otimizador.cjs"
+    "e2e": "node scripts/e2e/equipe.cjs && node scripts/e2e/personagem.cjs && node scripts/e2e/rotacao.cjs && node scripts/e2e/armas.cjs && node scripts/e2e/recarga.cjs && node scripts/e2e/vault.cjs && node scripts/e2e/card.cjs && node scripts/e2e/importar.cjs && node scripts/e2e/novo.cjs && node scripts/e2e/passos.cjs && node scripts/e2e/otimizador.cjs"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.104.4",

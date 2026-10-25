@@ -219,3 +219,9 @@
 .rt-dialog .rt-seg { align-self: flex-start; }
 .rt-dialog .rt-inp { height: var(--ctl-md); }
 .rt-inp select { appearance: none; -webkit-appearance: none; cursor: pointer; }
+.rt-contrib { display: flex; flex-direction: column; gap: var(--sp-2); padding: 10px; border-radius: var(--r-inner); background: #121a3a; border: 1px solid var(--border-ctl); }
+.rt-contrib .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.rt-contrib .chips button { display: inline-flex; align-items: center; gap: 6px; min-height: var(--ctl-sm); padding: 0 10px; border-radius: var(--r-ctl); border: 1px solid #232d5c; background: #0a0f24; color: #a7b0d6; font: 600 var(--fs-2) var(--font-display); cursor: pointer; }
+.rt-contrib .chips button i { width: 8px; height: 8px; border-radius: 50%; background: var(--c); }
+.rt-contrib .chips button[aria-pressed='true'] { border-color: var(--gold); background: #2a2312; color: #f8de9e; }
+.rt-contrib .list .r { display: flex; justify-content: space-between; font-size: var(--fs-2); color: #c3caea; padding: 2px 0; }

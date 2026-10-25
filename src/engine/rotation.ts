@@ -7,7 +7,7 @@
 import { kitElement } from './kitElement';
 import type { Element, HitType, Move, Talent } from '../data/schema';
 import type { FlatDamageEffect, SpecialMove } from '../effects/schema';
-import { SPECIAL_RESIST, TRANSFORMATIVE, type AdditiveReaction, type AmplifyingReaction, type ElementOrPhysical, type LunarReaction, type SpecialReaction, type TransformativeReaction } from './constants/reactions';
+import { CONTRIBUTOR_WEIGHTS, SPECIAL_RESIST, TRANSFORMATIVE, type AdditiveReaction, type AmplifyingReaction, type ElementOrPhysical, type LunarReaction, type SpecialReaction, type TransformativeReaction } from './constants/reactions';
 import { computeHit, type EnemyStats, type HitBreakdown } from './damage';
 import { critFactor } from './formulas';
 import { computeLunarReaction, computeSpecial, computeStellarSwirlReaction, computeTransformative, type SpecialBreakdown } from './reactions';
@@ -74,6 +74,11 @@ export interface RotationAction {
   activeTags: readonly string[];
   /** Ajuste de DMG% desta linha (ex.: decaimento do A4 da Mavuika). */
   dmgAdjust: number;
+  /**
+   * Reações Lunar-Charged, Lunar-Crystallize e Stellar-Swirl: índices dos membros que aplicaram os elementos (até 4).
+   * Sem lista, só o dono da ação contribui.
+   */
+  contributors?: readonly number[];
   time?: number;
   note?: string;
 }
@@ -105,6 +110,8 @@ export interface ActionResult {
   noCrit: number;
   crit: number;
   avg: number;
+  /** Reação de time: o valor de cada contribuinte (média) e o peso que ele teve (60/30/5/5, do maior para o menor). */
+  contributors?: { member: number; avg: number; weight: number }[];
 }
 
 export type DamageKind = 'direct' | 'transformative' | 'lunar' | 'stellar';
@@ -279,6 +286,29 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
     if (kind !== 'direct') {
       const scale = move.reactionHit ? { atk: 0, em: 0, hp: 0, def: 0, flat: 0 } : scaleAt(move, move.talent === 'proc' || move.talent === 'reaction' ? 1 : member.talents[move.talent]);
       const r = reactionAction({ move, executions: action.executions, ownElement: member.character.element, stats, scale, characterLevel: config.characterLevel, enemy });
+      const hit = move.reactionHit;
+      if (hit && (hit.kind === 'lunar' || hit.kind === 'stellarswirl')) {
+        // Reação do time: cada contribuinte vale por si (EM e crítico próprios) e o total é a soma ponderada 60/30/5/5.
+        const who = [...new Set(action.contributors?.length ? action.contributors : [action.member])].filter((i) => i >= 0 && i < members.length).slice(0, CONTRIBUTOR_WEIGHTS.length);
+        const each = who.map((i) => {
+          const st = statsFor(i, tags);
+          const en: EnemyStats = { ...enemy, defIgnore: Math.min(1, (config.enemyDefIgnore ?? 0) + (st.defIgnore ?? 0)) };
+          const x = reactionAction({ move, executions: 1, ownElement: members[i].character.element, stats: st, scale, characterLevel: config.characterLevel, enemy: en });
+          const n = x.breakdown.total;
+          return { member: i, noCrit: n, crit: n * critFactor('crit', x.critRate, x.critDmg), avg: n * critFactor('avg', x.critRate, x.critDmg) };
+        });
+        const weighted = (pick: (e: (typeof each)[number]) => number) => [...each].map(pick).sort((a, b) => b - a).reduce((s, v, k) => s + v * CONTRIBUTOR_WEIGHTS[k], 0) * action.executions;
+        const noCrit = weighted((e) => e.noCrit);
+        const byAvg = [...each].sort((a, b) => b.avg - a.avg);
+        const scaleTo = r.breakdown.total > 0 ? noCrit / r.breakdown.total : 0;
+        return {
+          action, element: r.element, stats, scale, flatDamage: 0,
+          breakdown: { ...r.breakdown, base: r.breakdown.base * scaleTo, baseTotal: r.breakdown.baseTotal * scaleTo, total: noCrit },
+          kind, critRate: r.critRate, critDmg: r.critDmg,
+          noCrit, crit: weighted((e) => e.crit), avg: weighted((e) => e.avg),
+          contributors: byAvg.map((e, k) => ({ member: e.member, avg: e.avg * action.executions, weight: CONTRIBUTOR_WEIGHTS[k] })),
+        };
+      }
       const noCrit = r.breakdown.total;
       return {
         action, element: r.element, stats, scale, flatDamage: 0, breakdown: r.breakdown, kind, critRate: r.critRate, critDmg: r.critDmg,

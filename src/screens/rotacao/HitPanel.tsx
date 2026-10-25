@@ -63,7 +63,14 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
   const kindLine = chainId ? 'Dano contínuo' : 'Golpe único';
   const reactionLine = special ? SPECIAL_LABEL[special] : action.reaction === 'none' ? 'sem reação' : REACTION_LABEL[action.reaction];
   const familyColor = familyOf(special) ? FAMILY_COLOR[familyOf(special)!] : undefined;
+  const memberLabel = project.members[action.member]?.character ?? '';
   const hitsEach = action.executions;
+  const teamReaction = action.move.talent === 'reaction' && /^(lunarcharged|lunarcrystallize|stellarswirl)/.test(action.move.label);
+  const who = action.contributors?.length ? action.contributors : [action.member];
+  const toggleWho = (i: number) => {
+    const next = who.includes(i) ? who.filter((x) => x !== i) : [...who, i];
+    if (next.length > 0) update(action.id, { contributors: next });
+  };
 
   /** Mudou início, intervalo ou duração: as execuções são refeitas na hora (a duração estica a rotação). */
   const redo = (patch: { start?: number; every?: number; length?: number }) => {
@@ -123,9 +130,32 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
         <>
           <div className="rt-three">
             <Num label="Instante" value={action.time} unit="s" onCommit={(t) => update(action.id, { time: t })} min={0} />
-            <Num label="Hits" value={action.executions} digits={0} onCommit={(n) => update(action.id, { executions: Math.max(1, Math.round(n)) })} min={1} />
+            <Num label={teamReaction ? 'Procs' : 'Hits'} value={action.executions} digits={0} onCommit={(n) => update(action.id, { executions: Math.max(1, Math.round(n)) })} min={1} />
             <Sel label="Reação" value={action.reaction} options={REACTION_OPTIONS} onChange={(r) => update(action.id, { reaction: r })} />
           </div>
+          {teamReaction && (
+            <div className="rt-contrib" role="group" aria-label="Quem contribui para a reação">
+              <span className="rt-lbl">Quem contribui (aplicou os elementos)</span>
+              <div className="chips">
+                {project.members.map((m, i) => (
+                  <button key={m.character} type="button" aria-pressed={who.includes(i)} style={{ ['--c' as string]: v.colors[i] }} onClick={() => toggleWho(i)}>
+                    <i />{m.character}
+                  </button>
+                ))}
+              </div>
+              {result?.contributors && (
+                <div className="list">
+                  {result.contributors.map((c) => (
+                    <div className="r" key={c.member}>
+                      <span>{project.members[c.member]?.character}</span>
+                      <span className="num">{formatInt(c.avg)} × {Math.round(c.weight * 100)}%</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <span className="rt-note">O dano é 60% do maior valor + 30% do 2º + 5% + 5%, cada um com a Maestria e o crítico dele. A ação conta para {memberLabel}.</span>
+            </div>
+          )}
           <Sel label="Elemento do dano" value={(action.element ?? '') as (typeof ELEMENTS)[number]} options={ELEMENTS.map((e) => ({ value: e, label: ELEMENT_LABEL[e] }))} onChange={(e) => update(action.id, { element: e === '' ? undefined : e })} />
           {result && (
             <div className="rt-cascade" aria-label="Cascata de multiplicadores">

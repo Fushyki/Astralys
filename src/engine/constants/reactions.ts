@@ -87,6 +87,14 @@ export const SPECIAL_REACTION_MULTI: Record<SpecialReaction, number> = {
   stellarswirl: 0.75, // os vórtices valem 2x e 3x (ver STELLAR_SWIRL_VORTEX)
 };
 
+/**
+ * Dano de REAÇÃO Lunar-Charged, Lunar-Crystallize e Stellar-Swirl (gerado pelo time): cada personagem que aplicou os
+ * elementos da reação "contribui" com o seu valor (EM e crítico próprios); ordenados do maior para o menor, o dano é
+ * 60% do 1º + 30% do 2º + 5% do 3º + 5% do 4º. Contribuinte ausente: o peso some, os outros não são reescalonados.
+ * Com um só contribuinte, a reação vale 60% do coeficiente (Lunar-Charged 3 × 0,6 = 1,8).
+ */
+export const CONTRIBUTOR_WEIGHTS = [0.6, 0.3, 0.05, 0.05] as const;
+
 export const STELLAR_SWIRL_VORTEX = { vortex1: 2, vortex2: 3 } as const;
 
 /** RES usada por cada reação especial. Stellar-Conduct e Stellar-Swirl dependem do elemento do disparo. */

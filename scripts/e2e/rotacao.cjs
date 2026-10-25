@@ -83,6 +83,16 @@ const num = (s) => Number(String(s).replace(/\./g, '').replace(',', '.'));
   check('Redemoinho Hydro entra na rotação com dano maior que 0', num(swirlAvg) > 0 && /Redemoinho Hydro/.test(await panel('Golpe selecionado').locator('.rt-title b').textContent()), swirlAvg);
   await page.keyboard.press('Control+z'); await settle();
 
+  // ---- Reação Lunar de time: contribuintes ----
+  await page.click('.rt-tabs button:has-text("Iansan")');
+  await page.click('.rt-mvgroup .rt-mv:has-text("Lunar-Carregado")'); await settle();
+  const one = num(await page.textContent('[data-testid="hit-avg"]'));
+  await panel('Golpe selecionado').locator('.rt-contrib button:has-text("Mavuika")').click(); await settle();
+  const two = num(await page.textContent('[data-testid="hit-avg"]'));
+  check('Lunar-Carregado: um 2º contribuinte soma 30% do valor dele ao dano da reação', one > 0 && two > one, `${one} → ${two}`);
+  check('o painel mostra o peso de cada contribuinte (60% e 30%)', /60%/.test(await panel('Golpe selecionado').locator('.rt-contrib .list').textContent()) && /30%/.test(await panel('Golpe selecionado').locator('.rt-contrib .list').textContent()));
+  await page.keyboard.press('Control+z'); await page.keyboard.press('Control+z'); await settle();
+
   // ---- Contínuo ----
   await page.click('.rt-tabs button:has-text("Mavuika")');
   await page.click('.rt-seg button:has-text("No instante marcado")');

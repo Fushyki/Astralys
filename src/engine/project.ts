@@ -158,6 +158,8 @@ export const ActionSchema = z.object({
   dmgAdjust: z.number().default(0),
   /** Golpe contínuo: as execuções com o mesmo `chainId` são irmãs (cada uma é uma ação com instante e reação próprios). */
   chainId: z.string().optional(),
+  /** Reações Lunar-Charged, Lunar-Crystallize e Stellar-Swirl: membros que aplicaram os elementos (pesos 60/30/5/5). Sem lista, só o dono. */
+  contributors: z.array(z.number().int().min(0)).max(4).optional(),
   /** Instante da rotação, em segundos. */
   time: z.number().min(0),
   note: z.string().optional(),
@@ -684,6 +686,7 @@ export function resolveProject(project: RotationProject, data: GameData, effects
       reaction: a.reaction as ReactionChoice,
       activeTags: a.tagSource === 'windows' ? tagsAt(project.buffWindows, a.time) : a.activeTags,
       dmgAdjust: a.dmgAdjust,
+      ...(a.contributors?.length ? { contributors: a.contributors } : {}),
       time: a.time,
       note: a.note,
     };

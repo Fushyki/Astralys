@@ -9,7 +9,6 @@ const ProjectLayout = lazy(() => import('./app/ProjectLayout'));
 const Equipe = lazy(() => import('./screens/Equipe'));
 const Personagem = lazy(() => import('./screens/Personagem'));
 const Rotacao = lazy(() => import('./screens/Rotacao'));
-const Time = lazy(() => import('./screens/Time'));
 const Armas = lazy(() => import('./screens/Armas'));
 const Recarga = lazy(() => import('./screens/Recarga'));
 const RecargaLivre = lazy(() => import('./screens/RecargaLivre'));
@@ -60,7 +59,7 @@ ReactDOM.createRoot(rootElement).render(
             <Route path="rotacao" element={<Suspense fallback={null}><Rotacao /></Suspense>} />
             <Route path="armas/:nome?" element={<Suspense fallback={null}><Armas /></Suspense>} />
             <Route path="recarga" element={<Suspense fallback={null}><Recarga /></Suspense>} />
-            <Route path="time" element={<Suspense fallback={null}><Time /></Suspense>} />
+            <Route path="time" element={<Navigate to="../rotacao" replace />} />
             <Route path="otimizador/:nome?" element={<Suspense fallback={null}><Otimizador /></Suspense>} />
           </Route>
           <Route path="/card/:id" element={<Suspense fallback={null}><Card /></Suspense>} />

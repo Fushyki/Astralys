@@ -30,29 +30,23 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.waitForSelector('.dz-stepbar');
 
   const tabs = await page.$$eval('.dz-subnav nav a', (a) => a.map((x) => x.textContent.replace(/\s+/g, ' ').trim()));
-  check('a faixa do time tem os 3 passos numerados', tabs.join('|') === '1Equipe|2Rotação e buffs|3Dano do time', tabs.join('|'));
+  check('a faixa do time tem os 2 passos numerados', tabs.join('|') === '1 · Equipe|2 · Rotação e buffs', tabs.join('|'));
   check('o menu geral é Times, Personagens, Inventário, Otimizador e Ferramentas', (await page.$$eval('.dz-nav > a, .dz-header .dz-navbtn', (a) => a.map((x) => x.textContent.trim()))).join('|') === 'Times|Personagens|Inventário|Ferramentas ▾');
-  check('o passo 1 explica o que fazer e oferece o próximo', /Passo 1 de 3/.test(await bar()) && (await page.locator('.dz-stepbar a:has-text("Próximo passo: Montar a rotação")').count()) === 1);
+  check('o passo 1 explica o que fazer e oferece o próximo', /Passo 1 de 2/.test(await bar()) && (await page.locator('.dz-stepbar a:has-text("Próximo passo: Montar a rotação")').count()) === 1);
   check('no passo 1 não há botão de voltar', (await page.locator('.dz-stepbar a:has-text("←")').count()) === 0);
 
   await page.click('.eq-card a:has-text("Ajustar build") >> nth=0');
   await page.waitForURL(/personagem\/Mavuika/);
   await settle();
-  check('o personagem fica dentro do passo 1 (Equipe)', /Passo 1 de 3/.test(await bar()) && (await page.getAttribute('.dz-subnav a:has-text("Equipe")', 'aria-current')) === 'page');
+  check('o personagem fica dentro do passo 1 (Equipe)', /Passo 1 de 2/.test(await bar()) && (await page.getAttribute('.dz-subnav a:has-text("Equipe")', 'aria-current')) === 'page');
   await page.click('.dz-stepbar a:has-text("Próximo passo")');
   await page.waitForURL(/rotacao/);
   await settle();
-  check('o passo 2 é a rotação, com voltar para a equipe', /Passo 2 de 3/.test(await bar()) && (await page.locator('.dz-stepbar a:has-text("← Equipe")').count()) === 1);
-  await page.click('.dz-stepbar a:has-text("Próximo passo")');
-  await page.waitForURL(/\/time/);
-  await settle();
-  check('o passo 3 é o resultado e leva ao Card', /Passo 3 de 3/.test(await bar()) && (await page.locator('.dz-stepbar a:has-text("Gerar o Card")').count()) === 1);
+  check('o passo 2 é a rotação, com voltar para a equipe', /Passo 2 de 2/.test(await bar()) && (await page.locator('.dz-stepbar a:has-text("← Equipe")').count()) === 1);
+  check('o passo 2 termina em "Gerar card"', (await page.locator('.dz-stepbar a:has-text("Gerar card")').count()) === 1);
+  await page.goto(`${BASE}/projeto/exemplo/time`, { waitUntil: 'networkidle' });
+  check('/time redireciona para a rotação', /\/rotacao$/.test(page.url()));
   await page.screenshot({ path: path.join(OUT, 'r-passos-time.png') });
-
-  // Voltar pelo botão
-  await page.click('.dz-stepbar a:has-text("← Rotação")');
-  await page.waitForURL(/rotacao/);
-  check('"← Rotação" volta um passo', /Passo 2 de 3/.test(await bar()));
 
   // Menu Ferramentas: telas de apoio do time
   await page.click('button[aria-label="Ferramentas"]');

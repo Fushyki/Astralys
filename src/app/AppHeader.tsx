@@ -1,6 +1,6 @@
 /**
  * Barra superior fixa, igual em todas as telas: Times · Personagens · Inventário · Otimizador · Ferramentas.
- * Dentro de um time aparece uma faixa com as 3 telas dele: Equipe (com os personagens), Rotação e Dano do time.
+ * Dentro de um time aparece uma faixa com as 2 telas dele: Equipe (com os personagens) e Rotação e buffs.
  */
 import { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
@@ -59,7 +59,6 @@ export function AppHeader({ projectId, memberName, projectName, favorite, onTogg
     ? [
         { to: base, label: 'Equipe', on: pathname === base || pathname.startsWith(`${base}/personagem`) || pathname.startsWith(`${base}/armas`) },
         { to: `${base}/rotacao`, label: 'Rotação e buffs', on: pathname.startsWith(`${base}/rotacao`) },
-        { to: `${base}/time`, label: 'Dano do time', on: pathname.startsWith(`${base}/time`) },
       ]
     : [];
 
@@ -94,8 +93,7 @@ export function AppHeader({ projectId, memberName, projectName, favorite, onTogg
           <nav aria-label="Telas do time">
             {tabs.map((t, i) => (
               <Link key={t.label} to={t.to} aria-current={t.on ? 'page' : undefined}>
-                <span className="step-n" aria-hidden="true">{i + 1}</span>
-                {t.label}
+                {i + 1} · {t.label}
               </Link>
             ))}
           </nav>

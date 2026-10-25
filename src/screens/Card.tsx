@@ -93,7 +93,7 @@ export default function Card() {
             <h1 className="h1">Card</h1>
           </div>
           <div className="actions">
-            <Link className="dz-btn" to={`/projeto/${project.id}/time`}>Voltar ao dano do time</Link>
+            <Link className="dz-btn" to={`/projeto/${project.id}/rotacao`}>Voltar à rotação</Link>
           </div>
         </section>
 

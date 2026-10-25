@@ -87,7 +87,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.waitForURL(/\/projeto\/(?!exemplo)[^/]+$/);
   await page.waitForSelector('.eq-card');
   const id = page.url().split('/projeto/')[1];
-  const telas = [['Equipe', ''], ['Personagem', '/personagem/Citlali'], ['Rotação', '/rotacao'], ['Dano do time', '/time'], ['Armas', '/armas'], ['Recarga', '/recarga']];
+  const telas = [['Equipe', ''], ['Personagem', '/personagem/Citlali'], ['Rotação', '/rotacao'], ['Armas', '/armas'], ['Recarga', '/recarga']];
   for (const [label, p] of telas) {
     await page.goto(`${BASE}/projeto/${id}${p}`, { waitUntil: 'networkidle' });
     await page.waitForTimeout(900);

@@ -35,9 +35,9 @@ describe('tabela de dano das reações', () => {
     expect(total(rows, 'stellarswirl-Pyro-vortex2') / total(rows, 'stellarswirl-Pyro-vortex1')).toBeCloseTo(1.5, 6);
   });
 
-  it('Lunar-Carregado confere com o cálculo direto (um contribuinte = coeficiente cheio, 3)', () => {
+  it('Lunar-Carregado confere com o cálculo direto (um contribuinte = multiplicador de reação, 1,8)', () => {
     const direct = computeLunarReaction('lunarcharged', { characterLevel: 90, em: 0, critRate: 0, critDmg: 0, critMode: 'hit', enemy }).total;
-    expect(total(rows, 'lunarcharged')).toBeCloseTo(direct, 6);
+    expect(total(rows, 'lunarcharged')).toBeCloseTo(direct * 0.6, 6);
   });
 
   it('RES maior reduz o dano da reação daquele elemento', () => {

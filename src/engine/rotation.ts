@@ -7,7 +7,7 @@
 import { kitElement } from './kitElement';
 import type { Element, HitType, Move, Talent } from '../data/schema';
 import type { FlatDamageEffect, SpecialMove } from '../effects/schema';
-import { CONTRIBUTOR_WEIGHTS, SPECIAL_RESIST, TRANSFORMATIVE, type AdditiveReaction, type AmplifyingReaction, type ElementOrPhysical, type LunarReaction, type SpecialReaction, type TransformativeReaction } from './constants/reactions';
+import { CONTRIBUTOR_WEIGHTS, REACTION_COEF_FACTOR, SPECIAL_RESIST, TRANSFORMATIVE, type AdditiveReaction, type AmplifyingReaction, type ElementOrPhysical, type LunarReaction, type SpecialReaction, type TransformativeReaction } from './constants/reactions';
 import { computeHit, type EnemyStats, type HitBreakdown } from './damage';
 import { critFactor } from './formulas';
 import { computeLunarReaction, computeSpecial, computeStellarSwirlReaction, computeTransformative, type SpecialBreakdown } from './reactions';
@@ -294,7 +294,7 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
           const st = statsFor(i, tags);
           const en: EnemyStats = { ...enemy, defIgnore: Math.min(1, (config.enemyDefIgnore ?? 0) + (st.defIgnore ?? 0)) };
           const x = reactionAction({ move, executions: 1, ownElement: members[i].character.element, stats: st, scale, characterLevel: config.characterLevel, enemy: en });
-          const n = x.breakdown.total;
+          const n = x.breakdown.total * REACTION_COEF_FACTOR;
           return { member: i, noCrit: n, crit: n * critFactor('crit', x.critRate, x.critDmg), avg: n * critFactor('avg', x.critRate, x.critDmg) };
         });
         const weighted = (pick: (e: (typeof each)[number]) => number) => [...each].map(pick).sort((a, b) => b - a).reduce((s, v, k) => s + v * CONTRIBUTOR_WEIGHTS[k], 0) * action.executions;

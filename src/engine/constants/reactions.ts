@@ -90,9 +90,11 @@ export const SPECIAL_REACTION_MULTI: Record<SpecialReaction, number> = {
 /**
  * Dano de REAÇÃO Lunar-Charged, Lunar-Crystallize e Stellar-Swirl (gerado pelo time): cada personagem que aplicou os
  * elementos da reação "contribui" com o seu valor (EM e crítico próprios); ordenados do maior para o menor, o dano é
- * 100% do 1º + 1/2 do 2º + 1/12 do 3º + 1/12 do 4º (a mesma proporção de 60/30/5/5, mas o maior vale inteiro). Contribuinte
- * ausente: o peso some, os outros não são reescalonados. Com um só contribuinte, a reação vale o coeficiente cheio (Lunar-Charged 3).
+ * 100% do 1º + 1/2 do 2º + 1/12 do 3º + 1/12 do 4º, cada um já com o multiplicador de REAÇÃO (`REACTION_COEF_FACTOR` × o do golpe
+ * direto: Lunar-Charged 1,8 em vez de 3; Lunar-Crystallize 0,96 em vez de 1,6; HomDGCat Wiki 6.3). Contribuinte ausente: o peso
+ * some, os outros não são reescalonados. Com um só contribuinte, vale o multiplicador de reação (1,8 no Lunar-Charged).
  */
+export const REACTION_COEF_FACTOR = 0.6;
 export const CONTRIBUTOR_WEIGHTS = [1, 1 / 2, 1 / 12, 1 / 12] as const;
 
 export const STELLAR_SWIRL_VORTEX = { vortex1: 2, vortex2: 3 } as const;

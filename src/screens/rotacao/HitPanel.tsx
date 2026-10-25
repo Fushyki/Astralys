@@ -153,7 +153,7 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
                   ))}
                 </div>
               )}
-              <span className="rt-note">O dano é o maior valor inteiro + metade do 2º + 1/12 do 3º + 1/12 do 4º, cada um com a Maestria e o crítico dele. A ação conta para {memberLabel}.</span>
+              <span className="rt-note">O dano é o maior valor + 1/2 do 2º + 1/12 do 3º + 1/12 do 4º (cada um já com o multiplicador de reação, 0,6 do golpe direto), cada um com a Maestria e o crítico dele. A ação conta para {memberLabel}.</span>
             </div>
           )}
           <Sel label="Elemento do dano" value={(action.element ?? '') as (typeof ELEMENTS)[number]} options={ELEMENTS.map((e) => ({ value: e, label: ELEMENT_LABEL[e] }))} onChange={(e) => update(action.id, { element: e === '' ? undefined : e })} />

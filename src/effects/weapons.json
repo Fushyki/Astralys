@@ -10,16 +10,6 @@
     "fonte_info": "planilha Mavuika_Iansan_Combo2, aba \"Armas (efeitos)\". R1 em Nightsoul (×1,75): 28%→49% ATK, 20%→35% CD."
   },
   {
-    "weapon": "Thrilling Tales of Dragon Slayers",
-    "atkPct": 0,
-    "dmgPct": 0,
-    "critRate": 0,
-    "critDmg": 0,
-    "em": 0,
-    "er": 0,
-    "fonte_info": "planilha Mavuika_Iansan_Combo2, aba \"Armas (efeitos)\". Vai só ao PRÓXIMO personagem: use 'Buffs extras' (R5 = 48%)."
-  },
-  {
     "weapon": "Engulfing Lightning",
     "atkPct": 0,
     "dmgPct": 0,
@@ -12717,6 +12707,269 @@
       }
     ],
     "note": "Dano Crítico do Supremo e ATK do dono (assumido ativo); o ATK dos aliados (3 s) vale nas janelas de buff. Com Hexerei: Secret Rite (2+ membros Hexerei) os dois ATK sobem 75% (parâmetro do Lunaris).",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "buffs": [
+      {
+        "id": "time",
+        "label": "ATK do próximo personagem",
+        "minConstellation": 0,
+        "scope": "others",
+        "timed": true,
+        "stats": {
+          "atkPct": 0.24,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": []
+      }
+    ],
+    "flat": [],
+    "procs": [],
+    "weapon": "Thrilling Tales of Dragon Slayers",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {},
+        "buffs": [
+          {
+            "id": "time",
+            "label": "ATK do próximo personagem",
+            "minConstellation": 0,
+            "scope": "others",
+            "timed": true,
+            "stats": {
+              "atkPct": 0.24,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          }
+        ],
+        "flat": [],
+        "procs": []
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {},
+        "buffs": [
+          {
+            "id": "time",
+            "label": "ATK do próximo personagem",
+            "minConstellation": 0,
+            "scope": "others",
+            "timed": true,
+            "stats": {
+              "atkPct": 0.3,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          }
+        ],
+        "flat": [],
+        "procs": []
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {},
+        "buffs": [
+          {
+            "id": "time",
+            "label": "ATK do próximo personagem",
+            "minConstellation": 0,
+            "scope": "others",
+            "timed": true,
+            "stats": {
+              "atkPct": 0.36,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          }
+        ],
+        "flat": [],
+        "procs": []
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {},
+        "buffs": [
+          {
+            "id": "time",
+            "label": "ATK do próximo personagem",
+            "minConstellation": 0,
+            "scope": "others",
+            "timed": true,
+            "stats": {
+              "atkPct": 0.42,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          }
+        ],
+        "flat": [],
+        "procs": []
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {},
+        "buffs": [
+          {
+            "id": "time",
+            "label": "ATK do próximo personagem",
+            "minConstellation": 0,
+            "scope": "others",
+            "timed": true,
+            "stats": {
+              "atkPct": 0.48,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": []
+          }
+        ],
+        "flat": [],
+        "procs": []
+      }
+    ],
+    "note": "Ao trocar de personagem, o que entra ganha ATK por 10 s (1 vez a cada 20 s): faixa na linha do tempo, vale para os aliados do dono (parâmetro do Lunaris).",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
   {

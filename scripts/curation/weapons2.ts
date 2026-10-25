@@ -127,6 +127,11 @@ export const WEAPONS_2: Record<string, GearCur> = {
     expect: 'Blade of the Daylight Hours',
     note: 'Dano Crítico do Supremo e ATK do dono (assumido ativo); o ATK dos aliados (3 s) vale nas janelas de buff. Com Hexerei: Secret Rite (2+ membros Hexerei) os dois ATK sobem 75% (parâmetro do Lunaris).',
   },
+  'Thrilling Tales of Dragon Slayers': {
+    buffs: [{ id: 'time', label: 'ATK do próximo personagem', scope: 'others', timed: true, stats: { atkPct: { p: 0 } } }],
+    expect: 'When switching characters',
+    note: 'Ao trocar de personagem, o que entra ganha ATK por 10 s (1 vez a cada 20 s): faixa na linha do tempo, vale para os aliados do dono (parâmetro do Lunaris).',
+  },
   'Lightbearing Moonshard': { defPct: { lit: 0.2 }, buffs: [{ id: 'lcr', label: 'DMG Lunar-Cristalizar', timed: true, stats: { reactionBonus: { lunarcrystallize: { p: 0 } } } }], expect: 'Lunar-Crystallize', note: 'DEF e +64% (R1) de DMG Lunar-Cristalizar por 5 s depois da habilidade: faixa na linha do tempo.' },
   'Whitelake Frostfeather': { atkPct: { p: 1, x: 3 }, buffs: [{ id: 'crit', label: 'Dano Crítico Estelar', stats: { reactionBonus: { stellarconductCritDmg: { p: 4 }, stellarswirlCritDmg: { p: 4 } } } }], expect: 'Lake-Hued Lament', note: 'ATK e, com 3 stacks (assumidos), +50% (R1) de Dano Crítico no dano Estelar. A energia não entra.' },
   'Exaiphanes Blade': { atkPct: { p: 0 }, expect: 'Traveler equips', note: 'Só o ATK (assumido ativo). A energia devolvida não entra.' },

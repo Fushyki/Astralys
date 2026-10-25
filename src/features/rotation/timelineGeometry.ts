@@ -2,7 +2,7 @@
  * Geometria da linha do tempo (sem React): conversão tempo ↔ posição, snap e tamanho das estrelas.
  * O SVG usa um viewBox de largura fixa (1000); o navegador escala.
  */
-import type { RotationProject } from '../../engine';
+import { effectiveDuration, type RotationProject } from '../../engine';
 
 export const VIEW_W = 1000;
 export const X0 = 184; // início do eixo (depois da coluna de nomes e fontes)
@@ -17,10 +17,10 @@ export const BUFF_ROW_H = 34;
 export const BUFF_BAR_H = 26;
 
 /** Fim do eixo em segundos: cobre a duração, as ações e as janelas, arredondado para cima a um passo par. */
-export function axisEnd(project: Pick<RotationProject, 'config' | 'actions' | 'buffWindows'>): number {
+export function axisEnd(project: Pick<RotationProject, 'config' | 'actions' | 'buffWindows' | 'compat'>): number {
   const lastAction = project.actions.reduce((m, a) => Math.max(m, a.time), 0);
   const lastWindow = project.buffWindows.reduce((m, w) => Math.max(m, w.end), 0);
-  const needed = Math.max(project.config.rotationDuration, lastAction + 1, lastWindow);
+  const needed = Math.max(effectiveDuration(project), lastAction + 1, lastWindow);
   return Math.max(4, Math.ceil(needed / 2) * 2);
 }
 

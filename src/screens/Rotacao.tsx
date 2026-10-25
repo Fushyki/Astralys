@@ -1,6 +1,7 @@
 /** Rotação e buffs (/projeto/:id/rotacao): linha do tempo editável, paleta de golpes e o golpe selecionado. */
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { effectiveDuration } from '../engine';
 import { useProjectView } from '../app/ProjectContext';
 import { realignActions } from '../features/rotation/projectOps';
 import { laneInfos } from '../features/rotation/rotationModel';
@@ -36,7 +37,7 @@ export default function Rotacao() {
     <main className="dz-page">
       <section className="dz-pagehead">
         <div className="titles">
-          <h1 className="h1" style={{ fontSize: 36 }}>Rotação · {v.project.config.rotationDuration.toString().replace('.', ',')} s</h1>
+          <h1 className="h1" style={{ fontSize: 36 }}>Rotação · {effectiveDuration(v.project).toString().replace('.', ',')} s</h1>
           <span className="num muted">{v.project.actions.length} golpes · {windowed} buffs com janela</span>
         </div>
         <div className="actions rt-actions">

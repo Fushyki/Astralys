@@ -3,7 +3,7 @@
  * (participação de cada personagem no dano, builds, DPS/DPR e a sequência de golpes). Função pura.
  */
 import type { Character } from '../../data/schema';
-import type { AnalysisBundle, ResolvedProject, RotationProject } from '../../engine';
+import { effectiveDuration, type AnalysisBundle, type ResolvedProject, type RotationProject } from '../../engine';
 import { memberColors } from '../../design/elements';
 import { mainReaction } from '../team/teamModel';
 
@@ -123,7 +123,7 @@ export function buildCardModel(
     };
   });
   const card = project.meta.card ?? {};
-  const duration = Math.max(project.config.rotationDuration, 0.1);
+  const duration = Math.max(effectiveDuration(project), 0.1);
   const biggest = Math.max(1, ...result.actions.map((a) => a.avg));
   const timeline: CardHit[] = result.actions.map((a) => ({
     at: Math.min(1, Math.max(0, (a.action.time ?? 0) / duration)),
@@ -138,7 +138,7 @@ export function buildCardModel(
     members,
     dps: result.totals.dps,
     dpr: result.totals.avg,
-    duration: project.config.rotationDuration,
+    duration: effectiveDuration(project),
     sequence: sequenceText(project, hitTypeOf),
     enemyLevel: project.config.enemyLevel,
     nick: card.nick?.trim() ?? '',

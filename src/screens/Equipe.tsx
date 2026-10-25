@@ -5,7 +5,7 @@ import { useProjectView } from '../app/ProjectContext';
 import { CharacterPickerDialog } from '../design/CharacterPickerDialog';
 import { CharacterAvatar, Chip, KpiCard, StackedBar } from '../design/primitives';
 import { pieceIconUrl, weaponIconUrl } from '../design/images';
-import { MAX_TEAM_SIZE, effectiveTalents, type MemberRef } from '../engine';
+import { MAX_TEAM_SIZE, effectiveDuration, effectiveTalents, type MemberRef } from '../engine';
 import type { LoadedData } from '../features/rotation/data';
 import { effectStatus } from '../features/rotation/teamInfo';
 import { weaponsFor } from '../features/rotation/teamOps';
@@ -234,7 +234,7 @@ export default function Equipe() {
       </section>
 
       <p className="muted small" style={{ margin: 0 }}>
-        Rotação de {formatDecimal(project.config.rotationDuration, 1)} s com {summary.actionCount} golpes. Os papéis, os buffs e os stats vêm do cálculo do projeto.
+        Rotação de {formatDecimal(effectiveDuration(project), 1)} s com {summary.actionCount} golpes. Os papéis, os buffs e os stats vêm do cálculo do projeto.
       </p>
 
       {picker && (

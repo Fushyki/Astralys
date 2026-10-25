@@ -5,7 +5,7 @@ import { AppHeader } from '../app/AppHeader';
 import '../design/design.css';
 import { elementColor } from '../design/elements';
 import { CharacterAvatar, Chip, StackedBar } from '../design/primitives';
-import { analyzeProject, parseProject, resolveProject, type RotationProject } from '../engine';
+import { analyzeProject, effectiveDuration, parseProject, resolveProject, type RotationProject } from '../engine';
 import { useGameData } from '../features/rotation/data';
 import { cloneProject, saveProject } from '../features/rotation/persistence';
 import { getPublic, type PublicProject } from '../online/api';
@@ -126,7 +126,7 @@ export default function Publico() {
                   <div className="pb-kp">
                     <span><b className="num" data-testid="pub-dps">{compact(numbers.dps)}</b> DPS</span>
                     <span><b className="num" data-testid="pub-dpr">{compact(numbers.dpr)}</b> DPR</span>
-                    <span className="num">{formatDecimal(loaded.project.config.rotationDuration, 1)} s</span>
+                    <span className="num">{formatDecimal(effectiveDuration(loaded.project), 1)} s</span>
                   </div>
                 </>
               )}

@@ -3,7 +3,7 @@
  * Tudo sai do motor e das tabelas de efeitos; nada é digitado. Funções puras.
  */
 import type { Character } from '../../data/schema';
-import { assembleTeam, type AnalysisBundle, type ResolvedProject, type RotationProject, type StatDelta, type TeamBuff } from '../../engine';
+import { assembleTeam, effectiveDuration, type AnalysisBundle, type ResolvedProject, type RotationProject, type StatDelta, type TeamBuff } from '../../engine';
 import { formatDecimal, formatInt } from '../../ui/format';
 import { resonanceOf } from '../rotation/teamInfo';
 
@@ -115,7 +115,7 @@ export function configChips(project: RotationProject, elements: (Character['elem
     { text: `Inimigo nível ${c.enemyLevel}` },
     { text: `RES base ${formatDecimal(c.enemyBaseRes * 100, 0)}%` },
     { text: `Redução de DEF ${formatDecimal(c.enemyDefRed * 100, 0)}%` },
-    { text: `Rotação de ${formatDecimal(c.rotationDuration, 1)} s` },
+    { text: `Rotação de ${formatDecimal(effectiveDuration(project), 1)} s` },
   ];
   for (const r of resonanceOf(elements.filter((e): e is Character['element'] => !!e)).filter((x) => x.applied)) {
     chips.push({ text: `Ressonância ${r.element} · ${r.text.replace(', já aplicado', '')}`, accent: true });

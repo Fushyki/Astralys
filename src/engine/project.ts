@@ -103,6 +103,8 @@ export const ConfigSchema = z.object({
   enemyDefIgnore: z.number().min(0).max(1).optional(),
   minRollsPerSubstat: z.number().int().min(0).max(6),
   rotationDuration: z.number().positive(),
+  /** Só vale `rotationDuration` se o usuário definiu a duração à mão (ou no modo planilha); senão ela segue o último golpe. */
+  durationManual: z.boolean().optional(),
 });
 
 export const MoveRefSchema = z.object({
@@ -634,12 +636,22 @@ export function gearSourceIds(m: MemberInput, i: number): string[] {
   return ids;
 }
 
+/** Menor duração automática (s): evita dividir por zero quando só há um golpe em 0 s. */
+export const MIN_AUTO_DURATION = 0.5;
+
+/** Duração da rotação: a manual (Configurações, ou modo planilha) ou o instante do último golpe. */
+export function effectiveDuration(project: Pick<RotationProject, 'config' | 'actions' | 'compat'>): number {
+  if (project.config.durationManual === true || project.compat === 'planilha') return project.config.rotationDuration;
+  const last = project.actions.reduce((m, a) => Math.max(m, a.time), 0);
+  return Math.max(MIN_AUTO_DURATION, Math.round(last * 100) / 100);
+}
+
 /** Transforma o projeto salvo nas entradas do motor. Lança ProjectResolveError se algo não existir nos dados. */
 export function resolveProject(project: RotationProject, data: GameData, effects: EffectsData): ResolvedProject {
   const planilha = project.compat === 'planilha';
   const members = finalizeMembers(project.members.map((m) => resolveMember(m, data, effects, project.config.minRollsPerSubstat)), planilha);
   const moves = indexMoves(data.moves);
-  const config: GlobalConfig = { ...project.config, elementMode: planilha || project.elementMode === 'personagem' ? 'character' : 'kit' };
+  const config: GlobalConfig = { ...project.config, rotationDuration: effectiveDuration(project), elementMode: planilha || project.elementMode === 'personagem' ? 'character' : 'kit' };
 
   // Cronológico: os stacks de dano fixo são consumidos pelos primeiros hits elegíveis NO TEMPO (ordem estável nos empates).
   const chronological = [...project.actions].sort((a, b) => a.time - b.time);

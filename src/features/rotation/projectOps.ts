@@ -239,7 +239,11 @@ type Config = RotationProject['config'];
 export function updateConfig(project: RotationProject, patch: Partial<Config>): RotationProject {
   const next: Config = { ...project.config };
   const num = (v: unknown): v is number => typeof v === 'number' && Number.isFinite(v);
-  if (num(patch.rotationDuration) && patch.rotationDuration > 0) next.rotationDuration = Math.round(patch.rotationDuration * 100) / 100;
+  if (num(patch.rotationDuration) && patch.rotationDuration > 0) {
+    next.rotationDuration = Math.round(patch.rotationDuration * 100) / 100;
+    next.durationManual = true;
+  }
+  if (patch.durationManual === false) next.durationManual = false;
   if (num(patch.enemyLevel)) next.enemyLevel = Math.min(200, Math.max(1, Math.round(patch.enemyLevel)));
   if (num(patch.characterLevel)) next.characterLevel = Math.min(100, Math.max(1, Math.round(patch.characterLevel)));
   if (num(patch.enemyBaseRes)) next.enemyBaseRes = Math.min(2, Math.max(-1, Math.round(patch.enemyBaseRes * 1000) / 1000));

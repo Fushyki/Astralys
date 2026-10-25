@@ -1,7 +1,7 @@
 /** Configurações da rotação: duração, inimigo, realinhar golpes, converter perfis em janelas e restaurar o exemplo. */
 import { useEffect, useState } from 'react';
 import { NumberInput, SelectField } from '../../design/fields';
-import type { RotationProject } from '../../engine';
+import { effectiveDuration, type RotationProject } from '../../engine';
 import { DEFAULT_REALIGN_STEP, MIN_REALIGN_STEP, lastActionTime } from '../../features/rotation/projectOps';
 import { SAMPLE_ID, sampleForApp } from '../../features/rotation/persistence';
 import { useRotationStore } from '../../features/rotation/store';
@@ -19,6 +19,8 @@ export function SettingsDialog({ project, onClose }: { project: RotationProject;
   const stepOk = Number.isFinite(stepNum) && stepNum >= MIN_REALIGN_STEP;
   const cfg = project.config;
   const last = lastActionTime(project);
+  const duration = effectiveDuration(project);
+  const manual = cfg.durationManual === true || project.compat === 'planilha';
   const hasManual = project.actions.some((a) => a.tagSource === 'manual');
 
   useEffect(() => {
@@ -36,9 +38,9 @@ export function SettingsDialog({ project, onClose }: { project: RotationProject;
         </header>
         <div className="pc-dialog-body">
           <div className="pc-form two">
-            <NumberInput label="Duração da rotação" value={cfg.rotationDuration} min={0.5} step={0.5} suffix="s" onCommit={(v) => updateConfig({ rotationDuration: v })} />
+            <NumberInput label="Duração da rotação" value={duration} min={0.5} step={0.5} suffix="s" onCommit={(v) => updateConfig({ rotationDuration: v })} />
             <div style={{ alignSelf: 'end' }}>
-              <Button variant="ghost" size="sm" disabled={last <= 0 || Math.abs(last - cfg.rotationDuration) < 0.005} onClick={() => updateConfig({ rotationDuration: last })}>
+              <Button variant="ghost" size="sm" disabled={!manual || project.compat === 'planilha'} onClick={() => updateConfig({ durationManual: false })}>
                 usar o fim do último golpe ({formatDecimal(last, 1)} s)
               </Button>
             </div>

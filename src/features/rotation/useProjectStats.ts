@@ -3,7 +3,7 @@
  * um projeto por vez e em intervalos curtos, para a lista aparecer na hora e os números chegarem em seguida.
  */
 import { useEffect, useState } from 'react';
-import { analyzeProject, resolveProject } from '../../engine';
+import { analyzeProject, effectiveDuration, resolveProject } from '../../engine';
 import type { LoadedData } from './data';
 import { loadProject } from './persistence';
 
@@ -34,7 +34,7 @@ export function useProjectStats(ids: string[], data: LoadedData | undefined, ver
           const r = resolveProject(p, data.game, data.effects);
           const b = analyzeProject({ team: r.team, actions: r.actions, flatEffects: r.flatEffects, ampCoefficient: r.ampCoefficient });
           const res = b.optimization.result;
-          value = { dps: res.totals.dps, dpr: res.totals.avg, shares: res.members.map((m) => m.share), duration: p.config.rotationDuration };
+          value = { dps: res.totals.dps, dpr: res.totals.avg, shares: res.members.map((m) => m.share), duration: effectiveDuration(p) };
         }
       } catch {
         value = 'error';

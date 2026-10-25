@@ -165,14 +165,25 @@ const num = (s) => Number(String(s).replace(/\./g, '').replace(',', '.'));
   check('o gráfico tem 6 pontos numerados e legenda', (await page.locator('.rt-mark').count()) === 6 && (await page.locator('.rt-legend > span').count()) === 6);
   check('a divisão do dano lista os 4 personagens e a frase Hipercarry', (await page.locator('.rt-split').count()) === 4 && /Hipercarry: Mavuika/.test(await panel('Divisão do dano').textContent()));
 
-  // ---- Duração e configurações ----
+  // ---- Configurações ----
   await page.click('button:has-text("Configurações")');
-  const d = page.locator('.dz-dialog label.dz-field:has(span:text-is("Duração da rotação")) input');
+  const dlg = page.locator('.rt-dialog');
+  check('Configurações abre um diálogo com as seções', (await dlg.locator('.rt-cfg-sec h3').allTextContents()).join('|').startsWith('Duração da rotação|Cenário|Elemento dos golpes|Realinhar os golpes'));
+  const d = dlg.locator('.rt-fld:has-text("Duração") input').first();
   await d.fill('35'); await d.blur(); await settle();
   check('duração manual (35 s) divide o DPS por 2 (exemplo é modo planilha)', Math.abs(num(await dps()) - 108300) < 2, await dps());
+  check('o diálogo mostra o DPS ao vivo', num(await dlg.locator('.rt-cfg-live .num').textContent()) === num(await dps()));
+  const res = dlg.locator('.rt-fld:has-text("RES base do inimigo") input');
+  const dpsBefore = num(await dps());
+  await res.fill('50'); await res.blur(); await settle();
+  check('mudar a RES do inimigo muda o dano na hora', num(await dps()) < dpsBefore, `${dpsBefore} → ${await dps()}`);
+  await dlg.locator('button:has-text("Realinhar agora")').click(); await settle();
+  check('Realinhar agora deixa os golpes seguidos (Apertar a linha fica desligado)', await page.locator('.rt-head button:has-text("Apertar a linha")').isDisabled());
   await page.keyboard.press('Escape');
-  await page.keyboard.press('Control+z'); await settle();
-  check('Ctrl+Z restaura', (await dps()) === '216.600');
+  check('Esc fecha o diálogo', (await page.locator('.rt-dialog').count()) === 0);
+  for (let i = 0; i < 4; i++) await page.keyboard.press('Control+z');
+  await settle();
+  check('Ctrl+Z restaura o DPS', (await dps()) === '216.600', await dps());
   const tighten = page.locator('.rt-head button:has-text("Apertar a linha")');
   check('"Apertar a linha" no cabeçalho', (await tighten.count()) === 1 && !(await tighten.isDisabled()));
   await tighten.click(); await settle();

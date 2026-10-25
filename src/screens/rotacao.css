@@ -200,3 +200,22 @@
 .rt-hscroll::-moz-range-progress { height: 6px; border-radius: 3px; background: #2a356a; }
 .rt-hscroll::-moz-range-thumb { width: 28px; height: 10px; border-radius: 5px; background: var(--gold); border: 0; }
 .rt-hscroll:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
+
+/* Configurações */
+.rt-dialog { width: min(680px, 100%); max-height: 88vh; display: flex; flex-direction: column; background: #0c1128; border: 1px solid #232d5c; border-radius: var(--r-panel); overflow: hidden; }
+.rt-dialog > header { display: flex; align-items: center; gap: var(--sp-3); min-height: var(--panel-head); padding: var(--sp-3) var(--panel-pad); border-bottom: 1px solid #18204a; background: #0f1532; }
+.rt-dialog > header h2 { margin: 0; flex: 1; font: 700 var(--fs-4) var(--font-display); letter-spacing: .08em; text-transform: uppercase; color: #eef1ff; }
+.rt-cfg-live { display: flex; flex-direction: column; align-items: flex-end; padding: 2px var(--sp-3); border: 1px solid #6b5524; border-radius: var(--r-inner); background: #17140e; }
+.rt-cfg-live .rt-lbl { color: var(--gold); font-size: 11px; }
+.rt-cfg-live .num { font: 700 var(--fs-5) var(--font-display); color: var(--gold); line-height: 1.1; font-variant-numeric: tabular-nums; }
+.rt-dialog-body { overflow-y: auto; padding: var(--panel-pad); display: flex; flex-direction: column; gap: var(--sp-4); }
+.rt-cfg-sec { display: flex; flex-direction: column; gap: var(--sp-3); padding: var(--sp-4); border-radius: var(--r-inner); background: #0a0f24; border: 1px solid #232d5c; }
+.rt-cfg-sec header h3 { margin: 0; font: 700 var(--fs-3) var(--font-display); letter-spacing: .08em; text-transform: uppercase; color: #eef1ff; }
+.rt-cfg-sec header p { margin: 2px 0 0; font-size: var(--fs-1); color: #7e88b6; line-height: 1.4; }
+.rt-cfg-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: var(--sp-3); }
+.rt-cfg-row { display: flex; flex-direction: column; gap: var(--sp-2); max-width: 260px; }
+.rt-cfg-row.inline { flex-direction: row; align-items: flex-end; max-width: none; }
+.rt-cfg-row.inline .rt-fld { width: 200px; }
+.rt-dialog .rt-seg { align-self: flex-start; }
+.rt-dialog .rt-inp { height: var(--ctl-md); }
+.rt-inp select { appearance: none; -webkit-appearance: none; cursor: pointer; }

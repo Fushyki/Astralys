@@ -93,7 +93,7 @@ export default function Rotacao() {
         <p className="note" role="status">Atualizando a equipe…</p>
       )}
 
-      {settings && <SettingsDialog project={v.project} onClose={() => setSettings(false)} />}
+      {settings && <SettingsDialog project={v.project} dps={v.summary.dps} onClose={() => setSettings(false)} />}
     </main>
   );
 }

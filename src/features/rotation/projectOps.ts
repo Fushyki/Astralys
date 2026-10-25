@@ -395,26 +395,36 @@ export function chainTimes(start: number, every: number, until: number): number[
 /** As execuções do grupo, em ordem de tempo. */
 export const chainOf = (project: RotationProject, chainId: string): ActionRef[] => project.actions.filter((a) => a.chainId === chainId).sort((a, b) => a.time - b.time);
 
-/** Transforma o golpe em contínuo: a ação original vira a 1ª execução e as outras são cópias, a cada `every` até `until`. */
-export function makeChain(project: RotationProject, id: string, params: { every: number; until: number }): RotationProject {
+/**
+ * Até onde o golpe contínuo vai: a duração da rotação. Manual (Configurações) ou, no automático, o último golpe que NÃO é
+ * contínuo (senão o contínuo definiria a própria duração).
+ */
+export function chainUntil(project: RotationProject): number {
+  if (project.config.durationManual === true || project.compat === 'planilha') return project.config.rotationDuration;
+  return project.actions.filter((a) => !a.chainId).reduce((m, a) => Math.max(m, a.time), 0);
+}
+
+/** Transforma o golpe em contínuo: a ação original vira a 1ª execução e as outras são cópias, a cada `every` até a duração. */
+export function makeChain(project: RotationProject, id: string, params: { every: number; until?: number }): RotationProject {
   const src = project.actions.find((a) => a.id === id);
   if (!src) return project;
   const chainId = src.chainId ?? nextChainId(project);
-  return rebuildChain({ ...project, actions: project.actions.map((a) => (a.id === id ? { ...a, chainId } : a)) }, chainId, { start: src.time, ...params });
+  return rebuildChain({ ...project, actions: project.actions.map((a) => (a.id === id ? { ...a, chainId } : a)) }, chainId, { start: src.time, every: params.every, until: params.until ?? chainUntil(project) });
 }
 
 /** "Refazer pelo intervalo": recria as execuções a partir de Começa em / A cada / Até (a 1ª execução e a reação-base ficam). */
-export function rebuildChain(project: RotationProject, chainId: string, params: { start: number; every: number; until: number }): RotationProject {
+export function rebuildChain(project: RotationProject, chainId: string, params: { start: number; every: number; until?: number }): RotationProject {
   const members = chainOf(project, chainId);
   const head = members[0];
   if (!head) return project;
-  const times = chainTimes(params.start, params.every, params.until);
+  const until = params.until ?? chainUntil({ ...project, actions: project.actions.filter((a) => a.chainId !== chainId) });
+  const times = chainTimes(params.start, params.every, until);
   let next: RotationProject = { ...project, actions: project.actions.filter((a) => a.chainId !== chainId || a.id === head.id) };
   next = { ...next, actions: next.actions.map((a) => (a.id === head.id ? { ...a, time: times[0] } : a)) };
   for (const t of times.slice(1)) {
     next = { ...next, actions: [...next.actions, { ...head, id: nextActionId(next), time: t, activeTags: [...head.activeTags] }] };
   }
-  return touch({ ...next, chains: { ...next.chains, [chainId]: { every: Math.max(0.1, params.every), until: params.until } } });
+  return touch({ ...next, chains: { ...next.chains, [chainId]: { every: Math.max(0.1, params.every), until } } });
 }
 
 /** + Execução: uma nova execução depois da última (a cada `every`). */

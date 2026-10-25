@@ -30,8 +30,8 @@ export interface RotationState {
   insertAction: (input: Omit<ops.NewAction, 'time'>) => string | null;
   reorderActions: (from: number, to: number) => void;
   removeActions: (ids: string[]) => void;
-  makeChain: (id: string, params: { every: number; until: number }) => void;
-  rebuildChain: (chainId: string, params: { start: number; every: number; until: number }) => void;
+  makeChain: (id: string, params: { every: number }) => void;
+  rebuildChain: (chainId: string, params: { start: number; every: number }) => void;
   addExecution: (chainId: string) => void;
   dissolveChain: (chainId: string) => void;
   removeChain: (chainId: string) => void;

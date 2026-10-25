@@ -50,13 +50,11 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
   const meta = chainId ? project.chains[chainId] : undefined;
   const [start, setStart] = useState(execs[0]?.time ?? action.time);
   const [every, setEvery] = useState(meta?.every ?? 2);
-  const [until, setUntil] = useState(meta?.until ?? action.time + 10);
   const [everyN, setEveryN] = useState('2');
   useEffect(() => {
     setStart(execs[0]?.time ?? action.time);
     setEvery(meta?.every ?? 2);
-    setUntil(meta?.until ?? action.time + 10);
-  }, [chainId, meta?.every, meta?.until]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [chainId, meta?.every]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const covering = useMemo(() => (chainId || !result ? [] : coveringBuffs(project, v.resolved, v.bundle, action.id)), [project, v.resolved, v.bundle, action.id, chainId, result]);
   const total = v.bundle.optimization.result.totals.avg;
@@ -73,14 +71,13 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
         <b style={{ color: familyColor }}>{name}</b>
         <span>{kindLine} · {reactionLine}</span>
       </div>
-      <Seg full label="Tipo de golpe" value={chainId ? 'chain' : 'single'} onChange={(m) => (m === 'chain' ? st().makeChain(action.id, { every: 2, until: action.time + 10 }) : chainId && st().dissolveChain(chainId))} options={[{ value: 'single', label: 'Golpe único' }, { value: 'chain', label: 'Contínuo' }]} />
+      <Seg full label="Tipo de golpe" value={chainId ? 'chain' : 'single'} onChange={(m) => (m === 'chain' ? st().makeChain(action.id, { every: 2 }) : chainId && st().dissolveChain(chainId))} options={[{ value: 'single', label: 'Golpe único' }, { value: 'chain', label: 'Contínuo' }]} />
 
       {chainId ? (
         <>
-          <div className="rt-three">
+          <div className="rt-two">
             <Num label="Começa em" value={start} unit="s" onCommit={setStart} min={0} />
             <Num label="A cada" value={every} unit="s" className="gold" onCommit={setEvery} min={0.1} />
-            <Num label="Até" value={until} unit="s" onCommit={setUntil} min={0} />
           </div>
           <div className="rt-two">
             <Num label="Hits por vez" value={hitsEach} digits={0} onCommit={(n) => setAll({ executions: Math.max(1, Math.round(n)) })} min={1} />
@@ -107,7 +104,7 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
             })}
             <div className="ef">
               <Button variant="ghost" size="sm" onClick={() => chainId && st().addExecution(chainId)}>+ Execução</Button>
-              <Button variant="ghost" size="sm" onClick={() => chainId && st().rebuildChain(chainId, { start, every, until })}>Refazer pelo intervalo</Button>
+              <Button variant="ghost" size="sm" onClick={() => chainId && st().rebuildChain(chainId, { start, every })}>Refazer pelo intervalo</Button>
             </div>
           </div>
           <span className="rt-note">Cada ponto tem tempo e reação próprios. Ex.: Durin derrete 1 a cada 2. Na linha do tempo, o ponto cheio tem reação e o vazado não.</span>

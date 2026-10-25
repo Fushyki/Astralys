@@ -51,13 +51,24 @@ describe('golpe contínuo', () => {
     // Reação em 1 de 2: execuções 1, 3 e 5 com reação
     p = reactionEveryN(p, chain[0].chainId!, 2, 'melt');
     expect(chainOf(p, chain[0].chainId!).map((a) => a.reaction)).toEqual(['melt', 'none', 'melt', 'none', 'melt']);
-    // Refazer pelo intervalo recria
+    // Refazer pelo intervalo recria (até a duração)
     p = rebuildChain(p, chain[0].chainId!, { start: 0.5, every: 4, until: 10.5 });
     expect(chainOf(p, chain[0].chainId!).map((a) => a.time)).toEqual([0.5, 4.5, 8.5]);
     p = addExecution(p, chain[0].chainId!);
     expect(chainOf(p, chain[0].chainId!)).toHaveLength(4);
     expect(dissolveChain(p, chain[0].chainId!).actions).toHaveLength(1);
     expect(removeChain(p, chain[0].chainId!).actions).toHaveLength(0);
+  });
+
+  it('sem "Até": o contínuo vai até a duração da rotação (último golpe não contínuo)', () => {
+    let p = empty();
+    p = insertAction(p, { member: 0, move: move('fim') }, { mode: 'marker', gap: 0.4, marker: 9 });
+    p = insertAction(p, { member: 0, move: move('c') }, { mode: 'marker', gap: 0.4, marker: 1 });
+    const id = p.actions.find((a) => a.move.label === 'c')!.id;
+    p = makeChain(p, id, { every: 2 });
+    const times = chainOf(p, p.actions.find((a) => a.chainId)!.chainId!).map((a) => a.time);
+    expect(times).toEqual([1, 3, 5, 7]);
+    expect(Math.max(...times)).toBeLessThan(9);
   });
 
   it('remover a última execução some com o grupo', () => {

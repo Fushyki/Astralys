@@ -15,6 +15,7 @@ import {
   finalStats,
   gearFlat,
   resolveMember,
+  withSpecial,
   zeroRolls,
   type EffectsData,
   type FinalStats,
@@ -152,7 +153,8 @@ export function createEvaluator(input: EvaluatorInput): Evaluator {
     if (!move) return 0;
     const action: RotationAction = {
       id: move.id, member,
-      move: { id: move.id, character: move.character, talent: move.talent, hitType: move.hitType, label: move.label, displayName: move.label, hits: move.hits, scale: move.scale },
+      // Golpe Lunar/Estelar do kit usa a fórmula dele (sem DMG% elemental), como na tabela de dano.
+      move: withSpecial({ id: move.id, character: move.character, talent: move.talent, hitType: move.hitType, label: move.label, displayName: move.label, hits: move.hits, scale: move.scale }, move.variant, r.members[member].characterEffect),
       executions: 1, reaction: o.reaction, activeTags: [...new Set(r.assembly.buffs.map((b) => b.tag))], dmgAdjust: 0,
     };
     const res = evaluateRotation({ members: r.members, assembly: r.assembly, config: r.team.config, rolls, ampCoefficient: resolved.ampCoefficient }, [action]).actions[0];

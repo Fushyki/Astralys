@@ -6,7 +6,7 @@ import { parseGood } from '../../src/features/good/goodImport';
 import { createEvaluator } from '../../src/features/optimizer/evaluator';
 import { DEFAULT_CONFIG, filterInventory, runOptimizer, type OptimizerConfig } from '../../src/features/optimizer/run';
 import { bruteForce, configOfPieces } from '../../src/features/optimizer/solver';
-import { DIMS, addInto } from '../../src/features/optimizer/vector';
+import { DIM, DIMS, addInto } from '../../src/features/optimizer/vector';
 import { sampleProject } from '../../src/features/rotation/persistence';
 
 const root = path.resolve(__dirname, '../..');
@@ -237,6 +237,26 @@ describe('alvo da otimização: golpe do kit e buff', () => {
     // 0,8% do HP máximo: o valor do buff é 0,008 × HP final (ao menos dentro de 1% do melhor HP)
     expect(byBuff.report.stats.hp * 0.008).toBeCloseTo(byBuff.report.value, 0);
     expect(byBuff.report.stats.hp).toBeGreaterThanOrEqual(byHp.report.stats.hp * 0.99);
+  });
+});
+
+describe('golpe Lunar do kit como alvo', () => {
+  it('Carga Lunar de Interferência Kuuvahki (Columbina) não ganha nada do DMG% Hydro', () => {
+    const base0 = sampleProject();
+    const members = ['Columbina', 'Mavuika', 'Citlali', 'Bennett'].map((name) => ({ ...project.members[0], character: name, weapon: game.weapons.find((w) => w.type === game.characters.find((c) => c.name === name)!.weapon && w.rarity === 4)!.name, primarySet: undefined, secondarySet: undefined }));
+    const p = { ...base0, compat: 'none' as const, members, actions: [], buffWindows: [] };
+    const r = resolveProject(p as never, game, effects);
+    const move = game.moves.find((m) => m.character === 'Columbina' && m.label === 'Gravity Interference: Lunar-Charged DMG')!;
+    const objective = { kind: 'move', moveId: move.id, reaction: 'none', crit: 'avg' } as never;
+    const rolls = r.team.members.map(() => ({ CR: 0, CD: 0, 'ATK%': 0, EM: 0, ER: 0, ATK: 0, 'HP%': 0, HP: 0, 'DEF%': 0, DEF: 0 }));
+    const ev = createEvaluator({ resolved: r, member: 0, rolls, ref: p.members[0] as never, game, effects, objective, constraints: {} });
+    const vec = new Float64Array(DIMS);
+    vec[DIM.hpFlat] = 4780; vec[DIM.hpPct] = 0.3; vec[DIM.cr] = 0.5; vec[DIM.cd] = 1;
+    const withHydro = Float64Array.from(vec);
+    withHydro[DIM.dmg] = 0.466;
+    const cfg = {};
+    expect(ev.evaluate(withHydro, cfg)).toBeCloseTo(ev.evaluate(vec, cfg), 6);
+    expect(ev.evaluate(vec, cfg)).toBeGreaterThan(0);
   });
 });
 

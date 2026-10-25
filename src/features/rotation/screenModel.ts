@@ -8,6 +8,7 @@ import type { LaneInfo } from './rotationModel';
 
 /** Rótulo do marcador: N1–N5, CA (carregado), QD (imersivo), E (habilidade), Q (supremo). */
 export function hitTag(move: { talent: string; hitType: string; label: string }): string {
+  if (move.talent === 'reaction') return /swirl/i.test(move.label) ? 'RD' : 'RE';
   if (move.talent === 'skill' && move.hitType === 'skill') return 'E';
   if (move.talent === 'burst' && move.hitType === 'burst') return 'Q';
   if (move.hitType === 'charged') return 'CA';

@@ -46,7 +46,7 @@ export function Moves({ v }: { v: ProjectView }) {
     const m = v.resolved.team.members[member];
     return m ? memberProcs(m, v.data.game.moves).filter((p) => !q || p.proc.label.toLowerCase().includes(q) || p.origin.toLowerCase().includes(q)) : [];
   }, [v.resolved, v.data.game.moves, member, q]);
-  const reactions = useMemo(() => (q ? REACTION_ACTIONS.filter((r) => r.label.toLowerCase().includes(q) || 'reação'.includes(q)) : []), [q]);
+  const reactions = useMemo(() => REACTION_ACTIONS.filter((r) => !q || r.label.toLowerCase().includes(q) || 'reação'.includes(q) || (q.includes('swirl') && r.key.includes('swirl'))), [q]);
 
   return (
     <Panel bar title="Golpes" className="rt-moves">
@@ -117,7 +117,7 @@ export function Moves({ v }: { v: ProjectView }) {
         )}
         {reactions.length > 0 && (
           <div className="rt-mvgroup">
-            <span className="rt-lbl">Reações</span>
+            <span className="rt-lbl" title="Dano da própria reação (Maestria e bônus de reação deste personagem)">Reações (dano da reação)</span>
             {reactions.map((r) => (
               <button
                 key={r.key}

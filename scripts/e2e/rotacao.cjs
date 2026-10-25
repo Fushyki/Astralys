@@ -77,6 +77,12 @@ const num = (s) => Number(String(s).replace(/\./g, '').replace(',', '.'));
   await page.keyboard.press('Control+z'); await page.keyboard.press('Control+z'); await page.keyboard.press('Control+z'); await settle();
   check('desfazer 3 vezes volta aos 24 golpes', (await hits()).length === 24);
 
+  // ---- Dano de reação (Redemoinho) ----
+  await page.click('.rt-mvgroup .rt-mv:has-text("Redemoinho Hydro")'); await settle();
+  const swirlAvg = await page.textContent('[data-testid="hit-avg"]');
+  check('Redemoinho Hydro entra na rotação com dano maior que 0', num(swirlAvg) > 0 && /Redemoinho Hydro/.test(await panel('Golpe selecionado').locator('.rt-title b').textContent()), swirlAvg);
+  await page.keyboard.press('Control+z'); await settle();
+
   // ---- Contínuo ----
   await page.click('.rt-tabs button:has-text("Mavuika")');
   await page.click('.rt-seg button:has-text("No instante marcado")');

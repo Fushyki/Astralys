@@ -83,7 +83,7 @@ const num = (s) => Number(String(s).replace(/\./g, '').replace(',', '.'));
   await page.click('.rt-mvgroup .rt-mv >> nth=0'); await settle();
   const sel = panel('Golpe selecionado');
   await sel.locator('.rt-seg button:has-text("Contínuo")').click(); await settle();
-  check('o contínuo não pergunta "Até" (vai até a duração)', (await sel.locator('.rt-fld:has-text("Até")').count()) === 0);
+  check('o contínuo tem Duração e não tem "Até"', (await sel.locator('.rt-fld:has-text("Duração")').count()) === 1 && (await sel.locator('.rt-fld:has-text("Até")').count()) === 0);
   const execLabel = await sel.locator('.rt-exec .rt-lbl').textContent();
   check('"Contínuo" cria execuções editáveis uma a uma', /Execuções · \d+/.test(execLabel) && (await sel.locator('.rt-exec .er').count()) >= 2, execLabel);
   check('a linha do tempo mostra losangos', (await page.locator('.rt-diamond').count()) >= 2);

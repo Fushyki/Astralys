@@ -50,11 +50,13 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
   const meta = chainId ? project.chains[chainId] : undefined;
   const [start, setStart] = useState(execs[0]?.time ?? action.time);
   const [every, setEvery] = useState(meta?.every ?? 2);
+  const [length, setLength] = useState(meta ? Math.max(0.1, meta.until - (execs[0]?.time ?? action.time)) : 10);
   const [everyN, setEveryN] = useState('2');
   useEffect(() => {
     setStart(execs[0]?.time ?? action.time);
     setEvery(meta?.every ?? 2);
-  }, [chainId, meta?.every]); // eslint-disable-line react-hooks/exhaustive-deps
+    setLength(meta ? Math.max(0.1, meta.until - (execs[0]?.time ?? action.time)) : 10);
+  }, [chainId, meta?.every, meta?.until]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const covering = useMemo(() => (chainId || !result ? [] : coveringBuffs(project, v.resolved, v.bundle, action.id)), [project, v.resolved, v.bundle, action.id, chainId, result]);
   const total = v.bundle.optimization.result.totals.avg;
@@ -75,9 +77,10 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
 
       {chainId ? (
         <>
-          <div className="rt-two">
+          <div className="rt-three">
             <Num label="Começa em" value={start} unit="s" onCommit={setStart} min={0} />
             <Num label="A cada" value={every} unit="s" className="gold" onCommit={setEvery} min={0.1} />
+            <Num label="Duração" value={length} unit="s" onCommit={setLength} min={0.1} />
           </div>
           <div className="rt-two">
             <Num label="Hits por vez" value={hitsEach} digits={0} onCommit={(n) => setAll({ executions: Math.max(1, Math.round(n)) })} min={1} />
@@ -104,7 +107,7 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
             })}
             <div className="ef">
               <Button variant="ghost" size="sm" onClick={() => chainId && st().addExecution(chainId)}>+ Execução</Button>
-              <Button variant="ghost" size="sm" onClick={() => chainId && st().rebuildChain(chainId, { start, every })}>Refazer pelo intervalo</Button>
+              <Button variant="ghost" size="sm" onClick={() => chainId && st().rebuildChain(chainId, { start, every, until: start + length })}>Refazer pelo intervalo</Button>
             </div>
           </div>
           <span className="rt-note">Cada ponto tem tempo e reação próprios. Ex.: Durin derrete 1 a cada 2. Na linha do tempo, o ponto cheio tem reação e o vazado não.</span>

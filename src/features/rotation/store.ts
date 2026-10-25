@@ -31,7 +31,7 @@ export interface RotationState {
   reorderActions: (from: number, to: number) => void;
   removeActions: (ids: string[]) => void;
   makeChain: (id: string, params: { every: number }) => void;
-  rebuildChain: (chainId: string, params: { start: number; every: number }) => void;
+  rebuildChain: (chainId: string, params: { start: number; every: number; until?: number }) => void;
   addExecution: (chainId: string) => void;
   dissolveChain: (chainId: string) => void;
   removeChain: (chainId: string) => void;

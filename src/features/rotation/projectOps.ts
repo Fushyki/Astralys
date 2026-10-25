@@ -404,12 +404,18 @@ export function chainUntil(project: RotationProject): number {
   return project.actions.filter((a) => !a.chainId).reduce((m, a) => Math.max(m, a.time), 0);
 }
 
+/** Fim padrão do contínuo: a duração da rotação; se ela não cabe nem 2 execuções, 4 execuções. */
+function defaultChainEnd(project: RotationProject, start: number, every: number): number {
+  const end = chainUntil(project);
+  return end > start + every ? end : start + Math.max(0.1, every) * 4;
+}
+
 /** Transforma o golpe em contínuo: a ação original vira a 1ª execução e as outras são cópias, a cada `every` até a duração. */
 export function makeChain(project: RotationProject, id: string, params: { every: number; until?: number }): RotationProject {
   const src = project.actions.find((a) => a.id === id);
   if (!src) return project;
   const chainId = src.chainId ?? nextChainId(project);
-  return rebuildChain({ ...project, actions: project.actions.map((a) => (a.id === id ? { ...a, chainId } : a)) }, chainId, { start: src.time, every: params.every, until: params.until ?? chainUntil(project) });
+  return rebuildChain({ ...project, actions: project.actions.map((a) => (a.id === id ? { ...a, chainId } : a)) }, chainId, { start: src.time, every: params.every, until: params.until ?? defaultChainEnd(project, src.time, params.every) });
 }
 
 /** "Refazer pelo intervalo": recria as execuções a partir de Começa em / A cada / Até (a 1ª execução e a reação-base ficam). */

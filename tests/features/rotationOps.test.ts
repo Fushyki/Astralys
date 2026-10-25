@@ -69,6 +69,10 @@ describe('golpe contínuo', () => {
     const times = chainOf(p, p.actions.find((a) => a.chainId)!.chainId!).map((a) => a.time);
     expect(times).toEqual([1, 3, 5, 7]);
     expect(Math.max(...times)).toBeLessThan(9);
+    // a duração do contínuo é editável: 'Refazer' com outra duração
+    const cid = p.actions.find((a) => a.chainId)!.chainId!;
+    p = rebuildChain(p, cid, { start: 1, every: 2, until: 1 + 4 });
+    expect(chainOf(p, cid).map((a) => a.time)).toEqual([1, 3]);
   });
 
   it('remover a última execução some com o grupo', () => {

@@ -119,7 +119,7 @@ export interface SolveOptions {
 }
 
 /** Padrões que o inventário permite: um set só entra se tiver peças em posições suficientes. */
-export function allPatterns(slots: readonly Piece[][], onlySets?: ReadonlySet<string>): Pattern[] {
+export function allPatterns(slots: readonly Piece[][], onlySets?: ReadonlySet<string>, fullBonus = false): Pattern[] {
   const slotsOf = new Map<string, Set<number>>();
   slots.forEach((list, i) => {
     for (const p of list) {
@@ -129,11 +129,12 @@ export function allPatterns(slots: readonly Piece[][], onlySets?: ReadonlySet<st
     }
   });
   const names = [...slotsOf.keys()].sort();
-  const out: Pattern[] = [{ kind: 'none', sets: [] }];
+  // `fullBonus`: o usuário marcou sets, então o build tem que dar o bônus completo deles (4 peças ou 2+2), sem "sem set" nem 2 peças soltas.
+  const out: Pattern[] = fullBonus && names.length ? [] : [{ kind: 'none', sets: [] }];
   for (const x of names) {
     const n = slotsOf.get(x)!.size;
     if (n >= 4) out.push({ kind: 'four', sets: [x] });
-    if (n >= 2) out.push({ kind: 'two', sets: [x] });
+    if (n >= 2 && !fullBonus) out.push({ kind: 'two', sets: [x] });
   }
   for (let i = 0; i < names.length; i++) {
     for (let j = i + 1; j < names.length; j++) {

@@ -181,7 +181,8 @@ export function startOptimizer(input: RunInput, control: RunControl = {}): RunHa
       const config = { primarySet: cfg.primarySet, secondarySet: cfg.secondarySet, fourPiece: cfg.fourPiece };
       const providers = [config.primarySet, config.secondarySet].filter((x): x is string => !!x).map(setName);
       // O equipado só entra como ponto de partida se o bônus dele vem de sets permitidos.
-      if (!inv.onlySets || providers.every((x) => inv.onlySets!.has(x))) seeds.push({ pieces, config, value: evaluator.evaluate(vec, config) });
+      const full = !!config.secondarySet || (!!config.primarySet && config.fourPiece !== false);
+      if (!inv.onlySets || (full && providers.every((x) => inv.onlySets!.has(x)))) seeds.push({ pieces, config, value: evaluator.evaluate(vec, config) });
     }
   }
 
@@ -225,7 +226,7 @@ export function startOptimizer(input: RunInput, control: RunControl = {}): RunHa
     slots: inv.slots,
     evaluate: evaluator.evaluate,
     topN: input.config.topN,
-    patterns: allPatterns(inv.slots, inv.onlySets),
+    patterns: allPatterns(inv.slots, inv.onlySets, !!inv.onlySets),
     onProgress: input.onProgress,
     onPattern: input.onPattern,
     shouldStop: input.shouldStop,

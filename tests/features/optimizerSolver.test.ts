@@ -109,6 +109,12 @@ describe('solver exato', () => {
     expect(new Set(allPatterns(onlyOne).map((p) => p.kind))).toEqual(new Set(['none', 'four', 'two']));
   });
 
+  it('com sets marcados (fullBonus) só sobram padrões que dão o bônus completo', () => {
+    const slots = inventory(31, 4, ['A', 'B']);
+    expect(new Set(allPatterns(slots, new Set(['A']), true).map((p) => p.kind))).toEqual(new Set(['four']));
+    expect(new Set(allPatterns(slots, new Set(['A', 'B']), true).map((p) => p.kind))).toEqual(new Set(['four', 'two-two']));
+  });
+
   it('para quando pedem e devolve o que já achou', () => {
     const slots = inventory(41, 8, ['A', 'B', 'C']);
     let calls = 0;

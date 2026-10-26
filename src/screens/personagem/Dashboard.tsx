@@ -250,9 +250,10 @@ export function Dashboard({ v, index, onGood }: { v: ProjectView; index: number;
           onChange={setReaction}
         />
         <span className="grow" />
+        {/* "Voltar ao build genérico" / "Usar as peças dele do inventário": a BuildStrip põe o botão aqui, na mesma barra de Editar build, Comparar build e Otimizar */}
+        <span id="gear-acts-slot" className="gear-acts-slot" />
         <button type="button" className="dz-btn" onClick={() => setEditBuild(true)} title="Main stats, raridades e ER mínimo">Editar build</button>
         <Link className="dz-btn" to={`/projeto/${v.id}/armas/${encodeURIComponent(ref.character)}`} title="Compara armas, refinos e constelações">Comparar build</Link>
-        <Link className="dz-btn gold" to={`?aba=otimizar`}>Otimizar</Link>
       </div>
 
       <DamageLegend />

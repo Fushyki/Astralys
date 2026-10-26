@@ -3,6 +3,7 @@
  * (arma, refinamento, sets, main stats, raridades e ER mínimo).
  */
 import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { loadGood } from '../../features/good/goodStore';
 import { norm, type GoodArtifact } from '../../features/good/goodImport';
 import { MAIN_LABEL, formatMain } from '../../features/good/labels';
@@ -81,6 +82,9 @@ export function BuildStrip({ data, index, member: memberRef, projectId, compact,
   };
   const [pickWeapon, setPickWeapon] = useState(false);
   const [infoWeapon, setInfoWeapon] = useState(false);
+  /** Onde o botão de peças vai (a barra de botões do Resumo); sem ela, fica embaixo das peças. */
+  const [actsSlot, setActsSlot] = useState<HTMLElement | null>(null);
+  useEffect(() => { if (compact) setActsSlot(document.getElementById('gear-acts-slot')); }, [compact]);
   const [pickSet, setPickSet] = useState(false);
   const [pickPiece, setPickPiece] = useState<PieceSlot | null>(null);
   const update = useRotationStore((st) => st.updateMember);
@@ -366,7 +370,7 @@ export function BuildStrip({ data, index, member: memberRef, projectId, compact,
   return compact ? (
     <div className="gr">
       {body}
-      {(memberRef.pieces || inventoryPieces) && <div className="gr-foot">{acts(false)}</div>}
+      {(memberRef.pieces || inventoryPieces) && (actsSlot ? createPortal(acts(false), actsSlot) : <div className="gr-foot">{acts(false)}</div>)}
     </div>
   ) : (
     <Panel title="Equipamento" aside={acts(true)}>{body}</Panel>

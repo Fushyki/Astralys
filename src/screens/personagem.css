@@ -398,3 +398,5 @@
 .cb-add .val input { width: 100%; min-width: 0; border: 0; background: none; outline: none; color: var(--text); font: inherit; font-size: var(--fs-2); }
 .cb-add .val i { font-style: normal; color: var(--faint); }
 .cb-add .dz-btn { min-height: var(--ctl-sm); }
+.gear-acts-slot { display: contents; }
+.gear-acts-slot .pc-gearacts { display: contents; }

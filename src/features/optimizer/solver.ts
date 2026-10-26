@@ -308,12 +308,15 @@ export function* solveSteps(options: SolveOptions): Generator<void, { builds: Bu
     return evaluate(vec, config);
   };
   let sinceYield = 0;
+  let lastYield = performance.now();
+  /** Cede o controle a cada 200 chamadas OU a cada ~30 ms (o que vier primeiro): sem o tempo, iterações pesadas (poda de listas) atrasavam o "Parar" por segundos. */
   function* tick(): Generator<void, void, void> {
-    if (++sinceYield < 200) return;
+    if (++sinceYield < 200 && performance.now() - lastYield < 30) return;
     sinceYield = 0;
     options.onProgress?.(stats, best[0]?.value ?? -Infinity);
     if (options.shouldStop?.()) stats.stopped = true;
     yield;
+    lastYield = performance.now();
   }
 
   // Nós da busca: uma variante de set com as posições de main stat já fixadas ou não. O nó mais promissor (maior
@@ -365,11 +368,14 @@ export function* solveSteps(options: SolveOptions): Generator<void, { builds: Bu
     for (const variant of variantsOf(pattern, slots, topN)) {
       stats.patterns++;
       push(prepare(variant));
+      yield* tick();
+      if (stats.stopped) return { builds: best, stats };
     }
   }
 
   while (queue.length && !stats.stopped) {
     yield* tick();
+    if (stats.stopped) break;
     const prep = queue.shift()!;
     if (prep.bound <= threshold()) break; // a fila está ordenada: o resto também não passa
     const { variant, order, ordered, suffix } = prep;

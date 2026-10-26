@@ -146,6 +146,7 @@ export function OtimizadorPanel({ index }: { index: number }) {
   const [error, setError] = useState<string | null>(null);
   const [equippedKey, setEquippedKey] = useState<string | null>(null);
   const [fieldMode, setFieldMode] = useState(false);
+  const [stopping, setStopping] = useState(false);
   const [showMore, setShowMore] = useState(false);
   const [minKey, setMinKey] = useState<MinKey>('er');
   const [minVal, setMinVal] = useState('');
@@ -295,6 +296,7 @@ export function OtimizadorPanel({ index }: { index: number }) {
   const run = () => {
     if (!good) return;
     setRunning(true);
+    setStopping(false);
     setError(null);
     setResult(null);
     setEquippedKey(null);
@@ -311,7 +313,10 @@ export function OtimizadorPanel({ index }: { index: number }) {
     job.current = j;
     j.promise.then((r) => setResult(r), (e) => setError(e instanceof Error ? e.message : String(e))).finally(() => setRunning(false));
   };
-  const stop = () => job.current?.stop();
+  const stop = () => {
+    setStopping(true);
+    job.current?.stop();
+  };
 
   const equip = (b: OptimizedBuild) => {
     // Equipar põe as 5 peças reais no personagem: o dano calculado é exatamente o mostrado aqui.
@@ -563,7 +568,7 @@ export function OtimizadorPanel({ index }: { index: number }) {
                   <span className="ot-min-calc">Calculadora de recarga pede <b className="num">{formatDecimal(erNeeded, 1)}%</b>{erInUse ? ' · em uso' : ''}</span>
                 )}
                 {running ? (
-                  <Button variant="secondary" size="lg" className="ot-go-btn" onClick={stop}>Parar</Button>
+                  <Button variant="secondary" size="lg" className="ot-go-btn" onClick={stop} disabled={stopping}>{stopping ? 'Parando…' : 'Parar'}</Button>
                 ) : (
                   <Button variant="primary" size="lg" className="ot-go-btn" onClick={run}>Otimizar</Button>
                 )}

@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { analyzeProject, resolveProject, type EffectsData, type GameData } from '../../src/engine';
 import { parseGood } from '../../src/features/good/goodImport';
 import { createEvaluator } from '../../src/features/optimizer/evaluator';
-import { DEFAULT_CONFIG, evaluateEquipped, filterInventory, runOptimizer, type OptimizerConfig } from '../../src/features/optimizer/run';
+import { DEFAULT_CONFIG, evaluateEquipped, filterInventory, runOptimizer, startOptimizer, type OptimizerConfig } from '../../src/features/optimizer/run';
 import { bruteForce, configOfPieces } from '../../src/features/optimizer/solver';
 import { DIM, DIMS, addInto } from '../../src/features/optimizer/vector';
 import { sampleProject } from '../../src/features/rotation/persistence';
@@ -323,5 +323,22 @@ describe('build atual sem rodar a busca', () => {
     expect(now.report.stats.atk).toBeCloseTo(result.equipped!.report.stats.atk, 6);
     // em campo: com todos os buffs do time ligados o ATK não cai e, no exemplo, sobe
     expect(now.report.fieldStats.atk).toBeGreaterThan(now.report.stats.atk);
+  });
+});
+
+describe('responsividade do "Parar"', () => {
+  it('a busca cede o controle com frequência (nenhum intervalo longo entre dois passos), para o Parar chegar logo', () => {
+    const good = inventory(9);
+    const h = startOptimizer({ ...base, good, characterKey: 'Mavuika', config: { ...DEFAULT_CONFIG, topN: 5 } });
+    let last = performance.now();
+    let worst = 0;
+    for (const _ of h.steps) {
+      void _;
+      const now = performance.now();
+      worst = Math.max(worst, now - last);
+      last = now;
+    }
+    // sem a regra de tempo, iterações pesadas de poda passavam de 1 s sem ceder
+    expect(worst).toBeLessThan(250);
   });
 });

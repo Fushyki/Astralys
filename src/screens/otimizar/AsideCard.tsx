@@ -69,7 +69,7 @@ export function AsideCard({ v, index }: { v: ProjectView; index: number }) {
             </span>
             <span className="t">
               <small className="lbl">Arma</small>
-              <b className="n">{ref.weapon}</b>
+              <b className="n" title={ref.weapon}>{ref.weapon}</b>
               <i className="stars" aria-label={`${weapon?.rarity ?? 5} estrelas`}>{'★'.repeat(weapon?.rarity ?? 5)}</i>
               <small className="num">{WEAPON_LABEL[character.weapon] ?? character.weapon} · Nv 90/90</small>
             </span>

@@ -237,9 +237,9 @@ button.ot-ch[aria-pressed='true'] b { color: var(--gold-hi); }
 .oa-weapon .art img { width: 100%; height: 100%; object-fit: contain; border-radius: var(--r-inner); }
 .oa-weapon .art .ph { color: var(--gold); font-size: var(--fs-6); }
 .oa-weapon .art .rf { position: absolute; bottom: -7px; left: 50%; transform: translateX(-50%); font-size: 10px; font-weight: 700; background: var(--gold); color: var(--on-gold); border-radius: var(--r-chip); padding: 0 6px; white-space: nowrap; }
-.oa-weapon .t { display: flex; flex-direction: column; gap: var(--sp-1); min-width: 0; }
+.oa-weapon .t { display: flex; flex-direction: column; justify-content: center; gap: var(--sp-1); min-width: 0; }
 .oa-weapon .t .lbl { font: 600 11px var(--font-display); letter-spacing: .1em; text-transform: uppercase; color: var(--faint); }
-.oa-weapon .t .n { font: 700 19px var(--font-display); line-height: 1.1; overflow-wrap: anywhere; }
+.oa-weapon .t .n { font: 700 19px var(--font-display); line-height: 1.1; overflow-wrap: anywhere; /* sempre 2 linhas de altura: o card não cresce com nome grande (o nome inteiro está no title) */ height: 2.2em; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
 .oa-weapon .t .stars { font-style: normal; font-size: 10px; letter-spacing: 2px; color: var(--frame-5); }
 .oa-weapon .t small { font-size: var(--fs-1); color: var(--muted); }
 .oa-weapon .mini { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }

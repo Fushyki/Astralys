@@ -58,6 +58,18 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   })(), `${atkFicha}`);
   await page.click('.ot-field-btn');
 
+  // ---- Card da arma com tamanho fixo, mesmo com nome grande ----
+  const pickWeapon = async (name) => {
+    await page.click('.oa-weapon'); await page.waitForSelector('.dz-dialog .wcard');
+    await page.fill('.dz-dialog input[type="search"]', name); await page.waitForTimeout(300);
+    await page.locator('.dz-dialog .wcard').first().click(); await page.waitForTimeout(400);
+    return page.$eval('.oa-weapon', (e) => Math.round(e.getBoundingClientRect().height));
+  };
+  const hShort = await pickWeapon('Rainslasher');
+  const hLong = await pickWeapon('Beacon of the Reed Sea');
+  check('o card da arma tem a mesma altura com nome curto e com nome grande', hShort === hLong, `${hShort} / ${hLong}`);
+  await pickWeapon('A Thousand Blazing Suns');
+
   // ---- Barra ----
   check('não existe o botão "Buffs do time que entram na busca"', (await page.locator('text=/buffs do time que entram/i').count()) === 0);
   const cols = await page.$$eval('.ot-bar-grid > *', (c) => c.map((x) => Math.round(x.getBoundingClientRect().width)));

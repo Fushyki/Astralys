@@ -108,13 +108,6 @@
 .ot-art .lv { position: absolute; top: -5px; left: -4px; font-size: 9px; font-weight: 700; background: var(--gold); color: var(--on-gold); border-radius: 3px; padding: 0 3px; }
 .ot-art .dot { position: absolute; right: -4px; bottom: -4px; width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--surface); }
 .ot-cur { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
-.ot-cur li { display: flex; align-items: center; gap: 10px; padding: 6px var(--sp-2); border-radius: var(--r-inner); background: var(--bg-header); border: 1px solid var(--border); }
-.ot-cur li[data-empty='true'] { opacity: .5; }
-.ot-cur .t { display: flex; flex-direction: column; min-width: 0; line-height: 1.2; flex: 1; }
-.ot-cur .t small { font-size: 11px; color: var(--muted); }
-.ot-cur .t .set { font-size: var(--fs-2); font-weight: 600; color: var(--text); overflow-wrap: anywhere; }
-.ot-cur .t .subs { color: var(--faint); overflow-wrap: anywhere; }
-.ot-cur .v { font: 700 var(--fs-5) var(--font-display); color: var(--gold); }
 .ot-setchips { display: flex; flex-wrap: wrap; gap: 6px; }
 .ot-setchips span { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; border-radius: 999px; padding: 3px 9px; background: var(--bg-header); border: 1px solid var(--border); color: var(--faint); }
 .ot-setchips span[data-on='true'] { background: #2a2312; border-color: #6b5524; color: var(--gold-hi); }
@@ -255,3 +248,21 @@ button.ot-ch[aria-pressed='true'] b { color: var(--gold-hi); }
 .oa-weapon .mini small { font-size: 11px; color: var(--faint); }
 .oa-weapon .mini b { font: 700 17px var(--font-display); }
 .oa-weapon .mini b.gold { color: var(--gold); }
+
+/* Build atual: uma linha-card por peça, com o ícone quadrado na altura do card e a faixa na cor do set */
+.ot-cur li { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--sp-3); align-items: stretch; padding: var(--sp-2) 10px; border-radius: var(--r-inner); background: var(--item-bg); border: 1px solid #3a3220; border-top: 2px solid var(--sc, #3a3220); }
+.ot-cur li[data-empty='true'] { opacity: .5; }
+.ot-cur li .ot-art { box-sizing: border-box; width: auto; height: 100%; min-height: 76px; aspect-ratio: 1 / 1; border-radius: var(--r-inner); background: var(--frame-5-bg); border: 1px solid var(--frame-5); }
+.ot-cur li .ot-art[data-rarity='4'] { background: #241f3d; border-color: #7a68c0; }
+.ot-cur li .ot-art .ph { font-size: var(--fs-6); }
+.ot-cur li .body { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.ot-cur li .head { display: flex; align-items: baseline; gap: var(--sp-2); min-width: 0; }
+.ot-cur li .t { display: flex; flex-direction: column; min-width: 0; line-height: 1.2; flex: 1; }
+.ot-cur li .t .k { font-size: var(--fs-1); color: var(--text-2); }
+.ot-cur li .t .set { font-size: 11px; color: var(--faint); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ot-cur li .v { font: 700 var(--fs-5) var(--font-display); color: var(--gold); }
+.ot-cur li .subs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2px var(--sp-3); padding-top: 5px; border-top: 1px solid #2a2410; }
+.ot-cur li .subs > span { display: flex; justify-content: space-between; gap: var(--sp-1); font-size: 11px; min-width: 0; }
+.ot-cur li .subs > span > span { color: var(--faint); }
+.ot-cur li .subs b { font-weight: 600; color: var(--text); }
+.ot-cur li .subs > span[data-crit='true'] b { color: var(--gold); }

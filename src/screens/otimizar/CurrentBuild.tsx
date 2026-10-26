@@ -1,4 +1,5 @@
 /** Painel "Build atual": as 5 peças que o personagem usa hoje, os sets, os stats e o botão "Status em campo". */
+import type { CSSProperties } from 'react';
 import { Panel, StarIcon } from '../../design/primitives';
 import { norm } from '../../features/good/goodImport';
 import { MAIN_LABEL, SUB_LABEL, formatMain, formatSub } from '../../features/good/labels';
@@ -32,15 +33,26 @@ export function CurrentBuild({ build, field, onField, sets }: { build: Optimized
           const a = bySlot.get(sl.key);
           const set = a ? setOf(a.setKey) : undefined;
           const key = a ? (a.slotKey === 'flower' ? 'hp' : a.slotKey === 'plume' ? 'atk' : a.mainStatKey) : '';
+          const name = set?.name ?? a?.setKey ?? '';
           return (
-            <li key={sl.key} data-empty={!a}>
-              {a ? <PieceArt piece={a} setId={set?.id} setName={set?.name} dot /> : <span className="ot-art empty" aria-hidden="true" />}
-              <span className="t">
-                <b className="set">{a ? (set?.name ?? a.setKey) : 'sem peça'}</b>
-                <small>{sl.label}{a ? ` · ${MAIN_LABEL[key] ?? key}` : ''}</small>
-                {a && <small className="subs">{a.substats.map((x) => `${SUB_LABEL[x.key] ?? x.key} ${formatSub(x.key, x.value)}`).join(' · ')}</small>}
-              </span>
-              {a && <b className="v num">{formatMain(key, mainStatValue(key, a.rarity, a.level))}</b>}
+            <li key={sl.key} data-empty={!a} style={a ? ({ ['--sc' as string]: setColor(name) } as CSSProperties) : undefined}>
+              {a ? <PieceArt piece={a} setId={set?.id} setName={name} /> : <span className="ot-art empty" aria-hidden="true" />}
+              <div className="body">
+                <div className="head">
+                  <span className="t">
+                    <small className="k">{sl.label}{a ? ` · ${MAIN_LABEL[key] ?? key}` : ''}</small>
+                    <small className="set" title={name}>{a ? name : 'sem peça'}</small>
+                  </span>
+                  {a && <b className="v num">{formatMain(key, mainStatValue(key, a.rarity, a.level))}</b>}
+                </div>
+                {a && (
+                  <div className="subs">
+                    {a.substats.slice(0, 4).map((x) => (
+                      <span key={x.key} data-crit={x.key === 'critRate_' || x.key === 'critDMG_'}><span>{SUB_LABEL[x.key] ?? x.key}</span><b className="num">{formatSub(x.key, x.value)}</b></span>
+                    ))}
+                  </div>
+                )}
+              </div>
             </li>
           );
         })}

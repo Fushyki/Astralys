@@ -15,6 +15,7 @@ import {
   finalStats,
   gearFlat,
   resolveMember,
+  kitProcMoves,
   withSpecial,
   zeroRolls,
   type EffectsData,
@@ -152,12 +153,13 @@ export function createEvaluator(input: EvaluatorInput): Evaluator {
 
   /** Um golpe do kit sozinho, com todas as etiquetas de buff ligadas (como a tabela de dano do personagem). */
   const moveValue = (r: ReturnType<typeof run>, o: Extract<Objective, { kind: 'move' }>): number => {
-    const move = game.moves.find((m) => m.id === o.moveId);
+    const proc = kitProcMoves(r.members[member], game.moves).find((p) => p.move.id === o.moveId);
+    const move = proc?.move ?? game.moves.find((m) => m.id === o.moveId);
     if (!move) return 0;
     const action: RotationAction = {
       id: move.id, member,
       // Golpe Lunar/Estelar do kit usa a fórmula dele (sem DMG% elemental), como na tabela de dano.
-      move: withSpecial({ id: move.id, character: move.character, talent: move.talent, hitType: move.hitType, label: move.label, displayName: move.label, hits: move.hits, scale: move.scale }, move.variant, r.members[member].characterEffect),
+      move: proc?.resolved ?? withSpecial({ id: move.id, character: move.character, talent: move.talent, hitType: move.hitType, label: move.label, displayName: move.label, hits: move.hits, scale: move.scale }, move.variant, r.members[member].characterEffect),
       executions: 1, reaction: o.reaction, activeTags: [...new Set(r.assembly.buffs.map((b) => b.tag))], dmgAdjust: 0,
     };
     const res = evaluateRotation({ members: r.members, assembly: r.assembly, config: r.team.config, rolls, ampCoefficient: resolved.ampCoefficient }, [action]).actions[0];

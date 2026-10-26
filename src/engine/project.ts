@@ -400,6 +400,23 @@ export function memberProcs(
   return out;
 }
 
+/**
+ * Golpes extras Lunar/Estelar do kit (passivas e constelações, ex.: Ineffa A1/C2/C6) como golpes escolhíveis: entram na
+ * tabela de dano e no alvo "Um golpe" do otimizador. `move` é o golpe no formato dos dados do jogo (rótulo = chave do golpe
+ * extra, `labelPt` = nome), `resolved` já traz a reação Lunar/Estelar.
+ */
+export function kitProcMoves(m: Parameters<typeof memberProcs>[0], moves?: readonly Move[]): { move: Move; resolved: ResolvedMove }[] {
+  return memberProcs(m, moves)
+    .filter((p) => p.key.startsWith('char:') && p.proc.special)
+    .map((p) => ({
+      resolved: p.move,
+      move: {
+        id: p.move.id, characterId: m.character.name, character: m.character.name, talent: 'skill' as const, hitType: 'skill' as const,
+        label: p.key, labelPt: p.proc.label, variant: 0, variants: 1, hits: p.move.hits, scale: p.move.scale as Move['scale'],
+      },
+    }));
+}
+
 /** Reações que podem ser postas na rotação como ação (`talent: 'reaction'`, `label` = chave). */
 export const REACTION_ACTIONS: readonly { key: string; label: string; hit: ReactionHit }[] = [
   { key: 'overloaded', label: 'Sobrecarga', hit: { kind: 'transformative', reaction: 'overloaded' } },
@@ -427,7 +444,9 @@ export function reactionMove(ref: MoveRef, displayName?: string): ResolvedMove {
 }
 
 /** Reação Lunar/Estelar de um golpe do kit (a mesma busca de `withSpecial`), ou undefined se o dano é elemental comum. */
-export function specialOfMove(move: { talent: string; label: string }, variant: number, effect: Pick<CharacterEffect, 'specialMoves'> | undefined): SpecialReaction | undefined {
+export function specialOfMove(move: { talent: string; label: string }, variant: number, effect: (Pick<CharacterEffect, 'specialMoves'> & Partial<Pick<CharacterEffect, 'procs'>>) | undefined): SpecialReaction | undefined {
+  const proc = effect?.procs?.find((p) => p.special && `char:${p.id}` === move.label);
+  if (proc) return proc.special!.reaction;
   return effect?.specialMoves?.find((x) => x.talent === move.talent && x.label === move.label && (x.variant === undefined || x.variant === variant))?.reaction;
 }
 

@@ -16,7 +16,7 @@ import { DEFAULT_CONFIG, countCandidates, evaluateEquipped, type OptimizedBuild,
 import { REACTION_LABEL, displayName, reactionOptions } from '../features/character/characterModel';
 import { useRotationStore } from '../features/rotation/store';
 import { energyMembers, energyResults } from '../features/energy/energyModel';
-import { kitElement, type ElementOrPhysical, type ReactionChoice } from '../engine';
+import { kitElement, kitProcMoves, type ElementOrPhysical, type ReactionChoice } from '../engine';
 import { mainStatValue } from '../engine/pieces';
 import { MAIN_LABEL, SUB_LABEL, formatMain, formatSub } from '../features/good/labels';
 import { formatDecimal, formatInt } from '../ui/format';
@@ -245,7 +245,8 @@ export function OtimizadorPanel({ index }: { index: number }) {
   const overflow = setInfo.length > setLimit;
   const visibleSets = showAllSets || !overflow ? setInfo : setInfo.slice(0, setLimit);
 
-  const moves = data.game.moves.filter((m) => m.character === ref.character);
+  const memberNow = v.resolved.team.members[index];
+  const moves = [...data.game.moves.filter((m) => m.character === ref.character), ...(memberNow ? kitProcMoves(memberNow, data.game.moves).map((p) => p.move) : [])];
   const moveChosen = moves.find((m) => m.id === ui.moveId) ?? moves.find((m) => m.talent === 'burst') ?? moves[0];
   const kitMode = v.resolved.team.config.elementMode === 'kit';
   const infusion = v.resolved.team.members[index]?.normalInfusion;

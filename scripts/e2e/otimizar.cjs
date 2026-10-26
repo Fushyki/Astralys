@@ -70,10 +70,10 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   check('a lista mostra 2 builds e o botão "Mostrar mais · N builds"', cards === 2 && /^Mostrar mais · \d+ builds$/.test((await page.textContent('.ot-more-btn')).trim()), `${cards} cards`);
   await page.click('.ot-more-btn');
   check('"Mostrar mais" mostra os outros na mesma grade de 2 colunas', (await page.locator('.ot-build').count()) > 2);
-  check('as peças mostram "troca" ou "equipada"', (await page.locator('.ot-build .piece .tag').count()) >= 10);
+  check('as peças mostram "troca" ou "equipada"', (await page.locator('.ot-build .piece .top em').count()) >= 10);
   const cmp = await page.$$eval('.ot-build .cmp', (c) => c.map((x) => x.textContent.trim()));
   check('com o equipado válido a comparação é contra o equipado', cmp.length > 0 && cmp.every((t) => /contra o equipado/.test(t)), cmp.join(' | '));
-  const mainTexts = await page.$$eval('.ot-build .piece .t b', (b) => b.map((x) => x.textContent.trim()));
+  const mainTexts = await page.$$eval('.ot-build .piece .main b', (b) => b.map((x) => x.textContent.trim()));
   check('nenhum main stat aparece como 0,5% / 0,3%', !mainTexts.some((t) => /^0,[0-9]%$/.test(t)), mainTexts.slice(0, 6).join(' | '));
 
   // ---- Equipado inválido: mínimo que ele não atinge ----

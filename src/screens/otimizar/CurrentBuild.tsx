@@ -1,7 +1,7 @@
 /** Painel "Build atual": as 5 peças que o personagem usa hoje, os sets, os stats e o botão "Status em campo". */
 import { Panel, StarIcon } from '../../design/primitives';
 import { norm } from '../../features/good/goodImport';
-import { MAIN_LABEL, formatMain } from '../../features/good/labels';
+import { MAIN_LABEL, SUB_LABEL, formatMain, formatSub } from '../../features/good/labels';
 import type { OptimizedBuild } from '../../features/optimizer/run';
 import { mainStatValue } from '../../engine/pieces';
 import { PieceArt, SLOTS, critValue, fmtInt, fmtPct, setColor } from './shared';
@@ -36,8 +36,9 @@ export function CurrentBuild({ build, field, onField, sets }: { build: Optimized
             <li key={sl.key} data-empty={!a}>
               {a ? <PieceArt piece={a} setId={set?.id} setName={set?.name} dot /> : <span className="ot-art empty" aria-hidden="true" />}
               <span className="t">
+                <b className="set">{a ? (set?.name ?? a.setKey) : 'sem peça'}</b>
                 <small>{sl.label}{a ? ` · ${MAIN_LABEL[key] ?? key}` : ''}</small>
-                <small className="set">{a ? (set?.name ?? a.setKey) : 'sem peça'}</small>
+                {a && <small className="subs">{a.substats.map((x) => `${SUB_LABEL[x.key] ?? x.key} ${formatSub(x.key, x.value)}`).join(' · ')}</small>}
               </span>
               {a && <b className="v num">{formatMain(key, mainStatValue(key, a.rarity, a.level))}</b>}
             </li>

@@ -81,9 +81,9 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   check('a busca devolve até 5 builds', builds >= 1 && builds <= 5, String(builds));
   check('diz que a busca foi completa', /Busca completa/.test(await page.textContent('.ot-strip')));
   // Guia visual v2: imagens, alturas iguais, grade de builds e nenhum texto sublinhado
-  const tilesOk = await page.$$eval('.ot-build', (b) => b.every((x) => x.querySelectorAll('.piece').length === 5 && [...x.querySelectorAll('.piece .ot-art')].every((a) => a.querySelector('img') || a.querySelector('.ph'))));
+  const tilesOk = await page.$$eval('.ot-build', (b) => b.every((x) => x.querySelectorAll('.piece').length === 5 && [...x.querySelectorAll('.piece .art')].every((a) => a.querySelector('img') || a.querySelector('.ph'))));
   check('todo build mostra as 5 peças com imagem (ou o glifo da posição)', tilesOk);
-  const imgs = await page.$$eval('.ot-build .piece .ot-art > img', (i) => i.length);
+  const imgs = await page.$$eval('.ot-build .piece .art > img', (i) => i.length);
   check('as peças carregam a imagem do artefato do Lunaris', imgs >= 5, String(imgs));
   const topH = await page.$$eval('.ot-top > .dz-panel', (p) => p.map((x) => Math.round(x.getBoundingClientRect().height)));
   check('os 3 painéis de filtro têm a mesma altura', topH.length === 3 && new Set(topH).size === 1, topH.join(','));

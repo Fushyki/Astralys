@@ -43,3 +43,9 @@ export const critValue = (s: Pick<FinalStats, 'critRate' | 'critDmg'>): number =
 
 export const fmtPct = (f: number) => `${formatDecimal(f * 100, 1)}%`;
 export const fmtInt = formatInt;
+
+/** Imagem grande da peça (64 px) ou o glifo da posição quando falta. */
+export function ArtImg({ setId, slot }: { setId?: number; slot: string }) {
+  const [failed, setFailed] = useState(false);
+  return setId && !failed ? <img src={pieceIconUrl(setId, slot as PieceKey)} alt="" loading="lazy" crossOrigin="anonymous" onError={() => setFailed(true)} /> : <b className="ph" aria-hidden="true">{SLOT_GLYPH[slot] ?? '◆'}</b>;
+}

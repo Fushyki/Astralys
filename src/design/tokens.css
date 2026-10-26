@@ -36,6 +36,9 @@
   --el-geo: #e7b75c;
   --el-dendro: #a5cf5a;
   --el-physical: #c9cfea;
+  /* itens 5★ e peças (aba Otimizar) */
+  --item-bg: #120f12; --item-bg-swap: #16120c; --item-border: #5a4720; --item-border-swap: #8a6c2c;
+  --item-bg-kept: #0d1430; --item-border-kept: #2f4a80; --frame-5: #c9a04a; --frame-5-bg: #2a2010;
   /* famílias de dano que não são elementais: Lunar e Estelar */
   --dmg-lunar: #9ba8ff;
   --dmg-lunar-bg: #1d2250;
@@ -55,7 +58,7 @@
   --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-5: 24px; --sp-6: 32px;
   --panel-gap: 16px; --panel-pad: 16px; --panel-head: 44px;
   --ctl-sm: 32px; --ctl-md: 40px; --ctl-lg: 48px;
-  --r-chip: 6px; --r-ctl: 8px; --r-inner: 10px; --r-panel: 14px;
+  --r-chip: 6px; --r-ctl: 8px; --r-inner: 10px; --r-panel: 14px; --r-card: 12px;
   --fs-1: 12px; --fs-2: 13px; --fs-3: 14px; --fs-4: 16px; --fs-5: 20px; --fs-6: 28px; --fs-kpi: 40px;
   --ico-1: 16px; --ico-2: 24px; --ico-3: 40px; --ico-4: 64px;
   --row-h: 32px;

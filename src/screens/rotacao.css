@@ -238,3 +238,13 @@
 .rt-flat .fr[data-off='true'] .n, .rt-flat .fr[data-off='true'] .v { opacity: .5; text-decoration: line-through; }
 .rt-flat .qty { display: flex; align-items: center; gap: var(--sp-2); flex-wrap: wrap; }
 .rt-hit[data-flat]::after { content: ''; position: absolute; right: -3px; top: -3px; width: 8px; height: 8px; border-radius: 50%; background: var(--gold); border: 1px solid var(--bg); }
+
+/* linha amarela do tempo (como o cursor do Word): clique na régua põe a linha; arrastar a linha empurra tudo à direita */
+.rt-tlw { position: relative; }
+.rt-caret { position: absolute; top: 0; bottom: 0; width: 0; z-index: 6; pointer-events: none; }
+.rt-caret::before { content: ''; position: absolute; top: 0; bottom: 0; left: -1px; width: 2px; background: var(--gold); box-shadow: 0 0 6px #f1c96b66; }
+.rt-caret .grab { position: absolute; top: 0; bottom: 0; left: -7px; width: 14px; cursor: ew-resize; pointer-events: auto; }
+.rt-caret .flag { position: absolute; top: 36px; left: 6px; white-space: nowrap; font-size: 11px; font-weight: 700; color: var(--on-gold); background: var(--gold); border-radius: 4px; padding: 1px 6px; pointer-events: none; font-variant-numeric: tabular-nums; max-width: 340px; overflow: hidden; text-overflow: ellipsis; }
+.rt-caret[data-pushing] .flag { background: var(--gold-hi); }
+.rt-caret.low { z-index: 2; }
+.rt-hit.at-caret { outline: 2px solid var(--gold); outline-offset: 2px; }

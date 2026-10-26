@@ -560,3 +560,37 @@ export function duplicateWindow(project: RotationProject, id: string): { project
   const copy: BuffWindow = { id: newId, tag: w.tag, start: clampTime(w.end), end: clampTime(w.end + len) };
   return { project: touch({ ...project, buffWindows: [...project.buffWindows, copy] }), newId };
 }
+
+/**
+ * Menor deslocamento (negativo) permitido ao empurrar para a esquerda a partir de `at`: os golpes da direita não passam dos
+ * golpes e janelas que ficam à esquerda da linha.
+ */
+export function minPush(project: RotationProject, at: number): number {
+  const before = [
+    ...project.actions.filter((a) => a.time < at - 1e-9).map((a) => a.time),
+    ...project.buffWindows.filter((w) => !w.whole && !w.anchor && w.end <= at + 1e-9).map((w) => w.end),
+  ];
+  return -(at - Math.max(0, ...before));
+}
+
+/**
+ * "Empurrar a linha": tudo que está à direita de `at` anda `delta` segundos (golpes e janelas de buff; golpes contínuos
+ * andam junto). Janela que a linha atravessa só estica ou encolhe; "rotação inteira" não muda; janela "por golpe" segue o golpe.
+ */
+export function pushFrom(project: RotationProject, at: number, delta: number): RotationProject {
+  const d = Math.max(minPush(project, at), Math.round(delta * 100) / 100);
+  if (!d) return project;
+  const moved = new Set<string>();
+  const actions = project.actions.map((a) => {
+    if (a.time < at - 1e-9) return a;
+    moved.add(a.id);
+    return { ...a, time: clampTime(a.time + d) };
+  });
+  const shifted = project.buffWindows.map((w) => {
+    if (w.whole || w.anchor) return w;
+    if (w.start >= at - 1e-9) return { ...w, start: clampTime(w.start + d), end: clampTime(w.end + d) };
+    if (w.end > at + 1e-9) return { ...w, end: clampTime(Math.max(w.start + MIN_WINDOW, w.end + d)) };
+    return w;
+  });
+  return touch({ ...project, actions, buffWindows: followAnchors(shifted, actions, moved) });
+}

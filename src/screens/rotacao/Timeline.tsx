@@ -9,7 +9,7 @@ import type { ProjectView } from '../../app/ProjectContext';
 import { Panel } from '../../design/primitives';
 import { effectiveDuration, type ActionResult } from '../../engine';
 import { specialOfMove } from '../../engine/project';
-import { MIN_WINDOW } from '../../features/rotation/projectOps';
+import { MIN_WINDOW, minPush } from '../../features/rotation/projectOps';
 import type { LaneInfo } from '../../features/rotation/rotationModel';
 import { fieldSegments, groupBuffLanes, hitTag } from '../../features/rotation/screenModel';
 import { useRotationStore } from '../../features/rotation/store';
@@ -37,6 +37,9 @@ export function Timeline({ v, lanes }: { v: ProjectView; lanes: LaneInfo[] }) {
   const [zoom, setZoom] = useState<Zoom>('1');
   const [buffMode, setBuffMode] = useState<'group' | 'active'>('group');
   const [preview, setPreview] = useState<Preview>(null);
+  /** Empurrar a linha: tudo à direita de `t0` anda `delta` s enquanto se arrasta (grava ao soltar). */
+  const [push, setPush] = useState<{ t0: number; delta: number } | null>(null);
+  const pushRef = useRef<{ t0: number } | null>(null);
   const dragRef = useRef<Drag | null>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -72,8 +75,7 @@ export function Timeline({ v, lanes }: { v: ProjectView; lanes: LaneInfo[] }) {
 
   const duration = effectiveDuration(project);
   const lastTime = project.actions.reduce((m, a) => Math.max(m, a.time), 0);
-  const lastWin = project.buffWindows.reduce((m, w) => (w.whole ? m : Math.max(m, w.end)), 0);
-  const tmax = Math.max(4, Math.ceil(Math.max(duration, lastTime + 1, lastWin)));
+  const tmax = Math.max(4, Math.ceil(Math.max(duration, lastTime)));
   const labelW = 200;
   const fitW = Math.max(300, wrapW - labelW);
   const trackW = zoom === 'fit' ? fitW : Math.max(fitW, tmax * PX_PER_S * (zoom === '2' ? 2 : 1));
@@ -95,7 +97,36 @@ export function Timeline({ v, lanes }: { v: ProjectView; lanes: LaneInfo[] }) {
     if (!r || r.width === 0) return 0;
     return Math.max(0, ((clientX - r.left) / r.width) * tmax);
   };
-  const timeOf = (id: string, fallback: number) => (preview?.id === id && preview.time !== undefined ? preview.time : fallback);
+  const pushed = (t: number) => (push && t >= push.t0 - 1e-9 ? t + push.delta : t);
+  const timeOf = (id: string, fallback: number) => (preview?.id === id && preview.time !== undefined ? preview.time : pushed(fallback));
+  const caret = Math.min(tmax, Math.max(0, playhead + (push?.delta ?? 0)));
+  const caretPx = labelW + (caret / tmax) * trackW;
+  const atHit = useMemo(() => {
+    let best: (typeof project.actions)[number] | null = null;
+    for (const a of project.actions) if (a.time <= playhead + 0.05 && (!best || a.time >= best.time)) best = a;
+    return best;
+  }, [project.actions, playhead]);
+  const onCaretDown = (e: ReactPointerEvent<HTMLElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+    pushRef.current = { t0: playhead };
+    setPush({ t0: playhead, delta: 0 });
+  };
+  const onCaretMove = (e: ReactPointerEvent<HTMLElement>) => {
+    const p = pushRef.current;
+    if (!p) return;
+    setPush({ t0: p.t0, delta: Math.max(minPush(project, p.t0), snap(timeAt(e.clientX)) - p.t0) });
+  };
+  const onCaretUp = (e: ReactPointerEvent<HTMLElement>) => {
+    const p = pushRef.current;
+    pushRef.current = null;
+    const el = e.currentTarget as HTMLElement;
+    if (el.hasPointerCapture(e.pointerId)) el.releasePointerCapture(e.pointerId);
+    const cur = push;
+    setPush(null);
+    if (p && cur && cur.delta) st().pushFrom(p.t0, cur.delta);
+  };
 
   const begin = (e: ReactPointerEvent<HTMLElement>, d: DragInit) => {
     e.preventDefault();
@@ -169,6 +200,10 @@ export function Timeline({ v, lanes }: { v: ProjectView; lanes: LaneInfo[] }) {
     <Panel bar title="Linha do tempo" aside={<Seg label="Zoom" value={zoom} onChange={setZoom} options={[{ value: 'fit', label: 'Ajustar' }, { value: '1', label: '1×' }, { value: '2', label: '2×' }]} />} className="rt-p0">
       <div className="rt-zoomscroll" ref={wrapRef} onScroll={syncFromTop}>
         <div className="rt-tlw" style={{ width: labelW + trackW }}>
+          <div className="rt-caret" style={{ left: caretPx }} data-testid="caret" data-pushing={push ? true : undefined}>
+            <span className="grab" role="slider" aria-label="Linha do tempo: arraste para empurrar tudo que está à direita" aria-valuenow={Math.round(caret * 100) / 100} onPointerDown={onCaretDown} onPointerMove={onCaretMove} onPointerUp={onCaretUp} onPointerCancel={onCaretUp} />
+            <span className="flag num">{dec(caret, 1)} s{atHit ? ` · ${names[atHit.member]}: ${(atHit.displayName ?? atHit.move.label).replace(`${atHit.move.character} - `, '')}` : ''}{push && push.delta ? ` (${push.delta > 0 ? '+' : ''}${dec(push.delta, 1)} s)` : ''}</span>
+          </div>
           {/* Tempo */}
           <div className="rt-lane ruler" style={{ gridTemplateColumns: `${labelW}px ${trackW}px` }}>
             <span className="lname"><span className="rt-lbl">Tempo</span></span>
@@ -185,7 +220,7 @@ export function Timeline({ v, lanes }: { v: ProjectView; lanes: LaneInfo[] }) {
             <span className="lname"><span className="rt-lbl">Em campo</span></span>
             <div className="trk">
               {field.map((f, i) => (
-                <span key={i} className="seg" title={names[f.member]} aria-label={`${names[f.member]} em campo`} style={{ left: `${x(f.start)}%`, width: `calc(${((f.end - f.start) / tmax) * 100}% - 2px)`, background: v.colors[f.member] }} />
+                <span key={i} className="seg" title={names[f.member]} aria-label={`${names[f.member]} em campo`} style={{ left: `${x(pushed(f.start))}%`, width: `calc(${((pushed(f.end) - pushed(f.start)) / tmax) * 100}% - 2px)`, background: v.colors[f.member] }} />
               ))}
             </div>
           </div>
@@ -202,7 +237,7 @@ export function Timeline({ v, lanes }: { v: ProjectView; lanes: LaneInfo[] }) {
                   <span className="nm" title={name}>{name}</span>
                   <span className="pct">{formatPercent(shares[mi] ?? 0)}</span>
                 </span>
-                <div className="trk">
+                <div className="trk" onPointerDown={(e) => e.target === e.currentTarget && st().setPlayhead(snap(timeAt(e.clientX)))}>
                   {chains.map((cid) => {
                     const list = mine.filter((a) => a.chainId === cid).sort((a, b) => a.time - b.time);
                     const sel = list.some((a) => a.id === selectedActionId);
@@ -245,7 +280,7 @@ export function Timeline({ v, lanes }: { v: ProjectView; lanes: LaneInfo[] }) {
                       <button
                         key={a.id}
                         type="button"
-                        className={`rt-hit${size > 22 ? ' big' : ''}${lunar ? ' lunar' : ''}`}
+                        className={`rt-hit${size > 22 ? ' big' : ''}${lunar ? ' lunar' : ''}${atHit?.id === a.id ? ' at-caret' : ''}`}
                         data-flat={(res?.flatUse ?? []).some((u) => u.hits > 0) ? true : undefined}
                         aria-pressed={selectedActionId === a.id}
                         aria-label={`${a.displayName ?? a.move.label} em ${dec(timeOf(a.id, a.time), 1)} s`}
@@ -284,6 +319,7 @@ export function Timeline({ v, lanes }: { v: ProjectView; lanes: LaneInfo[] }) {
       {/* A barra de rolagem fica aqui, logo acima de "Buffs no time"; a parte de baixo anda junto com ela. */}
       <div className="rt-zoomscroll rt-zoomlow" ref={lowRef} onWheel={wheelLow}>
         <div className="rt-tlw" style={{ width: labelW + trackW }}>
+          <div className="rt-caret low" style={{ left: caretPx }} aria-hidden />
           {/* Buffs no time */}
           <div className="rt-sect rt-stick" style={{ width: wrapW }}>
             <span className="rt-lbl">Buffs no time</span>
@@ -312,7 +348,7 @@ export function Timeline({ v, lanes }: { v: ProjectView; lanes: LaneInfo[] }) {
                         </div>
                       )}
                       {wins.map((w) => {
-                        const cur = preview?.id === w.id && preview.start !== undefined ? { start: preview.start, end: preview.end ?? w.end } : { start: w.whole ? 0 : w.start, end: w.whole ? Math.max(duration, tmax) : w.end };
+                        const cur = preview?.id === w.id && preview.start !== undefined ? { start: preview.start, end: preview.end ?? w.end } : { start: w.whole ? 0 : pushed(w.start), end: w.whole ? Math.max(duration, tmax) : w.start >= (push?.t0 ?? Infinity) - 1e-9 || w.end > (push?.t0 ?? Infinity) ? pushed(w.end) : w.end };
                         return (
                           <button
                             key={w.id}
@@ -321,7 +357,7 @@ export function Timeline({ v, lanes }: { v: ProjectView; lanes: LaneInfo[] }) {
                             aria-pressed={selectedWindowId === w.id}
                             aria-label={`${lane.label}, de ${dec(cur.start, 1)} a ${dec(cur.end, 1)} segundos`}
                             title={lane.detail}
-                            style={{ left: `${x(cur.start)}%`, width: `${x(cur.end - cur.start)}%`, background: color }}
+                            style={{ left: `${x(Math.min(cur.start, tmax))}%`, width: `${x(Math.max(0, Math.min(cur.end, tmax) - Math.min(cur.start, tmax)))}%`, background: color }}
                             onPointerDown={(e) => begin(e, { kind: 'win', id: w.id, mode: 'move', grab: timeAt(e.clientX) - w.start, start: w.start, end: w.end })}
                             onPointerMove={drag}
                             onPointerUp={finish}

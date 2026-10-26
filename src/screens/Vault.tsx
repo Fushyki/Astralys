@@ -57,7 +57,7 @@ export default function Vault() {
   const rename = (id: string, name: string) => {
     setRenaming(null);
     const trimmed = name.trim();
-    if (trimmed) edit(id, (p) => (trimmed === p.name ? null : { ...p, name: trimmed, meta: { ...p.meta, updatedAt: new Date().toISOString() } }));
+    if (trimmed) edit(id, (p) => (trimmed === p.name ? null : { ...p, name: trimmed, meta: { ...p.meta, ...(p.meta.card?.title ? { card: { ...p.meta.card, title: trimmed } } : {}), updatedAt: new Date().toISOString() } }));
   };
   const token = useSession((st) => st.token);
   const [syncing, setSyncing] = useState(false);

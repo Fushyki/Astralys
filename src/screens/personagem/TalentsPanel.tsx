@@ -3,6 +3,7 @@
  * golpes em grupos e três passivas. As condições (checkbox + valor + efeitos) são os buffs curados do personagem:
  * ligar ou desligar muda o cálculo do time inteiro na hora.
  */
+import { useDamageView } from '../../features/character/damageView';
 import { useEffect, useMemo, useState } from 'react';
 import type { ProjectView } from '../../app/ProjectContext';
 import { Button } from '../../design/Button';
@@ -155,8 +156,7 @@ export function TalentsPanel({ v, index }: { v: ProjectView; index: number }) {
   const character = member.character;
   const constellation = ref.constellation ?? 0;
   const eff = effectiveTalents(ref.talents, ref.constellation, character);
-  const [crit, setCrit] = useState<Crit>('avg');
-  const [reaction, setReaction] = useState<ReactionChoice>('none');
+  const { crit, setCrit, reaction, setReaction } = useDamageView(v.id, ref.character);
   const teamElements = v.resolved.team.members.map((m) => m.character.element);
   const options = reactionOptions(character.element, teamElements);
   const activeReaction = options.includes(reaction) ? reaction : 'none';

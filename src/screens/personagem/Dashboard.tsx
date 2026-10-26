@@ -2,6 +2,7 @@
  * "Resumo" do personagem num painel só (estilo calculadora): equipamento em uma linha, controles de crítico e reação,
  * atributos, golpes por tipo, reações, buffs do time e os substats como estrelas.
  */
+import { useDamageView } from '../../features/character/damageView';
 import { useMemo, useState, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import type { ProjectView } from '../../app/ProjectContext';
@@ -187,8 +188,7 @@ export function Dashboard({ v, index, onGood }: { v: ProjectView; index: number;
   const s = v.bundle.memberStats[index];
   const teamElements = v.resolved.team.members.map((m) => m.character.element);
   const options = reactionOptions(character.element, teamElements);
-  const [crit, setCrit] = useState<Crit>('avg');
-  const [reaction, setReaction] = useState<ReactionChoice>('none');
+  const { crit, setCrit, reaction, setReaction } = useDamageView(v.id, ref.character);
   const active = options.includes(reaction) ? reaction : 'none';
   const [editBuild, setEditBuild] = useState(false);
   const groups = useDamageGroups(v, index, active);

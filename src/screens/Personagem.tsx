@@ -7,6 +7,7 @@ import { useRotationStore } from '../features/rotation/store';
 import { CharacterAvatar } from '../design/primitives';
 import { Dashboard } from './personagem/Dashboard';
 import { ArtCard, ConstellationCard, TalentsCard } from './personagem/SideCards';
+import { BuildComparePanel } from './personagem/BuildCompare';
 import { DamageTablePanel, ReactionsPanel, ReceivedBuffsPanel, RollValuePanel } from './personagem/MainColumn';
 import { OtimizadorPanel } from './Otimizador';
 import { TalentsPanel } from './personagem/TalentsPanel';
@@ -105,6 +106,7 @@ export default function Personagem() {
           {view === 'otimizar' && <OtimizadorPanel index={index} />}
           {view === 'avancado' && (
             <>
+              <BuildComparePanel v={v} index={index} onOptimize={() => goView('otimizar')} />
               <DamageTablePanel v={v} index={index} />
               <div className="pc-row b">
                 <div className="pc-col">

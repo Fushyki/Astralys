@@ -2,6 +2,7 @@
  * Otimizador de artefatos, como aba "Otimizar" da página do personagem (/projeto/:id/personagem/:nome?aba=otimizar):
  * a otimização é individual de cada personagem. A rota antiga /projeto/:id/otimizador/:nome? redireciona para lá.
  */
+import { useDamageView } from '../features/character/damageView';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 import { useProjectView, type ProjectView } from '../app/ProjectContext';
@@ -12,6 +13,7 @@ import { artifactSig, norm, type Good, type GoodArtifact } from '../features/goo
 import { loadGood } from '../features/good/goodStore';
 import { startOptimizerJob, type OptimizerJob, type OptimizerProgress } from '../features/optimizer/client';
 import type { Constraints, Objective } from '../features/optimizer/evaluator';
+import { RESULT_CACHE } from '../features/optimizer/resultCache';
 import { DEFAULT_CONFIG, countCandidates, evaluateEquipped, type OptimizedBuild, type OptimizerConfig, type OptimizerResult } from '../features/optimizer/run';
 import { REACTION_LABEL, displayName, reactionOptions } from '../features/character/characterModel';
 import { useRotationStore } from '../features/rotation/store';
@@ -88,9 +90,6 @@ const initial: UiState = {
   levelMin: 0, levelMax: 20, topN: 5, borrow: false, offMains: { sands: [], goblet: [], circlet: [] }, offSets: [], fillerSets: true, blocked: [],
 };
 
-/** Último resultado da otimização de cada personagem de cada projeto (só na memória da sessão): trocar de aba não obriga a otimizar de novo. */
-const RESULT_CACHE = new Map<string, OptimizerResult>();
-
 /** Cada personagem de cada projeto guarda a própria configuração do otimizador (alvo, mínimos, filtros e sets). */
 const STORAGE = 'astralys.otimizador';
 const storageKey = (projectId: string, character: string) => `${STORAGE}:${projectId}:${character}`;
@@ -147,7 +146,7 @@ export function OtimizadorPanel({ index }: { index: number }) {
   const ui = store.key === key ? store.ui : readUi(key, () => roleDefaults(v, index, erDefault));
   const setUi = (next: UiState) => setStore({ key, ui: next });
   const [progress, setProgress] = useState<OptimizerProgress | null>(null);
-  const [result, setResult] = useState<OptimizerResult | null>(() => RESULT_CACHE.get(storageKey(v.id, ref?.character ?? '')) ?? null);
+  const [result, setResult] = useState<OptimizerResult | null>(() => RESULT_CACHE.get(storageKey(v.id, ref?.character ?? ''))?.result ?? null);
   const keyRef = useRef('');
   const [running, setRunning] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -181,7 +180,7 @@ export function OtimizadorPanel({ index }: { index: number }) {
     setRunning(false);
     setStopping(false);
     setProgress(null);
-    setResult(RESULT_CACHE.get(key) ?? null);
+    setResult(RESULT_CACHE.get(key)?.result ?? null);
     setError(null);
     setEquippedKey(null);
     setShowAllSets(false);
@@ -253,7 +252,9 @@ export function OtimizadorPanel({ index }: { index: number }) {
   const moveElement: ElementOrPhysical | undefined = moveChosen && character ? (kitMode ? kitElement(character, moveChosen, infusion) : (character.element as ElementOrPhysical)) : undefined;
   const teamElements = v.resolved.team.members.map((m) => m.character.element);
   const reactions = character ? reactionOptions(character.element, teamElements) : (['none'] as ReactionChoice[]);
-  const reaction = (reactions.includes(ui.reaction as ReactionChoice) ? ui.reaction : 'none') as ReactionChoice;
+  const shared = useDamageView(v.id, ref?.character ?? '');
+  const reaction: ReactionChoice = reactions.includes(shared.reaction) ? shared.reaction : 'none';
+  const critPick = shared.crit;
   /** Buffs que este personagem dá e que crescem com os stats dele (o valor muda com o build). */
   const effect = v.resolved.team.members[index]?.characterEffect;
   const buffOptions = [
@@ -273,7 +274,7 @@ export function OtimizadorPanel({ index }: { index: number }) {
     const objective: Objective =
       ui.goal === 'stat' ? { kind: 'stat', stat: ui.stat }
       : ui.goal === 'buff' ? { kind: 'buff', buffId: buffChosen?.id ?? '' }
-      : ui.scope === 'move' && moveChosen ? { kind: 'move', moveId: moveChosen.id, reaction, crit: ui.crit }
+      : ui.scope === 'move' && moveChosen ? { kind: 'move', moveId: moveChosen.id, reaction, crit: critPick }
       : ui.scope === 'member' ? { kind: 'member' }
       : { kind: 'team' };
     const mainStats: OptimizerConfig['mainStats'] = {};
@@ -334,7 +335,7 @@ export function OtimizadorPanel({ index }: { index: number }) {
     const runKey = key;
     j.promise
       .then((r) => {
-        RESULT_CACHE.set(runKey, r);
+        RESULT_CACHE.set(runKey, { result: r, caption: goalCaption });
         if (keyRef.current === runKey) setResult(r);
       }, (e) => { if (keyRef.current === runKey) setError(e instanceof Error ? e.message : String(e)); })
       .finally(() => { if (keyRef.current === runKey) setRunning(false); });
@@ -560,7 +561,7 @@ export function OtimizadorPanel({ index }: { index: number }) {
                     <span className="lbl">Reação</span>
                     <div className="ot-seg" role="group" aria-label="Reação" data-off={!moveOn}>
                       {reactions.map((r) => (
-                        <button key={r} type="button" disabled={!moveOn} aria-pressed={reaction === r} onClick={() => setUi({ ...ui, reaction: r })}>{REACTION_LABEL[r] ?? r}</button>
+                        <button key={r} type="button" disabled={!moveOn} aria-pressed={reaction === r} onClick={() => shared.setReaction(r as ReactionChoice)}>{REACTION_LABEL[r] ?? r}</button>
                       ))}
                     </div>
                   </div>
@@ -568,7 +569,7 @@ export function OtimizadorPanel({ index }: { index: number }) {
                     <span className="lbl">Crítico</span>
                     <div className="ot-seg" role="group" aria-label="Crítico" data-off={!moveOn}>
                       {(Object.keys(CRIT_LABEL) as Crit[]).map((c) => (
-                        <button key={c} type="button" disabled={!moveOn} title={CRIT_LABEL[c]} aria-pressed={ui.crit === c} onClick={() => setUi({ ...ui, crit: c })}>{CRIT_SHORT[c]}</button>
+                        <button key={c} type="button" disabled={!moveOn} title={CRIT_LABEL[c]} aria-pressed={critPick === c} onClick={() => shared.setCrit(c)}>{CRIT_SHORT[c]}</button>
                       ))}
                     </div>
                   </div>

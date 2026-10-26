@@ -1,4 +1,5 @@
 /** Coluna principal da calculadora: atributos, tabela de dano, reações do time e buffs recebidos. */
+import { useDamageView } from '../../features/character/damageView';
 import { useMemo, useState } from 'react';
 import type { ProjectView } from '../../app/ProjectContext';
 import { Chip, Panel, Segmented } from '../../design/primitives';
@@ -74,8 +75,8 @@ export function useDamageGroups(v: ProjectView, index: number, reaction: Reactio
 }
 
 export function DamageTablePanel({ v, index }: { v: ProjectView; index: number }) {
-  const [reaction, setReaction] = useState<ReactionChoice>('none');
   const member = v.resolved.team.members[index];
+  const { reaction, setReaction } = useDamageView(v.id, member.character.name);
   const teamElements = v.resolved.team.members.map((m) => m.character.element);
   const options = reactionOptions(member.character.element, teamElements);
   const active = options.includes(reaction) ? reaction : 'none';

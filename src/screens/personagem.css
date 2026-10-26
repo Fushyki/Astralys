@@ -400,3 +400,5 @@
 .cb-add .dz-btn { min-height: var(--ctl-sm); }
 .gear-acts-slot { display: contents; }
 .gear-acts-slot .pc-gearacts { display: contents; }
+.pc-cmp td:first-child { min-width: 180px; }
+.pc-cmp tr.avg td { font-weight: 700; }

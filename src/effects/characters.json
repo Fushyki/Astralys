@@ -894,6 +894,10 @@
           "reactionBonus": {}
         },
         "flat": [],
+        "stacks": {
+          "max": 4,
+          "unit": "inimigos marcados"
+        },
         "note": "Assume 4 inimigos marcados (+40% de HP máximo) por 25 s: ligue nas janelas."
       },
       {
@@ -1829,6 +1833,9 @@
           "reactionBonus": {}
         },
         "flat": [],
+        "stacks": {
+          "max": 3
+        },
         "note": "Assume 3 stacks de +10% de ATK (ao levar dano): ligue nas janelas."
       },
       {
@@ -2414,6 +2421,9 @@
           "reactionBonus": {}
         },
         "flat": [],
+        "stacks": {
+          "max": 4
+        },
         "note": "Assume 4 stacks de +50 de Maestria: ligue nas janelas."
       },
       {
@@ -3304,6 +3314,9 @@
           "reactionBonus": {}
         },
         "flat": [],
+        "stacks": {
+          "max": 3
+        },
         "note": "Assume 3 stacks (+42% de Dano Crítico do Carregado): ligue na janela."
       }
     ],
@@ -3372,6 +3385,9 @@
           "reactionBonus": {}
         },
         "flat": [],
+        "stacks": {
+          "max": 5
+        },
         "note": "Assume 5 stacks de +6% de ATK (variação de HP): ligue nas janelas."
       },
       {
@@ -3526,6 +3542,9 @@
           "reactionBonus": {}
         },
         "flat": [],
+        "stacks": {
+          "max": 3
+        },
         "note": "Assume 3 stacks de +20% de Dano Crítico: ligue nas janelas."
       },
       {
@@ -3662,6 +3681,9 @@
           "reactionBonus": {}
         },
         "flat": [],
+        "stacks": {
+          "max": 2
+        },
         "note": "Assume 2 stacks (+20% de Taxa Crítica) com o Bond of Life em 100% ou mais: ligue na janela."
       },
       {
@@ -3864,6 +3886,9 @@
           "reactionBonus": {}
         },
         "flat": [],
+        "stacks": {
+          "max": 3
+        },
         "note": "Assume 3 stacks de Crystal Shrapnel gastos (+36% de Taxa Crítica na habilidade): ligue na janela. O tiro do canhão não entra."
       },
       {
@@ -3895,6 +3920,10 @@
           "reactionBonus": {}
         },
         "flat": [],
+        "stacks": {
+          "max": 3,
+          "unit": "stacks acima de 3"
+        },
         "note": "Assume 6 stacks de Crystal Shrapnel (3 acima de 3): +135% de Dano Crítico no Ceremonial Crystalshot: ligue na janela do golpe."
       }
     ],
@@ -4698,6 +4727,9 @@
           "reactionBonus": {}
         },
         "flat": [],
+        "stacks": {
+          "max": 3
+        },
         "note": "Assume os 3 stacks de Detector (+10% de DMG Físico cada) no personagem em campo durante a Soulwind: ligue nas janelas."
       },
       {
@@ -5073,6 +5105,9 @@
           "reactionBonus": {}
         },
         "flat": [],
+        "stacks": {
+          "max": 3
+        },
         "note": "Assume 3 stacks (+45% de DMG da habilidade): ligue nas janelas."
       },
       {
@@ -5948,6 +5983,10 @@
           "reactionBonus": {}
         },
         "flat": [],
+        "stacks": {
+          "max": 4,
+          "unit": "efeitos ativos"
+        },
         "note": "Assume 4 efeitos independentes ativos (+24% de DMG Electro): ligue nas janelas."
       }
     ],
@@ -6256,6 +6295,9 @@
           "reactionBonus": {}
         },
         "flat": [],
+        "stacks": {
+          "max": 10
+        },
         "note": "Assume 10 stacks (+20% de DMG Pyro) durante o Niwabi: ligue nas janelas."
       },
       {
@@ -6779,6 +6821,9 @@
           "reactionBonus": {}
         },
         "flat": [],
+        "stacks": {
+          "max": 4
+        },
         "note": "Assume 4 stacks (+16% de Taxa Crítica) e Convicção (+32% de Dano Crítico) no Heartstopper Strike (habilidade): ligue na janela."
       }
     ],
@@ -6954,6 +6999,9 @@
           "reactionBonus": {}
         },
         "flat": [],
+        "stacks": {
+          "max": 2
+        },
         "note": "+16% de ATK por 10 s depois do efeito Coil: ligue nas janelas."
       },
       {
@@ -7598,6 +7646,9 @@
           "reactionBonus": {}
         },
         "flat": [],
+        "stacks": {
+          "max": 5
+        },
         "note": "Assume 5 stacks (+50% de DMG Electro) por 4 s depois de acertos Normais: ligue nas janelas."
       }
     ],
@@ -8174,6 +8225,9 @@
           "reactionBonus": {}
         },
         "flat": [],
+        "stacks": {
+          "max": 4
+        },
         "note": "Assume 4 stacks (+100 de Maestria) durante o Painted Dome: ligue nas janelas."
       },
       {
@@ -8588,6 +8642,9 @@
           "reactionBonus": {}
         },
         "flat": [],
+        "stacks": {
+          "max": 2
+        },
         "note": "Assume 2 stacks (+18% de ATK): ligue nas janelas."
       },
       {
@@ -8617,6 +8674,9 @@
           "reactionBonus": {}
         },
         "flat": [],
+        "stacks": {
+          "max": 3
+        },
         "note": "Assume 3 stacks (+36% de Dano Crítico): ligue nas janelas."
       },
       {
@@ -8739,6 +8799,9 @@
           "reactionBonus": {}
         },
         "flat": [],
+        "stacks": {
+          "max": 3
+        },
         "note": "Assume 3 stacks (+60% de DMG Pyro/Electro) por 8 s depois da cura: ligue nas janelas. Só personagens Pyro/Electro recebem."
       },
       {
@@ -9343,6 +9406,9 @@
           "reactionBonus": {}
         },
         "flat": [],
+        "stacks": {
+          "max": 2
+        },
         "note": "Assume 2 stacks (+30% de DMG Electro): ligue nas janelas."
       },
       {
@@ -10103,6 +10169,9 @@
           "reactionBonus": {}
         },
         "flat": [],
+        "stacks": {
+          "max": 3
+        },
         "note": "Assume 3 stacks (+30% de ATK do personagem em campo): ligue nas janelas."
       }
     ],
@@ -10478,6 +10547,9 @@
           "reactionBonus": {}
         },
         "flat": [],
+        "stacks": {
+          "max": 2
+        },
         "note": "Assume 2 stacks (+70% de ATK) depois de Nightsoul Burst: ligue nas janelas."
       },
       {
@@ -11880,6 +11952,9 @@
           "reactionBonus": {}
         },
         "flat": [],
+        "stacks": {
+          "max": 3
+        },
         "note": "Assume 3 stacks (+15% de Taxa Crítica) por 10 s: ligue nas janelas."
       },
       {
@@ -12622,6 +12697,9 @@
           "reactionBonus": {}
         },
         "flat": [],
+        "stacks": {
+          "max": 4
+        },
         "note": "Assume 4 stacks (+30% de DMG de Normal/Carregado): ligue nas janelas."
       },
       {
@@ -12683,6 +12761,9 @@
           "reactionBonus": {}
         },
         "flat": [],
+        "stacks": {
+          "max": 4
+        },
         "note": "Assume 4 stacks de Azure Fang's Oath (+80% de Dano Crítico): ligue nas janelas."
       },
       {
@@ -13132,6 +13213,10 @@
           "reactionBonus": {}
         },
         "flat": [],
+        "stacks": {
+          "max": 10,
+          "unit": "níveis de Luz de Lótus"
+        },
         "note": "Assume 10 níveis de Luz de Lótus (+60 de Maestria) dentro da área da Lâmpada: ligue nas janelas."
       },
       {
@@ -13627,6 +13712,10 @@
           "reactionBonus": {}
         },
         "flat": [],
+        "stacks": {
+          "max": 10,
+          "unit": "níveis de Luz de Lótus"
+        },
         "note": "Assume 10 níveis de Luz de Lótus (+60 de Maestria) dentro da área da Lâmpada: ligue nas janelas."
       },
       {
@@ -14292,6 +14381,9 @@
           "reactionBonus": {}
         },
         "flat": [],
+        "stacks": {
+          "max": 4
+        },
         "note": "Assume 4 stacks (+20% de Taxa Crítica) depois de criar Gradient Beacons: ligue na janela."
       },
       {
@@ -14667,6 +14759,9 @@
           "reactionBonus": {}
         },
         "flat": [],
+        "stacks": {
+          "max": 3
+        },
         "note": "Assume 3 stacks (+60% de HP máximo): ligue na janela. O HP maior eleva todos os buffs dela que escalam com HP."
       }
     ],
@@ -15377,6 +15472,10 @@
           "reactionBonus": {}
         },
         "flat": [],
+        "stacks": {
+          "max": 3,
+          "unit": "selos"
+        },
         "note": "Assume 3 Selos gastos no Carregado (+15% de DMG Pyro por 6 s): ligue na janela do Carregado."
       },
       {
@@ -17634,6 +17733,10 @@
           }
         },
         "flat": [],
+        "stacks": {
+          "max": 8,
+          "unit": "stacks de Frostglow"
+        },
         "note": "Assume 8 stacks de Frostglow (o máximo de 40%): DMG Estelar dos outros membros por 15 s depois do Supremo: ligue nas janelas."
       }
     ],
@@ -17792,6 +17895,10 @@
           }
         },
         "flat": [],
+        "stacks": {
+          "max": 8,
+          "unit": "stacks de Frostglow"
+        },
         "note": "Assume 8 stacks de Frostglow (o máximo de 40%): DMG Estelar dos outros membros por 15 s depois do Supremo: ligue nas janelas."
       }
     ],
@@ -17862,6 +17969,9 @@
           }
         },
         "flat": [],
+        "stacks": {
+          "max": 4
+        },
         "note": "Assume 4 stacks de Marvelous Splendor (15% cada, parâmetro do Lunaris e Genshin Optimizer): +60% de DMG Estelar: ligue nas janelas."
       },
       {
@@ -17963,6 +18073,9 @@
           "reactionBonus": {}
         },
         "flat": [],
+        "stacks": {
+          "max": 4
+        },
         "note": "Assume 4 stacks: +28% de ATK: ligue nas janelas do A1."
       },
       {

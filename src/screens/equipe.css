@@ -84,3 +84,10 @@
 .eq-compat p { margin: 4px 0 0; font-size: 13px; color: var(--text-2); max-width: 760px; }
 .eq-card:has(.eq-buffs) .acts { margin-top: 0; }
 .eq-buffs .bc-note { margin: 0; padding: 8px 10px; border-radius: 8px; background: color-mix(in srgb, var(--gold) 10%, var(--bg-header)); border: 1px solid color-mix(in srgb, var(--gold) 35%, var(--border)); font-size: 12px; color: var(--text-2); }
+
+.bcard .bc-stacks { display: flex; align-items: center; gap: var(--sp-2); font-size: var(--fs-1); color: var(--muted); }
+.bcard .bc-stacks > span:first-child { flex: 1; min-width: 0; }
+.bcard .bc-stacks button { width: var(--ctl-sm); height: var(--ctl-sm); border-radius: var(--r-ctl); border: 1px solid var(--border-ctl); background: var(--bg-header); color: var(--gold); font: inherit; cursor: pointer; }
+.bcard .bc-stacks button:disabled { opacity: .4; cursor: not-allowed; }
+.bcard .bc-stacks b { min-width: 3.2em; text-align: center; color: var(--text); }
+.bcard .bc-stacks b small { color: var(--muted); font-weight: 400; }

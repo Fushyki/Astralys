@@ -32,6 +32,7 @@ function groupCards(cards: BuffCard[], member: number, names: string[], colors: 
 
 export function MemberBuffs({ v, index }: { v: ProjectView; index: number }) {
   const setBuff = useRotationStore((s) => s.setBuff);
+  const updateMember = useRotationStore((s) => s.updateMember);
   const [open, setOpen] = useState(false);
   const cards = useMemo(() => (v.inSync ? memberBuffCards(v.project, v.resolved, v.bundle, index) : []), [v.project, v.resolved, v.bundle, index, v.inSync]);
   const names = v.project.members.map((m) => m.character);
@@ -76,6 +77,14 @@ export function MemberBuffs({ v, index }: { v: ProjectView; index: number }) {
                     {c.chips.length > 0 && (
                       <span className="bc-vals">
                         {c.chips.map((s) => <span key={s} className="num">{s}</span>)}
+                      </span>
+                    )}
+                    {c.stack && (
+                      <span className="bc-stacks" role="group" aria-label={`Quantidade de ${c.stack.unit ?? 'stacks'}`}>
+                        <span>{c.stack.unit ?? 'Stacks'}</span>
+                        <button type="button" aria-label="Menos" disabled={c.stack.n <= 0} onClick={(e) => { e.preventDefault(); updateMember(c.stack!.giver, { stacks: { ...v.project.members[c.stack!.giver].stacks, [c.stack!.buffId]: c.stack!.n - 1 } }); }}>−</button>
+                        <b className="num">{c.stack.n}<small>/{c.stack.max}</small></b>
+                        <button type="button" aria-label="Mais" disabled={c.stack.n >= c.stack.max} onClick={(e) => { e.preventDefault(); updateMember(c.stack!.giver, { stacks: { ...v.project.members[c.stack!.giver].stacks, [c.stack!.buffId]: c.stack!.n + 1 } }); }}>+</button>
                       </span>
                     )}
                     <span className="bc-meta">

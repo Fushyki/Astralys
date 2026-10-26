@@ -10,7 +10,7 @@ import { elementColor } from '../../design/elements';
 import { DamageLegend, FamilyBadge, damageColor } from '../../design/damageFamily';
 import { Segmented, StarIcon } from '../../design/primitives';
 import type { CharacterBuff } from '../../effects/schema';
-import { KIT_INFUSIONS, assembleTeam, characterBuffDelta, effectiveTalents } from '../../engine';
+import { KIT_INFUSIONS, assembleTeam, characterBuffDelta, effectiveTalents, scaleBuffStacks, stacksOf } from '../../engine';
 import type { MemberRef, ReactionChoice } from '../../engine';
 import { REACTION_LABEL, characterReactions, memberBuffCards, reactionOptions, type MoveLine } from '../../features/character/characterModel';
 import { buffHome, paramRows, skillIconUrl, splitChip, useTalents, type CharacterTalents, type TalentText } from '../../features/character/talents';
@@ -103,6 +103,9 @@ interface CondProps {
   disabled: string[];
   chips: string[];
   onToggle: (id: string, enabled: boolean) => void;
+  /** Stacks escolhidos (undefined = o máximo) e como mudar, se o buff tem stacks. */
+  chosen?: number;
+  onStacks?: (n: number) => void;
 }
 
 /** Id do motor do buff do personagem: fonte estática (só dele, sempre) ou buff de time (faixa/regra). */
@@ -111,11 +114,12 @@ function toggleIdOf(index: number, b: CharacterBuff): string {
 }
 
 /** Condição: caixa dourada com o checkbox, o texto, o valor em destaque e os efeitos que ela dá. */
-function Condition({ buff, index, constellation, disabled, chips, onToggle }: CondProps) {
+function Condition({ buff, index, constellation, disabled, chips, onToggle, chosen, onStacks }: CondProps) {
   const id = toggleIdOf(index, buff);
   const locked = buff.minConstellation > constellation;
   const active = !locked && !disabled.includes(id);
-  const fallback = buff.stats ? deltaChips(characterBuffDelta(buff.stats, !!buff.forElements)) : [];
+  const fallback = buff.stats ? deltaChips(characterBuffDelta(scaleBuffStacks(buff, chosen).stats, !!buff.forElements)) : [];
+  const n = stacksOf(buff, chosen);
   const rows = ratio((chips.length ? chips : fallback).map(splitChip));
   return (
     <div className="tl-cond" data-active={active} data-locked={locked}>
@@ -124,6 +128,14 @@ function Condition({ buff, index, constellation, disabled, chips, onToggle }: Co
         <span className="txt" title={buff.note}>{buff.label}{locked ? ` · libera na C${buff.minConstellation}` : buff.timed ? '' : ' · sempre'}</span>
         {rows[0] && <span className="dz-badge gold num">{rows[0].value || rows[0].name}</span>}
       </label>
+      {buff.stacks && onStacks && (
+        <div className="tl-stacks" role="group" aria-label={`Quantidade de ${buff.stacks.unit ?? 'stacks'} de ${buff.label}`}>
+          <span>{buff.stacks.unit ?? 'Stacks'}</span>
+          <button type="button" aria-label="Menos" disabled={locked || n <= 0} onClick={() => onStacks(n - 1)}>−</button>
+          <b className="num">{n}<small>/{buff.stacks.max}</small></b>
+          <button type="button" aria-label="Mais" disabled={locked || n >= buff.stacks.max} onClick={() => onStacks(n + 1)}>+</button>
+        </div>
+      )}
       <div className="rows">
         {rows.map((r) => (
           <div className="r" key={r.name + r.value}><span className="k">{r.name}</span><span className="v num">{r.value}</span></div>
@@ -173,7 +185,7 @@ export function TalentsPanel({ v, index }: { v: ProjectView; index: number }) {
   if (!tl) return <p className="note" role="status">Carregando os textos dos talentos…</p>;
 
   const conds = (pred: (b: CharacterBuff) => boolean) =>
-    buffs.filter(pred).map((b) => <Condition key={b.id} buff={b} index={index} constellation={constellation} disabled={disabled} chips={chipsOf(b)} onToggle={setSourceEnabled} />);
+    buffs.filter(pred).map((b) => <Condition key={b.id} buff={b} index={index} constellation={constellation} disabled={disabled} chips={chipsOf(b)} onToggle={setSourceEnabled} chosen={ref.stacks?.[b.id]} onStacks={(n) => updateMember(index, { stacks: { ...ref.stacks, [b.id]: n } })} />);
   const noteOf = (src: string) => notes.find((n) => n.src === src);
   const valueOf = (l: MoveLine) => `${l.hits > 1 ? `${l.hits}× ` : ''}${formatInt(l[crit])}`;
   const rowsOf = (lines: MoveLine[]) => lines.map((l) => ({ key: l.id, name: l.name, value: valueOf(l), tone: damageColor(l.element, l.special), special: l.special }));

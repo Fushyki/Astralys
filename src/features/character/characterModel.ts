@@ -17,6 +17,7 @@ import {
 } from '../../engine';
 import { deltaChips } from '../team/teamModel';
 import type { DamageRow } from '../../engine';
+import { stacksOf } from '../../engine';
 
 // ---------- Tabela de dano ----------
 
@@ -315,6 +316,8 @@ export interface BuffCard {
   needsConfirmation: boolean;
   /** Vale só enquanto uma janela da rotação o liga (senão vale o tempo todo). */
   timed: boolean;
+  /** Buff com stacks ou pontos: quem dá, o id do buff, o máximo, quantos valem hoje e como chamar. */
+  stack?: { giver: number; buffId: string; max: number; n: number; unit?: string };
 }
 
 const STATIC_TAG: Record<string, string> = { weapon: 'Arma', 'set-2p': 'Set · 2 peças', 'set-4p': 'Set · 4 peças', character: 'Passiva', resonance: 'Ressonância', extra: 'Extra' };
@@ -337,6 +340,16 @@ export function memberBuffCards(project: RotationProject, resolved: ResolvedProj
   const shareOf = (id: string, active: boolean) => {
     const mine = bundle.attribution.items.find((i) => i.id === id)?.perMember.find((p) => p.name === name);
     return active && mine ? mine.contribution / memberAvg : null;
+  };
+
+  /** Stacks de um buff de personagem (`cbuff-<membro>-<id>` ou `m<membro>:cbuff-<id>`), se ele tem. */
+  const stackOf = (id: string): BuffCard['stack'] => {
+    const m = /^cbuff-(\d+)-(.+)$/.exec(id) ?? (/^m(\d+):cbuff-(.+)$/.exec(id));
+    if (!m) return undefined;
+    const giver = Number(m[1]);
+    const buff = project.members[giver] && resolved.team.members[giver]?.characterEffect?.buffs.find((x) => x.id === m[2]);
+    if (!buff || !buff.stacks) return undefined;
+    return { giver, buffId: m[2], max: buff.stacks.max, n: stacksOf(buff, project.members[giver].stacks?.[m[2]]), ...(buff.stacks.unit ? { unit: buff.stacks.unit } : {}) };
   };
 
   const cards: BuffCard[] = [];
@@ -364,6 +377,7 @@ export function memberBuffCards(project: RotationProject, resolved: ResolvedProj
       share: shareOf(src.id, active),
       needsConfirmation: flagged,
       timed: false,
+      stack: stackOf(src.id),
     });
   }
   if (full.resonanceAtkPct > 0) {
@@ -379,7 +393,7 @@ export function memberBuffCards(project: RotationProject, resolved: ResolvedProj
     const tag = b.id.startsWith('gear-') ? 'Arma/set' : b.id.startsWith('flat-atk-') ? 'Passiva' : idMatch ? characterBuffTag(resolved, Number(idMatch[1]), idMatch[2]) : 'Extra';
     cards.push({
       id: b.id, toggleId: b.toggleId, name: b.name, tag, giver: b.giver, giverName: b.giverName, window: b.window, chips: b.value === '—' ? [] : b.value.split(', '),
-      active: b.active, lockedOff: b.lockedOff, gear: b.gear, receivers: b.receivers, share: b.share, needsConfirmation: b.needsConfirmation, timed: b.window !== 'o tempo todo',
+      active: b.active, lockedOff: b.lockedOff, gear: b.gear, receivers: b.receivers, share: b.share, needsConfirmation: b.needsConfirmation, timed: b.window !== 'o tempo todo', stack: stackOf(b.id),
     });
   }
   return cards;

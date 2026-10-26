@@ -93,3 +93,10 @@
 .tl-card.cons .cst[data-lit='true'] .tl-desc p { color: var(--text-2); }
 .tl-full .tl-cut { font-size: var(--fs-2); color: var(--faint); border-top: 1px solid #18204a; padding-top: var(--sp-3); }
 .tl-card.cons .cst .tl-desc p { -webkit-line-clamp: 5; }
+
+.tl-cond .tl-stacks { display: flex; align-items: center; gap: var(--sp-2); padding: var(--sp-2) var(--sp-3); font-size: var(--fs-1); color: #f8de9e; border-bottom: 1px solid #2a2410; }
+.tl-cond .tl-stacks > span { flex: 1; min-width: 0; }
+.tl-cond .tl-stacks button { width: var(--ctl-sm); height: var(--ctl-sm); border-radius: var(--r-ctl); border: 1px solid #6b5524; background: #211b0c; color: var(--gold); font: inherit; cursor: pointer; }
+.tl-cond .tl-stacks button:disabled { opacity: .4; cursor: not-allowed; }
+.tl-cond .tl-stacks b { min-width: 3.2em; text-align: center; }
+.tl-cond .tl-stacks b small { color: var(--muted); font-weight: 400; }

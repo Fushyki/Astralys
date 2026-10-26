@@ -230,6 +230,8 @@ export const CharacterBuffSchema = z.object({
   defShred: z.number().positive().optional(),
   /** Dano fixo por golpe elegível (ex.: Gorou A4, "Dano de Habilidade aumentado em 156% da DEF"). */
   flat: z.array(WeaponFlatSchema).default([]),
+  /** Efeito com stacks ou pontos: os números acima valem para `max`; o usuário escolhe quantos (`MemberRef.stacks`). */
+  stacks: z.object({ max: z.number().int().min(2), unit: z.string().optional() }).optional(),
   /** O que foi assumido e o que não entra. */
   note: z.string().optional(),
 });

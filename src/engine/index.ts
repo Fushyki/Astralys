@@ -12,6 +12,7 @@ export * from './attribution';
 export * from './workerApi';
 export * from './analysis';
 export * from './project';
+export * from './stacks';
 export * from './bundle';
 export * from './damageTable';
 export * from './critSweep';

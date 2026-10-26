@@ -65,6 +65,32 @@ const meta = read<{ gameVersion: string }>('src/data/generated/meta.json');
 /** Entradas feitas à mão (planilha de referência); as geradas por este script são refeitas a cada execução. */
 const handMade = <T extends { fonte_info: string }>(list: T[]): T[] => list.filter((e) => !e.fonte_info.includes('scripts/curation/'));
 
+/** Como chamar o que se conta em cada buff (o padrão da tela é "stacks"). */
+const STACK_UNITS: Record<string, string> = {
+  'Yelan:c4': 'inimigos marcados', 'Keqing:c6': 'efeitos ativos', 'Yanfei:a1': 'selos', 'Navia:c6': 'stacks acima de 3',
+  'Aether (Dendro):a1': 'níveis de Luz de Lótus', 'Lumine (Dendro):a1': 'níveis de Luz de Lótus', 'Aether (Cryo):c6': 'stacks de Frostglow', 'Lumine (Cryo):c6': 'stacks de Frostglow',
+};
+
+/** Stacks/pontos de um buff: informado na curadoria ou o multiplicador inteiro `x` (2 a 20) dos valores de `stats` (todos iguais). */
+function stackInfo(b: { stats?: unknown; stacks?: { max: number; unit?: string } | false }): { max: number; unit?: string } | undefined {
+  if (b.stacks === false) return undefined;
+  if (b.stacks) return b.stacks;
+  const xs = new Set<number>();
+  const walk = (x: unknown): void => {
+    if (!x || typeof x !== 'object') return;
+    const o = x as Record<string, unknown>;
+    if (typeof o.x === 'number' && ('p' in o)) {
+      if (Number.isInteger(o.x) && o.x >= 2 && o.x <= 20) xs.add(o.x);
+      else xs.add(-1);
+      return;
+    }
+    Object.values(o).forEach(walk);
+  };
+  walk(b.stats);
+  const list = [...xs].filter((n) => n > 0);
+  return list.length === 1 && !xs.has(-1) ? { max: list[0] } : undefined;
+}
+
 const round = (n: number) => Math.round(n * 1e6) / 1e6;
 const valueOf = (v: Val, params: number[], where: string, text = ''): number => {
   if (typeof v === 'number') return v;
@@ -346,6 +372,7 @@ function buildCharacters(): CharacterEffect[] {
         ...(levelTable ? { level: { talent: b.kit!.talent, table: levelTable } } : {}),
         scope: b.scope,
         timed: b.timed,
+        ...(stackInfo(b) ? { stacks: { ...stackInfo(b)!, ...(STACK_UNITS[`${name}:${b.id}`] ? { unit: STACK_UNITS[`${name}:${b.id}`] } : {}) } } : {}),
         ...(b.forElements ? { forElements: b.forElements } : {}),
         ...(b.forFactions ? { forFactions: b.forFactions } : {}),
         ...(s

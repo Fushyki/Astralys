@@ -3,6 +3,7 @@
  * O projeto guarda NOMES (personagem, arma, set, golpe), nunca os dados do jogo: o mesmo arquivo continua válido
  * quando o Lunaris atualiza os números. A resolução junta o projeto com os dados do jogo e os efeitos.
  */
+import { withStacks } from './stacks';
 import { z } from 'zod';
 import type { ArtifactSet, Character, Move, Talent, Weapon } from '../data/schema';
 import { planilhaEffect } from './compat/planilha';
@@ -71,6 +72,8 @@ export const MemberRefSchema = z.object({
    * (`RotationProject.enabled`). Ausente = como antes: ligados (projetos antigos e o gabarito da planilha).
    */
   gearManual: z.boolean().optional(),
+  /** Quantos stacks (ou pontos) de cada buff do personagem valem, por id do buff (`CharacterBuff.stacks`). Ausente = o máximo. */
+  stacks: z.record(z.string(), z.number().int().min(0)).optional(),
   /** Infusão dos ataques normais, carregados e de queda (Hu Tao no Paramita, Xiao no Supremo…). Ausente = sem infusão (Físico em quem usa arma física). */
   normalInfusion: z.enum(['Pyro', 'Hydro', 'Anemo', 'Electro', 'Dendro', 'Cryo', 'Geo']).optional(),
   minER: z.number().min(0).optional(),
@@ -478,7 +481,7 @@ export function resolveMember(ref: MemberRef, data: GameData, effects: EffectsDa
   const secondarySet = setOf(real ? real.secondarySet : ref.secondarySet);
   const fourPiece = real ? real.fourPiece : ref.fourPiece;
   const gear = gearBuffs({ weapon, weaponEffect, refinement: ref.refinement, primarySet, secondarySet, fourPiece });
-  const own = effects.characters.find((c) => c.character === ref.character);
+  const own = withStacks(effects.characters.find((c) => c.character === ref.character), ref.stacks);
   const characterEffect: CharacterEffect | undefined = gear.length
     ? {
         ...(own ?? { character: ref.character, atkPct: 0, dmgPct: 0, critRate: 0, critDmg: 0, em: 0, appliesToSelf: false, notes: [], procs: [], factions: [], specialMoves: [], fonte_info: 'Buffs de arma e set' }),

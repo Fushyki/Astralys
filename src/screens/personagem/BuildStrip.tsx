@@ -14,6 +14,7 @@ import { cleanText, pieceIconUrl, weaponIconUrl } from '../../design/images';
 import { FLOWER_HP, MAIN_STAT_VALUES, PLUME_ATK, PIECE_SLOTS, buildFromPieces, mainStatOf, type MemberRef, type PieceSlot, type RealPiece } from '../../engine';
 import { weaponsFor } from '../../features/rotation/teamOps';
 import { WeaponPickerDialog } from './WeaponPicker';
+import { WeaponInfoDialog } from './WeaponInfo';
 import { SetPickerDialog } from './SetPicker';
 import { useRotationStore } from '../../features/rotation/store';
 import { EFFECT_STATUS_LABEL, effectCoverage, effectStatus, missingEffects } from '../../features/rotation/teamInfo';
@@ -75,6 +76,7 @@ export function BuildStrip({ data, index, member: memberRef, projectId, compact,
     if (!x) onEditClose?.();
   };
   const [pickWeapon, setPickWeapon] = useState(false);
+  const [infoWeapon, setInfoWeapon] = useState(false);
   const [pickSet, setPickSet] = useState(false);
   const [pickPiece, setPickPiece] = useState<PieceSlot | null>(null);
   const update = useRotationStore((st) => st.updateMember);
@@ -109,6 +111,10 @@ export function BuildStrip({ data, index, member: memberRef, projectId, compact,
   // Com dois sets (2+2), a 1ª, 2ª e 5ª peça ilustram o principal; as outras, o segundo.
   const setFor = (i: number) => (sets.length === 2 && (i === 2 || i === 3) ? sets[1] : sets[0]);
 
+  /** O ícone da arma abre o popup da passiva (o resto do cartão continua trocando a arma). */
+  const openInfo = (e: React.MouseEvent) => { e.stopPropagation(); setInfoWeapon(true); };
+  const onInfoKey = (e: React.KeyboardEvent) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); setInfoWeapon(true); } };
+
   const acts = (editBtn: boolean) => (
     <span className="pc-gearacts">
       {memberRef.pieces ? (
@@ -125,7 +131,7 @@ export function BuildStrip({ data, index, member: memberRef, projectId, compact,
       <div className="pc-gear">
         {compact ? (
           <button type="button" className="gt-weapon" data-rarity={weapon?.rarity ?? 5} onClick={() => setPickWeapon(true)} aria-label={`Trocar a arma ${memberRef.weapon}`}>
-            <span className="art"><Img src={weapon?.icon ? weaponIconUrl(weapon.icon) : undefined} fallback="⚔" /><b className="rf num">R{refine}</b></span>
+            <span className="art info" role="button" tabIndex={0} aria-label={`Passiva e buff de ${memberRef.weapon}`} title="Ver a passiva e o buff da arma" onClick={openInfo} onKeyDown={onInfoKey}><Img src={weapon?.icon ? weaponIconUrl(weapon.icon) : undefined} fallback="⚔" /><b className="rf num">R{refine}</b></span>
             <span className="txt">
               <b className="n">{memberRef.weapon}</b>
               <span className="num sub">{weapon ? `ATK ${formatInt(weapon.baseAtk)}` : ''}{substat ? ` · ${substat}` : ''}</span>
@@ -134,7 +140,7 @@ export function BuildStrip({ data, index, member: memberRef, projectId, compact,
           </button>
         ) : (
           <button type="button" className="pc-weapon gear-tile" data-rarity={weapon?.rarity ?? 5} onClick={() => setPickWeapon(true)} aria-label={`Trocar a arma ${memberRef.weapon}`}>
-            <span className="art"><Img src={weapon?.icon ? weaponIconUrl(weapon.icon) : undefined} fallback="⚔" /></span>
+            <span className="art info" role="button" tabIndex={0} aria-label={`Passiva e buff de ${memberRef.weapon}`} title="Ver a passiva e o buff da arma" onClick={openInfo} onKeyDown={onInfoKey}><Img src={weapon?.icon ? weaponIconUrl(weapon.icon) : undefined} fallback="⚔" /></span>
             <span className="lv num">Nv 90</span>
             <span className="rf num">R{refine}</span>
             <span className="n">{memberRef.weapon}</span>
@@ -292,6 +298,7 @@ export function BuildStrip({ data, index, member: memberRef, projectId, compact,
         </section>
       </div>
       )}
+      {infoWeapon && <WeaponInfoDialog index={index} onClose={() => setInfoWeapon(false)} />}
       {pickWeapon && character && (
         <WeaponPickerDialog
           weapons={weaponsFor(character, data.game.weapons)}

@@ -157,6 +157,20 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
   check('o refino R5 muda o texto da passiva e marca o R5', (await page.textContent('.pc-pcard[aria-label="Passiva da arma"] p')) !== r1 && (await page.getAttribute('.pc-refine button:has-text("R5")', 'aria-pressed')) === 'true');
   await page.click('.pc-refine button:has-text("R1")'); await settle();
 
+  // Popup da arma (no ícone): passiva, stats e o botão de ativar o buff
+  await page.click('.gt-weapon .art.info');
+  await page.waitForSelector('[role="dialog"][aria-label^="Passiva de"]');
+  check('o ícone da arma abre o popup com a passiva e os stats', (await page.locator('.dz-dialog.wi .wi-sec h3').count()) >= 2 && /ATK base \d/.test(await page.textContent('.wi-top')) && (await page.locator('.dz-dialog .wcard').count()) === 0);
+  const sw = page.locator('.wi-buff input');
+  if (await sw.count()) {
+    const before = await sw.first().isChecked();
+    await sw.first().click(); await settle();
+    check('o botão do buff liga e desliga', (await page.locator('.wi-buff input').first().isChecked()) === !before);
+    await page.locator('.wi-buff input').first().click(); await settle();
+  } else check('a arma sem buff cadastrado avisa isso', /não tem buff/.test(await page.textContent('.dz-dialog.wi')));
+  await page.keyboard.press('Escape');
+  check('Esc fecha o popup', (await page.locator('.dz-dialog.wi').count()) === 0);
+
   // Trocar arma: grade com imagens, filtro por raridade e busca
   await page.click('.gt-weapon'); await page.waitForSelector('.dz-dialog .wcard');
   check('o seletor de armas é uma grade de cards com imagem', (await page.locator('.dz-dialog .wcard').count()) > 10 && (await page.locator('.dz-dialog .wcard img').count()) > 5);

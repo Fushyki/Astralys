@@ -24,6 +24,7 @@ import './otimizador.css';
 import { Button, ButtonLink } from '../design/Button';
 import { TeamBuffsStrip } from './personagem/AsideExtras';
 import { CurrentBuild } from './otimizar/CurrentBuild';
+import { ResultCard, pieceSig, type CardCompare } from './otimizar/ResultCard';
 import { MIN_DEFS, activeMins, firstUnmet, formatMin, type MinKey } from './otimizar/minimos';
 import { FamilyBadge, damageColor } from '../design/damageFamily';
 import { specialOfMove } from '../engine/project';
@@ -148,6 +149,7 @@ export function OtimizadorPanel({ index }: { index: number }) {
   const [error, setError] = useState<string | null>(null);
   const [equippedKey, setEquippedKey] = useState<string | null>(null);
   const [fieldMode, setFieldMode] = useState(false);
+  const [showMore, setShowMore] = useState(false);
   const [minOpen, setMinOpen] = useState(false);
   const [minKey, setMinKey] = useState<MinKey>('er');
   const [minVal, setMinVal] = useState('');
@@ -277,7 +279,7 @@ export function OtimizadorPanel({ index }: { index: number }) {
     if (!good) return null;
     try {
       return evaluateEquipped({
-        good, characterKey, config: config(), member: index, rolls: v.bundle.optimization.rolls, ref,
+        good, characterKey, config: { ...config(), constraints: {} }, member: index, rolls: v.bundle.optimization.rolls, ref,
         resolved: { team: optimizerTeam, actions: v.resolved.actions, flatEffects: v.resolved.flatEffects, ampCoefficient: v.resolved.ampCoefficient },
         planilha: project.compat === 'planilha', game: data.game, effects: data.effects,
       }, ref.pieces?.length ? (ref.pieces as GoodArtifact[]) : undefined);
@@ -292,6 +294,7 @@ export function OtimizadorPanel({ index }: { index: number }) {
     setError(null);
     setResult(null);
     setEquippedKey(null);
+    setShowMore(false);
     setProgress(null);
     const j = startOptimizerJob(
       {
@@ -318,7 +321,6 @@ export function OtimizadorPanel({ index }: { index: number }) {
     : ui.goal === 'buff' ? (Math.abs(r.value) < 10 ? `${formatDecimal(r.value * 100, 1)}%` : formatInt(r.value))
     : formatInt(r.value);
   const goalCaption = ui.goal === 'stat' ? STAT_LABEL[ui.stat] : ui.goal === 'buff' ? (buffChosen?.label ?? 'buff') : ui.scope === 'move' ? `${moveChosen?.labelPt ?? moveChosen?.label ?? 'golpe'} · ${REACTION_LABEL[reaction] ?? reaction}` : ui.scope === 'member' ? `dano de ${ref.character}` : 'dano da rotação do time';
-  const base = result?.equipped?.report.value;
   /** Recarga que a calculadora de recarga do projeto pede para este personagem (null se ele não usa o Supremo). */
   const erNeeded = (() => {
     const r = energyResults(project, energyMembers(project, data.game.characters, data.particles))[index];
@@ -335,7 +337,28 @@ export function OtimizadorPanel({ index }: { index: number }) {
   /** O mínimo que o build equipado não atinge (null se atinge todos, ou se não há equipado). */
   const unmet = current ? firstUnmet(ui.mins, current.report.stats) : null;
 
-  const equippedSig = new Set((result?.equipped?.pieces ?? []).map(pieceSig));
+  const currentSig = new Set((current?.pieces ?? []).map(pieceSig));
+  /** Builds da lista: o equipado entra na posição dele (selo "equipado hoje") ou, se ficou fora do top, no fim. */
+  const cards = (() => {
+    if (!result) return [];
+    const list = result.builds.map((b) => ({ build: b, isCurrent: !!current && b.pieces.length === current.pieces.length && b.pieces.every((p) => currentSig.has(pieceSig(p))), outside: false }));
+    if (current && !list.some((c) => c.isCurrent)) list.push({ build: current, isCurrent: true, outside: true });
+    return list;
+  })();
+  /** Chip de comparação: contra o equipado quando ele cumpre os mínimos; senão o #1 é o "melhor resultado" e os outros comparam com ele. */
+  const compareOf = (c: (typeof cards)[number], i: number): CardCompare | undefined => {
+    const v0 = c.build.report.value;
+    if (c.outside) return undefined;
+    if (current && !unmet) {
+      if (c.isCurrent) return undefined;
+      const d = (v0 / current.report.value - 1) * 100;
+      return Number.isFinite(d) ? { text: `${d >= 0 ? '+' : '−'}${formatDecimal(Math.abs(d), 2)}% contra o equipado`, tone: d >= 0 ? 'good' : 'bad' } : undefined;
+    }
+    const best = cards[0]?.build.report.value;
+    if (i === 0) return { text: 'melhor resultado', tone: 'good' };
+    const d = best ? (v0 / best - 1) * 100 : NaN;
+    return Number.isFinite(d) ? { text: `${d >= 0 ? '+' : '−'}${formatDecimal(Math.abs(d), 2)}% contra o #1`, tone: d >= 0 ? 'good' : 'bad' } : undefined;
+  };
 
   return (
     <div className="ot">
@@ -576,109 +599,34 @@ export function OtimizadorPanel({ index }: { index: number }) {
           </section>
 
           {result && (
-            <section className="ot-results" aria-label="Builds encontrados">
-              {result.builds.length === 0 && <p className="note">Nenhum conjunto cumpre os mínimos escolhidos. Afrouxe um deles.</p>}
-              {result.builds.map((b, i) => (
-                <BuildCard key={b.key} title={`#${i + 1}`} build={b} base={base} now={result.equipped?.report} equippedSig={equippedSig} focusValue={focusValue} data={data.game.artifacts} caption={goalCaption} onEquip={() => equip(b)} equipped={equippedKey === b.key} current={result.equipped?.key === b.key} />
-              ))}
-              {result.equipped && !result.builds.some((b) => b.key === result.equipped!.key) && (
-                <BuildCard title={`Fora do top ${result.builds.length || ui.topN}`} build={result.equipped} best={result.builds[0]?.report.value} equippedSig={equippedSig} focusValue={focusValue} data={data.game.artifacts} caption={goalCaption} current />
+            <>
+              <section className="ot-results" aria-label="Builds encontrados">
+                {result.builds.length === 0 && <p className="note">Nenhum conjunto cumpre os mínimos escolhidos. Afrouxe um deles.</p>}
+                {cards.slice(0, showMore ? cards.length : 2).map((c, i) => (
+                  <ResultCard
+                    key={c.build.key + (c.outside ? ':hoje' : '')}
+                    rank={c.outside ? 'Hoje' : `#${i + 1}`}
+                    build={c.build}
+                    now={current}
+                    field={fieldMode}
+                    compare={compareOf(c, i)}
+                    currentSig={currentSig}
+                    sets={data.game.artifacts}
+                    caption={goalCaption}
+                    focusValue={focusValue}
+                    onEquip={c.outside ? undefined : () => equip(c.build)}
+                    equipped={equippedKey === c.build.key}
+                    isCurrent={c.isCurrent}
+                  />
+                ))}
+              </section>
+              {cards.length > 2 && (
+                <button type="button" className="ot-more-btn" onClick={() => setShowMore(!showMore)}>{showMore ? 'Mostrar menos' : `Mostrar mais · ${cards.length - 2} builds`}</button>
               )}
-            </section>
+            </>
           )}
         </>
       )}
     </div>
-  );
-}
-
-function pieceSig(a: GoodArtifact) {
-  return `${a.slotKey}|${a.setKey}|${a.mainStatKey}|${a.level ?? 0}|${a.substats.map((s) => `${s.key}:${s.value}`).join(',')}`;
-}
-
-function Delta({ now, prev, fmt, pct }: { now: number; prev?: number; fmt: (d: number) => string; pct?: boolean }) {
-  if (prev === undefined || !Number.isFinite(now) || Math.abs(now - prev) < 1e-9) return null;
-  const d = pct ? (now / prev - 1) * 100 : now - prev;
-  return <small className={d >= 0 ? 'up' : 'down'}>{d >= 0 ? '+' : '−'}{fmt(Math.abs(d))}</small>;
-}
-
-function BuildCard({ title, build, base, best, now, equippedSig, focusValue, data, caption, onEquip, equipped, current }: {
-  title: string;
-  build: OptimizedBuild;
-  base?: number;
-  /** Valor do melhor build achado: base da diferença do build equipado quando ele ficou fora do top. */
-  best?: number;
-  /** É o build que o personagem usa hoje. */
-  current?: boolean;
-  /** Relatório do build equipado hoje: base dos sinais de diferença nos stats. */
-  now?: OptimizedBuild['report'];
-  equippedSig: Set<string>;
-  focusValue: (r: OptimizedBuild['report']) => string;
-  data: { name: string; id: number }[];
-  caption: string;
-  onEquip?: () => void;
-  equipped?: boolean;
-}) {
-  const r = build.report;
-  const delta = current ? (best && Number.isFinite(r.value) ? (r.value / best - 1) * 100 : undefined) : base && Number.isFinite(r.value) ? (r.value / base - 1) * 100 : undefined;
-  const isNow = !onEquip;
-  const dec = (n: number) => formatDecimal(n, 1);
-  const stats: { label: string; value: string; d: React.ReactNode }[] = [
-    { label: 'ATK', value: formatInt(r.stats.atk), d: <Delta now={r.stats.atk} prev={now?.stats.atk} fmt={formatInt} /> },
-    { label: 'HP', value: formatInt(r.stats.hp), d: <Delta now={r.stats.hp} prev={now?.stats.hp} fmt={formatInt} /> },
-    { label: 'DEF', value: formatInt(r.stats.def), d: <Delta now={r.stats.def} prev={now?.stats.def} fmt={formatInt} /> },
-    { label: 'Maestria', value: formatInt(r.stats.em), d: <Delta now={r.stats.em} prev={now?.stats.em} fmt={formatInt} /> },
-    { label: 'Taxa crít.', value: `${dec(r.stats.critRate * 100)}%`, d: <Delta now={r.stats.critRate * 100} prev={now ? now.stats.critRate * 100 : undefined} fmt={dec} /> },
-    { label: 'Dano crít.', value: `${dec(r.stats.critDmg * 100)}%`, d: <Delta now={r.stats.critDmg * 100} prev={now ? now.stats.critDmg * 100 : undefined} fmt={dec} /> },
-    { label: 'Recarga', value: `${formatDecimal(r.stats.er * 100, 1)}%`, d: <Delta now={r.stats.er * 100} prev={now ? now.stats.er * 100 : undefined} fmt={dec} /> },
-    { label: 'DPR do time', value: formatInt(r.teamAvg), d: <Delta now={r.teamAvg} prev={now?.teamAvg} fmt={(d) => `${formatDecimal(d, 2)}%`} pct /> },
-  ];
-  return (
-    <article className="ot-build" data-now={isNow} data-current={current ? true : undefined}>
-      <header>
-        <span className="rank">{title}</span>
-        <div className="val">
-          <b className="num">{focusValue(r)}</b>
-          <small>{caption} · {build.setLabel}</small>
-        </div>
-        {current && <Chip tone="#e9c46a">equipado hoje</Chip>}
-        {delta !== undefined && Math.abs(delta) > 1e-9 && <Chip tone={delta >= 0 ? '#7bd88f' : '#e06c75'}>{delta >= 0 ? '+' : '−'}{formatDecimal(Math.abs(delta), 2)}% {current ? 'contra o melhor' : 'contra o equipado'}</Chip>}
-        {onEquip && (
-          <Button variant="primary" onClick={onEquip} disabled={equipped}>{equipped ? 'Equipado' : 'Equipar'}</Button>
-        )}
-      </header>
-      <div className="pieces">
-        {build.pieces.map((a: GoodArtifact) => {
-          const set = data.find((x) => norm(x.name) === norm(a.setKey));
-          const kept = equippedSig.has(pieceSig(a));
-          const slotLabel = SLOTS.find((x) => x.key === a.slotKey)?.label ?? a.slotKey;
-          return (
-            <div className="piece" key={`${a.slotKey}`} data-rarity={a.rarity} data-change={!isNow && !kept} aria-label={`${slotLabel}: ${set?.name ?? a.setKey}`}>
-              <span className="top">
-                <span className="slot">{slotLabel}</span>
-                {!isNow && <em>{kept ? 'equipada' : 'troca'}</em>}
-              </span>
-              <span className="art" title={set?.name ?? a.setKey}>
-                <Img src={set ? pieceIconUrl(set.id, a.slotKey as 'flower') : undefined} fallback={SLOT_GLYPH[a.slotKey] ?? '◆'} />
-                <b className="lv num">+{a.level ?? 0}</b>
-              </span>
-              <span className="main">{MAIN_LABEL[a.mainStatKey] ?? a.mainStatKey} <b className="num">{formatMain(a.mainStatKey, mainStatValue(a.mainStatKey, a.rarity, a.level))}</b></span>
-              <ul>
-                {a.substats.map((s) => <li key={s.key} data-crit={s.key === 'critRate_' || s.key === 'critDMG_'}><span>{SUB_LABEL[s.key] ?? s.key}</span><b className="num">{formatSub(s.key, s.value)}</b></li>)}
-              </ul>
-              {a.location && <span className="loc">de {a.location}</span>}
-            </div>
-          );
-        })}
-      </div>
-      <dl className="stats num">
-        {stats.map((s) => (
-          <div key={s.label}>
-            <dt>{s.label}</dt>
-            <dd>{s.value}{!isNow && s.d}</dd>
-          </div>
-        ))}
-      </dl>
-    </article>
   );
 }

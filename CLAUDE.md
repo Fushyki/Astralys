@@ -140,3 +140,9 @@ Plano completo: `C:\Users\dabiv\.claude\plans\hashed-nibbling-island.md`. Strix 
 - Janela de buff: `BuffWindow.whole` (rotação inteira) e `BuffWindow.anchor` ("por golpe": acompanha o golpe-gatilho, `followAnchors`). Buff sem janela não entra no cálculo. Redução de RES/DEF é um buff comum (sem seção de debuffs, decisão do Davi).
 - Duração: `effectiveDuration(project)` = último golpe, salvo `config.durationManual` (Configurações) ou modo planilha (gabarito).
 - Inserção: "Em ordem (no fim)" ou "No instante marcado" com espaço entre golpes (0,4 s); estado no store (`insertMode`, `gap`), fora do desfazer.
+
+
+## Aba Otimizar (mockup `reference/design/Otimizar.dc.html`)
+- `screens/Otimizador.tsx` (`OtimizadorPanel`) orquestra; peças em `screens/otimizar/`: `AsideCard` (coluna do personagem, um painel só), `CurrentBuild` (painel "Build atual" + botão "Status em campo"), `ResultCard` (card de build, grade de 2), `minimos.ts` (mínimos como chips: `activeMins`, `firstUnmet`, `formatMin`), `shared.tsx` (`PieceArt`, `setColor`, `critValue`). Formatação de main stats: `formatMain` em `features/good/labels.ts` (fração ×100).
+- Build atual e diferenças dos cards vêm do MESMO avaliador (`evaluateEquipped` em `features/optimizer/run.ts`); "Status em campo" usa `BuildReport.fieldStats` (todos os buffs de time ligados juntos). Equipado que não cumpre um mínimo nunca é base de comparação (decisão 82).
+- Teste: `scripts/e2e/otimizar.cjs` (26 verificações, screenshots em 1600/1366/390 px).

@@ -56,26 +56,34 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   check('a faixa do time tem 2 telas: Equipe, Rotação e buffs', (await page.$$eval('.dz-subnav nav a', (a) => a.map((x) => x.textContent.replace(/^\d · /, '').trim()))).join('|') === 'Equipe|Rotação e buffs');
   check('"O que otimizar" tem 3 escolhas: Dano, Buff e Stat', (await page.locator('.ot-seg[aria-label="O que otimizar"] button').count()) === 3 && (await page.getAttribute('.ot-seg[aria-label="O que otimizar"] button:has-text("Dano")', 'aria-pressed')) === 'true');
   check('em Dano há 3 alvos: rotação do time, só dele e um golpe do kit', (await page.$$eval('.ot-seg[aria-label="Dano de"] button', (b) => b.map((x) => x.textContent.trim()))).join('|') === 'Rotação do time|Só Mavuika|Um golpe');
-  const prev = await page.textContent('.ot-go .muted');
+
+  const addMin = async (key, value) => {
+    await page.click('.ot-minadd button');
+    await page.selectOption('select[aria-label="Stat do mínimo"]', key);
+    await page.fill('input[aria-label="Valor do mínimo"]', value);
+    await page.click('.ot-pop button:has-text("Adicionar")');
+  };
+  const rmMin = async (label) => { await page.click(`button[aria-label="Remover mínimo de ${label}"]`); };
+  const prev = await page.textContent('.ot-strip .stat');
   check('a rota antiga /otimizador/:nome leva à aba do personagem', await (async () => { await page.goto(`${BASE}/projeto/exemplo/otimizador/Mavuika`, { waitUntil: 'networkidle' }); return /personagem\/Mavuika\?aba=otimizar/.test(page.url()); })());
   await page.waitForSelector('.ot-top');
-  check('mostra quantas peças entram por posição', /40 peças entram \(8 \/ 8 \/ 8 \/ 8 \/ 8/.test(prev), prev);
+  check('mostra quantas peças entram por posição', /40 peças \(8 · 8 · 8 · 8 · 8\)/.test(prev), prev);
 
-  await page.click('.ax-weapon-body');
+  await page.click('.oa-weapon');
   check('clicar na arma na aba Otimizar abre o popup de trocar arma', (await page.locator('[role="dialog"][aria-label="Trocar arma"]').count()) === 1);
   await page.keyboard.press('Escape');
   await page.waitForTimeout(200);
 
   // ---- Otimizar (dano do time) ----
-  await page.click('.ot-go .dz-btn.gold');
-  await page.waitForSelector('.ot-build:not([data-now="true"])', { timeout: 120000 });
-  const builds = await page.locator('.ot-build:not([data-now="true"])').count();
+  await page.click('.ot-bar-row > .dz-btn.gold');
+  await page.waitForSelector('.ot-build', { timeout: 120000 });
+  const builds = await page.locator('.ot-build').count();
   check('a busca devolve até 5 builds', builds >= 1 && builds <= 5, String(builds));
-  check('diz que a busca foi completa', /Busca completa/.test(await page.textContent('.ot-summary')));
+  check('diz que a busca foi completa', /Busca completa/.test(await page.textContent('.ot-strip')));
   // Guia visual v2: imagens, alturas iguais, grade de builds e nenhum texto sublinhado
-  const tilesOk = await page.$$eval('.ot-build', (b) => b.every((x) => x.querySelectorAll('.piece').length === 5 && [...x.querySelectorAll('.piece .art')].every((a) => a.querySelector('img') || a.querySelector('.ph'))));
+  const tilesOk = await page.$$eval('.ot-build', (b) => b.every((x) => x.querySelectorAll('.piece').length === 5 && [...x.querySelectorAll('.piece .ot-art')].every((a) => a.querySelector('img') || a.querySelector('.ph'))));
   check('todo build mostra as 5 peças com imagem (ou o glifo da posição)', tilesOk);
-  const imgs = await page.$$eval('.ot-build .piece .art > img', (i) => i.length);
+  const imgs = await page.$$eval('.ot-build .piece .ot-art > img', (i) => i.length);
   check('as peças carregam a imagem do artefato do Lunaris', imgs >= 5, String(imgs));
   const topH = await page.$$eval('.ot-top > .dz-panel', (p) => p.map((x) => Math.round(x.getBoundingClientRect().height)));
   check('os 3 painéis de filtro têm a mesma altura', topH.length === 3 && new Set(topH).size === 1, topH.join(','));
@@ -88,12 +96,12 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   const gutters = await page.evaluate(() => { const r = document.querySelector('.pc-page').getBoundingClientRect(); return [Math.round(r.left), Math.round(window.innerWidth - r.right)]; });
   check('margem lateral da página de 24 px no máximo em 1440 px', gutters.every((g) => g <= 24), gutters.join('/'));
   check('cada build mostra as 5 peças com imagem e substats', (await page.locator('.ot-build').first().locator('.piece').count()) === 5);
-  const vals = await page.$$eval('.ot-build:not([data-now="true"]) .val b', (b) => b.map((x) => Number(x.textContent.replace(/\./g, ''))));
+  const vals = await page.$$eval('.ot-build .val b', (b) => b.map((x) => Number(x.textContent.replace(/\./g, ''))));
   check('os builds vêm do melhor para o pior', vals.every((v, i) => i === 0 || v <= vals[i - 1]) && vals[0] > 0, vals.join(' > '));
   await page.screenshot({ path: path.join(OUT, 'otimizador.png'), fullPage: true });
 
   // ---- Equipar ----
-  await page.locator('.ot-build:not([data-now="true"])').first().locator('button:has-text("Equipar")').click();
+  await page.locator('.ot-build').first().locator('button:has-text("Equipar")').click();
   check('Equipar marca o build como equipado', (await page.locator('.ot-build button:has-text("Equipado")').count()) === 1);
   await page.click('.pc-views button:has-text("Resumo e build")');
   await page.waitForSelector('.pc-gear');
@@ -115,20 +123,20 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.waitForSelector('.ot-top');
 
   // ---- Restrição de Recarga ----
-  await page.fill('input[aria-label="Recarga mínima"]', '125');
-  await page.click('.ot-go .dz-btn.gold');
+  await addMin('er', '125');
+  await page.click('.ot-bar-row > .dz-btn.gold');
   await page.waitForSelector('.ot-build, .note', { timeout: 120000 });
   await page.waitForTimeout(500);
-  const ers = await page.$$eval('.ot-build:not([data-now="true"]) .stats', (f) => f.map((x) => Number((/Recarga(\d+)/.exec(x.textContent) || [])[1])));
+  const ers = await page.$$eval('.ot-build .stats', (f) => f.map((x) => Number((/Recarga(\d+)/.exec(x.textContent) || [])[1])));
   check('com Recarga mínima de 125% nenhum build fica abaixo', ers.every((e) => e >= 125), ers.join(',') || 'nenhum cumpre');
 
   // ---- Foco num stat ----
-  await page.fill('input[aria-label="Recarga mínima"]', '');
+  await rmMin('Recarga');
   await page.click('.ot-seg[aria-label="O que otimizar"] button:has-text("Stat")');
   await page.click('.ot-seg button:has-text("Maestria")');
-  await page.click('.ot-go .dz-btn.gold');
-  await page.waitForSelector('.ot-build:not([data-now="true"])', { timeout: 120000 });
-  const em = await page.$$eval('.ot-build:not([data-now="true"]) .val b', (b) => b.map((x) => Number(x.textContent.replace(/\./g, ''))));
+  await page.click('.ot-bar-row > .dz-btn.gold');
+  await page.waitForSelector('.ot-build', { timeout: 120000 });
+  const em = await page.$$eval('.ot-build .val b', (b) => b.map((x) => Number(x.textContent.replace(/\./g, ''))));
   check('foco em Maestria: o melhor build tem a maior Maestria', em.length > 0 && em[0] >= Math.max(...em), em.join(' > '));
 
   // ---- Um golpe do kit, com e sem reação ----
@@ -153,14 +161,14 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   const crits = await page.$$eval('.ot-seg button', (b) => b.map((x) => x.textContent.trim()).filter((t) => /Média|Sempre|Nunca/.test(t)));
   check('o tipo de crítico é escolhido', crits.includes('Média') && crits.includes('Sempre') && crits.includes('Nunca'), crits.join(','));
   await page.click('.ot-seg button:has-text("Sem reação")');
-  await page.click('.ot-go .dz-btn.gold');
-  await page.waitForSelector('.ot-build:not([data-now="true"])', { timeout: 120000 });
-  const semReacao = Number((await page.textContent('.ot-build:not([data-now="true"]) .val b')).replace(/\./g, ''));
+  await page.click('.ot-bar-row > .dz-btn.gold');
+  await page.waitForSelector('.ot-build', { timeout: 120000 });
+  const semReacao = Number((await page.textContent('.ot-build .val b')).replace(/\./g, ''));
   await page.click('.ot-seg button:has-text("Derreter")');
-  await page.click('.ot-go .dz-btn.gold');
-  await page.waitForSelector('.ot-build:not([data-now="true"])', { timeout: 120000 });
+  await page.click('.ot-bar-row > .dz-btn.gold');
+  await page.waitForSelector('.ot-build', { timeout: 120000 });
   await page.waitForTimeout(400);
-  const comDerreter = Number((await page.textContent('.ot-build:not([data-now="true"]) .val b')).replace(/\./g, ''));
+  const comDerreter = Number((await page.textContent('.ot-build .val b')).replace(/\./g, ''));
   check('o mesmo golpe vale mais com Derreter do que sem reação', comDerreter > semReacao, `${semReacao} < ${comDerreter}`);
   check('o resultado diz qual golpe e qual reação foram otimizados', /Derreter/.test(await page.textContent('.ot-build .val small')), await page.textContent('.ot-build .val small'));
 
@@ -168,9 +176,9 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.goto(`${BASE}/projeto/exemplo/personagem/Bennett?aba=otimizar`, { waitUntil: 'networkidle' });
   await page.click('.ot-seg[aria-label="O que otimizar"] button:has-text("Buff")');
   check('Buff lista o que o Bennett dá ao time e cresce com o ATK dele', /ATK fixo/.test(await page.textContent('.ot-seg[aria-label="Buff"]')), (await page.textContent('.ot-seg[aria-label="Buff"]')).slice(0, 80));
-  await page.click('.ot-go .dz-btn.gold');
-  await page.waitForSelector('.ot-build:not([data-now="true"])', { timeout: 120000 });
-  const buffVals = await page.$$eval('.ot-build:not([data-now="true"]) .val b', (b) => b.map((x) => Number(x.textContent.replace(/\./g, ''))));
+  await page.click('.ot-bar-row > .dz-btn.gold');
+  await page.waitForSelector('.ot-build', { timeout: 120000 });
+  const buffVals = await page.$$eval('.ot-build .val b', (b) => b.map((x) => Number(x.textContent.replace(/\./g, ''))));
   check('o melhor build é o que dá o maior valor do buff', buffVals.length > 0 && buffVals[0] >= Math.max(...buffVals) && buffVals[0] > 0, buffVals.join(' > '));
 
   // ---- Equipe: clicar no retrato troca o personagem ----
@@ -186,13 +194,13 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.click('.pc-views button:has-text("Otimizar")');
   await page.waitForSelector('.ot-top');
   check('a aba Otimizar da Citlali abre o otimizador dela (individual)', /personagem\/Citlali/.test(page.url()) && /aba=otimizar/.test(page.url()));
-  const citER = Number((await page.inputValue('input[aria-label="Recarga mínima"]')).replace(',', '.'));
+  const citER = Number((await page.textContent('.ot-minchip:has-text("Recarga") b')).replace('%', '').replace(',', '.'));
   check('cada personagem tem a própria configuração: a Citlali já vem com a Recarga que a calculadora pede', citER > 150 && citER < 260, String(citER));
-  await page.fill('input[aria-label="Taxa crítica mínima"]', '77');
+  await addMin('cr', '77');
   await page.click('.pc-tabs a:has-text("Mavuika")'); await page.waitForSelector('.ot-top');
-  check('voltar à Mavuika mostra a configuração dela, sem a da Citlali', (await page.inputValue('input[aria-label="Taxa crítica mínima"]')) === '' );
+  check('voltar à Mavuika mostra a configuração dela, sem a da Citlali', (await page.locator('.ot-minchip:has-text("Taxa crítica")').count()) === 0);
   await page.click('.pc-tabs a:has-text("Citlali")'); await page.waitForSelector('.ot-top');
-  check('a configuração da Citlali fica guardada ao voltar', (await page.inputValue('input[aria-label="Taxa crítica mínima"]')) === '77');
+  check('a configuração da Citlali fica guardada ao voltar', /77/.test(await page.textContent('.ot-minchip:has-text("Taxa crítica")')));
   await page.goto(`${BASE}/projeto/exemplo`, { waitUntil: 'networkidle' });
   check('a barra de passos tem 2 passos', /Passo 1 de 2/.test(await page.textContent('.dz-stepbar')));
 

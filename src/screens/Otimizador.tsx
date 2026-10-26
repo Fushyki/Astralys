@@ -5,8 +5,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 import { useProjectView, type ProjectView } from '../app/ProjectContext';
-import { Chip, Panel, StarIcon } from '../design/primitives';
-import { DualRange, SecHead, StatChip, STAT_COLOR, STAT_TAG } from '../design/filtros';
+import { Panel, StarIcon } from '../design/primitives';
+import { DualRange, STAT_TAG } from '../design/filtros';
 import { pieceIconUrl } from '../design/images';
 import { norm, type Good, type GoodArtifact } from '../features/good/goodImport';
 import { loadGood } from '../features/good/goodStore';
@@ -22,7 +22,6 @@ import { MAIN_LABEL, SUB_LABEL, formatMain, formatSub } from '../features/good/l
 import { formatDecimal, formatInt } from '../ui/format';
 import './otimizador.css';
 import { Button, ButtonLink } from '../design/Button';
-import { TeamBuffsStrip } from './personagem/AsideExtras';
 import { CurrentBuild } from './otimizar/CurrentBuild';
 import { ResultCard, pieceSig, type CardCompare } from './otimizar/ResultCard';
 import { MIN_DEFS, activeMins, firstUnmet, formatMin, type MinKey } from './otimizar/minimos';

@@ -11,7 +11,7 @@ import { DamageTablePanel, ReactionsPanel, ReceivedBuffsPanel } from './personag
 import { ToolsPanel, type ToolTab } from './personagem/ToolsPanel';
 import { OtimizadorPanel } from './Otimizador';
 import { TalentsPanel } from './personagem/TalentsPanel';
-import { AsideExtras } from './personagem/AsideExtras';
+import { AsideCard } from './otimizar/AsideCard';
 import './personagem.css';
 
 type View = 'resumo' | 'talentos' | 'avancado' | 'otimizar';
@@ -92,10 +92,15 @@ export default function Personagem() {
       <main className={`pc-page${view === 'otimizar' ? ' opt' : ''}${view === 'talentos' ? ' solo' : ''}`}>
         {view !== 'talentos' && (
         <aside className="pc-aside">
-            <ArtCard character={character} memberRef={ref} index={index} color={v.colors[index]} level={v.project.config.characterLevel} eligible={eligible} compact={view === 'otimizar'} />
-            <ConstellationCard character={character} memberRef={ref} index={index} compact={view === 'otimizar'} />
-            <TalentsCard character={character} memberRef={ref} index={index} share={share} compact={view === 'otimizar'} />
-            {view === 'otimizar' && <AsideExtras v={v} index={index} />}
+            {view === 'otimizar' ? (
+              <AsideCard v={v} index={index} />
+            ) : (
+              <>
+                <ArtCard character={character} memberRef={ref} index={index} color={v.colors[index]} level={v.project.config.characterLevel} eligible={eligible} />
+                <ConstellationCard character={character} memberRef={ref} index={index} />
+                <TalentsCard character={character} memberRef={ref} index={index} share={share} />
+              </>
+            )}
           </aside>
         )}
 

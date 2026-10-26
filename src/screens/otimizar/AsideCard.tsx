@@ -34,7 +34,7 @@ export function AsideCard({ v, index }: { v: ProjectView; index: number }) {
   const cons = ref.constellation ?? 0;
   const eff = effectiveTalents(ref.talents, ref.constellation, character);
   const refine = Math.min(5, Math.max(1, ref.refinement ?? 1));
-  const sub = weapon?.substat ? `${weapon.substat.stat} ${formatDecimal(weapon.substat.value < 1 ? weapon.substat.value * 100 : weapon.substat.value, 1)}${weapon.substat.value < 1 ? '%' : ''}` : '';
+  const substatValue = weapon?.substat ? `${formatDecimal(weapon.substat.value < 1 ? weapon.substat.value * 100 : weapon.substat.value, 1)}${weapon.substat.value < 1 ? '%' : ''}` : '—';
 
   return (
     <section className="dz-panel oa" style={{ ['--c' as string]: color, ['--e' as string]: elementColor(character.element) }} aria-label={`${character.name}, ${character.element}`}>
@@ -61,6 +61,24 @@ export function AsideCard({ v, index }: { v: ProjectView; index: number }) {
             })}
           </div>
         )}
+        <button type="button" className="oa-weapon" data-rarity={weapon?.rarity ?? 5} onClick={() => setPick(true)} aria-label={`Trocar arma (atual: ${ref.weapon})`}>
+          <span className="top">
+            <span className="art">
+              <Img src={weapon?.icon ? weaponIconUrl(weapon.icon) : undefined} fallback="⚔" />
+              <b className="rf num">R{refine}</b>
+            </span>
+            <span className="t">
+              <small className="lbl">Arma</small>
+              <b className="n">{ref.weapon}</b>
+              <i className="stars" aria-label={`${weapon?.rarity ?? 5} estrelas`}>{'★'.repeat(weapon?.rarity ?? 5)}</i>
+              <small className="num">{WEAPON_LABEL[character.weapon] ?? character.weapon} · Nv 90/90</small>
+            </span>
+          </span>
+          <span className="mini">
+            <span><small>ATK base</small><b className="num">{weapon ? formatInt(weapon.baseAtk) : '—'}</b></span>
+            <span><small>{weapon?.substat?.stat ?? 'Substat'}</small><b className="num gold">{substatValue}</b></span>
+          </span>
+        </button>
         <div className="oa-sec">
           <span className="lbl">Constelação</span>
           <div className="oa-cons" role="group" aria-label="Constelação">
@@ -89,13 +107,6 @@ export function AsideCard({ v, index }: { v: ProjectView; index: number }) {
           </div>
           <span className="oa-share num">{formatPercent(share, 1)} do dano do time</span>
         </div>
-        <button type="button" className="oa-weapon" data-rarity={weapon?.rarity ?? 5} onClick={() => setPick(true)} aria-label={`Trocar a arma ${ref.weapon}`}>
-          <span className="art"><Img src={weapon?.icon ? weaponIconUrl(weapon.icon) : undefined} fallback="⚔" /></span>
-          <span className="t">
-            <b>{ref.weapon}</b>
-            <small className="num">Nv 90 · R{refine}{weapon ? ` · ATK ${formatInt(weapon.baseAtk)}` : ''}{sub ? ` · ${sub}` : ''}</small>
-          </span>
-        </button>
       </div>
       {pick && (
         <WeaponPickerDialog

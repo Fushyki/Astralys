@@ -494,6 +494,15 @@ export function gearFlat(members: MemberInput[]): FlatDamageEffect[] {
   return out;
 }
 
+/**
+ * Facções ligadas do membro. Sem escolha salva, os personagens Moonsign já nascem Moonsign (no Genshin Optimizer é fixo no kit);
+ * Hexerei continua uma escolha do usuário. Escolha salva (mesmo vazia) vale como está.
+ */
+export function factionsOf(chosen: readonly ('moonsign' | 'hexerei')[] | undefined, eligible: readonly ('moonsign' | 'hexerei')[] | undefined): ('moonsign' | 'hexerei')[] {
+  const list = eligible ?? [];
+  return chosen === undefined ? list.filter((f) => f === 'moonsign') : list.filter((f) => chosen.includes(f));
+}
+
 export function resolveMember(ref: MemberRef, data: GameData, effects: EffectsData, minRolls = 0): MemberInput {
   const setOf = (name?: string) => (name ? { name, effect: effects.sets.find((s) => s.set === name) } : undefined);
   const weapon = byName(data.weapons, ref.weapon, 'Arma');
@@ -523,7 +532,7 @@ export function resolveMember(ref: MemberRef, data: GameData, effects: EffectsDa
     artifacts: ref.artifacts,
     talents: effectiveTalents(ref.talents, ref.constellation, character),
     constellation: ref.constellation,
-    factions: (ref.factions ?? []).filter((f) => own?.factions?.includes(f)),
+    factions: factionsOf(ref.factions, own?.factions),
     minER: ref.minER,
     normalInfusion: ref.normalInfusion,
     totalRolls: ref.totalRolls,

@@ -4,7 +4,7 @@ import type { ProjectView } from '../../app/ProjectContext';
 import { CharacterAvatar } from '../../design/primitives';
 import { elementColor } from '../../design/elements';
 import { weaponIconUrl } from '../../design/images';
-import { effectiveTalents } from '../../engine';
+import { effectiveTalents, factionsOf } from '../../engine';
 import { effectStatus } from '../../features/rotation/teamInfo';
 import { weaponsFor } from '../../features/rotation/teamOps';
 import { useRotationStore } from '../../features/rotation/store';
@@ -55,9 +55,10 @@ export function AsideCard({ v, index }: { v: ProjectView; index: number }) {
         {eligible.length > 0 && (
           <div className="oa-fac" role="group" aria-label="Facção">
             {eligible.map((f) => {
-              const on = ref.factions?.includes(f) ?? false;
-              const rest = (ref.factions ?? []).filter((x) => x !== f);
-              return <button key={f} type="button" aria-pressed={on} onClick={() => update(index, { factions: on ? (rest.length ? rest : undefined) : [...rest, f] })}>{FACTION_LABEL[f]}</button>;
+              const cur = factionsOf(ref.factions, eligible);
+              const on = cur.includes(f);
+              const rest = cur.filter((x) => x !== f);
+              return <button key={f} type="button" aria-pressed={on} onClick={() => update(index, { factions: on ? rest : [...rest, f] })}>{FACTION_LABEL[f]}</button>;
             })}
           </div>
         )}

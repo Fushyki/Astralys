@@ -166,8 +166,8 @@ describe('Moonsign e golpes derivados', () => {
     const M = ['moonsign' as const];
     const two = run([{ character: 'Flins', factions: M }, { character: 'Ineffa', factions: M }, { character: 'Bennett' }], [], override);
     const one = run([{ character: 'Flins', factions: M }, { character: 'Bennett' }], [], override);
-    // Interruptor desligado (padrão): os mesmos personagens não contam como Moonsign.
-    const off = run([{ character: 'Flins' }, { character: 'Ineffa' }, { character: 'Bennett' }], [], override);
+    // Interruptor desligado (escolha salva vazia): os mesmos personagens não contam como Moonsign. Sem escolha salva, Moonsign já vem ligado.
+    const off = run([{ character: 'Flins', factions: [] }, { character: 'Ineffa', factions: [] }, { character: 'Bennett' }], [], override);
     // Facção que o personagem não tem é ignorada (Bennett não é Moonsign).
     const fake = run([{ character: 'Flins', factions: M }, { character: 'Bennett', factions: M }], [], override);
     const gleam = (x: typeof two) => x.r.team.members.flatMap((m) => m.characterEffect?.buffs ?? []).filter((b) => b.id === 'moonsign-gleam');

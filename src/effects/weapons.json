@@ -3628,281 +3628,6 @@
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
   },
   {
-    "atkPct": 0.24,
-    "dmgPct": 0,
-    "critRate": 0,
-    "critDmg": 0,
-    "em": 0,
-    "er": 0,
-    "hpPct": 0,
-    "defPct": 0,
-    "dmgPctByType": {},
-    "buffs": [
-      {
-        "id": "edict",
-        "label": "Electrifying Edict (DMG Lunar-Carregado da equipe)",
-        "minConstellation": 0,
-        "scope": "team",
-        "timed": true,
-        "stats": {
-          "atkPct": 0,
-          "dmgPct": 0,
-          "critRate": 0,
-          "critDmg": 0,
-          "em": 0,
-          "er": 0,
-          "hpPct": 0,
-          "defPct": 0,
-          "dmgPctByType": {},
-          "critRateByType": {},
-          "critDmgByType": {},
-          "defIgnore": 0,
-          "atkFlat": 0,
-          "hpFlat": 0,
-          "defFlat": 0,
-          "physDmgPct": 0,
-          "physCritDmg": 0,
-          "reactionBonus": {
-            "lunarcharged": 0.4
-          }
-        },
-        "flat": []
-      }
-    ],
-    "flat": [],
-    "procs": [],
-    "weapon": "Fractured Halo",
-    "refinements": [
-      {
-        "atkPct": 0.24,
-        "dmgPct": 0,
-        "critRate": 0,
-        "critDmg": 0,
-        "em": 0,
-        "er": 0,
-        "hpPct": 0,
-        "defPct": 0,
-        "dmgPctByType": {},
-        "buffs": [
-          {
-            "id": "edict",
-            "label": "Electrifying Edict (DMG Lunar-Carregado da equipe)",
-            "minConstellation": 0,
-            "scope": "team",
-            "timed": true,
-            "stats": {
-              "atkPct": 0,
-              "dmgPct": 0,
-              "critRate": 0,
-              "critDmg": 0,
-              "em": 0,
-              "er": 0,
-              "hpPct": 0,
-              "defPct": 0,
-              "dmgPctByType": {},
-              "critRateByType": {},
-              "critDmgByType": {},
-              "defIgnore": 0,
-              "atkFlat": 0,
-              "hpFlat": 0,
-              "defFlat": 0,
-              "physDmgPct": 0,
-              "physCritDmg": 0,
-              "reactionBonus": {
-                "lunarcharged": 0.4
-              }
-            },
-            "flat": []
-          }
-        ],
-        "flat": [],
-        "procs": []
-      },
-      {
-        "atkPct": 0.3,
-        "dmgPct": 0,
-        "critRate": 0,
-        "critDmg": 0,
-        "em": 0,
-        "er": 0,
-        "hpPct": 0,
-        "defPct": 0,
-        "dmgPctByType": {},
-        "buffs": [
-          {
-            "id": "edict",
-            "label": "Electrifying Edict (DMG Lunar-Carregado da equipe)",
-            "minConstellation": 0,
-            "scope": "team",
-            "timed": true,
-            "stats": {
-              "atkPct": 0,
-              "dmgPct": 0,
-              "critRate": 0,
-              "critDmg": 0,
-              "em": 0,
-              "er": 0,
-              "hpPct": 0,
-              "defPct": 0,
-              "dmgPctByType": {},
-              "critRateByType": {},
-              "critDmgByType": {},
-              "defIgnore": 0,
-              "atkFlat": 0,
-              "hpFlat": 0,
-              "defFlat": 0,
-              "physDmgPct": 0,
-              "physCritDmg": 0,
-              "reactionBonus": {
-                "lunarcharged": 0.5
-              }
-            },
-            "flat": []
-          }
-        ],
-        "flat": [],
-        "procs": []
-      },
-      {
-        "atkPct": 0.36,
-        "dmgPct": 0,
-        "critRate": 0,
-        "critDmg": 0,
-        "em": 0,
-        "er": 0,
-        "hpPct": 0,
-        "defPct": 0,
-        "dmgPctByType": {},
-        "buffs": [
-          {
-            "id": "edict",
-            "label": "Electrifying Edict (DMG Lunar-Carregado da equipe)",
-            "minConstellation": 0,
-            "scope": "team",
-            "timed": true,
-            "stats": {
-              "atkPct": 0,
-              "dmgPct": 0,
-              "critRate": 0,
-              "critDmg": 0,
-              "em": 0,
-              "er": 0,
-              "hpPct": 0,
-              "defPct": 0,
-              "dmgPctByType": {},
-              "critRateByType": {},
-              "critDmgByType": {},
-              "defIgnore": 0,
-              "atkFlat": 0,
-              "hpFlat": 0,
-              "defFlat": 0,
-              "physDmgPct": 0,
-              "physCritDmg": 0,
-              "reactionBonus": {
-                "lunarcharged": 0.6
-              }
-            },
-            "flat": []
-          }
-        ],
-        "flat": [],
-        "procs": []
-      },
-      {
-        "atkPct": 0.42,
-        "dmgPct": 0,
-        "critRate": 0,
-        "critDmg": 0,
-        "em": 0,
-        "er": 0,
-        "hpPct": 0,
-        "defPct": 0,
-        "dmgPctByType": {},
-        "buffs": [
-          {
-            "id": "edict",
-            "label": "Electrifying Edict (DMG Lunar-Carregado da equipe)",
-            "minConstellation": 0,
-            "scope": "team",
-            "timed": true,
-            "stats": {
-              "atkPct": 0,
-              "dmgPct": 0,
-              "critRate": 0,
-              "critDmg": 0,
-              "em": 0,
-              "er": 0,
-              "hpPct": 0,
-              "defPct": 0,
-              "dmgPctByType": {},
-              "critRateByType": {},
-              "critDmgByType": {},
-              "defIgnore": 0,
-              "atkFlat": 0,
-              "hpFlat": 0,
-              "defFlat": 0,
-              "physDmgPct": 0,
-              "physCritDmg": 0,
-              "reactionBonus": {
-                "lunarcharged": 0.7
-              }
-            },
-            "flat": []
-          }
-        ],
-        "flat": [],
-        "procs": []
-      },
-      {
-        "atkPct": 0.48,
-        "dmgPct": 0,
-        "critRate": 0,
-        "critDmg": 0,
-        "em": 0,
-        "er": 0,
-        "hpPct": 0,
-        "defPct": 0,
-        "dmgPctByType": {},
-        "buffs": [
-          {
-            "id": "edict",
-            "label": "Electrifying Edict (DMG Lunar-Carregado da equipe)",
-            "minConstellation": 0,
-            "scope": "team",
-            "timed": true,
-            "stats": {
-              "atkPct": 0,
-              "dmgPct": 0,
-              "critRate": 0,
-              "critDmg": 0,
-              "em": 0,
-              "er": 0,
-              "hpPct": 0,
-              "defPct": 0,
-              "dmgPctByType": {},
-              "critRateByType": {},
-              "critDmgByType": {},
-              "defIgnore": 0,
-              "atkFlat": 0,
-              "hpFlat": 0,
-              "defFlat": 0,
-              "physDmgPct": 0,
-              "physCritDmg": 0,
-              "reactionBonus": {
-                "lunarcharged": 0.8
-              }
-            },
-            "flat": []
-          }
-        ],
-        "flat": [],
-        "procs": []
-      }
-    ],
-    "note": "Assume o ATK depois de habilidade/Supremo sempre ativo. Electrifying Edict: +40% (R1) de DMG Lunar-Carregado da equipe por 20 s depois de criar um escudo com o ATK ativo: faixa, ligue nas janelas.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
-  },
-  {
     "atkPct": 0.36,
     "dmgPct": 0,
     "critRate": 0,
@@ -21307,6 +21032,281 @@
       }
     ],
     "note": "ATK fixo = 52% da Maestria (R1) + 3 stacks de 28% (depois da habilidade), sempre ativo.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+  },
+  {
+    "atkPct": 0.24,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "buffs": [
+      {
+        "id": "edict",
+        "label": "Electrifying Edict (DMG Lunar-Carregado da equipe)",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "lunarcharged": 0.4
+          }
+        },
+        "flat": []
+      }
+    ],
+    "flat": [],
+    "procs": [],
+    "weapon": "Fractured Halo",
+    "refinements": [
+      {
+        "atkPct": 0.24,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {},
+        "buffs": [
+          {
+            "id": "edict",
+            "label": "Electrifying Edict (DMG Lunar-Carregado da equipe)",
+            "minConstellation": 0,
+            "scope": "team",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "lunarcharged": 0.4
+              }
+            },
+            "flat": []
+          }
+        ],
+        "flat": [],
+        "procs": []
+      },
+      {
+        "atkPct": 0.3,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {},
+        "buffs": [
+          {
+            "id": "edict",
+            "label": "Electrifying Edict (DMG Lunar-Carregado da equipe)",
+            "minConstellation": 0,
+            "scope": "team",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "lunarcharged": 0.5
+              }
+            },
+            "flat": []
+          }
+        ],
+        "flat": [],
+        "procs": []
+      },
+      {
+        "atkPct": 0.36,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {},
+        "buffs": [
+          {
+            "id": "edict",
+            "label": "Electrifying Edict (DMG Lunar-Carregado da equipe)",
+            "minConstellation": 0,
+            "scope": "team",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "lunarcharged": 0.6
+              }
+            },
+            "flat": []
+          }
+        ],
+        "flat": [],
+        "procs": []
+      },
+      {
+        "atkPct": 0.42,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {},
+        "buffs": [
+          {
+            "id": "edict",
+            "label": "Electrifying Edict (DMG Lunar-Carregado da equipe)",
+            "minConstellation": 0,
+            "scope": "team",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "lunarcharged": 0.7
+              }
+            },
+            "flat": []
+          }
+        ],
+        "flat": [],
+        "procs": []
+      },
+      {
+        "atkPct": 0.48,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {},
+        "buffs": [
+          {
+            "id": "edict",
+            "label": "Electrifying Edict (DMG Lunar-Carregado da equipe)",
+            "minConstellation": 0,
+            "scope": "team",
+            "timed": true,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {
+                "lunarcharged": 0.8
+              }
+            },
+            "flat": []
+          }
+        ],
+        "flat": [],
+        "procs": []
+      }
+    ],
+    "note": "Assume o ATK depois de habilidade/Supremo sempre ativo. Electrifying Edict: +40% (R1) de DMG Lunar-Carregado da equipe por 20 s depois de criar um escudo com o ATK ativo: faixa, ligue nas janelas.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
   {

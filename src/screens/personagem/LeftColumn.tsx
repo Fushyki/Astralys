@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { NumberInput } from '../../design/fields';
 import { CharacterAvatar, Panel, Segmented } from '../../design/primitives';
 import { SecHead, StatChip } from '../../design/filtros';
-import { SUBSTATS, defaultTotalRolls, effectiveTalents, maxRollsFor, rollValues, type AnalysisBundle, type MemberRef, type Substat } from '../../engine';
+import { SUBSTATS, factionsOf, defaultTotalRolls, effectiveTalents, maxRollsFor, rollValues, type AnalysisBundle, type MemberRef, type Substat } from '../../engine';
 import { SUB_LABEL, formatSub } from '../../features/good/labels';
 import type { Character } from '../../data/schema';
 import { useRotationStore } from '../../features/rotation/store';
@@ -52,10 +52,11 @@ export function CharacterCard({ character, memberRef, index, color, level, share
           <span className="lbl">Facção</span>
           <div className="row" role="group" aria-label="Facção">
             {eligible.map((f) => {
-              const on = memberRef.factions?.includes(f) ?? false;
-              const rest = (memberRef.factions ?? []).filter((x) => x !== f);
+              const cur = factionsOf(memberRef.factions, eligible);
+              const on = cur.includes(f);
+              const rest = cur.filter((x) => x !== f);
               return (
-                <button key={f} type="button" aria-pressed={on} title={FACTION_HINT[f]} onClick={() => update(index, { factions: on ? (rest.length ? rest : undefined) : [...rest, f] })}>
+                <button key={f} type="button" aria-pressed={on} title={FACTION_HINT[f]} onClick={() => update(index, { factions: on ? rest : [...rest, f] })}>
                   {FACTION_LABEL[f]}
                 </button>
               );

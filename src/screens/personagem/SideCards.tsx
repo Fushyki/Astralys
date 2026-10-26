@@ -3,7 +3,7 @@ import { useState } from 'react';
 import type { Character } from '../../data/schema';
 import { CharacterAvatar } from '../../design/primitives';
 import { elementColor } from '../../design/elements';
-import { effectiveTalents, type MemberRef } from '../../engine';
+import { effectiveTalents, factionsOf, type MemberRef } from '../../engine';
 import { useTalents } from '../../features/character/talents';
 import { useRotationStore } from '../../features/rotation/store';
 import { formatPercent } from '../../ui/format';
@@ -50,10 +50,11 @@ export function ArtCard({
         {eligible.length > 0 && (
           <div className="factions" role="group" aria-label="Facção">
             {eligible.map((f) => {
-              const on = memberRef.factions?.includes(f) ?? false;
-              const rest = (memberRef.factions ?? []).filter((x) => x !== f);
+              const cur = factionsOf(memberRef.factions, eligible);
+              const on = cur.includes(f);
+              const rest = cur.filter((x) => x !== f);
               return (
-                <button key={f} type="button" aria-pressed={on} title={FACTION_HINT[f]} onClick={() => update(index, { factions: on ? (rest.length ? rest : undefined) : [...rest, f] })}>
+                <button key={f} type="button" aria-pressed={on} title={FACTION_HINT[f]} onClick={() => update(index, { factions: on ? rest : [...rest, f] })}>
                   {FACTION_LABEL[f]}
                 </button>
               );

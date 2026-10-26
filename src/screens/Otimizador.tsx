@@ -348,7 +348,9 @@ export function OtimizadorPanel({ index }: { index: number }) {
   /** Dono de uma peça equipada em outro personagem: o nome e a cor dele (a do time, se ele for do time). */
   const ownerOf = (location: string): Owner => {
     const i = project.members.findIndex((m) => norm(m.character) === norm(location));
-    return i >= 0 ? { name: project.members[i].character, color: v.colors[i] } : { name: location, color: 'var(--faint)' };
+    if (i >= 0) return { name: project.members[i].character, color: v.colors[i], icon: data.game.characters.find((c) => c.name === project.members[i].character)?.icon };
+    const other = data.game.characters.find((c) => norm(c.name) === norm(location));
+    return { name: other?.name ?? location, color: 'var(--faint)', icon: other?.icon };
   };
   const currentSig = new Set((current?.pieces ?? []).map(pieceSig));
   /** Builds da lista: o equipado entra na posição dele (selo "equipado hoje") ou, se ficou fora do top, no fim. */
@@ -632,7 +634,6 @@ export function OtimizadorPanel({ index }: { index: number }) {
                     onEquip={c.outside ? undefined : () => equip(c.build)}
                     equipped={equippedKey === c.build.key}
                     isCurrent={c.isCurrent}
-                    mine={mineKey}
                     ownerOf={ownerOf}
                   />
                 ))}

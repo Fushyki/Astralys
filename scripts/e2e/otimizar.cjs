@@ -81,6 +81,11 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   check('cada peça tem a faixa na cor do set e o selo CV com 1 casa', (await page.locator('.ot-build .piece .bar').count()) >= 10 && (await page.$$eval('.ot-build .piece .cv', (c) => c.every((x) => /^CV \d+,\d$/.test(x.textContent.trim())))));
   check('o cabeçalho mostra "{n} trocas" e os sets, sem chip roxo', (await page.locator('.ot-build .sets .swaps').count()) >= 1 && /^\d+ trocas?$/.test((await page.textContent('.ot-build .sets .swaps')).trim()) && (await page.locator('.ot-build .borrow').count()) === 0);
   check('a peça sem dono diz "no inventário"', (await page.locator('.ot-build .piece .foot').count()) >= 1 && /no inventário/.test(await page.textContent('.ot-build .piece .foot')));
+  check('o ícone da peça é grande e sem box; o mini ícone é de quem a tem equipada (mesmo o personagem desta aba)', await (async () => {
+    const art = await page.$eval('.ot-build .piece .art', (e) => { const r = e.getBoundingClientRect(); const cs = getComputedStyle(e); return [Math.round(r.width), cs.borderTopWidth, cs.backgroundColor]; });
+    const owners = await page.$$eval('.ot-build .piece .owner', (o) => o.map((x) => x.getAttribute('aria-label')));
+    return art[0] >= 90 && art[1] === '0px' && owners.length >= 1 && owners.every((t) => /^equipada em Mavuika$/.test(t));
+  })());
   const mainTexts = await page.$$eval('.ot-build .piece .mv b', (b) => b.map((x) => x.textContent.trim()));
   check('nenhum main stat aparece como 0,5% / 0,3%', !mainTexts.some((t) => /^0,[0-9]%$/.test(t)), mainTexts.slice(0, 6).join(' | '));
 

@@ -1,7 +1,7 @@
 /** Buffs de teste (no Editar build): qualquer tipo de bônus, sempre ligado, para testar sem montar a rotação. */
 import { useState } from 'react';
 import { useProjectView } from '../../app/ProjectContext';
-import { CUSTOM_GROUPS, customStat, customValueText, makeCustomBuff } from '../../features/rotation/customBuffs';
+import { CUSTOM_GROUPS, TEST_PREFIX, customStat, customValueText, makeCustomBuff } from '../../features/rotation/customBuffs';
 import { useRotationStore } from '../../features/rotation/store';
 
 export function CustomBuffs({ character }: { character: string }) {
@@ -11,7 +11,7 @@ export function CustomBuffs({ character }: { character: string }) {
   const [stat, setStat] = useState('ATK%');
   const [value, setValue] = useState('');
   const [target, setTarget] = useState<'self' | 'all'>('self');
-  const mine = v.project.extras.map((e, i) => ({ e, i })).filter(({ e }) => e.team === false && (e.target === character || e.target === 'all') && !!customStat(e.stat));
+  const mine = v.project.extras.map((e, i) => ({ e, i })).filter(({ e }) => e.team === false && !!e.description?.startsWith(TEST_PREFIX) && (e.target === character || e.target === 'all') && !!customStat(e.stat));
   const def = customStat(stat);
   const typed = Number(value.replace(',', '.'));
   const ok = value.trim() !== '' && Number.isFinite(typed);

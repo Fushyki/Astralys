@@ -85,11 +85,14 @@ export const CUSTOM_GROUPS: CustomGroup[] = [
 export const CUSTOM_STATS: CustomStat[] = CUSTOM_GROUPS.flatMap((g) => g.stats);
 export const customStat = (stat: string): CustomStat | undefined => CUSTOM_STATS.find((s) => s.stat === stat);
 
+/** Começo da descrição dos buffs de teste (distingue dos extras que vieram da planilha). */
+export const TEST_PREFIX = 'Buff de teste';
+
 /** O buff de teste que o editor grava: sempre ligado, para um personagem ou todos. */
 export function makeCustomBuff(target: string, stat: string, typed: number): ExtraBuff | null {
   const def = customStat(stat);
   if (!def || !Number.isFinite(typed)) return null;
-  return { target, stat, value: def.pct ? typed / 100 : typed, team: false, description: `Buff de teste: ${def.label}` };
+  return { target, stat, value: def.pct ? typed / 100 : typed, team: false, description: `${TEST_PREFIX}: ${def.label}` };
 }
 
 /** Texto do valor de um buff de teste ("+12,5%" ou "+80"). */

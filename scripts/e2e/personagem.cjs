@@ -171,6 +171,20 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
   await page.keyboard.press('Escape');
   check('Esc fecha o popup', (await page.locator('.dz-dialog.wi').count()) === 0);
 
+  // Buffs de teste: qualquer tipo de bônus no Editar build
+  await view('Build');
+  const atkBefore = await page.textContent('.db-panel:has(h3:text-is("Atributos")) li:has-text("ATK") b');
+  await page.click('button:has-text("Editar build")');
+  await page.waitForSelector('.dz-dialog .cb');
+  await page.selectOption('.cb select[aria-label="Tipo de bônus"]', 'ATK%');
+  await page.fill('.cb input[aria-label="Valor do bônus"]', '50');
+  await page.click('.cb button:has-text("Adicionar")'); await settle();
+  check('o Editar build aceita buffs de teste de qualquer tipo (grupos do catálogo)', (await page.locator('.cb-list li').count()) === 1 && (await page.locator('.cb select[aria-label="Tipo de bônus"] optgroup').count()) >= 6, `${await page.locator('.cb-list li').count()} itens, ${await page.locator('.cb select[aria-label="Tipo de bônus"] optgroup').count()} grupos`);
+  await page.keyboard.press('Escape'); await settle();
+  const atkAfter = await page.textContent('.db-panel:has(h3:text-is("Atributos")) li:has-text("ATK") b');
+  check('o buff de teste entra no cálculo (ATK sobe)', Number(atkAfter.replace(/\./g, '')) > Number(atkBefore.replace(/\./g, '')), `${atkBefore} → ${atkAfter}`);
+  await page.keyboard.press('Control+z'); await settle();
+
   // Trocar arma: grade com imagens, filtro por raridade e busca
   await page.click('.gt-weapon'); await page.waitForSelector('.dz-dialog .wcard');
   check('o seletor de armas é uma grade de cards com imagem', (await page.locator('.dz-dialog .wcard').count()) > 10 && (await page.locator('.dz-dialog .wcard img').count()) > 5);

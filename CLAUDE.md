@@ -146,3 +146,7 @@ Plano completo: `C:\Users\dabiv\.claude\plans\hashed-nibbling-island.md`. Strix 
 - `screens/Otimizador.tsx` (`OtimizadorPanel`) orquestra; peças em `screens/otimizar/`: `AsideCard` (coluna do personagem, um painel só), `CurrentBuild` (painel "Build atual" + botão "Status em campo"), `ResultCard` (card de build, grade de 2; CV por peça `pieceCv`), `minimos.ts` (mínimos como chips: `activeMins`, `firstUnmet`, `formatMin`; a adição é inline no painel de otimização 66|33), `shared.tsx` (`PieceArt`, `setColor`, `critValue`). Formatação de main stats: `formatMain` em `features/good/labels.ts` (fração ×100).
 - Build atual e diferenças dos cards vêm do MESMO avaliador (`evaluateEquipped` em `features/optimizer/run.ts`); "Status em campo" usa `BuildReport.fieldStats` (todos os buffs de time ligados juntos). Equipado que não cumpre um mínimo nunca é base de comparação (decisão 82).
 - Teste: `scripts/e2e/otimizar.cjs` (34 verificações, screenshots em 1600/1366/390 px).
+
+## Atualizações de 26/10/2026
+- Detalhes na decisão 84 de `docs/DECISOES_PENDENTES.md`: Lunar/Estelar de golpes extras e reações (specialOfMoveRef), dano fixo por golpe (`flatStacks`/`flatOff`, consumo em ordem de tempo), buffs de teste no Editar build (`customBuffs.ts`), textos do Lunaris limpos (`src/data/clean.ts`), otimizador mais rápido (`scripts/bench-optimizer.ts`), Avançado sem Ferramentas e hero em `/`.
+

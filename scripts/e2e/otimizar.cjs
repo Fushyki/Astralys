@@ -101,16 +101,25 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.click('.ot-blocked .bk button:has-text("Habilitar")');
   check('habilitar um a um desbloqueia e fecha quando não sobra nenhum', (await page.locator('.ot-blocked').count()) === 0 && (await page.locator('.ot-unblock').count()) === 0);
 
+  // ---- Equipar: o botão vira "Equipado" (bloqueado) e os donos das peças mudam na hora ----
+  await page.locator('.ot-build').first().locator('button:has-text("Equipar")').click();
+  await page.waitForTimeout(600);
+  const firstBtn = page.locator('.ot-build').first().locator('.equip');
+  check('depois de equipar, o botão diz "Equipado" e fica bloqueado', (await firstBtn.textContent()).trim() === 'Equipado' && (await firstBtn.isDisabled()));
+  const owners = await page.locator('.ot-build').first().locator('.piece .owner').evaluateAll((o) => o.map((x) => x.getAttribute('aria-label')));
+  check('o mini ícone das 5 peças passa a ser do personagem que as equipou, na hora', owners.length === 5 && owners.every((t) => t === 'equipada em Mavuika'), owners.join(' | '));
+  check('as peças do build equipado viram "equipada"', (await page.locator('.ot-build').first().locator('.piece .phead em:has-text("equipada")').count()) === 5);
+
   // ---- Equipado inválido: mínimo que ele não atinge ----
   const addMin = async (key, value) => {
     await page.selectOption('select[aria-label="Stat do mínimo"]', key);
     await page.fill('input[aria-label="Valor do mínimo"]', value);
     await page.click('.ot-min-add .dz-btn');
   };
-  await addMin('cr', '99');
+  await addMin('cr', '100.5');
   check('o mínimo vira um chip dourado removível', (await page.locator('.ot-minchip:has(button[aria-label="Remover mínimo de Taxa crítica"])').count()) === 1);
   const bad = (await page.textContent('.ot-eq.bad')).trim();
-  check('equipado que não atinge o mínimo: chip vermelho com o valor que tem', /^Equipado hoje não atinge Taxa crítica ≥ 99,0% \(tem \d+,\d%\)$/.test(bad), bad);
+  check('equipado que não atinge o mínimo: chip vermelho com o valor que tem', /^Equipado hoje não atinge Taxa crítica ≥ 100,5% \(tem \d+,\d%\)$/.test(bad), bad);
   await page.click('.ot-go-btn');
   await page.waitForSelector('.ot-build', { timeout: 120000 });
   const body = await page.textContent('.ot-results');

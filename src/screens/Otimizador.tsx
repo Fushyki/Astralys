@@ -302,6 +302,17 @@ export function OtimizadorPanel({ index }: { index: number }) {
   })();
   const minsOn = Object.values(ui.mins).filter((x) => x.trim() !== '').length;
 
+  /** Peças que o personagem usa hoje: as do projeto, ou as do inventário com o nome dele. */
+  const currentPieces: GoodArtifact[] = ref.pieces?.length ? (ref.pieces as GoodArtifact[]) : (good?.artifacts ?? []).filter((a) => norm(a.location) === mineKey);
+  const ms = v.bundle.memberStats[index];
+  const currentStats = ms
+    ? [
+        { label: 'ATK', value: formatInt(ms.atk) }, { label: 'HP', value: formatInt(ms.hp) }, { label: 'DEF', value: formatInt(ms.def) },
+        { label: 'Maestria', value: formatInt(ms.em) }, { label: 'Taxa crít.', value: `${formatDecimal(ms.critRate * 100, 1)}%` },
+        { label: 'Dano crít.', value: `${formatDecimal(ms.critDmg * 100, 1)}%` }, { label: 'Recarga', value: `${formatDecimal(ms.er * 100, 1)}%` },
+      ]
+    : [];
+
   const equippedSig = new Set((result?.equipped?.pieces ?? []).map(pieceSig));
 
   return (
@@ -316,35 +327,29 @@ export function OtimizadorPanel({ index }: { index: number }) {
       ) : (
         <>
           <div className="ot-top">
-            <Panel
-              bar
-              title="Mínimos nos stats"
-              badge={<span className="dz-badge num">{minsOn} ativos</span>}
-              foot={
-                erNeeded !== null ? (
-                  <div className="ot-tip">
-                    <span>A calculadora de recarga pede <b className="num">{formatDecimal(erNeeded, 1)}%</b> para {ref.character}.</span>
-                    <span className="ot-tip-acts">
-                      <Button variant="ghost" size="sm" onClick={() => setUi({ ...ui, mins: { ...ui.mins, er: String(erNeeded) } })}>Usar como mínimo</Button>
-                      <ButtonLink variant="ghost" size="sm" to={`/projeto/${v.id}/recarga`}>Abrir a calculadora</ButtonLink>
-                    </span>
-                  </div>
-                ) : (
-                  <p className="ot-tip">Ex.: Recarga ≥ 120% para não faltar energia na rotação.</p>
-                )
-              }
-            >
-              <div className="ot-mins">
-                {([['er', 'Recarga', '%'], ['cr', 'Taxa crítica', '%'], ['cd', 'Dano crítico', '%'], ['em', 'Maestria', ''], ['hp', 'HP', ''], ['atk', 'ATK', ''], ['def', 'DEF', '']] as const).map(([k, label, suf]) => (
-                  <label key={k}>
-                    <span>{label}</span>
-                    <span className="in">
-                      <input inputMode="decimal" placeholder="—" value={ui.mins[k]} onChange={(e) => setUi({ ...ui, mins: { ...ui.mins, [k]: e.target.value } })} aria-label={`${label} mínima`} />
-                      {suf && <i>{suf}</i>}
-                    </span>
-                  </label>
-                ))}
-              </div>
+            <Panel bar title="Build atual" badge={<span className="dz-badge num">{currentPieces.length}/5 peças</span>}>
+              {currentPieces.length === 0 ? (
+                <p className="ot-tip">{ref.character} não tem artefatos equipados no inventário. O build genérico do projeto vale até você escolher um dos resultados.</p>
+              ) : (
+                <ul className="ot-cur">
+                  {SLOTS.map((sl) => {
+                    const a = currentPieces.find((x) => x.slotKey === sl.key);
+                    const set = a ? data.game.artifacts.find((x) => norm(x.name) === norm(a.setKey)) : undefined;
+                    return (
+                      <li key={sl.key} data-empty={!a}>
+                        <span className="ico"><Img src={set ? pieceIconUrl(set.id, sl.key as 'flower') : undefined} fallback={SLOT_GLYPH[sl.key] ?? '◆'} /></span>
+                        <span className="t">
+                          <b>{sl.label}{a ? <small className="num"> +{a.level ?? 0}</small> : null}</b>
+                          <small>{a ? `${MAIN_LABEL[a.mainStatKey] ?? a.mainStatKey} ${fmtStat(a.mainStatKey, mainStatValue(a.mainStatKey, a.rarity, a.level))} · ${set?.name ?? a.setKey}` : 'sem peça'}</small>
+                        </span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+              <dl className="ot-cur-stats num">
+                {currentStats.map((x) => <div key={x.label}><dt>{x.label}</dt><dd>{x.value}</dd></div>)}
+              </dl>
             </Panel>
 
             <Panel bar title="Filtro de artefatos" badge={<span className="dz-badge num">{levelCount}/{allArt.length}</span>}>
@@ -515,6 +520,32 @@ export function OtimizadorPanel({ index }: { index: number }) {
                   {[1, 2, 3, 4, 5, 8, 10].map((n) => <option key={n} value={n}>{n}</option>)}
                 </select>
               </div>
+            </div>
+
+            <div className="ot-minbar" role="group" aria-label="Mínimos nos stats">
+              <span className="lbl">Mínimos nos stats <span className="dz-badge num">{minsOn} ativos</span></span>
+              <div className="ot-mins">
+                {([['er', 'Recarga', '%'], ['cr', 'Taxa crítica', '%'], ['cd', 'Dano crítico', '%'], ['em', 'Maestria', ''], ['hp', 'HP', ''], ['atk', 'ATK', ''], ['def', 'DEF', '']] as const).map(([k, label, suf]) => (
+                  <label key={k}>
+                    <span>{label}</span>
+                    <span className="in">
+                      <input inputMode="decimal" placeholder="—" value={ui.mins[k]} onChange={(e) => setUi({ ...ui, mins: { ...ui.mins, [k]: e.target.value } })} aria-label={`${label} mínima`} />
+                      {suf && <i>{suf}</i>}
+                    </span>
+                  </label>
+                ))}
+              </div>
+              {erNeeded !== null ? (
+                <span className="ot-tip">
+                  <span>A calculadora de recarga pede <b className="num">{formatDecimal(erNeeded, 1)}%</b> para {ref.character}.</span>
+                  <span className="ot-tip-acts">
+                    <Button variant="ghost" size="sm" onClick={() => setUi({ ...ui, mins: { ...ui.mins, er: String(erNeeded) } })}>Usar como mínimo</Button>
+                    <ButtonLink variant="ghost" size="sm" to={`/projeto/${v.id}/recarga`}>Abrir a calculadora</ButtonLink>
+                  </span>
+                </span>
+              ) : (
+                <span className="ot-tip">Ex.: Recarga ≥ 120% para não faltar energia na rotação.</span>
+              )}
             </div>
 
             <div className="ot-go">

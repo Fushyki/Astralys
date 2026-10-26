@@ -16,6 +16,22 @@
 .ot-top { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--panel-gap); align-items: stretch; }
 @media (max-width: 1100px) { .ot-top { grid-template-columns: minmax(0, 1fr); } }
 .ot-mins { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-3); }
+.ot-bar .ot-minbar { display: flex; flex-direction: column; gap: var(--sp-2); }
+.ot-bar .ot-minbar .lbl { display: flex; align-items: center; gap: var(--sp-2); font-size: var(--fs-1); color: var(--muted); }
+.ot-bar .ot-mins { grid-template-columns: repeat(7, minmax(0, 1fr)); }
+@media (max-width: 1100px) { .ot-bar .ot-mins { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.ot-cur { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--sp-2); }
+.ot-cur li { display: flex; align-items: center; gap: var(--sp-3); min-width: 0; }
+.ot-cur li[data-empty='true'] { opacity: .5; }
+.ot-cur .ico { flex: none; width: var(--ico-3); height: var(--ico-3); display: grid; place-items: center; }
+.ot-cur .ico img { width: 100%; height: 100%; object-fit: contain; }
+.ot-cur .t { display: flex; flex-direction: column; min-width: 0; }
+.ot-cur .t b { font-size: var(--fs-2); font-weight: 600; }
+.ot-cur .t b small { color: var(--gold); font-weight: 600; }
+.ot-cur .t small { font-size: var(--fs-1); color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ot-cur-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--sp-2) var(--sp-3); margin: var(--sp-3) 0 0; padding-top: var(--sp-3); border-top: 1px solid #ffffff14; }
+.ot-cur-stats dt { font-size: var(--fs-1); color: var(--muted); }
+.ot-cur-stats dd { margin: 0; font-weight: 600; }
 .ot-mins label { display: flex; flex-direction: column; gap: var(--sp-1); font-size: var(--fs-1); color: var(--muted); }
 .ot-mins .in { display: flex; align-items: center; gap: var(--sp-2); height: var(--ctl-md); padding: 0 var(--sp-3); background: #080c1d; border: 1px solid #232d5c; border-radius: var(--r-ctl); box-sizing: border-box; }
 .ot-mins .in:focus-within { border-color: var(--gold); }

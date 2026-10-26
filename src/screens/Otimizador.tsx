@@ -573,10 +573,10 @@ export function OtimizadorPanel({ index }: { index: number }) {
             <section className="ot-results" aria-label="Builds encontrados">
               {result.builds.length === 0 && <p className="note">Nenhum conjunto cumpre os mínimos escolhidos. Afrouxe um deles.</p>}
               {result.builds.map((b, i) => (
-                <BuildCard key={b.key} title={`#${i + 1}`} build={b} base={base} now={result.equipped?.report} equippedSig={equippedSig} focusValue={focusValue} data={data.game.artifacts} caption={goalCaption} onEquip={() => equip(b)} equipped={equippedKey === b.key} />
+                <BuildCard key={b.key} title={`#${i + 1}`} build={b} base={base} now={result.equipped?.report} equippedSig={equippedSig} focusValue={focusValue} data={data.game.artifacts} caption={goalCaption} onEquip={() => equip(b)} equipped={equippedKey === b.key} current={result.equipped?.key === b.key} />
               ))}
-              {result.equipped && (
-                <BuildCard title="Hoje" build={result.equipped} equippedSig={equippedSig} focusValue={focusValue} data={data.game.artifacts} caption={goalCaption} />
+              {result.equipped && !result.builds.some((b) => b.key === result.equipped!.key) && (
+                <BuildCard title={`Fora do top ${result.builds.length || ui.topN}`} build={result.equipped} best={result.builds[0]?.report.value} equippedSig={equippedSig} focusValue={focusValue} data={data.game.artifacts} caption={goalCaption} current />
               )}
             </section>
           )}
@@ -596,10 +596,14 @@ function Delta({ now, prev, fmt, pct }: { now: number; prev?: number; fmt: (d: n
   return <small className={d >= 0 ? 'up' : 'down'}>{d >= 0 ? '+' : '−'}{fmt(Math.abs(d))}</small>;
 }
 
-function BuildCard({ title, build, base, now, equippedSig, focusValue, data, caption, onEquip, equipped }: {
+function BuildCard({ title, build, base, best, now, equippedSig, focusValue, data, caption, onEquip, equipped, current }: {
   title: string;
   build: OptimizedBuild;
   base?: number;
+  /** Valor do melhor build achado: base da diferença do build equipado quando ele ficou fora do top. */
+  best?: number;
+  /** É o build que o personagem usa hoje. */
+  current?: boolean;
   /** Relatório do build equipado hoje: base dos sinais de diferença nos stats. */
   now?: OptimizedBuild['report'];
   equippedSig: Set<string>;
@@ -610,7 +614,7 @@ function BuildCard({ title, build, base, now, equippedSig, focusValue, data, cap
   equipped?: boolean;
 }) {
   const r = build.report;
-  const delta = base && Number.isFinite(r.value) ? (r.value / base - 1) * 100 : undefined;
+  const delta = current ? (best && Number.isFinite(r.value) ? (r.value / best - 1) * 100 : undefined) : base && Number.isFinite(r.value) ? (r.value / base - 1) * 100 : undefined;
   const isNow = !onEquip;
   const dec = (n: number) => formatDecimal(n, 1);
   const stats: { label: string; value: string; d: React.ReactNode }[] = [
@@ -624,15 +628,15 @@ function BuildCard({ title, build, base, now, equippedSig, focusValue, data, cap
     { label: 'DPR do time', value: formatInt(r.teamAvg), d: <Delta now={r.teamAvg} prev={now?.teamAvg} fmt={(d) => `${formatDecimal(d, 2)}%`} pct /> },
   ];
   return (
-    <article className="ot-build" data-now={isNow}>
+    <article className="ot-build" data-now={isNow} data-current={current ? true : undefined}>
       <header>
         <span className="rank">{title}</span>
         <div className="val">
           <b className="num">{focusValue(r)}</b>
           <small>{caption} · {build.setLabel}</small>
         </div>
-        {delta !== undefined && <Chip tone={delta >= 0 ? '#7bd88f' : '#e06c75'}>{delta >= 0 ? '+' : '−'}{formatDecimal(Math.abs(delta), 2)}% contra o equipado</Chip>}
-        {isNow && <Chip tone="#8a93b8">referência · em uso</Chip>}
+        {current && <Chip tone="#e9c46a">equipado hoje</Chip>}
+        {delta !== undefined && Math.abs(delta) > 1e-9 && <Chip tone={delta >= 0 ? '#7bd88f' : '#e06c75'}>{delta >= 0 ? '+' : '−'}{formatDecimal(Math.abs(delta), 2)}% {current ? 'contra o melhor' : 'contra o equipado'}</Chip>}
         {onEquip && (
           <Button variant="primary" onClick={onEquip} disabled={equipped}>{equipped ? 'Equipado' : 'Equipar'}</Button>
         )}

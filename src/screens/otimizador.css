@@ -85,6 +85,7 @@
 .ot-build[data-now='true'] { background: #0a0f22; border-color: #2a356a; border-style: dashed; }
 .ot-build header { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-3) var(--sp-4); padding: var(--sp-4); border-bottom: 1px solid #18204a; }
 .ot-build .rank { font-family: var(--font-display); font-weight: 700; font-size: 34px; line-height: 1; color: var(--gold); }
+.ot-build[data-current='true']:not([data-now='true']) { border-color: var(--gold); }
 .ot-build[data-now='true'] .rank { color: var(--muted); }
 .ot-build .val { display: flex; flex-direction: column; line-height: 1.15; min-width: 0; }
 .ot-build .val b { font: 700 30px var(--font-display); }

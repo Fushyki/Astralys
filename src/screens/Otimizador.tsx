@@ -18,6 +18,7 @@ import { useRotationStore } from '../features/rotation/store';
 import { energyMembers, energyResults } from '../features/energy/energyModel';
 import { kitElement, type ElementOrPhysical, type ReactionChoice } from '../engine';
 import { mainStatValue } from '../engine/pieces';
+import { MAIN_LABEL, SUB_LABEL, formatMain, formatSub } from '../features/good/labels';
 import { formatDecimal, formatInt } from '../ui/format';
 import './otimizador.css';
 import { Button, ButtonLink } from '../design/Button';
@@ -42,15 +43,6 @@ const SLOTS = [
   { key: 'goblet', label: 'Cálice' },
   { key: 'circlet', label: 'Tiara' },
 ] as const;
-
-const MAIN_LABEL: Record<string, string> = {
-  hp: 'HP', atk: 'ATK', hp_: 'HP%', atk_: 'ATK%', def_: 'DEF%', eleMas: 'Maestria', enerRech_: 'Recarga', critRate_: 'Taxa Crítica',
-  critDMG_: 'Dano Crítico', heal_: 'Cura', pyro_dmg_: 'DMG Pyro', hydro_dmg_: 'DMG Hydro', cryo_dmg_: 'DMG Cryo', electro_dmg_: 'DMG Electro',
-  anemo_dmg_: 'DMG Anemo', geo_dmg_: 'DMG Geo', dendro_dmg_: 'DMG Dendro', physical_dmg_: 'DMG Físico',
-};
-const SUB_LABEL: Record<string, string> = { hp: 'HP', hp_: 'HP%', atk: 'ATK', atk_: 'ATK%', def: 'DEF', def_: 'DEF%', eleMas: 'EM', enerRech_: 'ER', critRate_: 'CR', critDMG_: 'CD' };
-const PERCENT = new Set(['hp_', 'atk_', 'def_', 'enerRech_', 'critRate_', 'critDMG_', 'heal_', 'pyro_dmg_', 'hydro_dmg_', 'cryo_dmg_', 'electro_dmg_', 'anemo_dmg_', 'geo_dmg_', 'dendro_dmg_', 'physical_dmg_']);
-const fmtStat = (key: string, value: number) => (PERCENT.has(key) ? `${formatDecimal(value, 1)}%` : formatInt(value));
 
 type Goal = 'dano' | 'buff' | 'stat';
 type Scope = 'team' | 'member' | 'move';
@@ -340,7 +332,7 @@ export function OtimizadorPanel({ index }: { index: number }) {
                         <span className="ico"><Img src={set ? pieceIconUrl(set.id, sl.key as 'flower') : undefined} fallback={SLOT_GLYPH[sl.key] ?? '◆'} /></span>
                         <span className="t">
                           <b>{sl.label}{a ? <small className="num"> +{a.level ?? 0}</small> : null}</b>
-                          <small>{a ? `${MAIN_LABEL[a.mainStatKey] ?? a.mainStatKey} ${fmtStat(a.mainStatKey, mainStatValue(a.mainStatKey, a.rarity, a.level))} · ${set?.name ?? a.setKey}` : 'sem peça'}</small>
+                          <small>{a ? `${MAIN_LABEL[a.mainStatKey] ?? a.mainStatKey} ${formatMain(a.mainStatKey, mainStatValue(a.mainStatKey, a.rarity, a.level))} · ${set?.name ?? a.setKey}` : 'sem peça'}</small>
                         </span>
                       </li>
                     );
@@ -687,9 +679,9 @@ function BuildCard({ title, build, base, best, now, equippedSig, focusValue, dat
                 <Img src={set ? pieceIconUrl(set.id, a.slotKey as 'flower') : undefined} fallback={SLOT_GLYPH[a.slotKey] ?? '◆'} />
                 <b className="lv num">+{a.level ?? 0}</b>
               </span>
-              <span className="main">{MAIN_LABEL[a.mainStatKey] ?? a.mainStatKey} <b className="num">{fmtStat(a.mainStatKey, mainStatValue(a.mainStatKey, a.rarity, a.level))}</b></span>
+              <span className="main">{MAIN_LABEL[a.mainStatKey] ?? a.mainStatKey} <b className="num">{formatMain(a.mainStatKey, mainStatValue(a.mainStatKey, a.rarity, a.level))}</b></span>
               <ul>
-                {a.substats.map((s) => <li key={s.key} data-crit={s.key === 'critRate_' || s.key === 'critDMG_'}><span>{SUB_LABEL[s.key] ?? s.key}</span><b className="num">{fmtStat(s.key, s.value)}</b></li>)}
+                {a.substats.map((s) => <li key={s.key} data-crit={s.key === 'critRate_' || s.key === 'critDMG_'}><span>{SUB_LABEL[s.key] ?? s.key}</span><b className="num">{formatSub(s.key, s.value)}</b></li>)}
               </ul>
               {a.location && <span className="loc">de {a.location}</span>}
             </div>

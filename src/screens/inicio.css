@@ -1,14 +1,28 @@
-/* Página inicial. */
-.in-hero { display: flex; flex-direction: column; gap: 18px; max-width: 760px; padding-top: 24px; }
-.in-hero .lead { margin: 0; font-size: 18px; color: var(--text-2); line-height: 1.5; }
-.in-hero .actions { display: flex; flex-wrap: wrap; gap: 10px; }
-.in-features { list-style: none; margin: 0; padding: 0; }
-.in-features p { margin: 8px 0 0; color: var(--text-2); font-size: 14px; line-height: 1.5; }
+/* Página inicial: o céu do Astralys, a frase e dois caminhos. Só tokens de src/design/tokens.css. */
+.in-page { min-height: 100vh; display: flex; flex-direction: column; background: var(--bg); }
+.in-hero { position: relative; flex: 1; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); align-items: center; gap: var(--sp-6); padding: var(--sp-6) var(--gutter) 72px; max-width: var(--page-max); width: 100%; margin: 0 auto; box-sizing: border-box; overflow: hidden; }
+@media (max-width: 960px) { .in-hero { grid-template-columns: minmax(0, 1fr); padding-bottom: var(--sp-6); } }
 
-.in-paths { display: flex; flex-direction: column; gap: 14px; }
-.in-path-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
-.in-path { display: flex; flex-direction: column; gap: 8px; min-height: 130px; padding: 20px; border: 1px solid var(--border); border-top: 4px solid var(--gold); border-radius: 16px; background: var(--surface); color: var(--text); text-decoration: none; }
+.in-sky { position: absolute; inset: 0; pointer-events: none; }
+.in-sky i { position: absolute; border-radius: 50%; background: var(--text); opacity: .4; animation: in-twinkle 5s ease-in-out infinite; }
+.in-sky i:nth-child(3n) { background: var(--gold); opacity: .55; }
+.in-arc { position: absolute; inset: 0; width: 100%; height: 100%; }
+@keyframes in-twinkle { 0%, 100% { opacity: .15; } 50% { opacity: .7; } }
+@media (prefers-reduced-motion: reduce) { .in-sky i { animation: none; } }
+
+.in-copy { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: var(--sp-4); }
+.in-eyebrow { display: inline-flex; align-items: center; gap: var(--sp-2); font: 700 var(--fs-4) var(--font-display); letter-spacing: .3em; text-transform: uppercase; color: var(--gold); }
+.in-copy h1 { margin: 0; font: 700 clamp(48px, 7vw, 96px) var(--font-display); line-height: .95; letter-spacing: .01em; }
+.in-copy p { margin: 0; max-width: 460px; font-size: var(--fs-5); line-height: 1.45; color: var(--text-2); }
+.in-cta { display: flex; flex-wrap: wrap; gap: var(--sp-3); margin-top: var(--sp-2); }
+.in-path { display: inline-flex; align-items: center; justify-content: center; min-height: var(--ctl-lg); padding: 0 var(--sp-5); border-radius: var(--r-ctl); border: 1px solid var(--border-ctl-hi); background: var(--surface-2); color: var(--text); text-decoration: none; }
+.in-path b { font: 700 var(--fs-4) var(--font-display); letter-spacing: .1em; text-transform: uppercase; }
 .in-path:hover { border-color: var(--gold); }
-.in-path b { font-family: var(--font-display); font-size: 26px; line-height: 1.1; }
-.in-path span { color: var(--muted); font-size: 15px; line-height: 1.4; }
-.in-paths p { margin: 0; }
+.in-path.gold { background: var(--gold); border-color: var(--gold); color: var(--on-gold); }
+.in-path.gold:hover { background: var(--gold-hi); }
+.in-path.ghost { background: transparent; }
+.in-demo { color: var(--muted); font-size: var(--fs-3); text-decoration: none; }
+.in-demo:hover { color: var(--gold-hi); }
+
+.in-art { position: relative; width: 100%; height: auto; max-height: 520px; filter: drop-shadow(0 0 40px #f1c96b14); }
+@media (max-width: 960px) { .in-art { order: -1; max-height: 260px; } }

@@ -32,7 +32,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
 
   // Home
   await page.goto(`${BASE}/`, { waitUntil: 'networkidle' });
-  check('a home apresenta as 4 funções', (await page.locator('.in-features li').count()) === 4);
+  check('a home é a hero: título, dois caminhos e o exemplo', /Cada número/.test(await page.textContent('.in-copy h1')) && (await page.locator('.in-path').count()) >= 2 && (await page.locator('.in-demo').count()) === 1);
   await page.click('.in-path:has-text("Abrir um time salvo")');
   await page.waitForSelector('.vt-card');
   check('"Abrir um time salvo" abre o Vault', page.url().endsWith('/vault'));

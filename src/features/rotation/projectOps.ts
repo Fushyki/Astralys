@@ -2,7 +2,7 @@
  * Operações puras sobre o projeto (sem React, sem estado). Sempre devolvem um projeto NOVO; nunca mutam.
  * O estado (Zustand) só orquestra histórico e persistência em cima disto.
  */
-import { effectiveDuration, type ActionRef, type BuffWindow, type MoveRef, type RotationProject } from '../../engine';
+import { effectiveDuration, type ExtraBuff, type ActionRef, type BuffWindow, type MoveRef, type RotationProject } from '../../engine';
 
 const MIN_EXECUTIONS = 1;
 
@@ -60,6 +60,30 @@ export function updateAction(project: RotationProject, id: string, patch: Partia
   };
   const actions = project.actions.map((a) => (a.id === id ? { ...a, ...next } : a));
   return touch({ ...project, actions, buffWindows: followAnchors(project.buffWindows, actions, new Set([id])) });
+}
+
+/** Buff de teste (editor de build): sempre ligado, para um personagem ou todos. */
+export function addExtra(project: RotationProject, extra: ExtraBuff): RotationProject {
+  return touch({ ...project, extras: [...project.extras, extra] });
+}
+
+/** Remove um buff de teste; os interruptores (`disabled`) dos que vinham depois seguem o novo número. */
+export function removeExtra(project: RotationProject, index: number): RotationProject {
+  if (index < 0 || index >= project.extras.length) return project;
+  const renum = (id: string) => id.replace(/(m\d+:extra-|^extra-)(\d+)(@.*)?$/, (all, pre: string, n: string, rest: string | undefined) => {
+    const k = Number(n);
+    return k === index ? '' : `${pre}${k > index ? k - 1 : k}${rest ?? ''}`;
+  });
+  const disabled = project.disabled.map(renum).filter(Boolean);
+  return touch({ ...project, extras: project.extras.filter((_, i) => i !== index), disabled });
+}
+
+/** Quantos golpes um buff de dano fixo atinge: um número, "all" (todos os golpes) ou undefined (volta ao do cadastro). */
+export function setFlatStacks(project: RotationProject, id: string, value: number | 'all' | undefined): RotationProject {
+  const next = { ...(project.flatStacks ?? {}) };
+  if (value === undefined) delete next[id];
+  else next[id] = value === 'all' ? 'all' : Math.max(1, Math.round(value));
+  return touch({ ...project, flatStacks: next });
 }
 
 /** Janelas "Por golpe": começam `delay` s depois do golpe-gatilho e acompanham se ele mudar de lugar (a duração fica). */

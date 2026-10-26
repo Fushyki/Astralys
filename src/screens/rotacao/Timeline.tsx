@@ -158,7 +158,12 @@ export function Timeline({ v, lanes }: { v: ProjectView; lanes: LaneInfo[] }) {
 
   const ticks = Array.from({ length: tmax + 1 }, (_, i) => i);
   const title = (r: ActionResult | undefined, a: { time: number; displayName?: string; move: { label: string } }) =>
-    `${a.displayName ?? a.move.label} · ${formatDecimal(a.time, 1)} s${r ? ` · ${formatInt(r.avg)} (${formatPercent(r.avg / total)} do time)` : ''}`;
+    `${a.displayName ?? a.move.label} · ${formatDecimal(a.time, 1)} s${r ? ` · ${formatInt(r.avg)} (${formatPercent(r.avg / total)} do time)` : ''}${flatTitle(r)}`;
+  /** Dano fixo que o golpe consome (para ver na linha do tempo quem usa qual buff flat). */
+  const flatTitle = (r: ActionResult | undefined) => {
+    const used = (r?.flatUse ?? []).filter((u) => u.hits > 0);
+    return used.length ? ` · dano fixo: ${used.map((u) => `${u.name} ×${u.hits}`).join(', ')}` : '';
+  };
 
   return (
     <Panel bar title="Linha do tempo" aside={<Seg label="Zoom" value={zoom} onChange={setZoom} options={[{ value: 'fit', label: 'Ajustar' }, { value: '1', label: '1×' }, { value: '2', label: '2×' }]} />} className="rt-p0">
@@ -241,6 +246,7 @@ export function Timeline({ v, lanes }: { v: ProjectView; lanes: LaneInfo[] }) {
                         key={a.id}
                         type="button"
                         className={`rt-hit${size > 22 ? ' big' : ''}${lunar ? ' lunar' : ''}`}
+                        data-flat={(res?.flatUse ?? []).some((u) => u.hits > 0) ? true : undefined}
                         aria-pressed={selectedActionId === a.id}
                         aria-label={`${a.displayName ?? a.move.label} em ${dec(timeOf(a.id, a.time), 1)} s`}
                         title={title(res, a)}

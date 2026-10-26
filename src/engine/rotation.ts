@@ -430,6 +430,7 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
       noCrit,
       crit: noCrit * critFactor('crit', critRate, critDmg),
       avg: noCrit * critFactor('avg', critRate, critDmg),
+      flatUse: flatPass[idx].use,
     };
   });
 

@@ -12,7 +12,7 @@ import { weaponStatsAt, type CharacterBuff, type CharacterEffect, type FlatDamag
 import { SUBSTATS, zeroRolls, type Rolls } from './artifacts';
 import { RealPieceSchema, buildFromPieces } from './pieces';
 import { AMP_EM_COEFFICIENT_SHEET } from './constants/reactions';
-import type { ExtraScale, ReactionChoice, ReactionHit, ResolvedMove, RotationAction } from './rotation';
+import { flatId, type ExtraScale, type ReactionChoice, type ReactionHit, type ResolvedMove, type RotationAction } from './rotation';
 import type { SpecialReaction } from './reactions';
 import type { MemberInput } from './stats';
 import type { GlobalConfig, TeamInput } from './team';
@@ -163,6 +163,8 @@ export const ActionSchema = z.object({
   chainId: z.string().optional(),
   /** Reações Lunar-Charged, Lunar-Crystallize e Stellar-Swirl: membros que aplicaram os elementos (pesos 1, 1/2, 1/12, 1/12). Sem lista, só o dono. */
   contributors: z.array(z.number().int().min(0)).max(4).optional(),
+  /** Buffs de dano fixo que ESTE golpe não consome (ids `fonte|nome`). Por padrão o golpe consome todos os que servem a ele. */
+  flatOff: z.array(z.string()).optional(),
   /** Instante da rotação, em segundos. */
   time: z.number().min(0),
   note: z.string().optional(),
@@ -186,6 +188,8 @@ export const RotationProjectSchema = z
     config: ConfigSchema,
     members: z.array(MemberRefSchema).min(1).max(MAX_TEAM_SIZE),
     extras: z.array(ExtraBuffSchema).default([]),
+    /** Quantos golpes cada buff de dano fixo atinge (id `fonte|nome`): um número ou "all" (todos os golpes). Ausente = o do cadastro. */
+    flatStacks: z.record(z.union([z.literal('all'), z.number().int().min(1)])).default({}),
     actions: z.array(ActionSchema).default([]),
     /** Janelas de buff no tempo; dão as etiquetas das ações com `tagSource: 'windows'`. */
     buffWindows: z.array(BuffWindowSchema).default([]),
@@ -690,6 +694,7 @@ export function resolveProject(project: RotationProject, data: GameData, effects
       activeTags: a.tagSource === 'windows' ? tagsAt(project.buffWindows, a.time) : a.activeTags,
       dmgAdjust: a.dmgAdjust,
       ...(a.contributors?.length ? { contributors: a.contributors } : {}),
+      ...(a.flatOff?.length ? { flatOff: a.flatOff } : {}),
       time: a.time,
       note: a.note,
     };
@@ -701,7 +706,10 @@ export function resolveProject(project: RotationProject, data: GameData, effects
     team: { members, extras: project.extras, config, disabled: [...project.disabled, ...gearOff] },
     gearIds,
     actions,
-    flatEffects: [...applyFlatLevels(effects.flatDamage, members), ...gearFlat(members)],
+    flatEffects: [...applyFlatLevels(effects.flatDamage, members), ...gearFlat(members)].map((e) => {
+      const o = project.flatStacks?.[flatId(e)];
+      return o === undefined ? e : { ...e, stacks: o === 'all' ? undefined : o };
+    }),
     ampCoefficient: project.compat === 'planilha' ? AMP_EM_COEFFICIENT_SHEET : undefined,
   };
 }

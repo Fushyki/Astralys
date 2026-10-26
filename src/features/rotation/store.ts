@@ -3,7 +3,7 @@
  * A lógica de edição está em projectOps.ts; aqui só se orquestra histórico e seleção.
  */
 import { create } from 'zustand';
-import { effectiveDuration, type ActionRef, type MemberRef, type RotationProject, type Substat } from '../../engine';
+import { effectiveDuration, type ActionRef, type ExtraBuff, type MemberRef, type RotationProject, type Substat } from '../../engine';
 import * as ops from './projectOps';
 import * as team from './teamOps';
 
@@ -50,6 +50,10 @@ export interface RotationState {
 
   addAction: (input: ops.NewAction) => string | null;
   updateAction: (id: string, patch: Partial<Omit<ActionRef, 'id'>>) => void;
+  /** Quantos golpes um buff de dano fixo atinge (número, "all" ou undefined = o do cadastro). */
+  setFlatStacks: (id: string, value: number | 'all' | undefined) => void;
+  addExtra: (extra: ExtraBuff) => void;
+  removeExtra: (index: number) => void;
   moveAction: (id: string, time: number) => void;
   removeAction: (id: string) => void;
   duplicateAction: (id: string) => void;
@@ -172,6 +176,9 @@ export const useRotationStore = create<RotationState>((set, get) => {
       return id;
     },
     updateAction: (id, patch) => commit(get().project && ops.updateAction(get().project!, id, patch)),
+    addExtra: (extra) => commit(get().project && ops.addExtra(get().project!, extra)),
+    removeExtra: (index) => commit(get().project && ops.removeExtra(get().project!, index)),
+    setFlatStacks: (id, value) => commit(get().project && ops.setFlatStacks(get().project!, id, value)),
     moveAction: (id, time) => commit(get().project && ops.moveAction(get().project!, id, time)),
     removeAction: (id) => {
       const project = get().project;

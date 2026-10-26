@@ -286,6 +286,7 @@ export function projectFromPlanilha(imported: PlanilhaImport, options: ProjectFr
     config: { ...team.config },
     members,
     extras: team.extras.map((e) => ({ ...e })),
+    flatStacks: {},
     actions: imported.actions.map((a, i) => ({
       id: a.id,
       member: a.member,

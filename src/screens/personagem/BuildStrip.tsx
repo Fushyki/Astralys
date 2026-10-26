@@ -15,6 +15,7 @@ import { FLOWER_HP, MAIN_STAT_VALUES, PLUME_ATK, PIECE_SLOTS, buildFromPieces, m
 import { weaponsFor } from '../../features/rotation/teamOps';
 import { WeaponPickerDialog } from './WeaponPicker';
 import { WeaponInfoDialog } from './WeaponInfo';
+import { CustomBuffs } from './CustomBuffs';
 import { SetPickerDialog } from './SetPicker';
 import { useRotationStore } from '../../features/rotation/store';
 import { EFFECT_STATUS_LABEL, effectCoverage, effectStatus, missingEffects } from '../../features/rotation/teamInfo';
@@ -156,6 +157,7 @@ export function BuildStrip({ data, index, member: memberRef, projectId, compact,
               return (
                 <button type="button" key={slot} className={`gt-piece real${piece ? "" : " empty"}`} data-rarity={piece?.rarity ?? 4} onClick={() => setPickPiece(slot)} aria-label={`${SLOT_LABEL[slot]}: ${piece ? (pset?.name ?? piece.setKey) : 'sem peça'}. Tocar para escolher do inventário`}>
                   <span className="top"><span className="lv num">{piece && main ? `+${main.level}` : ''}</span><span className="slot">{SLOT_LABEL[slot]}</span></span>
+                  <span className="pic"><Img src={pset ? pieceIconUrl(pset.id, slot) : undefined} fallback={piece ? '◆' : '+'} /></span>
                   <span className="main">{piece && main ? (MAIN_LABEL[main.key] ?? main.key) : 'Sem peça'}</span>
                   <b className="val num">{piece && main ? formatMain(main.key, main.value) : '—'}</b>
                   <span className="setname">{piece ? (pset?.name ?? piece.setKey) : ''}</span>
@@ -178,6 +180,7 @@ export function BuildStrip({ data, index, member: memberRef, projectId, compact,
             return (
               <button type="button" key={slot} className="gt-piece" data-rarity={memberRef.artifacts.rarity[slot]} onClick={() => setPickPiece(slot)} aria-label={`${SLOT_LABEL[slot]}: tocar para escolher uma peça do inventário`}>
                 <span className="top"><span className="lv num">+{memberRef.artifacts.rarity[slot] === 5 ? 20 : 16}</span><span className="slot">{SLOT_LABEL[slot]}</span></span>
+                <span className="pic"><Img src={set ? pieceIconUrl(set.id, slot) : undefined} fallback={SLOT_LABEL[slot].charAt(0)} /></span>
                 <span className="main">{m.label}</span>
                 <b className="val num">{m.value}</b>
                 <span className="setname">{set?.name ?? 'Sem set'}</span>
@@ -416,6 +419,7 @@ function BuildDialog({ data, index, memberRef, onClose }: { data: LoadedData; in
             <p className="dz-error">Sem efeito numérico cadastrado: {missing.join(', ')}. Só os stats base e o substat contam; a passiva ainda não entra no cálculo.</p>
           )}
           {!cover.characterHasEffect && <p className="muted small">As passivas de {memberRef.character} (ex.: bônus de dano de talentos) também não estão cadastradas.</p>}
+          <CustomBuffs character={memberRef.character} />
           <Assumptions data={data} memberRef={memberRef} />
         </div>
       </div>

@@ -46,6 +46,7 @@ export function buildNewTeam(input: NewTeamInput, game: Pick<GameData, 'characte
     compat: 'none',
     members: names.map((n) => input.builds?.[n] ?? defaultMember(n, game)),
     extras: [],
+    flatStacks: {},
     actions: [],
     buffWindows: [],
     chains: {},

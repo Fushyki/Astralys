@@ -126,8 +126,18 @@ const NAMED: Record<string, (v: number) => StatDelta> = {
 
 /** Converte "stat nomeado + valor" em delta. Devolve null se o nome for desconhecido. */
 export function namedStatDelta(name: string, value: number): StatDelta | null {
-  const f = NAMED[name.trim()];
-  return f ? f(value) : null;
+  const key = name.trim();
+  const f = NAMED[key];
+  if (f) return f(value);
+  // Buffs de teste (editor): `react:<chave>` = bônus de reação (ver REACTION_BONUS_KEYS), `cr:<tipo>` / `cd:<tipo>` = crítico por tipo de golpe.
+  const [kind, arg] = key.split(':');
+  if (kind === 'react' && (REACTION_BONUS_KEYS as readonly string[]).includes(arg)) return { reactionBonus: { [arg]: value } as Partial<Record<ReactionBonusKey, number>> };
+  if ((kind === 'cr' || kind === 'cd') && ['normal', 'charged', 'plunge', 'skill', 'burst'].includes(arg)) return kind === 'cr' ? { critRateByType: { [arg]: value } } : { critDmgByType: { [arg]: value } };
+  if (key === 'Melt DMG%') return { meltBonus: value };
+  if (key === 'Vaporize DMG%') return { vaporizeBonus: value };
+  if (key === 'DEF ignore') return { defIgnore: value };
+  if (key === 'Physical CD') return { physCritDmg: value };
+  return null;
 }
 
 /** Stat de ascensão/substat do Lunaris ('CD', 'Pyro%', 'Healing'...) → delta. Bônus elementais só valem para o próprio elemento. */

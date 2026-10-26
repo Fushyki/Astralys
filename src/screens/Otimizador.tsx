@@ -88,6 +88,9 @@ const initial: UiState = {
   levelMin: 0, levelMax: 20, topN: 5, borrow: false, offMains: { sands: [], goblet: [], circlet: [] }, offSets: [], fillerSets: true, blocked: [],
 };
 
+/** Último resultado da otimização de cada personagem de cada projeto (só na memória da sessão): trocar de aba não obriga a otimizar de novo. */
+const RESULT_CACHE = new Map<string, OptimizerResult>();
+
 /** Cada personagem de cada projeto guarda a própria configuração do otimizador (alvo, mínimos, filtros e sets). */
 const STORAGE = 'astralys.otimizador';
 const storageKey = (projectId: string, character: string) => `${STORAGE}:${projectId}:${character}`;
@@ -144,7 +147,8 @@ export function OtimizadorPanel({ index }: { index: number }) {
   const ui = store.key === key ? store.ui : readUi(key, () => roleDefaults(v, index, erDefault));
   const setUi = (next: UiState) => setStore({ key, ui: next });
   const [progress, setProgress] = useState<OptimizerProgress | null>(null);
-  const [result, setResult] = useState<OptimizerResult | null>(null);
+  const [result, setResult] = useState<OptimizerResult | null>(() => RESULT_CACHE.get(storageKey(v.id, ref?.character ?? '')) ?? null);
+  const keyRef = useRef('');
   const [running, setRunning] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [equippedKey, setEquippedKey] = useState<string | null>(null);
@@ -171,11 +175,18 @@ export function OtimizadorPanel({ index }: { index: number }) {
   }, [store, key]);
   useEffect(() => () => job.current?.stop(), []);
   useEffect(() => {
-    setResult(null);
+    keyRef.current = key;
+    // Trocar de personagem do mesmo time não perde a otimização: o resultado de cada um fica guardado até a próxima busca.
+    if (running) job.current?.stop();
+    setRunning(false);
+    setStopping(false);
+    setProgress(null);
+    setResult(RESULT_CACHE.get(key) ?? null);
     setError(null);
     setEquippedKey(null);
     setShowAllSets(false);
-  }, [key]);
+    setShowMore(false);
+  }, [key]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     const refresh = () => setGood(loadGood());
     window.addEventListener('focus', refresh);
@@ -319,7 +330,13 @@ export function OtimizadorPanel({ index }: { index: number }) {
       setProgress,
     );
     job.current = j;
-    j.promise.then((r) => setResult(r), (e) => setError(e instanceof Error ? e.message : String(e))).finally(() => setRunning(false));
+    const runKey = key;
+    j.promise
+      .then((r) => {
+        RESULT_CACHE.set(runKey, r);
+        if (keyRef.current === runKey) setResult(r);
+      }, (e) => { if (keyRef.current === runKey) setError(e instanceof Error ? e.message : String(e)); })
+      .finally(() => { if (keyRef.current === runKey) setRunning(false); });
   };
   const stop = () => {
     setStopping(true);
@@ -358,12 +375,19 @@ export function OtimizadorPanel({ index }: { index: number }) {
   /** O mínimo que o build equipado não atinge (null se atinge todos, ou se não há equipado). */
   const unmet = current ? firstUnmet(ui.mins, current.report.stats) : null;
 
-  /** Dono de uma peça equipada em outro personagem: o nome e a cor dele (a do time, se ele for do time). */
-  const ownerOf = (location: string): Owner => {
-    const i = project.members.findIndex((m) => norm(m.character) === norm(location));
-    if (i >= 0) return { name: project.members[i].character, color: v.colors[i], icon: data.game.characters.find((c) => c.name === project.members[i].character)?.icon };
-    const other = data.game.characters.find((c) => norm(c.name) === norm(location));
-    return { name: other?.name ?? location, color: 'var(--faint)', icon: other?.icon };
+  /**
+   * Quem tem a peça equipada AGORA: o personagem do projeto que a usa (assim o ícone muda na hora ao equipar) ou, se ninguém do time a
+   * tem, o dono do inventário. Quem do time já tem peças no projeto não é mais dono das que ficaram de fora.
+   */
+  const ownerOf = (a: GoodArtifact): Owner | null => {
+    const sig = pieceSig(a);
+    const holder = project.members.findIndex((m) => m.pieces?.some((p) => pieceSig(p as GoodArtifact) === sig));
+    const info = (name: string, color: string) => ({ name: data.game.characters.find((c) => c.name === name)?.name ?? name, color, icon: data.game.characters.find((c) => norm(c.name) === norm(name))?.icon });
+    if (holder >= 0) return info(project.members[holder].character, v.colors[holder]);
+    if (!a.location) return null;
+    const i = project.members.findIndex((m) => norm(m.character) === norm(a.location));
+    if (i >= 0) return project.members[i].pieces?.length ? null : info(project.members[i].character, v.colors[i]);
+    return info(a.location, 'var(--faint)');
   };
   const currentSig = new Set((current?.pieces ?? []).map(pieceSig));
   /** Builds da lista: o equipado entra na posição dele (selo "equipado hoje") ou, se ficou fora do top, no fim. */

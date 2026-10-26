@@ -82,6 +82,31 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
   };
 
   const setAll = (patch: Partial<ActionRef>) => execs.forEach((e) => update(e.id, patch));
+  /** Dano fixo: este golpe (ou todas as execuções do contínuo) consome ou não o buff. */
+  const flatOff = action.flatOff ?? [];
+  const toggleFlat = (id: string, on: boolean) => {
+    const next = on ? flatOff.filter((x) => x !== id) : [...new Set([...flatOff, id])];
+    if (chainId) setAll({ flatOff: next.length ? next : undefined });
+    else update(action.id, { flatOff: next.length ? next : undefined });
+  };
+  const flatSection = result?.flatUse && result.flatUse.length > 0 ? (
+    <div className="rt-flat" role="group" aria-label="Dano fixo">
+      <span className="rt-lbl">Dano fixo (buffs flat)</span>
+      {result.flatUse.map((u) => (
+        <div className="fr" key={u.id} data-off={u.off}>
+          <label>
+            <input type="checkbox" checked={!u.off} onChange={(e) => toggleFlat(u.id, e.target.checked)} aria-label={`Este golpe consome ${u.name}`} />
+            <span className="n">{u.name}<small>de {u.source}</small></span>
+            <span className="num v">{u.hits > 0 ? `+${formatInt(u.hits * u.perHit)} · ${u.hits} × ${formatInt(u.perHit)}` : u.off ? 'não consome' : 'sem stacks'}</span>
+          </label>
+          <div className="qty">
+            <Seg label={`Quantos golpes: ${u.name}`} value={u.stacks === undefined ? 'all' : 'n'} options={[{ value: 'all', label: 'Todos os golpes' }, { value: 'n', label: 'N golpes' }]} onChange={(m) => st().setFlatStacks(u.id, m === 'all' ? 'all' : (u.stacks ?? 5))} />
+            {u.stacks !== undefined && <Num ariaLabel={`Quantidade de golpes de ${u.name}`} className="sm" value={u.stacks} digits={0} min={1} unit="golpes" onCommit={(n) => st().setFlatStacks(u.id, n)} />}
+          </div>
+        </div>
+      ))}
+    </div>
+  ) : null;
 
   return (
     <>
@@ -126,6 +151,7 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
               <Button variant="ghost" size="sm" onClick={() => chainId && st().rebuildChain(chainId, { start, every, until: start + length })}>Refazer pelo intervalo</Button>
             </div>
           </div>
+          {flatSection}
           <span className="rt-note">Cada ponto tem tempo e reação próprios. Ex.: Durin derrete 1 a cada 2. Na linha do tempo, o ponto cheio tem reação e o vazado não.</span>
         </>
       ) : (
@@ -174,6 +200,7 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
               </div>
             </div>
           )}
+          {flatSection}
           {covering.length > 0 && (
             <div className="rt-cov" aria-label="Buffs que cobrem este golpe">
               {covering.slice(0, 8).map((c) => <span className="chip" key={c.id}>{c.name}<b>+{dec(c.loss * 100, 1)}%</b></span>)}

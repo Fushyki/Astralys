@@ -48,7 +48,8 @@ export function ResultCard({ rank, build, now, field, compare, currentSig, sets,
   onEquip?: () => void;
   equipped?: boolean;
   isCurrent?: boolean;
-  ownerOf: (location: string) => Owner;
+  /** Quem tem a peça equipada agora (null = está no inventário). */
+  ownerOf: (a: GoodArtifact) => Owner | null;
   /** Artefatos bloqueados (fora da otimização) e como bloquear/desbloquear um clicando nele. */
   blocked: Set<string>;
   onBlock: (a: GoodArtifact) => void;
@@ -103,7 +104,7 @@ export function ResultCard({ rank, build, now, field, compare, currentSig, sets,
           const kept = currentSig.has(pieceSig(a));
           const cv = pieceCv(a);
           // O mini ícone é de quem está com a peça equipada, seja o personagem desta aba ou outro.
-          const owner = a.location ? ownerOf(a.location) : null;
+          const owner = ownerOf(a);
           return (
             <div
               className="piece" key={sl.key} data-rarity={a.rarity} data-change={!kept} data-blocked={blocked.has(pieceSig(a)) ? true : undefined}
@@ -138,7 +139,7 @@ export function ResultCard({ rank, build, now, field, compare, currentSig, sets,
                   <li key={x.key} data-crit={x.key === 'critRate_' || x.key === 'critDMG_'}><span>{SUB_LABEL[x.key] ?? x.key}</span><b className="num">{formatSub(x.key, x.value)}</b></li>
                 ))}
               </ul>
-              {!a.location && <span className="foot">no inventário</span>}
+              {!owner && <span className="foot">no inventário</span>}
             </div>
           );
         })}

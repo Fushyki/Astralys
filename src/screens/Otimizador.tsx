@@ -24,6 +24,7 @@ import './otimizador.css';
 import { Button, ButtonLink } from '../design/Button';
 import { TeamBuffsStrip } from './personagem/AsideExtras';
 import { CurrentBuild } from './otimizar/CurrentBuild';
+import { MIN_DEFS, activeMins, firstUnmet, formatMin, type MinKey } from './otimizar/minimos';
 import { FamilyBadge, damageColor } from '../design/damageFamily';
 import { specialOfMove } from '../engine/project';
 import { MovePickerDialog, KindBadge, kindOf } from './otimizador/MovePicker';
@@ -147,6 +148,9 @@ export function OtimizadorPanel({ index }: { index: number }) {
   const [error, setError] = useState<string | null>(null);
   const [equippedKey, setEquippedKey] = useState<string | null>(null);
   const [fieldMode, setFieldMode] = useState(false);
+  const [minOpen, setMinOpen] = useState(false);
+  const [minKey, setMinKey] = useState<MinKey>('er');
+  const [minVal, setMinVal] = useState('');
   const [showAllSets, setShowAllSets] = useState(false);
   const [pickingMove, setPickingMove] = useState(false);
   const setsGrid = useRef<HTMLDivElement>(null);
@@ -322,6 +326,15 @@ export function OtimizadorPanel({ index }: { index: number }) {
   })();
   const minsOn = Object.values(ui.mins).filter((x) => x.trim() !== '').length;
 
+  const addMin = () => {
+    const n = Number(minVal.replace(',', '.'));
+    if (minVal.trim() === '' || !Number.isFinite(n)) return;
+    setUi({ ...ui, mins: { ...ui.mins, [minKey]: String(n) } });
+    setMinOpen(false);
+  };
+  /** O mínimo que o build equipado não atinge (null se atinge todos, ou se não há equipado). */
+  const unmet = current ? firstUnmet(ui.mins, current.report.stats) : null;
+
   const equippedSig = new Set((result?.equipped?.pieces ?? []).map(pieceSig));
 
   return (
@@ -484,49 +497,38 @@ export function OtimizadorPanel({ index }: { index: number }) {
                   {[1, 2, 3, 4, 5, 8, 10].map((n) => <option key={n} value={n}>{n}</option>)}
                 </select>
               </div>
-            </div>
-
-            <div className="ot-minbar" role="group" aria-label="Mínimos nos stats">
-              <span className="lbl">Mínimos nos stats <span className="dz-badge num">{minsOn} ativos</span></span>
-              <div className="ot-mins">
-                {([['er', 'Recarga', '%'], ['cr', 'Taxa crítica', '%'], ['cd', 'Dano crítico', '%'], ['em', 'Maestria', ''], ['hp', 'HP', ''], ['atk', 'ATK', ''], ['def', 'DEF', '']] as const).map(([k, label, suf]) => (
-                  <label key={k}>
-                    <span>{label}</span>
-                    <span className="in">
-                      <input inputMode="decimal" placeholder="—" value={ui.mins[k]} onChange={(e) => setUi({ ...ui, mins: { ...ui.mins, [k]: e.target.value } })} aria-label={`${label} mínima`} />
-                      {suf && <i>{suf}</i>}
-                    </span>
-                  </label>
-                ))}
-              </div>
-              {erNeeded !== null ? (
-                <span className="ot-tip">
-                  <span>A calculadora de recarga pede <b className="num">{formatDecimal(erNeeded, 1)}%</b> para {ref.character}.</span>
-                  <span className="ot-tip-acts">
-                    <Button variant="ghost" size="sm" onClick={() => setUi({ ...ui, mins: { ...ui.mins, er: String(erNeeded) } })}>Usar como mínimo</Button>
-                    <ButtonLink variant="ghost" size="sm" to={`/projeto/${v.id}/recarga`}>Abrir a calculadora</ButtonLink>
+              <span className="ot-sep" aria-hidden="true" />
+              <div className="ot-mins-row" role="group" aria-label="Mínimos nos stats">
+                <span className="lbl">Mínimos</span>
+                {activeMins(ui.mins).map((m) => (
+                  <span key={m.k} className="ot-minchip">
+                    {m.label} ≥ <b className="num">{formatMin(m.k, m.value)}</b>
+                    <button type="button" aria-label={`Remover mínimo de ${m.label}`} onClick={() => setUi({ ...ui, mins: { ...ui.mins, [m.k]: '' } })}>×</button>
                   </span>
-                </span>
-              ) : (
-                <span className="ot-tip">Ex.: Recarga ≥ 120% para não faltar energia na rotação.</span>
-              )}
-            </div>
-
-            <div className="ot-go">
+                ))}
+                {erNeeded !== null && ui.mins.er.trim() !== '' && Math.abs(Number(ui.mins.er.replace(',', '.')) - erNeeded) < 1e-6 && (
+                  <span className="ot-minchip calc">Calculadora de recarga: <b className="num">{formatDecimal(erNeeded, 1)}%</b> · em uso</span>
+                )}
+                <div className="ot-minadd">
+                  <button type="button" className="ot-ghost" aria-haspopup="dialog" aria-expanded={minOpen} onClick={() => { setMinOpen(!minOpen); setMinKey(MIN_DEFS.find((d) => ui.mins[d.k].trim() === '')?.k ?? 'er'); setMinVal(''); }}>+ Mínimo</button>
+                  {minOpen && (
+                    <div className="ot-pop" role="dialog" aria-label="Novo mínimo">
+                      <select className="dz-input sm" aria-label="Stat do mínimo" value={minKey} onChange={(e) => setMinKey(e.target.value as MinKey)}>
+                        {MIN_DEFS.map((d) => <option key={d.k} value={d.k}>{d.label}{d.pct ? ' (%)' : ''}</option>)}
+                      </select>
+                      <input className="dz-input sm" inputMode="decimal" aria-label="Valor do mínimo" placeholder="—" value={minVal} autoFocus onChange={(e) => setMinVal(e.target.value)}
+                        onKeyDown={(e) => { if (e.key === 'Enter') addMin(); if (e.key === 'Escape') setMinOpen(false); }} />
+                      <button type="button" className="dz-btn sm gold" onClick={addMin} disabled={!Number.isFinite(Number(minVal.replace(',', '.'))) || minVal.trim() === ''}>Adicionar</button>
+                    </div>
+                  )}
+                </div>
+              </div>
               {running ? (
                 <Button variant="secondary" size="lg" onClick={stop}>Parar</Button>
               ) : (
                 <Button variant="primary" size="lg" onClick={run}>Otimizar</Button>
               )}
-              {preview && (
-                <span className="muted small">
-                  {preview.total} peças entram ({preview.perSlot.join(' / ')} por posição)
-                  {preview.removed.equippedByOthers > 0 && !ui.borrow ? ` · ${preview.removed.equippedByOthers} em outros personagens ficam de fora` : ''}
-                </span>
-              )}
             </div>
-
-            <TeamBuffsStrip v={v} index={index} />
             {pickingMove && character && (
               <MovePickerDialog
                 moves={moves}
@@ -539,29 +541,38 @@ export function OtimizadorPanel({ index }: { index: number }) {
                 onClose={() => setPickingMove(false)}
               />
             )}
-            {running && (
-              <div className="ot-progress" role="status" aria-live="polite">
-                <div className="bar"><i /></div>
-                <span>
-                  Buscando… {progress ? `${formatInt(progress.evaluations)} combinações testadas · ${(progress.elapsedMs / 1000).toFixed(0)} s` : 'preparando'}
-                  {progress && Number.isFinite(progress.best) ? ` · melhor até agora ${focusValue({ value: progress.best } as OptimizedBuild['report'])}` : ''}
-                </span>
-              </div>
-            )}
-            {error && <p className="dz-error" role="alert">{error}</p>}
-            {result && (
-              <div className="ot-summary">
-                <StarIcon size={20} />
-                <b className="msg">{result.builds.length > 0 && result.equipped && result.builds[0].key === result.equipped.key ? 'Seu build equipado já é o melhor com estes filtros.' : result.stopped ? 'Busca parada: estes são os melhores achados até aqui.' : 'Busca completa: nenhum conjunto melhor existe com estes filtros.'}</b>
+            <div className="ot-strip" role="status" aria-live="polite">
+              <StarIcon size={14} />
+              {running ? (
+                <>
+                  <b>Buscando…</b>
+                  <span className="stat num">
+                    {progress ? `${formatInt(progress.evaluations)} combinações testadas · ${(progress.elapsedMs / 1000).toFixed(0)} s` : 'preparando'}
+                    {progress && Number.isFinite(progress.best) ? ` · melhor até agora ${focusValue({ value: progress.best } as OptimizedBuild['report'])}` : ''}
+                  </span>
+                </>
+              ) : error ? (
+                <span className="err" role="alert">{error}</span>
+              ) : result ? (
+                <>
+                  <b>{result.stopped ? 'Busca parada' : 'Busca completa'}</b>
+                  <span className="stat num">
+                    {formatInt(result.stats.evaluations)} avaliações de {bigNumber(result.stats.combinations)} · {result.inventory.pieces} peças ({preview?.perSlot.join(' · ')})
+                    {result.inventory.removed.equippedByOthers > 0 && !ui.borrow ? ` · ${result.inventory.removed.equippedByOthers} de outros personagens fora` : ''}
+                  </span>
+                </>
+              ) : preview ? (
                 <span className="stat num">
-                  {result.stopped ? 'Busca parada' : 'Busca completa'} · {formatInt(result.stats.evaluations)} avaliações de {bigNumber(result.stats.combinations)} combinações · {result.inventory.pieces} peças entram
-                  {result.inventory.removed.equippedByOthers > 0 && !ui.borrow ? `, ${result.inventory.removed.equippedByOthers} de outros personagens ficaram de fora` : ''}
+                  {preview.total} peças ({preview.perSlot.join(' · ')})
+                  {preview.removed.equippedByOthers > 0 && !ui.borrow ? ` · ${preview.removed.equippedByOthers} de outros personagens fora` : ''}
                 </span>
-                {result.equippedOutside && <span className="ot-warn">Seu build equipado usa peças que os filtros deixam de fora (nível, main stat, set ou dono); por isso ele não entra na busca.</span>}
-                {result.equipped && <span className="ot-now"><span className="lb">Equipado hoje</span><b className="num">{focusValue(result.equipped.report)}</b></span>}
-              </div>
-            )}
-            {!running && !result && !error && <p className="ot-tip">Escolha o foco e os filtros e toque em <b>Otimizar</b>.</p>}
+              ) : null}
+              {current && (unmet ? (
+                <span className="ot-eq bad">Equipado hoje não atinge {unmet.label} ≥ {formatMin(unmet.k, unmet.value)} (tem {formatMin(unmet.k, unmet.have)})</span>
+              ) : (
+                <span className="ot-eq">Equipado hoje <b className="num">{focusValue(current.report)}</b></span>
+              ))}
+            </div>
           </section>
 
           {result && (

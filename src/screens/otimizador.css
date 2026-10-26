@@ -140,7 +140,7 @@ button.ot-ch[aria-pressed='true'] b { color: var(--gold-hi); }
 .ot-ghost.wide { align-self: flex-start; min-height: var(--ctl-sm); font-size: var(--fs-2); }
 .ot-hint { font-size: var(--fs-1); color: var(--faint); line-height: 1.4; }
 .ot-sets-panel .bar-body, .ot-top .dz-panel .bar-body { gap: var(--sp-3); }
-.ot-top .ot-switches { margin-top: auto; }
+
 
 
 /* Barra de otimização: linha 1 (foco, alvo, mostrar, mínimos, Otimizar) e faixa de resultado */
@@ -266,3 +266,9 @@ button.ot-ch[aria-pressed='true'] b { color: var(--gold-hi); }
 .ot-cur li .subs > span > span { color: var(--faint); }
 .ot-cur li .subs b { font-weight: 600; color: var(--text); }
 .ot-cur li .subs > span[data-crit='true'] b { color: var(--gold); }
+
+/* Sets: opções no topo e a grade ocupa a altura que sobra, só com linhas inteiras */
+.ot-sets-wrap { flex: 1 1 0; min-height: 0; overflow: hidden; }
+.ot-sets-wrap[data-all='true'] { flex: none; overflow: visible; }
+.ot-sets { align-content: start; }
+.ot-more-sets { align-self: stretch; min-height: 36px; border-radius: var(--r-ctl); border: 1px solid var(--border-ctl-hi); background: var(--surface-2); color: var(--text); font: 600 var(--fs-2) var(--font-display); letter-spacing: .08em; text-transform: uppercase; cursor: pointer; }

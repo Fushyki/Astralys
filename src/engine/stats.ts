@@ -66,7 +66,9 @@ export interface StatBlock {
 
 /** Reações com bônus de dano próprio além de Derreter/Vaporizar (que têm campo separado); ver `REACTION_BONUS_KEYS`. */
 export { REACTION_BONUS_KEYS, type ReactionBonusKey };
-const zeroReactions = () => Object.fromEntries(REACTION_BONUS_KEYS.map((k) => [k, 0])) as Record<ReactionBonusKey, number>;
+const ZERO_REACTIONS = Object.fromEntries(REACTION_BONUS_KEYS.map((k) => [k, 0])) as Record<ReactionBonusKey, number>;
+/** Cópia do molde zerado (bem mais rápida que remontar as ~70 chaves a cada bloco: roda milhares de vezes por segundo no otimizador). */
+const zeroReactions = () => ({ ...ZERO_REACTIONS });
 
 type ByType = Partial<Record<HitType, number>>;
 const BY_TYPE_KEYS = ['dmgByType', 'critRateByType', 'critDmgByType', 'reactionBonus'] as const;
@@ -85,13 +87,17 @@ export const zeroBlock = (): StatBlock => ({
   meltBonus: 0, vaporizeBonus: 0, defIgnore: 0, physDmg: 0, physCritDmg: 0, eleDmg: 0, reactionBonus: zeroReactions(),
 });
 
+const BY_TYPE_SET: ReadonlySet<string> = new Set(BY_TYPE_KEYS);
+
 export function addDelta(target: StatBlock, delta: StatDelta): StatBlock {
-  for (const [k, v] of Object.entries(delta)) {
-    if ((BY_TYPE_KEYS as readonly string[]).includes(k)) {
-      const into = target[k as (typeof BY_TYPE_KEYS)[number]] as Record<string, number>;
-      for (const [t, x] of Object.entries(v as object)) into[t] = (into[t] ?? 0) + (x as number);
-    } else if (typeof v === 'number') {
-      (target as unknown as Record<string, number>)[k] += v;
+  const t = target as unknown as Record<string, number>;
+  for (const k in delta) {
+    const v = (delta as Record<string, unknown>)[k];
+    if (typeof v === 'number') {
+      if (!BY_TYPE_SET.has(k)) t[k] += v;
+    } else if (v && BY_TYPE_SET.has(k)) {
+      const into = (target as unknown as Record<string, Record<string, number>>)[k];
+      for (const key in v as Record<string, number>) into[key] = (into[key] ?? 0) + (v as Record<string, number>)[key];
     }
   }
   return target;
@@ -445,6 +451,15 @@ export interface FinalStats {
   weaponErAtkPct: number;
 }
 
+/** Soma por chave dos bônus de reação (loop simples: é a parte mais chamada do cálculo de stats finais). */
+function sumReactions(a: Partial<Record<ReactionBonusKey, number>> | undefined, b: Partial<Record<ReactionBonusKey, number>> | undefined): Record<ReactionBonusKey, number> {
+  const out = { ...ZERO_REACTIONS };
+  // Só os bônus que não são zero mudam o molde; assim o resultado é o mesmo e quase nenhuma chave é escrita.
+  if (a) for (const k in a) { const v = a[k as ReactionBonusKey]; if (v) out[k as ReactionBonusKey] += v; }
+  if (b) for (const k in b) { const v = b[k as ReactionBonusKey]; if (v) out[k as ReactionBonusKey] += v; }
+  return out;
+}
+
 export function weaponErAtkPct(m: MemberInput, er: number): number {
   const p = m.weaponEffect ? weaponStatsAt(m.weaponEffect, m.refinement).atkPctPerEr : undefined;
   return p ? Math.min(Math.max(er - 1, 0) * p.coef, p.cap) : 0;
@@ -498,7 +513,7 @@ export function finalStats(m: MemberInput, statics: StatBlock, rolls: Rolls, tea
     physDmg: (statics.physDmg ?? 0) + (team.physDmg ?? 0),
     physCritDmg: (statics.physCritDmg ?? 0) + (team.physCritDmg ?? 0),
     eleDmg: (statics.eleDmg ?? 0) + (team.eleDmg ?? 0),
-    reactionBonus: Object.fromEntries(REACTION_BONUS_KEYS.map((k) => [k, (statics.reactionBonus?.[k] ?? 0) + (team.reactionBonus?.[k] ?? 0)])) as Record<ReactionBonusKey, number>,
+    reactionBonus: sumReactions(statics.reactionBonus, team.reactionBonus),
     weaponErAtkPct: erAtk,
   };
 }

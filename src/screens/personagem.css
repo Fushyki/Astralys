@@ -321,9 +321,10 @@
   .pc-page.opt .ot-top { align-self: stretch; }
   .pc-page.opt .ot-bar, .pc-page.opt .ot-results { grid-column: 1 / -1; }
 }
-.ax-weapon-body { display: grid; grid-template-columns: 64px minmax(0, 1fr); grid-template-areas: "art n" "art sub"; gap: 2px 14px; align-items: center; padding: 10px; border-radius: 12px; border: 1px solid var(--border-ctl); background: var(--bg-header); }
+.ax-weapon-body { width: 100%; text-align: left; color: var(--text); font: inherit; cursor: pointer; display: grid; grid-template-columns: 64px minmax(0, 1fr); grid-template-areas: "art n" "art sub"; gap: 2px 14px; align-items: center; padding: 10px; border-radius: 12px; border: 1px solid var(--border-ctl); background: var(--bg-header); }
 .ax-weapon-body[data-rarity="5"] { border-color: #8a6a2e; background: linear-gradient(160deg, #3a2f18 0%, var(--bg-header) 70%); }
 .ax-weapon-body[data-rarity="4"] { border-color: #5a4a8a; background: linear-gradient(160deg, #2b2547 0%, var(--bg-header) 70%); }
+.ax-weapon-body:hover { border-color: var(--gold); }
 .ax-weapon-body .art { grid-area: art; width: 64px; height: 64px; display: grid; place-items: center; }
 .ax-weapon-body .art img { max-width: 100%; max-height: 100%; object-fit: contain; }
 .ax-weapon-body .n { grid-area: n; align-self: end; font-weight: 600; overflow-wrap: anywhere; }

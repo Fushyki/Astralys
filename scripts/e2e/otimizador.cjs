@@ -61,6 +61,11 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.waitForSelector('.ot-top');
   check('mostra quantas peças entram por posição', /40 peças entram \(8 \/ 8 \/ 8 \/ 8 \/ 8/.test(prev), prev);
 
+  await page.click('.ax-weapon-body');
+  check('clicar na arma na aba Otimizar abre o popup de trocar arma', (await page.locator('[role="dialog"][aria-label="Trocar arma"]').count()) === 1);
+  await page.keyboard.press('Escape');
+  await page.waitForTimeout(200);
+
   // ---- Otimizar (dano do time) ----
   await page.click('.ot-go .dz-btn.gold');
   await page.waitForSelector('.ot-build:not([data-now="true"])', { timeout: 120000 });

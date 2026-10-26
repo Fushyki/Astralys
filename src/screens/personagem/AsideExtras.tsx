@@ -7,6 +7,10 @@ import { Button } from '../../design/Button';
 import { aggregateBuffs } from './Dashboard';
 import { formatDecimal, formatInt } from '../../ui/format';
 import type { ProjectView } from '../../app/ProjectContext';
+import { effectStatus } from '../../features/rotation/teamInfo';
+import { weaponsFor } from '../../features/rotation/teamOps';
+import { useRotationStore } from '../../features/rotation/store';
+import { WeaponPickerDialog } from './WeaponPicker';
 
 function Img({ src, fallback }: { src: string | undefined; fallback: string }) {
   const [failed, setFailed] = useState(false);
@@ -15,16 +19,28 @@ function Img({ src, fallback }: { src: string | undefined; fallback: string }) {
 
 export function AsideExtras({ v, index }: { v: ProjectView; index: number }) {
   const ref = v.project.members[index];
+  const update = useRotationStore((st) => st.updateMember);
+  const [pick, setPick] = useState(false);
+  const character = v.data.game.characters.find((c) => c.name === ref.character);
   const weapon = v.data.game.weapons.find((w) => w.name === ref.weapon);
   const refine = Math.min(5, Math.max(1, ref.refinement ?? 1));
   const sub = weapon?.substat ? `${weapon.substat.stat} ${formatDecimal(weapon.substat.value < 1 ? weapon.substat.value * 100 : weapon.substat.value, 1)}${weapon.substat.value < 1 ? '%' : ''}` : '';
   return (
     <Panel className="ax-weapon">
-      <div className="ax-weapon-body" data-rarity={weapon?.rarity ?? 5}>
+      <button type="button" className="ax-weapon-body" data-rarity={weapon?.rarity ?? 5} onClick={() => setPick(true)} aria-label={`Trocar a arma ${ref.weapon}`}>
         <span className="art"><Img src={weapon?.icon ? weaponIconUrl(weapon.icon) : undefined} fallback="⚔" /></span>
         <span className="n">{ref.weapon}</span>
         <span className="num sub">Nv 90 · R{refine}{weapon ? ` · ATK ${formatInt(weapon.baseAtk)}` : ''}{sub ? ` · ${sub}` : ''}</span>
-      </div>
+      </button>
+      {pick && character && (
+        <WeaponPickerDialog
+          weapons={weaponsFor(character, v.data.game.weapons)}
+          current={ref.weapon}
+          status={(name) => effectStatus(v.data.effects.weapons.find((e) => e.weapon === name))}
+          onPick={(name) => { update(index, { weapon: name }); setPick(false); }}
+          onClose={() => setPick(false)}
+        />
+      )}
     </Panel>
   );
 }

@@ -75,23 +75,23 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   check('a lista mostra 2 builds e o botão "Mostrar mais · N builds"', cards === 2 && /^Mostrar mais · \d+ builds$/.test((await page.textContent('.ot-more-btn')).trim()), `${cards} cards`);
   await page.click('.ot-more-btn');
   check('"Mostrar mais" mostra os outros na mesma grade de 2 colunas', (await page.locator('.ot-build').count()) > 2);
-  check('as peças mostram "troca" ou "equipada"', (await page.locator('.ot-build .piece .phead em').count()) >= 10);
+  check('as peças mostram "troca" ou "equipada"', (await page.locator('.ot-build .pcard .phead em').count()) >= 10);
   const cmp = await page.$$eval('.ot-build .cmp', (c) => c.map((x) => x.textContent.trim()));
   check('com o equipado válido a comparação é contra o equipado', cmp.length > 0 && cmp.every((t) => /contra o equipado/.test(t)), cmp.join(' | '));
-  check('cada peça tem a faixa na cor do set e o selo CV com 1 casa', (await page.locator('.ot-build .piece .bar').count()) >= 10 && (await page.$$eval('.ot-build .piece .cv', (c) => c.every((x) => /^CV \d+,\d$/.test(x.textContent.trim())))));
+  check('cada peça tem a faixa na cor do set e o selo CV com 1 casa', (await page.locator('.ot-build .pcard .bar').count()) >= 10 && (await page.$$eval('.ot-build .pcard .cv', (c) => c.every((x) => /^CV \d+,\d$/.test(x.textContent.trim())))));
   check('o cabeçalho mostra "{n} trocas" e os sets, sem chip roxo', (await page.locator('.ot-build .sets .swaps').count()) >= 1 && /^\d+ trocas?$/.test((await page.textContent('.ot-build .sets .swaps')).trim()) && (await page.locator('.ot-build .borrow').count()) === 0);
-  check('a peça sem dono diz "no inventário"', (await page.locator('.ot-build .piece .foot').count()) >= 1 && /no inventário/.test(await page.textContent('.ot-build .piece .foot')));
+  check('a peça sem dono diz "no inventário"', (await page.locator('.ot-build .pcard .foot').count()) >= 1 && /no inventário/.test(await page.textContent('.ot-build .pcard .foot')));
   check('o ícone da peça é grande e sem box; o mini ícone é de quem a tem equipada (mesmo o personagem desta aba)', await (async () => {
-    const art = await page.$eval('.ot-build .piece .art', (e) => { const r = e.getBoundingClientRect(); const cs = getComputedStyle(e); return [Math.round(r.width), cs.borderTopWidth, cs.backgroundColor]; });
-    const owners = await page.$$eval('.ot-build .piece .owner', (o) => o.map((x) => x.getAttribute('aria-label')));
+    const art = await page.$eval('.ot-build .pcard .art', (e) => { const r = e.getBoundingClientRect(); const cs = getComputedStyle(e); return [Math.round(r.width), cs.borderTopWidth, cs.backgroundColor]; });
+    const owners = await page.$$eval('.ot-build .pcard .owner', (o) => o.map((x) => x.getAttribute('aria-label')));
     return art[0] >= 90 && art[1] === '0px' && owners.length >= 1 && owners.every((t) => /^equipada em Mavuika$/.test(t));
   })());
-  const mainTexts = await page.$$eval('.ot-build .piece .mv b', (b) => b.map((x) => x.textContent.trim()));
+  const mainTexts = await page.$$eval('.ot-build .pcard .mv b', (b) => b.map((x) => x.textContent.trim()));
   check('nenhum main stat aparece como 0,5% / 0,3%', !mainTexts.some((t) => /^0,[0-9]%$/.test(t)), mainTexts.slice(0, 6).join(' | '));
 
   // ---- Artefatos bloqueados ----
-  await page.locator('.ot-build').first().locator('.piece').first().click();
-  check('clicar no artefato do resultado o tira da otimização (fica marcado)', (await page.locator('.ot-build .piece[data-blocked="true"]').count()) >= 1);
+  await page.locator('.ot-build').first().locator('.pcard').first().click();
+  check('clicar no artefato do resultado o tira da otimização (fica marcado)', (await page.locator('.ot-build .pcard[data-blocked="true"]').count()) >= 1);
   check('o filtro mostra "Habilitar artefatos bloqueados · 1"', /^Habilitar artefatos bloqueados · 1$/.test((await page.textContent('.ot-unblock')).trim()));
   await page.click('.ot-bar-min .ot-go-btn');
   await page.waitForSelector('.ot-build', { timeout: 120000 });
@@ -106,9 +106,17 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.waitForTimeout(600);
   const firstBtn = page.locator('.ot-build').first().locator('.equip');
   check('depois de equipar, o botão diz "Equipado" e fica bloqueado', (await firstBtn.textContent()).trim() === 'Equipado' && (await firstBtn.isDisabled()));
-  const owners = await page.locator('.ot-build').first().locator('.piece .owner').evaluateAll((o) => o.map((x) => x.getAttribute('aria-label')));
+  const owners = await page.locator('.ot-build').first().locator('.pcard .owner').evaluateAll((o) => o.map((x) => x.getAttribute('aria-label')));
   check('o mini ícone das 5 peças passa a ser do personagem que as equipou, na hora', owners.length === 5 && owners.every((t) => t === 'equipada em Mavuika'), owners.join(' | '));
-  check('as peças do build equipado viram "equipada"', (await page.locator('.ot-build').first().locator('.piece .phead em:has-text("equipada")').count()) === 5);
+  check('as peças do build equipado viram "equipada"', (await page.locator('.ot-build').first().locator('.pcard .phead em:has-text("equipada")').count()) === 5);
+
+  // ---- Resumo e build: o mesmo cartão das builds otimizadas, com o artefato equipado ----
+  await page.goto(`${BASE}/projeto/exemplo/personagem/Mavuika`, { waitUntil: 'networkidle' });
+  await page.waitForSelector('.gr .pcard');
+  check('o Resumo e build mostra os 5 artefatos equipados no mesmo estilo (set, substats, CV)', (await page.locator('.gr .pcard').count()) === 5 && (await page.locator('.gr .pcard .cv').count()) === 5 && (await page.locator('.gr .pcard ul li').count()) === 20 && (await page.locator('.gr .pcard .setname').count()) === 5);
+  await page.screenshot({ path: path.join(OUT, 'resumo-pecas.png'), fullPage: true });
+  await page.goto(`${BASE}/projeto/exemplo/personagem/Mavuika?aba=otimizar`, { waitUntil: 'networkidle' });
+  await page.waitForSelector('.ot-top');
 
   // ---- Equipado inválido: mínimo que ele não atinge ----
   const addMin = async (key, value) => {

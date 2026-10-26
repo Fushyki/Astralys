@@ -80,9 +80,9 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   check('a busca devolve até 5 builds', builds >= 1 && builds <= 5, String(builds));
   check('diz que a busca foi completa', /Busca completa/.test(await page.textContent('.ot-strip')));
   // Guia visual v2: imagens, alturas iguais, grade de builds e nenhum texto sublinhado
-  const tilesOk = await page.$$eval('.ot-build', (b) => b.every((x) => x.querySelectorAll('.piece').length === 5 && [...x.querySelectorAll('.piece .art')].every((a) => a.querySelector('img') || a.querySelector('.ph'))));
+  const tilesOk = await page.$$eval('.ot-build', (b) => b.every((x) => x.querySelectorAll('.pcard').length === 5 && [...x.querySelectorAll('.pcard .art')].every((a) => a.querySelector('img') || a.querySelector('.ph'))));
   check('todo build mostra as 5 peças com imagem (ou o glifo da posição)', tilesOk);
-  const imgs = await page.$$eval('.ot-build .piece .art > img', (i) => i.length);
+  const imgs = await page.$$eval('.ot-build .pcard .art > img', (i) => i.length);
   check('as peças carregam a imagem do artefato do Lunaris', imgs >= 5, String(imgs));
   const topH = await page.$$eval('.ot-top > .dz-panel', (p) => p.map((x) => Math.round(x.getBoundingClientRect().height)));
   check('os 3 painéis de filtro têm a mesma altura', topH.length === 3 && new Set(topH).size === 1, topH.join(','));
@@ -94,7 +94,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   check('nenhum texto sublinhado na aba Otimizar', under === 0, String(under));
   const gutters = await page.evaluate(() => { const r = document.querySelector('.pc-page').getBoundingClientRect(); return [Math.round(r.left), Math.round(window.innerWidth - r.right)]; });
   check('margem lateral da página de 24 px no máximo em 1440 px', gutters.every((g) => g <= 24), gutters.join('/'));
-  check('cada build mostra as 5 peças com imagem e substats', (await page.locator('.ot-build').first().locator('.piece').count()) === 5);
+  check('cada build mostra as 5 peças com imagem e substats', (await page.locator('.ot-build').first().locator('.pcard').count()) === 5);
   const vals = await page.$$eval('.ot-build .val b', (b) => b.map((x) => Number(x.textContent.replace(/\./g, ''))));
   check('os builds vêm do melhor para o pior', vals.every((v, i) => i === 0 || v <= vals[i - 1]) && vals[0] > 0, vals.join(' > '));
   await page.screenshot({ path: path.join(OUT, 'otimizador.png'), fullPage: true });

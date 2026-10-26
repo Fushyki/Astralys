@@ -16,6 +16,7 @@ import { weaponsFor } from '../../features/rotation/teamOps';
 import { WeaponPickerDialog } from './WeaponPicker';
 import { WeaponInfoDialog } from './WeaponInfo';
 import { CustomBuffs } from './CustomBuffs';
+import { PieceCard } from '../otimizar/PieceCard';
 import { SetPickerDialog } from './SetPicker';
 import { useRotationStore } from '../../features/rotation/store';
 import { EFFECT_STATUS_LABEL, effectCoverage, effectStatus, missingEffects } from '../../features/rotation/teamInfo';
@@ -153,14 +154,22 @@ export function BuildStrip({ data, index, member: memberRef, projectId, compact,
           if (memberRef.pieces) {
             const pset = piece ? data.game.artifacts.find((x) => norm(x.name) === norm(piece.setKey)) : undefined;
             const main = piece ? mainStatOf(piece) : null;
+            if (compact && piece) {
+              // Mesmo cartão das builds otimizadas: o usuário vê qual artefato está equipado (set, substats, CV).
+              return (
+                <PieceCard
+                  key={slot} piece={piece as GoodArtifact} slotLabel={SLOT_LABEL[slot]} set={pset} tag={{ text: 'equipada', kind: 'kept' }}
+                  onClick={() => setPickPiece(slot)} label={`${SLOT_LABEL[slot]}: ${pset?.name ?? piece.setKey}. Tocar para escolher outro do inventário`} title="Trocar este artefato"
+                />
+              );
+            }
             if (compact) {
               return (
-                <button type="button" key={slot} className={`gt-piece real${piece ? "" : " empty"}`} data-rarity={piece?.rarity ?? 4} onClick={() => setPickPiece(slot)} aria-label={`${SLOT_LABEL[slot]}: ${piece ? (pset?.name ?? piece.setKey) : 'sem peça'}. Tocar para escolher do inventário`}>
-                  <span className="top"><span className="lv num">{piece && main ? `+${main.level}` : ''}</span><span className="slot">{SLOT_LABEL[slot]}</span></span>
-                  <span className="pic"><Img src={pset ? pieceIconUrl(pset.id, slot) : undefined} fallback={piece ? '◆' : '+'} /></span>
-                  <span className="main">{piece && main ? (MAIN_LABEL[main.key] ?? main.key) : 'Sem peça'}</span>
-                  <b className="val num">{piece && main ? formatMain(main.key, main.value) : '—'}</b>
-                  <span className="setname">{piece ? (pset?.name ?? piece.setKey) : ''}</span>
+                <button type="button" key={slot} className="gt-piece real empty" data-rarity={4} onClick={() => setPickPiece(slot)} aria-label={`${SLOT_LABEL[slot]}: sem peça. Tocar para escolher uma do inventário`}>
+                  <span className="top"><span className="lv num" /><span className="slot">{SLOT_LABEL[slot]}</span></span>
+                  <span className="pic"><Img src={undefined} fallback="+" /></span>
+                  <span className="main">Sem peça</span>
+                  <b className="val num">—</b>
                 </button>
               );
             }

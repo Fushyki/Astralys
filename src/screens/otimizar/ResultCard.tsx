@@ -1,11 +1,12 @@
 /** Card de um build do otimizador: posição, valor, comparação, sets, as 5 peças (com CV e dono) e os stats com a diferença contra o Build atual. */
-import { CharacterAvatar } from '../../design/primitives';
 import { artifactSig, norm, type GoodArtifact } from '../../features/good/goodImport';
-import { MAIN_LABEL, SUB_LABEL, formatMain, formatSub } from '../../features/good/labels';
 import type { OptimizedBuild } from '../../features/optimizer/run';
-import { mainStatValue } from '../../engine/pieces';
 import { formatDecimal, formatInt } from '../../ui/format';
-import { ArtImg, SLOTS, fmtInt, fmtPct, setColor } from './shared';
+import { PieceCard, pieceCv, type Owner } from './PieceCard';
+import { SLOTS, fmtInt, fmtPct, setColor } from './shared';
+
+export { pieceCv };
+export type { Owner };
 
 export interface CardCompare {
   /** Texto e tom do chip de comparação do cabeçalho. */
@@ -13,19 +14,10 @@ export interface CardCompare {
   tone: 'good' | 'bad';
 }
 
-/** Quem é o dono de uma peça equipada em outro personagem: nome, inicial e cor (a do time, se ele for do time). */
-export interface Owner { name: string; color: string; icon?: string }
-
 /** "Emblem of Severed Fate" → "Emblem"; "Silken Moon's Serenade" → "Silken Moon". */
 const shortSet = (name: string) => name.split(/ of |'s /i)[0];
 
 export const pieceSig = (a: GoodArtifact) => artifactSig(a);
-
-/** CV (Crit Value) da peça: 2 × Taxa Crítica + Dano Crítico das substats (o main stat não entra). */
-export const pieceCv = (a: Pick<GoodArtifact, 'substats'>): number => {
-  const sum = (key: string) => a.substats.filter((s) => s.key === key).reduce((n, s) => n + s.value, 0);
-  return 2 * sum('critRate_') + sum('critDMG_');
-};
 
 function Diff({ d, text }: { d: number; text: string }) {
   if (!Number.isFinite(d) || Math.abs(d) < 1e-9) return null;
@@ -100,47 +92,18 @@ export function ResultCard({ rank, build, now, field, compare, currentSig, sets,
           if (!a) return <div className="piece" key={sl.key} data-change="false" />;
           const set = setOf(a.setKey);
           const name = set?.name ?? a.setKey;
-          const key = a.slotKey === 'flower' ? 'hp' : a.slotKey === 'plume' ? 'atk' : a.mainStatKey;
           const kept = currentSig.has(pieceSig(a));
-          const cv = pieceCv(a);
           // O mini ícone é de quem está com a peça equipada, seja o personagem desta aba ou outro.
           const owner = ownerOf(a);
+          const sig = pieceSig(a);
           return (
-            <div
-              className="piece" key={sl.key} data-rarity={a.rarity} data-change={!kept} data-blocked={blocked.has(pieceSig(a)) ? true : undefined}
-              role="button" tabIndex={0} aria-pressed={blocked.has(pieceSig(a))}
-              aria-label={`${sl.label}: ${name}. ${blocked.has(pieceSig(a)) ? 'Bloqueado: fora da otimização. Clique para habilitar.' : 'Clique para tirar este artefato da otimização.'}`}
-              title={blocked.has(pieceSig(a)) ? 'Bloqueado: fora da otimização (clique para habilitar)' : 'Clique para tirar este artefato da otimização'}
-              onClick={() => onBlock(a)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onBlock(a); } }}
-            >
-              <i className="bar" style={{ background: setColor(name) }} />
-              <div className="phead">
-                <span className="slot">{sl.label}</span>
-                <em>{kept ? 'equipada' : 'troca'}</em>
-              </div>
-              <div className="pic">
-                <span className="art" title={name}>
-                  <ArtImg setId={set?.id} slot={a.slotKey} />
-                  <b className="lv num">+{a.level ?? 0}</b>
-                  {blocked.has(pieceSig(a)) && <i className="lock" aria-hidden="true">🔒</i>}
-                  {owner && <span className="owner" title={`equipada em ${owner.name}`} aria-label={`equipada em ${owner.name}`}><CharacterAvatar name={owner.name} icon={owner.icon} color={owner.color} size={26} /></span>}
-                </span>
-                <i className="stars" aria-label={`${a.rarity} estrelas`}>{'★'.repeat(a.rarity)}</i>
-              </div>
-              <div className="main">
-                <small>{MAIN_LABEL[key] ?? key}</small>
-                <span className="mv">
-                  <b className="num">{formatMain(key, mainStatValue(key, a.rarity, a.level))}</b>
-                  <span className="cv num" data-hi={cv >= 30}>CV {formatDecimal(cv, 1)}</span>
-                </span>
-              </div>
-              <ul>
-                {a.substats.slice(0, 4).map((x) => (
-                  <li key={x.key} data-crit={x.key === 'critRate_' || x.key === 'critDMG_'}><span>{SUB_LABEL[x.key] ?? x.key}</span><b className="num">{formatSub(x.key, x.value)}</b></li>
-                ))}
-              </ul>
-              {!owner && <span className="foot">no inventário</span>}
-            </div>
+            <PieceCard
+              key={sl.key} piece={a} slotLabel={sl.label} set={set} owner={owner} inventory
+              tag={{ text: kept ? 'equipada' : 'troca', kind: kept ? 'kept' : 'swap' }}
+              blocked={blocked.has(sig)} onClick={() => onBlock(a)}
+              label={`${sl.label}: ${name}. ${blocked.has(sig) ? 'Bloqueado: fora da otimização. Clique para habilitar.' : 'Clique para tirar este artefato da otimização.'}`}
+              title={blocked.has(sig) ? 'Bloqueado: fora da otimização (clique para habilitar)' : 'Clique para tirar este artefato da otimização'}
+            />
           );
         })}
       </div>

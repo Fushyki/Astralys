@@ -53,7 +53,7 @@
 
 /* Builds: 2 por linha em 1366 px, 3 em 1920 px; cartões da mesma linha têm a mesma altura */
 @media (max-width: 640px) { .ot-results { grid-template-columns: minmax(0, 1fr); } }
-@media (max-width: 720px) { .pcards { grid-template-columns: repeat(2, minmax(0, 1fr)); } .ot-build .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 720px) { .ot-build .pieces { grid-template-columns: repeat(2, minmax(0, 1fr)); } .ot-build .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
 /* Escolha do golpe: botão na barra de foco e popup com os tipos de dano em cores */
 .ot-movebtn { display: flex; align-items: center; gap: var(--sp-2); min-height: var(--ctl-md); padding: 0 var(--sp-3); border: 1px solid #2a356a; border-radius: var(--r-ctl); background: #080c1d; color: var(--text); font: 500 var(--fs-3) var(--font-body); text-align: left; cursor: pointer; width: 100%; }
@@ -187,7 +187,7 @@ button.ot-ch[aria-pressed='true'] b { color: var(--gold-hi); }
 .ot-build .sets i { width: 7px; height: 7px; border-radius: 50%; }
 .ot-build .sets .swaps { background: #2a2312; border-color: #6b5524; color: var(--gold-hi); }
 .ot-build header .equip { margin-left: auto; }
-.pcards { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--sp-2); padding: var(--sp-3) var(--sp-4); }
+.ot-build .pieces { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--sp-2); padding: var(--sp-3) var(--sp-4); }
 .pcard { position: relative; display: flex; flex-direction: column; min-width: 0; border-radius: var(--r-card); overflow: hidden; background: var(--item-bg-swap); border: 1px solid var(--item-border-swap); }
 .pcard[data-change='false'] { background: var(--item-bg-kept); border-color: var(--item-border-kept); }
 .pcard .bar { display: block; height: 3px; }
@@ -224,7 +224,7 @@ button.ot-ch[aria-pressed='true'] b { color: var(--gold-hi); }
 .ot-build .stats .d[data-sign='up'] { color: var(--good); }
 .ot-build .stats .d[data-sign='down'] { color: var(--warn); }
 @media (max-width: 720px) {
-  .pcards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ot-build .pieces { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .ot-build .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
@@ -322,3 +322,14 @@ button.ot-ch[aria-pressed='true'] b { color: var(--gold-hi); }
 .ot-blocked .bk .t .subs { color: var(--faint); }
 
 .pcard .setname { padding: 0 10px; margin-bottom: 2px; font-size: 11px; color: var(--text-2); overflow-wrap: anywhere; line-height: 1.25; }
+
+/* Card da arma (Resumo e build): o mesmo cartão das peças, com a faixa dourada e o ícone da passiva */
+.pcard.weapon { background: var(--item-bg); border-color: var(--item-border); cursor: pointer; }
+.pcard.weapon[data-rarity='4'] { background: #1c1730; border-color: #4a3f7a; }
+.pcard.weapon .bar { background: var(--frame-5); }
+.pcard.weapon[data-rarity='4'] .bar { background: #7a68c0; }
+.pcard.weapon .phead em { background: var(--gold); color: var(--on-gold); }
+.pcard.weapon .art.info { cursor: help; border-radius: var(--r-inner); }
+.pcard.weapon .art.info:hover, .pcard.weapon .art.info:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.pcard.weapon:hover { border-color: var(--gold); }
+.pcard.weapon .mv b { color: var(--text); }

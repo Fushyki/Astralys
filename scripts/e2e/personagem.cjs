@@ -70,7 +70,7 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
   await page.click('.pc-views button:has-text("Resumo e build")');
   check('abre no Resumo, com o painel de colunas', (await page.getAttribute('.pc-views button:has-text("Resumo e build")', 'aria-selected')) === 'true' && (await page.locator('.db-cols').count()) === 1);
   check('o Resumo não tem o bloco "Maiores golpes" nem a tabela inteira', (await page.locator('.dz-panel:has(h2:text-is("Maiores golpes"))').count()) === 0 && (await page.locator('.dz-panel:has(h2:text-is("Tabela de dano"))').count()) === 0);
-  check('Resumo e build na mesma página: faixa de build, substats e atributos', (await page.locator('.gt-weapon').count()) === 1 && (await page.locator('.gt-piece').count()) === 5 && (await page.locator('.db-subs').count()) === 1 && (await page.locator('.db-panel:has(h3:text-is("Atributos"))').count()) === 1);
+  check('Resumo e build na mesma página: faixa de build, substats e atributos', (await page.locator('.pcard.weapon').count()) === 1 && (await page.locator('.gt-piece').count()) === 5 && (await page.locator('.db-subs').count()) === 1 && (await page.locator('.db-panel:has(h3:text-is("Atributos"))').count()) === 1);
   check('as ferramentas ficam só no Avançado', (await page.locator('.dz-panel:has(h2:text-is("Ferramentas"))').count()) === 0);
 
   // Abas e cabeçalho
@@ -143,10 +143,10 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
   check('o editor só traz os atributos das peças (arma e set têm seletores próprios)', (await page.locator('.dz-dialog label.dz-field:has(span:text-is("Arma"))').count()) === 0 && (await page.locator('.dz-dialog .fx-slot[data-slot="sands"]').count()) === 1);
   await page.keyboard.press('Escape');
   check('Esc fecha o editor', (await page.locator('.dz-dialog').count()) === 0);
-  check('a faixa de build mostra a arma e as 5 peças', (await page.$$('.gt-piece')).length === 5 && /A Thousand Blazing Suns/.test(await page.textContent('.gt-weapon')));
+  check('a faixa de build mostra a arma e as 5 peças', (await page.$$('.gt-piece')).length === 5 && /A Thousand Blazing Suns/.test(await page.textContent('.pcard.weapon')));
 
   // Equipamento com imagens e passivas em português
-  check('a arma tem imagem e cada peça mostra o set', (await page.locator('.gt-weapon .art img').count()) === 1 && /Obsidian Codex/.test(await page.textContent('.gt-piece')));
+  check('a arma tem imagem e cada peça mostra o set', (await page.locator('.pcard.weapon .art img').count()) === 1 && /Obsidian Codex/.test(await page.textContent('.gt-piece')));
   await openMore();
   const passive = await page.textContent('.pc-pcard[aria-label="Passiva da arma"]');
   check('a passiva da arma aparece em português, com o nome', /Brilho Escaldante/.test(passive), passive.replace(/\s+/g, ' ').slice(0, 110));
@@ -158,7 +158,7 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
   await page.click('.pc-refine button:has-text("R1")'); await settle();
 
   // Popup da arma (no ícone): passiva, stats e o botão de ativar o buff
-  await page.click('.gt-weapon .art.info');
+  await page.click('.pcard.weapon .art.info');
   await page.waitForSelector('[role="dialog"][aria-label^="Passiva de"]');
   check('o ícone da arma abre o popup com a passiva e os stats', (await page.locator('.dz-dialog.wi .wi-sec h3').count()) >= 2 && /ATK base \d/.test(await page.textContent('.wi-top')) && (await page.locator('.dz-dialog .wcard').count()) === 0);
   const sw = page.locator('.wi-buff input');
@@ -186,7 +186,7 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
   await page.keyboard.press('Control+z'); await settle();
 
   // Trocar arma: grade com imagens, filtro por raridade e busca
-  await page.click('.gt-weapon'); await page.waitForSelector('.dz-dialog .wcard');
+  await page.click('.pcard.weapon .setname'); await page.waitForSelector('.dz-dialog .wcard');
   check('o seletor de armas é uma grade de cards com imagem', (await page.locator('.dz-dialog .wcard').count()) > 10 && (await page.locator('.dz-dialog .wcard img').count()) > 5);
   check('a arma atual vem marcada como Equipada', (await page.locator('.dz-dialog .wcard[data-current="true"]').count()) === 1);
   await page.click('.dz-dialog .dz-seg button:has-text("4★")'); await settle();
@@ -197,12 +197,12 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
   check('a busca filtra as armas pelo nome', (await page.locator('.dz-dialog .wcard').count()) < before && (await page.locator('.dz-dialog .wcard').count()) >= 1);
   await page.keyboard.press('Escape');
   check('Esc fecha o seletor de armas', (await page.locator('.dz-dialog').count()) === 0);
-  await page.click('.gt-weapon'); await page.waitForSelector('.dz-dialog .wcard');
+  await page.click('.pcard.weapon .setname'); await page.waitForSelector('.dz-dialog .wcard');
   await page.fill('.dz-dialog input[type="search"]', 'Royal Greatsword'); await settle();
   await page.click('.dz-dialog .wcard:has-text("Royal Greatsword")'); await settle();
-  check('escolher uma arma troca a arma e fecha o seletor', /Royal Greatsword/.test(await page.textContent('.gt-weapon')) && (await page.locator('.dz-dialog').count()) === 0);
+  check('escolher uma arma troca a arma e fecha o seletor', /Royal Greatsword/.test(await page.textContent('.pcard.weapon')) && (await page.locator('.dz-dialog').count()) === 0);
   await page.keyboard.press('Control+z'); await settle();
-  check('Ctrl+Z devolve a arma anterior', /A Thousand Blazing Suns/.test(await page.textContent('.gt-weapon')));
+  check('Ctrl+Z devolve a arma anterior', /A Thousand Blazing Suns/.test(await page.textContent('.pcard.weapon')));
 
   // Trocar set: grade com imagem e o bônus de 2 peças
   await page.click('.pc-pcard[aria-label="Bônus dos sets"] button:has-text("Trocar set")'); await page.waitForSelector('.dz-dialog .scard');

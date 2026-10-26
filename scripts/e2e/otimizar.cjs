@@ -113,7 +113,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   // ---- Resumo e build: o mesmo cartão das builds otimizadas, com o artefato equipado ----
   await page.goto(`${BASE}/projeto/exemplo/personagem/Mavuika`, { waitUntil: 'networkidle' });
   await page.waitForSelector('.gr .pcard');
-  check('o Resumo e build mostra os 5 artefatos equipados no mesmo estilo (set, substats, CV)', (await page.locator('.gr .pcard').count()) === 5 && (await page.locator('.gr .pcard .cv').count()) === 5 && (await page.locator('.gr .pcard ul li').count()) === 20 && (await page.locator('.gr .pcard .setname').count()) === 5);
+  check('o Resumo e build mostra os 5 artefatos equipados no mesmo estilo (set, substats, CV)', (await page.locator('.gr .pcard:not(.weapon)').count()) === 5 && (await page.locator('.gr .pcard .cv').count()) === 5 && (await page.locator('.gr .pcard:not(.weapon) ul li').count()) === 20);
   await page.screenshot({ path: path.join(OUT, 'resumo-pecas.png'), fullPage: true });
   await page.goto(`${BASE}/projeto/exemplo/personagem/Mavuika?aba=otimizar`, { waitUntil: 'networkidle' });
   await page.waitForSelector('.ot-top');

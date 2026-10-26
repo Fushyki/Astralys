@@ -17,6 +17,8 @@ import { WeaponPickerDialog } from './WeaponPicker';
 import { WeaponInfoDialog } from './WeaponInfo';
 import { CustomBuffs } from './CustomBuffs';
 import { PieceCard } from '../otimizar/PieceCard';
+
+const WEAPON_TYPE: Record<string, string> = { Sword: 'Espada', Claymore: 'Espadão', Polearm: 'Lança', Catalyst: 'Catalisador', Bow: 'Arco' };
 import { SetPickerDialog } from './SetPicker';
 import { useRotationStore } from '../../features/rotation/store';
 import { EFFECT_STATUS_LABEL, effectCoverage, effectStatus, missingEffects } from '../../features/rotation/teamInfo';
@@ -132,14 +134,31 @@ export function BuildStrip({ data, index, member: memberRef, projectId, compact,
     <>
       <div className="pc-gear">
         {compact ? (
-          <button type="button" className="gt-weapon" data-rarity={weapon?.rarity ?? 5} onClick={() => setPickWeapon(true)} aria-label={`Trocar a arma ${memberRef.weapon}`}>
-            <span className="art info" role="button" tabIndex={0} aria-label={`Passiva e buff de ${memberRef.weapon}`} title="Ver a passiva e o buff da arma" onClick={openInfo} onKeyDown={onInfoKey}><Img src={weapon?.icon ? weaponIconUrl(weapon.icon) : undefined} fallback="⚔" /><b className="rf num">R{refine}</b></span>
-            <span className="txt">
-              <b className="n">{memberRef.weapon}</b>
-              <span className="num sub">{weapon ? `ATK ${formatInt(weapon.baseAtk)}` : ''}{substat ? ` · ${substat}` : ''}</span>
-              <span className="num sub">Nv 90</span>
-            </span>
-          </button>
+          <div
+            className="pcard weapon" data-rarity={weapon?.rarity ?? 5} role="button" tabIndex={0} title="Trocar a arma"
+            aria-label={`Trocar a arma ${memberRef.weapon}`} onClick={() => setPickWeapon(true)}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setPickWeapon(true); } }}
+          >
+            <i className="bar" />
+            <div className="phead"><span className="slot">Arma</span><em>R{refine}</em></div>
+            <div className="pic">
+              <span className="art info" role="button" tabIndex={0} aria-label={`Passiva e buff de ${memberRef.weapon}`} title="Ver a passiva e o buff da arma" onClick={openInfo} onKeyDown={onInfoKey}>
+                <Img src={weapon?.icon ? weaponIconUrl(weapon.icon) : undefined} fallback="⚔" />
+              </span>
+              <i className="stars" aria-label={`${weapon?.rarity ?? 5} estrelas`}>{'★'.repeat(weapon?.rarity ?? 5)}</i>
+            </div>
+            <span className="setname" title={memberRef.weapon}>{memberRef.weapon}</span>
+            <div className="main">
+              <small>ATK base</small>
+              <span className="mv"><b className="num">{weapon ? formatInt(weapon.baseAtk) : '—'}</b></span>
+            </div>
+            <ul>
+              {weapon?.substat && <li data-crit><span>{weapon.substat.stat}</span><b className="num">{formatDecimal(weapon.substat.value < 1 ? weapon.substat.value * 100 : weapon.substat.value, 1)}{weapon.substat.value < 1 ? '%' : ''}</b></li>}
+              <li><span>Nível</span><b className="num">90/90</b></li>
+              <li><span>Refino</span><b className="num">R{refine}</b></li>
+              <li><span>Tipo</span><b>{WEAPON_TYPE[weapon?.type ?? ''] ?? weapon?.type ?? ''}</b></li>
+            </ul>
+          </div>
         ) : (
           <button type="button" className="pc-weapon gear-tile" data-rarity={weapon?.rarity ?? 5} onClick={() => setPickWeapon(true)} aria-label={`Trocar a arma ${memberRef.weapon}`}>
             <span className="art info" role="button" tabIndex={0} aria-label={`Passiva e buff de ${memberRef.weapon}`} title="Ver a passiva e o buff da arma" onClick={openInfo} onKeyDown={onInfoKey}><Img src={weapon?.icon ? weaponIconUrl(weapon.icon) : undefined} fallback="⚔" /></span>

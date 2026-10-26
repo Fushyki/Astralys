@@ -355,7 +355,10 @@ function buildCharacters(): CharacterEffect[] {
       const node = b.kit ? { description: kitNode!.description, params: [] as number[] } : (isConst ? raw.constellations : raw.passives)?.[b.src];
       if (!node) throw new Error(`${name} ${b.id}: ${b.src} não existe`);
       let levelTable: number[] | undefined;
-      if (b.kit?.key) {
+      if (b.kit?.table) {
+        if (b.kit.table.length !== 15) throw new Error(`${name} ${b.id}: a tabela precisa de 15 níveis`);
+        levelTable = b.kit.table;
+      } else if (b.kit?.key) {
         const row = kitNode!.multipliers?.[b.kit.key];
         if (!row || row.length !== 15) throw new Error(`${name} ${b.id}: a linha "${b.kit.key}" não existe ou não tem 15 níveis`);
         levelTable = row.map(percentOf);

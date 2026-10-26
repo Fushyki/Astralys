@@ -12008,6 +12008,59 @@
         "note": "Moonsign Benediction: base das reações Lunares da equipe pelo stat, com teto (Genshin Optimizer soma as de vários membros)."
       },
       {
+        "id": "domain",
+        "label": "Columbina: Domínio Lunar",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "lunarcharged": 1,
+            "lunarbloom": 1,
+            "lunarcrystallize": 1
+          }
+        },
+        "level": {
+          "talent": "burst",
+          "table": [
+            0.13,
+            0.16,
+            0.19,
+            0.22,
+            0.25,
+            0.28,
+            0.31,
+            0.34,
+            0.37,
+            0.4,
+            0.43,
+            0.46,
+            0.49,
+            0.52,
+            0.55
+          ]
+        },
+        "flat": [],
+        "note": "DMG das reações Lunares da equipe pelo nível do Supremo (13% no nível 1 a 55% no 15; tabela do Genshin Optimizer, o Lunaris não traz o número) enquanto durar o Domínio Lunar (20 s): ligue nas janelas."
+      },
+      {
         "id": "c1",
         "label": "Columbina C1",
         "minConstellation": 1,

@@ -89,6 +89,18 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   const mainTexts = await page.$$eval('.ot-build .piece .mv b', (b) => b.map((x) => x.textContent.trim()));
   check('nenhum main stat aparece como 0,5% / 0,3%', !mainTexts.some((t) => /^0,[0-9]%$/.test(t)), mainTexts.slice(0, 6).join(' | '));
 
+  // ---- Artefatos bloqueados ----
+  await page.locator('.ot-build').first().locator('.piece').first().click();
+  check('clicar no artefato do resultado o tira da otimização (fica marcado)', (await page.locator('.ot-build .piece[data-blocked="true"]').count()) >= 1);
+  check('o filtro mostra "Habilitar artefatos bloqueados · 1"', /^Habilitar artefatos bloqueados · 1$/.test((await page.textContent('.ot-unblock')).trim()));
+  await page.click('.ot-bar-min .ot-go-btn');
+  await page.waitForSelector('.ot-build', { timeout: 120000 });
+  check('a busca seguinte não usa o artefato bloqueado (39 peças entram)', /39 peças/.test(await page.textContent('.ot-strip')), await page.textContent('.ot-strip'));
+  await page.click('.ot-unblock');
+  check('o diálogo lista o artefato bloqueado inteiro', (await page.locator('[role="dialog"][aria-label="Artefatos bloqueados"] .bk').count()) === 1);
+  await page.click('.ot-blocked .bk button:has-text("Habilitar")');
+  check('habilitar um a um desbloqueia e fecha quando não sobra nenhum', (await page.locator('.ot-blocked').count()) === 0 && (await page.locator('.ot-unblock').count()) === 0);
+
   // ---- Equipado inválido: mínimo que ele não atinge ----
   const addMin = async (key, value) => {
     await page.selectOption('select[aria-label="Stat do mínimo"]', key);

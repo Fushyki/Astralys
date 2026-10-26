@@ -200,3 +200,11 @@ export function buildFromGood(good: Good, characterName: string, game: Pick<Game
     refinement: gw?.refinement,
   };
 }
+
+
+/**
+ * Identifica um artefato do inventário (o GOOD não tem id): posição, set, main stat, nível e substats. Dois artefatos idênticos
+ * têm a mesma assinatura; o dono não entra (a peça continua a mesma ao mudar de personagem).
+ */
+export const artifactSig = (a: Pick<GoodArtifact, 'slotKey' | 'setKey' | 'mainStatKey' | 'level' | 'substats'>): string =>
+  `${a.slotKey}|${a.setKey}|${a.mainStatKey}|${a.level ?? 0}|${a.substats.map((s) => `${s.key}:${s.value}`).join(',')}`;

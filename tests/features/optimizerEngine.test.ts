@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { analyzeProject, resolveProject, type EffectsData, type GameData } from '../../src/engine';
-import { parseGood } from '../../src/features/good/goodImport';
+import { artifactSig, parseGood } from '../../src/features/good/goodImport';
 import { createEvaluator } from '../../src/features/optimizer/evaluator';
 import { DEFAULT_CONFIG, evaluateEquipped, filterInventory, runOptimizer, startOptimizer, type OptimizerConfig } from '../../src/features/optimizer/run';
 import { bruteForce, configOfPieces } from '../../src/features/optimizer/solver';
@@ -340,5 +340,22 @@ describe('responsividade do "Parar"', () => {
     }
     // sem a regra de tempo, iterações pesadas de poda passavam de 1 s sem ceder
     expect(worst).toBeLessThan(250);
+  });
+});
+
+describe('artefatos bloqueados', () => {
+  it('um artefato bloqueado sai da busca (e nenhum build o usa)', () => {
+    const good = inventory(4);
+    const target = good.artifacts.find((a) => a.slotKey === 'sands')!;
+    const sig = artifactSig(target);
+    const free = filterInventory(good, 'Mavuika', 'Pyro', { ...DEFAULT_CONFIG }, (k) => k);
+    const blocked = filterInventory(good, 'Mavuika', 'Pyro', { ...DEFAULT_CONFIG, blocked: [sig] }, (k) => k);
+    const same = good.artifacts.filter((a) => artifactSig(a) === sig).length;
+    expect(blocked.artifacts.length).toBe(free.artifacts.length - same);
+    expect(blocked.removed.blocked).toBe(same);
+    expect(blocked.artifacts.some((a) => artifactSig(a) === sig)).toBe(false);
+    const r = runOptimizer({ ...base, good, characterKey: 'Mavuika', config: { ...DEFAULT_CONFIG, topN: 3, blocked: [sig] } });
+    expect(r.builds.length).toBeGreaterThan(0);
+    for (const b of r.builds) expect(b.pieces.some((a) => artifactSig(a) === sig)).toBe(false);
   });
 });

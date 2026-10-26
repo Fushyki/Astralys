@@ -2,7 +2,7 @@
  * Otimizador de artefatos: filtros do inventário GOOD (como as configurações do Genshin Optimizer), solver exato e
  * relatório de cada build. Tudo puro (roda na thread principal ou no worker).
  */
-import { GoodSchema, loadoutFromPieces, norm, type Good, type GoodArtifact, type Loadout } from '../good/goodImport';
+import { GoodSchema, artifactSig, loadoutFromPieces, norm, type Good, type GoodArtifact, type Loadout } from '../good/goodImport';
 import type { Element } from '../../data/schema';
 import type { GameData } from '../../engine';
 import { createEvaluator, elementOf, type BuildReport, type Constraints, type EvaluatorInput, type Objective } from './evaluator';
@@ -27,6 +27,8 @@ export interface OptimizerConfig {
   fillerSets?: boolean;
   /** Peças que estão em outros personagens: 'none' (padrão), 'all' ou a lista das chaves dos personagens que "emprestam". */
   borrowFrom: 'none' | 'all' | string[];
+  /** Artefatos que o usuário tirou da otimização (assinaturas de `artifactSig`). */
+  blocked?: string[];
   /** Quantos builds devolver. */
   topN: number;
   /** Tolerância da busca (0 = exata). */
@@ -50,7 +52,7 @@ export interface FilteredInventory {
   artifacts: GoodArtifact[];
   slots: Piece[][];
   /** Quantas peças cada filtro tirou (para explicar ao usuário). */
-  removed: { level: number; main: number; set: number; equippedByOthers: number };
+  removed: { level: number; main: number; set: number; equippedByOthers: number; blocked: number };
   /** Peças que o personagem tem equipadas (cada posição), se tiver as 5. */
   equipped: GoodArtifact[] | null;
   /** Nomes dos sets que podem dar bônus (undefined = todos): restringe os padrões de set do solver. */
@@ -58,7 +60,8 @@ export interface FilteredInventory {
 }
 
 export function filterInventory(good: Good, characterKey: string, element: Element, config: OptimizerConfig, setName: (key: string) => string): FilteredInventory {
-  const removed = { level: 0, main: 0, set: 0, equippedByOthers: 0 };
+  const removed = { level: 0, main: 0, set: 0, equippedByOthers: 0, blocked: 0 };
+  const blocked = config.blocked?.length ? new Set(config.blocked) : undefined;
   const mine = norm(characterKey);
   const artifacts: GoodArtifact[] = [];
   const slots: Piece[][] = [[], [], [], [], []];
@@ -67,6 +70,7 @@ export function filterInventory(good: Good, characterKey: string, element: Eleme
 
   for (const a of good.artifacts) {
     if (a.rarity < 4) continue;
+    if (blocked && blocked.has(artifactSig(a))) { removed.blocked++; continue; }
     const level = pieceLevel(a);
     if (level < config.levelMin || level > config.levelMax) { removed.level++; continue; }
     const loc = norm(a.location);

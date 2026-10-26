@@ -1,6 +1,6 @@
 /** Card de um build do otimizador: posição, valor, comparação, sets, as 5 peças (com CV e dono) e os stats com a diferença contra o Build atual. */
 import { CharacterAvatar } from '../../design/primitives';
-import { norm, type GoodArtifact } from '../../features/good/goodImport';
+import { artifactSig, norm, type GoodArtifact } from '../../features/good/goodImport';
 import { MAIN_LABEL, SUB_LABEL, formatMain, formatSub } from '../../features/good/labels';
 import type { OptimizedBuild } from '../../features/optimizer/run';
 import { mainStatValue } from '../../engine/pieces';
@@ -19,7 +19,7 @@ export interface Owner { name: string; color: string; icon?: string }
 /** "Emblem of Severed Fate" → "Emblem"; "Silken Moon's Serenade" → "Silken Moon". */
 const shortSet = (name: string) => name.split(/ of |'s /i)[0];
 
-export const pieceSig = (a: GoodArtifact) => `${a.slotKey}|${a.setKey}|${a.mainStatKey}|${a.level ?? 0}|${a.substats.map((s) => `${s.key}:${s.value}`).join(',')}`;
+export const pieceSig = (a: GoodArtifact) => artifactSig(a);
 
 /** CV (Crit Value) da peça: 2 × Taxa Crítica + Dano Crítico das substats (o main stat não entra). */
 export const pieceCv = (a: Pick<GoodArtifact, 'substats'>): number => {
@@ -34,7 +34,7 @@ function Diff({ d, text }: { d: number; text: string }) {
 
 const signed = (d: number, digits: number, suffix = '') => `${d > 0 ? '+' : '−'}${digits === 0 ? formatInt(Math.abs(d)) : formatDecimal(Math.abs(d), digits)}${suffix}`;
 
-export function ResultCard({ rank, build, now, field, compare, currentSig, sets, caption, focusValue, onEquip, equipped, isCurrent, ownerOf }: {
+export function ResultCard({ rank, build, now, field, compare, currentSig, sets, caption, focusValue, onEquip, equipped, isCurrent, ownerOf, blocked, onBlock }: {
   rank: string;
   build: OptimizedBuild;
   /** O Build atual (base das diferenças); null se o personagem não tem peças. */
@@ -49,6 +49,9 @@ export function ResultCard({ rank, build, now, field, compare, currentSig, sets,
   equipped?: boolean;
   isCurrent?: boolean;
   ownerOf: (location: string) => Owner;
+  /** Artefatos bloqueados (fora da otimização) e como bloquear/desbloquear um clicando nele. */
+  blocked: Set<string>;
+  onBlock: (a: GoodArtifact) => void;
 }) {
   const r = build.report;
   const s = field ? r.fieldStats : r.stats;
@@ -102,7 +105,13 @@ export function ResultCard({ rank, build, now, field, compare, currentSig, sets,
           // O mini ícone é de quem está com a peça equipada, seja o personagem desta aba ou outro.
           const owner = a.location ? ownerOf(a.location) : null;
           return (
-            <div className="piece" key={sl.key} data-rarity={a.rarity} data-change={!kept} aria-label={`${sl.label}: ${name}`}>
+            <div
+              className="piece" key={sl.key} data-rarity={a.rarity} data-change={!kept} data-blocked={blocked.has(pieceSig(a)) ? true : undefined}
+              role="button" tabIndex={0} aria-pressed={blocked.has(pieceSig(a))}
+              aria-label={`${sl.label}: ${name}. ${blocked.has(pieceSig(a)) ? 'Bloqueado: fora da otimização. Clique para habilitar.' : 'Clique para tirar este artefato da otimização.'}`}
+              title={blocked.has(pieceSig(a)) ? 'Bloqueado: fora da otimização (clique para habilitar)' : 'Clique para tirar este artefato da otimização'}
+              onClick={() => onBlock(a)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onBlock(a); } }}
+            >
               <i className="bar" style={{ background: setColor(name) }} />
               <div className="phead">
                 <span className="slot">{sl.label}</span>
@@ -112,6 +121,7 @@ export function ResultCard({ rank, build, now, field, compare, currentSig, sets,
                 <span className="art" title={name}>
                   <ArtImg setId={set?.id} slot={a.slotKey} />
                   <b className="lv num">+{a.level ?? 0}</b>
+                  {blocked.has(pieceSig(a)) && <i className="lock" aria-hidden="true">🔒</i>}
                   {owner && <span className="owner" title={`equipada em ${owner.name}`} aria-label={`equipada em ${owner.name}`}><CharacterAvatar name={owner.name} icon={owner.icon} color={owner.color} size={26} /></span>}
                 </span>
                 <i className="stars" aria-label={`${a.rarity} estrelas`}>{'★'.repeat(a.rarity)}</i>

@@ -303,3 +303,20 @@ button.ot-ch[aria-pressed='true'] b { color: var(--gold-hi); }
 .ot-min-calc { font-size: var(--fs-1); color: var(--faint); }
 .ot-min-calc b { color: var(--text-2); }
 .ot-bar-min .ot-go-btn { margin-top: auto; align-self: stretch; min-height: var(--ctl-md); width: 100%; font-size: var(--fs-4); }
+
+/* Artefatos bloqueados: clicar na peça do resultado tira da otimização; o botão do filtro abre a lista para habilitar */
+.ot-build .piece[role='button'] { cursor: pointer; }
+.ot-build .piece[role='button']:hover { border-color: var(--gold); }
+.ot-build .piece[data-blocked='true'] { opacity: .45; filter: grayscale(.6); border-style: dashed; }
+.ot-build .piece .art .lock { position: absolute; right: 0; top: 0; font-style: normal; font-size: var(--fs-4); }
+.ot-unblock { margin-top: auto; min-height: var(--ctl-sm); border-radius: var(--r-ctl); border: 1px solid #6b5524; background: #2a2312; color: var(--gold-hi); font: 600 var(--fs-2) var(--font-display); letter-spacing: .06em; text-transform: uppercase; cursor: pointer; }
+.ot-blocked-grid { display: flex; flex-direction: column; gap: var(--sp-2); }
+.ot-blocked .bk { display: grid; grid-template-columns: var(--ico-4) minmax(0, 1fr) auto; gap: var(--sp-3); align-items: center; padding: var(--sp-2) var(--sp-3); border-radius: var(--r-inner); background: var(--item-bg-swap); border: 1px solid var(--item-border-swap); border-top: 2px solid var(--sc); }
+.ot-blocked .bk .art { position: relative; width: var(--ico-4); height: var(--ico-4); display: grid; place-items: center; }
+.ot-blocked .bk .art img { width: 100%; height: 100%; object-fit: contain; }
+.ot-blocked .bk .art .lv { position: absolute; top: 0; left: 0; font-size: 10px; font-weight: 700; background: var(--gold); color: var(--on-gold); border-radius: 4px; padding: 0 4px; }
+.ot-blocked .bk .t { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.ot-blocked .bk .t b { font-size: var(--fs-3); }
+.ot-blocked .bk .t b .num { color: var(--gold); margin-left: var(--sp-1); }
+.ot-blocked .bk .t small { font-size: var(--fs-1); color: var(--muted); overflow-wrap: anywhere; }
+.ot-blocked .bk .t .subs { color: var(--faint); }

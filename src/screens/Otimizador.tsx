@@ -8,7 +8,7 @@ import { useProjectView, type ProjectView } from '../app/ProjectContext';
 import { Panel, StarIcon } from '../design/primitives';
 import { DualRange, STAT_TAG } from '../design/filtros';
 import { pieceIconUrl } from '../design/images';
-import { norm, type Good, type GoodArtifact } from '../features/good/goodImport';
+import { artifactSig, norm, type Good, type GoodArtifact } from '../features/good/goodImport';
 import { loadGood } from '../features/good/goodStore';
 import { startOptimizerJob, type OptimizerJob, type OptimizerProgress } from '../features/optimizer/client';
 import type { Constraints, Objective } from '../features/optimizer/evaluator';
@@ -23,6 +23,7 @@ import { formatDecimal, formatInt } from '../ui/format';
 import './otimizador.css';
 import { Button, ButtonLink } from '../design/Button';
 import { CurrentBuild } from './otimizar/CurrentBuild';
+import { BlockedDialog } from './otimizar/BlockedDialog';
 import { ResultCard, pieceSig, type CardCompare, type Owner } from './otimizar/ResultCard';
 import { MIN_DEFS, activeMins, firstUnmet, formatMin, type MinKey } from './otimizar/minimos';
 import { FamilyBadge, damageColor } from '../design/damageFamily';
@@ -78,11 +79,13 @@ interface UiState {
   offSets: string[];
   /** Peças de sets desmarcados continuam entrando como peça extra, sem bônus. */
   fillerSets: boolean;
+  /** Artefatos tirados da otimização (assinaturas de `artifactSig`). */
+  blocked: string[];
 }
 
 const initial: UiState = {
   goal: 'dano', scope: 'team', moveId: '', reaction: 'none', crit: 'avg', buffId: '', stat: 'hp', mins: { er: '', cr: '', cd: '', em: '', hp: '', atk: '', def: '' },
-  levelMin: 0, levelMax: 20, topN: 5, borrow: false, offMains: { sands: [], goblet: [], circlet: [] }, offSets: [], fillerSets: true,
+  levelMin: 0, levelMax: 20, topN: 5, borrow: false, offMains: { sands: [], goblet: [], circlet: [] }, offSets: [], fillerSets: true, blocked: [],
 };
 
 /** Cada personagem de cada projeto guarda a própria configuração do otimizador (alvo, mínimos, filtros e sets). */
@@ -147,6 +150,7 @@ export function OtimizadorPanel({ index }: { index: number }) {
   const [equippedKey, setEquippedKey] = useState<string | null>(null);
   const [fieldMode, setFieldMode] = useState(false);
   const [stopping, setStopping] = useState(false);
+  const [showBlocked, setShowBlocked] = useState(false);
   const [showMore, setShowMore] = useState(false);
   const [minKey, setMinKey] = useState<MinKey>('er');
   const [minVal, setMinVal] = useState('');
@@ -215,7 +219,10 @@ export function OtimizadorPanel({ index }: { index: number }) {
 
   if (!ref) return null;
 
-  const inLevel = (a: GoodArtifact) => (a.level ?? 0) >= ui.levelMin && (a.level ?? 0) <= ui.levelMax;
+  const blockedSet = new Set(ui.blocked);
+  const inLevel = (a: GoodArtifact) => (a.level ?? 0) >= ui.levelMin && (a.level ?? 0) <= ui.levelMax && !blockedSet.has(artifactSig(a));
+  const blockedArtifacts = (good?.artifacts ?? []).filter((a, i, all) => blockedSet.has(artifactSig(a)) && all.findIndex((b) => artifactSig(b) === artifactSig(a)) === i);
+  const toggleBlock = (a: GoodArtifact) => { const sig = artifactSig(a); setUi({ ...ui, blocked: blockedSet.has(sig) ? ui.blocked.filter((x) => x !== sig) : [...ui.blocked, sig] }); };
   const allArt = good?.artifacts ?? [];
   const levelCount = allArt.filter(inLevel).length;
   const slotCount = (slot: string) => allArt.filter((a) => a.slotKey === slot && inLevel(a)).length;
@@ -267,6 +274,7 @@ export function OtimizadorPanel({ index }: { index: number }) {
       constraints: Object.fromEntries(Object.entries(constraints).filter(([, x]) => x !== undefined)) as Constraints,
       allowedSets: ui.offSets.length ? setInfo.map((s) => s.key).filter((k) => !ui.offSets.includes(k)) : undefined,
       fillerSets: ui.fillerSets,
+      blocked: ui.blocked,
       borrowFrom: ui.borrow ? 'all' : 'none',
     };
   };
@@ -423,6 +431,9 @@ export function OtimizadorPanel({ index }: { index: number }) {
                   </div>
                 );
               })}
+              {blockedArtifacts.length > 0 && (
+                <button type="button" className="ot-unblock" onClick={() => setShowBlocked(true)}>Habilitar artefatos bloqueados · {blockedArtifacts.length}</button>
+              )}
             </Panel>
 
             <Panel
@@ -620,6 +631,16 @@ export function OtimizadorPanel({ index }: { index: number }) {
             </div>
           </section>
 
+          {showBlocked && (
+            <BlockedDialog
+              artifacts={blockedArtifacts}
+              sets={data.game.artifacts}
+              onEnable={(sig) => { const next = ui.blocked.filter((x) => x !== sig); setUi({ ...ui, blocked: next }); if (next.length === 0) setShowBlocked(false); }}
+              onEnableAll={() => { setUi({ ...ui, blocked: [] }); setShowBlocked(false); }}
+              onClose={() => setShowBlocked(false)}
+            />
+          )}
+
           {result && (
             <>
               <section className="ot-results" aria-label="Builds encontrados">
@@ -639,6 +660,8 @@ export function OtimizadorPanel({ index }: { index: number }) {
                     onEquip={c.outside ? undefined : () => equip(c.build)}
                     equipped={equippedKey === c.build.key}
                     isCurrent={c.isCurrent}
+                    blocked={blockedSet}
+                    onBlock={toggleBlock}
                     ownerOf={ownerOf}
                   />
                 ))}

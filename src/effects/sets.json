@@ -485,6 +485,16 @@
       "er": 0,
       "hpPct": 0,
       "defPct": 0,
+      "resShred": {
+        "value": 0.4,
+        "elements": [
+          "Pyro",
+          "Hydro",
+          "Electro",
+          "Cryo"
+        ],
+        "ifInTeam": true
+      },
       "buffs": [],
       "flat": [],
       "reactionBonus": {
@@ -494,7 +504,7 @@
       "procs": []
     },
     "twoPieceBuffs": [],
-    "note": "+60% de Redemoinho e +20% de Redemoinho Estelar (também como ação na rotação). A redução de 40% da RES do elemento espalhado (e da Cryo no Redemoinho Estelar) NÃO entra: depende do elemento de cada Redemoinho e o motor só tem redução de RES sempre ativa.",
+    "note": "+60% de Redemoinho e +20% de Redemoinho Estelar (também como ação na rotação). Entra a redução de 40% da RES de cada elemento (Pyro, Hydro, Electro, Cryo) que existe no time, assumida sempre ativa; a RES Cryo do Redemoinho Estelar não é separada.",
     "partial": true,
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },

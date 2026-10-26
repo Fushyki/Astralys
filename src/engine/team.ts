@@ -289,7 +289,7 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
         if (br && br.value > 0 && br.elements.includes(el) && !off(`cbuff-res-${i}-${b.id}`)) shred += br.value;
       }
       const sr = fourPieceActive(m) ? m.primarySet?.effect?.fourPiece?.resShred : undefined;
-      if (sr && sr.value > 0 && sr.elements.includes(el) && !off(`set-res-shred-${i}`)) shred += sr.value;
+      if (sr && sr.value > 0 && sr.elements.includes(el) && (!sr.ifInTeam || members.some((x) => x.character.element === el)) && !off(`set-res-shred-${i}`)) shred += sr.value;
     });
     enemyRes[el] = config.enemyBaseRes - shred;
   }

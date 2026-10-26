@@ -201,13 +201,15 @@ export function TalentsPanel({ v, index }: { v: ProjectView; index: number }) {
       out.push({ title: 'Ataque normal', rows: rowsOf(by(['normal'])) }, { title: 'Ataque carregado', rows: rowsOf(by(['charged'])) }, { title: 'Ataque imersivo', rows: rowsOf(by(['plunge'])) });
     } else {
       const basics = by(['normal', 'charged', 'plunge']);
-      const rest = lines.filter((l) => !basics.includes(l));
+      const extras = lines.filter((l) => l.id.includes(':proc:'));
+      const rest = lines.filter((l) => !basics.includes(l) && !extras.includes(l));
       const form = talent === 'burst' ? BURST_FORMS[character.name] : undefined;
       const special = form ? rest.filter((l) => form.match.test(l.id)) : [];
       const main = rest.filter((l) => !special.includes(l));
       out.push({ title: form ? form.base : talent === 'skill' ? 'Habilidade' : 'Supremo', rows: rowsOf(main) });
       if (form && special.length) out.push({ title: form.title, rows: rowsOf(special) });
       if (basics.length) out.push({ title: 'Golpes de ataque normal neste modo', rows: rowsOf(basics) });
+      if (extras.length) out.push({ title: 'Golpes de passivas e constelações', rows: rowsOf(extras) });
     }
     return out.filter((g) => g.rows.length > 0);
   };

@@ -45,17 +45,17 @@ export function StatChip({ tag, n, on, color, label, onClick, className }: { tag
 }
 
 /** Slider duplo (mínimo e máximo no mesmo trilho). */
-export function DualRange({ min, max, low, high, onChange, label }: { min: number; max: number; low: number; high: number; onChange: (low: number, high: number) => void; label: string }) {
+export function DualRange({ min, max, low, high, onChange, label, prefix = '' }: { min: number; max: number; low: number; high: number; onChange: (low: number, high: number) => void; label: string; prefix?: string }) {
   const pct = (v: number) => ((v - min) / (max - min)) * 100;
   return (
     <div className="fx-range" style={{ ['--lo' as string]: `${pct(low)}%`, ['--hi' as string]: `${pct(high)}%` } as CSSProperties}>
-      <span className="num fx-end">{low}</span>
+      <span className="num fx-end">{prefix}{low}</span>
       <div className="fx-track">
         <i />
         <input type="range" min={min} max={max} step={1} value={low} aria-label={`${label}: mínimo`} onChange={(e) => onChange(Math.min(Number(e.target.value), high), high)} />
         <input type="range" min={min} max={max} step={1} value={high} aria-label={`${label}: máximo`} onChange={(e) => onChange(low, Math.max(Number(e.target.value), low))} />
       </div>
-      <span className="num fx-end">{high}</span>
+      <span className="num fx-end">{prefix}{high}</span>
     </div>
   );
 }

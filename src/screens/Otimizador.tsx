@@ -53,9 +53,8 @@ const STAT_LABEL: Record<StatKey, string> = { hp: 'HP máximo', atk: 'ATK', def:
 const FROM_LABEL: Record<string, string> = { atk: 'o ATK', baseAtk: 'o ATK base', hp: 'o HP', def: 'a DEF', em: 'a Maestria', er: 'a Recarga' };
 const CRIT_LABEL: Record<Crit, string> = { avg: 'Média com crítico', crit: 'Sempre crítico', noCrit: 'Sem crítico' };
 const CRIT_SHORT: Record<Crit, string> = { avg: 'Média', crit: 'Sempre', noCrit: 'Nunca' };
-/** Quantos main stats e sets aparecem antes do botão "Mostrar todos". */
-const MAINS_SHOWN = 12;
-const SETS_SHOWN = 18;
+/** A grade de sets mostra o que cabe em 3 linhas; o botão "Mostrar todos" só existe se houver mais. */
+const SETS_ROWS = 3;
 /** Glifo da posição quando falta a imagem da peça. */
 const SLOT_GLYPH: Record<string, string> = { flower: '✿', plume: '✒', sands: '⌛', goblet: '♕', circlet: '♛' };
 const TALENT_LABEL = { normal: 'Ataque normal', skill: 'Habilidade', burst: 'Supremo' } as const;
@@ -150,7 +149,8 @@ export function OtimizadorPanel({ index }: { index: number }) {
   const [fieldMode, setFieldMode] = useState(false);
   const [showAllSets, setShowAllSets] = useState(false);
   const [pickingMove, setPickingMove] = useState(false);
-  const [showAllMains, setShowAllMains] = useState<Record<'sands' | 'goblet' | 'circlet', boolean>>({ sands: false, goblet: false, circlet: false });
+  const setsGrid = useRef<HTMLDivElement>(null);
+  const [setCols, setSetCols] = useState(6);
   const job = useRef<OptimizerJob | null>(null);
 
   useEffect(() => {
@@ -173,6 +173,16 @@ export function OtimizadorPanel({ index }: { index: number }) {
     window.addEventListener('focus', refresh);
     return () => window.removeEventListener('focus', refresh);
   }, []);
+
+  useEffect(() => {
+    const el = setsGrid.current;
+    if (!el) return;
+    const measure = () => setSetCols(Math.max(1, Math.floor((el.clientWidth + 8) / (56 + 8))));
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [good]);
 
   const characterKey = useMemo(() => good?.characters.find((c) => norm(c.key) === norm(ref?.character ?? ''))?.key ?? ref?.character ?? '', [good, ref]);
   const setInfo = useMemo(() => {
@@ -202,7 +212,9 @@ export function OtimizadorPanel({ index }: { index: number }) {
   const othersCount = allArt.filter((a) => a.location && norm(a.location) !== mineKey).length;
   const setsOn = setInfo.filter((s) => !ui.offSets.includes(s.key)).length;
   const pickedSets = ui.offSets.length ? setInfo.filter((s) => !ui.offSets.includes(s.key)) : [];
-  const visibleSets = showAllSets ? setInfo : setInfo.filter((s, i) => i < SETS_SHOWN || pickedSets.includes(s));
+  const setLimit = setCols * SETS_ROWS;
+  const overflow = setInfo.length > setLimit;
+  const visibleSets = showAllSets || !overflow ? setInfo : setInfo.filter((s, i) => i < setLimit || pickedSets.includes(s));
 
   const moves = data.game.moves.filter((m) => m.character === ref.character);
   const moveChosen = moves.find((m) => m.id === ui.moveId) ?? moves.find((m) => m.talent === 'burst') ?? moves[0];
@@ -327,36 +339,29 @@ export function OtimizadorPanel({ index }: { index: number }) {
             <CurrentBuild build={current} field={fieldMode} onField={() => setFieldMode(!fieldMode)} sets={data.game.artifacts} />
 
             <Panel bar title="Filtro de artefatos" badge={<span className="dz-badge num">{levelCount}/{allArt.length}</span>}>
-              <div className="ot-sec">
+              <div className="ot-level">
                 <span className="lb">Nível</span>
-                <DualRange min={0} max={20} low={ui.levelMin} high={ui.levelMax} label="Nível" onChange={(lo, hi) => setUi({ ...ui, levelMin: lo, levelMax: hi })} />
+                <DualRange min={0} max={20} low={ui.levelMin} high={ui.levelMax} prefix="+" label="Nível" onChange={(lo, hi) => setUi({ ...ui, levelMin: lo, levelMax: hi })} />
               </div>
-              <div className="ot-sec">
-                <span className="lb">Peças disponíveis</span>
-                <div className="fx-grid">
-                  {SLOTS.map((sl) => <StatChip key={sl.key} tag={sl.label} n={slotCount(sl.key)} on={slotCount(sl.key) > 0} label={`${sl.label}: ${slotCount(sl.key)} de ${slotTotal(sl.key)} no filtro de nível`} />)}
-                </div>
+              <div className="ot-pieces">
+                <span className="lb">Peças</span>
+                {SLOTS.map((sl) => <span key={sl.key} className="ot-ch" title={`${sl.label}: ${slotCount(sl.key)} de ${slotTotal(sl.key)} no filtro de nível`}>{sl.label} <b className="num">{slotCount(sl.key)}</b></span>)}
               </div>
               {(['sands', 'goblet', 'circlet'] as const).map((slot) => {
                 const mains = mainsOf(slot);
                 const on = mains.filter(([k]) => !ui.offMains[slot].includes(k)).length;
-                const shown = showAllMains[slot] ? mains : mains.slice(0, MAINS_SHOWN);
                 return (
-                  <div className="ot-sec ruled" key={slot} data-slot={slot}>
-                    <div className="ot-sec-head">
+                  <div className="ot-grp" key={slot} data-slot={slot}>
+                    <div className="ot-grp-head">
                       <span className="lb">{SLOTS.find((x) => x.key === slot)!.label} · <span className="num">{on}/{mains.length}</span></span>
-                      <span className="ot-sec-acts">
-                        {mains.length > MAINS_SHOWN && (
-                          <Button variant="ghost" size="sm" onClick={() => setShowAllMains({ ...showAllMains, [slot]: !showAllMains[slot] })}>{showAllMains[slot] ? 'Menos' : `Mostrar todos (${mains.length})`}</Button>
-                        )}
-                        <Button variant="ghost" size="sm" onClick={() => setUi({ ...ui, offMains: { ...ui.offMains, [slot]: [] } })} disabled={on === mains.length}>Todos</Button>
-                        <Button variant="ghost" size="sm" onClick={() => setUi({ ...ui, offMains: { ...ui.offMains, [slot]: mains.map(([k]) => k) } })} disabled={on === 0}>Nenhum</Button>
-                      </span>
+                      <button type="button" className="ot-ghost" onClick={() => setUi({ ...ui, offMains: { ...ui.offMains, [slot]: [] } })}>Todos</button>
+                      <button type="button" className="ot-ghost" onClick={() => setUi({ ...ui, offMains: { ...ui.offMains, [slot]: mains.map(([k]) => k) } })}>Nenhum</button>
                     </div>
-                    <div className="fx-grid">
-                      {shown.map(([k, n]) => (
-                        <StatChip key={k} tag={STAT_TAG[k] ?? k} n={n} on={!ui.offMains[slot].includes(k)} color={STAT_COLOR[k]} label={`${MAIN_LABEL[k] ?? k}: ${n} peças`} className="ot-chip-main"
-                          onClick={() => setUi({ ...ui, offMains: { ...ui.offMains, [slot]: toggle(ui.offMains[slot], k) } })} />
+                    <div className="ot-chips">
+                      {mains.map(([k, n]) => (
+                        <button key={k} type="button" className="ot-ch" aria-pressed={!ui.offMains[slot].includes(k)} title={`${MAIN_LABEL[k] ?? k}: ${n} peças`} onClick={() => setUi({ ...ui, offMains: { ...ui.offMains, [slot]: toggle(ui.offMains[slot], k) } })}>
+                          {STAT_TAG[k] ?? k} <b className="num">{n}</b>
+                        </button>
                       ))}
                     </div>
                   </div>
@@ -366,36 +371,12 @@ export function OtimizadorPanel({ index }: { index: number }) {
 
             <Panel
               bar
-              className="ot-sets-panel"
               title="Sets"
               badge={<span className={`dz-badge num${ui.offSets.length ? ' gold' : ''}`}>{setsOn}/{setInfo.length}</span>}
-              aside={<Button variant="ghost" size="sm" onClick={() => setUi({ ...ui, offSets: ui.offSets.length ? [] : setInfo.map((x) => x.key) })}>{ui.offSets.length ? 'Marcar todos' : 'Nenhum'}</Button>}
-              foot={
-                <div className="ot-switches">
-                  <button type="button" className="ot-switch" aria-pressed={ui.fillerSets} title="Ligado: só os sets marcados dão bônus, mas as outras peças podem completar o build (ex.: 4 peças de um set e a quinta de outro). Desligado: só entram peças dos sets marcados." onClick={() => setUi({ ...ui, fillerSets: !ui.fillerSets })}>
-                    <span className="box" aria-hidden="true">✓</span><span className="t">Aceitar peças de outros sets, sem bônus</span>
-                  </button>
-                  <button type="button" className="ot-switch" aria-pressed={ui.borrow} onClick={() => setUi({ ...ui, borrow: !ui.borrow })}>
-                    <span className="box" aria-hidden="true">✓</span><span className="t">Usar artefatos de outros personagens</span>
-                    <span className="dz-badge num">{ui.borrow ? othersCount : 0}/{othersCount}</span>
-                  </button>
-                </div>
-              }
+              aside={<button type="button" className="ot-ghost" onClick={() => setUi({ ...ui, offSets: ui.offSets.length ? [] : setInfo.map((x) => x.key) })}>Nenhum</button>}
             >
-              {pickedSets.length > 0 ? (
-                <div className="ot-picked">
-                  {pickedSets.slice(0, 3).map((x) => (
-                    <div className="ot-pick" key={x.key}>
-                      <span className="ico"><Img src={x.id ? pieceIconUrl(x.id, 'flower') : undefined} fallback="◆" /></span>
-                      <span className="t"><b>{x.name}</b><small className="num">{x.count} peças · dá bônus de set</small></span>
-                    </div>
-                  ))}
-                  {pickedSets.length > 3 && <span className="ot-more num">+{pickedSets.length - 3} sets marcados</span>}
-                </div>
-              ) : (
-                <p className="ot-tip">Todos os sets podem dar bônus de 2 ou 4 peças. Marque só os que quer: as outras peças completam o build sem bônus.</p>
-              )}
-              <div className="ot-sets">
+              <span className="ot-hint">Marque só os sets que podem dar bônus de 2 ou 4 peças.</span>
+              <div className="ot-sets" ref={setsGrid}>
                 {visibleSets.map((x) => (
                   <button key={x.key} type="button" className="ot-set" aria-pressed={!ui.offSets.includes(x.key)} onClick={() => setUi({ ...ui, offSets: toggle(ui.offSets, x.key) })} title={`${x.name}: ${x.count} peças`} aria-label={`${x.name}: ${x.count} peças`}>
                     <Img src={x.id ? pieceIconUrl(x.id, 'flower') : undefined} fallback="◆" />
@@ -403,9 +384,18 @@ export function OtimizadorPanel({ index }: { index: number }) {
                   </button>
                 ))}
               </div>
-              {setInfo.length > SETS_SHOWN && (
-                <Button variant="ghost" size="sm" className="ot-showall" onClick={() => setShowAllSets(!showAllSets)}>{showAllSets ? 'Mostrar menos' : `Mostrar todos (${setInfo.length})`}</Button>
+              {overflow && (
+                <button type="button" className="ot-ghost wide" onClick={() => setShowAllSets(!showAllSets)}>{showAllSets ? 'Mostrar menos' : `Mostrar todos · ${setInfo.length}`}</button>
               )}
+              <div className="ot-switches">
+                <button type="button" className="ot-switch" aria-pressed={ui.fillerSets} onClick={() => setUi({ ...ui, fillerSets: !ui.fillerSets })}>
+                  <span className="box" aria-hidden="true">✓</span><span className="t">Aceitar peças de outros sets, sem bônus</span>
+                </button>
+                <button type="button" className="ot-switch" aria-pressed={ui.borrow} onClick={() => setUi({ ...ui, borrow: !ui.borrow })}>
+                  <span className="box" aria-hidden="true">✓</span><span className="t">Usar artefatos de outros personagens</span>
+                  <span className="dz-badge num">{ui.borrow ? othersCount : 0}/{othersCount}</span>
+                </button>
+              </div>
             </Panel>
           </div>
 

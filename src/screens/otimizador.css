@@ -202,3 +202,25 @@
 .ot-cur-stats dd[data-gold='true'] { color: var(--gold); }
 .ot-field-btn { margin-top: auto; align-self: stretch; min-height: 36px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; border-radius: var(--r-ctl); border: 1px solid var(--border-ctl-hi); background: var(--surface-2); color: var(--text); font: 600 var(--fs-2) var(--font-display); letter-spacing: .08em; text-transform: uppercase; cursor: pointer; }
 .ot-field-btn[aria-pressed='true'] { background: var(--gold); border-color: var(--gold); color: var(--on-gold); }
+
+/* Painéis Filtro de artefatos e Sets */
+.ot-level { display: flex; align-items: center; gap: 10px; }
+.ot-level .fx-range { flex: 1; min-width: 0; }
+.ot-lb, .ot-level .lb, .ot-pieces .lb, .ot-grp-head .lb { font: 600 var(--fs-1) var(--font-display); letter-spacing: .1em; text-transform: uppercase; color: var(--faint); white-space: nowrap; }
+.ot-pieces { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-1); }
+.ot-pieces .lb { margin-right: var(--sp-1); }
+.ot-ch { display: inline-flex; align-items: center; gap: 6px; font-size: var(--fs-1); border-radius: var(--r-chip); padding: 3px var(--sp-2); border: 1px solid var(--border); background: var(--bg-header); color: var(--muted); cursor: default; font-family: var(--font-body); }
+.ot-ch b { font-weight: 600; color: var(--text-2); }
+button.ot-ch { cursor: pointer; }
+button.ot-ch[aria-pressed='true'] { border-color: var(--gold); background: #2a2312; color: var(--gold); }
+button.ot-ch[aria-pressed='true'] b { color: var(--gold-hi); }
+.ot-grp { display: flex; flex-direction: column; gap: 6px; padding-top: 10px; border-top: 1px solid var(--divider); }
+.ot-grp-head { display: flex; align-items: center; gap: 6px; }
+.ot-grp-head .lb { flex: 1; }
+.ot-chips { display: flex; flex-wrap: wrap; gap: var(--sp-1); }
+.ot-ghost { min-height: 26px; padding: 0 var(--sp-2); border-radius: var(--r-ctl); border: 1px solid transparent; background: transparent; color: var(--text); font: 600 var(--fs-1) var(--font-display); letter-spacing: .08em; text-transform: uppercase; cursor: pointer; }
+.ot-ghost:hover { border-color: var(--border-ctl-hi); }
+.ot-ghost.wide { align-self: flex-start; min-height: var(--ctl-sm); font-size: var(--fs-2); }
+.ot-hint { font-size: var(--fs-1); color: var(--faint); line-height: 1.4; }
+.ot-sets-panel .bar-body, .ot-top .dz-panel .bar-body { gap: var(--sp-3); }
+.ot-top .ot-switches { margin-top: auto; }

@@ -1,10 +1,11 @@
-/** Card de um build do otimizador: posição, valor, comparação, sets, as 5 peças e os stats com a diferença contra o Build atual. */
+/** Card de um build do otimizador: posição, valor, comparação, sets, as 5 peças (com CV e dono) e os stats com a diferença contra o Build atual. */
+import { pieceIconUrl, type PieceKey } from '../../design/images';
 import { norm, type GoodArtifact } from '../../features/good/goodImport';
 import { MAIN_LABEL, SUB_LABEL, formatMain, formatSub } from '../../features/good/labels';
 import type { OptimizedBuild } from '../../features/optimizer/run';
 import { mainStatValue } from '../../engine/pieces';
 import { formatDecimal, formatInt } from '../../ui/format';
-import { ArtImg, SLOTS, fmtInt, fmtPct } from './shared';
+import { ArtImg, SLOTS, fmtInt, fmtPct, setColor } from './shared';
 
 export interface CardCompare {
   /** Texto e tom do chip de comparação do cabeçalho. */
@@ -12,7 +13,19 @@ export interface CardCompare {
   tone: 'good' | 'bad';
 }
 
+/** Quem é o dono de uma peça equipada em outro personagem: nome, inicial e cor (a do time, se ele for do time). */
+export interface Owner { name: string; color: string }
+
+/** "Emblem of Severed Fate" → "Emblem"; "Silken Moon's Serenade" → "Silken Moon". */
+const shortSet = (name: string) => name.split(/ of |'s /i)[0];
+
 export const pieceSig = (a: GoodArtifact) => `${a.slotKey}|${a.setKey}|${a.mainStatKey}|${a.level ?? 0}|${a.substats.map((s) => `${s.key}:${s.value}`).join(',')}`;
+
+/** CV (Crit Value) da peça: 2 × Taxa Crítica + Dano Crítico das substats (o main stat não entra). */
+export const pieceCv = (a: Pick<GoodArtifact, 'substats'>): number => {
+  const sum = (key: string) => a.substats.filter((s) => s.key === key).reduce((n, s) => n + s.value, 0);
+  return 2 * sum('critRate_') + sum('critDMG_');
+};
 
 function Diff({ d, text }: { d: number; text: string }) {
   if (!Number.isFinite(d) || Math.abs(d) < 1e-9) return null;
@@ -21,7 +34,7 @@ function Diff({ d, text }: { d: number; text: string }) {
 
 const signed = (d: number, digits: number, suffix = '') => `${d > 0 ? '+' : '−'}${digits === 0 ? formatInt(Math.abs(d)) : formatDecimal(Math.abs(d), digits)}${suffix}`;
 
-export function ResultCard({ rank, build, now, field, compare, currentSig, sets, caption, focusValue, onEquip, equipped, isCurrent }: {
+export function ResultCard({ rank, build, now, field, compare, currentSig, sets, caption, focusValue, onEquip, equipped, isCurrent, mine, ownerOf }: {
   rank: string;
   build: OptimizedBuild;
   /** O Build atual (base das diferenças); null se o personagem não tem peças. */
@@ -35,12 +48,22 @@ export function ResultCard({ rank, build, now, field, compare, currentSig, sets,
   onEquip?: () => void;
   equipped?: boolean;
   isCurrent?: boolean;
+  /** Chave (normalizada) do personagem desta aba: peça dele não mostra dono. */
+  mine: string;
+  ownerOf: (location: string) => Owner;
 }) {
   const r = build.report;
   const s = field ? r.fieldStats : r.stats;
   const p = now ? (field ? now.report.fieldStats : now.report.stats) : undefined;
   const setOf = (key: string) => sets.find((x) => norm(x.name) === norm(key));
   const bySlot = new Map(build.pieces.map((a) => [a.slotKey, a]));
+  const counts = new Map<string, number>();
+  for (const a of build.pieces) {
+    const name = setOf(a.setKey)?.name ?? a.setKey;
+    counts.set(name, (counts.get(name) ?? 0) + 1);
+  }
+  const chips = [...counts.entries()].filter(([, n]) => n >= 2).sort((a, b) => b[1] - a[1]);
+  const swaps = isCurrent ? 0 : build.pieces.filter((a) => !currentSig.has(pieceSig(a))).length;
 
   const rows: { k: string; v: string; d?: React.ReactNode }[] = [
     { k: 'ATK', v: fmtInt(s.atk), d: p && <Diff d={s.atk - p.atk} text={signed(s.atk - p.atk, 0)} /> },
@@ -59,10 +82,14 @@ export function ResultCard({ rank, build, now, field, compare, currentSig, sets,
         <span className="rank">{rank}</span>
         <div className="val">
           <b className="num">{focusValue(r)}</b>
-          <small>{caption} · {build.setLabel}</small>
+          <small>{caption}</small>
         </div>
         {isCurrent && <span className="cur">equipado hoje</span>}
         {compare && <span className="cmp num" data-tone={compare.tone}>{compare.text}</span>}
+        <span className="sets">
+          {chips.map(([name, n]) => <span key={name}><i style={{ background: setColor(name) }} />{shortSet(name)} {n}</span>)}
+          {swaps > 0 && <span className="swaps">{swaps} {swaps === 1 ? 'troca' : 'trocas'}</span>}
+        </span>
         {onEquip && <button type="button" className="dz-btn gold equip" onClick={onEquip} disabled={equipped}>{equipped ? 'Equipado' : 'Equipar'}</button>}
       </header>
       <div className="pieces">
@@ -70,25 +97,43 @@ export function ResultCard({ rank, build, now, field, compare, currentSig, sets,
           const a = bySlot.get(sl.key);
           if (!a) return <div className="piece" key={sl.key} data-change="false" />;
           const set = setOf(a.setKey);
+          const name = set?.name ?? a.setKey;
           const key = a.slotKey === 'flower' ? 'hp' : a.slotKey === 'plume' ? 'atk' : a.mainStatKey;
           const kept = currentSig.has(pieceSig(a));
+          const cv = pieceCv(a);
+          const other = !!a.location && norm(a.location) !== mine;
+          const owner = other ? ownerOf(a.location) : null;
           return (
-            <div className="piece" key={sl.key} data-rarity={a.rarity} data-change={!kept} aria-label={`${sl.label}: ${set?.name ?? a.setKey}`}>
-              <span className="top">
+            <div className="piece" key={sl.key} data-rarity={a.rarity} data-change={!kept} aria-label={`${sl.label}: ${name}`}>
+              <i className="bar" style={{ background: setColor(name) }} />
+              <div className="phead">
                 <span className="slot">{sl.label}</span>
                 <em>{kept ? 'equipada' : 'troca'}</em>
-              </span>
-              <span className="art" title={set?.name ?? a.setKey}>
-                <ArtImg setId={set?.id} slot={a.slotKey} />
-                <b className="lv num">+{a.level ?? 0}</b>
-              </span>
-              <span className="main">{MAIN_LABEL[key] ?? key} <b className="num">{formatMain(key, mainStatValue(key, a.rarity, a.level))}</b></span>
+              </div>
+              <div className="pic">
+                <span className="art" title={name}>
+                  <ArtImg setId={set?.id} slot={a.slotKey} />
+                  <b className="lv num">+{a.level ?? 0}</b>
+                  <i className="seticon" style={{ background: setColor(name) }} title={name}>
+                    {set && <img src={pieceIconUrl(set.id, 'flower' as PieceKey)} alt="" loading="lazy" crossOrigin="anonymous" onError={(e) => { e.currentTarget.style.display = 'none'; }} />}
+                  </i>
+                  {owner && <i className="owner" style={{ background: owner.color }} title={`de ${owner.name}`} aria-label={`de ${owner.name}`}>{owner.name[0]}</i>}
+                </span>
+                <i className="stars" aria-label={`${a.rarity} estrelas`}>{'★'.repeat(a.rarity)}</i>
+              </div>
+              <div className="main">
+                <small>{MAIN_LABEL[key] ?? key}</small>
+                <span className="mv">
+                  <b className="num">{formatMain(key, mainStatValue(key, a.rarity, a.level))}</b>
+                  <span className="cv num" data-hi={cv >= 30}>CV {formatDecimal(cv, 1)}</span>
+                </span>
+              </div>
               <ul>
-                {a.substats.map((x) => (
+                {a.substats.slice(0, 4).map((x) => (
                   <li key={x.key} data-crit={x.key === 'critRate_' || x.key === 'critDMG_'}><span>{SUB_LABEL[x.key] ?? x.key}</span><b className="num">{formatSub(x.key, x.value)}</b></li>
                 ))}
               </ul>
-              {a.location && <span className="loc">de {a.location}</span>}
+              {!a.location && <span className="foot">no inventário</span>}
             </div>
           );
         })}

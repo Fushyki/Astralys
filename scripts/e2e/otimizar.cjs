@@ -38,6 +38,8 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
 
   // ---- Coluna do personagem (um painel) e Build atual ----
   check('a coluna do personagem é um painel só, com a arma no rodapé', (await page.locator('.pc-aside > .oa').count()) === 1 && (await page.locator('.oa .oa-weapon').count()) === 1);
+  const wb = await page.$eval('.oa-weapon .art', (e) => [Math.round(e.getBoundingClientRect().width), Math.round(e.getBoundingClientRect().height)]);
+  check('o card da arma é um botão com ícone de 76 px e aria-label "Trocar arma (atual: …)"', wb[0] === 76 && wb[1] === 76 && /^Trocar arma \(atual: .+\)$/.test(await page.getAttribute('.oa-weapon', 'aria-label')), wb.join('x'));
   check('a arma abre o popup de trocar arma', await (async () => { await page.click('.oa-weapon'); const ok = (await page.locator('[role="dialog"][aria-label="Trocar arma"]').count()) === 1; await page.keyboard.press('Escape'); await page.waitForTimeout(150); return ok; })());
   check('Build atual: selo 5/5 peças e 5 linhas', /5\/5 peças/.test(await page.textContent('.ot-top > .dz-panel:first-child .bar-head')) && (await page.locator('.ot-top .ot-cur li').count()) === 5);
   const mains = await page.$$eval('.ot-top .ot-cur li .v', (b) => b.map((x) => x.textContent.trim()));
@@ -58,36 +60,41 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
 
   // ---- Barra ----
   check('não existe o botão "Buffs do time que entram na busca"', (await page.locator('text=/buffs do time que entram/i').count()) === 0);
-  const barH = await page.$eval('.ot-bar-row', (e) => Math.round(e.getBoundingClientRect().height));
-  check('a barra de otimização tem 1 linha de controles em 1600 px', barH < 70, `${barH}px`);
-  check('os mínimos são chips (sem campos fixos)', (await page.locator('.ot-bar input[aria-label$="mínima"]').count()) === 0 && (await page.locator('.ot-minadd button').count()) === 1);
+  const cols = await page.$$eval('.ot-bar-grid > *', (c) => c.map((x) => Math.round(x.getBoundingClientRect().width)));
+  check('o painel de otimização tem 2 colunas 66% | 33%', cols.length === 2 && Math.abs(cols[0] / cols[1] - 2) < 0.1, cols.join('/'));
+  const lines = await page.$$eval('.ot-bar-cfg .ot-bar-line', (l) => l.length);
+  check('a configuração tem 2 linhas (Otimizar/Alvo/Mostrar e Golpe/Reação/Crítico)', lines === 2);
+  check('o Golpe fica desativado, sem sumir, fora do alvo "Um golpe"', await page.locator('.ot-movebtn').isDisabled());
+  check('os mínimos são chips (sem campos fixos)', (await page.locator('.ot-bar input[aria-label$="mínima"]').count()) === 0 && (await page.locator('.ot-min-add .dz-btn').count()) === 1);
   check('com o equipado válido a faixa diz "Equipado hoje {valor}"', /^Equipado hoje\s*[\d.]+$/.test((await page.textContent('.ot-eq')).trim()), await page.textContent('.ot-eq'));
 
   // ---- Busca com equipado válido ----
-  await page.click('.ot-bar-row > .dz-btn.gold');
+  await page.click('.ot-go-btn');
   await page.waitForSelector('.ot-build', { timeout: 120000 });
   const cards = await page.locator('.ot-build').count();
   check('a lista mostra 2 builds e o botão "Mostrar mais · N builds"', cards === 2 && /^Mostrar mais · \d+ builds$/.test((await page.textContent('.ot-more-btn')).trim()), `${cards} cards`);
   await page.click('.ot-more-btn');
   check('"Mostrar mais" mostra os outros na mesma grade de 2 colunas', (await page.locator('.ot-build').count()) > 2);
-  check('as peças mostram "troca" ou "equipada"', (await page.locator('.ot-build .piece .top em').count()) >= 10);
+  check('as peças mostram "troca" ou "equipada"', (await page.locator('.ot-build .piece .phead em').count()) >= 10);
   const cmp = await page.$$eval('.ot-build .cmp', (c) => c.map((x) => x.textContent.trim()));
   check('com o equipado válido a comparação é contra o equipado', cmp.length > 0 && cmp.every((t) => /contra o equipado/.test(t)), cmp.join(' | '));
-  const mainTexts = await page.$$eval('.ot-build .piece .main b', (b) => b.map((x) => x.textContent.trim()));
+  check('cada peça tem a faixa na cor do set e o selo CV com 1 casa', (await page.locator('.ot-build .piece .bar').count()) >= 10 && (await page.$$eval('.ot-build .piece .cv', (c) => c.every((x) => /^CV \d+,\d$/.test(x.textContent.trim())))));
+  check('o cabeçalho mostra "{n} trocas" e os sets, sem chip roxo', (await page.locator('.ot-build .sets .swaps').count()) >= 1 && /^\d+ trocas?$/.test((await page.textContent('.ot-build .sets .swaps')).trim()) && (await page.locator('.ot-build .borrow').count()) === 0);
+  check('a peça sem dono diz "no inventário"', (await page.locator('.ot-build .piece .foot').count()) >= 1 && /no inventário/.test(await page.textContent('.ot-build .piece .foot')));
+  const mainTexts = await page.$$eval('.ot-build .piece .mv b', (b) => b.map((x) => x.textContent.trim()));
   check('nenhum main stat aparece como 0,5% / 0,3%', !mainTexts.some((t) => /^0,[0-9]%$/.test(t)), mainTexts.slice(0, 6).join(' | '));
 
   // ---- Equipado inválido: mínimo que ele não atinge ----
   const addMin = async (key, value) => {
-    await page.click('.ot-minadd button');
     await page.selectOption('select[aria-label="Stat do mínimo"]', key);
     await page.fill('input[aria-label="Valor do mínimo"]', value);
-    await page.click('.ot-pop button:has-text("Adicionar")');
+    await page.click('.ot-min-add .dz-btn');
   };
   await addMin('cr', '99');
   check('o mínimo vira um chip dourado removível', (await page.locator('.ot-minchip:has(button[aria-label="Remover mínimo de Taxa crítica"])').count()) === 1);
   const bad = (await page.textContent('.ot-eq.bad')).trim();
   check('equipado que não atinge o mínimo: chip vermelho com o valor que tem', /^Equipado hoje não atinge Taxa crítica ≥ 99,0% \(tem \d+,\d%\)$/.test(bad), bad);
-  await page.click('.ot-bar-row > .dz-btn.gold');
+  await page.click('.ot-go-btn');
   await page.waitForSelector('.ot-build', { timeout: 120000 });
   const body = await page.textContent('.ot-results');
   check('sem "−∞" nem "−100%" nos cards', !/∞|−100,00%/.test(body));
@@ -106,11 +113,38 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
     await page.screenshot({ path: path.join(OUT, `otimizar-${w}.png`), fullPage: true });
   }
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.waitForTimeout(300);
-  check('390px: sem rolagem horizontal', await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1));
+  await page.waitForTimeout(800);
+  const w390 = await page.evaluate(() => [document.documentElement.scrollWidth, window.innerWidth, [...document.querySelectorAll('body *')].filter((e) => e.getBoundingClientRect().right > window.innerWidth + 1).slice(0, 4).map((e) => e.tagName + '.' + e.className + '<' + (e.parentElement ? e.parentElement.className : '') + '>' + e.textContent.slice(0, 24) + ':' + Math.round(e.getBoundingClientRect().right))]);
+  check('390px: sem rolagem horizontal', w390[0] <= w390[1] + 1, JSON.stringify(w390));
   await page.screenshot({ path: path.join(OUT, 'otimizar-390.png'), fullPage: true });
 
   check('sem erros no console', problems.length === 0, problems.slice(0, 3).join(' | '));
+
+  // ---- Sets: só linhas inteiras e "Mostrar todos · mais N sets" só com sets escondidos ----
+  await page.setViewportSize({ width: 1600, height: 1000 });
+  const data = JSON.parse(fs.readFileSync(path.join(__dirname, '..', '..', 'src', 'data', 'generated', 'artifacts.json'), 'utf8'));
+  const keys = data.filter((a) => a.rarity >= 4).slice(0, 40).map((a) => a.name.replace(/[^A-Za-z0-9 ]/g, ' ').split(/\s+/).filter(Boolean).map((w) => w[0].toUpperCase() + w.slice(1)).join(''));
+  const many = JSON.parse(fs.readFileSync(FIXTURE, 'utf8'));
+  many.artifacts.forEach((a, i) => { a.setKey = keys[i % keys.length]; });
+  await page.goto(`${BASE}/inventario`, { waitUntil: 'networkidle' });
+  await page.evaluate(() => localStorage.clear());
+  await page.reload({ waitUntil: 'networkidle' });
+  await page.setInputFiles('input[type=file]', { name: 'many.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(many)) });
+  await page.waitForSelector('.inv-grid .inv-art');
+  await page.goto(`${BASE}/projeto/exemplo/personagem/Mavuika?aba=otimizar`, { waitUntil: 'networkidle' });
+  await page.waitForSelector('.ot-sets-wrap');
+  await page.waitForTimeout(500);
+  const total = await page.$$eval('.ot-set', (c) => c.length);
+  const more = await page.locator('.ot-more-sets').count();
+  const cut = await page.evaluate(() => {
+    const wrap = document.querySelector('.ot-sets-wrap').getBoundingClientRect();
+    const cells = [...document.querySelectorAll('.ot-set')].map((c) => c.getBoundingClientRect());
+    return cells.every((c) => c.bottom <= wrap.bottom + 1);
+  });
+  check('Sets: com sets sobrando aparece "Mostrar todos · mais N sets" e nenhuma linha fica cortada', more === 1 && cut && /^Mostrar todos · mais \d+ sets$/.test((await page.textContent('.ot-more-sets')).trim()), `${total} visíveis`);
+  await page.click('.ot-more-sets');
+  check('Mostrar todos revela os outros sets', (await page.$$eval('.ot-set', (c) => c.length)) > total);
+
   await browser.close();
   const ok = results.filter(Boolean).length;
   console.log(`\n${ok}/${results.length} verificações OK`);

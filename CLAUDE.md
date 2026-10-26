@@ -143,6 +143,6 @@ Plano completo: `C:\Users\dabiv\.claude\plans\hashed-nibbling-island.md`. Strix 
 
 
 ## Aba Otimizar (mockup `reference/design/Otimizar.dc.html`)
-- `screens/Otimizador.tsx` (`OtimizadorPanel`) orquestra; peças em `screens/otimizar/`: `AsideCard` (coluna do personagem, um painel só), `CurrentBuild` (painel "Build atual" + botão "Status em campo"), `ResultCard` (card de build, grade de 2), `minimos.ts` (mínimos como chips: `activeMins`, `firstUnmet`, `formatMin`), `shared.tsx` (`PieceArt`, `setColor`, `critValue`). Formatação de main stats: `formatMain` em `features/good/labels.ts` (fração ×100).
+- `screens/Otimizador.tsx` (`OtimizadorPanel`) orquestra; peças em `screens/otimizar/`: `AsideCard` (coluna do personagem, um painel só), `CurrentBuild` (painel "Build atual" + botão "Status em campo"), `ResultCard` (card de build, grade de 2; CV por peça `pieceCv`), `minimos.ts` (mínimos como chips: `activeMins`, `firstUnmet`, `formatMin`; a adição é inline no painel de otimização 66|33), `shared.tsx` (`PieceArt`, `setColor`, `critValue`). Formatação de main stats: `formatMain` em `features/good/labels.ts` (fração ×100).
 - Build atual e diferenças dos cards vêm do MESMO avaliador (`evaluateEquipped` em `features/optimizer/run.ts`); "Status em campo" usa `BuildReport.fieldStats` (todos os buffs de time ligados juntos). Equipado que não cumpre um mínimo nunca é base de comparação (decisão 82).
-- Teste: `scripts/e2e/otimizar.cjs` (26 verificações, screenshots em 1600/1366/390 px).
+- Teste: `scripts/e2e/otimizar.cjs` (34 verificações, screenshots em 1600/1366/390 px).

@@ -58,10 +58,9 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   check('em Dano há 3 alvos: rotação do time, só dele e um golpe do kit', (await page.$$eval('.ot-seg[aria-label="Dano de"] button', (b) => b.map((x) => x.textContent.trim()))).join('|') === 'Rotação do time|Só Mavuika|Um golpe');
 
   const addMin = async (key, value) => {
-    await page.click('.ot-minadd button');
     await page.selectOption('select[aria-label="Stat do mínimo"]', key);
     await page.fill('input[aria-label="Valor do mínimo"]', value);
-    await page.click('.ot-pop button:has-text("Adicionar")');
+    await page.click('.ot-min-add .dz-btn');
   };
   const rmMin = async (label) => { await page.click(`button[aria-label="Remover mínimo de ${label}"]`); };
   const prev = await page.textContent('.ot-strip .stat');
@@ -75,7 +74,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.waitForTimeout(200);
 
   // ---- Otimizar (dano do time) ----
-  await page.click('.ot-bar-row > .dz-btn.gold');
+  await page.click('.ot-go-btn');
   await page.waitForSelector('.ot-build', { timeout: 120000 });
   const builds = await page.locator('.ot-build').count();
   check('a busca devolve até 5 builds', builds >= 1 && builds <= 5, String(builds));
@@ -124,7 +123,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
 
   // ---- Restrição de Recarga ----
   await addMin('er', '125');
-  await page.click('.ot-bar-row > .dz-btn.gold');
+  await page.click('.ot-go-btn');
   await page.waitForSelector('.ot-build, .note', { timeout: 120000 });
   await page.waitForTimeout(500);
   const ers = await page.$$eval('.ot-build .stats', (f) => f.map((x) => Number((/Recarga(\d+)/.exec(x.textContent) || [])[1])));
@@ -134,7 +133,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await rmMin('Recarga');
   await page.click('.ot-seg[aria-label="O que otimizar"] button:has-text("Stat")');
   await page.click('.ot-seg button:has-text("Maestria")');
-  await page.click('.ot-bar-row > .dz-btn.gold');
+  await page.click('.ot-go-btn');
   await page.waitForSelector('.ot-build', { timeout: 120000 });
   const em = await page.$$eval('.ot-build .val b', (b) => b.map((x) => Number(x.textContent.replace(/\./g, ''))));
   check('foco em Maestria: o melhor build tem a maior Maestria', em.length > 0 && em[0] >= Math.max(...em), em.join(' > '));
@@ -161,11 +160,11 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   const crits = await page.$$eval('.ot-seg button', (b) => b.map((x) => x.textContent.trim()).filter((t) => /Média|Sempre|Nunca/.test(t)));
   check('o tipo de crítico é escolhido', crits.includes('Média') && crits.includes('Sempre') && crits.includes('Nunca'), crits.join(','));
   await page.click('.ot-seg button:has-text("Sem reação")');
-  await page.click('.ot-bar-row > .dz-btn.gold');
+  await page.click('.ot-go-btn');
   await page.waitForSelector('.ot-build', { timeout: 120000 });
   const semReacao = Number((await page.textContent('.ot-build .val b')).replace(/\./g, ''));
   await page.click('.ot-seg button:has-text("Derreter")');
-  await page.click('.ot-bar-row > .dz-btn.gold');
+  await page.click('.ot-go-btn');
   await page.waitForSelector('.ot-build', { timeout: 120000 });
   await page.waitForTimeout(400);
   const comDerreter = Number((await page.textContent('.ot-build .val b')).replace(/\./g, ''));
@@ -176,7 +175,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.goto(`${BASE}/projeto/exemplo/personagem/Bennett?aba=otimizar`, { waitUntil: 'networkidle' });
   await page.click('.ot-seg[aria-label="O que otimizar"] button:has-text("Buff")');
   check('Buff lista o que o Bennett dá ao time e cresce com o ATK dele', /ATK fixo/.test(await page.textContent('.ot-seg[aria-label="Buff"]')), (await page.textContent('.ot-seg[aria-label="Buff"]')).slice(0, 80));
-  await page.click('.ot-bar-row > .dz-btn.gold');
+  await page.click('.ot-go-btn');
   await page.waitForSelector('.ot-build', { timeout: 120000 });
   const buffVals = await page.$$eval('.ot-build .val b', (b) => b.map((x) => Number(x.textContent.replace(/\./g, ''))));
   check('o melhor build é o que dá o maior valor do buff', buffVals.length > 0 && buffVals[0] >= Math.max(...buffVals) && buffVals[0] > 0, buffVals.join(' > '));

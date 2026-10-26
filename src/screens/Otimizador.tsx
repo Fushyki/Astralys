@@ -23,7 +23,7 @@ import { formatDecimal, formatInt } from '../ui/format';
 import './otimizador.css';
 import { Button, ButtonLink } from '../design/Button';
 import { CurrentBuild } from './otimizar/CurrentBuild';
-import { ResultCard, pieceSig, type CardCompare } from './otimizar/ResultCard';
+import { ResultCard, pieceSig, type CardCompare, type Owner } from './otimizar/ResultCard';
 import { MIN_DEFS, activeMins, firstUnmet, formatMin, type MinKey } from './otimizar/minimos';
 import { FamilyBadge, damageColor } from '../design/damageFamily';
 import { specialOfMove } from '../engine/project';
@@ -147,7 +147,6 @@ export function OtimizadorPanel({ index }: { index: number }) {
   const [equippedKey, setEquippedKey] = useState<string | null>(null);
   const [fieldMode, setFieldMode] = useState(false);
   const [showMore, setShowMore] = useState(false);
-  const [minOpen, setMinOpen] = useState(false);
   const [minKey, setMinKey] = useState<MinKey>('er');
   const [minVal, setMinVal] = useState('');
   const [showAllSets, setShowAllSets] = useState(false);
@@ -337,11 +336,20 @@ export function OtimizadorPanel({ index }: { index: number }) {
     const n = Number(minVal.replace(',', '.'));
     if (minVal.trim() === '' || !Number.isFinite(n)) return;
     setUi({ ...ui, mins: { ...ui.mins, [minKey]: String(n) } });
-    setMinOpen(false);
+    setMinVal('');
   };
+  /** O Golpe, a Reação e o Crítico só valem com Alvo = "Um golpe" (os outros ficam desativados, sem sumir). */
+  const moveOn = ui.goal === 'dano' && ui.scope === 'move';
+  /** O mínimo de Recarga é o que a calculadora de recarga pede. */
+  const erInUse = erNeeded !== null && ui.mins.er.trim() !== '' && Math.abs(Number(ui.mins.er.replace(',', '.')) - erNeeded) < 1e-6;
   /** O mínimo que o build equipado não atinge (null se atinge todos, ou se não há equipado). */
   const unmet = current ? firstUnmet(ui.mins, current.report.stats) : null;
 
+  /** Dono de uma peça equipada em outro personagem: o nome e a cor dele (a do time, se ele for do time). */
+  const ownerOf = (location: string): Owner => {
+    const i = project.members.findIndex((m) => norm(m.character) === norm(location));
+    return i >= 0 ? { name: project.members[i].character, color: v.colors[i] } : { name: location, color: 'var(--faint)' };
+  };
   const currentSig = new Set((current?.pieces ?? []).map(pieceSig));
   /** Builds da lista: o equipado entra na posição dele (selo "equipado hoje") ou, se ficou fora do top, no fim. */
   const cards = (() => {
@@ -443,121 +451,121 @@ export function OtimizadorPanel({ index }: { index: number }) {
           </div>
 
           <section className="ot-bar" aria-label="Foco da otimização">
-            <div className="ot-bar-row">
-              <div className="ot-field">
-                <span className="lbl">Otimizar</span>
-                <div className="ot-seg" role="group" aria-label="O que otimizar">
-                  {([['dano', 'Dano', 'Dano do time, dele ou de um golpe'], ['buff', 'Buff', 'O maior valor de um buff que ele dá ao time (foco de suportes)'], ['stat', 'Stat', 'O maior valor final de HP, ATK, Maestria… (use os mínimos para não perder o resto)']] as [Goal, string, string][]).map(([k, label, tip]) => (
-                    <button key={k} type="button" aria-pressed={ui.goal === k} title={tip} onClick={() => setUi({ ...ui, goal: k })}>{label}</button>
-                  ))}
-                </div>
-              </div>
-
-              {ui.goal === 'dano' && (
-                <>
+            <div className="ot-bar-grid">
+              <div className="ot-bar-cfg">
+                <div className="ot-bar-line">
                   <div className="ot-field">
-                    <span className="lbl">Alvo</span>
-                    <div className="ot-seg" role="group" aria-label="Dano de" title="Rotação do time: soma o dano de todos, com os buffs que ele dá nas janelas. Um golpe: avaliado sozinho com todos os buffs ligados.">
-                      {([['team', 'Rotação do time'], ['member', `Só ${ref.character}`], ['move', 'Um golpe']] as [Scope, string][]).map(([k, label]) => (
-                        <button key={k} type="button" aria-pressed={ui.scope === k} onClick={() => setUi({ ...ui, scope: k })}>{label}</button>
+                    <span className="lbl">Otimizar</span>
+                    <div className="ot-seg" role="group" aria-label="O que otimizar">
+                      {([['dano', 'Dano', 'Dano do time, dele ou de um golpe'], ['buff', 'Buff', 'O maior valor de um buff que ele dá ao time (foco de suportes)'], ['stat', 'Stat', 'O maior valor final de HP, ATK, Maestria… (use os mínimos para não perder o resto)']] as [Goal, string, string][]).map(([k, label, tip]) => (
+                        <button key={k} type="button" aria-pressed={ui.goal === k} title={tip} onClick={() => setUi({ ...ui, goal: k })}>{label}</button>
                       ))}
                     </div>
                   </div>
-                  {ui.scope === 'move' && (
-                    <>
-                      <div className="ot-field grow">
-                        <span className="lbl">Golpe</span>
-                        <button type="button" className="ot-movebtn" aria-haspopup="dialog" aria-label="Escolher o golpe a otimizar" onClick={() => setPickingMove(true)}>
-                          {moveChosen && <KindBadge kind={kindOf(moveChosen)} />}
-                          <span className="n" style={{ color: damageColor(moveElement, moveChosen ? specialOfMove(moveChosen, 0, effect) : undefined) }}>{moveChosen ? displayName(moveChosen) : 'Escolher o golpe'}</span>
-                          {moveChosen && <FamilyBadge special={specialOfMove(moveChosen, 0, effect)} />}
-                          <span className="chev" aria-hidden="true">▾</span>
-                        </button>
+                  {ui.goal === 'dano' && (
+                    <div className="ot-field">
+                      <span className="lbl">Alvo</span>
+                      <div className="ot-seg" role="group" aria-label="Dano de" title="Rotação do time: soma o dano de todos, com os buffs que ele dá nas janelas. Um golpe: avaliado sozinho com todos os buffs ligados.">
+                        {([['team', 'Rotação do time'], ['member', `Só ${ref.character}`], ['move', 'Um golpe']] as [Scope, string][]).map(([k, label]) => (
+                          <button key={k} type="button" aria-pressed={ui.scope === k} onClick={() => setUi({ ...ui, scope: k })}>{label}</button>
+                        ))}
                       </div>
-                      <div className="ot-field">
-                        <span className="lbl">Reação</span>
-                        <div className="ot-seg" role="group" aria-label="Reação">
-                          {reactions.map((r) => (
-                            <button key={r} type="button" aria-pressed={reaction === r} onClick={() => setUi({ ...ui, reaction: r })}>{REACTION_LABEL[r] ?? r}</button>
-                          ))}
-                        </div>
-                      </div>
-                      <div className="ot-field">
-                        <span className="lbl">Crítico</span>
-                        <div className="ot-seg" role="group" aria-label="Crítico">
-                          {(Object.keys(CRIT_LABEL) as Crit[]).map((c) => (
-                            <button key={c} type="button" title={CRIT_LABEL[c]} aria-pressed={ui.crit === c} onClick={() => setUi({ ...ui, crit: c })}>{CRIT_SHORT[c]}</button>
-                          ))}
-                        </div>
-                      </div>
-                    </>
-                  )}
-                </>
-              )}
-
-              {ui.goal === 'buff' && (
-                <div className="ot-field grow">
-                  <span className="lbl">Buff</span>
-                  {buffOptions.length === 0 ? (
-                    <p className="note">{ref.character} não tem buff que cresça com os stats dele (nesta constelação). Escolha Dano ou Stat.</p>
-                  ) : (
-                    <div className="ot-seg" role="group" aria-label="Buff">
-                      {buffOptions.map((b) => (
-                        <button key={b.id} type="button" title={b.hint} aria-pressed={buffChosen?.id === b.id} onClick={() => setUi({ ...ui, buffId: b.id })}>{b.label}</button>
-                      ))}
                     </div>
                   )}
+                  {ui.goal === 'buff' && (
+                    <div className="ot-field grow">
+                      <span className="lbl">Buff</span>
+                      {buffOptions.length === 0 ? (
+                        <p className="note">{ref.character} não tem buff que cresça com os stats dele (nesta constelação). Escolha Dano ou Stat.</p>
+                      ) : (
+                        <div className="ot-seg" role="group" aria-label="Buff">
+                          {buffOptions.map((b) => (
+                            <button key={b.id} type="button" title={b.hint} aria-pressed={buffChosen?.id === b.id} onClick={() => setUi({ ...ui, buffId: b.id })}>{b.label}</button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  {ui.goal === 'stat' && (
+                    <div className="ot-field grow">
+                      <span className="lbl">Stat</span>
+                      <div className="ot-seg" role="group" aria-label="Stat">
+                        {(Object.keys(STAT_LABEL) as StatKey[]).map((k) => (
+                          <button key={k} type="button" aria-pressed={ui.stat === k} onClick={() => setUi({ ...ui, stat: k })}>{STAT_LABEL[k]}</button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  <div className="ot-field mostrar">
+                    <span className="lbl">Mostrar</span>
+                    <select className="dz-input sm" aria-label="Melhores a mostrar" value={ui.topN} onChange={(e) => setUi({ ...ui, topN: Number(e.target.value) })}>
+                      {[1, 2, 3, 4, 5, 8, 10].map((n) => <option key={n} value={n}>{n}</option>)}
+                    </select>
+                  </div>
                 </div>
-              )}
+                <div className="ot-bar-line">
+                  <div className="ot-field grow">
+                    <span className="lbl">Golpe</span>
+                    <button type="button" className="ot-movebtn" disabled={!moveOn} aria-haspopup="dialog" aria-label="Escolher o golpe a otimizar" onClick={() => setPickingMove(true)}>
+                      {moveChosen && <KindBadge kind={kindOf(moveChosen)} />}
+                      <span className="n" style={{ color: damageColor(moveElement, moveChosen ? specialOfMove(moveChosen, 0, effect) : undefined) }}>{moveChosen ? displayName(moveChosen) : 'Escolher o golpe'}</span>
+                      {moveChosen && <FamilyBadge special={specialOfMove(moveChosen, 0, effect)} />}
+                      <span className="chev" aria-hidden="true">▾</span>
+                    </button>
+                  </div>
+                  <div className="ot-field">
+                    <span className="lbl">Reação</span>
+                    <div className="ot-seg" role="group" aria-label="Reação" data-off={!moveOn}>
+                      {reactions.map((r) => (
+                        <button key={r} type="button" disabled={!moveOn} aria-pressed={reaction === r} onClick={() => setUi({ ...ui, reaction: r })}>{REACTION_LABEL[r] ?? r}</button>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="ot-field">
+                    <span className="lbl">Crítico</span>
+                    <div className="ot-seg" role="group" aria-label="Crítico" data-off={!moveOn}>
+                      {(Object.keys(CRIT_LABEL) as Crit[]).map((c) => (
+                        <button key={c} type="button" disabled={!moveOn} title={CRIT_LABEL[c]} aria-pressed={ui.crit === c} onClick={() => setUi({ ...ui, crit: c })}>{CRIT_SHORT[c]}</button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-              {ui.goal === 'stat' && (
-                <div className="ot-field grow">
-                  <span className="lbl">Stat</span>
-                  <div className="ot-seg" role="group" aria-label="Stat">
-                    {(Object.keys(STAT_LABEL) as StatKey[]).map((k) => (
-                      <button key={k} type="button" aria-pressed={ui.stat === k} onClick={() => setUi({ ...ui, stat: k })}>{STAT_LABEL[k]}</button>
+              <div className="ot-bar-min" role="group" aria-label="Mínimos nos stats">
+                <div className="ot-min-head">
+                  <span className="lbl">Mínimos nos stats</span>
+                  <span className="dz-badge num gold">{minsOn} {minsOn === 1 ? 'ativo' : 'ativos'}</span>
+                </div>
+                {minsOn > 0 && (
+                  <div className="ot-min-chips">
+                    {activeMins(ui.mins).map((m) => (
+                      <span key={m.k} className="ot-minchip">
+                        {m.label} ≥ <b className="num">{formatMin(m.k, m.value)}</b>
+                        <button type="button" aria-label={`Remover mínimo de ${m.label}`} onClick={() => setUi({ ...ui, mins: { ...ui.mins, [m.k]: '' } })}>×</button>
+                      </span>
                     ))}
                   </div>
-                </div>
-              )}
-
-              <div className="ot-field">
-                <span className="lbl">Mostrar</span>
-                <select className="dz-input sm" aria-label="Melhores a mostrar" value={ui.topN} onChange={(e) => setUi({ ...ui, topN: Number(e.target.value) })}>
-                  {[1, 2, 3, 4, 5, 8, 10].map((n) => <option key={n} value={n}>{n}</option>)}
-                </select>
-              </div>
-              <span className="ot-sep" aria-hidden="true" />
-              <div className="ot-mins-row" role="group" aria-label="Mínimos nos stats">
-                <span className="lbl">Mínimos</span>
-                {activeMins(ui.mins).map((m) => (
-                  <span key={m.k} className="ot-minchip">
-                    {m.label} ≥ <b className="num">{formatMin(m.k, m.value)}</b>
-                    <button type="button" aria-label={`Remover mínimo de ${m.label}`} onClick={() => setUi({ ...ui, mins: { ...ui.mins, [m.k]: '' } })}>×</button>
-                  </span>
-                ))}
-                {erNeeded !== null && ui.mins.er.trim() !== '' && Math.abs(Number(ui.mins.er.replace(',', '.')) - erNeeded) < 1e-6 && (
-                  <span className="ot-minchip calc">Calculadora de recarga: <b className="num">{formatDecimal(erNeeded, 1)}%</b> · em uso</span>
                 )}
-                <div className="ot-minadd">
-                  <button type="button" className="ot-ghost" aria-haspopup="dialog" aria-expanded={minOpen} onClick={() => { setMinOpen(!minOpen); setMinKey(MIN_DEFS.find((d) => ui.mins[d.k].trim() === '')?.k ?? 'er'); setMinVal(''); }}>+ Mínimo</button>
-                  {minOpen && (
-                    <div className="ot-pop" role="dialog" aria-label="Novo mínimo">
-                      <select className="dz-input sm" aria-label="Stat do mínimo" value={minKey} onChange={(e) => setMinKey(e.target.value as MinKey)}>
-                        {MIN_DEFS.map((d) => <option key={d.k} value={d.k}>{d.label}{d.pct ? ' (%)' : ''}</option>)}
-                      </select>
-                      <input className="dz-input sm" inputMode="decimal" aria-label="Valor do mínimo" placeholder="—" value={minVal} autoFocus onChange={(e) => setMinVal(e.target.value)}
-                        onKeyDown={(e) => { if (e.key === 'Enter') addMin(); if (e.key === 'Escape') setMinOpen(false); }} />
-                      <button type="button" className="dz-btn sm gold" onClick={addMin} disabled={!Number.isFinite(Number(minVal.replace(',', '.'))) || minVal.trim() === ''}>Adicionar</button>
-                    </div>
-                  )}
+                <div className="ot-min-add">
+                  <select className="dz-input sm" aria-label="Stat do mínimo" value={minKey} onChange={(e) => setMinKey(e.target.value as MinKey)}>
+                    {MIN_DEFS.map((d) => <option key={d.k} value={d.k}>{d.label}</option>)}
+                  </select>
+                  <span className="val">
+                    <input className="num" inputMode="decimal" aria-label="Valor do mínimo" placeholder="—" value={minVal} onChange={(e) => setMinVal(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') addMin(); }} />
+                    <i>{MIN_DEFS.find((d) => d.k === minKey)?.pct ? '%' : ''}</i>
+                  </span>
+                  <button type="button" className="dz-btn" onClick={addMin} disabled={!Number.isFinite(Number(minVal.replace(',', '.'))) || minVal.trim() === ''}>Adicionar</button>
                 </div>
+                {erNeeded !== null && (
+                  <span className="ot-min-calc">Calculadora de recarga pede <b className="num">{formatDecimal(erNeeded, 1)}%</b>{erInUse ? ' · em uso' : ''}</span>
+                )}
+                {running ? (
+                  <Button variant="secondary" size="lg" className="ot-go-btn" onClick={stop}>Parar</Button>
+                ) : (
+                  <Button variant="primary" size="lg" className="ot-go-btn" onClick={run}>Otimizar</Button>
+                )}
               </div>
-              {running ? (
-                <Button variant="secondary" size="lg" onClick={stop}>Parar</Button>
-              ) : (
-                <Button variant="primary" size="lg" onClick={run}>Otimizar</Button>
-              )}
             </div>
             {pickingMove && character && (
               <MovePickerDialog
@@ -588,13 +596,13 @@ export function OtimizadorPanel({ index }: { index: number }) {
                   <b>{result.stopped ? 'Busca parada' : 'Busca completa'}</b>
                   <span className="stat num">
                     {formatInt(result.stats.evaluations)} avaliações de {bigNumber(result.stats.combinations)} · {result.inventory.pieces} peças ({preview?.perSlot.join(' · ')})
-                    {result.inventory.removed.equippedByOthers > 0 && !ui.borrow ? ` · ${result.inventory.removed.equippedByOthers} de outros personagens fora` : ''}
+                    {ui.borrow ? ' · inclui peças de outros personagens' : result.inventory.removed.equippedByOthers > 0 ? ` · ${result.inventory.removed.equippedByOthers} de outros personagens fora` : ''}
                   </span>
                 </>
               ) : preview ? (
                 <span className="stat num">
                   {preview.total} peças ({preview.perSlot.join(' · ')})
-                  {preview.removed.equippedByOthers > 0 && !ui.borrow ? ` · ${preview.removed.equippedByOthers} de outros personagens fora` : ''}
+                  {ui.borrow ? ' · inclui peças de outros personagens' : preview.removed.equippedByOthers > 0 ? ` · ${preview.removed.equippedByOthers} de outros personagens fora` : ''}
                 </span>
               ) : null}
               {current && (unmet ? (
@@ -624,6 +632,8 @@ export function OtimizadorPanel({ index }: { index: number }) {
                     onEquip={c.outside ? undefined : () => equip(c.build)}
                     equipped={equippedKey === c.build.key}
                     isCurrent={c.isCurrent}
+                    mine={mineKey}
+                    ownerOf={ownerOf}
                   />
                 ))}
               </section>

@@ -270,6 +270,24 @@ export function startOptimizer(input: RunInput, control: RunControl = {}): RunHa
   return { steps: steps(), result };
 }
 
+/**
+ * O build que o personagem usa hoje (as peças do inventário com o nome dele, uma por posição), avaliado com o MESMO avaliador
+ * da busca: dá o "Build atual" sem rodar a busca e bate com o `equipped` do resultado. Sem nenhuma peça, null.
+ */
+export function evaluateEquipped(input: RunInput): OptimizedBuild | null {
+  const { good, game } = input;
+  const mine = norm(input.characterKey);
+  const element = elementOf(input.resolved, input.member);
+  const pieces = SLOT_ORDER.map((slot) => good.artifacts.find((a) => a.rarity >= 4 && a.slotKey === slot && norm(a.location) === mine)).filter((a): a is GoodArtifact => !!a);
+  if (pieces.length === 0) return null;
+  const evaluator = createEvaluator({ ...input, objective: input.config.objective, constraints: input.config.constraints });
+  const vec = new Float64Array(DIMS);
+  for (const a of pieces) addInto(vec, pieceVector(a, element));
+  const loadout = loadoutFromPieces(pieces, game);
+  const config: SetConfig = { primarySet: loadout.primarySet, secondarySet: loadout.secondarySet, fourPiece: loadout.fourPiece };
+  return { key: 'equipado', pieces, config, setLabel: patternLabel(patternOf(config)), report: evaluator.report(vec, config), loadout };
+}
+
 export function runOptimizer(input: RunInput): OptimizerResult {
   const h = startOptimizer(input);
   for (const _ of h.steps) void _;

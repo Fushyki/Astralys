@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { analyzeProject, resolveProject, type EffectsData, type GameData } from '../../src/engine';
 import { parseGood } from '../../src/features/good/goodImport';
 import { createEvaluator } from '../../src/features/optimizer/evaluator';
-import { DEFAULT_CONFIG, filterInventory, runOptimizer, type OptimizerConfig } from '../../src/features/optimizer/run';
+import { DEFAULT_CONFIG, evaluateEquipped, filterInventory, runOptimizer, type OptimizerConfig } from '../../src/features/optimizer/run';
 import { bruteForce, configOfPieces } from '../../src/features/optimizer/solver';
 import { DIM, DIMS, addInto } from '../../src/features/optimizer/vector';
 import { sampleProject } from '../../src/features/rotation/persistence';
@@ -308,5 +308,20 @@ describe('nível da peça e builds completos', () => {
     expect(got.builds[0].pieces.find((p) => p.slotKey === 'sands')!.level).toBe(20);
     expect(got.builds[1].pieces.find((p) => p.slotKey === 'sands')!.level).toBe(0);
     expect(got.builds[1].report.value).toBeLessThan(got.builds[0].report.value);
+  });
+});
+
+describe('build atual sem rodar a busca', () => {
+  it('evaluateEquipped dá o mesmo relatório do equipado do resultado e traz os stats em campo', () => {
+    const good = inventory(4);
+    const eq = ['flower', 'plume', 'sands', 'goblet', 'circlet'].map((slot) => good.artifacts.find((a) => a.slotKey === slot)!);
+    const withOwner = { ...good, artifacts: good.artifacts.map((a) => (eq.includes(a) ? { ...a, location: 'Mavuika' } : a)) };
+    const input = { ...base, good: withOwner, characterKey: 'Mavuika', config: { ...DEFAULT_CONFIG, topN: 1 } };
+    const now = evaluateEquipped(input as never)!;
+    const result = runOptimizer(input as never);
+    expect(now.report.value).toBeCloseTo(result.equipped!.report.value, 6);
+    expect(now.report.stats.atk).toBeCloseTo(result.equipped!.report.stats.atk, 6);
+    // em campo: com todos os buffs do time ligados o ATK não cai e, no exemplo, sobe
+    expect(now.report.fieldStats.atk).toBeGreaterThan(now.report.stats.atk);
   });
 });

@@ -85,7 +85,10 @@ export interface BuildReport {
   teamAvg: number;
   memberAvg: number;
   dps: number;
+  /** Stats da ficha do build (só o que vale o tempo todo). */
   stats: FinalStats;
+  /** Stats com todos os buffs de time ligados ao mesmo tempo ("em campo"): o mesmo critério do golpe avaliado sozinho. */
+  fieldStats: FinalStats;
   /** Restrições cumpridas. */
   feasible: boolean;
 }
@@ -191,6 +194,7 @@ export function createEvaluator(input: EvaluatorInput): Evaluator {
         memberAvg: result.members[member].avg,
         dps: result.totals.dps,
         stats: r.stats,
+        fieldStats: finalStats(r.members[member], r.assembly.statics[member], zeroRolls(), activeTeamDelta(r.assembly.buffs, name, new Set(r.assembly.buffs.map((b) => b.tag))), r.assembly.resonanceAtkPct),
         feasible,
       };
     },

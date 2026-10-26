@@ -648,10 +648,9 @@ function BuildCard({ title, build, base, now, equippedSig, focusValue, data, cap
                 <span className="slot">{slotLabel}</span>
                 {!isNow && <em>{kept ? 'equipada' : 'troca'}</em>}
               </span>
-              <span className="art">
+              <span className="art" title={set?.name ?? a.setKey}>
                 <Img src={set ? pieceIconUrl(set.id, a.slotKey as 'flower') : undefined} fallback={SLOT_GLYPH[a.slotKey] ?? '◆'} />
                 <b className="lv num">+{a.level ?? 0}</b>
-                <span className="setico" title={set?.name ?? a.setKey}><Img src={set ? pieceIconUrl(set.id, 'flower') : undefined} fallback="◆" /></span>
               </span>
               <span className="main">{MAIN_LABEL[a.mainStatKey] ?? a.mainStatKey} <b className="num">{fmtStat(a.mainStatKey, mainStatValue(a.mainStatKey, a.rarity, a.level))}</b></span>
               <ul>

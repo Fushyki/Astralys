@@ -274,11 +274,13 @@ export function startOptimizer(input: RunInput, control: RunControl = {}): RunHa
  * O build que o personagem usa hoje (as peças do inventário com o nome dele, uma por posição), avaliado com o MESMO avaliador
  * da busca: dá o "Build atual" sem rodar a busca e bate com o `equipped` do resultado. Sem nenhuma peça, null.
  */
-export function evaluateEquipped(input: RunInput): OptimizedBuild | null {
+export function evaluateEquipped(input: RunInput, own?: readonly GoodArtifact[]): OptimizedBuild | null {
   const { good, game } = input;
   const mine = norm(input.characterKey);
   const element = elementOf(input.resolved, input.member);
-  const pieces = SLOT_ORDER.map((slot) => good.artifacts.find((a) => a.rarity >= 4 && a.slotKey === slot && norm(a.location) === mine)).filter((a): a is GoodArtifact => !!a);
+  // `own`: as peças que o projeto já aplicou ao personagem; sem elas valem as do inventário com o nome dele.
+  const source = own?.length ? [...own] : good.artifacts.filter((a) => a.rarity >= 4 && norm(a.location) === mine);
+  const pieces = SLOT_ORDER.map((slot) => source.find((a) => a.slotKey === slot)).filter((a): a is GoodArtifact => !!a);
   if (pieces.length === 0) return null;
   const evaluator = createEvaluator({ ...input, objective: input.config.objective, constraints: input.config.constraints });
   const vec = new Float64Array(DIMS);

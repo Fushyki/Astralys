@@ -12,7 +12,7 @@ import { norm, type Good, type GoodArtifact } from '../features/good/goodImport'
 import { loadGood } from '../features/good/goodStore';
 import { startOptimizerJob, type OptimizerJob, type OptimizerProgress } from '../features/optimizer/client';
 import type { Constraints, Objective } from '../features/optimizer/evaluator';
-import { DEFAULT_CONFIG, countCandidates, type OptimizedBuild, type OptimizerConfig, type OptimizerResult } from '../features/optimizer/run';
+import { DEFAULT_CONFIG, countCandidates, evaluateEquipped, type OptimizedBuild, type OptimizerConfig, type OptimizerResult } from '../features/optimizer/run';
 import { REACTION_LABEL, displayName, reactionOptions } from '../features/character/characterModel';
 import { useRotationStore } from '../features/rotation/store';
 import { energyMembers, energyResults } from '../features/energy/energyModel';
@@ -23,6 +23,7 @@ import { formatDecimal, formatInt } from '../ui/format';
 import './otimizador.css';
 import { Button, ButtonLink } from '../design/Button';
 import { TeamBuffsStrip } from './personagem/AsideExtras';
+import { CurrentBuild } from './otimizar/CurrentBuild';
 import { FamilyBadge, damageColor } from '../design/damageFamily';
 import { specialOfMove } from '../engine/project';
 import { MovePickerDialog, KindBadge, kindOf } from './otimizador/MovePicker';
@@ -146,6 +147,7 @@ export function OtimizadorPanel({ index }: { index: number }) {
   const [running, setRunning] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [equippedKey, setEquippedKey] = useState<string | null>(null);
+  const [fieldMode, setFieldMode] = useState(false);
   const [showAllSets, setShowAllSets] = useState(false);
   const [pickingMove, setPickingMove] = useState(false);
   const [showAllMains, setShowAllMains] = useState<Record<'sands' | 'goblet' | 'circlet', boolean>>({ sands: false, goblet: false, circlet: false });
@@ -254,6 +256,20 @@ export function OtimizadorPanel({ index }: { index: number }) {
     disabled: (v.resolved.team.disabled ?? []).filter((id) => !v.resolved.gearIds.includes(id) || project.disabled.includes(id)),
   };
 
+  /** Build atual: as peças do projeto ou as do inventário com o nome dele, avaliadas como os resultados (mesma fonte dos stats e das diferenças). */
+  const current = (() => {
+    if (!good) return null;
+    try {
+      return evaluateEquipped({
+        good, characterKey, config: config(), member: index, rolls: v.bundle.optimization.rolls, ref,
+        resolved: { team: optimizerTeam, actions: v.resolved.actions, flatEffects: v.resolved.flatEffects, ampCoefficient: v.resolved.ampCoefficient },
+        planilha: project.compat === 'planilha', game: data.game, effects: data.effects,
+      }, ref.pieces?.length ? (ref.pieces as GoodArtifact[]) : undefined);
+    } catch {
+      return null;
+    }
+  })();
+
   const run = () => {
     if (!good) return;
     setRunning(true);
@@ -294,17 +310,6 @@ export function OtimizadorPanel({ index }: { index: number }) {
   })();
   const minsOn = Object.values(ui.mins).filter((x) => x.trim() !== '').length;
 
-  /** Peças que o personagem usa hoje: as do projeto, ou as do inventário com o nome dele. */
-  const currentPieces: GoodArtifact[] = ref.pieces?.length ? (ref.pieces as GoodArtifact[]) : (good?.artifacts ?? []).filter((a) => norm(a.location) === mineKey);
-  const ms = v.bundle.memberStats[index];
-  const currentStats = ms
-    ? [
-        { label: 'ATK', value: formatInt(ms.atk) }, { label: 'HP', value: formatInt(ms.hp) }, { label: 'DEF', value: formatInt(ms.def) },
-        { label: 'Maestria', value: formatInt(ms.em) }, { label: 'Taxa crít.', value: `${formatDecimal(ms.critRate * 100, 1)}%` },
-        { label: 'Dano crít.', value: `${formatDecimal(ms.critDmg * 100, 1)}%` }, { label: 'Recarga', value: `${formatDecimal(ms.er * 100, 1)}%` },
-      ]
-    : [];
-
   const equippedSig = new Set((result?.equipped?.pieces ?? []).map(pieceSig));
 
   return (
@@ -319,30 +324,7 @@ export function OtimizadorPanel({ index }: { index: number }) {
       ) : (
         <>
           <div className="ot-top">
-            <Panel bar title="Build atual" badge={<span className="dz-badge num">{currentPieces.length}/5 peças</span>}>
-              {currentPieces.length === 0 ? (
-                <p className="ot-tip">{ref.character} não tem artefatos equipados no inventário. O build genérico do projeto vale até você escolher um dos resultados.</p>
-              ) : (
-                <ul className="ot-cur">
-                  {SLOTS.map((sl) => {
-                    const a = currentPieces.find((x) => x.slotKey === sl.key);
-                    const set = a ? data.game.artifacts.find((x) => norm(x.name) === norm(a.setKey)) : undefined;
-                    return (
-                      <li key={sl.key} data-empty={!a}>
-                        <span className="ico"><Img src={set ? pieceIconUrl(set.id, sl.key as 'flower') : undefined} fallback={SLOT_GLYPH[sl.key] ?? '◆'} /></span>
-                        <span className="t">
-                          <b>{sl.label}{a ? <small className="num"> +{a.level ?? 0}</small> : null}</b>
-                          <small>{a ? `${MAIN_LABEL[a.mainStatKey] ?? a.mainStatKey} ${formatMain(a.mainStatKey, mainStatValue(a.mainStatKey, a.rarity, a.level))} · ${set?.name ?? a.setKey}` : 'sem peça'}</small>
-                        </span>
-                      </li>
-                    );
-                  })}
-                </ul>
-              )}
-              <dl className="ot-cur-stats num">
-                {currentStats.map((x) => <div key={x.label}><dt>{x.label}</dt><dd>{x.value}</dd></div>)}
-              </dl>
-            </Panel>
+            <CurrentBuild build={current} field={fieldMode} onField={() => setFieldMode(!fieldMode)} sets={data.game.artifacts} />
 
             <Panel bar title="Filtro de artefatos" badge={<span className="dz-badge num">{levelCount}/{allArt.length}</span>}>
               <div className="ot-sec">

@@ -2,7 +2,7 @@
 import { useMemo, useState } from 'react';
 import type { ProjectView } from '../../app/ProjectContext';
 import { Chip, Panel, Segmented } from '../../design/primitives';
-import { assembleTeam, damageTable, effectiveTalents, type ReactionChoice } from '../../engine';
+import { SUBSTATS, assembleTeam, damageTable, effectiveTalents, type ReactionChoice, type Substat } from '../../engine';
 import {
   REACTION_LABEL,
   characterReactions,
@@ -185,6 +185,31 @@ export function ReceivedBuffsPanel({ v, index }: { v: ProjectView; index: number
         ))}
       </div>
       <span className="note">Última coluna: quanto do dano de {name} some sem esse buff. Desmarque para ver o time sem ele.</span>
+    </Panel>
+  );
+}
+
+
+const ROLL_LABEL: Record<Substat, string> = {
+  CR: 'Taxa Crítica', CD: 'Dano Crítico', 'ATK%': 'ATK%', EM: 'Maestria', ER: 'Recarga', ATK: 'ATK fixo', 'HP%': 'HP%', HP: 'HP fixo', 'DEF%': 'DEF%', DEF: 'DEF fixo',
+};
+
+/** Quanto o dano da equipe sobe com mais um roll de cada substat deste personagem (abaixo de "Reações deste time"). */
+export function RollValuePanel({ v, index }: { v: ProjectView; index: number }) {
+  const gains = v.bundle.gains.filter((g) => g.member === index);
+  const max = Math.max(1e-12, ...gains.filter((g) => !g.atCap).map((g) => g.relativeGain));
+  const rows = SUBSTATS.map((s) => gains.find((g) => g.substat === s)).filter((g): g is NonNullable<typeof g> => !!g && g.relativeGain > 1e-9).sort((a, b) => b.relativeGain - a.relativeGain);
+  return (
+    <Panel title="Valor de +1 roll">
+      <p className="note">Quanto o dano da equipe sobe com mais um roll de cada substat deste personagem. "máx." = já está no limite de rolls, então o ganho é só teórico.</p>
+      {rows.map((g) => (
+        <div className="dz-barrow" key={g.substat}>
+          <span className="name">{ROLL_LABEL[g.substat]}{g.atCap ? <span className="dz-chip" style={{ marginLeft: 6 }}>máx.</span> : null}</span>
+          <div className="dz-bar"><i style={{ width: `${g.atCap ? 0 : (g.relativeGain / max) * 100}%` }} /></div>
+          <span className="val num" title={`+${formatInt(g.dpsGain)} DPS`}>+{formatDecimal(g.relativeGain * 100, 2)}%</span>
+        </div>
+      ))}
+      {rows.length === 0 && <p className="note">Nenhum substat aumenta o dano deste personagem.</p>}
     </Panel>
   );
 }

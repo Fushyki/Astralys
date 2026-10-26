@@ -2,7 +2,8 @@
  * Modelo da tela Rotação (puro): rótulo curto do golpe na linha do tempo, quem está em campo, buffs agrupados por quem
  * dá, linhas da Sequência (golpe contínuo = uma linha) e dados do gráfico de dano acumulado.
  */
-import type { ActionRef, ActionResult, RotationProject } from '../../engine';
+import type { ActionRef, ActionResult, MoveRef, RotationProject } from '../../engine';
+import type { SpecialReaction } from '../../engine/constants/reactions';
 import { effectiveDuration } from '../../engine';
 import type { LaneInfo } from './rotationModel';
 
@@ -138,3 +139,17 @@ export function hypercarryNote(members: { name: string; fraction: number }[]): s
 }
 
 export const effectiveEnd = (project: Pick<RotationProject, 'config' | 'actions' | 'compat'>) => effectiveDuration(project);
+
+
+/**
+ * Reação Lunar/Estelar de um golpe da Rotação, para mostrar o dano como Lunar/Estelar e não como o elemento da RES:
+ * o golpe do kit marcado (`kit`), o golpe extra com `special` (A1, C2 e C6 da Ineffa…) ou a própria reação posta como ação.
+ */
+export function specialOfMoveRef(move: Pick<MoveRef, 'talent' | 'label'>, kit: SpecialReaction | undefined, procs: readonly { key: string; proc: { special?: { reaction: SpecialReaction } } }[]): SpecialReaction | undefined {
+  if (move.talent === 'reaction') {
+    const m = /^(lunarcharged|lunarbloom|lunarcrystallize|stellarconduct|stellarswirl)/.exec(move.label);
+    return m ? (m[1] as SpecialReaction) : undefined;
+  }
+  if (move.talent === 'proc') return procs.find((p) => p.key === move.label)?.proc.special?.reaction;
+  return kit;
+}

@@ -10,6 +10,7 @@
  * não reconhece NÃO derrubam o sync: são listadas no relatório final para revisão.
  */
 import { mkdir, writeFile } from 'node:fs/promises';
+import { cleanGenerated } from './clean-generated';
 import path from 'node:path';
 import { z } from 'zod';
 import {
@@ -454,6 +455,7 @@ async function main() {
   await writeFile(path.join(OUT_DIR, 'weapons.json'), toJsonLines(weapons));
   await writeFile(path.join(OUT_DIR, 'artifacts.json'), toJsonLines(artifactSets));
   await writeFile(path.join(OUT_DIR, 'meta.json'), JSON.stringify(syncMeta, null, 2) + '\n');
+  cleanGenerated(OUT_DIR); // tira as marcas {LINK#…} e {M#o}{F#a} do texto do Lunaris
 
   // --- Relatório ---
   console.log('\nGerado em src/data/generated/:');

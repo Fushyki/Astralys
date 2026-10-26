@@ -309,7 +309,7 @@ button.ot-ch[aria-pressed='true'] b { color: var(--gold-hi); }
 .ot-build .piece[role='button']:hover { border-color: var(--gold); }
 .ot-build .piece[data-blocked='true'] { opacity: .45; filter: grayscale(.6); border-style: dashed; }
 .ot-build .piece .art .lock { position: absolute; right: 0; top: 0; font-style: normal; font-size: var(--fs-4); }
-.ot-unblock { margin-top: auto; min-height: var(--ctl-sm); border-radius: var(--r-ctl); border: 1px solid #6b5524; background: #2a2312; color: var(--gold-hi); font: 600 var(--fs-2) var(--font-display); letter-spacing: .06em; text-transform: uppercase; cursor: pointer; }
+.ot-unblock { align-self: flex-start; padding: 0 var(--sp-3); min-height: var(--ctl-sm); border-radius: var(--r-ctl); border: 1px solid #6b5524; background: #2a2312; color: var(--gold-hi); font: 600 var(--fs-2) var(--font-display); letter-spacing: .06em; text-transform: uppercase; cursor: pointer; }
 .ot-blocked-grid { display: flex; flex-direction: column; gap: var(--sp-2); }
 .ot-blocked .bk { display: grid; grid-template-columns: var(--ico-4) minmax(0, 1fr) auto; gap: var(--sp-3); align-items: center; padding: var(--sp-2) var(--sp-3); border-radius: var(--r-inner); background: var(--item-bg-swap); border: 1px solid var(--item-border-swap); border-top: 2px solid var(--sc); }
 .ot-blocked .bk .art { position: relative; width: var(--ico-4); height: var(--ico-4); display: grid; place-items: center; }

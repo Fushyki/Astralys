@@ -1,14 +1,13 @@
 /** Calculadora do personagem (/projeto/:id/personagem/:nome): build, atributos, tabela de dano, reações e buffs. */
-import { useEffect, useRef, useState } from 'react';
-import { Link, Navigate, useParams, useSearchParams } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Link, Navigate, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useProjectView } from '../app/ProjectContext';
 import { formatPercent } from '../ui/format';
 import { useRotationStore } from '../features/rotation/store';
 import { CharacterAvatar } from '../design/primitives';
 import { Dashboard } from './personagem/Dashboard';
 import { ArtCard, ConstellationCard, TalentsCard } from './personagem/SideCards';
-import { DamageTablePanel, ReactionsPanel, ReceivedBuffsPanel } from './personagem/MainColumn';
-import { ToolsPanel, type ToolTab } from './personagem/ToolsPanel';
+import { DamageTablePanel, ReactionsPanel, ReceivedBuffsPanel, RollValuePanel } from './personagem/MainColumn';
 import { OtimizadorPanel } from './Otimizador';
 import { TalentsPanel } from './personagem/TalentsPanel';
 import { AsideCard } from './otimizar/AsideCard';
@@ -26,11 +25,10 @@ export default function Personagem() {
   const v = useProjectView();
   const { nome = '' } = useParams();
   const selectMember = useRotationStore((s) => s.selectMember);
-  const [tool, setTool] = useState<ToolTab>('optimizer');
   const [params, setParams] = useSearchParams();
   const view: View = VIEWS.some((x) => x.id === params.get('aba')) ? (params.get('aba') as View) : 'resumo';
   const goView = (next: View) => setParams(next === 'resumo' ? {} : { aba: next }, { replace: true });
-  const toolsRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   const name = decodeURIComponent(nome);
   const index = v.project.members.findIndex((m) => m.character === name);
@@ -48,11 +46,8 @@ export default function Personagem() {
   const ref = v.project.members[index];
   const character = v.data.game.characters.find((c) => c.name === name)!;
   const share = v.summary.members[index]?.fraction ?? 0;
-  const goToGood = () => {
-    setTool('good');
-    goView('avancado');
-    setTimeout(() => toolsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60);
-  };
+  /** "Usar o inventário GOOD": o inventário agora vive na tela Inventário. */
+  const goToGood = () => navigate('/inventario');
 
   const eligible = v.data.effects.characters.find((c) => c.character === character.name)?.factions ?? [];
 
@@ -112,11 +107,11 @@ export default function Personagem() {
             <>
               <DamageTablePanel v={v} index={index} />
               <div className="pc-row b">
-                <ReactionsPanel v={v} index={index} />
+                <div className="pc-col">
+                  <ReactionsPanel v={v} index={index} />
+                  <RollValuePanel v={v} index={index} />
+                </div>
                 <ReceivedBuffsPanel v={v} index={index} />
-              </div>
-              <div ref={toolsRef}>
-                <ToolsPanel v={v} index={index} tab={tool} onTab={setTool} />
               </div>
             </>
           )}

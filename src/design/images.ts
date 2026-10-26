@@ -11,9 +11,11 @@ export type PieceKey = keyof typeof PIECE_NUMBER;
 /** Ícone de uma peça de um set (o id do set do Lunaris é o mesmo do arquivo). */
 export const pieceIconUrl = (setId: number, slot: PieceKey) => `${BASE}/artifacts/UI_RelicIcon_${setId}_${PIECE_NUMBER[slot]}.webp`;
 
+import { cleanLunarisMarkup } from '../data/clean';
+
 /** Texto de passiva do Lunaris sem as marcas de cor e com as quebras de linha viradas em espaço. */
 export const cleanText = (text: string | undefined): string =>
-  (text ?? '')
+  cleanLunarisMarkup(text ?? '')
     .replace(/<[^>]*>/g, '')
     .replace(/\\n|\n/g, ' ')
     .replace(/\s+/g, ' ')

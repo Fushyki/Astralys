@@ -6,6 +6,7 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { existsSync } from 'node:fs';
+import { cleanGenerated } from './clean-generated';
 
 const RAW = path.resolve('data/raw/lunaris');
 const OUT = path.resolve('src/data/generated/talents.json');
@@ -88,6 +89,7 @@ async function main() {
     );
   }
   await writeFile(OUT, '[\n  ' + out.join(',\n  ') + '\n]\n');
+  cleanGenerated(path.dirname(OUT));
   console.log(`talents.json: ${out.length} personagens (${(out.join('').length / 1024).toFixed(0)} KB)${missing.length ? `; sem dados: ${missing.join(', ')}` : ''}`);
 }
 

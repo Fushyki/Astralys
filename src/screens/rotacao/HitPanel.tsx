@@ -4,8 +4,9 @@ import type { ProjectView } from '../../app/ProjectContext';
 import { Button } from '../../design/Button';
 import { FAMILY_COLOR, SPECIAL_LABEL, familyOf } from '../../design/damageFamily';
 import { Panel } from '../../design/primitives';
-import type { ActionRef } from '../../engine';
+import { defaultContributors, memberProcs, type ActionRef } from '../../engine';
 import { specialOfMove } from '../../engine/project';
+import { specialOfMoveRef } from '../../features/rotation/screenModel';
 import { REACTION_LABEL } from '../../features/character/characterModel';
 import { chainOf } from '../../features/rotation/projectOps';
 import { coveringBuffs, hitCascade } from '../../features/rotation/rotationModel';
@@ -43,7 +44,8 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
   const project = v.project;
   const result = v.bundle.optimization.result.actions.find((r) => r.action.id === action.id);
   const effect = v.resolved.team.members[action.member]?.characterEffect;
-  const special = specialOfMove(action.move, action.move.variant, effect);
+  const procs = memberProcs(v.resolved.team.members[action.member], v.data.game.moves);
+  const special = specialOfMoveRef(action.move, specialOfMove(action.move, action.move.variant, effect), procs);
   const name = (action.displayName ?? action.move.label).replace(`${action.move.character} - `, '');
   const chainId = action.chainId;
   const execs = chainId ? chainOf(project, chainId) : [];
@@ -66,7 +68,7 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
   const memberLabel = project.members[action.member]?.character ?? '';
   const hitsEach = action.executions;
   const teamReaction = action.move.talent === 'reaction' && /^(lunarcharged|lunarcrystallize|stellarswirl)/.test(action.move.label);
-  const who = action.contributors?.length ? action.contributors : [action.member];
+  const who = action.contributors?.length ? action.contributors : defaultContributors(v.resolved.team.members.map((m) => m.character.element), action.move.label, action.member);
   const toggleWho = (i: number) => {
     const next = who.includes(i) ? who.filter((x) => x !== i) : [...who, i];
     if (next.length > 0) update(action.id, { contributors: next });

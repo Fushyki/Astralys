@@ -2,7 +2,8 @@
 import { useMemo, useState } from 'react';
 import type { ProjectView } from '../../app/ProjectContext';
 import { Panel } from '../../design/primitives';
-import { damageColor } from '../../design/damageFamily';
+import { FamilyBadge, damageColor } from '../../design/damageFamily';
+import { specialOfMoveRef } from '../../features/rotation/screenModel';
 import { REACTION_ACTIONS, kitElement, memberProcs } from '../../engine';
 import { specialOfMove } from '../../engine/project';
 import { cleanMoveName } from '../../features/character/characterModel';
@@ -107,10 +108,10 @@ export function Moves({ v }: { v: ProjectView }) {
                 type="button"
                 className="rt-mv"
                 title={`${p.origin}${p.proc.note ? `: ${p.proc.note}` : ''}`}
-                style={{ ['--c' as string]: v.colors[member] }}
+                style={{ ['--c' as string]: damageColor(undefined, p.proc.special?.reaction) ?? v.colors[member] }}
                 onClick={() => insert({ member, move: { character, talent: 'proc', label: p.key, variant: 0 }, displayName: `${character} - ${p.proc.label}` })}
               >
-                <span className="dot" /><span className="n">{p.proc.label}</span><span className="plus" aria-hidden="true">+</span>
+                <span className="dot" /><span className="n">{p.proc.label}</span><FamilyBadge special={p.proc.special?.reaction} /><span className="plus" aria-hidden="true">+</span>
               </button>
             ))}
           </div>
@@ -123,10 +124,10 @@ export function Moves({ v }: { v: ProjectView }) {
                 key={r.key}
                 type="button"
                 className="rt-mv"
-                style={{ ['--c' as string]: v.colors[member] }}
+                style={{ ['--c' as string]: damageColor(undefined, specialOfMoveRef({ talent: 'reaction', label: r.key }, undefined, [])) ?? v.colors[member] }}
                 onClick={() => insert({ member, move: { character, talent: 'reaction', label: r.key, variant: 0 }, displayName: `${character} - ${r.label}` })}
               >
-                <span className="dot" /><span className="n">{r.label}</span><span className="plus" aria-hidden="true">+</span>
+                <span className="dot" /><span className="n">{r.label}</span><FamilyBadge special={specialOfMoveRef({ talent: 'reaction', label: r.key }, undefined, [])} /><span className="plus" aria-hidden="true">+</span>
               </button>
             ))}
           </div>

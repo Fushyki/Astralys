@@ -4,10 +4,11 @@ import type { ProjectView } from '../../app/ProjectContext';
 import { Button } from '../../design/Button';
 import { SPECIAL_LABEL } from '../../design/damageFamily';
 import { Panel } from '../../design/primitives';
+import { memberProcs } from '../../engine';
 import { specialOfMove } from '../../engine/project';
 import { REACTION_LABEL } from '../../features/character/characterModel';
 import type { LaneInfo } from '../../features/rotation/rotationModel';
-import { sequenceRows } from '../../features/rotation/screenModel';
+import { sequenceRows, specialOfMoveRef } from '../../features/rotation/screenModel';
 import { useRotationStore } from '../../features/rotation/store';
 import { dec } from './ui';
 
@@ -25,6 +26,12 @@ export function Sequence({ v, lanes }: { v: ProjectView; lanes: LaneInfo[] }) {
   const [drag, setDrag] = useState<{ from: number; over: number } | null>(null);
   const project = v.project;
   const rows = useMemo(() => sequenceRows(project), [project]);
+  /** Golpes extras de cada membro (para saber quais são dano Lunar/Estelar). */
+  const procCache = useMemo(() => new Map<number, ReturnType<typeof memberProcs>>(), [v.resolved, v.data.game.moves]);
+  const procsOf = (i: number) => {
+    if (!procCache.has(i)) procCache.set(i, v.resolved.team.members[i] ? memberProcs(v.resolved.team.members[i], v.data.game.moves) : []);
+    return procCache.get(i)!;
+  };
   const results = v.bundle.optimization.result.actions;
   const laneTags = useMemo(() => new Set(lanes.map((l) => l.tag)), [lanes]);
   // Recolhida, a lista mostra os primeiros golpes e, se estiver fora deles, também a linha do golpe selecionado.
@@ -76,7 +83,7 @@ export function Sequence({ v, lanes }: { v: ProjectView; lanes: LaneInfo[] }) {
               const res = results.find((x) => x.action.id === a.id);
               const sel = checked.has(rowKey(r));
               const effect = v.resolved.team.members[a.member]?.characterEffect;
-              const special = specialOfMove(a.move, a.move.variant, effect);
+              const special = specialOfMoveRef(a.move, specialOfMove(a.move, a.move.variant, effect), procsOf(a.member));
               const reacted = project.actions.find((x) => r.ids.includes(x.id) && x.reaction !== 'none');
               const reaction = special ? SPECIAL_LABEL[special] : reacted ? REACTION_LABEL[reacted.reaction] : '—';
               const active = res ? res.action.activeTags.filter((t) => laneTags.has(t)).length : 0;

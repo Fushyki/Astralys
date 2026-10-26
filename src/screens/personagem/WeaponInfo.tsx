@@ -1,6 +1,7 @@
 /** Popup da arma (no ícone do Resumo e build): passiva no refinamento dele, stats e os buffs da arma, cada um com o botão de ativar. */
 import { useEffect, useMemo } from 'react';
 import { useProjectView } from '../../app/ProjectContext';
+import { cleanLunarisMarkup } from '../../data/clean';
 import { weaponIconUrl } from '../../design/images';
 import { weaponStatsAt } from '../../effects/schema';
 import { memberBuffCards, type BuffCard } from '../../features/character/characterModel';
@@ -64,7 +65,7 @@ export function WeaponInfoDialog({ index, onClose }: { index: number; onClose: (
         </div>
         <section className="wi-sec">
           <h3>{weapon?.passive ? (weapon.passive.namePt ?? weapon.passive.name) : 'Passiva'}</h3>
-          <p className="wi-desc">{passive ? (passive.descriptionPt ?? passive.description).split('\\n').join('\n') : 'Esta arma não tem passiva nos dados.'}</p>
+          <p className="wi-desc">{passive ? cleanLunarisMarkup(passive.descriptionPt ?? passive.description) : 'Esta arma não tem passiva nos dados.'}</p>
         </section>
         <section className="wi-sec">
           <h3>Buffs</h3>

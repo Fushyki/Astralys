@@ -657,8 +657,8 @@ export function OtimizadorPanel({ index }: { index: number }) {
                     sets={data.game.artifacts}
                     caption={goalCaption}
                     focusValue={focusValue}
-                    onEquip={c.outside ? undefined : () => equip(c.build)}
-                    equipped={equippedKey === c.build.key}
+                    onEquip={() => equip(c.build)}
+                    equipped={c.isCurrent || equippedKey === c.build.key}
                     isCurrent={c.isCurrent}
                     blocked={blockedSet}
                     onBlock={toggleBlock}

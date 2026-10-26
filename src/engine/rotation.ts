@@ -79,6 +79,8 @@ export interface RotationAction {
    * Sem lista, só o dono da ação contribui.
    */
   contributors?: readonly number[];
+  /** Dano fixo que ESTE golpe não consome (ids de `flatId`); o golpe fica de fora mesmo sobrando stacks. */
+  flatOff?: readonly string[];
   time?: number;
   note?: string;
 }
@@ -112,7 +114,25 @@ export interface ActionResult {
   avg: number;
   /** Reação de time: o valor de cada contribuinte (média) e o peso que ele teve (pesos 1, 1/2, 1/12, 1/12, do maior para o menor). */
   contributors?: { member: number; avg: number; weight: number }[];
+  /** Dano fixo que este golpe poderia receber: quantos hits consumiu de cada efeito (0 = não consumiu: desligado aqui ou sem stacks). */
+  flatUse?: FlatUse[];
 }
+
+/** Uso de um buff de dano fixo por um golpe. */
+export interface FlatUse {
+  id: string;
+  name: string;
+  source: string;
+  perHit: number;
+  hits: number;
+  /** O usuário tirou este golpe do efeito. */
+  off: boolean;
+  /** Stacks totais do efeito (undefined = todos os golpes). */
+  stacks?: number;
+}
+
+/** Id estável de um buff de dano fixo (quem dá + nome). */
+export const flatId = (e: { source: string; name: string }): string => `${e.source}|${e.name}`;
 
 export type DamageKind = 'direct' | 'transformative' | 'lunar' | 'stellar';
 
@@ -227,6 +247,20 @@ export function scaleAt(move: ResolvedMove, level: number | undefined) {
   };
 }
 
+/** Elementos que aplicam cada reação Lunar (quem participa dela quando o usuário não escolhe os contribuintes). */
+const REACTION_APPLIERS: Record<string, readonly string[]> = { lunarcharged: ['Electro', 'Hydro'], lunarcrystallize: ['Geo', 'Hydro'] };
+
+/**
+ * Contribuintes padrão de uma reação de time: os membros com os elementos dela (Lunar-Carregado = Hydro e Electro). Sem
+ * nenhum, ou para os outros tipos, só o dono da ação. O usuário troca a lista em "Golpe selecionado".
+ */
+export function defaultContributors(elements: readonly string[], label: string, owner: number): number[] {
+  const key = /^(lunarcharged|lunarcrystallize)/.exec(label)?.[1];
+  const appliers = key ? REACTION_APPLIERS[key] : undefined;
+  const who = appliers ? elements.flatMap((e, i) => (appliers.includes(e) ? [i] : [])) : [];
+  return who.length ? who : [owner];
+}
+
 /** Elementos de alvo/estilo de cada efeito de dano fixo vêm como texto; compara sem diferenciar maiúsculas. */
 const sameEl = (a: string, b: string) => a.toLowerCase() === b.toLowerCase();
 
@@ -269,7 +303,37 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
     return { effect: e, perHit, remaining: e.stacks ?? Infinity };
   });
 
-  const results: ActionResult[] = actions.map((action) => {
+  /** Elemento padrão do golpe (kit do jogo, infusão ou o do personagem). */
+  const elementOfAction = (action: RotationAction): ElementOrPhysical => {
+    const m = members[action.member];
+    return action.move.element ?? (config.elementMode === 'kit' ? kitElement(m.character, action.move, m.normalInfusion) : m.character.element);
+  };
+  // Dano fixo: os golpes consomem os stacks na ORDEM DO TEMPO (empate: ordem da lista), salvo os que o usuário tirou do efeito.
+  const flatPass: { damage: number; use: FlatUse[] }[] = actions.map(() => ({ damage: 0, use: [] }));
+  [...actions.keys()].sort((x, y) => (actions[x].time ?? 0) - (actions[y].time ?? 0) || x - y).forEach((idx) => {
+    const action = actions[idx];
+    const move = action.move;
+    if (damageKind(move) !== 'direct') return; // Lunar/Estelar e reações não consomem dano fixo
+    const member = members[action.member];
+    const element = elementOfAction(action);
+    const hitsOfAction = action.executions * Math.max(1, move.hits);
+    for (const f of flat) {
+      if (f.perHit <= 0) continue;
+      const e = f.effect;
+      const targetOk = e.targets === 'all' || e.targets.includes(member.character.name);
+      const elementOk = e.elements.length === 0 || (element !== 'Physical' && e.elements.some((x) => sameEl(x, element)));
+      const typeOk = e.hitTypes.length === 0 || (move.hitType !== 'other' && e.hitTypes.includes(move.hitType));
+      if (!(targetOk && elementOk && typeOk)) continue;
+      const id = flatId(e);
+      const off = !!action.flatOff?.includes(id);
+      const covered = off || f.remaining <= 0 ? 0 : Math.min(hitsOfAction, f.remaining);
+      f.remaining -= covered;
+      flatPass[idx].damage += covered * f.perHit;
+      flatPass[idx].use.push({ id, name: e.name, source: e.source, perHit: f.perHit, hits: covered, off, ...(e.stacks !== undefined ? { stacks: e.stacks } : {}) });
+    }
+  });
+
+  const results: ActionResult[] = actions.map((action, idx) => {
     const member = members[action.member];
     const move = action.move;
     const tags = new Set(action.activeTags);
@@ -289,7 +353,7 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
       const hit = move.reactionHit;
       if (hit && (hit.kind === 'lunar' || hit.kind === 'stellarswirl')) {
         // Reação do time: cada contribuinte vale por si (EM e crítico próprios) e o total é a soma ponderada 1 + 1/2 + 1/12 + 1/12.
-        const who = [...new Set(action.contributors?.length ? action.contributors : [action.member])].filter((i) => i >= 0 && i < members.length).slice(0, CONTRIBUTOR_WEIGHTS.length);
+        const who = [...new Set(action.contributors?.length ? action.contributors : defaultContributors(members.map((m) => m.character.element), move.label, action.member))].filter((i) => i >= 0 && i < members.length).slice(0, CONTRIBUTOR_WEIGHTS.length);
         const each = who.map((i) => {
           const st = statsFor(i, tags);
           const en: EnemyStats = { ...enemy, defIgnore: Math.min(1, (config.enemyDefIgnore ?? 0) + (st.defIgnore ?? 0)) };
@@ -319,20 +383,8 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
     // Sem elemento escolhido, vale o do kit (Físico nos ataques normais de arma, elemento nas habilidades) ou, no modo antigo, o do personagem.
     const element: ElementOrPhysical = move.element ?? (config.elementMode === 'kit' ? kitElement(member.character, move, member.normalInfusion) : member.character.element);
 
-    // Dano fixo desta linha
-    const hitsOfAction = action.executions * Math.max(1, move.hits);
-    let flatDamage = 0;
-    for (const f of flat) {
-      if (f.perHit <= 0 || f.remaining <= 0) continue;
-      const e = f.effect;
-      const targetOk = e.targets === 'all' || e.targets.includes(member.character.name);
-      const elementOk = e.elements.length === 0 || (element !== 'Physical' && e.elements.some((x) => sameEl(x, element)));
-      const typeOk = e.hitTypes.length === 0 || (move.hitType !== 'other' && e.hitTypes.includes(move.hitType));
-      if (!(targetOk && elementOk && typeOk)) continue;
-      const covered = Math.min(hitsOfAction, f.remaining);
-      f.remaining -= covered;
-      flatDamage += covered * f.perHit;
-    }
+    // Dano fixo desta linha (consumido em ordem de tempo; ver `flatPass`)
+    const flatDamage = flatPass[idx]?.damage ?? 0;
 
     const level = move.talent === 'proc' || move.talent === 'reaction' ? 1 : member.talents[move.talent];
     const scale = scaleAt(move, level);

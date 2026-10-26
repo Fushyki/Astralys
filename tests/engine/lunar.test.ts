@@ -92,12 +92,20 @@ describe('distinção Lunar/Estelar nas listas de golpes', () => {
 });
 
 describe('reação Lunar de time: contribuintes 1, 1/2, 1/12, 1/12', () => {
+  it('sem lista, contribuem os membros Electro e Hydro do time (padrão); o dono não precisa ser um deles', () => {
+    const t = [{ character: 'Flins' }, { character: 'Ineffa' }, { character: 'Columbina' }, { character: 'Sucrose' }];
+    const a = run(t, [{ talent: 'reaction', label: 'lunarcharged', member: 3 }]).result.actions[0];
+    expect(a.contributors!.map((c) => c.member).sort()).toEqual([0, 1, 2]);
+    const owner = run(t, [{ talent: 'reaction', label: 'lunarcrystallize', member: 3 }]).result.actions[0];
+    expect(owner.contributors!.map((c) => c.member)).toEqual([2]);
+  });
+
   const team = [{ character: 'Flins' }, { character: 'Ineffa' }, { character: 'Columbina' }];
   const one = (c?: number[]) => run(team, [{ talent: 'reaction', label: 'lunarcharged', ...(c ? { contributors: c } : {}) }]).result.actions[0];
 
   it('um contribuinte vale o multiplicador de reação (1,8 no Lunar-Charged = 0,6 × 3)', () => {
-    const a = one();
-    const { r } = run(team, [{ talent: 'reaction', label: 'lunarcharged' }]);
+    const a = one([0]);
+    const { r } = run(team, [{ talent: 'reaction', label: 'lunarcharged', contributors: [0] }]);
     const s = a.stats;
     const rb = (k: string) => (s.reactionBonus as Record<string, number>)[k] ?? 0;
     const direct = computeLunarReaction('lunarcharged', {

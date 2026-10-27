@@ -101,3 +101,8 @@
 .tl-cond .tl-stacks b { min-width: 3.2em; text-align: center; }
 .tl-cond .tl-stacks b small { color: var(--muted); font-weight: 400; }
 
+
+/* número de stacks digitável */
+.stack-in { width: 3.4em; min-width: 0; text-align: center; background: transparent; border: 0; border-bottom: 1px solid var(--border-ctl-hi); color: inherit; font: inherit; padding: 0 2px; }
+.stack-in:focus { outline: none; border-bottom-color: var(--gold); }
+.stack-in:disabled { opacity: .5; }

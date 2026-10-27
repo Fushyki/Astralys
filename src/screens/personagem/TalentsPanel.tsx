@@ -3,6 +3,7 @@
  * golpes em grupos e três passivas. As condições (checkbox + valor + efeitos) são os buffs curados do personagem:
  * ligar ou desligar muda o cálculo do time inteiro na hora.
  */
+import { StackInput } from './StackInput';
 import { useDamageView } from '../../features/character/damageView';
 import { useEffect, useMemo, useState } from 'react';
 import type { ProjectView } from '../../app/ProjectContext';
@@ -132,9 +133,7 @@ function Condition({ buff, index, constellation, disabled, chips, onToggle, chos
       {buff.stacks && onStacks && (
         <div className="tl-stacks" role="group" aria-label={`Quantidade de ${buff.stacks.unit ?? 'stacks'} de ${buff.label}`}>
           <span>{buff.stacks.unit ?? 'Stacks'}</span>
-          <button type="button" aria-label="Menos" disabled={locked || n <= 0} onClick={() => onStacks(n - 1)}>−</button>
-          <b className="num">{n}<small>/{buff.stacks.max}</small></b>
-          <button type="button" aria-label="Mais" disabled={locked || n >= buff.stacks.max} onClick={() => onStacks(n + 1)}>+</button>
+          <StackInput value={n} max={buff.stacks.max} disabled={locked} label={`${buff.stacks.unit ?? 'Stacks'} de ${buff.label}`} onChange={onStacks} />
         </div>
       )}
       <div className="rows">

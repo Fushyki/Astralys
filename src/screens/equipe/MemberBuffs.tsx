@@ -7,6 +7,7 @@ import type { ProjectView } from '../../app/ProjectContext';
 import { memberBuffCards, type BuffCard } from '../../features/character/characterModel';
 import { useRotationStore } from '../../features/rotation/store';
 import { formatPercent } from '../../ui/format';
+import { StackInput } from '../personagem/StackInput';
 import { Button } from '../../design/Button';
 
 interface Group {
@@ -85,9 +86,7 @@ export function MemberBuffs({ v, index, inline = false }: { v: ProjectView; inde
                     {c.stack && (
                       <span className="bc-stacks" role="group" aria-label={`Quantidade de ${c.stack.unit ?? 'stacks'}`}>
                         <span>{c.stack.unit ?? 'Stacks'}</span>
-                        <button type="button" aria-label="Menos" disabled={c.stack.n <= 0} onClick={(e) => { e.preventDefault(); updateMember(c.stack!.giver, { stacks: { ...v.project.members[c.stack!.giver].stacks, [c.stack!.buffId]: c.stack!.n - 1 } }); }}>−</button>
-                        <b className="num">{c.stack.n}<small>/{c.stack.max}</small></b>
-                        <button type="button" aria-label="Mais" disabled={c.stack.n >= c.stack.max} onClick={(e) => { e.preventDefault(); updateMember(c.stack!.giver, { stacks: { ...v.project.members[c.stack!.giver].stacks, [c.stack!.buffId]: c.stack!.n + 1 } }); }}>+</button>
+                        <StackInput value={c.stack.n} max={c.stack.max} label={`${c.stack.unit ?? 'Stacks'} de ${c.name}`} onChange={(n) => updateMember(c.stack!.giver, { stacks: { ...v.project.members[c.stack!.giver].stacks, [c.stack!.buffId]: n } })} />
                       </span>
                     )}
                     <span className="bc-meta">

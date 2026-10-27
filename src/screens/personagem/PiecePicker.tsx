@@ -5,7 +5,7 @@ import { pieceIconUrl } from '../../design/images';
 import { mainStatOf, pieceLevel, type RealPiece, type SlotKey } from '../../engine';
 import type { ArtifactSet } from '../../data/schema';
 import { norm, type Good } from '../../features/good/goodImport';
-import { MAIN_LABEL, SUB_LABEL, formatMain, formatSub } from '../../features/good/labels';
+import { MAIN_LABEL, SUB_LABEL, characterDisplayName, formatMain, formatSub } from '../../features/good/labels';
 
 const SLOT_LABEL: Record<SlotKey, string> = { flower: 'Flor', plume: 'Pluma', sands: 'Areia', goblet: 'Cálice', circlet: 'Tiara' };
 const PAGE = 36;
@@ -24,7 +24,7 @@ function Tile({ p, set, mine, current, onClick }: { p: RealPiece; set?: Artifact
       <span className="main">{MAIN_LABEL[p.mainStatKey] ?? p.mainStatKey} <b className="num">{formatMain(p.mainStatKey, main.value)}</b> <small>+{main.level}</small></span>
       <ul>{p.substats.map((s) => <li key={s.key}><span>{SUB_LABEL[s.key] ?? s.key}</span><b className="num">{formatSub(s.key, s.value)}</b></li>)}</ul>
       {current && <span className="tag now">Equipada aqui</span>}
-      {!current && p.location && <span className={`tag${mine ? ' mine' : ''}`}>{mine ? 'Dele no inventário' : `Em ${p.location}`}</span>}
+      {!current && p.location && <span className={`tag${mine ? ' mine' : ''}`}>{mine ? 'Dele no inventário' : `Em ${characterDisplayName(p.location)}`}</span>}
     </button>
   );
 }

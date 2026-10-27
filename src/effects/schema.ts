@@ -124,6 +124,20 @@ export const KitSpecialMoveSchema = SpecialMoveSchema.extend({
 });
 export type KitSpecialMove = z.infer<typeof KitSpecialMoveSchema>;
 
+/** Golpes que somam "% do ATK por ponto" de um recurso escolhido pelo usuário (Espírito Lutador da Mavuika). */
+export const PointMoveSchema = z.object({
+  talent: z.enum(['normal', 'skill', 'burst']),
+  /** Rótulos (Lunaris) dos golpes que ganham o bônus. */
+  labels: z.array(z.string().min(1)).min(1),
+  /** Talento cujo nível escolhe o valor por ponto. */
+  levelTalent: z.enum(['normal', 'skill', 'burst']),
+  /** Fração do ATK por ponto, nos níveis 1 a 15 do talento. */
+  perPoint: z.array(z.number()).length(15),
+  max: z.number().int().positive(),
+  unit: z.string().min(1),
+});
+export type PointMove = z.infer<typeof PointMoveSchema>;
+
 /** Stats que uma conversão pode alimentar (fixos ou em fração). */
 export const ConvertTargetSchema = z.enum(['atkFlat', 'hpFlat', 'defFlat', 'atkPct', 'hpPct', 'defPct', 'em', 'dmgPct', 'critRate', 'critDmg', 'er', 'normal', 'charged', 'plunge', 'skill', 'burst', ...REACTION_BONUS_KEYS]);
 export type ConvertTarget = z.infer<typeof ConvertTargetSchema>;
@@ -230,6 +244,11 @@ export const CharacterBuffSchema = z.object({
   defShred: z.number().positive().optional(),
   /** Dano fixo por golpe elegível (ex.: Gorou A4, "Dano de Habilidade aumentado em 156% da DEF"). */
   flat: z.array(WeaponFlatSchema).default([]),
+  /**
+   * O bônus cai em linha reta até 0 em `duration` segundos depois do início da janela (ex.: A4 da Mavuika, 20 s). Com a constelação
+   * `noDecayFrom` ou maior ele não cai mais.
+   */
+  decay: z.object({ duration: z.number().positive(), noDecayFrom: z.number().int().min(0).max(6).optional() }).optional(),
   /** Efeito com stacks ou pontos: os números acima valem para `max`; o usuário escolhe quantos (`MemberRef.stacks`). */
   stacks: z.object({
     max: z.number().int().min(2),
@@ -276,6 +295,8 @@ export const CharacterEffectSchema = z.object({
   factions: z.array(z.enum(['moonsign', 'hexerei'])).default([]),
   /** Golpes do kit que causam dano Lunar/Estelar no lugar do dano direto. */
   specialMoves: z.array(KitSpecialMoveSchema).default([]),
+  /** Golpes com bônus por ponto de recurso (o usuário escolhe os pontos no golpe). */
+  pointMoves: z.array(PointMoveSchema).optional(),
   fonte_info: FonteInfo,
 });
 export type CharacterEffect = z.infer<typeof CharacterEffectSchema>;

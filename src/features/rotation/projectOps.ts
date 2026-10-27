@@ -27,6 +27,8 @@ export interface NewAction {
   executions?: number;
   reaction?: ActionRef['reaction'];
   activeTags?: string[];
+  /** Pontos do recurso do golpe (Espírito Lutador): ver `ActionRef.points`. */
+  points?: number;
 }
 
 export function addAction(project: RotationProject, input: NewAction): RotationProject {
@@ -43,6 +45,7 @@ export function addAction(project: RotationProject, input: NewAction): RotationP
     executions: Math.max(MIN_EXECUTIONS, input.executions ?? 1),
     reaction: input.reaction ?? 'none',
     activeTags: input.activeTags ?? [],
+    ...(input.points !== undefined ? { points: input.points } : {}),
     // Ações novas seguem as janelas de buff: arrastar no tempo muda os buffs que valem.
     tagSource: 'windows',
     dmgAdjust: 0,

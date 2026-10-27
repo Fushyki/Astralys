@@ -20,7 +20,7 @@ import { useRotationStore } from '../features/rotation/store';
 import { energyMembers, energyResults } from '../features/energy/energyModel';
 import { kitElement, kitProcMoves, type ElementOrPhysical, type ReactionChoice } from '../engine';
 import { mainStatValue } from '../engine/pieces';
-import { MAIN_LABEL, SUB_LABEL, formatMain, formatSub } from '../features/good/labels';
+import { MAIN_LABEL, SUB_LABEL, characterDisplayName, formatMain, formatSub } from '../features/good/labels';
 import { formatDecimal, formatInt } from '../ui/format';
 import './otimizador.css';
 import { Button, ButtonLink } from '../design/Button';
@@ -396,7 +396,7 @@ export function OtimizadorPanel({ index }: { index: number }) {
     if (!a.location) return null;
     const i = project.members.findIndex((m) => norm(m.character) === norm(a.location));
     if (i >= 0) return project.members[i].pieces?.length ? null : info(project.members[i].character, v.colors[i]);
-    return info(a.location, 'var(--faint)');
+    return info(characterDisplayName(a.location, data.game.characters), 'var(--faint)');
   };
   const currentSig = new Set((current?.pieces ?? []).map(pieceSig));
   /** Builds da lista: o equipado entra na posição dele (selo "equipado hoje") ou, se ficou fora do top, no fim. */

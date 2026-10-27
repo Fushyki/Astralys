@@ -42,6 +42,11 @@ export function PieceArt({ piece, setId, setName, dot }: { piece: GoodArtifact; 
 export const critValue = (s: Pick<FinalStats, 'critRate' | 'critDmg'>): number => (2 * s.critRate + s.critDmg) * 100;
 
 export const fmtPct = (f: number) => `${formatDecimal(f * 100, 1)}%`;
+
+/** Taxa Crítica acima de 100% não rende nada (o cálculo limita em 100%): mostra o valor real e o selo de excesso. */
+export function CritExcess({ rate }: { rate: number }) {
+  return rate > 1 + 1e-9 ? <i className="dz-chip warn crit-excess" title="O cálculo usa no máximo 100% de Taxa Crítica">excesso de {fmtPct(rate - 1)}</i> : null;
+}
 export const fmtInt = formatInt;
 
 /** Imagem grande da peça (64 px) ou o glifo da posição quando falta. */

@@ -136,10 +136,10 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
     await page.fill('input[aria-label="Valor do mínimo"]', value);
     await page.click('.ot-min-add .dz-btn');
   };
-  await addMin('cr', '100.5');
+  await addMin('cr', '125.5');
   check('o mínimo vira um chip dourado removível', (await page.locator('.ot-minchip:has(button[aria-label="Remover mínimo de Taxa crítica"])').count()) === 1);
   const bad = (await page.textContent('.ot-eq.bad')).trim();
-  check('equipado que não atinge o mínimo: chip vermelho com o valor que tem', /^Equipado hoje não atinge Taxa crítica ≥ 100,5% \(tem \d+,\d%\)$/.test(bad), bad);
+  check('equipado que não atinge o mínimo: chip vermelho com o valor que tem', /^Equipado hoje não atinge Taxa crítica ≥ 125,5% \(tem \d+,\d%\)$/.test(bad), bad);
   await page.click('.ot-go-btn');
   await page.waitForSelector('.ot-build', { timeout: 120000 });
   const body = await page.textContent('.ot-results');

@@ -156,14 +156,16 @@
       "stat": "DMG%",
       "value": 0.25,
       "team": false,
-      "description": "Da planilha original — origem não identificada, confirme"
+      "description": "Iansan C6: +25% de DMG",
+      "label": "Iansan C6"
     },
     {
       "target": "Mavuika",
       "stat": "DMG%",
       "value": 0.15,
       "team": false,
-      "description": "Da planilha original — origem não identificada, confirme"
+      "description": "Bennett C6 (Fogo e Coragem): +15% de DMG",
+      "label": "Bennett C6"
     },
     {
       "target": "Citlali",

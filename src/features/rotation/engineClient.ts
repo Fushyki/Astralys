@@ -2,6 +2,7 @@
  * Cliente do Web Worker do motor. Cada pedido recebe um id e devolve uma Promise; se o navegador não
  * suportar workers (ou nos testes), o mesmo código roda na thread principal.
  */
+import { reloadOnce } from '../../app/reloadOnce';
 import { handleEngineRequest, type EngineRequest, type EngineResponse, type EngineResult } from '../../engine';
 
 type DistributiveOmit<T, K extends keyof never> = T extends unknown ? Omit<T, K> : never;
@@ -19,9 +20,19 @@ export class EngineClient {
 
   constructor() {
     if (typeof Worker === 'undefined') return;
-    this.worker = new Worker(new URL('../../engine/worker.ts', import.meta.url), { type: 'module' });
+    try {
+      this.worker = new Worker(new URL('../../engine/worker.ts', import.meta.url), { type: 'module' });
+    } catch {
+      // Sem Worker (ou arquivo que sumiu depois de um deploy): recarrega uma vez; se não der, calcula na thread principal.
+      reloadOnce();
+      return;
+    }
     this.worker.onmessage = (event: MessageEvent<EngineResponse>) => this.settle(event.data);
-    this.worker.onerror = (event) => this.failAll(new Error(event.message || 'O motor de cálculo parou de responder.'));
+    this.worker.onerror = (event) => {
+      // O arquivo do Worker não carregou (index.html antigo): recarrega uma vez.
+      reloadOnce();
+      this.failAll(new Error(event.message || 'O motor de cálculo parou de responder.'));
+    };
   }
 
   request<T extends EngineResult>(body: EngineRequestBody): Promise<T> {

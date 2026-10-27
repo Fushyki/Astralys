@@ -388,7 +388,10 @@ export function memberBuffCards(project: RotationProject, resolved: ResolvedProj
     });
   }
 
+  // Os buffs extras do membro já vieram das fontes estáticas acima: não entram de novo (era a duplicata "Buff sem origem conhecida").
+  const seen = new Set(cards.map((c) => c.id));
   for (const b of receivedBuffs(project, resolved, bundle, member)) {
+    if (seen.has(b.id)) continue;
     const idMatch = /^cbuff-(\d+)-(.+)$/.exec(b.id);
     const tag = b.id.startsWith('gear-') ? 'Arma/set' : b.id.startsWith('flat-atk-') ? 'Passiva' : idMatch ? characterBuffTag(resolved, Number(idMatch[1]), idMatch[2]) : 'Extra';
     cards.push({

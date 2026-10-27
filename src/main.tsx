@@ -3,6 +3,9 @@ import ReactDOM from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Navigate, Route, Routes, useParams } from 'react-router-dom';
 import './index.css';
+import { installDeployRecovery } from './app/reloadOnce';
+
+installDeployRecovery();
 
 // O editor (e os ~1 MB de dados do jogo) só é baixado quando a rota é aberta.
 const ProjectLayout = lazy(() => import('./app/ProjectLayout'));

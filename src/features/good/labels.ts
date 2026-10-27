@@ -19,3 +19,21 @@ export function formatSub(key: string, value: number): string {
 export function formatMain(key: string, fraction: number): string {
   return PERCENT.has(key) ? `${formatDecimal(fraction * 100, 1)}%` : formatInt(fraction);
 }
+
+const normKey = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '');
+
+/**
+ * Nome de exibição de um personagem que vem do GOOD (`KaedeharaKazuha` → "Kaedehara Kazuha", `YumemizukiMizuki` → "Yumemizuki Mizuki").
+ * Com a lista de personagens do jogo, vale o nome oficial; sem ela (ou sem achar), separa as palavras da chave. O Viajante do GOOD é "Viajante".
+ */
+export function characterDisplayName(key: string, characters?: readonly { name: string }[]): string {
+  const hit = characters?.find((c) => normKey(c.name) === normKey(key));
+  if (hit) return hit.name;
+  if (/^traveler/i.test(key)) return 'Viajante';
+  return key.replace(/([a-z])([A-Z])/g, '$1 $2');
+}
+
+/** Chaves de dono do GOOD que não casam com nenhum personagem dos dados (para listar nomes sem mapeamento). */
+export function unmappedOwnerKeys(owners: readonly string[], characters: readonly { name: string }[]): string[] {
+  return [...new Set(owners.filter((o) => o && !characters.some((c) => normKey(c.name) === normKey(o))))].sort();
+}

@@ -333,3 +333,6 @@ button.ot-ch[aria-pressed='true'] b { color: var(--gold-hi); }
 .pcard.weapon .art.info:hover, .pcard.weapon .art.info:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 .pcard.weapon:hover { border-color: var(--gold); }
 .pcard.weapon .mv b { color: var(--text); }
+
+/* selo de excesso de Taxa Crítica */
+.crit-excess { margin-left: var(--sp-2); font-style: normal; white-space: nowrap; }

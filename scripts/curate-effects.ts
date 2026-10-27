@@ -17,6 +17,7 @@ import { CharacterBuffSchema, CharacterEffectSchema, ProcSchema, SetEffectSchema
 import { FOUR_PIECE, type Val } from './curation/sets';
 import { FOUR_PIECE_2 } from './curation/sets2';
 import { parseTwoPiece } from './lib/twoPiece';
+import { POINT_MOVES } from './curation/points';
 import { WEAPONS } from './curation/weapons';
 import { WEAPONS_2 } from './curation/weapons2';
 import type { BuffCur, FlatCur, GearCur, ProcCur, StatsCur, Sum } from './curation/gear';
@@ -409,7 +410,7 @@ function buildCharacters(): CharacterEffect[] {
   const strip = (t: string) => t.replace(/<[^>]*>/g, '').replace(/\{\/?LINK[^}]*\}/g, '').replace(/\n/g, ' ').replace(/\s+/g, ' ');
 
   const moves = read<{ character: string; talent: string; label: string; variant: number }[]>('src/data/generated/moves.json');
-  const names = [...new Set([...Object.keys(CHARACTER_BUFFS), ...Object.keys(CHARACTER_NOTES), ...Object.keys(CHARACTER_PROCS), ...Object.keys(LUNAR_PROCS), ...Object.keys(FACTIONS), ...Object.keys(SPECIAL_MOVES)])];
+  const names = [...new Set([...Object.keys(POINT_MOVES), ...Object.keys(CHARACTER_BUFFS), ...Object.keys(CHARACTER_NOTES), ...Object.keys(CHARACTER_PROCS), ...Object.keys(LUNAR_PROCS), ...Object.keys(FACTIONS), ...Object.keys(SPECIAL_MOVES)])];
   for (const name of names) {
     const list = CHARACTER_BUFFS[name] ?? [];
     const handMadeEntry = existing.find((e) => e.character === name);
@@ -456,6 +457,7 @@ function buildCharacters(): CharacterEffect[] {
         timed: b.timed,
         ...(stackInfo(b) ? { stacks: stackMeta(b, node.params, `${name} ${b.id}`, STACK_UNITS[`${name}:${b.id}`], node.description) } : {}),
         ...(b.forElements ? { forElements: b.forElements } : {}),
+        ...(b.decay ? { decay: b.decay } : {}),
         ...(b.forFactions ? { forFactions: b.forFactions } : {}),
         ...(s
           ? {
@@ -534,6 +536,12 @@ function buildCharacters(): CharacterEffect[] {
     const procIds = procs.map((p) => p.id).filter((id, i, all) => all.indexOf(id) !== i);
     if (procIds.length) errors.push(`${name}: ids de golpe extra repetidos: ${procIds.join(', ')}`);
     const factions = FACTIONS[name] ?? [];
+    const pointMoves = (POINT_MOVES[name] ?? []).map((p) => {
+      const row = raw.skills?.[SKILL_KEY[p.kitTalent]]?.multipliers?.[p.key];
+      if (!row || row.length !== 15) throw new Error(`${name}: a linha "${p.key}" não existe ou não tem 15 níveis`);
+      for (const l of p.labels) if (!moves.some((m) => m.character === name && m.talent === p.talent && m.label === l)) errors.push(`${name}: golpe "${l}" (${p.talent}) não existe no Lunaris`);
+      return { talent: p.talent, labels: p.labels, levelTalent: p.kitTalent, perPoint: row.map((t) => percentOf(String(t))), max: p.max, unit: p.unit };
+    });
     const specialMoves = SPECIAL_MOVES[name] ?? [];
     for (const s of specialMoves) {
       if (!moves.some((m) => m.character === name && m.talent === s.talent && m.label === s.label && (s.variant === undefined || m.variant === s.variant))) {
@@ -543,7 +551,7 @@ function buildCharacters(): CharacterEffect[] {
     if (handMadeEntry) {
       // Personagem que já veio da planilha de referência: os efeitos dela ficam e a curadoria soma os buffs e as notas.
       const at = out.findIndex((e) => e.character === name);
-      out[at] = CharacterEffectSchema.parse({ ...handMadeEntry, buffs: [...(handMadeEntry.buffs ?? []).filter((old) => !buffs.some((n) => n.id === old.id)), ...buffs], notes, procs, factions, specialMoves });
+      out[at] = CharacterEffectSchema.parse({ ...handMadeEntry, buffs: [...(handMadeEntry.buffs ?? []).filter((old) => !buffs.some((n) => n.id === old.id)), ...buffs], notes, procs, factions, specialMoves, pointMoves });
       continue;
     }
     out.push(CharacterEffectSchema.parse({
@@ -554,6 +562,7 @@ function buildCharacters(): CharacterEffect[] {
       procs,
       factions,
       specialMoves,
+      pointMoves,
       fonte_info: `${source}; curadoria em scripts/curation/characters.ts.`,
     }));
   }

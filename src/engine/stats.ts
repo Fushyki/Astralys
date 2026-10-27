@@ -89,6 +89,12 @@ export const zeroBlock = (): StatBlock => ({
 
 const BY_TYPE_SET: ReadonlySet<string> = new Set(BY_TYPE_KEYS);
 
+/** O delta com todos os números multiplicados por `k`. */
+export function scaleDelta(delta: StatDelta, k: number): StatDelta {
+  const scale = (v: unknown): unknown => (typeof v === 'number' ? v * k : v && typeof v === 'object' ? Object.fromEntries(Object.entries(v).map(([key, x]) => [key, scale(x)])) : v);
+  return scale(delta) as StatDelta;
+}
+
 export function addDelta(target: StatBlock, delta: StatDelta): StatBlock {
   const t = target as unknown as Record<string, number>;
   for (const k in delta) {
@@ -404,6 +410,8 @@ export interface TeamBuff {
   always?: boolean;
   /** Conversão de stat: `delta` guarda o valor calculado com os rolls dados à montagem da equipe. */
   derived?: true;
+  /** Cai em linha reta até 0 em `decay` segundos depois do início da janela (ver `CharacterBuff.decay`). */
+  decay?: number;
 }
 
 export function receivesBuff(buff: TeamBuff, characterName: string): boolean {
@@ -416,12 +424,15 @@ export function activeTeamDelta(
   characterName: string,
   tags: ReadonlySet<string> | 'all',
   include: (b: TeamBuff) => boolean = () => true,
+  /** Segundos desde o início da janela de cada etiqueta, no instante do golpe (para os buffs que caem com o tempo). */
+  ages?: Readonly<Record<string, number>>,
 ): StatBlock {
   const sum = zeroBlock();
   for (const b of buffs) {
     if (!receivesBuff(b, characterName) || !include(b)) continue;
     if (tags !== 'all' && !b.always && !tags.has(b.tag)) continue;
-    addDelta(sum, b.delta);
+    const k = b.decay && ages ? Math.min(1, Math.max(0, 1 - (ages[b.tag] ?? 0) / b.decay)) : 1;
+    addDelta(sum, k === 1 ? b.delta : scaleDelta(b.delta, k));
   }
   return sum;
 }

@@ -5,6 +5,7 @@
 import { importPlanilha, parseProject, projectFromPlanilha, type RotationProject } from '../../engine';
 import type { LoadedData } from './data';
 import { newProjectId, sampleProject } from './persistence';
+import { dropDuplicateExtras } from './extraDedupe';
 import { parseShare, projectFromShare } from './share';
 
 export interface ImportResult {
@@ -27,7 +28,14 @@ export async function importXlsx(file: File, data: LoadedData): Promise<ImportRe
   return { project, warnings: imported.warnings };
 }
 
-export async function importJson(file: File): Promise<ImportResult> {
+/** Descarta os buffs extras que repetem um buff já calculado (só com os dados do jogo carregados). */
+function withoutDuplicates(project: RotationProject, warnings: string[], data?: LoadedData): ImportResult {
+  if (!data) return { project, warnings };
+  const r = dropDuplicateExtras(project, data.game, data.effects);
+  return { project: r.project, warnings: [...warnings, ...r.warnings] };
+}
+
+export async function importJson(file: File, data?: LoadedData): Promise<ImportResult> {
   let raw: unknown;
   try {
     raw = JSON.parse(await file.text());
@@ -38,10 +46,10 @@ export async function importJson(file: File): Promise<ImportResult> {
   const share = parseShare(raw);
   if (share) {
     const r = projectFromShare(share, { ...sampleProject(), gameVersion: share.gameVersion });
-    return { project: r.project, warnings: r.warnings };
+    return withoutDuplicates(r.project, r.warnings, data);
   }
   const parsed = parseProject(raw);
-  return { project: { ...parsed, id: newProjectId() }, warnings: [] };
+  return withoutDuplicates({ ...parsed, id: newProjectId() }, [], data);
 }
 
 /** Baixa o projeto como arquivo .json. */

@@ -77,6 +77,18 @@ export function planilhaEffect<T extends { buffs?: unknown[] } | undefined>(effe
   return effect ? ({ ...effect, buffs: [] } as T) : effect;
 }
 
+/**
+ * A planilha deixa alguns buffs como "origem não identificada". Os que o GO (e o dono do projeto) identificaram ganham o nome da origem:
+ * +25% DMG = Iansan C6 e +15% DMG = Bennett C6 (Fogo e Coragem), só se o personagem está no time. O +30% ATK segue sem origem.
+ */
+export function attributeExtras(extras: ExtraBuff[], names: string[]): void {
+  for (const e of extras) {
+    if (!/origem não identificada/i.test(e.description ?? '') || e.stat !== 'DMG%' || e.team) continue;
+    if (Math.abs(e.value - 0.25) < 1e-9 && names.includes('Iansan')) Object.assign(e, { label: 'Iansan C6', description: 'Iansan C6: +25% de DMG' });
+    else if (Math.abs(e.value - 0.15) < 1e-9 && names.includes('Bennett')) Object.assign(e, { label: 'Bennett C6', description: 'Bennett C6 (Fogo e Coragem): +15% de DMG' });
+  }
+}
+
 export function importPlanilha(wb: WorkBook, data: GameData, effects: EffectsData): PlanilhaImport {
   const warnings: string[] = [];
   const time = sheet(wb, 'Time');
@@ -159,6 +171,8 @@ export function importPlanilha(wb: WorkBook, data: GameData, effects: EffectsDat
       description: str(time, `E${r}`) || undefined,
     });
   }
+
+  attributeExtras(extras, names);
 
   // ---- Perfis de buff → etiquetas ----
   const pf = sheet(wb, 'Perfis de buff');

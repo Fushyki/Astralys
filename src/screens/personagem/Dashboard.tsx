@@ -267,7 +267,7 @@ export function Dashboard({ v, index, onGood }: { v: ProjectView; index: number;
               {attrs.map((r) => (
                 <li key={r.k}>
                   <span className="k" style={r.tone ? { color: r.tone } : undefined}><Ico k={r.ico} />{r.k}</span>
-                  <b className="num">{r.v}</b>
+                  <b className="num">{r.v}{r.ico === 'cr' && s.critRate > 1 + 1e-9 && <i className="dz-chip warn crit-excess" title="O cálculo usa no máximo 100% de Taxa Crítica">excesso de {formatDecimal((s.critRate - 1) * 100, 1)}%</i>}</b>
                 </li>
               ))}
             </ul>

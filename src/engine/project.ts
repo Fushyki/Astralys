@@ -63,6 +63,8 @@ export const MemberRefSchema = z.object({
   artifacts: ArtifactConfigSchema,
   /** Níveis BASE dos talentos (sem o +3 das constelações). */
   talents: z.object({ normal: TalentLevel, skill: TalentLevel, burst: TalentLevel }),
+  /** 'generic' = o usuário voltou ao build genérico de propósito: o projeto não abre mais com as peças do inventário. */
+  piecesChoice: z.literal('generic').optional(),
   /** Nível do personagem (1 a 90). Ausente = o nível padrão do cenário (`config.characterLevel`). */
   level: z.number().int().min(1).max(90).optional(),
   /** Constelação (0 a 6). Ausente = C0. Sobe em 3 o nível dos talentos da C3 e da C5. */
@@ -155,6 +157,8 @@ export const ActionSchema = z.object({
   move: MoveRefSchema,
   displayName: z.string().optional(),
   extraScale: ExtraScaleSchema.optional(),
+  /** Pontos do recurso do golpe (Espírito Lutador da Mavuika): soma "% do ATK por ponto" ao dano. Ausente = sem o bônus (projetos antigos). */
+  points: z.number().min(0).optional(),
   executions: z.number().positive().default(1),
   reaction: ReactionChoiceSchema.default('none'),
   /** Elemento do dano, se diferente do padrão (ex.: 'Physical' num Normal sem infusão). Ausente = o do golpe/personagem. */
@@ -271,6 +275,17 @@ export type RotationProject = z.infer<typeof RotationProjectSchema>;
 export const parseProject = (raw: unknown): RotationProject => RotationProjectSchema.parse(raw);
 
 /** Etiquetas ativas no instante `t`: as das janelas que o cobrem. Resultado ordenado e sem repetição. */
+/** Segundos desde o início da janela de cada etiqueta ativa em `t` (a janela mais recente, se houver mais de uma). */
+export function tagAgesAt(windows: readonly BuffWindow[], t: number): Record<string, number> {
+  const ages: Record<string, number> = {};
+  for (const w of windows) {
+    if (w.whole || !(t >= w.start && t < w.end)) continue;
+    const age = t - w.start;
+    if (ages[w.tag] === undefined || age < ages[w.tag]) ages[w.tag] = age;
+  }
+  return ages;
+}
+
 export function tagsAt(windows: readonly BuffWindow[], t: number): string[] {
   const tags = new Set<string>();
   for (const w of windows) if (w.whole || (t >= w.start && t < w.end)) tags.add(w.tag);
@@ -453,6 +468,25 @@ export function specialOfMove(move: { talent: string; label: string }, variant: 
   const proc = effect?.procs?.find((p) => p.special && `char:${p.id}` === move.label);
   if (proc) return proc.special!.reaction;
   return effect?.specialMoves?.find((x) => x.talent === move.talent && x.label === move.label && (x.variant === undefined || x.variant === variant))?.reaction;
+}
+
+/**
+ * Bônus por ponto de recurso de um golpe (ex.: Mavuika, Espírito Lutador: 2,88% do ATK por ponto no Supremo nível 10): fração do ATK
+ * somada à escala do golpe. `points` ausente = o máximo do recurso. Devolve undefined se o golpe não tem esse bônus.
+ */
+export function pointExtra(move: { talent: string; label: string }, effect: Pick<CharacterEffect, 'pointMoves'> | undefined, talents: { normal: number; skill: number; burst: number }, points?: number): ExtraScale | undefined {
+  const pm = effect?.pointMoves?.find((p) => p.talent === move.talent && p.labels.includes(move.label));
+  if (!pm) return undefined;
+  const n = Math.min(pm.max, Math.max(0, points ?? pm.max));
+  const level = Math.min(15, Math.max(1, Math.round(talents[pm.levelTalent])));
+  const atk = pm.perPoint[level - 1] * n;
+  return atk > 0 ? { atk } : undefined;
+}
+
+/** Pontos do recurso que o golpe aceita (máximo e nome), se tiver. */
+export function pointMoveOf(move: { talent: string; label: string }, effect: Pick<CharacterEffect, 'pointMoves'> | undefined): { max: number; unit: string } | undefined {
+  const pm = effect?.pointMoves?.find((p) => p.talent === move.talent && p.labels.includes(move.label));
+  return pm ? { max: pm.max, unit: pm.unit } : undefined;
 }
 
 /** Golpe do kit com dano Lunar/Estelar (curadoria `CharacterEffect.specialMoves`): marca a reação e aplica o multiplicador extra. */
@@ -705,6 +739,14 @@ export function effectiveDuration(project: Pick<RotationProject, 'config' | 'act
   return Math.max(MIN_AUTO_DURATION, Math.round(last * 100) / 100);
 }
 
+/** Escala extra da ação: a manual (planilha) mais o bônus por pontos de recurso, se a ação tem `points`. */
+function withPoints(a: Pick<ActionRef, 'move' | 'extraScale' | 'points'>, member: MemberInput | undefined): ExtraScale | undefined {
+  if (a.points === undefined || !member) return a.extraScale;
+  const p = pointExtra(a.move, member.characterEffect, member.talents, a.points);
+  if (!p) return a.extraScale;
+  return { ...a.extraScale, atk: (a.extraScale?.atk ?? 0) + (p.atk ?? 0) };
+}
+
 /** Transforma o projeto salvo nas entradas do motor. Lança ProjectResolveError se algo não existir nos dados. */
 export function resolveProject(project: RotationProject, data: GameData, effects: EffectsData): ResolvedProject {
   const planilha = project.compat === 'planilha';
@@ -719,7 +761,7 @@ export function resolveProject(project: RotationProject, data: GameData, effects
     const base =
       a.move.talent === 'proc' ? procMove(procs[a.member] ?? [], a.move, a.displayName)
       : a.move.talent === 'reaction' ? reactionMove(a.move, a.displayName)
-      : withSpecial(resolveMove(moves, a.move, a.displayName, a.extraScale), a.move.variant, members[a.member]?.characterEffect);
+      : withSpecial(resolveMove(moves, a.move, a.displayName, withPoints(a, members[a.member])), a.move.variant, members[a.member]?.characterEffect);
     // Sem `element` na ação, o golpe é do elemento do personagem (no modo planilha, sempre).
     const move = a.element ? { ...base, element: a.element } : base;
     return {
@@ -729,6 +771,7 @@ export function resolveProject(project: RotationProject, data: GameData, effects
       executions: a.executions,
       reaction: a.reaction as ReactionChoice,
       activeTags: a.tagSource === 'windows' ? tagsAt(project.buffWindows, a.time) : a.activeTags,
+      ...(a.tagSource === 'windows' ? { tagAges: tagAgesAt(project.buffWindows, a.time) } : {}),
       dmgAdjust: a.dmgAdjust,
       ...(a.contributors?.length ? { contributors: a.contributors } : {}),
       ...(a.flatOff?.length ? { flatOff: a.flatOff } : {}),

@@ -69,10 +69,9 @@ describe('resumo da rotação de exemplo (gabarito)', () => {
 
   it('buffs sem origem aparecem sempre, mesmo fora do topo, com o valor no nome', () => {
     const flagged = s.why.filter((w) => w.flag);
-    expect(flagged.length).toBeGreaterThanOrEqual(3);
+    expect(flagged.length).toBeGreaterThanOrEqual(2);
     expect(flagged.every((w) => w.flag === 'a confirmar' && /sem origem conhecida/.test(w.label))).toBe(true);
     expect(flagged.some((w) => /\+30% ATK/.test(w.label))).toBe(true);
-    expect(flagged.some((w) => /\+25% DMG/.test(w.label))).toBe(true);
     expect(s.why.some((w) => /origem não identificada/.test(w.label))).toBe(false);
   });
 });

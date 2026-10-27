@@ -5,7 +5,7 @@ import { Panel } from '../../design/primitives';
 import { FamilyBadge, damageColor } from '../../design/damageFamily';
 import { specialOfMoveRef } from '../../features/rotation/screenModel';
 import { REACTION_ACTIONS, kitElement, memberProcs } from '../../engine';
-import { specialOfMove } from '../../engine/project';
+import { pointMoveOf, specialOfMove } from '../../engine/project';
 import { cleanMoveName } from '../../features/character/characterModel';
 import { insertTime } from '../../features/rotation/projectOps';
 import { useRotationStore } from '../../features/rotation/store';
@@ -87,7 +87,7 @@ export function Moves({ v }: { v: ProjectView }) {
                     className="rt-mv"
                     title={m.label}
                     style={{ ['--c' as string]: colorOf(m) }}
-                    onClick={() => insert({ member, move: { character: m.character, talent: m.talent, label: m.label, variant: m.variant }, displayName: `${m.character} - ${label}` })}
+                    onClick={() => insert({ member, move: { character: m.character, talent: m.talent, label: m.label, variant: m.variant }, displayName: `${m.character} - ${label}`, points: pointMoveOf(m, effect)?.max })}
                   >
                     <span className="dot" />
                     <span className="n">{label}</span>

@@ -16,6 +16,7 @@ import {
   gearFlat,
   resolveMember,
   kitProcMoves,
+  pointExtra,
   withSpecial,
   zeroRolls,
   type EffectsData,
@@ -102,6 +103,10 @@ export interface Evaluator {
 
 const configKey = (c: SetConfig) => `${c.primarySet ?? ''}|${c.secondarySet ?? ''}|${c.fourPiece === false ? 'two' : 'four'}`;
 
+/** Tempo gasto em cada etapa de uma avaliação (só conta quando `evalTimes.on`; usado por `scripts/time-optimizer.ts`). */
+export const evalTimes = { on: false, calls: 0, assembleMs: 0, finalStatsMs: 0, valueMs: 0 };
+const now = () => (evalTimes.on ? performance.now() : 0);
+
 export function createEvaluator(input: EvaluatorInput): Evaluator {
   const { resolved, member, game, effects } = input;
   const name = resolved.team.members[member].character.name;
@@ -126,8 +131,14 @@ export function createEvaluator(input: EvaluatorInput): Evaluator {
     const mine: MemberInput = { ...base[member], externalStats: vecToDelta(vec) };
     const members = base.map((m, i) => (i === member ? mine : m));
     const team = { ...resolved.team, members };
+    const t0 = now();
     const assembly = assembleTeam(team, { rolls });
+    const t1 = now();
     const stats = finalStats(mine, assembly.statics[member], zeroRolls(), activeTeamDelta(assembly.buffs, name, new Set<string>()), assembly.resonanceAtkPct);
+    if (evalTimes.on) {
+      evalTimes.assembleMs += t1 - t0;
+      evalTimes.finalStatsMs += performance.now() - t1;
+    }
     return { members, assembly, stats, flat, team };
   };
 
@@ -159,7 +170,7 @@ export function createEvaluator(input: EvaluatorInput): Evaluator {
     const action: RotationAction = {
       id: move.id, member,
       // Golpe Lunar/Estelar do kit usa a fórmula dele (sem DMG% elemental), como na tabela de dano.
-      move: proc?.resolved ?? withSpecial({ id: move.id, character: move.character, talent: move.talent, hitType: move.hitType, label: move.label, displayName: move.label, hits: move.hits, scale: move.scale }, move.variant, r.members[member].characterEffect),
+      move: proc?.resolved ?? withSpecial({ id: move.id, character: move.character, talent: move.talent, hitType: move.hitType, label: move.label, displayName: move.label, hits: move.hits, scale: move.scale, extra: pointExtra(move, r.members[member].characterEffect, r.members[member].talents) }, move.variant, r.members[member].characterEffect),
       executions: 1, reaction: o.reaction, activeTags: [...new Set(r.assembly.buffs.map((b) => b.tag))], dmgAdjust: 0,
     };
     const res = evaluateRotation({ members: r.members, assembly: r.assembly, config: r.team.config, rolls, ampCoefficient: resolved.ampCoefficient }, [action]).actions[0];
@@ -184,7 +195,12 @@ export function createEvaluator(input: EvaluatorInput): Evaluator {
     evaluate(vec, config) {
       const r = run(vec, config);
       if (!meets(r.stats)) return -Infinity;
-      return valueOf(r);
+      if (!evalTimes.on) return valueOf(r);
+      const t = performance.now();
+      const v = valueOf(r);
+      evalTimes.valueMs += performance.now() - t;
+      evalTimes.calls++;
+      return v;
     },
     report(vec, config) {
       const r = run(vec, config);

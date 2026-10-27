@@ -5,7 +5,7 @@ import { Button } from '../../design/Button';
 import { FAMILY_COLOR, SPECIAL_LABEL, familyOf } from '../../design/damageFamily';
 import { Panel } from '../../design/primitives';
 import { defaultContributors, memberProcs, type ActionRef } from '../../engine';
-import { specialOfMove } from '../../engine/project';
+import { pointMoveOf, specialOfMove } from '../../engine/project';
 import { specialOfMoveRef } from '../../features/rotation/screenModel';
 import { REACTION_LABEL } from '../../features/character/characterModel';
 import { chainOf } from '../../features/rotation/projectOps';
@@ -89,6 +89,10 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
     if (chainId) setAll({ flatOff: next.length ? next : undefined });
     else update(action.id, { flatOff: next.length ? next : undefined });
   };
+  const point = pointMoveOf(action.move, effect);
+  const pointsSection = point ? (
+    <Num label={point.unit} value={action.points ?? 0} unit="pts" digits={0} min={0} onCommit={(n) => (chainId ? setAll({ points: Math.min(point.max, Math.max(0, Math.round(n))) }) : update(action.id, { points: Math.min(point.max, Math.max(0, Math.round(n))) }))} />
+  ) : null;
   const flatSection = result?.flatUse && result.flatUse.length > 0 ? (
     <div className="rt-flat" role="group" aria-label="Dano fixo">
       <span className="rt-lbl">Dano fixo (buffs flat)</span>
@@ -123,6 +127,7 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
             <Num label="A cada" value={every} unit="s" className="gold" onCommit={(n) => { setEvery(n); redo({ every: n }); }} min={0.1} />
             <Num label="Duração" value={length} unit="s" onCommit={(n) => { setLength(n); redo({ length: n }); }} min={0.1} />
           </div>
+          {pointsSection}
           <div className="rt-two">
             <Num label="Hits por vez" value={hitsEach} digits={0} onCommit={(n) => setAll({ executions: Math.max(1, Math.round(n)) })} min={1} />
             <Sel label="Reação" value={action.reaction} options={REACTION_OPTIONS} onChange={(r) => setAll({ reaction: r })} />
@@ -184,6 +189,7 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
               <span className="rt-note">O dano é o maior valor + 1/2 do 2º + 1/12 do 3º + 1/12 do 4º (cada um já com o multiplicador de reação, 0,6 do golpe direto), cada um com a Maestria e o crítico dele. A ação conta para {memberLabel}.</span>
             </div>
           )}
+          {pointsSection}
           <Sel label="Elemento do dano" value={(action.element ?? '') as (typeof ELEMENTS)[number]} options={ELEMENTS.map((e) => ({ value: e, label: ELEMENT_LABEL[e] }))} onChange={(e) => update(action.id, { element: e === '' ? undefined : e })} />
           {result && (
             <div className="rt-cascade" aria-label="Cascata de multiplicadores">

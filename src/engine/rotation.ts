@@ -72,8 +72,10 @@ export interface RotationAction {
   reaction: ReactionChoice;
   /** Etiquetas de buff de time ativas nesta ação. */
   activeTags: readonly string[];
-  /** Ajuste de DMG% desta linha (ex.: decaimento do A4 da Mavuika). */
+  /** Ajuste de DMG% desta linha (ex.: decaimento do A4 da Mavuika, na planilha, à mão). */
   dmgAdjust: number;
+  /** Segundos desde o início da janela de cada etiqueta no instante do golpe (faz cair os buffs com `decay`). */
+  tagAges?: Readonly<Record<string, number>>;
   /**
    * Reações Lunar-Charged, Lunar-Crystallize e Stellar-Swirl: índices dos membros que aplicaram os elementos (até 4).
    * Sem lista, só o dono da ação contribui.
@@ -279,11 +281,14 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
   const names = members.map((m) => m.character.name);
 
   const cache = new Map<string, FinalStats>();
-  const statsFor = (member: number, tags: ReadonlySet<string> | 'all'): FinalStats => {
-    const key = `${member}|${tags === 'all' ? '*' : [...tags].sort().join(',')}`;
+  const decaying = new Set(assembly.buffs.filter((b) => b.decay).map((b) => b.tag));
+  const statsFor = (member: number, tags: ReadonlySet<string> | 'all', ages?: Readonly<Record<string, number>>): FinalStats => {
+    // Só as idades das etiquetas que caem com o tempo entram na chave (e no cálculo).
+    const live = tags === 'all' || !ages ? undefined : Object.fromEntries([...tags].filter((t) => decaying.has(t) && ages[t] !== undefined).map((t) => [t, Math.round(ages[t] * 100) / 100]));
+    const key = `${member}|${tags === 'all' ? '*' : [...tags].sort().join(',')}|${live ? JSON.stringify(live) : ''}`;
     let s = cache.get(key);
     if (!s) {
-      const team = activeTeamDelta(assembly.buffs, names[member], tags);
+      const team = activeTeamDelta(assembly.buffs, names[member], tags, undefined, live);
       s = finalStats(members[member], assembly.statics[member], ctx.rolls[member], team, assembly.resonanceAtkPct);
       cache.set(key, s);
     }
@@ -337,7 +342,7 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
     const member = members[action.member];
     const move = action.move;
     const tags = new Set(action.activeTags);
-    const stats = statsFor(action.member, tags);
+    const stats = statsFor(action.member, tags, action.tagAges);
     const enemy: EnemyStats = {
       level: config.enemyLevel,
       res: assembly.enemyRes,
@@ -355,7 +360,7 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
         // Reação do time: cada contribuinte vale por si (EM e crítico próprios) e o total é a soma ponderada 1 + 1/2 + 1/12 + 1/12.
         const who = [...new Set(action.contributors?.length ? action.contributors : defaultContributors(members.map((m) => m.character.element), move.label, action.member))].filter((i) => i >= 0 && i < members.length).slice(0, CONTRIBUTOR_WEIGHTS.length);
         const each = who.map((i) => {
-          const st = statsFor(i, tags);
+          const st = statsFor(i, tags, action.tagAges);
           const en: EnemyStats = { ...enemy, defIgnore: Math.min(1, (config.enemyDefIgnore ?? 0) + (st.defIgnore ?? 0)) };
           const x = reactionAction({ move, executions: 1, ownElement: members[i].character.element, stats: st, scale, characterLevel: members[i].level ?? config.characterLevel, enemy: en });
           const n = x.breakdown.total * REACTION_COEF_FACTOR;

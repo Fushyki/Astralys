@@ -411,3 +411,7 @@
 .lvlctl button:hover:not(:disabled) { border-color: var(--gold); color: var(--gold-hi); }
 .lvlctl button:disabled { opacity: .35; cursor: default; }
 .lvlctl small { color: var(--gold); font-size: .85em; }
+
+/* aviso de build teórica */
+.pc-theory { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-3); padding: var(--sp-2) var(--sp-3); margin-bottom: var(--sp-2); border: 1px solid var(--border-ctl); border-radius: var(--r-inner); background: var(--surface-2); color: var(--text-2); font-size: var(--fs-2); }
+.pc-theory > span { flex: 1; min-width: 220px; }

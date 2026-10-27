@@ -5,16 +5,16 @@ import { norm } from '../../features/good/goodImport';
 import { MAIN_LABEL, SUB_LABEL, formatMain, formatSub } from '../../features/good/labels';
 import type { OptimizedBuild } from '../../features/optimizer/run';
 import { mainStatValue } from '../../engine/pieces';
-import { PieceArt, SLOTS, critValue, fmtInt, fmtPct, setColor } from './shared';
+import { CritExcess, PieceArt, SLOTS, critValue, fmtInt, fmtPct, setColor } from './shared';
 import { formatDecimal } from '../../ui/format';
 
 interface SetInfo { name: string; id: number }
 
-export function currentStats(build: OptimizedBuild, field: boolean): { k: string; v: string; gold?: boolean }[] {
+export function currentStats(build: OptimizedBuild, field: boolean): { k: string; v: string; gold?: boolean; rate?: number }[] {
   const s = field ? build.report.fieldStats : build.report.stats;
   return [
     { k: 'ATK', v: fmtInt(s.atk) }, { k: 'HP', v: fmtInt(s.hp) }, { k: 'DEF', v: fmtInt(s.def) }, { k: 'Maestria', v: fmtInt(s.em) },
-    { k: 'Taxa crít.', v: fmtPct(s.critRate), gold: true }, { k: 'Dano crít.', v: fmtPct(s.critDmg), gold: true },
+    { k: 'Taxa crít.', v: fmtPct(s.critRate), gold: true, rate: s.critRate }, { k: 'Dano crít.', v: fmtPct(s.critDmg), gold: true },
     { k: 'Recarga', v: fmtPct(s.er) }, { k: 'Crit Value', v: formatDecimal(critValue(s), 1) },
   ];
 }
@@ -66,7 +66,7 @@ export function CurrentBuild({ build, field, onField, sets }: { build: Optimized
       )}
       {build && (
         <dl className="ot-cur-stats num">
-          {currentStats(build, field).map((x) => <div key={x.k}><dt>{x.k}</dt><dd data-gold={x.gold}>{x.v}</dd></div>)}
+          {currentStats(build, field).map((x) => <div key={x.k}><dt>{x.k}</dt><dd data-gold={x.gold}>{x.v}{x.rate !== undefined && <CritExcess rate={x.rate} />}</dd></div>)}
         </dl>
       )}
       <button type="button" className="ot-field-btn" aria-pressed={field} onClick={onField}><StarIcon size={12} />Status em campo</button>

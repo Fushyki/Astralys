@@ -7,6 +7,8 @@ import { Link, Outlet, useLocation, useNavigate, useParams } from 'react-router-
 import '../design/design.css';
 import { memberColors } from '../design/elements';
 import { StateCard } from '../design/primitives';
+import { loadGood } from '../features/good/goodStore';
+import { withInventoryPieces } from '../features/good/inventoryPieces';
 import { useGameData } from '../features/rotation/data';
 import { SAMPLE_ID, loadProject, saveProject } from '../features/rotation/persistence';
 import { useRotationStore } from '../features/rotation/store';
@@ -33,8 +35,12 @@ export default function ProjectLayout() {
   // Abre o projeto da rota (só quando o id muda; trocar de aba não reabre).
   useEffect(() => {
     if (useRotationStore.getState().project?.id === id) return;
-    const p = loadProject(id);
-    if (p) open(p);
+    const loaded = loadProject(id);
+    if (!loaded) return;
+    // Com inventário importado, o projeto abre com as PEÇAS do usuário (e não com o build teórico).
+    const p = withInventoryPieces(loaded, loadGood());
+    if (p !== loaded) saveProject(p);
+    open(p);
   }, [id, open]);
 
   // Salva sozinho, pouco depois da última alteração.

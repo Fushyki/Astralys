@@ -3,7 +3,7 @@ import { artifactSig, norm, type GoodArtifact } from '../../features/good/goodIm
 import type { OptimizedBuild } from '../../features/optimizer/run';
 import { formatDecimal, formatInt } from '../../ui/format';
 import { PieceCard, pieceCv, type Owner } from './PieceCard';
-import { SLOTS, fmtInt, fmtPct, setColor } from './shared';
+import { CritExcess, SLOTS, fmtInt, fmtPct, setColor } from './shared';
 
 export { pieceCv };
 export type { Owner };
@@ -64,7 +64,7 @@ export function ResultCard({ rank, build, now, field, compare, currentSig, sets,
     { k: 'HP', v: fmtInt(s.hp), d: p && <Diff d={s.hp - p.hp} text={signed(s.hp - p.hp, 0)} /> },
     { k: 'DEF', v: fmtInt(s.def), d: p && <Diff d={s.def - p.def} text={signed(s.def - p.def, 0)} /> },
     { k: 'Maestria', v: fmtInt(s.em), d: p && <Diff d={s.em - p.em} text={signed(s.em - p.em, 0)} /> },
-    { k: 'Taxa crít.', v: fmtPct(s.critRate), d: p && <Diff d={s.critRate - p.critRate} text={signed((s.critRate - p.critRate) * 100, 1)} /> },
+    { k: 'Taxa crít.', v: fmtPct(s.critRate), d: <>{p && <Diff d={s.critRate - p.critRate} text={signed((s.critRate - p.critRate) * 100, 1)} />}<CritExcess rate={s.critRate} /></> },
     { k: 'Dano crít.', v: fmtPct(s.critDmg), d: p && <Diff d={s.critDmg - p.critDmg} text={signed((s.critDmg - p.critDmg) * 100, 1)} /> },
     { k: 'Recarga', v: fmtPct(s.er), d: p && <Diff d={s.er - p.er} text={signed((s.er - p.er) * 100, 1)} /> },
     { k: 'DPR do time', v: fmtInt(r.teamAvg), d: now && now.report.teamAvg > 0 && <Diff d={r.teamAvg / now.report.teamAvg - 1} text={signed((r.teamAvg / now.report.teamAvg - 1) * 100, 2, '%')} /> },

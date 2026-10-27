@@ -187,7 +187,8 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
         return !b.forElements || b.forElements.includes(members[j].character.element);
       });
       if (targets.length === 0) continue;
-      addBuff({ id: `cbuff-${i}-${b.id}`, tag: labelTag(b.label), targets, delta, description: `${names[i]}: ${b.label}`, ...(b.timed ? {} : { always: true as const }) });
+      const decays = b.decay && !(b.decay.noDecayFrom !== undefined && (m.constellation ?? 0) >= b.decay.noDecayFrom);
+      addBuff({ id: `cbuff-${i}-${b.id}`, tag: labelTag(b.label), targets, delta, description: `${names[i]}: ${b.label}`, ...(b.timed ? {} : { always: true as const }), ...(decays ? { decay: b.decay!.duration } : {}) });
     }
   });
 

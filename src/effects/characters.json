@@ -64,11 +64,15 @@
           "reactionBonus": {}
         },
         "flat": [],
+        "decay": {
+          "duration": 20,
+          "noDecayFrom": 4
+        },
         "stacks": {
           "max": 200,
-          "unit": "pontos de Fighting Spirit"
+          "unit": "pontos de Espírito Lutador"
         },
-        "note": "+0,2% de DMG de quem está em campo por ponto de Fighting Spirit usado no Supremo (até 200 = +40%): a quantidade é escolha sua (padrão: 200). Liga na janela; no jogo ele decai em 20 s (a C4 tira o decaimento)."
+        "note": "+0,2% de DMG de quem está em campo por ponto de Espírito Lutador usado no Supremo (até 200 = +40%): a quantidade é escolha sua (padrão: 200). Cai em linha reta até 0 em 20 s depois do início da janela (use o tempo do golpe); a C4 tira o decaimento."
       },
       {
         "id": "c1",
@@ -144,6 +148,91 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [
+      {
+        "talent": "burst",
+        "labels": [
+          "Skill DMG"
+        ],
+        "levelTalent": "burst",
+        "perPoint": [
+          0.016,
+          0.0172,
+          0.0184,
+          0.02,
+          0.0212,
+          0.0224,
+          0.024,
+          0.0256,
+          0.0272,
+          0.0288,
+          0.0304,
+          0.032,
+          0.034,
+          0.036,
+          0.038
+        ],
+        "max": 200,
+        "unit": "Espírito Lutador"
+      },
+      {
+        "talent": "skill",
+        "labels": [
+          "Flamestrider Normal Attack 1-Hit DMG",
+          "Flamestrider Normal Attack 2-Hit DMG",
+          "Flamestrider Normal Attack 3-Hit DMG",
+          "Flamestrider Normal Attack 4-Hit DMG",
+          "Flamestrider Normal Attack 5-Hit DMG"
+        ],
+        "levelTalent": "burst",
+        "perPoint": [
+          0.0026,
+          0.0028,
+          0.003,
+          0.0033,
+          0.0035,
+          0.0037,
+          0.0041,
+          0.0044,
+          0.0047,
+          0.0051,
+          0.0055,
+          0.0058,
+          0.0062,
+          0.0065,
+          0.0069
+        ],
+        "max": 200,
+        "unit": "Espírito Lutador"
+      },
+      {
+        "talent": "skill",
+        "labels": [
+          "Flamestrider Charged Attack Cyclic DMG",
+          "Flamestrider Charged Attack Final DMG"
+        ],
+        "levelTalent": "burst",
+        "perPoint": [
+          0.0052,
+          0.0056,
+          0.006,
+          0.0066,
+          0.007,
+          0.0075,
+          0.0082,
+          0.0088,
+          0.0095,
+          0.0102,
+          0.0109,
+          0.0116,
+          0.0124,
+          0.0131,
+          0.0138
+        ],
+        "max": 200,
+        "unit": "Espírito Lutador"
+      }
+    ],
     "fonte_info": "planilha Mavuika_Iansan_Combo2, aba \"Personagens (efeitos)\". A1 +30% ATK (Lunaris p1); A4 +40% DMG decaindo (use 'Ajuste DMG%' na Rotação)."
   },
   {
@@ -404,6 +493,7 @@
     ],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "planilha Mavuika_Iansan_Combo2, aba \"Personagens (efeitos)\". Reduz RES Pyro/Hydro em 20%."
   },
   {
@@ -528,6 +618,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "planilha Mavuika_Iansan_Combo2, aba \"Personagens (efeitos)\". Supremo: ATK fixo = 37% do ATK dela, máx. 810 (sua planilha)."
   },
   {
@@ -617,6 +708,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "planilha Mavuika_Iansan_Combo2, aba \"Personagens (efeitos)\". Supremo: 139% do ATK base (nv 13 + C1, sua planilha)."
   },
   {
@@ -725,6 +817,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -839,6 +932,7 @@
     ],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -990,6 +1084,7 @@
     ],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -1185,6 +1280,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -1317,6 +1413,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -1470,6 +1567,7 @@
     ],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -1577,6 +1675,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -1753,6 +1852,7 @@
       "hexerei"
     ],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -1927,6 +2027,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -2067,6 +2168,7 @@
       "hexerei"
     ],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -2247,6 +2349,7 @@
     ],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -2399,6 +2502,7 @@
     ],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -2512,6 +2616,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -2705,6 +2810,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -2869,6 +2975,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -2992,6 +3099,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -3080,6 +3188,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -3230,6 +3339,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -3373,6 +3483,7 @@
     ],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -3501,6 +3612,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -3620,6 +3732,7 @@
     ],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -3788,6 +3901,7 @@
     ],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -3986,6 +4100,7 @@
     ],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -4120,6 +4235,7 @@
     ],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -4232,6 +4348,7 @@
     ],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -4315,6 +4432,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -4389,6 +4507,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -4515,6 +4634,7 @@
       "hexerei"
     ],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -4646,6 +4766,7 @@
     ],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -4727,6 +4848,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -4849,6 +4971,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -4990,6 +5113,7 @@
       "hexerei"
     ],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -5074,6 +5198,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -5227,6 +5352,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -5301,6 +5427,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -5431,6 +5558,7 @@
     ],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -5511,6 +5639,7 @@
         "label": "Stellar-Conduct DMG"
       }
     ],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -5600,6 +5729,7 @@
     ],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -5697,6 +5827,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -5925,6 +6056,7 @@
       "hexerei"
     ],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -6054,6 +6186,7 @@
     ],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -6164,6 +6297,7 @@
       "hexerei"
     ],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -6295,6 +6429,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -6474,6 +6609,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -6551,6 +6687,7 @@
     ],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -6673,6 +6810,7 @@
     ],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -6821,6 +6959,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -6923,6 +7062,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -7032,6 +7172,7 @@
     ],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -7169,6 +7310,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -7400,6 +7542,7 @@
     ],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -7483,6 +7626,7 @@
     ],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -7648,6 +7792,7 @@
     ],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -7743,6 +7888,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -7867,6 +8013,7 @@
     ],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -7997,6 +8144,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -8179,6 +8327,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -8274,6 +8423,7 @@
     ],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -8385,6 +8535,7 @@
     ],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -8556,6 +8707,7 @@
     ],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -8691,6 +8843,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -8844,6 +8997,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -8968,6 +9122,7 @@
     ],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -9093,6 +9248,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -9252,6 +9408,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -9369,6 +9526,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -9476,6 +9634,7 @@
     ],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -9614,6 +9773,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -9732,6 +9892,7 @@
     ],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -9861,6 +10022,7 @@
     ],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -9972,6 +10134,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -10229,6 +10392,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -10330,6 +10494,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -10432,6 +10597,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -10639,6 +10805,7 @@
     ],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -10783,6 +10950,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -10953,6 +11121,7 @@
     ],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -11142,6 +11311,7 @@
     ],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -11385,6 +11555,7 @@
         "label": "Thunderous Symphony Additional DMG"
       }
     ],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -11547,6 +11718,7 @@
       "moonsign"
     ],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -11777,6 +11949,7 @@
         "label": "Phantasm Performance 3-Hit DMG (Shades)"
       }
     ],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -12003,6 +12176,7 @@
       "hexerei"
     ],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -12106,6 +12280,7 @@
       "moonsign"
     ],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -12700,6 +12875,7 @@
         "label": "Gravity Interference: Lunar-Crystallize DMG"
       }
     ],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -12901,6 +13077,7 @@
       "moonsign"
     ],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -13054,6 +13231,7 @@
       "hexerei"
     ],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -13180,6 +13358,7 @@
       "hexerei"
     ],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -13267,6 +13446,7 @@
     ],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -13353,6 +13533,7 @@
     ],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -13420,6 +13601,7 @@
     ],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -13553,6 +13735,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -13679,6 +13862,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -13766,6 +13950,7 @@
     ],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -13852,6 +14037,7 @@
     ],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -13919,6 +14105,7 @@
     ],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -14052,6 +14239,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -14178,6 +14366,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -14391,6 +14580,7 @@
         "label": "Lumi Million Ton Crush DMG"
       }
     ],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -14514,6 +14704,7 @@
       "hexerei"
     ],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -14726,6 +14917,7 @@
         "label": "Gradient Detonation Stellar-Conduct DMG"
       }
     ],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -14831,6 +15023,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -15020,6 +15213,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -15357,6 +15551,7 @@
         "label": "Spirit Blade Stellar Swirl DMG"
       }
     ],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -15463,6 +15658,7 @@
     ],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -15597,6 +15793,7 @@
     ],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -15780,6 +15977,7 @@
     ],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -15922,6 +16120,7 @@
     ],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -15986,6 +16185,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -16140,6 +16340,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -16214,6 +16415,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -16266,6 +16468,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -16339,6 +16542,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -16430,6 +16634,7 @@
     ],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -16517,6 +16722,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -16652,6 +16858,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -16767,6 +16974,7 @@
     ],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -16887,6 +17095,7 @@
       "moonsign"
     ],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -17167,6 +17376,7 @@
         "label": "2-Hit Hold DMG"
       }
     ],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -17400,6 +17610,7 @@
         "label": "Skill 2-Hit DMG"
       }
     ],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -17540,6 +17751,7 @@
       "hexerei"
     ],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -17764,6 +17976,7 @@
         "label": "Convective Inhibition Ray Stellar Swirl DMG"
       }
     ],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -17877,6 +18090,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -18039,6 +18253,7 @@
         "label": "Stellar Swirl Ice Javelin Single Strike DMG"
       }
     ],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -18201,6 +18416,7 @@
         "label": "Stellar Swirl Ice Javelin Single Strike DMG"
       }
     ],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -18587,6 +18803,7 @@
         "variant": 1
       }
     ],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -18805,6 +19022,7 @@
       "hexerei"
     ],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -18851,6 +19069,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -18903,6 +19122,7 @@
     ],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -18949,6 +19169,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -18995,6 +19216,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -19041,6 +19263,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -19087,6 +19310,7 @@
     "procs": [],
     "factions": [],
     "specialMoves": [],
+    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   }
 ]

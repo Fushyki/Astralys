@@ -3,6 +3,7 @@
  * N-ésimo melhor já achado), junta os resultados e deixa parar a qualquer momento. Sem Worker (testes), roda na
  * thread principal.
  */
+import { reloadOnce } from '../../app/reloadOnce';
 import type { FromWorker, ToWorker, WorkerData } from './optimizer.worker';
 import { runOptimizer, type OptimizedBuild, type OptimizerResult } from './run';
 
@@ -105,6 +106,7 @@ export function startOptimizerJob(data: WorkerData, onProgress?: (p: OptimizerPr
     };
     w.onerror = (event) => {
       if (settled) return;
+      reloadOnce(); // arquivo do Worker que sumiu depois de um deploy: recarrega uma vez
       finish();
       rejectJob(new Error(event.message || 'O otimizador parou de responder.'));
     };

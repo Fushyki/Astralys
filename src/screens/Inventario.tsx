@@ -12,7 +12,7 @@ import { clearGood, loadGood, saveGood } from '../features/good/goodStore';
 import { useGameData } from '../features/rotation/data';
 import { ONLINE_ENABLED } from '../online/config';
 import { fetchEnka } from '../online/enka';
-import { MAIN_LABEL, SUB_LABEL, formatMain, formatSub } from '../features/good/labels';
+import { MAIN_LABEL, SUB_LABEL, characterDisplayName, formatMain, formatSub } from '../features/good/labels';
 import { formatInt } from '../ui/format';
 import './otimizador.css';
 import './inventario.css';
@@ -176,7 +176,7 @@ export default function Inventario() {
               <>
                 <p className="muted small">{formatInt(artifacts.length)} peças</p>
                 <div className="inv-grid arts">
-                  {artifacts.slice(0, shown).map((a, i) => <ArtifactTile key={i} a={a} setInfo={setName(a.setKey)} />)}
+                  {artifacts.slice(0, shown).map((a, i) => <ArtifactTile key={i} a={a} setInfo={setName(a.setKey)}  characters={data?.game.characters} />)}
                 </div>
                 {artifacts.length > shown && <button type="button" className="dz-btn" onClick={() => setShown(shown + PAGE)}>Mostrar mais ({artifacts.length - shown})</button>}
               </>
@@ -189,7 +189,7 @@ export default function Inventario() {
                       <span className="art">{info?.icon ? <img src={weaponIconUrl(info.icon)} alt="" loading="lazy" crossOrigin="anonymous" /> : <b className="ph">⚔</b>}</span>
                       <span className="n">{info?.name ?? w.key}</span>
                       <span className="num sub">Nv {w.level ?? '?'} · R{w.refinement ?? 1}</span>
-                      {w.location && <Chip>de {w.location}</Chip>}
+                      {w.location && <Chip>de {characterDisplayName(w.location, data?.game.characters)}</Chip>}
                     </div>
                   );
                 })}
@@ -203,7 +203,7 @@ export default function Inventario() {
   );
 }
 
-function ArtifactTile({ a, setInfo }: { a: GoodArtifact; setInfo?: { name: string; id: number } }) {
+function ArtifactTile({ a, setInfo, characters }: { a: GoodArtifact; setInfo?: { name: string; id: number }; characters?: readonly { name: string }[] }) {
   const [failed, setFailed] = useState(false);
   const level = pieceLevel(a);
   const slot = SLOTS.find((x) => x.key === a.slotKey)?.label ?? a.slotKey;
@@ -230,7 +230,7 @@ function ArtifactTile({ a, setInfo }: { a: GoodArtifact; setInfo?: { name: strin
       </ul>
       <footer>
         <span className="set" title={setInfo?.name ?? a.setKey}>{setInfo?.name ?? a.setKey}</span>
-        {a.location && <span className="loc">{a.location}</span>}
+        {a.location && <span className="loc">{characterDisplayName(a.location, characters)}</span>}
       </footer>
     </article>
   );

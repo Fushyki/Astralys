@@ -4,9 +4,9 @@
  */
 import type { Move } from '../data/schema';
 import type { ElementOrPhysical } from './constants/reactions';
-import { evaluateRotation, type DamageKind, type ReactionChoice, type ResolvedMove, type RotationAction, type RotationContext } from './rotation';
+import { evaluateRotation, type DamageKind, type ExtraScale, type ReactionChoice, type ResolvedMove, type RotationAction, type RotationContext } from './rotation';
 import type { SpecialReaction } from './reactions';
-import { kitProcMoves, withSpecial } from './project';
+import { kitProcMoves, pointExtra, withSpecial } from './project';
 import type { Rolls } from './artifacts';
 import type { TeamAssembly, TeamInput } from './team';
 
@@ -34,7 +34,7 @@ export interface DamageTableInput {
   ampCoefficient?: number;
 }
 
-const toResolved = (m: Move): ResolvedMove => ({
+const toResolved = (m: Move, extra?: ExtraScale): ResolvedMove => ({
   id: m.id,
   character: m.character,
   talent: m.talent,
@@ -43,6 +43,7 @@ const toResolved = (m: Move): ResolvedMove => ({
   displayName: m.label,
   hits: m.hits,
   scale: m.scale,
+  ...(extra ? { extra } : {}),
 });
 
 export function damageTable(input: DamageTableInput): DamageRow[] {
@@ -57,7 +58,7 @@ export function damageTable(input: DamageTableInput): DamageRow[] {
     id: m.id,
     member,
     // Golpes que no jogo causam dano Lunar/Estelar usam a fórmula deles (curadoria `specialMoves`).
-    move: procById.get(m.id) ?? withSpecial(toResolved(m), m.variant, team.members[member].characterEffect),
+    move: procById.get(m.id) ?? withSpecial(toResolved(m, pointExtra(m, team.members[member].characterEffect, team.members[member].talents)), m.variant, team.members[member].characterEffect),
     executions: 1,
     reaction,
     activeTags: tags,

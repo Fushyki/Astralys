@@ -92,7 +92,7 @@ export default function Personagem() {
               <AsideCard v={v} index={index} />
             ) : (
               <>
-                <ArtCard character={character} memberRef={ref} index={index} color={v.colors[index]} level={v.project.config.characterLevel} eligible={eligible} />
+                <ArtCard character={character} memberRef={ref} index={index} color={v.colors[index]} level={ref.level ?? v.project.config.characterLevel} eligible={eligible} />
                 <ConstellationCard character={character} memberRef={ref} index={index} />
                 <TalentsCard character={character} memberRef={ref} index={index} share={share} />
               </>

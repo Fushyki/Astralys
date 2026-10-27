@@ -69,7 +69,7 @@ export function SettingsDialog({ project, dps, onClose }: { project: RotationPro
 
           <Section title="Cenário" hint="Vale para todos os golpes. Mudou aqui, o dano muda na hora.">
             <div className="rt-cfg-grid">
-              <Num label="Nível dos personagens" value={cfg.characterLevel} digits={0} min={1} onCommit={(v) => updateConfig({ characterLevel: v })} />
+              <Num label="Nível padrão dos personagens" value={cfg.characterLevel} digits={0} min={1} onCommit={(v) => updateConfig({ characterLevel: v })} />
               <Num label="Nível do inimigo" value={cfg.enemyLevel} digits={0} min={1} onCommit={(v) => updateConfig({ enemyLevel: v })} />
               <Num label="RES base do inimigo" value={Math.round(cfg.enemyBaseRes * 1000) / 10} unit="%" onCommit={(v) => updateConfig({ enemyBaseRes: v / 100 })} />
               <Num label="Redução de DEF" value={Math.round(cfg.enemyDefRed * 1000) / 10} unit="%" min={0} onCommit={(v) => updateConfig({ enemyDefRed: v / 100 })} />

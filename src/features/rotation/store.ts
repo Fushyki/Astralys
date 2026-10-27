@@ -55,6 +55,8 @@ export interface RotationState {
   addExtra: (extra: ExtraBuff) => void;
   removeExtra: (index: number) => void;
   moveAction: (id: string, time: number) => void;
+  /** Troca o projeto inteiro (ex.: importar uma rotação compartilhada) como uma entrada do histórico. */
+  applyProject: (next: RotationProject) => void;
   /** Empurra tudo que está à direita de `at` por `delta` segundos (a linha do tempo). */
   pushFrom: (at: number, delta: number) => void;
   removeAction: (id: string) => void;
@@ -182,6 +184,7 @@ export const useRotationStore = create<RotationState>((set, get) => {
     removeExtra: (index) => commit(get().project && ops.removeExtra(get().project!, index)),
     setFlatStacks: (id, value) => commit(get().project && ops.setFlatStacks(get().project!, id, value)),
     moveAction: (id, time) => commit(get().project && ops.moveAction(get().project!, id, time)),
+    applyProject: (next) => commit(next, null),
     pushFrom: (at, delta) => {
       const project = get().project;
       if (!project) return;

@@ -198,7 +198,7 @@ export function Dashboard({ v, index, onGood }: { v: ProjectView; index: number;
     element: character.element,
     teamElements,
     em: s.em,
-    characterLevel: team.config.characterLevel,
+    characterLevel: member.level ?? team.config.characterLevel,
     enemy: { level: team.config.enemyLevel, res: assembly.enemyRes, defRed: assembly.enemyDefRed, defIgnore: team.config.enemyDefIgnore },
     ampCoefficient: v.resolved.ampCoefficient,
     reactionBonus: s.reactionBonus,

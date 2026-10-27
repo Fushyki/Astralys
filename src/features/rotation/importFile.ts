@@ -4,7 +4,8 @@
  */
 import { importPlanilha, parseProject, projectFromPlanilha, type RotationProject } from '../../engine';
 import type { LoadedData } from './data';
-import { newProjectId } from './persistence';
+import { newProjectId, sampleProject } from './persistence';
+import { parseShare, projectFromShare } from './share';
 
 export interface ImportResult {
   project: RotationProject;
@@ -32,6 +33,12 @@ export async function importJson(file: File): Promise<ImportResult> {
     raw = JSON.parse(await file.text());
   } catch {
     throw new Error('O arquivo não é um JSON válido.');
+  }
+  // Arquivo de "Compartilhar rotação" com a equipe dentro vira um time novo.
+  const share = parseShare(raw);
+  if (share) {
+    const r = projectFromShare(share, { ...sampleProject(), gameVersion: share.gameVersion });
+    return { project: r.project, warnings: r.warnings };
   }
   const parsed = parseProject(raw);
   return { project: { ...parsed, id: newProjectId() }, warnings: [] };

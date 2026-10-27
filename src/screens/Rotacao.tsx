@@ -15,6 +15,7 @@ import { HitPanel } from './rotacao/HitPanel';
 import { Moves } from './rotacao/Moves';
 import { Sequence } from './rotacao/Sequence';
 import { SettingsDialog } from './rotacao/Settings';
+import { ShareDialog } from './rotacao/ShareDialog';
 import { Timeline } from './rotacao/Timeline';
 import { dec } from './rotacao/ui';
 import './rotacao.css';
@@ -22,6 +23,7 @@ import './rotacao.css';
 export default function Rotacao() {
   const v = useProjectView();
   const [settings, setSettings] = useState(false);
+  const [share, setShare] = useState<'share' | 'import' | null>(null);
   const canUndo = useRotationStore((s) => s.past.length > 0);
   const canRedo = useRotationStore((s) => s.future.length > 0);
   const undo = useRotationStore((s) => s.undo);
@@ -66,6 +68,8 @@ export default function Rotacao() {
           <Button variant="secondary" size="sm" onClick={redo} disabled={!canRedo}>Refazer</Button>
           <Button variant="secondary" size="sm" onClick={() => realign()} disabled={!canTighten}>Apertar a linha</Button>
           <Link className="dz-btn sm" to={`/comparar?a=${v.id}`}>Comparar A / B</Link>
+          <Button variant="secondary" size="sm" onClick={() => setShare('share')} title="Baixa um arquivo com a rotação (e, se quiser, a equipe) para mandar a amigos">Compartilhar</Button>
+          <Button variant="secondary" size="sm" onClick={() => setShare('import')} title="Aplica neste time uma rotação que um amigo compartilhou">Importar</Button>
           <Button variant="secondary" size="sm" onClick={() => setSettings(true)}>Configurações</Button>
         </div>
         <div className="rt-live" aria-live="polite">
@@ -93,6 +97,7 @@ export default function Rotacao() {
         <p className="note" role="status">Atualizando a equipe…</p>
       )}
 
+      {share && <ShareDialog project={v.project} mode={share} onClose={() => setShare(null)} />}
       {settings && <SettingsDialog project={v.project} dps={v.summary.dps} onClose={() => setSettings(false)} />}
     </main>
   );

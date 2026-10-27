@@ -185,7 +185,7 @@ export default function Equipe() {
                   <div className="meta">
                     <span className="name">{ref.character}</span>
                     <span className="role">{role} · {character?.element}</span>
-                    <span className="num sub">Nv {project.config.characterLevel} · C{ref.constellation ?? 0} · talentos {talents.normal}/{talents.skill}/{talents.burst}</span>
+                    <span className="num sub">Nv {Math.min(90, ref.level ?? project.config.characterLevel)} · C{ref.constellation ?? 0} · talentos {talents.normal}/{talents.skill}/{talents.burst}</span>
                   </div>
                   <span className="swap" aria-hidden="true">⇄</span>
                 </button>

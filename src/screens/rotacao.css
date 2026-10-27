@@ -248,3 +248,11 @@
 .rt-caret[data-pushing] .flag { background: var(--gold-hi); }
 .rt-caret.low { z-index: 2; }
 .rt-hit.at-caret { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+/* compartilhar / importar rotação */
+.rt-share .rt-share-parts { display: flex; flex-direction: column; gap: var(--sp-2); }
+.rt-share .part { display: flex; gap: var(--sp-3); align-items: flex-start; padding: var(--sp-2) var(--sp-3); border-radius: var(--r-inner); background: var(--bg); border: 1px solid var(--border-ctl); cursor: pointer; }
+.rt-share .part input { width: var(--ico-1); height: var(--ico-1); margin-top: 2px; accent-color: var(--gold); }
+.rt-share .part span { display: flex; flex-direction: column; min-width: 0; }
+.rt-share .part small { color: var(--muted); font-size: var(--fs-1); }
+.rt-share .rt-acts { display: flex; justify-content: flex-end; }

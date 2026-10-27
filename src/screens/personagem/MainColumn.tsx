@@ -135,7 +135,7 @@ export function ReactionsPanel({ v, index }: { v: ProjectView; index: number }) 
     element: member.character.element,
     teamElements: team.members.map((m) => m.character.element),
     em: v.bundle.memberStats[index].em,
-    characterLevel: team.config.characterLevel,
+    characterLevel: member.level ?? team.config.characterLevel,
     enemy: { level: team.config.enemyLevel, res: assembly.enemyRes, defRed: assembly.enemyDefRed, defIgnore: team.config.enemyDefIgnore },
     ampCoefficient: v.resolved.ampCoefficient,
     reactionBonus: v.bundle.memberStats[index].reactionBonus,

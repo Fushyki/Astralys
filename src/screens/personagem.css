@@ -402,3 +402,12 @@
 .gear-acts-slot .pc-gearacts { display: contents; }
 .pc-cmp td:first-child { min-width: 180px; }
 .pc-cmp tr.avg td { font-weight: 700; }
+
+/* nível editável do personagem */
+.lvlctl { display: inline-flex; align-items: center; gap: 4px; }
+.lvlctl input { width: 2.2em; text-align: center; background: transparent; border: 0; border-bottom: 1px solid var(--border-ctl-hi); color: inherit; font: inherit; padding: 0; }
+.lvlctl input:focus { outline: none; border-bottom-color: var(--gold); }
+.lvlctl button { width: 18px; height: 18px; display: inline-grid; place-items: center; padding: 0; line-height: 1; border: 1px solid var(--border-ctl); border-radius: 50%; background: transparent; color: inherit; cursor: pointer; }
+.lvlctl button:hover:not(:disabled) { border-color: var(--gold); color: var(--gold-hi); }
+.lvlctl button:disabled { opacity: .35; cursor: default; }
+.lvlctl small { color: var(--gold); font-size: .85em; }

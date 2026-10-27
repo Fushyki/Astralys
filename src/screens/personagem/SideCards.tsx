@@ -1,4 +1,5 @@
 /** Coluna esquerda da página do personagem: arte, constelação em mapa de estrelas e talentos em círculos. */
+import { LevelControl } from './LevelControl';
 import { useState } from 'react';
 import type { Character } from '../../data/schema';
 import { CharacterAvatar } from '../../design/primitives';
@@ -39,7 +40,7 @@ export function ArtCard({
           <CharacterAvatar name={character.name} icon={character.icon} color={color} size={120} />
         )}
         <span className="elem">{character.element.toUpperCase()}</span>
-        <span className="lvl num">{level} / 90</span>
+        <LevelControl name={character.name} index={index} level={level} />
       </div>
       <div className="ident">
         <div className="row">

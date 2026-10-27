@@ -109,7 +109,7 @@ export async function searchBestLoadout(input: SearchInput): Promise<SearchResul
     if (hit !== undefined) return hit;
     const lo = loadoutFromPieces(SLOTS.map((s) => p[s]), game);
     const memberRef: MemberRef = { ...ref, ...lo, manualRolls: lo.manualRolls };
-    const resolved = resolveMember(memberRef, game, effects, input.minRolls);
+    const resolved = resolveMember(memberRef, game, effects, input.minRolls, team.config.characterLevel);
     const members = team.members.map((m, i) => (i === member ? resolved : m));
     const nextTeam: TeamInput = { ...team, members };
     const rolls = input.rolls.map((r, i) => (i === member ? manualToRolls(lo.manualRolls, input.minRolls) : r));

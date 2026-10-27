@@ -175,7 +175,7 @@ export function TalentsPanel({ v, index }: { v: ProjectView; index: number }) {
     element: character.element,
     teamElements,
     em: v.bundle.memberStats[index].em,
-    characterLevel: v.resolved.team.config.characterLevel,
+    characterLevel: member.level ?? v.resolved.team.config.characterLevel,
     enemy: { level: v.resolved.team.config.enemyLevel, res: assembly.enemyRes, defRed: assembly.enemyDefRed, defIgnore: v.resolved.team.config.enemyDefIgnore },
     ampCoefficient: v.resolved.ampCoefficient,
     reactionBonus: v.bundle.memberStats[index].reactionBonus,

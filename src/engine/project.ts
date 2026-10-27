@@ -6,6 +6,7 @@
 import { withStacks } from './stacks';
 import { z } from 'zod';
 import type { ArtifactSet, Character, Move, Talent, Weapon } from '../data/schema';
+import { characterAtLevel, type LevelsData } from '../data/levels';
 import { planilhaEffect } from './compat/planilha';
 import { activeCharacterBuffs } from './stats';
 import { weaponStatsAt, type CharacterBuff, type CharacterEffect, type FlatDamageEffect, type Proc, type SetEffect, type WeaponEffect, type WeaponFlat } from '../effects/schema';
@@ -23,6 +24,8 @@ export const MAX_TEAM_SIZE = 4;
 // ---------- Dados necessários para resolver ----------
 
 export interface GameData {
+  /** Curvas de nível dos personagens (sem elas, os stats ficam no nível 90). */
+  levels?: LevelsData;
   characters: Character[];
   moves: Move[];
   weapons: Weapon[];
@@ -60,6 +63,8 @@ export const MemberRefSchema = z.object({
   artifacts: ArtifactConfigSchema,
   /** Níveis BASE dos talentos (sem o +3 das constelações). */
   talents: z.object({ normal: TalentLevel, skill: TalentLevel, burst: TalentLevel }),
+  /** Nível do personagem (1 a 90). Ausente = o nível padrão do cenário (`config.characterLevel`). */
+  level: z.number().int().min(1).max(90).optional(),
   /** Constelação (0 a 6). Ausente = C0. Sobe em 3 o nível dos talentos da C3 e da C5. */
   constellation: z.number().int().min(0).max(6).optional(),
   /**
@@ -503,10 +508,11 @@ export function factionsOf(chosen: readonly ('moonsign' | 'hexerei')[] | undefin
   return chosen === undefined ? list.filter((f) => f === 'moonsign') : list.filter((f) => chosen.includes(f));
 }
 
-export function resolveMember(ref: MemberRef, data: GameData, effects: EffectsData, minRolls = 0): MemberInput {
+export function resolveMember(ref: MemberRef, data: GameData, effects: EffectsData, minRolls = 0, defaultLevel = 90): MemberInput {
   const setOf = (name?: string) => (name ? { name, effect: effects.sets.find((s) => s.set === name) } : undefined);
   const weapon = byName(data.weapons, ref.weapon, 'Arma');
-  const character = byName(data.characters, ref.character, 'Personagem');
+  const level = ref.level ?? defaultLevel;
+  const character = characterAtLevel(byName(data.characters, ref.character, 'Personagem'), level, data.levels);
   const weaponEffect = effects.weapons.find((w) => w.weapon === weapon.name);
   const real = ref.pieces?.length ? buildFromPieces(ref.pieces, character.element, data.artifacts.map((a) => a.name)) : undefined;
   const primarySet = setOf(real ? real.primarySet : ref.primarySet);
@@ -524,6 +530,7 @@ export function resolveMember(ref: MemberRef, data: GameData, effects: EffectsDa
   const characterEffect = withStacks(merged, ref.stacks);
   return {
     character,
+    level,
     weapon,
     characterEffect,
     weaponEffect,
@@ -701,7 +708,7 @@ export function effectiveDuration(project: Pick<RotationProject, 'config' | 'act
 /** Transforma o projeto salvo nas entradas do motor. Lança ProjectResolveError se algo não existir nos dados. */
 export function resolveProject(project: RotationProject, data: GameData, effects: EffectsData): ResolvedProject {
   const planilha = project.compat === 'planilha';
-  const members = finalizeMembers(project.members.map((m) => resolveMember(m, data, effects, project.config.minRollsPerSubstat)), planilha);
+  const members = finalizeMembers(project.members.map((m) => resolveMember(m, data, effects, project.config.minRollsPerSubstat, project.config.characterLevel)), planilha);
   const moves = indexMoves(data.moves);
   const config: GlobalConfig = { ...project.config, rotationDuration: effectiveDuration(project), elementMode: planilha || project.elementMode === 'personagem' ? 'character' : 'kit' };
 

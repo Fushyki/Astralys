@@ -173,6 +173,8 @@ export interface SetSelection {
 
 export interface MemberInput {
   character: Character;
+  /** Nível do personagem (stats base e fórmulas de nível); ausente = o do cenário. */
+  level?: number;
   weapon: Weapon;
   characterEffect?: CharacterEffect;
   weaponEffect?: WeaponEffect;

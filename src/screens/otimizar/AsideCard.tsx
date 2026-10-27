@@ -4,6 +4,7 @@ import type { ProjectView } from '../../app/ProjectContext';
 import { CharacterAvatar } from '../../design/primitives';
 import { elementColor } from '../../design/elements';
 import { weaponIconUrl } from '../../design/images';
+import { LevelControl } from '../personagem/LevelControl';
 import { effectiveTalents, factionsOf } from '../../engine';
 import { effectStatus } from '../../features/rotation/teamInfo';
 import { weaponsFor } from '../../features/rotation/teamOps';
@@ -45,7 +46,7 @@ export function AsideCard({ v, index }: { v: ProjectView; index: number }) {
           <CharacterAvatar name={character.name} icon={character.icon} color={color} size={120} />
         )}
         <span className="elem">{character.element.toUpperCase()}</span>
-        <span className="lvl num">{v.project.config.characterLevel} / 90</span>
+        <LevelControl name={character.name} index={index} level={ref.level ?? v.project.config.characterLevel} />
       </div>
       <div className="oa-body">
         <div className="oa-id">

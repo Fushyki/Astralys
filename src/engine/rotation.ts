@@ -349,7 +349,7 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
     // Golpe Lunar/Estelar ou reação: fórmula própria, sem DMG% nem dano fixo comuns (não consome stacks).
     if (kind !== 'direct') {
       const scale = move.reactionHit ? { atk: 0, em: 0, hp: 0, def: 0, flat: 0 } : scaleAt(move, move.talent === 'proc' || move.talent === 'reaction' ? 1 : member.talents[move.talent]);
-      const r = reactionAction({ move, executions: action.executions, ownElement: member.character.element, stats, scale, characterLevel: config.characterLevel, enemy });
+      const r = reactionAction({ move, executions: action.executions, ownElement: member.character.element, stats, scale, characterLevel: member.level ?? config.characterLevel, enemy });
       const hit = move.reactionHit;
       if (hit && (hit.kind === 'lunar' || hit.kind === 'stellarswirl')) {
         // Reação do time: cada contribuinte vale por si (EM e crítico próprios) e o total é a soma ponderada 1 + 1/2 + 1/12 + 1/12.
@@ -357,7 +357,7 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
         const each = who.map((i) => {
           const st = statsFor(i, tags);
           const en: EnemyStats = { ...enemy, defIgnore: Math.min(1, (config.enemyDefIgnore ?? 0) + (st.defIgnore ?? 0)) };
-          const x = reactionAction({ move, executions: 1, ownElement: members[i].character.element, stats: st, scale, characterLevel: config.characterLevel, enemy: en });
+          const x = reactionAction({ move, executions: 1, ownElement: members[i].character.element, stats: st, scale, characterLevel: members[i].level ?? config.characterLevel, enemy: en });
           const n = x.breakdown.total * REACTION_COEF_FACTOR;
           return { member: i, noCrit: n, crit: n * critFactor('crit', x.critRate, x.critDmg), avg: n * critFactor('avg', x.critRate, x.critDmg) };
         });
@@ -409,7 +409,7 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
       critRate,
       critDmg,
       critMode: 'hit',
-      characterLevel: config.characterLevel,
+      characterLevel: member.level ?? config.characterLevel,
       em: stats.em,
       enemy,
       reaction: action.reaction === 'none' ? undefined : { kind: action.reaction, bonus: reactionBonus },

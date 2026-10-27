@@ -201,6 +201,41 @@ const num = (s) => Number(String(s).replace(/\./g, '').replace(',', '.'));
   check('com a linha apertada o botão fica desligado', await tighten.isDisabled());
   await page.keyboard.press('Control+z'); await settle();
 
+  // ---- Linha amarela do tempo: clique na régua e empurrar ----
+  const ruler = page.locator('.rt-lane.ruler .trk');
+  const rb = await ruler.boundingBox();
+  await page.mouse.click(rb.x + rb.width * 0.3, rb.y + rb.height / 2); await settle();
+  check('clicar na régua põe a linha amarela', (await page.locator('[data-testid="caret"]').count()) === 1);
+  const flag = (await page.locator('.rt-caret .flag').first().textContent()) || '';
+  check('a linha mostra o tempo e o golpe daquele momento', /\d+,\d s/.test(flag) && flag.includes(':'), flag);
+  const timesBefore = await page.$$eval('.rt-hit', (els) => els.map((e) => e.getAttribute('aria-label')));
+  const grab = page.locator('.rt-caret .grab').first();
+  const gb = await grab.boundingBox();
+  await page.mouse.move(gb.x + gb.width / 2, gb.y + 40);
+  await page.mouse.down();
+  await page.mouse.move(gb.x + gb.width / 2 + 72, gb.y + 40, { steps: 6 });
+  await page.mouse.up(); await settle();
+  const timesAfter = await page.$$eval('.rt-hit', (els) => els.map((e) => e.getAttribute('aria-label')));
+  const moved = timesAfter.filter((l, i) => l !== timesBefore[i]).length;
+  check('arrastar a linha para a direita empurra só os golpes à direita dela', moved > 0 && moved < timesBefore.length, String(moved) + ' de ' + timesBefore.length);
+  await page.keyboard.press('Control+z'); await settle();
+  check('Ctrl+Z desfaz o empurrão', JSON.stringify(await page.$$eval('.rt-hit', (els) => els.map((e) => e.getAttribute('aria-label')))) === JSON.stringify(timesBefore));
+
+  // ---- Compartilhar e importar rotação ----
+  await page.locator('.rt-head button:has-text("Compartilhar")').click();
+  check('Compartilhar abre as partes (rotação marcada, equipe desmarcada)', (await page.locator('.rt-share .part input').count()) === 4 && (await page.locator('.rt-share .part input').first().isChecked()) && !(await page.locator('.rt-share .part input').nth(3).isChecked()));
+  const [dl] = await Promise.all([page.waitForEvent('download'), page.locator('.rt-share button:has-text("Baixar arquivo")').click()]);
+  const shareFile = path.join(OUT, 'rotacao-compartilhada.json');
+  await dl.saveAs(shareFile);
+  check('baixa um .astralys-rotacao.json', /\.astralys-rotacao\.json$/.test(dl.suggestedFilename()), dl.suggestedFilename());
+  await page.locator('.rt-head button:has-text("Apertar a linha")').click(); await settle();
+  await page.locator('.rt-head button:has-text("Importar")').click();
+  await page.setInputFiles('.rt-share input[type="file"]', shareFile); await settle();
+  await page.locator('.rt-share button:has-text("Aplicar ao time")').click(); await settle();
+  check('importar a rotação mostra o resultado', (await page.locator('.rt-share [role="status"]').count()) === 1);
+  await page.keyboard.press('Escape');
+  check('a rotação importada volta ao DPS de origem', (await dps()) === '216.600', await dps());
+
   // ---- Persistência ----
   await page.waitForTimeout(700);
   await page.reload({ waitUntil: 'networkidle' }); await page.waitForSelector('.rt-hit');

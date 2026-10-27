@@ -41,7 +41,7 @@ export const CHARACTERS_4: Record<string, BuffCuration[]> = {
     { id: 'c1', label: 'Aino C1', src: 'const1', scope: 'team', timed: true, stats: { em: { p: 0 } }, expect: 'Elemental Mastery will be increased by 80', note: '+80 de Maestria dela e do personagem em campo por 15 s depois da habilidade ou Supremo: ligue nas janelas.' },
   ],
   Nefer: [
-    { id: 'a1', label: 'Nefer A1', src: 'p1', scope: 'self', timed: true, stats: { em: { p: 2 } }, expect: "Nefer's Elemental Mastery will be increased by 100 for 8s", note: '+100 de Maestria por 8 s com 3 stacks de Véu da Falsidade (Ascendant Gleam): ligue nas janelas.' },
+    { id: 'a1', label: 'Nefer A1', src: 'p1', scope: 'self', timed: true, stats: { em: { p: 2 } }, stacks: { max: 5, unit: 'stacks de Véu da Falsidade', levels: [{ lit: 0 }, { lit: 0 }, { p: 2 }, { p: 2 }, { p: 2 }] }, expect: "Nefer's Elemental Mastery will be increased by 100 for 8s", note: '+100 de Maestria por 8 s com 3 stacks de Véu da Falsidade (Ascendant Gleam): ligue nas janelas.' },
     { id: 'c4', label: 'Nefer C4', src: 'const4', scope: 'self', timed: false, resShred: { value: { p: 2 }, elements: ['Dendro'] }, expect: 'Dendro RES decreased by 20%', note: 'Assume a redução de RES Dendro durante o Shadow Dance sempre ativa.' },
   ],
   Durin: [

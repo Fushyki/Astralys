@@ -3,7 +3,6 @@
  * golpes em grupos e três passivas. As condições (checkbox + valor + efeitos) são os buffs curados do personagem:
  * ligar ou desligar muda o cálculo do time inteiro na hora.
  */
-import { ReceivedSection } from './ReceivedSection';
 import { useDamageView } from '../../features/character/damageView';
 import { useEffect, useMemo, useState } from 'react';
 import type { ProjectView } from '../../app/ProjectContext';
@@ -130,7 +129,7 @@ function Condition({ buff, index, constellation, disabled, chips, onToggle, chos
         <span className="txt" title={buff.note}>{buff.label}{locked ? ` · libera na C${buff.minConstellation}` : buff.timed ? '' : ' · sempre'}</span>
         {rows[0] && <span className="dz-badge gold num">{rows[0].value || rows[0].name}</span>}
       </label>
-      {buff.stacks && !buff.stacks.of && onStacks && (
+      {buff.stacks && onStacks && (
         <div className="tl-stacks" role="group" aria-label={`Quantidade de ${buff.stacks.unit ?? 'stacks'} de ${buff.label}`}>
           <span>{buff.stacks.unit ?? 'Stacks'}</span>
           <button type="button" aria-label="Menos" disabled={locked || n <= 0} onClick={() => onStacks(n - 1)}>−</button>
@@ -300,8 +299,6 @@ export function TalentsPanel({ v, index }: { v: ProjectView; index: number }) {
           <span key={r.id} className="x"><span style={{ color }}>{r.name}</span><b className="num">{r.value.type === 'mult' ? `×${formatDecimal(r.value.amount, 2)}` : formatInt(r.value.amount)}</b></span>
         ))}
       </section>
-
-      <ReceivedSection v={v} index={index} />
 
       {infusable && (
         <section className="tl-infusion" aria-label="Infusão dos ataques normais">

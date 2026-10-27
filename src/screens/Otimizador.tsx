@@ -300,13 +300,20 @@ export function OtimizadorPanel({ index }: { index: number }) {
     disabled: (v.resolved.team.disabled ?? []).filter((id) => !v.resolved.gearIds.includes(id) || project.disabled.includes(id)),
   };
 
+  /**
+   * "Um golpe" usa os status do talento + os buffs que o usuário ligou (arma e set só se ligados), como a tabela de dano: não
+   * depende da rotação. Só o dano do personagem e o do time usam a rotação (e avaliam arma e set como ligados).
+   */
+  const hitOnly = ui.goal === 'dano' && ui.scope === 'move';
+  const teamForRun = hitOnly ? v.resolved.team : optimizerTeam;
+
   /** Build atual: as peças do projeto ou as do inventário com o nome dele, avaliadas como os resultados (mesma fonte dos stats e das diferenças). */
   const current = (() => {
     if (!good) return null;
     try {
       return evaluateEquipped({
         good, characterKey, config: { ...config(), constraints: {} }, member: index, rolls: v.bundle.optimization.rolls, ref,
-        resolved: { team: optimizerTeam, actions: v.resolved.actions, flatEffects: v.resolved.flatEffects, ampCoefficient: v.resolved.ampCoefficient },
+        resolved: { team: teamForRun, actions: v.resolved.actions, flatEffects: v.resolved.flatEffects, ampCoefficient: v.resolved.ampCoefficient },
         planilha: project.compat === 'planilha', game: data.game, effects: data.effects,
       }, ref.pieces?.length ? (ref.pieces as GoodArtifact[]) : undefined);
     } catch {
@@ -326,7 +333,7 @@ export function OtimizadorPanel({ index }: { index: number }) {
     const j = startOptimizerJob(
       {
         good, characterKey, config: config(), member: index, rolls: v.bundle.optimization.rolls, ref,
-        resolved: { team: optimizerTeam, actions: v.resolved.actions, flatEffects: v.resolved.flatEffects, ampCoefficient: v.resolved.ampCoefficient },
+        resolved: { team: teamForRun, actions: v.resolved.actions, flatEffects: v.resolved.flatEffects, ampCoefficient: v.resolved.ampCoefficient },
         planilha: project.compat === 'planilha', game: data.game, effects: data.effects,
       },
       setProgress,
@@ -550,7 +557,7 @@ export function OtimizadorPanel({ index }: { index: number }) {
                 <div className="ot-bar-line">
                   <div className="ot-field grow">
                     <span className="lbl">Golpe</span>
-                    <button type="button" className="ot-movebtn" disabled={!moveOn} aria-haspopup="dialog" aria-label="Escolher o golpe a otimizar" onClick={() => setPickingMove(true)}>
+                    <button type="button" className="ot-movebtn" disabled={!moveOn} aria-haspopup="dialog" aria-label="Escolher o golpe a otimizar" title="Um golpe usa os status do talento e os buffs que você ligou na Equipe e em Talentos (arma e set só se ligados); não usa a rotação." onClick={() => setPickingMove(true)}>
                       {moveChosen && <KindBadge kind={kindOf(moveChosen)} />}
                       <span className="n" style={{ color: damageColor(moveElement, moveChosen ? specialOfMove(moveChosen, 0, effect) : undefined) }}>{moveChosen ? displayName(moveChosen) : 'Escolher o golpe'}</span>
                       {moveChosen && <FamilyBadge special={specialOfMove(moveChosen, 0, effect)} />}

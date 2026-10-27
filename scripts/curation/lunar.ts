@@ -75,7 +75,7 @@ export const LUNAR_BUFFS: Record<string, BuffCuration[]> = {
   ],
   Nefer: [
     { id: 'a0', label: 'Nefer: base do Lunar-Florescer', src: 'p3', scope: 'team', timed: false, convert: { from: 'em', perPoint: { p: 0 }, cap: { p: 1 }, to: ['lunarbloomBase'] }, expect: "every point of Elemental Mastery that Nefer has increasing Lunar-Bloom's Base DMG by 0.0175%", note: BASE_NOTE },
-    { id: 'c2', label: 'Nefer C2', src: 'const2', scope: 'self', timed: true, team: { moonsign: 2 }, stats: { em: { lit: 100 } }, expect: "Nefer's Elemental Mastery will be increased by 200 for 8s instead", note: 'Com 5 stacks de Veil of Falsehood, a Maestria do A1 vira 200: soma os 100 que faltam (200 − 100 do A1) na mesma janela. Os 140% do Phantasm Performance NÃO entram.' },
+    { id: 'c2', label: 'Nefer C2', src: 'const2', scope: 'self', timed: true, team: { moonsign: 2 }, stats: { em: { lit: 100 } }, stacks: { max: 5, of: 'a1', levels: [{ lit: 0 }, { lit: 0 }, { lit: 0 }, { lit: 0 }, { lit: 100 }] }, expect: "Nefer's Elemental Mastery will be increased by 200 for 8s instead", note: 'Com 5 stacks de Veil of Falsehood, a Maestria do A1 vira 200: soma os 100 que faltam (200 − 100 do A1) na mesma janela. Os 140% do Phantasm Performance NÃO entram.' },
     { id: 'c6', label: 'Nefer C6', src: 'const6', scope: 'self', timed: false, team: { moonsign: 2 }, stats: { reactionBonus: { lunarbloomSpecial: { p: 2 } } }, expect: "Nefer's Lunar-Bloom DMG is elevated by 15%", note: 'Com Moonsign: Ascendant Gleam, dano Lunar-Florescer da Nefer elevado em 15%.' },
   ],
   Jahoda: [

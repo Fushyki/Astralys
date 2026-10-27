@@ -73,7 +73,7 @@ const STACK_UNITS: Record<string, string> = {
 };
 
 /** Stacks/pontos de um buff: informado na curadoria ou o multiplicador inteiro `x` (2 a 20) dos valores de `stats` (todos iguais). */
-function stackInfo(b: { stats?: unknown; stacks?: { max: number; unit?: string; levels?: Val[]; of?: string; default?: number } | false }): { max: number; unit?: string; levels?: Val[]; of?: string; default?: number } | undefined {
+function stackInfo(b: { stats?: unknown; stacks?: { max: number; unit?: string; levels?: Val[]; of?: string; default?: number; step?: number } | false }): { max: number; unit?: string; levels?: Val[]; of?: string; default?: number; step?: number } | undefined {
   if (b.stacks === false) return undefined;
   if (b.stacks) return b.stacks;
   const xs = new Set<number>();
@@ -167,7 +167,7 @@ const stackBuffs = (groups: { max: number; stats: StatsCur }[], c: Ctx, where: s
   );
 
 /** `stacks` de um buff pronto: máximo, nome da unidade e, se o efeito sobe aos saltos (10/20/30/48%), a tabela por quantidade. */
-function stackMeta(b: { stats?: unknown; stacks?: { max: number; unit?: string; levels?: Val[]; of?: string; default?: number } | false }, params: number[], where: string, unit?: string, text = '') {
+function stackMeta(b: { stats?: unknown; stacks?: { max: number; unit?: string; levels?: Val[]; of?: string; default?: number; step?: number } | false }, params: number[], where: string, unit?: string, text = '') {
   const info = stackInfo(b);
   if (!info) return undefined;
   let table: number[] | undefined;
@@ -179,7 +179,7 @@ function stackMeta(b: { stats?: unknown; stacks?: { max: number; unit?: string; 
     table = [0, ...vals.map((x) => round(x / top))];
   }
   const u = unit ?? info.unit;
-  return { max: info.max, ...(u ? { unit: u } : {}), ...(table ? { table } : {}), ...(info.of ? { of: info.of } : {}), ...(info.default !== undefined ? { default: info.default } : {}) };
+  return { max: info.max, ...(u ? { unit: u } : {}), ...(table ? { table } : {}), ...(info.of ? { of: info.of } : {}), ...(info.default !== undefined ? { default: info.default } : {}), ...(info.step !== undefined ? { step: info.step } : {}) };
 }
 
 function buildSets(): SetEffect[] {

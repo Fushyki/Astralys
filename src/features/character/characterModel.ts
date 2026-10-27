@@ -317,7 +317,7 @@ export interface BuffCard {
   /** Vale só enquanto uma janela da rotação o liga (senão vale o tempo todo). */
   timed: boolean;
   /** Buff com stacks ou pontos: quem dá, o id do buff, o máximo, quantos valem hoje e como chamar. */
-  stack?: { giver: number; buffId: string; max: number; n: number; unit?: string };
+  stack?: { giver: number; buffId: string; max: number; n: number; unit?: string; step?: number };
 }
 
 const STATIC_TAG: Record<string, string> = { weapon: 'Arma', 'set-2p': 'Set · 2 peças', 'set-4p': 'Set · 4 peças', character: 'Passiva', resonance: 'Ressonância', extra: 'Extra' };
@@ -349,7 +349,7 @@ export function memberBuffCards(project: RotationProject, resolved: ResolvedProj
     const giver = Number(m[1]);
     const buff = project.members[giver] && resolved.team.members[giver]?.characterEffect?.buffs.find((x) => x.id === m[2]);
     if (!buff || !buff.stacks || buff.stacks.of) return undefined;
-    return { giver, buffId: m[2], max: buff.stacks.max, n: stacksOf(buff, project.members[giver].stacks?.[m[2]]), ...(buff.stacks.unit ? { unit: buff.stacks.unit } : {}) };
+    return { giver, buffId: m[2], max: buff.stacks.max, n: stacksOf(buff, project.members[giver].stacks?.[m[2]]), ...(buff.stacks.unit ? { unit: buff.stacks.unit } : {}), ...(buff.stacks.step ? { step: buff.stacks.step } : {}) };
   };
 
   const cards: BuffCard[] = [];

@@ -259,6 +259,8 @@ export const CharacterBuffSchema = z.object({
     of: z.string().optional(),
     /** Quantidade usada enquanto o usuário não escolhe (padrão: o máximo). Ex.: contagem de inimigos começa em 1. */
     default: z.number().int().min(0).optional(),
+    /** Quanto vale cada passo na tela (ex.: 2 = o seletor mostra 0, 2, 4… segundos, com `max` passos). */
+    step: z.number().positive().optional(),
   }).optional(),
   /** O que foi assumido e o que não entra. */
   note: z.string().optional(),

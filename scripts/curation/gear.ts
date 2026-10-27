@@ -51,7 +51,7 @@ export interface BuffCur {
   forElements?: Element[];
   stats?: StatsCur;
   /** Stacks/pontos que o usuário escolhe: os números valem para `max`; `levels` = o valor em cada quantidade (1..max) quando sobe aos saltos. */
-  stacks?: { max: number; unit?: string; levels?: Val[]; /** Usa a quantidade escolhida em outro buff do mesmo efeito (id dele), sem pedir de novo. */ of?: string; /** Quantidade enquanto o usuário não escolhe (padrão: `max`). */ default?: number } | false;
+  stacks?: { max: number; unit?: string; levels?: Val[]; /** Usa a quantidade escolhida em outro buff do mesmo efeito (id dele), sem pedir de novo. */ of?: string; /** Quantidade enquanto o usuário não escolhe (padrão: `max`). */ default?: number; step?: number } | false;
   convert?: { from: 'atk' | 'baseAtk' | 'hp' | 'def' | 'em' | 'er' | 'partyEnergy'; perPoint: Sum; threshold?: Sum; cap?: Sum; to: ConvertTarget[] };
   team?: BuffTeamRules;
 }

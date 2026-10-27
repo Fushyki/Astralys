@@ -133,7 +133,7 @@ function Condition({ buff, index, constellation, disabled, chips, onToggle, chos
       {buff.stacks && onStacks && (
         <div className="tl-stacks" role="group" aria-label={`Quantidade de ${buff.stacks.unit ?? 'stacks'} de ${buff.label}`}>
           <span>{buff.stacks.unit ?? 'Stacks'}</span>
-          <StackInput value={n} max={buff.stacks.max} disabled={locked} label={`${buff.stacks.unit ?? 'Stacks'} de ${buff.label}`} onChange={onStacks} />
+          <StackInput value={n} max={buff.stacks.max} step={buff.stacks.step} disabled={locked} label={`${buff.stacks.unit ?? 'Stacks'} de ${buff.label}`} onChange={onStacks} />
         </div>
       )}
       <div className="rows">

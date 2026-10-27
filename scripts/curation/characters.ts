@@ -20,7 +20,7 @@ export interface BuffCuration {
   scope: 'self' | 'others' | 'team';
   timed: boolean;
   /** Stacks/pontos: sem isto, vem do multiplicador inteiro `x` (2 a 20) dos valores em `stats`; `false` desliga. Os números valem para `max`. */
-  stacks?: { max: number; unit?: string; levels?: Val[]; of?: string; default?: number } | false;
+  stacks?: { max: number; unit?: string; levels?: Val[]; of?: string; default?: number; step?: number } | false;
   /** Cai com o tempo (ver `CharacterBuff.decay`). */
   decay?: { duration: number; noDecayFrom?: number };
   /** Constelação mínima (por padrão vem de `src`; num buff do kit, informe aqui, ex.: +1 stack na C2). */

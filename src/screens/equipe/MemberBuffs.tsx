@@ -86,7 +86,7 @@ export function MemberBuffs({ v, index, inline = false }: { v: ProjectView; inde
                     {c.stack && (
                       <span className="bc-stacks" role="group" aria-label={`Quantidade de ${c.stack.unit ?? 'stacks'}`}>
                         <span>{c.stack.unit ?? 'Stacks'}</span>
-                        <StackInput value={c.stack.n} max={c.stack.max} label={`${c.stack.unit ?? 'Stacks'} de ${c.name}`} onChange={(n) => updateMember(c.stack!.giver, { stacks: { ...v.project.members[c.stack!.giver].stacks, [c.stack!.buffId]: n } })} />
+                        <StackInput value={c.stack.n} max={c.stack.max} step={c.stack.step} label={`${c.stack.unit ?? 'Stacks'} de ${c.name}`} onChange={(n) => updateMember(c.stack!.giver, { stacks: { ...v.project.members[c.stack!.giver].stacks, [c.stack!.buffId]: n } })} />
                       </span>
                     )}
                     <span className="bc-meta">

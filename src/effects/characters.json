@@ -69,10 +69,11 @@
           "noDecayFrom": 4
         },
         "stacks": {
-          "max": 200,
-          "unit": "pontos de Espírito Lutador"
+          "max": 10,
+          "unit": "tempo restante do buff (s)",
+          "step": 2
         },
-        "note": "+0,2% de DMG de quem está em campo por ponto de Espírito Lutador usado no Supremo (até 200 = +40%): a quantidade é escolha sua (padrão: 200). Cai em linha reta até 0 em 20 s depois do início da janela (use o tempo do golpe); a C4 tira o decaimento."
+        "note": "+40% de DMG de quem está em campo (200 de Espírito Lutador no Supremo), caindo em linha reta até 0 em 20 s (4% a cada 2 s). Escolha o tempo restante do buff: 20 s = +40%, 10 s = +20%, 0 = nada. Na rotação ele já cai sozinho pelo tempo do golpe, então deixe em 20 s. A C4 tira o decaimento."
       },
       {
         "id": "c1",

@@ -9,11 +9,11 @@
 .vt-filters .dz-btn[aria-pressed="true"] { border-color: var(--gold); color: var(--gold); }
 
 .vt-card { display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--border); border-top: 4px solid var(--c, var(--gold)); border-radius: 16px; overflow: hidden; min-width: 0; }
-.vt-card:hover { border-color: var(--border-strong, #2e3966); border-top-color: var(--c, var(--gold)); }
+.vt-card:hover { border-color: var(--border-strong, var(--border-ctl-hi)); border-top-color: var(--c, var(--gold)); }
 .vt-poster { display: block; line-height: 0; color: inherit; text-decoration: none; }
 .vt-poster .pc-box { border: 0; border-radius: 0; }
 .vt-poster:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
-.vt-wait { aspect-ratio: 4 / 5; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; line-height: 1.4; background: #0a0e1c; padding: 16px; text-align: center; }
+.vt-wait { aspect-ratio: 4 / 5; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; line-height: 1.4; background: var(--bg); padding: 16px; text-align: center; }
 .vt-faces { display: flex; gap: 8px; }
 
 .vt-card { position: relative; }

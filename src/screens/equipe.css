@@ -33,7 +33,7 @@
 .eq-gear { display: flex; gap: 10px; align-items: stretch; }
 .eq-pieces { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; flex: 1; min-width: 0; }
 .eq-tile { position: relative; display: grid; place-items: center; padding: 4px; border-radius: 12px; border: 2px solid var(--border-ctl); background: linear-gradient(180deg, #4a3a73 0%, #1a1f3d 70%); cursor: pointer; min-width: 0; aspect-ratio: 1; }
-.eq-tile[data-rarity='5'] { background: linear-gradient(180deg, #7a5a2b 0%, #2a2418 72%); border-color: #5a4524; }
+.eq-tile[data-rarity='5'] { background: var(--rar5-bg); border-color: var(--rar5-border); }
 .eq-tile:hover, .eq-tile:focus-visible { border-color: var(--gold); outline: none; }
 .eq-tile img { width: 100%; height: 100%; object-fit: contain; }
 .eq-tile .ph { font-family: var(--font-display); color: var(--gold); font-size: 22px; }
@@ -58,7 +58,7 @@
 .eq-buffs .bc-head { display: flex; align-items: center; gap: 8px; width: 100%; min-height: 36px; padding: 6px 10px; border-radius: 10px; border: 1px solid var(--border-ctl); background: var(--bg-header); color: var(--text); font: inherit; cursor: pointer; text-align: left; }
 .eq-buffs .bc-head:hover { border-color: var(--gold); }
 .eq-buffs .bc-head .bc-lbl { font-family: var(--font-display); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; font-size: 13px; }
-.eq-buffs .bc-head .bc-badge { padding: 1px 8px; border-radius: 999px; background: var(--good); color: #0a0e1c; font-size: 12px; font-weight: 700; }
+.eq-buffs .bc-head .bc-badge { padding: 1px 8px; border-radius: 999px; background: var(--good); color: var(--bg); font-size: 12px; font-weight: 700; }
 .eq-buffs .bc-head .bc-chev { margin-left: auto; color: var(--muted); }
 .eq-buffs .bc-list { display: flex; flex-direction: column; gap: 12px; }
 .eq-buffs .bc-bulk { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 10px; font-size: 12px; }

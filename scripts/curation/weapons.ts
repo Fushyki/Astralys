@@ -121,7 +121,6 @@ export const WEAPONS: Record<string, WeaponCuration> = {
   },
   'Crimson Moon\'s Semblance': { dmgPct: [{ p: 2 }, { p: 4 }], expect: 'Bond of Life', note: 'Assume o Bond of Life de 30% do HP máximo ativo (+12% e +24% de DMG).' },
   'Lumidouce Elegy': { atkPct: { p: 0 }, expect: 'ATK increased by', note: 'Só o ATK. O DMG com Queimadura e a energia NÃO entram.' },
-  'Symphonist of Scents': { atkPct: { p: 0 }, expect: 'ATK is increased by', note: 'Só o ATK base. O bônus fora de campo e o "Sweet Echoes" NÃO entram.' },
   'Blackcliff Pole': blackcliff(),
   'Royal Spear': royal(),
   "Dragon's Bane": { dmgPct: { p: 0 }, expect: 'Increases DMG against opponents affected by Hydro or Pyro', note: 'Assume inimigo sob Hydro ou Pyro.' },

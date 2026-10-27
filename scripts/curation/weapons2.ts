@@ -206,6 +206,15 @@ export const WEAPONS_2: Record<string, GearCur> = {
     expect: 'of their Elemental Mastery as bonus ATK',
     note: 'ATK fixo = 52% da Maestria (R1) + 28% por stack depois da habilidade (até 3): a quantidade de stacks é escolha sua (padrão: 3).',
   },
+  'Symphonist of Scents': {
+    atkPct: { p: 0 },
+    buffs: [
+      { id: 'offfield', label: 'ATK fora de campo', timed: true, stats: { atkPct: { p: 1 } } },
+      { id: 'echoes', label: 'Sweet Echoes (ATK de quem cura e de quem foi curado)', scope: 'team', timed: true, stats: { atkPct: { p: 2 } } },
+    ],
+    expect: 'Sweet Echoes',
+    note: 'ATK base sempre (12% no R1). Fora de campo soma outros 12%: faixa na linha do tempo, ligue enquanto o portador está fora de campo. Sweet Echoes: +32% (R1) de ATK por 3 s para o portador e para quem ele curou depois de curar (vale fora de campo); como o motor não sabe quem foi curado, vale para a equipe nas janelas que você ligar.',
+  },
   'Fractured Halo': { atkPct: { p: 0 }, buffs: [{ id: 'edict', label: 'Electrifying Edict (DMG Lunar-Carregado da equipe)', scope: 'team', timed: true, stats: { reactionBonus: { lunarcharged: { p: 2 } } } }], expect: 'ATK is increased by', note: 'Assume o ATK depois de habilidade/Supremo sempre ativo. Electrifying Edict: +40% (R1) de DMG Lunar-Carregado da equipe por 20 s depois de criar um escudo com o ATK ativo: faixa, ligue nas janelas.' },
   'Bloodsoaked Ruins': { buffs: [{ id: 'lc', label: 'Lunar-Carregado depois do Supremo', timed: true, stats: { reactionBonus: { lunarcharged: { p: 1 } } } }, { id: 'requiem', label: 'Requiem of Ruin', timed: true, stats: { critDmg: { p: 3 } } }], expect: 'Lunar-Charged DMG', note: '+36% (R1) de DMG Lunar-Carregado por 3,5 s depois do Supremo e +28% de Dano Crítico por 6 s depois de um Lunar-Carregado: faixas. A energia não entra.' },
   'Disaster and Remorse': {

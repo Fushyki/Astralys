@@ -230,11 +230,11 @@
 .rt-flat { display: flex; flex-direction: column; gap: var(--sp-2); padding: var(--sp-2) var(--sp-3); border-radius: var(--r-inner); background: var(--bg); border: 1px solid var(--border-ctl); }
 .rt-flat .fr { display: flex; flex-direction: column; gap: 6px; padding-top: var(--sp-2); border-top: 1px solid var(--divider); }
 .rt-flat .fr:first-of-type { border-top: 0; padding-top: 0; }
-.rt-flat .fr > label { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: var(--sp-2); font-size: var(--fs-1); cursor: pointer; }
+.rt-flat .fr > label { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: var(--sp-2); font-size: var(--fs-1); cursor: pointer; }
 .rt-flat input[type='checkbox'] { width: var(--ico-1); height: var(--ico-1); accent-color: var(--gold); }
 .rt-flat .n { display: flex; flex-direction: column; min-width: 0; font-weight: 600; }
 .rt-flat .n small { font-weight: 400; color: var(--faint); }
-.rt-flat .v { color: var(--gold-hi); white-space: nowrap; }
+.rt-flat .v { grid-column: 2; color: var(--gold-hi); overflow-wrap: anywhere; }
 .rt-flat .fr[data-off='true'] .n, .rt-flat .fr[data-off='true'] .v { opacity: .5; text-decoration: line-through; }
 .rt-flat .qty { display: flex; align-items: center; gap: var(--sp-2); flex-wrap: wrap; }
 .rt-hit[data-flat]::after { content: ''; position: absolute; right: -3px; top: -3px; width: 8px; height: 8px; border-radius: 50%; background: var(--gold); border: 1px solid var(--bg); }

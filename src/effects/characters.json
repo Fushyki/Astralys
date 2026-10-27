@@ -315,6 +315,10 @@
           "reactionBonus": {}
         },
         "flat": [],
+        "stacks": {
+          "max": 40,
+          "unit": "pontos de Cifra"
+        },
         "note": "Assume 40 pontos de Cifra (+60% de DMG Pyro e Hydro da equipe): ligue na janela. Os pontos sobem durante o Itzpapa."
       },
       {
@@ -344,6 +348,10 @@
           "reactionBonus": {}
         },
         "flat": [],
+        "stacks": {
+          "max": 40,
+          "unit": "pontos de Cifra"
+        },
         "note": "Assume 40 pontos de Cifra (+100% de DMG dela): ligue na janela."
       },
       {
@@ -1710,6 +1718,10 @@
             ]
           }
         ],
+        "stacks": {
+          "max": 4,
+          "unit": "stacks de Fatal Reckoning"
+        },
         "note": "Assume 4 stacks: soma 120% da DEF a todo golpe do Supremo dele."
       }
     ],
@@ -3283,6 +3295,16 @@
           "reactionBonus": {}
         },
         "flat": [],
+        "stacks": {
+          "max": 3,
+          "unit": "stacks de Past Draconic Glories",
+          "table": [
+            0,
+            0.166667,
+            0.416667,
+            1
+          ]
+        },
         "note": "Assume 3 stacks de Past Draconic Glories (+60% de DMG do Carregado): ligue na janela."
       },
       {
@@ -3652,6 +3674,10 @@
             ]
           }
         ],
+        "stacks": {
+          "max": 3,
+          "unit": "stacks de Dark-Shattering Flame"
+        },
         "note": "Soma 20% do ATK por stack (assume 3 stacks = 60%) ao dano base dos Normais e do Last Lightfall, com teto de 1.800 por golpe."
       },
       {
@@ -3704,6 +3730,10 @@
             ]
           }
         ],
+        "stacks": {
+          "max": 3,
+          "of": "a1"
+        },
         "note": "O A1 melhorado: 30% do ATK por stack (90% com 3) e teto de 2.700. Soma a diferença (+30% do ATK e +900 de teto) ao A1."
       },
       {
@@ -3995,6 +4025,10 @@
             "stacks": 1
           }
         ],
+        "stacks": {
+          "max": 2,
+          "unit": "stacks de Hunter's Experience"
+        },
         "note": "Soma 640% do ATK (2 stacks de 320%) ao primeiro golpe da habilidade (o Scalespiker Cannon)."
       },
       {
@@ -6307,7 +6341,7 @@
         "scope": "others",
         "timed": true,
         "stats": {
-          "atkPct": 0.2,
+          "atkPct": 0.1,
           "dmgPct": 0,
           "critRate": 0,
           "critDmg": 0,
@@ -6327,7 +6361,40 @@
           "reactionBonus": {}
         },
         "flat": [],
-        "note": "+10% de ATK da equipe por 15 s mais 1% por stack da A1; assume 10 stacks (+20%): ligue nas janelas."
+        "note": "+10% de ATK da equipe por 15 s depois do Ryuukin Saxifrage: ligue nas janelas."
+      },
+      {
+        "id": "a4s",
+        "label": "Yoimiya A4 (stacks da A1)",
+        "minConstellation": 0,
+        "scope": "others",
+        "timed": true,
+        "stats": {
+          "atkPct": 0.1,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "stacks": {
+          "max": 10,
+          "of": "a1"
+        },
+        "note": "+1% de ATK da equipe por stack da A1 que ela tem ao usar o Ryuukin Saxifrage (a mesma quantidade escolhida na A1): ligue junto com o A4."
       },
       {
         "id": "c1",
@@ -7710,6 +7777,18 @@
           "reactionBonus": {}
         },
         "flat": [],
+        "stacks": {
+          "max": 4,
+          "unit": "inimigos marcados",
+          "table": [
+            0,
+            0.625,
+            0.75,
+            0.875,
+            1
+          ],
+          "default": 1
+        },
         "note": "Assume 1 inimigo marcado pelas Sementes (+100 de Maestria): ligue nas janelas."
       },
       {
@@ -7882,6 +7961,10 @@
           "reactionBonus": {}
         },
         "flat": [],
+        "stacks": {
+          "max": 50,
+          "unit": "pontos de Kuugoryoku"
+        },
         "note": "Assume o bônus máximo de +200% de DMG do Supremo (depende dos pontos Kuugoryoku gastos): ligue na janela."
       }
     ],
@@ -9075,6 +9158,17 @@
           "reactionBonus": {}
         },
         "flat": [],
+        "stacks": {
+          "max": 4,
+          "unit": "stacks de Storm Pinion",
+          "table": [
+            0,
+            0.4,
+            0.6,
+            0.8,
+            1
+          ]
+        },
         "note": "Assume 4 stacks (+10% de Taxa Crítica de Plunging da equipe) por 20 s: ligue nas janelas."
       },
       {
@@ -9106,6 +9200,16 @@
           "reactionBonus": {}
         },
         "flat": [],
+        "stacks": {
+          "max": 3,
+          "unit": "Skyladders",
+          "table": [
+            0,
+            0.214286,
+            0.5,
+            1
+          ]
+        },
         "note": "Assume 3 Skyladders (+70% de Dano Crítico do Driftcloud Wave): ligue na janela."
       },
       {
@@ -9712,6 +9816,18 @@
           "reactionBonus": {}
         },
         "flat": [],
+        "stacks": {
+          "max": 4,
+          "unit": "inimigos no campo",
+          "table": [
+            0,
+            0.4,
+            0.6,
+            0.8,
+            1
+          ],
+          "default": 1
+        },
         "note": "Assume 1 inimigo (+8% de DEF): ligue na janela. Com 4 ou mais inimigos é 20%."
       }
     ],
@@ -9800,6 +9916,16 @@
             "stacks": 1
           }
         ],
+        "stacks": {
+          "max": 3,
+          "unit": "stacks de Wavechaser's Exploits",
+          "table": [
+            0,
+            0.333333,
+            0.666667,
+            1
+          ]
+        },
         "note": "Soma 45% do HP máximo (3 stacks) ao dano base do Boomsharka-laka (Supremo)."
       },
       {
@@ -10753,6 +10879,10 @@
           }
         },
         "flat": [],
+        "stacks": {
+          "max": 150,
+          "unit": "pontos de Rescue Essentials"
+        },
         "note": "Assume 150 pontos de Rescue Essentials (o máximo): +1,5% por ponto no Redemoinho e Eletrocarregado e +0,24% no Redemoinho Estelar (parâmetros do Lunaris): ligue nas janelas. O de Lunar-Carregado NÃO entra (o Genshin Optimizer usa 0,2% por ponto, número que não aparece no Lunaris)."
       },
       {
@@ -10785,6 +10915,10 @@
           }
         },
         "flat": [],
+        "stacks": {
+          "max": 50,
+          "unit": "pontos extras (C2)"
+        },
         "note": "Os 50 pontos a mais de Rescue Essentials (1,5% cada, do A1) no Redemoinho e Eletrocarregado, na mesma janela do A1. O Redemoinho Estelar e o Lunar-Carregado destes pontos NÃO entram."
       }
     ],
@@ -10884,6 +11018,16 @@
           "reactionBonus": {}
         },
         "flat": [],
+        "stacks": {
+          "max": 3,
+          "unit": "stacks de Death's Crossing",
+          "table": [
+            0,
+            0.142857,
+            0.285714,
+            1
+          ]
+        },
         "note": "Assume 3 stacks (+70% de DMG dos Normais no Seven-Phase Flash): ligue na janela."
       },
       {
@@ -10915,6 +11059,16 @@
           "reactionBonus": {}
         },
         "flat": [],
+        "stacks": {
+          "max": 3,
+          "table": [
+            0,
+            0.083333,
+            0.25,
+            1
+          ],
+          "of": "a4n"
+        },
         "note": "Assume 3 stacks (+60% de DMG do Supremo): ligue na janela."
       },
       {
@@ -10944,6 +11098,16 @@
           "reactionBonus": {}
         },
         "flat": [],
+        "stacks": {
+          "max": 3,
+          "table": [
+            0,
+            0.25,
+            0.5,
+            1
+          ],
+          "of": "a4n"
+        },
         "note": "Assume 3 stacks (+40% de ATK): ligue na janela."
       }
     ],
@@ -15852,6 +16016,10 @@
           ]
         },
         "flat": [],
+        "stacks": {
+          "max": 300,
+          "unit": "pontos de Fanfarra"
+        },
         "note": "Assume o máximo de 300 pontos de Fanfarra (DMG da equipe = 300 × a razão do nível do Supremo): ligue nas janelas. A Fanfarra real depende das variações de HP do time."
       },
       {
@@ -16494,6 +16662,17 @@
           "reactionBonus": {}
         },
         "flat": [],
+        "stacks": {
+          "max": 3,
+          "unit": "inimigos atingidos",
+          "table": [
+            0,
+            0.333333,
+            0.666667,
+            1
+          ],
+          "default": 1
+        },
         "note": "Assume 1 inimigo atingido pelo Monsieur Verite (+10% de ATK por 12 s): ligue na janela. Com 2 e 3 inimigos o valor é 20% e 30%."
       },
       {
@@ -17130,6 +17309,10 @@
           }
         },
         "flat": [],
+        "stacks": {
+          "max": 30,
+          "unit": "pontos acima de 70"
+        },
         "note": "Assume 100 pontos de Phase Shift Radiance (30 acima de 70): dano Lunar-Cristalizar dela elevado em 48% por 3 s: ligue na janela."
       }
     ],
@@ -17629,6 +17812,15 @@
           "reactionBonus": {}
         },
         "flat": [],
+        "stacks": {
+          "max": 2,
+          "unit": "stacks de Hunter's Precision",
+          "table": [
+            0,
+            0,
+            1
+          ]
+        },
         "note": "+100 de Maestria de quem está no campo com 2 stacks de Hunter's Precision: ligue na janela."
       }
     ],
@@ -18097,6 +18289,10 @@
           }
         },
         "flat": [],
+        "stacks": {
+          "max": 2,
+          "unit": "stacks de Marvelous Splendor"
+        },
         "note": "Os 2 stacks a mais de Marvelous Splendor (15% cada, como no A1) na mesma janela do A1."
       },
       {

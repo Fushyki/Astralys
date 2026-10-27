@@ -940,7 +940,7 @@
     },
     "twoPieceMore": [],
     "fourPiece": {
-      "atkPct": 0.18,
+      "atkPct": 0,
       "dmgPct": 0,
       "critRate": 0,
       "critDmg": 0,
@@ -952,6 +952,37 @@
       "hpPct": 0,
       "defPct": 0,
       "buffs": [
+        {
+          "id": "stacks",
+          "label": "Stacks da passiva",
+          "minConstellation": 0,
+          "scope": "self",
+          "timed": false,
+          "stats": {
+            "atkPct": 0.18,
+            "dmgPct": 0,
+            "critRate": 0,
+            "critDmg": 0,
+            "em": 0,
+            "er": 0,
+            "hpPct": 0,
+            "defPct": 0,
+            "dmgPctByType": {},
+            "critRateByType": {},
+            "critDmgByType": {},
+            "defIgnore": 0,
+            "atkFlat": 0,
+            "hpFlat": 0,
+            "defFlat": 0,
+            "physDmgPct": 0,
+            "physCritDmg": 0,
+            "reactionBonus": {}
+          },
+          "flat": [],
+          "stacks": {
+            "max": 2
+          }
+        },
         {
           "id": "fisico",
           "label": "2 stacks: dobro do DMG Físico",
@@ -1066,7 +1097,7 @@
     "twoPieceMore": [],
     "fourPiece": {
       "atkPct": 0,
-      "dmgPct": 0.24,
+      "dmgPct": 0,
       "critRate": 0,
       "critDmg": 0,
       "em": 0,
@@ -1075,8 +1106,40 @@
       "vaporizeBonus": 0,
       "er": 0,
       "hpPct": 0,
-      "defPct": 0.24,
-      "buffs": [],
+      "defPct": 0,
+      "buffs": [
+        {
+          "id": "stacks",
+          "label": "Stacks da passiva",
+          "minConstellation": 0,
+          "scope": "self",
+          "timed": false,
+          "stats": {
+            "atkPct": 0,
+            "dmgPct": 0.24,
+            "critRate": 0,
+            "critDmg": 0,
+            "em": 0,
+            "er": 0,
+            "hpPct": 0,
+            "defPct": 0.24,
+            "dmgPctByType": {},
+            "critRateByType": {},
+            "critDmgByType": {},
+            "defIgnore": 0,
+            "atkFlat": 0,
+            "hpFlat": 0,
+            "defFlat": 0,
+            "physDmgPct": 0,
+            "physCritDmg": 0,
+            "reactionBonus": {}
+          },
+          "flat": [],
+          "stacks": {
+            "max": 4
+          }
+        }
+      ],
       "flat": [],
       "reactionBonus": {},
       "procs": []
@@ -1359,18 +1422,56 @@
       "er": 0,
       "hpPct": 0,
       "defPct": 0,
-      "buffs": [],
+      "buffs": [
+        {
+          "id": "stacks",
+          "label": "Stacks de Flower of Paradise Lost",
+          "minConstellation": 0,
+          "scope": "self",
+          "timed": false,
+          "stats": {
+            "atkPct": 0,
+            "dmgPct": 0,
+            "critRate": 0,
+            "critDmg": 0,
+            "em": 0,
+            "er": 0,
+            "hpPct": 0,
+            "defPct": 0,
+            "dmgPctByType": {},
+            "critRateByType": {},
+            "critDmgByType": {},
+            "defIgnore": 0,
+            "atkFlat": 0,
+            "hpFlat": 0,
+            "defFlat": 0,
+            "physDmgPct": 0,
+            "physCritDmg": 0,
+            "reactionBonus": {
+              "bloom": 0.4,
+              "hyperbloom": 0.4,
+              "burgeon": 0.4,
+              "lunarbloom": 0.1
+            }
+          },
+          "flat": [],
+          "stacks": {
+            "max": 4,
+            "unit": "stacks"
+          }
+        }
+      ],
       "flat": [],
       "reactionBonus": {
-        "bloom": 0.8,
-        "hyperbloom": 0.8,
-        "burgeon": 0.8,
-        "lunarbloom": 0.2
+        "bloom": 0.4,
+        "hyperbloom": 0.4,
+        "burgeon": 0.4,
+        "lunarbloom": 0.1
       },
       "procs": []
     },
     "twoPieceBuffs": [],
-    "note": "Assume os 4 stacks: 40% × (1 + 4 × 25%) = +80% de Florescer, Hiperflorescer e Brotar e 10% × 2 = +20% de Lunar-Florescer.",
+    "note": "Florescer, Hiperflorescer e Brotar +40% e Lunar-Florescer +10%; cada stack soma +25% desses valores (até 4): a quantidade é escolha sua (padrão: 4).",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
   {
@@ -1382,8 +1483,8 @@
     },
     "twoPieceMore": [],
     "fourPiece": {
-      "atkPct": 0.25,
-      "dmgPct": 0.15,
+      "atkPct": 0,
+      "dmgPct": 0,
       "critRate": 0,
       "critDmg": 0,
       "em": 0,
@@ -1393,13 +1494,90 @@
       "er": 0,
       "hpPct": 0,
       "defPct": 0,
-      "buffs": [],
+      "buffs": [
+        {
+          "id": "nymph-atk",
+          "label": "Mirrored Nymph (ATK)",
+          "minConstellation": 0,
+          "scope": "self",
+          "timed": false,
+          "stats": {
+            "atkPct": 0.25,
+            "dmgPct": 0,
+            "critRate": 0,
+            "critDmg": 0,
+            "em": 0,
+            "er": 0,
+            "hpPct": 0,
+            "defPct": 0,
+            "dmgPctByType": {},
+            "critRateByType": {},
+            "critDmgByType": {},
+            "defIgnore": 0,
+            "atkFlat": 0,
+            "hpFlat": 0,
+            "defFlat": 0,
+            "physDmgPct": 0,
+            "physCritDmg": 0,
+            "reactionBonus": {}
+          },
+          "flat": [],
+          "stacks": {
+            "max": 3,
+            "unit": "stacks de Mirrored Nymph",
+            "table": [
+              0,
+              0.28,
+              0.64,
+              1
+            ]
+          }
+        },
+        {
+          "id": "nymph-dmg",
+          "label": "Mirrored Nymph (DMG Hydro)",
+          "minConstellation": 0,
+          "scope": "self",
+          "timed": false,
+          "stats": {
+            "atkPct": 0,
+            "dmgPct": 0.15,
+            "critRate": 0,
+            "critDmg": 0,
+            "em": 0,
+            "er": 0,
+            "hpPct": 0,
+            "defPct": 0,
+            "dmgPctByType": {},
+            "critRateByType": {},
+            "critDmgByType": {},
+            "defIgnore": 0,
+            "atkFlat": 0,
+            "hpFlat": 0,
+            "defFlat": 0,
+            "physDmgPct": 0,
+            "physCritDmg": 0,
+            "reactionBonus": {}
+          },
+          "flat": [],
+          "stacks": {
+            "max": 3,
+            "table": [
+              0,
+              0.266667,
+              0.6,
+              1
+            ],
+            "of": "nymph-atk"
+          }
+        }
+      ],
       "flat": [],
       "reactionBonus": {},
       "procs": []
     },
     "twoPieceBuffs": [],
-    "note": "Assume 3 stacks de Mirrored Nymph (ATK +25% e dano Hydro +15%).",
+    "note": "ATK (7/16/25%) e dano Hydro (4/9/15%) de Mirrored Nymph: a quantidade de stacks é escolha sua (padrão: 3).",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
   {
@@ -1448,7 +1626,7 @@
     "fourPiece": {
       "atkPct": 0,
       "dmgPct": 0,
-      "critRate": 0.36,
+      "critRate": 0,
       "critDmg": 0,
       "em": 0,
       "dmgPctByType": {},
@@ -1457,7 +1635,39 @@
       "er": 0,
       "hpPct": 0,
       "defPct": 0,
-      "buffs": [],
+      "buffs": [
+        {
+          "id": "stacks",
+          "label": "Stacks da passiva",
+          "minConstellation": 0,
+          "scope": "self",
+          "timed": false,
+          "stats": {
+            "atkPct": 0,
+            "dmgPct": 0,
+            "critRate": 0.36,
+            "critDmg": 0,
+            "em": 0,
+            "er": 0,
+            "hpPct": 0,
+            "defPct": 0,
+            "dmgPctByType": {},
+            "critRateByType": {},
+            "critDmgByType": {},
+            "defIgnore": 0,
+            "atkFlat": 0,
+            "hpFlat": 0,
+            "defFlat": 0,
+            "physDmgPct": 0,
+            "physCritDmg": 0,
+            "reactionBonus": {}
+          },
+          "flat": [],
+          "stacks": {
+            "max": 3
+          }
+        }
+      ],
       "flat": [],
       "reactionBonus": {},
       "procs": []
@@ -1558,7 +1768,7 @@
     "twoPieceMore": [],
     "fourPiece": {
       "atkPct": 0,
-      "dmgPct": 0.54,
+      "dmgPct": 0,
       "critRate": 0,
       "critDmg": 0,
       "em": 0,
@@ -1568,7 +1778,39 @@
       "er": 0,
       "hpPct": 0,
       "defPct": 0,
-      "buffs": [],
+      "buffs": [
+        {
+          "id": "stacks",
+          "label": "Stacks da passiva",
+          "minConstellation": 0,
+          "scope": "self",
+          "timed": false,
+          "stats": {
+            "atkPct": 0,
+            "dmgPct": 0.54,
+            "critRate": 0,
+            "critDmg": 0,
+            "em": 0,
+            "er": 0,
+            "hpPct": 0,
+            "defPct": 0,
+            "dmgPctByType": {},
+            "critRateByType": {},
+            "critDmgByType": {},
+            "defIgnore": 0,
+            "atkFlat": 0,
+            "hpFlat": 0,
+            "defFlat": 0,
+            "physDmgPct": 0,
+            "physCritDmg": 0,
+            "reactionBonus": {}
+          },
+          "flat": [],
+          "stacks": {
+            "max": 3
+          }
+        }
+      ],
       "flat": [],
       "reactionBonus": {},
       "procs": []
@@ -1654,15 +1896,47 @@
       "critRate": 0,
       "critDmg": 0,
       "em": 0,
-      "dmgPctByType": {
-        "plunge": 0.75
-      },
+      "dmgPctByType": {},
       "meltBonus": 0,
       "vaporizeBonus": 0,
       "er": 0,
       "hpPct": 0,
       "defPct": 0,
-      "buffs": [],
+      "buffs": [
+        {
+          "id": "stacks",
+          "label": "Stacks da passiva",
+          "minConstellation": 0,
+          "scope": "self",
+          "timed": false,
+          "stats": {
+            "atkPct": 0,
+            "dmgPct": 0,
+            "critRate": 0,
+            "critDmg": 0,
+            "em": 0,
+            "er": 0,
+            "hpPct": 0,
+            "defPct": 0,
+            "dmgPctByType": {
+              "plunge": 0.75
+            },
+            "critRateByType": {},
+            "critDmgByType": {},
+            "defIgnore": 0,
+            "atkFlat": 0,
+            "hpFlat": 0,
+            "defFlat": 0,
+            "physDmgPct": 0,
+            "physCritDmg": 0,
+            "reactionBonus": {}
+          },
+          "flat": [],
+          "stacks": {
+            "max": 5
+          }
+        }
+      ],
       "flat": [],
       "reactionBonus": {},
       "procs": []

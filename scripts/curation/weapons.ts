@@ -4,7 +4,7 @@
  * `expect` é um trecho que TEM de aparecer na descrição do R1: protege contra o Lunaris mudar a ordem dos parâmetros.
  */
 import type { Val } from './sets';
-import type { ProcCur } from './gear';
+import type { BuffCur, ProcCur } from './gear';
 
 export type Sum = Val | Val[];
 
@@ -22,6 +22,8 @@ export interface WeaponCuration {
   team?: { atkPct?: Sum; dmgPct?: Sum; em?: Sum };
   /** Golpes extras (ver `ProcCur` em gear.ts). */
   procs?: ProcCur[];
+  /** Buffs (stacks escolhidos pelo usuário, conversões...): ver `BuffCur` em gear.ts. */
+  buffs?: BuffCur[];
   expect: string;
   note: string;
 }
@@ -51,9 +53,10 @@ export const WEAPONS: Record<string, WeaponCuration> = {
   },
   'Summit Shaper': { atkPct: { p: 1, x: 5 }, expect: 'Scoring hits on opponents increases ATK by', note: `${STACKS} (5 stacks; sem o dobro com escudo).` },
   'Mistsplitter Reforged': {
-    dmgPct: [{ p: 0 }, { p: 3 }],
+    dmgPct: { p: 0 },
+    buffs: [{ id: 'emblema', label: 'Emblema de Mistsplitter', stats: { dmgPct: { p: 3 } }, stacks: { max: 3, unit: 'stacks do Emblema', levels: [{ p: 1 }, { p: 2 }, { p: 3 }] } }],
     expect: 'Elemental DMG Bonus for all elements',
-    note: 'Assume 3 stacks do Emblema (+28% de dano do elemento do personagem) sempre ativos, além dos 12% base.',
+    note: '12% de DMG elemental fixo + Emblema (8/16/28% no R1 com 1/2/3 stacks): a quantidade de stacks é escolha sua (padrão: 3).',
   },
   'Haran Geppaku Futsu': {
     dmgPct: { p: 0 },
@@ -162,12 +165,12 @@ export const WEAPONS: Record<string, WeaponCuration> = {
   'Elegy for the End': { em: { p: 0 }, expect: 'Increases Elemental Mastery by', note: 'Só a Maestria própria. O buff de 4 Sigils da equipe NÃO entra.' },
   'Polar Star': {
     byType: { skill: { p: 0 }, burst: { p: 0 } },
-    atkPct: { p: 5 },
+    buffs: [{ id: 'nightstar', label: 'Ashen Nightstar', stats: { atkPct: { p: 5 } }, stacks: { max: 4, unit: 'stacks de Ashen Nightstar', levels: [{ p: 2 }, { p: 3 }, { p: 4 }, { p: 5 }] } }],
     expect: 'Ashen Nightstar',
-    note: 'Assume 4 stacks de Ashen Nightstar (ATK +48% no R1) sempre ativos.',
+    note: 'ATK de Ashen Nightstar (10/20/30/48% no R1 com 1 a 4 stacks): a quantidade é escolha sua (padrão: 4).',
   },
   'Aqua Simulacra': { hpPct: { p: 0 }, dmgPct: { p: 1 }, expect: 'HP is increased by', note: 'Assume inimigos por perto (+DMG sempre ativo).' },
-  'Thundering Pulse': { atkPct: { p: 0 }, byType: { normal: { p: 3 } }, expect: 'Thunder Emblem', note: 'Assume 3 stacks do Emblema (+40% de Ataque Normal no R1) ativos.' },
+  'Thundering Pulse': { atkPct: { p: 0 }, buffs: [{ id: 'emblema', label: 'Thunder Emblem', stats: { byType: { normal: { p: 3 } } }, stacks: { max: 3, unit: 'stacks do Emblema', levels: [{ p: 1 }, { p: 2 }, { p: 3 }] } }], expect: 'Thunder Emblem', note: 'ATK fixo + DMG de Ataque Normal do Thunder Emblem (12/24/40% no R1 com 1/2/3 stacks): a quantidade é escolha sua (padrão: 3).' },
   'The First Great Magic': { byType: { charged: { p: 0 } }, expect: 'DMG dealt by Charged Attacks increased by', note: 'Só o dano de Ataque Carregado. O ATK por membros do time NÃO entra.' },
   'Golden Frostbound Oath': { defPct: { p: 4 }, expect: 'Increase DEF by', note: 'Só o DEF. Os bônus de dano Geo e Lunar-Cristalizar NÃO entram.' },
   'Hunter\'s Path': { dmgPct: { p: 0 }, expect: 'All Elemental DMG Bonus', note: 'Só o DMG elemental. O dano de Carregado por Maestria NÃO entra.' },

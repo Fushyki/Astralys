@@ -241,6 +241,8 @@ export function Dashboard({ v, index, onGood }: { v: ProjectView; index: number;
     <div className="db">
       <BuildStrip data={v.data} index={index} member={ref} projectId={v.id} compact editOpen={editBuild} onEditClose={() => setEditBuild(false)} />
 
+      <SubstatStars v={v} index={index} bases={{ atk: basePieces.atk, hp: basePieces.hp, def: basePieces.def }} onGood={onGood} />
+
       <div className="db-toolbar">
         <Segmented label="Crítico" value={crit} options={CRIT_OPTIONS} onChange={setCrit} />
         <Segmented
@@ -328,8 +330,6 @@ export function Dashboard({ v, index, onGood }: { v: ProjectView; index: number;
           </Panel>
         </div>
       </div>
-
-      <SubstatStars v={v} index={index} bases={{ atk: basePieces.atk, hp: basePieces.hp, def: basePieces.def }} onGood={onGood} />
     </div>
   );
 }

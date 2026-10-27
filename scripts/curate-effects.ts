@@ -72,7 +72,7 @@ const STACK_UNITS: Record<string, string> = {
 };
 
 /** Stacks/pontos de um buff: informado na curadoria ou o multiplicador inteiro `x` (2 a 20) dos valores de `stats` (todos iguais). */
-function stackInfo(b: { stats?: unknown; stacks?: { max: number; unit?: string } | false }): { max: number; unit?: string } | undefined {
+function stackInfo(b: { stats?: unknown; stacks?: { max: number; unit?: string; levels?: Val[]; of?: string; default?: number } | false }): { max: number; unit?: string; levels?: Val[]; of?: string; default?: number } | undefined {
   if (b.stacks === false) return undefined;
   if (b.stacks) return b.stacks;
   const xs = new Set<number>();
@@ -104,6 +104,82 @@ const valueOf = (v: Val, params: number[], where: string, text = ''): number => 
   if (raw === undefined) throw new Error(`${where}: parâmetro ${v.p} não existe`);
   return round(raw * (v.x ?? 1));
 };
+
+/** Valor com multiplicador de stacks inteiro (`x` de 2 a 20), o mesmo critério de `stackInfo`. */
+const stackX = (v: Val): number | undefined => (typeof v === 'object' && 'x' in v && v.x !== undefined && Number.isInteger(v.x) && v.x >= 2 && v.x <= 20 && ('p' in v || 're' in v) ? v.x : undefined);
+const SUM_KEYS = ['atkPct', 'dmgPct', 'critRate', 'critDmg', 'em', 'er', 'hpPct', 'defPct', 'physDmgPct', 'physCritDmg', 'meltBonus'] as const;
+const REC_KEYS = ['byType', 'critRateByType', 'critDmgByType', 'reactionBonus'] as const;
+
+/**
+ * Separa os valores de arma/set que dependem de stacks (`x` = máximo) do resto: `base` fica na raiz e cada máximo vira um buff
+ * `stacks` que o usuário escolhe (0 até o máximo), com os números do máximo como nos outros buffs com stacks.
+ */
+function splitStacks<T extends StatsCur>(cur: T): { base: T; groups: { max: number; stats: StatsCur }[] } {
+  const base: Record<string, unknown> = { ...cur };
+  const groups = new Map<number, Record<string, unknown>>();
+  const cut = (sum: Sum | undefined): { rest: Sum | undefined; byX: Map<number, Val[]> } => {
+    const items = (sum === undefined ? [] : Array.isArray(sum) ? sum : [sum]) as Val[];
+    const byX = new Map<number, Val[]>();
+    const rest: Val[] = [];
+    for (const it of items) {
+      const x = stackX(it);
+      if (x === undefined) rest.push(it);
+      else byX.set(x, [...(byX.get(x) ?? []), it]);
+    }
+    return { rest: rest.length === 0 ? undefined : rest.length === 1 ? rest[0] : rest, byX };
+  };
+  const group = (x: number) => groups.get(x) ?? (groups.set(x, {}), groups.get(x)!);
+  const one = (items: Val[]) => (items.length === 1 ? items[0] : items);
+  for (const k of SUM_KEYS) {
+    const sum = (cur as unknown as Record<string, Sum | undefined>)[k];
+    if (sum === undefined) continue;
+    const { rest, byX } = cut(sum);
+    if (byX.size === 0) continue;
+    if (rest === undefined) delete base[k]; else base[k] = rest;
+    for (const [x, items] of byX) group(x)[k] = one(items);
+  }
+  for (const k of REC_KEYS) {
+    const rec = (cur as unknown as Record<string, Record<string, Sum> | undefined>)[k];
+    if (!rec) continue;
+    const nextBase: Record<string, Sum> = {};
+    let touched = false;
+    for (const [name, sum] of Object.entries(rec)) {
+      const { rest, byX } = cut(sum);
+      if (rest !== undefined) nextBase[name] = rest;
+      for (const [x, items] of byX) {
+        touched = true;
+        const g = group(x);
+        g[k] = { ...((g[k] as Record<string, Sum>) ?? {}), [name]: one(items) };
+      }
+    }
+    if (touched) base[k] = nextBase;
+  }
+  return { base: base as T, groups: [...groups].sort((a, b) => a[0] - b[0]).map(([max, stats]) => ({ max, stats: stats as StatsCur })) };
+}
+
+const stackBuffs = (groups: { max: number; stats: StatsCur }[], c: Ctx, where: string): CharacterBuff[] =>
+  groups.map((g) =>
+    CharacterBuffSchema.parse({
+      id: groups.length > 1 ? `stacks-${g.max}` : 'stacks', label: groups.length > 1 ? `Stacks (até ${g.max})` : 'Stacks da passiva', minConstellation: 0, scope: 'self', timed: false,
+      stats: buffStats(g.stats, c), stacks: { max: g.max, ...(STACK_UNITS[where] ? { unit: STACK_UNITS[where] } : {}) },
+    }),
+  );
+
+/** `stacks` de um buff pronto: máximo, nome da unidade e, se o efeito sobe aos saltos (10/20/30/48%), a tabela por quantidade. */
+function stackMeta(b: { stats?: unknown; stacks?: { max: number; unit?: string; levels?: Val[]; of?: string; default?: number } | false }, params: number[], where: string, unit?: string, text = '') {
+  const info = stackInfo(b);
+  if (!info) return undefined;
+  let table: number[] | undefined;
+  if (info.levels) {
+    if (info.levels.length !== info.max) throw new Error(`${where}: "levels" precisa de ${info.max} valores (um por quantidade)`);
+    const vals = info.levels.map((l) => valueOf(l, params, where, text));
+    const top = vals[vals.length - 1];
+    if (!top) throw new Error(`${where}: o valor do último nível é zero`);
+    table = [0, ...vals.map((x) => round(x / top))];
+  }
+  const u = unit ?? info.unit;
+  return { max: info.max, ...(u ? { unit: u } : {}), ...(table ? { table } : {}), ...(info.of ? { of: info.of } : {}), ...(info.default !== undefined ? { default: info.default } : {}) };
+}
 
 function buildSets(): SetEffect[] {
   const raw = read<RawSet[]>('src/data/generated/artifacts.json');
@@ -141,16 +217,17 @@ function buildSets(): SetEffect[] {
       const text = set.bonuses.fourPiece.description;
       const ctx: Ctx = { params, text, where: set.name };
       const v = (x: Val | undefined) => (x === undefined ? 0 : valueOf(x, params, set.name, text));
-      const crit = cur.critRateByType || cur.critDmgByType ? [buildBuff({ id: 'crit-golpe', label: 'Crítico por golpe', stats: { critRateByType: cur.critRateByType, critDmgByType: cur.critDmgByType } }, ctx)] : [];
+      const { base, groups } = splitStacks(cur);
+      const crit = base.critRateByType || cur.critDmgByType ? [buildBuff({ id: 'crit-golpe', label: 'Crítico por golpe', stats: { critRateByType: base.critRateByType, critDmgByType: base.critDmgByType } }, ctx)] : [];
       fourPiece = {
-        atkPct: v(cur.atkPct), dmgPct: v(cur.dmgPct), critRate: v(cur.critRate), critDmg: v(cur.critDmg), em: v(cur.em),
-        dmgPctByType: Object.fromEntries(Object.entries(cur.byType ?? {}).map(([k, x]) => [k, v(x)])),
-        meltBonus: v(cur.meltBonus), vaporizeBonus: 0, er: v(cur.er), hpPct: v(cur.hpPct), defPct: v(cur.defPct),
+        atkPct: v(base.atkPct), dmgPct: v(base.dmgPct), critRate: v(base.critRate), critDmg: v(base.critDmg), em: v(base.em),
+        dmgPctByType: Object.fromEntries(Object.entries(base.byType ?? {}).map(([k, x]) => [k, v(x)])),
+        meltBonus: v(base.meltBonus), vaporizeBonus: 0, er: v(base.er), hpPct: v(base.hpPct), defPct: v(base.defPct),
         ...(cur.resShred ? { resShred: { value: v(cur.resShred.value), elements: cur.resShred.elements, ...(cur.resShred.ifInTeam ? { ifInTeam: true } : {}) } } : {}),
         ...(cur.team ? { team: { atkPct: v(cur.team.atkPct), dmgPct: v(cur.team.dmgPct), em: v(cur.team.em) } } : {}),
-        buffs: [...crit, ...(cur.buffs ?? []).map((b) => buildBuff(b, ctx))],
+        buffs: [...crit, ...stackBuffs(groups, ctx, set.name), ...(cur.buffs ?? []).map((b) => buildBuff(b, ctx))],
         flat: (cur.flat ?? []).map((f) => buildFlat(f, ctx)),
-        reactionBonus: reactionsOf(cur.reactionBonus, ctx),
+        reactionBonus: reactionsOf(base.reactionBonus, ctx),
         procs: (cur.procs ?? []).map((p) => buildProc(p, ctx)),
       };
       notes.push(cur.note);
@@ -227,6 +304,7 @@ function buildBuff(b: BuffCur, c: Ctx): CharacterBuff {
         }
       : {}),
     ...(b.team ? { team: b.team } : {}),
+    ...(stackInfo(b) ? { stacks: stackMeta(b, c.params, c.where, undefined, c.text) } : {}),
   });
 }
 
@@ -237,7 +315,8 @@ const buildFlat = (f: FlatCur, c: Ctx): WeaponFlat => ({
 });
 
 /** Números de um refinamento: os campos simples vão na raiz; o resto vira buffs (crítico por golpe, conversões, regras de time). */
-function gearStats(cur: GearCur, c: Ctx): WeaponStats {
+function gearStats(full: GearCur, c: Ctx): WeaponStats {
+  const { base: cur, groups } = splitStacks(full);
   const crit = cur.critRateByType || cur.critDmgByType ? [buildBuff({ id: 'crit-golpe', label: 'Crítico por golpe', stats: { critRateByType: cur.critRateByType, critDmgByType: cur.critDmgByType } }, c)] : [];
   // Bônus Físico e de reação do próprio dono viram um buff sempre ativo (a raiz da arma só tem os stats simples).
   if (cur.physDmgPct || cur.physCritDmg || cur.reactionBonus) {
@@ -249,7 +328,7 @@ function gearStats(cur: GearCur, c: Ctx): WeaponStats {
     em: sm(cur.em, c), er: sm(cur.er, c), hpPct: sm(cur.hpPct, c), defPct: sm(cur.defPct, c),
     dmgPctByType: byTypeOf(cur.byType, c),
     ...(t ? { team: { atkPct: sm(t.atkPct, c), dmgPct: sm(t.dmgPct, c), em: sm(t.em, c) } } : {}),
-    buffs: [...crit, ...(cur.buffs ?? []).map((b) => buildBuff(b, c))],
+    buffs: [...crit, ...stackBuffs(groups, c, c.where.replace(/ Rd$/, '')), ...(cur.buffs ?? []).map((b) => buildBuff(b, c))],
     flat: (cur.flat ?? []).map((f) => buildFlat(f, c)),
     procs: (cur.procs ?? []).map((p) => buildProc(p, c)),
   };
@@ -375,7 +454,7 @@ function buildCharacters(): CharacterEffect[] {
         ...(levelTable ? { level: { talent: b.kit!.talent, table: levelTable } } : {}),
         scope: b.scope,
         timed: b.timed,
-        ...(stackInfo(b) ? { stacks: { ...stackInfo(b)!, ...(STACK_UNITS[`${name}:${b.id}`] ? { unit: STACK_UNITS[`${name}:${b.id}`] } : {}) } } : {}),
+        ...(stackInfo(b) ? { stacks: stackMeta(b, node.params, `${name} ${b.id}`, STACK_UNITS[`${name}:${b.id}`], node.description) } : {}),
         ...(b.forElements ? { forElements: b.forElements } : {}),
         ...(b.forFactions ? { forFactions: b.forFactions } : {}),
         ...(s

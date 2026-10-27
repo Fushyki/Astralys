@@ -65,9 +65,12 @@ describe('efeitos de sets cadastrados', () => {
 
   it('valores conferidos à mão contra o texto do Lunaris', () => {
     const get = (n: string) => sets.find((s) => s.set === n)!;
-    expect(get("Nymph's Dream").fourPiece).toMatchObject({ atkPct: 0.25, dmgPct: 0.15 });
-    expect(get('Marechaussee Hunter').fourPiece?.critRate).toBeCloseTo(0.36, 6);
-    expect(get("Long Night's Oath").fourPiece?.dmgPctByType.plunge).toBeCloseTo(0.75, 6);
+    /** Soma da raiz do 4 peças com o buff `stacks` (no máximo de stacks). */
+    const stack = (n: string) => get(n).fourPiece!.buffs.filter((b) => b.stacks).map((b) => b.stats);
+    expect(stack("Nymph's Dream").reduce((a, x) => ({ atk: a.atk + (x?.atkPct ?? 0), dmg: a.dmg + (x?.dmgPct ?? 0) }), { atk: 0, dmg: 0 })).toEqual({ atk: 0.25, dmg: 0.15 });
+    expect(get('Marechaussee Hunter').fourPiece!.critRate + stack('Marechaussee Hunter').reduce((a, x) => a + (x?.critRate ?? 0), 0)).toBeCloseTo(0.36, 6);
+    expect(get('Marechaussee Hunter').fourPiece!.buffs.find((b) => b.id === 'stacks')?.stacks).toEqual({ max: 3 });
+    expect((get("Long Night's Oath").fourPiece!.dmgPctByType.plunge ?? 0) + stack("Long Night's Oath").reduce((a, x) => a + (x?.dmgPctByType?.plunge ?? 0), 0)).toBeCloseTo(0.75, 6);
     expect(get('Deepwood Memories').fourPiece?.resShred).toEqual({ value: 0.3, elements: ['Dendro'] });
     expect(get('Retracing Bolide').fourPiece?.dmgPctByType).toEqual({ normal: 0.4, charged: 0.4 });
     expect(get('Heart of Depth').twoPiece).toEqual({ stat: 'DMG%', value: 0.15, element: 'Hydro' });

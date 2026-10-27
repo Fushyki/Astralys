@@ -335,7 +335,7 @@ export function effectiveTalents(
 export function gearBuffs(m: Pick<MemberInput, 'weapon' | 'weaponEffect' | 'refinement' | 'primarySet' | 'secondarySet' | 'fourPiece'>): CharacterBuff[] {
   const out: CharacterBuff[] = [];
   const add = (prefix: string, label: string, list: CharacterBuff[]) => {
-    for (const b of list) out.push({ ...b, id: `${prefix}:${b.id}`, label: `${label}: ${b.label}` });
+    for (const b of list) out.push({ ...b, id: `${prefix}:${b.id}`, label: `${label}: ${b.label}`, ...(b.stacks?.of ? { stacks: { ...b.stacks, of: `${prefix}:${b.stacks.of}` } } : {}) });
   };
   if (m.weaponEffect) add('arma', m.weapon.name, weaponStatsAt(m.weaponEffect, m.refinement).buffs);
   for (const set of [m.primarySet, m.secondarySet]) {
@@ -513,13 +513,15 @@ export function resolveMember(ref: MemberRef, data: GameData, effects: EffectsDa
   const secondarySet = setOf(real ? real.secondarySet : ref.secondarySet);
   const fourPiece = real ? real.fourPiece : ref.fourPiece;
   const gear = gearBuffs({ weapon, weaponEffect, refinement: ref.refinement, primarySet, secondarySet, fourPiece });
-  const own = withStacks(effects.characters.find((c) => c.character === ref.character), ref.stacks);
-  const characterEffect: CharacterEffect | undefined = gear.length
+  const own = effects.characters.find((c) => c.character === ref.character);
+  // Os stacks escolhidos valem para os buffs do personagem e também para os de arma e set (ids `arma:...`, `set4-...`).
+  const merged: CharacterEffect | undefined = gear.length
     ? {
         ...(own ?? { character: ref.character, atkPct: 0, dmgPct: 0, critRate: 0, critDmg: 0, em: 0, appliesToSelf: false, notes: [], procs: [], factions: [], specialMoves: [], fonte_info: 'Buffs de arma e set' }),
         buffs: [...(own?.buffs ?? []), ...gear],
       }
     : own;
+  const characterEffect = withStacks(merged, ref.stacks);
   return {
     character,
     weapon,

@@ -348,7 +348,7 @@ export function memberBuffCards(project: RotationProject, resolved: ResolvedProj
     if (!m) return undefined;
     const giver = Number(m[1]);
     const buff = project.members[giver] && resolved.team.members[giver]?.characterEffect?.buffs.find((x) => x.id === m[2]);
-    if (!buff || !buff.stacks) return undefined;
+    if (!buff || !buff.stacks || buff.stacks.of) return undefined;
     return { giver, buffId: m[2], max: buff.stacks.max, n: stacksOf(buff, project.members[giver].stacks?.[m[2]]), ...(buff.stacks.unit ? { unit: buff.stacks.unit } : {}) };
   };
 

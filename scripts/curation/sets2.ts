@@ -36,9 +36,10 @@ export const FOUR_PIECE_2: Record<string, FourCuration> = {
     note: 'Faixas de 8 s depois de uma reação: ATK por aliado do mesmo elemento e Maestria por aliado de elemento diferente (até 3 cada). Ligue nas janelas.',
   },
   'Flower of Paradise Lost': {
-    reactionBonus: { bloom: [{ p: 0 }, { p: 0, x: 1 }], hyperbloom: [{ p: 1 }, { p: 1, x: 1 }], burgeon: [{ p: 2 }, { p: 2, x: 1 }], lunarbloom: [{ p: 7 }, { p: 7, x: 1 }] },
+    reactionBonus: { bloom: { p: 0 }, hyperbloom: { p: 1 }, burgeon: { p: 2 }, lunarbloom: { p: 7 } },
+    buffs: [{ id: 'stacks', label: 'Stacks de Flower of Paradise Lost', stats: { reactionBonus: { bloom: { p: 0, x: 1 }, hyperbloom: { p: 1, x: 1 }, burgeon: { p: 2, x: 1 }, lunarbloom: { p: 7, x: 1 } } }, stacks: { max: 4, unit: 'stacks' } }],
     expect: 'Bloom, Hyperbloom, and Burgeon reaction DMG are increased by 40%',
-    note: 'Assume os 4 stacks: 40% × (1 + 4 × 25%) = +80% de Florescer, Hiperflorescer e Brotar e 10% × 2 = +20% de Lunar-Florescer.',
+    note: 'Florescer, Hiperflorescer e Brotar +40% e Lunar-Florescer +10%; cada stack soma +25% desses valores (até 4): a quantidade é escolha sua (padrão: 4).',
   },
   'Song of Days Past': { partial: true, expect: 'Yearning effect', note: 'O bônus de dano por cura acumulada (Yearning) NÃO entra: o motor não acompanha cura.' },
   'Finale of the Deep Galleries': { byType: { normal: { p: 0 }, burst: { p: 1 } }, expect: 'has 0 Elemental Energy, Normal Attack DMG is increased by 60%', note: 'Assume 0 de energia: +60% de DMG do Normal e do Supremo. No jogo o efeito de um deixa de valer por 6 s depois do outro.' },

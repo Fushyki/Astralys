@@ -231,7 +231,16 @@ export const CharacterBuffSchema = z.object({
   /** Dano fixo por golpe elegível (ex.: Gorou A4, "Dano de Habilidade aumentado em 156% da DEF"). */
   flat: z.array(WeaponFlatSchema).default([]),
   /** Efeito com stacks ou pontos: os números acima valem para `max`; o usuário escolhe quantos (`MemberRef.stacks`). */
-  stacks: z.object({ max: z.number().int().min(2), unit: z.string().optional() }).optional(),
+  stacks: z.object({
+    max: z.number().int().min(2),
+    unit: z.string().optional(),
+    /** Fração do valor máximo em cada quantidade (índice 0 a `max`) quando o efeito não cresce em linha reta (ex.: 10/20/30/48%). */
+    table: z.array(z.number()).optional(),
+    /** Usa a quantidade escolhida em outro buff do mesmo efeito (id dele): um só seletor para os dois. */
+    of: z.string().optional(),
+    /** Quantidade usada enquanto o usuário não escolhe (padrão: o máximo). Ex.: contagem de inimigos começa em 1. */
+    default: z.number().int().min(0).optional(),
+  }).optional(),
   /** O que foi assumido e o que não entra. */
   note: z.string().optional(),
 });

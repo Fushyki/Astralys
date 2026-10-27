@@ -34,7 +34,7 @@ export const CHARACTERS_13: Record<string, BuffCuration[]> = {
     { id: 'c6', label: 'Layla C6', src: 'const6', scope: 'self', timed: false, stats: { byType: { skill: { p: 1 }, burst: { p: 1 } } }, expect: 'deal 40% increased DMG', note: '+40% de DMG da habilidade (Shooting Stars) e do Supremo (Starlight Slugs).' },
   ],
   Wanderer: [
-    { id: 'c2', label: 'Wanderer C2', src: 'const2', scope: 'self', timed: true, stats: { byType: { burst: { p: 1 } } }, expect: 'will see its DMG increased by 4% per point', note: 'Assume o bônus máximo de +200% de DMG do Supremo (depende dos pontos Kuugoryoku gastos): ligue na janela.' },
+    { id: 'c2', label: 'Wanderer C2', src: 'const2', scope: 'self', timed: true, stats: { byType: { burst: { p: 1 } } }, stacks: { max: 50, unit: 'pontos de Kuugoryoku' }, expect: 'will see its DMG increased by 4% per point', note: 'Assume o bônus máximo de +200% de DMG do Supremo (depende dos pontos Kuugoryoku gastos): ligue na janela.' },
   ],
   Yaoyao: [
     { id: 'c4', label: 'Yaoyao C4', src: 'const4', scope: 'self', timed: true, convert: { from: 'hp', perPoint: { p: 0 }, cap: { p: 2 }, to: ['em'] }, expect: 'increased based on 0.3% of her Max HP', note: 'Maestria = 0,3% do HP máximo (até 120) por 8 s: ligue na janela.' },
@@ -60,7 +60,7 @@ export const CHARACTERS_13: Record<string, BuffCuration[]> = {
     { id: 'c6', label: 'Wriothesley C6', src: 'const6', scope: 'self', timed: true, stats: { critRateByType: { charged: { p: 0 } }, critDmgByType: { charged: { p: 1 } } }, expect: 'The CRIT Rate of Rebuke: Vaulting Fist will be increased by 10%, and its CRIT DMG by 80%', note: '+10% de Taxa Crítica e +80% de Dano Crítico no Carregado Rebuke: ligue só nele. O gelo extra não entra.' },
   ],
   Neuvillette: [
-    { id: 'a1', label: 'Neuvillette A1', src: 'p1', scope: 'self', timed: true, stats: { byType: { charged: { p: 2 } } }, expect: 'to deal 110%/125%/160% of its original DMG', note: 'Assume 3 stacks de Past Draconic Glories (+60% de DMG do Carregado): ligue na janela.' },
+    { id: 'a1', label: 'Neuvillette A1', src: 'p1', scope: 'self', timed: true, stats: { byType: { charged: { p: 2 } } }, stacks: { max: 3, unit: 'stacks de Past Draconic Glories', levels: [{ p: 0 }, { p: 1 }, { p: 2 }] }, expect: 'to deal 110%/125%/160% of its original DMG', note: 'Assume 3 stacks de Past Draconic Glories (+60% de DMG do Carregado): ligue na janela.' },
     { id: 'c2', label: 'Neuvillette C2', src: 'const2', scope: 'self', timed: true, stats: { critDmgByType: { charged: { p: 0, x: 3 } } }, expect: 'increase the CRIT DMG of Charged Attack: Equitable Judgment by 14%', note: 'Assume 3 stacks (+42% de Dano Crítico do Carregado): ligue na janela.' },
   ],
 };

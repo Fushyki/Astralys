@@ -16,8 +16,17 @@ const signed = (n: number, kind: Row['kind']) => `${n > 0 ? '+' : n < 0 ? '−' 
 export function BuildComparePanel({ v, index, onOptimize }: { v: ProjectView; index: number; onOptimize: () => void }) {
   const name = v.project.members[index].character;
   const cached = RESULT_CACHE.get(resultKey(v.id, name));
-  const best = cached?.result.builds[0];
   const equipped = cached?.result.equipped ?? null;
+  const sigsOf = (b: { pieces: Parameters<typeof artifactSig>[0][] }) => new Set(b.pieces.map(artifactSig));
+  const same = (b: { pieces: Parameters<typeof artifactSig>[0][] }) => {
+    if (!equipped) return false;
+    const e = sigsOf(equipped);
+    return b.pieces.length === equipped.pieces.length && b.pieces.every((p) => e.has(artifactSig(p)));
+  };
+  // Se a melhor já é a equipada, compara com a segunda melhor (a melhor que não é a equipada).
+  const topIsEquipped = !!cached?.result.builds[0] && same(cached.result.builds[0]);
+  const best = cached?.result.builds.find((b) => !same(b)) ?? cached?.result.builds[0];
+  const bestLabel = topIsEquipped ? 'Segunda melhor' : 'Melhor otimizada';
 
   if (!cached || !best) {
     return (
@@ -48,12 +57,12 @@ export function BuildComparePanel({ v, index, onOptimize }: { v: ProjectView; in
   return (
     <Panel
       title="Build atual × melhor build"
-      aside={equipped ? <span className="muted small">{swaps === 0 ? 'a atual já é a melhor' : `${swaps} ${swaps === 1 ? 'troca' : 'trocas'} de peça`} · {gain > 0 ? '+' : ''}{formatPercent(gain)} no foco</span> : undefined}
+      aside={equipped ? <span className="muted small">{topIsEquipped ? 'a atual já é a melhor · comparada com a segunda melhor' : `${swaps} ${swaps === 1 ? 'troca' : 'trocas'} de peça`} · {gain > 0 ? '+' : ''}{formatPercent(gain)} no foco</span> : undefined}
     >
       <div className="dz-scroll">
         <table className="dz-table pc-cmp">
           <thead>
-            <tr><th scope="col">{equipped ? '' : 'Sem build atual no inventário'}</th><th scope="col">Build atual</th><th scope="col">Melhor otimizada</th><th scope="col">Diferença</th></tr>
+            <tr><th scope="col">{equipped ? '' : 'Sem build atual no inventário'}</th><th scope="col">Build atual</th><th scope="col">{bestLabel}</th><th scope="col">Diferença</th></tr>
           </thead>
           <tbody>
             {rows.map((r, i) => {
@@ -71,7 +80,7 @@ export function BuildComparePanel({ v, index, onOptimize }: { v: ProjectView; in
           </tbody>
         </table>
       </div>
-      <p className="note">Mesma reação e crítico do resto das telas. A melhor build é a primeira do último resultado da aba Otimizar{equipped ? '; a atual é a equipada hoje pelo inventário' : ''}.</p>
+      <p className="note">Mesma reação e crítico do resto das telas. A melhor build é a primeira do último resultado da aba Otimizar (se ela for a equipada, vale a segunda){equipped ? '; a atual é a equipada hoje pelo inventário' : ''}.</p>
     </Panel>
   );
 }

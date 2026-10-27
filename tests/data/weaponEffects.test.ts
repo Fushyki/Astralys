@@ -23,6 +23,16 @@ const effects: EffectsData = {
 };
 const get = (n: string) => weapons.find((w) => w.weapon === n)!;
 
+/** Números no máximo de stacks: a raiz da arma + o buff `stacks` (o usuário escolhe quantos valem). */
+const atMax = (n: string, refinement: number) => {
+  const w = weaponStatsAt(get(n), refinement);
+  const st = w.buffs.filter((b) => b.stacks).map((b) => b.stats);
+  const sum = (k: 'atkPct' | 'critRate' | 'dmgPct' | 'hpPct') => w[k] + st.reduce((a, x) => a + (x?.[k] ?? 0), 0);
+  const byType = { ...w.dmgPctByType } as Record<string, number>;
+  for (const x of st) for (const [k, v] of Object.entries(x?.dmgPctByType ?? {})) byType[k] = (byType[k] ?? 0) + v;
+  return { atkPct: sum('atkPct'), critRate: sum('critRate'), dmgPct: sum('dmgPct'), hpPct: sum('hpPct'), dmgPctByType: byType };
+};
+
 describe('efeitos de armas cadastrados', () => {
   it('todos passam no esquema, têm fonte e correspondem a uma arma do Lunaris', () => {
     for (const w of weapons) {
@@ -46,23 +56,22 @@ describe('efeitos de armas cadastrados', () => {
   });
 
   it('valores conferidos à mão contra o texto do Lunaris', () => {
-    expect(weaponStatsAt(get('Royal Greatsword'), 1).critRate).toBeCloseTo(0.4, 6); // 8% × 5 stacks
-    expect(weaponStatsAt(get('Royal Greatsword'), 5).critRate).toBeCloseTo(0.8, 6); // 16% × 5 stacks
+    expect(atMax('Royal Greatsword', 1).critRate).toBeCloseTo(0.4, 6); // 8% × 5 stacks
+    expect(atMax('Royal Greatsword', 5).critRate).toBeCloseTo(0.8, 6); // 16% × 5 stacks
     expect(weaponStatsAt(get('Aquila Favonia'), 1).atkPct).toBeCloseTo(0.2, 6);
     expect(weaponStatsAt(get('Aquila Favonia'), 5).atkPct).toBeCloseTo(0.4, 6);
     expect(weaponStatsAt(get('Skyward Blade'), 1).critRate).toBeCloseTo(0.04, 6);
-    expect(weaponStatsAt(get('Mistsplitter Reforged'), 1).dmgPct).toBeCloseTo(0.12 + 0.28, 6);
-    expect(weaponStatsAt(get("Amos' Bow"), 1).dmgPctByType).toMatchObject({ normal: 0.12 + 0.08 * 5, charged: 0.12 + 0.08 * 5 });
+    expect(atMax('Mistsplitter Reforged', 1).dmgPct).toBeCloseTo(0.12 + 0.28, 6);
+    expect(atMax("Amos' Bow", 1).dmgPctByType).toMatchObject({ normal: 0.12 + 0.08 * 5, charged: 0.12 + 0.08 * 5 });
     expect(weaponStatsAt(get('Rust'), 1).dmgPctByType).toMatchObject({ normal: 0.4, charged: -0.1 });
-    expect(weaponStatsAt(get('Summit Shaper'), 1).atkPct).toBeCloseTo(0.04 * 5, 6);
+    expect(atMax('Summit Shaper', 1).atkPct).toBeCloseTo(0.04 * 5, 6);
     expect(weaponStatsAt(get('Freedom-Sworn'), 1).team?.atkPct).toBeCloseTo(0.2, 6);
   });
 
   it('o refinamento só sobe (nunca cai) em bônus de atributo simples', () => {
     for (const n of ['Aquila Favonia', 'Royal Greatsword', 'Summit Shaper', 'Skyward Blade', 'Staff of Homa']) {
-      const w = get(n);
-      const key = (['atkPct', 'critRate', 'hpPct'] as const).find((k) => w[k] > 0)!;
-      const v = [1, 2, 3, 4, 5].map((r) => weaponStatsAt(w, r)[key]);
+      const key = (['atkPct', 'critRate', 'hpPct'] as const).find((k) => atMax(n, 1)[k] > 0)!;
+      const v = [1, 2, 3, 4, 5].map((r) => atMax(n, r)[key]);
       for (let i = 1; i < 5; i++) expect(v[i], `${n} R${i + 1}`).toBeGreaterThanOrEqual(v[i - 1]);
     }
   });
@@ -80,7 +89,7 @@ describe('armas no motor', () => {
   const withWeapon = (weapon: string, refinement?: number): RotationProject => {
     const base = sampleProject();
     const zero = { CR: 0, CD: 0, 'ATK%': 0, EM: 0, ER: 0, ATK: 0, 'HP%': 0, HP: 0, 'DEF%': 0, DEF: 0 };
-    return { ...base, members: base.members.map((m, i) => (i === 0 ? { ...m, weapon, refinement, manualRolls: zero } : m)) };
+    return { ...base, compat: 'none' as const, members: base.members.map((m, i) => (i === 0 ? { ...m, weapon, refinement, manualRolls: zero } : m)) };
   };
 
   it('o refinamento 5 rende mais Taxa Crítica que o 1 na Royal Greatsword (+0,4)', () => {

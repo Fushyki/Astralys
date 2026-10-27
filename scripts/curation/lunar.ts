@@ -123,7 +123,7 @@ export const LUNAR_BUFFS: Record<string, BuffCuration[]> = {
   Zibai: [
     { id: 'a0', label: 'Zibai: base do Lunar-Cristalizar', src: 'p3', scope: 'team', timed: false, convert: { from: 'def', perPoint: per100(0), cap: { p: 1 }, to: ['lunarcrystallizeBase'] }, expect: "every 100 DEF that Zibai has increasing Lunar-Crystallize's Base DMG by 0.7%", note: BASE_NOTE },
     { id: 'c2', label: 'Zibai C2', src: 'const2', scope: 'team', timed: true, stats: { reactionBonus: { lunarcrystallize: { p: 0 } } }, expect: "all nearby party members' Lunar-Crystallize Reaction DMG is increased by 30%", note: '+30% de DMG Lunar-Cristalizar da equipe no modo Lunar Phase Shift: ligue nas janelas.' },
-    { id: 'c6', label: 'Zibai C6', src: 'const6', scope: 'self', timed: true, stats: { reactionBonus: { lunarcrystallizeSpecial: { p: 0, x: 30 } } }, expect: 'by 1.6% for every point consumed above 70', note: 'Assume 100 pontos de Phase Shift Radiance (30 acima de 70): dano Lunar-Cristalizar dela elevado em 48% por 3 s: ligue na janela.' },
+    { id: 'c6', label: 'Zibai C6', src: 'const6', scope: 'self', timed: true, stats: { reactionBonus: { lunarcrystallizeSpecial: { p: 0, x: 30 } } }, stacks: { max: 30, unit: 'pontos acima de 70' }, expect: 'by 1.6% for every point consumed above 70', note: 'Assume 100 pontos de Phase Shift Radiance (30 acima de 70): dano Lunar-Cristalizar dela elevado em 48% por 3 s: ligue na janela.' },
   ],
 };
 

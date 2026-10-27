@@ -14,7 +14,7 @@ export const CHARACTERS_16: Record<string, BuffCuration[]> = {
   Alyosha: [
     { id: 'a4s', label: 'Alyosha A4 (habilidade)', src: 'p2', scope: 'self', timed: false, convert: { from: 'er', perPoint: { p: 0, x: 100 }, cap: { lit: 0.7 }, to: ['skill'] }, expect: 'by 0.35% for every 1% of his Energy Recharge', note: '+0,35% de DMG da habilidade por 1% de Recarga, até 70% (com 200% de Recarga).' },
     { id: 'a4b', label: 'Alyosha A4 (Supremo)', src: 'p2', scope: 'self', timed: false, convert: { from: 'er', perPoint: { p: 0, x: 100 }, cap: { lit: 0.7 }, to: ['burst'] }, expect: 'by 0.35% for every 1% of his Energy Recharge', note: '+0,35% de DMG do Supremo por 1% de Recarga, até 70%.' },
-    { id: 'c6', label: 'Alyosha C6', src: 'const6', scope: 'team', timed: true, stats: { em: { p: 0 } }, expect: 'Elemental Mastery increased by 100', note: '+100 de Maestria de quem está no campo com 2 stacks de Hunter\'s Precision: ligue na janela.' },
+    { id: 'c6', label: 'Alyosha C6', src: 'const6', scope: 'team', timed: true, stats: { em: { p: 0 } }, stacks: { max: 2, unit: "stacks de Hunter's Precision", levels: [{ lit: 0 }, { p: 0 }] }, expect: 'Elemental Mastery increased by 100', note: '+100 de Maestria de quem está no campo com 2 stacks de Hunter\'s Precision: ligue na janela.' },
   ],
   'Aether (Anemo)': traveler(),
 };

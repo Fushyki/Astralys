@@ -79,9 +79,11 @@ export const FOUR_PIECE: Record<string, FourCuration> = {
     note: 'Assume o bônus de 15 s depois do ataque carregado sempre ativo. A velocidade de ataque NÃO entra.',
   },
   "Nymph's Dream": {
-    atkPct: { p: 3 },
-    dmgPct: { p: 6 },
-    note: 'Assume 3 stacks de Mirrored Nymph (ATK +25% e dano Hydro +15%).',
+    buffs: [
+      { id: 'nymph-atk', label: 'Mirrored Nymph (ATK)', stats: { atkPct: { p: 3 } }, stacks: { max: 3, unit: 'stacks de Mirrored Nymph', levels: [{ p: 1 }, { p: 2 }, { p: 3 }] } },
+      { id: 'nymph-dmg', label: 'Mirrored Nymph (DMG Hydro)', stats: { dmgPct: { p: 6 } }, stacks: { max: 3, of: 'nymph-atk', levels: [{ p: 4 }, { p: 5 }, { p: 6 }] } },
+    ],
+    note: 'ATK (7/16/25%) e dano Hydro (4/9/15%) de Mirrored Nymph: a quantidade de stacks é escolha sua (padrão: 3).',
   },
   'Marechaussee Hunter': { critRate: { p: 0, x: 3 }, note: 'Assume 3 stacks de +12% de Taxa Crítica (variação de HP).' },
   'Golden Troupe': { byType: { skill: { p: 0 } }, note: 'Só os +25% de dano da habilidade em campo. Os +25% fora de campo NÃO entram.' },

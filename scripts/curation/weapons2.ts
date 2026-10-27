@@ -199,9 +199,12 @@ export const WEAPONS_2: Record<string, GearCur> = {
   Frostbreath: { atkPct: { p: 0 }, expect: 'Cryo or Hydro-related elemental reaction', note: 'Assume reação Cryo ou Hydro e o ATK ativo. A energia dos aliados não entra.' },
   'Song of the Vigil': { buffs: [{ id: 'atk', label: 'ATK depois de reação Estelar', timed: true, stats: { atkPct: { p: 1 } } }], expect: 'regenerates 4 Elemental Energy', note: '+20% (R1) de ATK por 12 s depois de uma reação Estelar (faixa). A energia não entra.' },
   'Staff of the Scarlet Sands': {
-    buffs: [{ id: 'em-atk', label: 'ATK por Maestria', convert: { from: 'em', perPoint: [{ p: 0 }, { p: 1, x: 3 }], to: ['atkFlat'] } }],
+    buffs: [
+      { id: 'em-atk', label: 'ATK por Maestria', convert: { from: 'em', perPoint: { p: 0 }, to: ['atkFlat'] } },
+      { id: 'dream', label: 'Dream of the Scarlet Sands (ATK por Maestria)', convert: { from: 'em', perPoint: { p: 1, x: 3 }, to: ['atkFlat'] }, stacks: { max: 3, unit: 'stacks de Dream of the Scarlet Sands' } },
+    ],
     expect: 'of their Elemental Mastery as bonus ATK',
-    note: 'ATK fixo = 52% da Maestria (R1) + 3 stacks de 28% (depois da habilidade), sempre ativo.',
+    note: 'ATK fixo = 52% da Maestria (R1) + 28% por stack depois da habilidade (até 3): a quantidade de stacks é escolha sua (padrão: 3).',
   },
   'Fractured Halo': { atkPct: { p: 0 }, buffs: [{ id: 'edict', label: 'Electrifying Edict (DMG Lunar-Carregado da equipe)', scope: 'team', timed: true, stats: { reactionBonus: { lunarcharged: { p: 2 } } } }], expect: 'ATK is increased by', note: 'Assume o ATK depois de habilidade/Supremo sempre ativo. Electrifying Edict: +40% (R1) de DMG Lunar-Carregado da equipe por 20 s depois de criar um escudo com o ATK ativo: faixa, ligue nas janelas.' },
   'Bloodsoaked Ruins': { buffs: [{ id: 'lc', label: 'Lunar-Carregado depois do Supremo', timed: true, stats: { reactionBonus: { lunarcharged: { p: 1 } } } }, { id: 'requiem', label: 'Requiem of Ruin', timed: true, stats: { critDmg: { p: 3 } } }], expect: 'Lunar-Charged DMG', note: '+36% (R1) de DMG Lunar-Carregado por 3,5 s depois do Supremo e +28% de Dano Crítico por 6 s depois de um Lunar-Carregado: faixas. A energia não entra.' },
@@ -381,10 +384,10 @@ export const WEAPONS_2: Record<string, GearCur> = {
   'Covenant of Frost and Snow': { em: { p: 0 }, expect: 'Elemental Mastery is increased by', note: 'Assume a habilidade usada nos últimos 12 s.' },
   'Breezeborne Refrain': { er: { p: 0 }, buffs: [{ id: 'viper', label: 'Thus Lied the Viper', scope: 'team', timed: true, stats: { reactionBonus: { stellarconduct: { p: 0 }, stellarswirl: { p: 0 } } } }], expect: 'Hymn of the Pure', note: 'Recarga e +24% (R1) de DMG Estelar da equipe por 12 s (faixa).' },
   'Silvershower Heartstrings': {
-    hpPct: { p: 2 },
+    buffs: [{ id: 'remedy', label: 'Remedy', stats: { hpPct: { p: 2 } }, stacks: { max: 3, unit: 'stacks de Remedy', levels: [{ p: 0 }, { p: 1 }, { p: 2 }] } }],
     critRateByType: { burst: { p: 6 } },
     expect: 'Remedy',
-    note: 'Assume os 3 stacks (HP máximo) e a Taxa Crítica do Supremo ativa.',
+    note: 'HP máximo de Remedy (12/24/40% no R1 com 1/2/3 stacks): a quantidade é escolha sua (padrão: 3). Assume a Taxa Crítica do Supremo ativa.',
   },
   "Astral Vulture's Crimson Plumage": {
     atkPct: { p: 0 },

@@ -15,7 +15,7 @@ export const CHARACTERS_3: Record<string, BuffCuration[]> = {
     { id: 'c2', label: 'Cyno C2', src: 'const2', scope: 'self', timed: true, stats: { dmgPct: { p: 0, x: 5 } }, expect: 'Electro DMG Bonus will increase by 10%', note: 'Assume 5 stacks (+50% de DMG Electro) por 4 s depois de acertos Normais: ligue nas janelas.' },
   ],
   Nahida: [
-    { id: 'c4', label: 'Nahida C4', src: 'const4', scope: 'self', timed: true, stats: { em: { p: 0 } }, expect: 'Nahida\'s Elemental Mastery will be increased by 100/120/140/160', note: 'Assume 1 inimigo marcado pelas Sementes (+100 de Maestria): ligue nas janelas.' },
+    { id: 'c4', label: 'Nahida C4', src: 'const4', scope: 'self', timed: true, stats: { em: { p: 0 } }, stacks: { max: 4, unit: 'inimigos marcados', default: 1, levels: [{ p: 0 }, { p: 1 }, { p: 2 }, { p: 3 }] }, expect: 'Nahida\'s Elemental Mastery will be increased by 100/120/140/160', note: 'Assume 1 inimigo marcado pelas Sementes (+100 de Maestria): ligue nas janelas.' },
   ],
   Wanderer: [
     { id: 'a1pyro', label: 'Wanderer A1 (Pyro)', src: 'p1', scope: 'self', timed: true, stats: { atkPct: { p: 0 } }, expect: 'Pyro: ATK increases by 30%', note: '+30% de ATK no estado Windfavored se a habilidade tocou Pyro: ligue nas janelas.' },

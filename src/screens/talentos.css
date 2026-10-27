@@ -100,3 +100,12 @@
 .tl-cond .tl-stacks button:disabled { opacity: .4; cursor: not-allowed; }
 .tl-cond .tl-stacks b { min-width: 3.2em; text-align: center; }
 .tl-cond .tl-stacks b small { color: var(--muted); font-weight: 400; }
+
+/* Buffs e debuffs recebidos (tela de Talentos) */
+.tl-recv { display: flex; flex-direction: column; gap: var(--sp-2); margin-bottom: var(--sp-3); }
+.tl-recv .tot, .tl-recv .giver { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; padding: 6px 0; border-bottom: 1px solid var(--divider); }
+.tl-recv .lbl, .tl-recv .who { font: 700 var(--fs-2) var(--font-display); letter-spacing: .06em; text-transform: uppercase; min-width: 130px; }
+.tl-recv .tot .lbl { color: var(--gold); }
+.tl-recv .x { display: inline-flex; gap: 6px; align-items: baseline; padding: 2px 8px; border-radius: var(--r-chip); background: var(--surface-2); border: 1px solid var(--border-ctl); font-size: var(--fs-1); color: var(--text-2); }
+.tl-recv .x b { color: var(--gold-hi); font-weight: 700; }
+.tl-recv .deb .x b { color: var(--bad, #f08a8a); }

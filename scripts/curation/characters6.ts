@@ -106,7 +106,7 @@ export const CHARACTERS_9: Record<string, BuffCuration[]> = {
     { id: 'shield', label: 'Zhongli: Escudo de Jade', src: 'kit', kit: { talent: 'skill' }, scope: 'self', timed: false, resShred: { value: { lit: 0.2 }, elements: ['Pyro', 'Hydro', 'Anemo', 'Electro', 'Dendro', 'Cryo', 'Geo', 'Physical'] }, expect: 'will decrease the Elemental RES and Physical RES of opponents in a small AoE by 20%', note: 'Assume a redução de 20% de RES elemental e Física (com o Escudo de Jade ativo) sempre ativa.' },
   ],
   Furina: [
-    { id: 'burst', label: 'Furina: Fanfarra', src: 'kit', kit: { talent: 'burst', key: 'Fanfare to DMG Increase Conversion Ratio' }, scope: 'team', timed: true, stats: { dmgPct: { lit: 300 } }, expect: 'Furina will increase the DMG dealt by and Incoming Healing Bonus of all nearby party members based on the amount of Fanfare', note: 'Assume o máximo de 300 pontos de Fanfarra (DMG da equipe = 300 × a razão do nível do Supremo): ligue nas janelas. A Fanfarra real depende das variações de HP do time.' },
+    { id: 'burst', label: 'Furina: Fanfarra', src: 'kit', kit: { talent: 'burst', key: 'Fanfare to DMG Increase Conversion Ratio' }, scope: 'team', timed: true, stats: { dmgPct: { lit: 300 } }, stacks: { max: 300, unit: 'pontos de Fanfarra' }, expect: 'Furina will increase the DMG dealt by and Incoming Healing Bonus of all nearby party members based on the amount of Fanfare', note: 'Assume o máximo de 300 pontos de Fanfarra (DMG da equipe = 300 × a razão do nível do Supremo): ligue nas janelas. A Fanfarra real depende das variações de HP do time.' },
   ],
 };
 
@@ -137,6 +137,6 @@ export const CHARACTERS_10: Record<string, BuffCuration[]> = {
     { id: 'c1', label: 'Freminet C1', src: 'const1', scope: 'self', timed: false, stats: { critRateByType: { skill: { p: 0 } } }, expect: 'The CRIT Rate of Pressurized Floe: Shattering Pressure will be increased by 15%', note: '+15% de Taxa Crítica do Shattering Pressure (habilidade), sempre.' },
   ],
   Xianyun: [
-    { id: 'a1', label: 'Xianyun A1', src: 'p1', scope: 'team', timed: true, stats: { critRateByType: { plunge: { p: 3 } } }, expect: 'cause the characters\' Plunging Attack CRIT Rate to increase by 4%/6%/8%/10%', note: 'Assume 4 stacks (+10% de Taxa Crítica de Plunging da equipe) por 20 s: ligue nas janelas.' },
+    { id: 'a1', label: 'Xianyun A1', src: 'p1', scope: 'team', timed: true, stats: { critRateByType: { plunge: { p: 3 } } }, stacks: { max: 4, unit: 'stacks de Storm Pinion', levels: [{ p: 0 }, { p: 1 }, { p: 2 }, { p: 3 }] }, expect: 'cause the characters\' Plunging Attack CRIT Rate to increase by 4%/6%/8%/10%', note: 'Assume 4 stacks (+10% de Taxa Crítica de Plunging da equipe) por 20 s: ligue nas janelas.' },
   ],
 };

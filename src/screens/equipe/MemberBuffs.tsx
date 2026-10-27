@@ -30,7 +30,8 @@ function groupCards(cards: BuffCard[], member: number, names: string[], colors: 
   return groups;
 }
 
-export function MemberBuffs({ v, index }: { v: ProjectView; index: number }) {
+/** `inline`: a lista fica sempre aberta, sem o cabeçalho que abre e fecha (usado na tela de Talentos). */
+export function MemberBuffs({ v, index, inline = false }: { v: ProjectView; index: number; inline?: boolean }) {
   const setBuff = useRotationStore((s) => s.setBuff);
   const updateMember = useRotationStore((s) => s.updateMember);
   const [open, setOpen] = useState(false);
@@ -45,13 +46,15 @@ export function MemberBuffs({ v, index }: { v: ProjectView; index: number }) {
   const setAll = (on: boolean) => toggleable.forEach((c) => c.active !== on && setEnabled(c, on));
 
   return (
-    <div className="eq-buffs" data-open={open}>
-      <button type="button" className="bc-head" aria-expanded={open} onClick={() => setOpen(!open)}>
-        <span className="bc-lbl">Buffs recebidos</span>
-        <span className="bc-badge num">{activeCount}/{cards.length}</span>
-        <span className="bc-chev" aria-hidden="true">{open ? '▴' : '▾'}</span>
-      </button>
-      {open && (
+    <div className="eq-buffs" data-open={inline || open}>
+      {!inline && (
+        <button type="button" className="bc-head" aria-expanded={open} onClick={() => setOpen(!open)}>
+          <span className="bc-lbl">Buffs recebidos</span>
+          <span className="bc-badge num">{activeCount}/{cards.length}</span>
+          <span className="bc-chev" aria-hidden="true">{open ? '▴' : '▾'}</span>
+        </button>
+      )}
+      {(inline || open) && (
         <div className="bc-list">
           <div className="bc-bulk">
             <span className="muted small">Desligar um buff tira só dele ({names[index]}).</span>

@@ -85,7 +85,8 @@ export const CHARACTERS_2: Record<string, BuffCuration[]> = {
   ],
   Yoimiya: [
     { id: 'a1', label: 'Yoimiya A1', src: 'p1', scope: 'self', timed: true, stats: { dmgPct: { p: 0, x: 10 } }, expect: 'Pyro DMG Bonus by 2% on hit', note: 'Assume 10 stacks (+20% de DMG Pyro) durante o Niwabi: ligue nas janelas.' },
-    { id: 'a4', label: 'Yoimiya A4', src: 'p2', scope: 'others', timed: true, stats: { atkPct: { lit: 0.2 } }, expect: 'to gain a 10% ATK increase for 15s', note: '+10% de ATK da equipe por 15 s mais 1% por stack da A1; assume 10 stacks (+20%): ligue nas janelas.' },
+    { id: 'a4', label: 'Yoimiya A4', src: 'p2', scope: 'others', timed: true, stats: { atkPct: { p: 0 } }, expect: 'to gain a 10% ATK increase for 15s', note: '+10% de ATK da equipe por 15 s depois do Ryuukin Saxifrage: ligue nas janelas.' },
+    { id: 'a4s', label: 'Yoimiya A4 (stacks da A1)', src: 'p2', scope: 'others', timed: true, stats: { atkPct: { p: 1, x: 10 } }, stacks: { max: 10, of: 'a1' }, expect: 'to gain a 10% ATK increase for 15s', note: '+1% de ATK da equipe por stack da A1 que ela tem ao usar o Ryuukin Saxifrage (a mesma quantidade escolhida na A1): ligue junto com o A4.' },
     { id: 'c1', label: 'Yoimiya C1', src: 'const1', scope: 'self', timed: true, stats: { atkPct: { p: 1 } }, expect: "Yoimiya's ATK is increased by 20%", note: '+20% de ATK por 20 s depois de derrotar inimigo sob a Marca Dourada: ligue nas janelas.' },
     { id: 'c2', label: 'Yoimiya C2', src: 'const2', scope: 'self', timed: true, stats: { dmgPct: { p: 0 } }, expect: 'gain a 25% Pyro DMG Bonus', note: '+25% de DMG Pyro por 6 s depois de um acerto crítico Pyro: ligue nas janelas.' },
   ],

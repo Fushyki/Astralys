@@ -9,7 +9,7 @@ import type { BuffCuration } from './characters';
 
 export const CHARACTERS_14: Record<string, BuffCuration[]> = {
   Charlotte: [
-    { id: 'c2', label: 'Charlotte C2', src: 'const2', scope: 'self', timed: true, stats: { atkPct: { p: 0 } }, expect: "Charlotte's own ATK will be increased by 10%/20%/30%", note: 'Assume 1 inimigo atingido pelo Monsieur Verite (+10% de ATK por 12 s): ligue na janela. Com 2 e 3 inimigos o valor é 20% e 30%.' },
+    { id: 'c2', label: 'Charlotte C2', src: 'const2', scope: 'self', timed: true, stats: { atkPct: { p: 0 } }, stacks: { max: 3, unit: 'inimigos atingidos', default: 1, levels: [{ p: 0 }, { p: 1 }, { p: 2 }] }, expect: "Charlotte's own ATK will be increased by 10%/20%/30%", note: 'Assume 1 inimigo atingido pelo Monsieur Verite (+10% de ATK por 12 s): ligue na janela. Com 2 e 3 inimigos o valor é 20% e 30%.' },
     { id: 'c4', label: 'Charlotte C4', src: 'const4', scope: 'self', timed: true, stats: { byType: { skill: { p: 0 } } }, expect: 'it will deal 10% more DMG', note: '+10% de DMG da habilidade contra inimigo marcado (Snappy Silhouette ou Focused Impression): ligue na janela.' },
   ],
   Furina: [
@@ -22,7 +22,7 @@ export const CHARACTERS_14: Record<string, BuffCuration[]> = {
     { id: 'c2', label: 'Navia C2', src: 'const2', scope: 'self', timed: true, stats: { critRateByType: { skill: { p: 0, x: 3 } } }, expect: 'increase the CRIT Rate of this Ceremonial Crystalshot instance by 12%', note: 'Assume 3 stacks de Crystal Shrapnel gastos (+36% de Taxa Crítica na habilidade): ligue na janela. O tiro do canhão não entra.' },
   ],
   Xianyun: [
-    { id: 'c6', label: 'Xianyun C6', src: 'const6', scope: 'self', timed: true, stats: { critDmgByType: { plunge: { p: 2 } } }, expect: 'the CRIT DMG of a Driftcloud Wave created in this instance of Cloud Transmogrification will be increased by 15%/35%/70%', note: 'Assume 3 Skyladders (+70% de Dano Crítico do Driftcloud Wave): ligue na janela.' },
+    { id: 'c6', label: 'Xianyun C6', src: 'const6', scope: 'self', timed: true, stats: { critDmgByType: { plunge: { p: 2 } } }, stacks: { max: 3, unit: 'Skyladders', levels: [{ p: 0 }, { p: 1 }, { p: 2 }] }, expect: 'the CRIT DMG of a Driftcloud Wave created in this instance of Cloud Transmogrification will be increased by 15%/35%/70%', note: 'Assume 3 Skyladders (+70% de Dano Crítico do Driftcloud Wave): ligue na janela.' },
   ],
   Chiori: [
     { id: 'c6', label: 'Chiori C6', src: 'const6', scope: 'self', timed: false, flat: [{ name: 'Normal por DEF', sourceStat: 'DEF', perPoint: { p: 1 }, hitTypes: ['normal'] }], expect: 'the DMG dealt by Chiori\'s own Normal Attacks is increased by an amount equal to 235% of her own DEF', note: 'Soma 235% da DEF ao dano base de cada Normal.' },
@@ -37,9 +37,9 @@ export const CHARACTERS_14: Record<string, BuffCuration[]> = {
     { id: 'c1', label: 'Sethos C1', src: 'const1', scope: 'self', timed: false, stats: { critRateByType: { charged: { p: 0 } } }, expect: 'The CRIT Rate of Shadowpiercing Shot is increased by 15%', note: '+15% de Taxa Crítica nos Shadowpiercing Shots (Carregados).' },
   ],
   Clorinde: [
-    { id: 'a1', label: 'Clorinde A1', src: 'p1', scope: 'self', timed: false, flat: [{ name: 'Dark-Shattering Flame (3 stacks)', sourceStat: 'ATK', perPoint: { p: 2, x: 3 }, cap: { p: 1 }, hitTypes: ['normal', 'burst'] }], expect: 'Electro DMG dealt by Clorinde\'s Normal Attacks and Last Lightfall will be increased by 20% of Clorinde\'s ATK', note: 'Soma 20% do ATK por stack (assume 3 stacks = 60%) ao dano base dos Normais e do Last Lightfall, com teto de 1.800 por golpe.' },
+    { id: 'a1', label: 'Clorinde A1', src: 'p1', scope: 'self', timed: false, flat: [{ name: 'Dark-Shattering Flame (3 stacks)', sourceStat: 'ATK', perPoint: { p: 2, x: 3 }, cap: { p: 1 }, hitTypes: ['normal', 'burst'] }], stacks: { max: 3, unit: 'stacks de Dark-Shattering Flame' }, expect: 'Electro DMG dealt by Clorinde\'s Normal Attacks and Last Lightfall will be increased by 20% of Clorinde\'s ATK', note: 'Soma 20% do ATK por stack (assume 3 stacks = 60%) ao dano base dos Normais e do Last Lightfall, com teto de 1.800 por golpe.' },
     { id: 'a4', label: 'Clorinde A4', src: 'p2', scope: 'self', timed: true, stats: { critRate: { p: 2, x: 2 } }, expect: 'her CRIT Rate will increase by 10%', note: 'Assume 2 stacks (+20% de Taxa Crítica) com o Bond of Life em 100% ou mais: ligue na janela.' },
-    { id: 'c2', label: 'Clorinde C2', src: 'const2', scope: 'self', timed: false, flat: [{ name: 'Dark-Shattering Flame (C2)', sourceStat: 'ATK', perPoint: { lit: 0.3 }, cap: { lit: 900 }, hitTypes: ['normal', 'burst'] }], expect: 'Electro DMG dealt by Clorinde\'s Normal Attacks and Last Lightfall will be increased by 30% of Clorinde\'s ATK', note: 'O A1 melhorado: 30% do ATK por stack (90% com 3) e teto de 2.700. Soma a diferença (+30% do ATK e +900 de teto) ao A1.' },
+    { id: 'c2', label: 'Clorinde C2', src: 'const2', scope: 'self', timed: false, flat: [{ name: 'Dark-Shattering Flame (C2)', sourceStat: 'ATK', perPoint: { lit: 0.3 }, cap: { lit: 900 }, hitTypes: ['normal', 'burst'] }], stacks: { max: 3, of: 'a1' }, expect: 'Electro DMG dealt by Clorinde\'s Normal Attacks and Last Lightfall will be increased by 30% of Clorinde\'s ATK', note: 'O A1 melhorado: 30% do ATK por stack (90% com 3) e teto de 2.700. Soma a diferença (+30% do ATK e +900 de teto) ao A1.' },
     { id: 'c4', label: 'Clorinde C4', src: 'const4', scope: 'self', timed: true, stats: { byType: { burst: { lit: 2 } } }, expect: 'Every 1% of her current Bond of Life will increase Last Lightfall DMG by 2%', note: 'Assume o máximo (+200% de DMG do Last Lightfall): ligue na janela do Supremo.' },
   ],
   Emilie: [
@@ -47,15 +47,15 @@ export const CHARACTERS_14: Record<string, BuffCuration[]> = {
   ],
   Kachina: [
     { id: 'a4', label: 'Kachina A4', src: 'p2', scope: 'self', timed: false, flat: [{ name: 'Turbo Twirly por DEF', sourceStat: 'DEF', perPoint: { p: 0 }, hitTypes: ['skill'] }], expect: "Turbo Twirly's DMG is increased by 20% of Kachina's DEF", note: 'Soma 20% da DEF ao dano base da habilidade (Turbo Twirly).' },
-    { id: 'c4', label: 'Kachina C4', src: 'const4', scope: 'self', timed: true, stats: { defPct: { p: 0 } }, expect: 'gains 8%/12%/16%/20% increased DEF', note: 'Assume 1 inimigo (+8% de DEF): ligue na janela. Com 4 ou mais inimigos é 20%.' },
+    { id: 'c4', label: 'Kachina C4', src: 'const4', scope: 'self', timed: true, stats: { defPct: { p: 0 } }, stacks: { max: 4, unit: 'inimigos no campo', default: 1, levels: [{ p: 0 }, { p: 1 }, { p: 2 }, { p: 3 }] }, expect: 'gains 8%/12%/16%/20% increased DEF', note: 'Assume 1 inimigo (+8% de DEF): ligue na janela. Com 4 ou mais inimigos é 20%.' },
   ],
   Kinich: [
-    { id: 'a4', label: 'Kinich A4', src: 'p2', scope: 'self', timed: false, flat: [{ name: 'Scalespiker Cannon por ATK', sourceStat: 'ATK', perPoint: { p: 1, x: 2 }, hitTypes: ['skill'], stacks: 1 }], expect: 'each stack consumed increasing the DMG dealt by this Cannon shot by 320%', note: 'Soma 640% do ATK (2 stacks de 320%) ao primeiro golpe da habilidade (o Scalespiker Cannon).' },
+    { id: 'a4', label: 'Kinich A4', src: 'p2', scope: 'self', timed: false, flat: [{ name: 'Scalespiker Cannon por ATK', sourceStat: 'ATK', perPoint: { p: 1, x: 2 }, hitTypes: ['skill'], stacks: 1 }], stacks: { max: 2, unit: "stacks de Hunter's Experience" }, expect: 'each stack consumed increasing the DMG dealt by this Cannon shot by 320%', note: 'Soma 640% do ATK (2 stacks de 320%) ao primeiro golpe da habilidade (o Scalespiker Cannon).' },
     { id: 'c1', label: 'Kinich C1', src: 'const1', scope: 'self', timed: false, stats: { critDmgByType: { skill: { p: 2 } } }, expect: "Scalespiker Cannon's CRIT DMG is increased by 100%", note: '+100% de Dano Crítico no Scalespiker Cannon (aqui conta nos golpes de habilidade dele).' },
     { id: 'c4', label: 'Kinich C4', src: 'const4', scope: 'self', timed: false, stats: { byType: { burst: { p: 2 } } }, expect: 'Hail to the Almighty Dragonlord deals 70% more DMG', note: '+70% de DMG do Supremo (Hail to the Almighty Dragonlord).' },
   ],
   Mualani: [
-    { id: 'a4', label: 'Mualani A4', src: 'p2', scope: 'self', timed: false, flat: [{ name: 'Boomsharka-laka por HP', sourceStat: 'HP', perPoint: { p: 3 }, hitTypes: ['burst'], stacks: 1 }], expect: 'increase the DMG of this Boomsharka-laka by 15%/30%/45% of her Max HP', note: 'Soma 45% do HP máximo (3 stacks) ao dano base do Boomsharka-laka (Supremo).' },
+    { id: 'a4', label: 'Mualani A4', src: 'p2', scope: 'self', timed: false, flat: [{ name: 'Boomsharka-laka por HP', sourceStat: 'HP', perPoint: { p: 3 }, hitTypes: ['burst'], stacks: 1 }], stacks: { max: 3, unit: "stacks de Wavechaser's Exploits", levels: [{ p: 1 }, { p: 2 }, { p: 3 }] }, expect: 'increase the DMG of this Boomsharka-laka by 15%/30%/45% of her Max HP', note: 'Soma 45% do HP máximo (3 stacks) ao dano base do Boomsharka-laka (Supremo).' },
     { id: 'c1', label: 'Mualani C1', src: 'const1', scope: 'self', timed: false, flat: [{ name: "Sharky's Surging Bite por HP", sourceStat: 'HP', perPoint: { p: 0 }, hitTypes: ['skill'], stacks: 1 }], expect: "increased by 66% of Mualani's Max HP", note: 'Soma 66% do HP máximo ao primeiro golpe da habilidade (Sharky\'s Surging Bite), com a regra de dano decrescente do Surfshark Wavebreaker NÃO aplicada.' },
   ],
   Xilonen: [
@@ -75,8 +75,8 @@ export const CHARACTERS_14: Record<string, BuffCuration[]> = {
     { id: 'c2em', label: 'Citlali C2 (Maestria)', src: 'const2', scope: 'self', timed: false, stats: { em: { p: 0 } }, expect: 'Citlali gains 125 Elemental Mastery', note: '+125 de Maestria dela.' },
     { id: 'c2team', label: 'Citlali C2 (aliados)', src: 'const2', scope: 'others', timed: true, stats: { em: { p: 1 } }, expect: 'gain 250 Elemental Mastery', note: '+250 de Maestria dos aliados protegidos pelo Opal Shield ou seguidos pelo Itzpapa: ligue na janela.' },
     { id: 'c2r', label: 'Citlali C2 (RES)', src: 'const2', scope: 'self', timed: false, resShred: { value: { p: 3 }, elements: ['Pyro', 'Hydro'] }, expect: 'have their Pyro and Hydro RES additionally decreased by 20% for 12s', note: 'Soma mais 20% de redução de RES Pyro e Hydro ao A1 (assume sempre ativa).' },
-    { id: 'c6t', label: 'Citlali C6 (equipe)', src: 'const6', scope: 'team', timed: true, forElements: ['Pyro', 'Hydro'], stats: { dmgPct: { p: 0, x: 40 } }, expect: 'a 1.5% Pyro and Hydro DMG Bonus', note: 'Assume 40 pontos de Cifra (+60% de DMG Pyro e Hydro da equipe): ligue na janela. Os pontos sobem durante o Itzpapa.' },
-    { id: 'c6s', label: 'Citlali C6 (dela)', src: 'const6', scope: 'self', timed: true, stats: { dmgPct: { p: 2, x: 40 } }, expect: 'increase the DMG Citlali deals by 2.5%', note: 'Assume 40 pontos de Cifra (+100% de DMG dela): ligue na janela.' },
+    { id: 'c6t', label: 'Citlali C6 (equipe)', src: 'const6', scope: 'team', timed: true, forElements: ['Pyro', 'Hydro'], stats: { dmgPct: { p: 0, x: 40 } }, stacks: { max: 40, unit: 'pontos de Cifra' }, expect: 'a 1.5% Pyro and Hydro DMG Bonus', note: 'Assume 40 pontos de Cifra (+60% de DMG Pyro e Hydro da equipe): ligue na janela. Os pontos sobem durante o Itzpapa.' },
+    { id: 'c6s', label: 'Citlali C6 (dela)', src: 'const6', scope: 'self', timed: true, stats: { dmgPct: { p: 2, x: 40 } }, stacks: { max: 40, unit: 'pontos de Cifra' }, expect: 'increase the DMG Citlali deals by 2.5%', note: 'Assume 40 pontos de Cifra (+100% de DMG dela): ligue na janela.' },
   ],
   Iansan: [
     { id: 'a1', label: 'Iansan A1', src: 'p1', scope: 'self', timed: true, stats: { atkPct: { p: 0 } }, expect: 'her ATK is increased by 20%', note: '+20% de ATK por 15 s (Precise Movement): ligue na janela.' },

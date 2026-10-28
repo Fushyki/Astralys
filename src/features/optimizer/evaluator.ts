@@ -9,6 +9,8 @@ import type { Element } from '../../data/schema';
 import {
   activeTeamDelta,
   assembleTeam,
+  foldSources,
+  type TeamAssembly,
   applyFlatLevels,
   evaluateRotation,
   finalizeMembers,
@@ -111,7 +113,7 @@ export function createEvaluator(input: EvaluatorInput): Evaluator {
   const { resolved, member, game, effects } = input;
   const name = resolved.team.members[member].character.name;
   const rolls = input.rolls.map((r, i) => (i === member ? zeroRolls() : r));
-  const cache = new Map<string, { members: MemberInput[]; flat: ResolvedProject['flatEffects'] }>();
+  const cache = new Map<string, { members: MemberInput[]; flat: ResolvedProject['flatEffects']; assembly?: TeamAssembly; moves?: Map<string, RotationAction | null> }>();
 
   const forConfig = (config: SetConfig) => {
     const key = configKey(config);
@@ -126,20 +128,39 @@ export function createEvaluator(input: EvaluatorInput): Evaluator {
     return hit;
   };
 
+  /**
+   * Montar o time era 70% do tempo da busca. O que o time recebe só muda com as peças testadas se o membro dá ATK fixo por ATK total
+   * ou tem conversão de stat (dele, ou a que usa o maior EM do time). Fora isso, a montagem é a mesma para toda peça do mesmo set:
+   * monta-se uma vez por set (sem as peças) e só os estáticos do membro são refeitos com a soma das 5 peças.
+   */
+  const mineDependsOnPieces = resolved.team.members.some((m, i) => {
+    const buffs = m.characterEffect?.buffs ?? [];
+    return (i === member && (!!m.characterEffect?.teamFlatAtk?.perTotalAtk || buffs.some((b) => b.convert))) || buffs.some((b) => b.convert?.source === 'highestEm');
+  });
+
   const run = (vec: Vec, config: SetConfig) => {
-    const { members: base, flat } = forConfig(config);
+    const hit = forConfig(config);
+    const { members: base, flat } = hit;
     const mine: MemberInput = { ...base[member], externalStats: vecToDelta(vec) };
     const members = base.map((m, i) => (i === member ? mine : m));
     const team = { ...resolved.team, members };
     const t0 = now();
-    const assembly = assembleTeam(team, { rolls });
+    let assembly: TeamAssembly;
+    if (mineDependsOnPieces) assembly = assembleTeam(team, { rolls });
+    else {
+      hit.assembly ??= assembleTeam({ ...resolved.team, members: base.map((m, i) => (i === member ? { ...m, externalStats: {} } : m)) }, { rolls });
+      const delta = vecToDelta(vec);
+      const statics = hit.assembly.statics.slice();
+      statics[member] = foldSources([...hit.assembly.sources[member], { id: `m${member}:artifacts`, label: 'Artefatos (peças reais)', kind: 'main-stat', member, delta }]);
+      assembly = { ...hit.assembly, statics };
+    }
     const t1 = now();
     const stats = finalStats(mine, assembly.statics[member], zeroRolls(), activeTeamDelta(assembly.buffs, name, new Set<string>()), assembly.resonanceAtkPct);
     if (evalTimes.on) {
       evalTimes.assembleMs += t1 - t0;
       evalTimes.finalStatsMs += performance.now() - t1;
     }
-    return { members, assembly, stats, flat, team };
+    return { members, assembly, stats, flat, team, hit };
   };
 
   const meets = (s: FinalStats): boolean => {
@@ -164,17 +185,29 @@ export function createEvaluator(input: EvaluatorInput): Evaluator {
 
   /** Um golpe do kit sozinho, com todas as etiquetas de buff ligadas (como a tabela de dano do personagem). */
   const moveValue = (r: ReturnType<typeof run>, o: Extract<Objective, { kind: 'move' }>): number => {
+    // O golpe e as etiquetas ligadas só mudam com o set (não com as peças): monta uma vez por set.
+    const mk = `${o.moveId}|${o.reaction}`;
+    r.hit.moves ??= new Map();
+    let action = r.hit.moves.get(mk);
+    if (action === undefined) {
+      action = buildMoveAction(r, o);
+      r.hit.moves.set(mk, action);
+    }
+    if (!action) return 0;
+    const res = evaluateRotation({ members: r.members, assembly: r.assembly, config: r.team.config, rolls, ampCoefficient: resolved.ampCoefficient }, [action]).actions[0];
+    return o.crit === 'crit' ? res.crit : o.crit === 'noCrit' ? res.noCrit : res.avg;
+  };
+
+  const buildMoveAction = (r: ReturnType<typeof run>, o: Extract<Objective, { kind: 'move' }>): RotationAction | null => {
     const proc = kitProcMoves(r.members[member], game.moves).find((p) => p.move.id === o.moveId);
     const move = proc?.move ?? game.moves.find((m) => m.id === o.moveId);
-    if (!move) return 0;
-    const action: RotationAction = {
+    if (!move) return null;
+    return {
       id: move.id, member,
       // Golpe Lunar/Estelar do kit usa a fórmula dele (sem DMG% elemental), como na tabela de dano.
       move: proc?.resolved ?? withSpecial({ id: move.id, character: move.character, talent: move.talent, hitType: move.hitType, label: move.label, displayName: move.label, hits: move.hits, scale: move.scale, extra: pointExtra(move, r.members[member].characterEffect, r.members[member].talents) }, move.variant, r.members[member].characterEffect),
       executions: 1, reaction: o.reaction, activeTags: [...new Set(r.assembly.buffs.map((b) => b.tag))], dmgAdjust: 0,
     };
-    const res = evaluateRotation({ members: r.members, assembly: r.assembly, config: r.team.config, rolls, ampCoefficient: resolved.ampCoefficient }, [action]).actions[0];
-    return o.crit === 'crit' ? res.crit : o.crit === 'noCrit' ? res.noCrit : res.avg;
   };
 
   const valueOf = (r: ReturnType<typeof run>): number => {

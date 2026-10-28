@@ -56,7 +56,7 @@ export function Moves({ v }: { v: ProjectView }) {
         <Seg full label="Como inserir" value={mode} onChange={setMode} options={[{ value: 'order', label: 'Em ordem (no fim)' }, { value: 'marker', label: 'No instante marcado' }]} />
         <div className="rt-two">
           <Num label="Espaço entre golpes" value={gap} unit="s" onCommit={setGap} min={0.05} />
-          <Static label="Próximo golpe entra em" className="gold">{next.toFixed(1).replace('.', ',')}<span className="u">s</span></Static>
+          <Static label="Próximo entra em" className="gold">{next.toFixed(1).replace('.', ',')}<span className="u">s</span></Static>
         </div>
         <span className="rt-note">Cada clique coloca o golpe depois do último, já com o espaço definido. Nada fica sobreposto.</span>
       </div>

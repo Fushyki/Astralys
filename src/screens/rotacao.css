@@ -258,3 +258,4 @@
 .rt-share .rt-acts { display: flex; justify-content: flex-end; }
 
 .rt-exec .er .dmg { text-align: right; color: var(--text-hi); }
+.rt-two > .rt-fld { white-space: nowrap; }

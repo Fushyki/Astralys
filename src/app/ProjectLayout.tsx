@@ -145,7 +145,7 @@ export default function ProjectLayout() {
         <div className={ready.stale ? 'dz-busy' : undefined}>
           <Outlet />
         </div>
-        <ProjectSteps id={id} firstMember={current.members[0].character} />
+        <ProjectSteps id={id} member={headerMember ?? current.members[0].character} />
       </ProjectProvider>
     </div>
   );

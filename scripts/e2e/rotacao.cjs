@@ -40,7 +40,7 @@ const num = (s) => Number(String(s).replace(/\./g, '').replace(',', '.'));
   check('24 golpes na linha do tempo', (await hits()).length === 24, String((await hits()).length));
   check('DPS ao vivo do exemplo é 216.600 (gabarito)', (await dps()) === '216.600', await dps());
   check('o cabeçalho conta golpes e buffs com janela', /24 golpes · \d+ buffs? com janela/.test(await page.textContent('.rt-head .sub')));
-  check('a etapa 3 saiu: só 1 e 2 na faixa do time', (await page.$$eval('.dz-subnav nav a', (a) => a.map((x) => x.textContent.trim()))).join('|') === '1 · Equipe|2 · Rotação e buffs');
+  check('a faixa do time tem 3 telas', (await page.$$eval('.dz-subnav nav a', (a) => a.map((x) => x.textContent.replace(/\s+/g, ' ').trim()))).join('|') === '1 · Equipe|2 · Personagens|3 · Rotação e buffs');
   const lanes = await page.$$eval('.rt-lane', (e) => e.map((x) => x.querySelector('.lname')?.textContent?.trim() ?? ''));
   check('faixas: Tempo, Em campo e uma por personagem', /^Tempo/.test(lanes[0]) && /^Em campo/.test(lanes[1]) && /Mavuika/.test(lanes[2]) && /Bennett/.test(lanes[5]), lanes.slice(0, 6).join(' | '));
   check('buffs agrupados por quem dá, com faixa tracejada para o que não tem janela ou barras', (await page.locator('.rt-giver').count()) >= 3 && (await page.locator('.rt-bar').count()) >= 10);

@@ -1,6 +1,6 @@
 /**
  * Barra superior fixa, igual em todas as telas: Times · Personagens · Inventário · Otimizador · Ferramentas.
- * Dentro de um time aparece uma faixa com as 2 telas dele: Equipe (com os personagens) e Rotação e buffs.
+ * Dentro de um time aparece uma faixa com as 3 telas dele: Equipe, Personagens e Rotação e buffs.
  */
 import { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
@@ -57,7 +57,8 @@ export function AppHeader({ projectId, memberName, projectName, favorite, onTogg
   ];
   const tabs = projectId
     ? [
-        { to: base, label: 'Equipe', on: pathname === base || pathname.startsWith(`${base}/personagem`) || pathname.startsWith(`${base}/armas`) },
+        { to: base, label: 'Equipe', on: pathname === base || pathname.startsWith(`${base}/armas`) },
+        { to: memberName ? `${base}/personagem/${encodeURIComponent(memberName)}` : base, label: 'Personagens', on: pathname.startsWith(`${base}/personagem`) },
         { to: `${base}/rotacao`, label: 'Rotação e buffs', on: pathname.startsWith(`${base}/rotacao`) },
       ]
     : [];

@@ -201,7 +201,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.click('.pc-tabs a:has-text("Citlali")'); await page.waitForSelector('.ot-top');
   check('a configuração da Citlali fica guardada ao voltar', /77/.test(await page.textContent('.ot-minchip:has-text("Taxa crítica")')));
   await page.goto(`${BASE}/projeto/exemplo`, { waitUntil: 'networkidle' });
-  check('a barra de passos tem 2 passos', /Passo 1 de 2/.test(await page.textContent('.dz-stepbar')));
+  check('a barra de passos tem 3 passos', /Passo 2 de 3/.test(await page.textContent('.dz-stepbar')));
 
   // ---- Personagens ----
   await page.click('.dz-nav a:has-text("Personagens")');

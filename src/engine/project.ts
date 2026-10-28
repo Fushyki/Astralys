@@ -708,12 +708,35 @@ export function applyFlatLevels(flat: FlatDamageEffect[], members: MemberInput[]
 }
 
 /**
+ * Fora do modo planilha, as passivas e constelações vêm da curadoria. Os números que a planilha semeou no topo do efeito
+ * (ATK% e DMG% da Mavuika, RES da Citlali, o C1 dentro do ATK fixo do Bennett) já existem como buffs curados: sem tirá-los
+ * cada um contaria duas vezes (Mavuika com +20% de DMG e +30% de ATK a mais, Citlali com -40% de RES em vez de -20%).
+ */
+function withoutPlanilhaSeed(m: MemberInput): MemberInput {
+  const e = m.characterEffect;
+  if (!e || !e.fonte_info.startsWith('planilha') || e.buffs.length === 0) return m;
+  const c1 = e.buffs.find((b) => b.id === 'c1' && b.convert?.from === 'baseAtk')?.convert?.perPoint ?? 0;
+  const { resShred: _drop, ...rest } = e;
+  void _drop;
+  return {
+    ...m,
+    characterEffect: {
+      // O prefixo evita tratar de novo (o otimizador finaliza membros que já vieram finalizados).
+      ...rest, fonte_info: `sem a semente da planilha; ${e.fonte_info}`, atkPct: 0, dmgPct: 0, critRate: 0, critDmg: 0, em: 0,
+      ...(e.teamFlatAtk ? { teamFlatAtk: { ...e.teamFlatAtk, perBaseAtk: Math.max(0, e.teamFlatAtk.perBaseAtk - c1) } } : {}),
+    },
+  };
+}
+
+/**
  * Aplica as regras de composição do time aos membros já resolvidos. No modo planilha, os personagens que vêm da planilha
- * ficam só com os efeitos dela: sem as passivas e constelações curadas depois.
+ * ficam só com os efeitos dela: sem as passivas e constelações curadas depois; fora dele, sem os números semeados que a curadoria repete.
  */
 export function finalizeMembers(members: MemberInput[], planilha: boolean): MemberInput[] {
   return applyTeamRules(members).map((m) =>
-    planilha && m.characterEffect && !m.characterEffect.fonte_info.includes('scripts/curation/') ? { ...m, characterEffect: planilhaEffect(m.characterEffect) } : m,
+    planilha
+      ? m.characterEffect && !m.characterEffect.fonte_info.includes('scripts/curation/') ? { ...m, characterEffect: planilhaEffect(m.characterEffect) } : m
+      : withoutPlanilhaSeed(m),
   );
 }
 

@@ -19,7 +19,7 @@ function Tile({ p, set, mine, current, onClick }: { p: RealPiece; set?: Artifact
   const main = mainStatOf(p);
   return (
     <button type="button" className="pp-tile" data-rarity={p.rarity} data-current={current} onClick={onClick} aria-label={`${set?.name ?? p.setKey}, ${MAIN_LABEL[p.mainStatKey] ?? p.mainStatKey}`}>
-      <span className="art">{set && !failed ? <img src={pieceIconUrl(set.id, p.slotKey as SlotKey)} alt="" loading="lazy" crossOrigin="anonymous" onError={() => setFailed(true)} /> : <b className="ph">◆</b>}</span>
+      <span className="art">{set && !failed ? <img src={pieceIconUrl(set.id, p.slotKey as SlotKey)} alt="" loading="lazy" crossOrigin="anonymous" onError={() => setFailed(true)} /> : <b className="ph" />}</span>
       <span className="n">{set?.name ?? p.setKey}</span>
       <span className="main">{MAIN_LABEL[p.mainStatKey] ?? p.mainStatKey} <b className="num">{formatMain(p.mainStatKey, main.value)}</b> <small>+{main.level}</small></span>
       <ul>{p.substats.map((s) => <li key={s.key}><span>{SUB_LABEL[s.key] ?? s.key}</span><b className="num">{formatSub(s.key, s.value)}</b></li>)}</ul>

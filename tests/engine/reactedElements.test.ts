@@ -1,7 +1,8 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { assembleTeam, resolveProject, type EffectsData, type GameData } from '../../src/engine';
+import { analyzeProject, assembleTeam, resolveProject, type EffectsData, type GameData } from '../../src/engine';
+import { memberBuffCards } from '../../src/features/character/characterModel';
 import { sampleProject } from '../../src/features/rotation/persistence';
 import type { Element } from '../../src/data/schema';
 
@@ -58,5 +59,24 @@ describe('Viridescent Venerer: RES só dos elementos espalhados', () => {
     const base = res(['Hydro']);
     expect(base.Hydro).toBeLessThan(base.Electro);
     expect(base.Electro).toBeCloseTo(res([]).Electro, 9);
+  });
+});
+
+describe('Equipe: cartões do Scroll', () => {
+  const cardsOf = (member: number, reacted?: Element[]) => {
+    const p = project();
+    if (reacted) p.members[2] = { ...p.members[2], reacted };
+    const r = resolveProject(p, game, effects);
+    const b = analyzeProject({ team: r.team, actions: r.actions, flatEffects: r.flatEffects, ampCoefficient: r.ampCoefficient });
+    return memberBuffCards(p, r, b, member).filter((c) => c.name.includes('Scroll of the Hero of Cinder City'));
+  };
+  it('no cartão da Iansan (dona do set) os dois buffs trazem o campo dos elementos da reação', () => {
+    const cards = cardsOf(2);
+    expect(cards).toHaveLength(2);
+    expect(cards.every((c) => c.reacted?.giver === 2 && c.reacted.own === 'Electro' && c.reacted.els.length === 0)).toBe(true);
+  });
+  it('quem não tem o elemento só recebe o buff depois de o elemento ser escolhido', () => {
+    expect(cardsOf(0)).toHaveLength(0);
+    expect(cardsOf(0, ['Pyro'])).toHaveLength(2);
   });
 });

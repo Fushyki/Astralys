@@ -17,6 +17,7 @@ import { cloneProject, saveProject } from '../features/rotation/persistence';
 import { useRotationStore } from '../features/rotation/store';
 import { defaultMember } from '../features/rotation/teamOps';
 import { configChips, givenBuffs, keyStats, mainReaction, mainsText, receivedBuffCount, roleOf, setPiecesText } from '../features/team/teamModel';
+import { norm } from '../features/good/goodImport';
 import { formatDecimal, formatInt, formatPercent } from '../ui/format';
 import './equipe.css';
 
@@ -41,12 +42,14 @@ function EquipGear({ index, memberRef, data, mains, setText }: { index: number; 
   return (
     <div className="eq-gear" data-mode={twoTwo ? 'two-two' : four ? 'four' : sets.length ? 'two' : 'none'}>
       <button type="button" className="eq-tile weapon" data-rarity={weapon?.rarity ?? 5} onClick={() => setPick('weapon')} aria-label={`Trocar a arma ${memberRef.weapon}`} title={`${memberRef.weapon} (R${memberRef.refinement ?? 1}) · tocar para trocar`}>
-        <GearImg src={weapon?.icon ? weaponIconUrl(weapon.icon) : undefined} fallback="⚔" />
+        <GearImg src={weapon?.icon ? weaponIconUrl(weapon.icon) : undefined} fallback="" />
         <span className="badge">R{memberRef.refinement ?? 1}</span>
       </button>
       <div className="eq-pieces" role="group" aria-label={`Artefatos: ${setText}. Mains: ${mains}`} title={`${setText} · Mains: ${mains}`}>
         {PIECES.map((slot, i) => {
-          const set = setFor(i);
+          // Com peças reais do inventário o set vem de cada peça (primarySet pode estar vazio).
+          const real = memberRef.pieces?.find((x) => x.slotKey === slot);
+          const set = real ? data.game.artifacts.find((x) => norm(x.name) === norm(real.setKey)) : setFor(i);
           const tone = twoTwo ? (set === sets[0] ? 'a' : 'b') : undefined;
           return (
             <button type="button" key={slot} className="eq-tile piece" data-tone={tone} data-rarity={memberRef.artifacts.rarity[slot]} onClick={() => setPick('set')} aria-label={`${PIECE_NAME[slot]} de ${set?.name ?? 'nenhum set'}: tocar para trocar o set`}>

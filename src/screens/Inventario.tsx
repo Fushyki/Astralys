@@ -186,7 +186,7 @@ export default function Inventario() {
                   const info = data?.game.weapons.find((x) => norm(x.name) === norm(w.key));
                   return (
                     <div className="inv-weapon" key={i} data-rarity={info?.rarity ?? 4}>
-                      <span className="art">{info?.icon ? <img src={weaponIconUrl(info.icon)} alt="" loading="lazy" crossOrigin="anonymous" /> : <b className="ph">⚔</b>}</span>
+                      <span className="art">{info?.icon ? <img src={weaponIconUrl(info.icon)} alt="" loading="lazy" crossOrigin="anonymous" /> : <b className="ph" />}</span>
                       <span className="n">{info?.name ?? w.key}</span>
                       <span className="num sub">Nv {w.level ?? '?'} · R{w.refinement ?? 1}</span>
                       {w.location && <Chip>de {characterDisplayName(w.location, data?.game.characters)}</Chip>}
@@ -216,7 +216,7 @@ function ArtifactTile({ a, setInfo, characters }: { a: GoodArtifact; setInfo?: {
         <span className="lvl num">+{level}</span>
       </header>
       <div className="face">
-        <span className="art">{setInfo && !failed ? <img src={pieceIconUrl(setInfo.id, a.slotKey as 'flower')} alt="" loading="lazy" crossOrigin="anonymous" onError={() => setFailed(true)} /> : <b className="ph">◆</b>}</span>
+        <span className="art">{setInfo && !failed ? <img src={pieceIconUrl(setInfo.id, a.slotKey as 'flower')} alt="" loading="lazy" crossOrigin="anonymous" onError={() => setFailed(true)} /> : <b className="ph" />}</span>
         <div className="mainstat">
           <span className="k">{MAIN_LABEL[mainKey] ?? mainKey}</span>
           <b className="v num">{mainValue}</b>

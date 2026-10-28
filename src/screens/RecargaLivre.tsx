@@ -165,7 +165,7 @@ export default function RecargaLivre() {
             {saved.length === 0 && <span className="muted small">Nenhum time salvo ainda. Dê um nome e toque em "Salvar time atual". O backup da calculadora antiga (.json) também pode ser importado.</span>}
             {saved.map((t) => (
               <span key={t.id} className="rc-saved">
-                <Button variant="ghost" size="sm" onClick={() => load_(t)} title={t.members.join(' · ')}>⭐ {t.name}</Button>
+                <Button variant="ghost" size="sm" onClick={() => load_(t)} title={t.members.join(' · ')}>{t.name}</Button>
                 <button type="button" className="x" onClick={() => del(t.id)} aria-label={`Excluir ${t.name}`}>×</button>
               </span>
             ))}

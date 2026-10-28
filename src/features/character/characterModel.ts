@@ -357,7 +357,7 @@ export function memberBuffCards(project: RotationProject, resolved: ResolvedProj
 
   /** Elementos da reação de um buff `forReacted` (`cbuff-<membro>-<id>`), se ele é desse tipo. */
   const reactedOf = (id: string): BuffCard['reacted'] => {
-    const m = /^cbuff-(d+)-(.+)$/.exec(id) ?? (/^m(d+):cbuff-(.+)$/.exec(id));
+    const m = /^cbuff-(\d+)-(.+)$/.exec(id) ?? (/^m(\d+):cbuff-(.+)$/.exec(id));
     if (!m) return undefined;
     const giver = Number(m[1]);
     const buff = project.members[giver] && resolved.team.members[giver]?.characterEffect?.buffs.find((x) => x.id === m[2]);

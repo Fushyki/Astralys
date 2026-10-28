@@ -66,7 +66,7 @@ export function AsideCard({ v, index }: { v: ProjectView; index: number }) {
         <button type="button" className="oa-weapon" data-rarity={weapon?.rarity ?? 5} onClick={() => setPick(true)} aria-label={`Trocar arma (atual: ${ref.weapon})`}>
           <span className="top">
             <span className="art">
-              <Img src={weapon?.icon ? weaponIconUrl(weapon.icon) : undefined} fallback="⚔" />
+              <Img src={weapon?.icon ? weaponIconUrl(weapon.icon) : undefined} fallback="" />
               <b className="rf num">R{refine}</b>
             </span>
             <span className="t">

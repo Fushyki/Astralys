@@ -58,7 +58,7 @@ const FROM_LABEL: Record<string, string> = { atk: 'o ATK', baseAtk: 'o ATK base'
 const CRIT_LABEL: Record<Crit, string> = { avg: 'Média com crítico', crit: 'Sempre crítico', noCrit: 'Sem crítico' };
 const CRIT_SHORT: Record<Crit, string> = { avg: 'Média', crit: 'Sempre', noCrit: 'Nunca' };
 /** Glifo da posição quando falta a imagem da peça. */
-const SLOT_GLYPH: Record<string, string> = { flower: '✿', plume: '✒', sands: '⌛', goblet: '♕', circlet: '♛' };
+const SLOT_GLYPH: Record<string, string> = { flower: '', plume: '', sands: '', goblet: '', circlet: '' };
 const TALENT_LABEL = { normal: 'Ataque normal', skill: 'Habilidade', burst: 'Supremo' } as const;
 
 interface UiState {
@@ -489,7 +489,7 @@ export function OtimizadorPanel({ index }: { index: number }) {
                 <div className="ot-sets">
                   {visibleSets.map((x) => (
                     <button key={x.key} type="button" className="ot-set" aria-pressed={!ui.offSets.includes(x.key)} onClick={() => setUi({ ...ui, offSets: toggle(ui.offSets, x.key) })} title={`${x.name}: ${x.count} peças`} aria-label={`${x.name}: ${x.count} peças`}>
-                      <Img src={x.id ? pieceIconUrl(x.id, 'flower') : undefined} fallback="◆" />
+                      <Img src={x.id ? pieceIconUrl(x.id, 'flower') : undefined} fallback="" />
                       <small className="num">{x.count}</small>
                     </button>
                   ))}

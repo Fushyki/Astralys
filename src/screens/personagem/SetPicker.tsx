@@ -12,7 +12,7 @@ export interface SetChoice {
 
 function Icon({ set }: { set: ArtifactSet }) {
   const [failed, setFailed] = useState(false);
-  return failed ? <b className="ph" aria-hidden="true">◆</b> : <img src={pieceIconUrl(set.id, 'flower')} alt="" loading="lazy" crossOrigin="anonymous" onError={() => setFailed(true)} />;
+  return failed ? <b className="ph" aria-hidden="true" /> : <img src={pieceIconUrl(set.id, 'flower')} alt="" loading="lazy" crossOrigin="anonymous" onError={() => setFailed(true)} />;
 }
 
 type Mode = 'four' | 'two-two';

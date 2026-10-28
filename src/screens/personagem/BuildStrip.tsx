@@ -153,7 +153,7 @@ export function BuildStrip({ data, index, member: memberRef, projectId, compact,
             <div className="phead"><span className="slot">Arma</span><em>R{refine}</em></div>
             <div className="pic">
               <span className="art info" role="button" tabIndex={0} aria-label={`Passiva e buff de ${memberRef.weapon}`} title="Ver a passiva e o buff da arma" onClick={openInfo} onKeyDown={onInfoKey}>
-                <Img src={weapon?.icon ? weaponIconUrl(weapon.icon) : undefined} fallback="⚔" />
+                <Img src={weapon?.icon ? weaponIconUrl(weapon.icon) : undefined} fallback="" />
               </span>
               <i className="stars" aria-label={`${weapon?.rarity ?? 5} estrelas`}>{'★'.repeat(weapon?.rarity ?? 5)}</i>
             </div>
@@ -171,7 +171,7 @@ export function BuildStrip({ data, index, member: memberRef, projectId, compact,
           </div>
         ) : (
           <button type="button" className="pc-weapon gear-tile" data-rarity={weapon?.rarity ?? 5} onClick={() => setPickWeapon(true)} aria-label={`Trocar a arma ${memberRef.weapon}`}>
-            <span className="art info" role="button" tabIndex={0} aria-label={`Passiva e buff de ${memberRef.weapon}`} title="Ver a passiva e o buff da arma" onClick={openInfo} onKeyDown={onInfoKey}><Img src={weapon?.icon ? weaponIconUrl(weapon.icon) : undefined} fallback="⚔" /></span>
+            <span className="art info" role="button" tabIndex={0} aria-label={`Passiva e buff de ${memberRef.weapon}`} title="Ver a passiva e o buff da arma" onClick={openInfo} onKeyDown={onInfoKey}><Img src={weapon?.icon ? weaponIconUrl(weapon.icon) : undefined} fallback="" /></span>
             <span className="lv num">Nv 90</span>
             <span className="rf num">R{refine}</span>
             <span className="n">{memberRef.weapon}</span>
@@ -204,7 +204,7 @@ export function BuildStrip({ data, index, member: memberRef, projectId, compact,
             }
             return (
               <button type="button" key={slot} className={`pc-piece gear-tile real${piece ? '' : ' empty'}`} data-rarity={piece?.rarity ?? 4} onClick={() => setPickPiece(slot)} aria-label={`${SLOT_LABEL[slot]}: ${piece ? (pset?.name ?? piece.setKey) : 'sem peça'}. Tocar para escolher do inventário`}>
-                <span className="art"><Img src={pset ? pieceIconUrl(pset.id, slot) : undefined} fallback={piece ? '◆' : '+'} /></span>
+                <span className="art"><Img src={pset ? pieceIconUrl(pset.id, slot) : undefined} fallback={piece ? '' : '+'} /></span>
                 {piece && main && <span className="lv num">+{main.level}</span>}
                 <span className="n">{SLOT_LABEL[slot]}</span>
                 <span className="main">{piece && main ? (MAIN_LABEL[main.key] ?? main.key) : 'Sem peça'}</span>
@@ -243,7 +243,7 @@ export function BuildStrip({ data, index, member: memberRef, projectId, compact,
       <div className="pc-passives">
         <section className="pc-pcard" aria-label="Passiva da arma">
           <header>
-            <span className="art sm"><Img src={weapon?.icon ? weaponIconUrl(weapon.icon) : undefined} fallback="⚔" /></span>
+            <span className="art sm"><Img src={weapon?.icon ? weaponIconUrl(weapon.icon) : undefined} fallback="" /></span>
             <div>
               <h3>{weapon?.passive?.name ?? 'Passiva da arma'}{weapon?.passive?.namePt && weapon.passive.namePt !== weapon.passive.name ? <small> · {weapon.passive.namePt}</small> : null}</h3>
               <span className="muted small">{memberRef.weapon}</span>
@@ -264,7 +264,7 @@ export function BuildStrip({ data, index, member: memberRef, projectId, compact,
 
         <section className="pc-pcard" aria-label="Bônus dos sets">
           <header>
-            <span className="art sm"><Img src={sets[0] ? pieceIconUrl(sets[0].id, 'flower') : undefined} fallback="◆" /></span>
+            <span className="art sm"><Img src={sets[0] ? pieceIconUrl(sets[0].id, 'flower') : undefined} fallback="" /></span>
             <div>
               <h3>{sets.length ? sets.map((x) => x.name).join(' + ') : 'Sem set'}</h3>
               <span className="muted small">{sets.length === 2 ? '2 + 2 peças' : fourPiece ? '4 peças' : sets.length ? '2 peças' : 'Nenhum set escolhido'}</span>
@@ -293,7 +293,7 @@ export function BuildStrip({ data, index, member: memberRef, projectId, compact,
       <div className="pc-passives">
         <section className="pc-pcard" aria-label="Passiva da arma">
           <header>
-            <span className="art sm"><Img src={weapon?.icon ? weaponIconUrl(weapon.icon) : undefined} fallback="⚔" /></span>
+            <span className="art sm"><Img src={weapon?.icon ? weaponIconUrl(weapon.icon) : undefined} fallback="" /></span>
             <div>
               <h3>{weapon?.passive?.name ?? 'Passiva da arma'}{weapon?.passive?.namePt && weapon.passive.namePt !== weapon.passive.name ? <small> · {weapon.passive.namePt}</small> : null}</h3>
               <span className="muted small">{memberRef.weapon}</span>
@@ -314,7 +314,7 @@ export function BuildStrip({ data, index, member: memberRef, projectId, compact,
 
         <section className="pc-pcard" aria-label="Bônus dos sets">
           <header>
-            <span className="art sm"><Img src={sets[0] ? pieceIconUrl(sets[0].id, 'flower') : undefined} fallback="◆" /></span>
+            <span className="art sm"><Img src={sets[0] ? pieceIconUrl(sets[0].id, 'flower') : undefined} fallback="" /></span>
             <div>
               <h3>{sets.length ? sets.map((x) => x.name).join(' + ') : 'Sem set'}</h3>
               <span className="muted small">{sets.length === 2 ? '2 + 2 peças' : fourPiece ? '4 peças' : sets.length ? '2 peças' : 'Nenhum set escolhido'}</span>

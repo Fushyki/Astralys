@@ -53,7 +53,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.click('.pc-views button:has-text("Otimizar")');
   await page.waitForSelector('.ot-top');
   check('abre o otimizador do Mavuika dentro da página dele', /aba=otimizar/.test(page.url()) && /Mavuika/.test(await page.textContent('.pc-tabs [aria-selected="true"]')));
-  check('a faixa do time tem 2 telas: Equipe, Rotação e buffs', (await page.$$eval('.dz-subnav nav a', (a) => a.map((x) => x.textContent.replace(/^\d · /, '').trim()))).join('|') === 'Equipe|Rotação e buffs');
+  check('a faixa do time tem 3 telas: Equipe, Personagens, Rotação e buffs', (await page.$$eval('.dz-subnav nav a', (a) => a.map((x) => x.textContent.replace(/^\d · /, '').trim()))).join('|') === 'Equipe|Personagens|Rotação e buffs');
   check('"O que otimizar" tem 3 escolhas: Dano, Buff e Stat', (await page.locator('.ot-seg[aria-label="O que otimizar"] button').count()) === 3 && (await page.getAttribute('.ot-seg[aria-label="O que otimizar"] button:has-text("Dano")', 'aria-pressed')) === 'true');
   check('em Dano há 3 alvos: rotação do time, só dele e um golpe do kit', (await page.$$eval('.ot-seg[aria-label="Dano de"] button', (b) => b.map((x) => x.textContent.trim()))).join('|') === 'Rotação do time|Só Mavuika|Um golpe');
 
@@ -201,7 +201,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.click('.pc-tabs a:has-text("Citlali")'); await page.waitForSelector('.ot-top');
   check('a configuração da Citlali fica guardada ao voltar', /77/.test(await page.textContent('.ot-minchip:has-text("Taxa crítica")')));
   await page.goto(`${BASE}/projeto/exemplo`, { waitUntil: 'networkidle' });
-  check('a barra de passos tem 3 passos', /Passo 2 de 3/.test(await page.textContent('.dz-stepbar')));
+  check('a barra de passos tem 3 passos', /Passo 1 de 3/.test(await page.textContent('.dz-stepbar')));
 
   // ---- Personagens ----
   await page.click('.dz-nav a:has-text("Personagens")');

@@ -176,6 +176,8 @@ export const ActionSchema = z.object({
   contributors: z.array(z.number().int().min(0)).max(4).optional(),
   /** Buffs de dano fixo que ESTE golpe não consome (ids `fonte|nome`). Por padrão o golpe consome todos os que servem a ele. */
   flatOff: z.array(z.string()).optional(),
+  /** Etiquetas de buff (faixas) que ESTE golpe ignora, mesmo dentro da janela delas (desligar um buff só para um golpe). */
+  tagsOff: z.array(z.string()).optional(),
   /** Instante da rotação, em segundos. */
   time: z.number().min(0),
   note: z.string().optional(),
@@ -796,7 +798,7 @@ export function resolveProject(project: RotationProject, data: GameData, effects
       move,
       executions: a.executions,
       reaction: a.reaction as ReactionChoice,
-      activeTags: a.tagSource === 'windows' ? tagsAt(project.buffWindows, a.time) : a.activeTags,
+      activeTags: (a.tagSource === 'windows' ? tagsAt(project.buffWindows, a.time) : a.activeTags).filter((t) => !a.tagsOff?.includes(t)),
       ...(a.tagSource === 'windows' ? { tagAges: tagAgesAt(project.buffWindows, a.time) } : {}),
       dmgAdjust: a.dmgAdjust,
       ...(a.contributors?.length ? { contributors: a.contributors } : {}),

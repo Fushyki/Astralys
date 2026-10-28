@@ -9,7 +9,7 @@ import { pointMoveOf, specialOfMove } from '../../engine/project';
 import { specialOfMoveRef } from '../../features/rotation/screenModel';
 import { REACTION_LABEL } from '../../features/character/characterModel';
 import { chainOf } from '../../features/rotation/projectOps';
-import { coveringBuffs, hitFigures } from '../../features/rotation/rotationModel';
+import { hitBuffRows, hitFigures } from '../../features/rotation/rotationModel';
 import { useRotationStore } from '../../features/rotation/store';
 import { formatInt, formatPercent } from '../../ui/format';
 import { Num, Sel, Seg, dec } from './ui';
@@ -60,7 +60,15 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
     setLength(meta ? Math.max(0.1, meta.until - (execs[0]?.time ?? action.time)) : 10);
   }, [chainId, meta?.every, meta?.until]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const covering = useMemo(() => (chainId || !result ? [] : coveringBuffs(project, v.resolved, v.bundle, action.id)), [project, v.resolved, v.bundle, action.id, chainId, result]);
+  const buffRows = useMemo(() => (result ? hitBuffRows(project, v.resolved, v.bundle, action.id) : []), [project, v.resolved, v.bundle, action.id, result]);
+  /** Liga ou desliga uma faixa de buff só para este golpe (ou para todas as execuções do contínuo). */
+  const toggleTag = (tag: string, on: boolean) => {
+    const cur = action.tagsOff ?? [];
+    const next = on ? cur.filter((t) => t !== tag) : [...cur, tag];
+    const patch = { tagsOff: next.length ? next : undefined };
+    if (chainId) setAll(patch);
+    else update(action.id, patch);
+  };
   const total = v.bundle.optimization.result.totals.avg;
   /** Dano médio de cada execução do golpe contínuo e a soma (cada execução é uma ação com o próprio instante, reação e buffs). */
   const execAvg = (id: string) => v.bundle.optimization.result.actions.find((r) => r.action.id === id)?.avg ?? 0;
@@ -114,6 +122,18 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
       ))}
     </div>
   ) : null;
+  const buffsSection = buffRows.length > 0 ? (
+    <div className="rt-bufs" role="group" aria-label="Buffs ligados neste golpe">
+      <span className="rt-lbl">Buffs neste golpe{chainId ? ' (todas as execuções)' : ''}</span>
+      {buffRows.map((b) => (
+        <label className="br" key={b.tag} data-off={!b.on}>
+          <input type="checkbox" checked={b.on} onChange={(e) => toggleTag(b.tag, e.target.checked)} aria-label={`${b.name} vale neste golpe`} />
+          <span className="n">{b.name}<small>{b.value}</small></span>
+          <span className="num v">{b.effect > 0.0005 ? `${b.on ? '+' : 'ganharia +'}${dec(b.effect * 100, 1)}%` : ''}</span>
+        </label>
+      ))}
+    </div>
+  ) : null;
 
   return (
     <>
@@ -162,6 +182,7 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
             </div>
           </div>
           {flatSection}
+          {buffsSection}
           <span className="rt-note">Cada ponto tem tempo e reação próprios. Ex.: Durin derrete 1 a cada 2. Na linha do tempo, o ponto cheio tem reação e o vazado não.</span>
         </>
       ) : (
@@ -213,11 +234,7 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
             </div>
           )}
           {flatSection}
-          {covering.length > 0 && (
-            <div className="rt-cov" aria-label="Buffs que cobrem este golpe">
-              {covering.slice(0, 8).map((c) => <span className="chip" key={c.id}>{c.name}<b>+{dec(c.loss * 100, 1)}%</b></span>)}
-            </div>
-          )}
+          {buffsSection}
         </>
       )}
 

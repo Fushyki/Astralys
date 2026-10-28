@@ -10,6 +10,7 @@ import {
   type AnalysisBundle,
   type ResolvedProject,
   type RotationProject,
+  tagsAt,
   type TeamBuff,
 } from '../../engine';
 import { deltaChips } from '../team/teamModel';
@@ -130,6 +131,50 @@ export function hitFigures(r: ActionResult): HitFigure[] {
   ];
   if (b.amp !== 1) out.push({ key: 'reaction', label: 'Reação', value: b.amp, unit: 'mult' });
   return out;
+}
+
+// ---------- Buffs ligados num golpe (para desligar só nele) ----------
+
+export interface HitBuffRow {
+  tag: string;
+  /** Quem dá e qual faixa ("Iansan · Scroll"). */
+  name: string;
+  /** Texto do efeito ("+40% DMG"). */
+  value: string;
+  /** Vale neste golpe (não foi desligado nele). */
+  on: boolean;
+  /** Ligado: quanto do dano do golpe some sem o buff. Desligado: quanto ele ganharia com o buff. */
+  effect: number;
+}
+
+/**
+ * Os buffs de time (faixas) que cobrem o golpe pelo tempo, ligados ou desligados só para ele (`ActionRef.tagsOff`), e o efeito de cada um
+ * no dano dele. Só entram as faixas que chegam ao personagem do golpe.
+ */
+export function hitBuffRows(project: RotationProject, resolved: ResolvedProject, bundle: AnalysisBundle, actionId: string): HitBuffRow[] {
+  const action = project.actions.find((a) => a.id === actionId);
+  const result = bundle.optimization.result.actions.find((a) => a.action.id === actionId);
+  if (!action || !result) return [];
+  const team = resolved.team;
+  const member = team.members[action.member]?.character.name;
+  const rolls = bundle.optimization.rolls;
+  const assembly = assembleTeam(team, { rolls });
+  const lanes = new Map(laneInfos(project, resolved).map((l) => [l.tag, l]));
+  const base = action.tagSource === 'windows' ? tagsAt(project.buffWindows, action.time) : action.activeTags;
+  const off = new Set(action.tagsOff ?? []);
+  const avgWith = (tags: string[]): number => {
+    const actions = resolved.actions.map((a) => (a.id === actionId ? { ...a, activeTags: tags } : a));
+    return evaluateRotation({ members: team.members, assembly, config: team.config, rolls, flatEffects: resolved.flatEffects, ampCoefficient: resolved.ampCoefficient }, actions).actions.find((x) => x.action.id === actionId)?.avg ?? 0;
+  };
+  const current = result.action.activeTags;
+  return base
+    .filter((tag) => assembly.buffs.some((b) => b.tag === tag && !b.always && (b.targets === 'all' || b.targets.includes(member))))
+    .map((tag) => {
+      const on = !off.has(tag);
+      const effect = result.avg <= 0 ? 0 : on ? Math.max(0, 1 - avgWith(current.filter((t) => t !== tag)) / result.avg) : Math.max(0, avgWith([...current, tag]) / result.avg - 1);
+      const lane = lanes.get(tag);
+      return { tag, name: lane?.source ?? tag, value: lane?.value ?? '', on, effect };
+    });
 }
 
 // ---------- Buffs que cobrem um golpe ----------

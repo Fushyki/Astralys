@@ -55,6 +55,14 @@ const num = (s) => Number(String(s).replace(/\./g, '').replace(',', '.'));
   check('selecionar mostra o golpe e o dano médio 1.239.638', /Supremo \(200 FS\)/.test(await panel('Golpe selecionado').locator('.rt-title b').textContent()) && (await page.textContent('[data-testid="hit-avg"]')) === '1.239.638');
   const cascade = await page.$$eval('.rt-figs .fig .k', (e) => e.map((x) => x.textContent));
   check('o golpe mostra os números pedidos', cascade.join() === 'Dano base,ATK,Proficiência,Taxa crítica,Dano crítico,Bônus de dano,DEF do inimigo,RES do inimigo,Reação', cascade.join());
+  // Desligar um buff só para este golpe
+  const hitAvg = async () => num(await page.textContent('[data-testid="hit-avg"]'));
+  const avgOn = await hitAvg();
+  check('o golpe lista os buffs que o cobrem pelo tempo, todos ligados', (await page.locator('.rt-bufs .br').count()) >= 3 && (await page.locator('.rt-bufs .br[data-off="true"]').count()) === 0);
+  await page.locator('.rt-bufs .br').first().locator('input').uncheck(); await settle();
+  check('desligar um buff neste golpe baixa o dano dele e a linha fica riscada', (await hitAvg()) < avgOn && (await page.locator('.rt-bufs .br[data-off="true"]').count()) === 1, `${avgOn} → ${await hitAvg()}`);
+  await page.keyboard.press('Control+z'); await settle();
+  check('Ctrl+Z religa o buff neste golpe', (await hitAvg()) === avgOn);
   const before = num(await dps());
   await panel('Golpe selecionado').locator('select[aria-label="Reação"]').selectOption('none'); await settle();
   check('trocar a reação para "Sem reação" reduz o DPS ao vivo', num(await dps()) < before * 0.8, `${before} → ${await dps()}`);

@@ -1,5 +1,5 @@
 /** Vault (/vault): todos os times criados, como cartões com a mesma cara dos cartões de personagem da Equipe. */
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AppHeader } from '../app/AppHeader';
 import '../design/design.css';
@@ -55,6 +55,13 @@ export default function Vault() {
   const [cardFormat, setCardFormatState] = useState<PosterFormat>(loadVaultCardFormat);
   const setCardFormat = (f: PosterFormat) => { setCardFormatState(f); saveVaultCardFormat(f); };
   const [notice, setNotice] = useState<string | null>(null);
+  /** Altura da janela: o card 9:16 não pode passar dela (senão a primeira linha fica cortada no fim da tela). */
+  const [viewH, setViewH] = useState(() => window.innerHeight);
+  useEffect(() => {
+    const on = () => setViewH(window.innerHeight);
+    window.addEventListener('resize', on);
+    return () => window.removeEventListener('resize', on);
+  }, []);
   /** Copia a imagem do card do time (no formato escolhido) para a área de transferência. */
   const copyCard = async (id: string, name: string) => {
     const el = document.querySelector<HTMLElement>(`.vt-card[data-id="${id}"] .pc`);
@@ -204,7 +211,7 @@ export default function Vault() {
             <p className="muted">{filtered ? 'Nenhum time bate com esses filtros.' : 'Crie um time ou importe uma planilha para começar.'}</p>
           </div>
         ) : (
-          <ul className={`dz-grid c3 vt-list${cardFormat === 'portrait' ? ' vt-two' : ''}`}>
+          <ul className={`dz-grid c3 vt-list${cardFormat === 'wide' ? ' vt-two' : ''}`}>
             {visible.map((p) => {
               const model = cards[p.id];
               const lead = p.members[0] ? elementColor(elementOf(p.members[0])) : '#e9c46a';
@@ -212,7 +219,7 @@ export default function Vault() {
                 <li key={p.id} className="vt-card" data-id={p.id} data-name={p.name} style={{ ['--c' as string]: lead }}>
                   <Link className="vt-poster" to={`/projeto/${p.id}`} aria-label={`Abrir ${p.name}`}>
                     {model && model !== 'error' ? (
-                      <ScaledPoster format={cardFormat}><PosterCard model={model} format={cardFormat} /></ScaledPoster>
+                      <ScaledPoster format={cardFormat} maxHeight={cardFormat === 'tall' ? Math.max(420, viewH - 290) : undefined}><PosterCard model={model} format={cardFormat} /></ScaledPoster>
                     ) : (
                       <div className="vt-wait" style={{ aspectRatio: `${POSTER_SIZE[cardFormat].w} / ${POSTER_SIZE[cardFormat].h}` }}>
                         <div className="vt-faces" aria-hidden="true">

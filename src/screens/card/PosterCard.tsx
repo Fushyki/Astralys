@@ -192,22 +192,25 @@ export function PosterCard({ model, format = 'portrait' }: { model: CardModel; f
 }
 
 /** Mostra o card escalado para caber na largura do contêiner (a imagem exportada continua no tamanho real). */
-export function ScaledPoster({ format, children }: { format: PosterFormat; children: ReactNode }) {
+/** `maxHeight` (px) também limita o tamanho: o card fica mais estreito, centralizado, em vez de passar do fim da tela. */
+export function ScaledPoster({ format, children, maxHeight }: { format: PosterFormat; children: ReactNode; maxHeight?: number }) {
   const { w, h } = POSTER_SIZE[format];
   const box = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
   useEffect(() => {
     const el = box.current;
     if (!el || typeof ResizeObserver === 'undefined') return;
-    const fit = () => setScale(Math.min(1, el.clientWidth / w));
+    const fit = () => setScale(Math.min(1, el.clientWidth / w, maxHeight ? maxHeight / h : Infinity));
     const ro = new ResizeObserver(fit);
     ro.observe(el);
     fit();
     return () => ro.disconnect();
-  }, [w]);
+  }, [w, h, maxHeight]);
   return (
     <div ref={box} className="pc-box" style={{ height: h * scale }}>
-      <div style={{ width: w, height: h, transform: `scale(${scale})`, transformOrigin: 'top left' }}>{children}</div>
+      <div style={{ width: w * scale, height: h * scale, margin: '0 auto' }}>
+        <div style={{ width: w, height: h, transform: `scale(${scale})`, transformOrigin: 'top left' }}>{children}</div>
+      </div>
     </div>
   );
 }

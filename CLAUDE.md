@@ -157,3 +157,10 @@ Plano completo: `C:\Users\dabiv\.claude\plans\hashed-nibbling-island.md`. Strix 
 - **Compartilhar rotação** (`features/rotation/share.ts`, `ShareDialog.tsx`): arquivo `.astralys-rotacao.json` com as partes escolhidas (rotação, cenário, buffs de teste, equipe); a rotação entra por NOME de personagem (`remapMemberId`). Arquivo com equipe vira time novo no Vault.
 - **Nível do personagem** (`MemberRef.level`, `data/levels.ts`, `scripts/sync-levels.ts` → `levels.json` do Genshin Optimizer): stats base em qualquer nível, ancorados no Lunaris no 90; ascensão = nº de limites 20/40/50/60/70/80 ≤ nível. Sem dados (Mitya, Valeriy) fica no 90. Nível da ARMA ainda fixo.
 - **Reação e crítico** compartilhados entre Resumo, Talentos, Avançado e Otimizar (`features/character/damageView.ts`); Avançado compara build atual × melhor/segunda melhor (`BuildCompare.tsx`, `optimizer/resultCache.ts`). Moonsign já vem ligado nos personagens Moonsign (`factionsOf`).
+
+
+## Atualizações de 28/10/2026
+- **Cards**: `features/card/cardModel.ts` monta `CardModel.lanes` (uma faixa por personagem; golpe contínuo = UMA entrada com início, fim e execuções; reações lançadas à mão não entram) e `sequence` na ordem real do tempo. `screens/card/RotationLanes.tsx` desenha a rotação (estrela = golpe, dourada = Supremo, barra = contínuo) e é usada nos 3 formatos: 4:5 (`PortraitCard`, constelação entre os retratos), 16:9 (`WideCard`) e 9:16 (`TallCard`, "Constelação": quadros 2×2, DPS num arco por participação, rotação com letras). O fundo do `.pc` é sólido (`--bg` não pode apontar para si mesmo: o PNG saía transparente).
+- **Rotação**: desligar um buff só para um golpe (`ActionRef.tagsOff`, lista em "Golpe selecionado"); dano de cada execução dos golpes contínuos; números do golpe (dano base, ATK, Proficiência, crítico, bônus, DEF e RES).
+- **Avançado**: clicar num golpe abre o cálculo do dano com a fonte de cada fator (`features/character/damageFormula.ts`).
+- **Otimizador**: `assembleTeam` uma vez por set e `StatsShare` em `evaluateRotation` (3 a 10× mais rápido).

@@ -74,11 +74,30 @@ describe('modelo do card infográfico', () => {
 describe('modelo do card para compartilhar', () => {
   const m = model();
 
-  it('mini linha do tempo: um ponto por golpe, de 0 a 1, com 4 Supremos marcados e o maior com peso 1', () => {
-    expect(m.timeline).toHaveLength(24);
-    expect(m.timeline.every((h) => h.at >= 0 && h.at <= 1 && h.weight > 0 && h.weight <= 1)).toBe(true);
-    expect(m.timeline.filter((h) => h.burst).length).toBeGreaterThanOrEqual(4);
-    expect(Math.max(...m.timeline.map((h) => h.weight))).toBe(1);
+  it('rotação: uma faixa por personagem, com os 24 golpes de 0 a 1, os Supremos marcados e o maior com peso 1', () => {
+    expect(m.lanes.map((l) => l.member)).toEqual([0, 1, 2, 3]);
+    const hits = m.lanes.flatMap((l) => l.hits);
+    expect(hits).toHaveLength(24);
+    expect(hits.every((h) => h.at >= 0 && h.at <= 1 && h.weight > 0 && h.weight <= 1)).toBe(true);
+    expect(hits.filter((h) => h.burst).length).toBeGreaterThanOrEqual(4);
+    expect(Math.max(...hits.map((h) => h.weight))).toBe(1);
+    // cada golpe está na faixa do próprio personagem
+    expect(m.lanes.every((l) => l.hits.every((h) => h.member === l.member))).toBe(true);
+  });
+
+  it('golpe contínuo vira UMA entrada (início, fim e execuções) e reação lançada à mão não entra', () => {
+    const c = model((p) => {
+      const mav = p.actions.filter((x) => x.member === 0).slice(0, 3);
+      mav.forEach((x, i) => { x.chainId = 'c9'; x.time = 2 + i; });
+      p.chains = { ...p.chains, c9: { every: 1, until: 4 } };
+      p.actions.push({ ...p.actions[0], id: 'rx', move: { character: 'Mavuika', talent: 'reaction', label: 'overloaded', variant: 0 }, time: 5 });
+    });
+    const hits = c.lanes.flatMap((l) => l.hits);
+    expect(hits).toHaveLength(24 - 3 + 1); // 3 execuções viram 1; a reação some
+    const chain = c.lanes[0].hits.find((h) => h.count === 3)!;
+    expect(chain.ticks).toHaveLength(3);
+    expect(chain.to!).toBeGreaterThan(chain.at);
+    expect(c.sequence).toMatch(/×3/);
   });
 
   it('reação principal, cor de destaque padrão e cores por membro (o 2º Pyro é mais escuro)', () => {

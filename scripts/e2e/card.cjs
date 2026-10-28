@@ -33,8 +33,8 @@ const pngSize = (file) => { const b = fs.readFileSync(file); return { w: b.readU
   check('abre em 4:5 (1080×1350)', (await page.locator('.pc').evaluate((e) => `${parseInt(e.style.width)}x${parseInt(e.style.height)}`)) === '1080x1350');
   const text = await page.textContent('.pc');
   check('o card mostra DPS 216.600 e 3,79 mi', text.includes('216.600') && text.includes('3,79 mi'), '');
-  check('mostra os 4 personagens e a reação (55% vem de Derreter)', ['Mavuika', 'Citlali', 'Iansan', 'Bennett'].every((n) => text.includes(n)) && /55%\s*vem de Derreter/.test(text));
-  check('mini linha do tempo com 24 golpes', (await page.locator('.pc-line span').count()) === 24);
+  check('mostra os 4 personagens e a reação (Derreter · 55% do dano)', ['Mavuika', 'Citlali', 'Iansan', 'Bennett'].every((n) => text.includes(n)) && /Derreter\s*·\s*55%\s*do dano/.test(text));
+  check('rotação em faixas: 4 personagens e 24 golpes (4+ Supremos em destaque)', (await page.locator('.pc-lanes text').allTextContents()).filter((x) => /^(MAVUIKA|CITLALI|IANSAN|BENNETT)$/.test(x)).length === 4 && (await page.locator('.pc-lanes [data-hit]').count()) === 24 && (await page.locator('.pc-lanes [data-burst]').count()) >= 4);
 
   await page.fill('.cd-form input[placeholder*="apelido" i], .cd-form input[placeholder^="Aparece"]', 'Davi');
   check('apelido aparece como "por Davi"', (await page.textContent('.pc-nick')) === 'por Davi');

@@ -27,14 +27,28 @@ export interface CardMember {
   color: string;
 }
 
-/** Um golpe na mini linha do tempo do card. */
+/** Um golpe (ou um golpe contínuo inteiro) na rotação do card. */
 export interface CardHit {
   /** Posição na rotação, de 0 a 1. */
   at: number;
+  /** Fim do golpe contínuo (0 a 1); ausente nos golpes únicos. */
+  to?: number;
+  /** Instante de cada execução de um golpe contínuo (0 a 1). */
+  ticks?: number[];
   member: number;
   /** Tamanho relativo ao maior golpe (0 a 1). */
   weight: number;
   burst: boolean;
+  /** Letra do golpe: N, CA, PA, E, Q... */
+  letter: string;
+  /** Execuções: 1 num golpe único, N num contínuo. */
+  count: number;
+}
+
+/** A rotação de um personagem: os golpes dele no tempo, na ordem real em que entram. */
+export interface CardLane {
+  member: number;
+  hits: CardHit[];
 }
 
 export interface CardModel {
@@ -45,7 +59,7 @@ export interface CardModel {
   dps: number;
   dpr: number;
   duration: number;
-  /** Sequência compacta, ex.: "Citlali E Q · Mavuika E CA×3 Q". */
+  /** Sequência compacta na ordem do tempo, ex.: "Citlali E Q · Mavuika E CA×3 Q"; golpe contínuo vira uma entrada só. */
   sequence: string;
   enemyLevel: number;
   nick: string;
@@ -53,7 +67,8 @@ export interface CardModel {
   characterLevel: number;
   /** Reação que mais rende dano (ex.: Derreter) e a fração do dano que ela responde. */
   reaction: { name: string; fraction: number } | null;
-  timeline: CardHit[];
+  /** Uma faixa por personagem, na ordem do time. */
+  lanes: CardLane[];
 }
 
 export const DEFAULT_BADGE = 'Theorycraft';
@@ -67,32 +82,56 @@ const abbr = (s: string) => MAIN_ABBR[s] ?? s;
 
 const HIT_LETTER = { normal: 'N', charged: 'CA', plunge: 'PA', skill: 'E', burst: 'Q', other: '+' } as const;
 
+/** Letra do golpe; null nos golpes que não são golpes da rotação (reação lançada à mão). */
+function letterOf(a: RotationProject['actions'][number], hitType: keyof typeof HIT_LETTER): string | null {
+  if (a.move.talent === 'reaction') return null;
+  if (/sprint|dash/i.test(a.move.label)) return 'Inv';
+  return HIT_LETTER[hitType];
+}
+
 /**
- * Letras dos golpes agrupadas por personagem na ordem do tempo: "Citlali E Q · Mavuika E CA CA Q".
- * Repetições seguidas do mesmo golpe viram "CA×3".
+ * Os golpes da rotação na ordem do tempo, como o jogador os fez: golpe contínuo (mesmo `chainId`) vira UMA entrada com o início, o fim
+ * e o instante de cada execução, e as reações lançadas à mão não entram (não são golpes).
  */
-export function sequenceText(project: RotationProject, hitTypeOf: (a: RotationProject['actions'][number]) => keyof typeof HIT_LETTER): string {
-  const ordered = [...project.actions].sort((a, b) => a.time - b.time);
-  const groups: { member: number; letters: string[] }[] = [];
+export function rotationHits(
+  project: RotationProject,
+  avgOf: (id: string) => number,
+  hitTypeOf: (a: RotationProject['actions'][number]) => keyof typeof HIT_LETTER,
+): CardHit[] {
+  const duration = Math.max(effectiveDuration(project), 0.1);
+  const at = (t: number) => Math.min(1, Math.max(0, t / duration));
+  const ordered = [...project.actions].sort((x, y) => x.time - y.time);
+  const biggest = Math.max(1, ...ordered.map((a) => avgOf(a.id)));
+  const seen = new Set<string>();
+  const out: CardHit[] = [];
   for (const a of ordered) {
-    const letter = HIT_LETTER[hitTypeOf(a)];
-    const last = groups[groups.length - 1];
-    if (last && last.member === a.member) last.letters.push(letter);
-    else groups.push({ member: a.member, letters: [letter] });
+    const hitType = hitTypeOf(a);
+    const letter = letterOf(a, hitType);
+    if (!letter) continue;
+    if (a.chainId) {
+      if (seen.has(a.chainId)) continue;
+      seen.add(a.chainId);
+      const run = ordered.filter((x) => x.chainId === a.chainId && letterOf(x, hitTypeOf(x)));
+      const last = run[run.length - 1];
+      out.push({ at: at(a.time), to: at(last.time), ticks: run.map((x) => at(x.time)), member: a.member, weight: Math.max(...run.map((x) => avgOf(x.id))) / biggest, burst: hitType === 'burst', letter, count: run.length });
+    } else {
+      out.push({ at: at(a.time), member: a.member, weight: avgOf(a.id) / biggest, burst: hitType === 'burst', letter, count: 1 });
+    }
   }
-  return groups
-    .map((g) => {
-      const parts: string[] = [];
-      for (const l of g.letters) {
-        const prev = parts[parts.length - 1];
-        const m = prev?.match(/^(\S+)×(\d+)$/);
-        if (m && m[1] === l) parts[parts.length - 1] = `${l}×${Number(m[2]) + 1}`;
-        else if (prev === l) parts[parts.length - 1] = `${l}×2`;
-        else parts.push(l);
-      }
-      return `${project.members[g.member]?.character ?? '?'} ${parts.join(' ')}`;
-    })
-    .join(' · ');
+  return out;
+}
+
+/** "Citlali E Q · Mavuika E×4 Q": golpes seguidos do mesmo personagem num grupo; a mesma letra em seguida vira ×N (contínuo conta as execuções). */
+export function sequenceOf(hits: readonly CardHit[], names: readonly string[]): string {
+  const groups: { member: number; parts: { letter: string; n: number }[] }[] = [];
+  for (const h of hits) {
+    let g = groups[groups.length - 1];
+    if (!g || g.member !== h.member) groups.push((g = { member: h.member, parts: [] }));
+    const p = g.parts[g.parts.length - 1];
+    if (p && p.letter === h.letter) p.n += h.count;
+    else g.parts.push({ letter: h.letter, n: h.count });
+  }
+  return groups.map((g) => `${names[g.member] ?? '?'} ${g.parts.map((p) => (p.n > 1 ? `${p.letter}×${p.n}` : p.letter)).join(' ')}`).join(' · ');
 }
 
 export function buildCardModel(
@@ -123,14 +162,9 @@ export function buildCardModel(
     };
   });
   const card = project.meta.card ?? {};
-  const duration = Math.max(effectiveDuration(project), 0.1);
-  const biggest = Math.max(1, ...result.actions.map((a) => a.avg));
-  const timeline: CardHit[] = result.actions.map((a) => ({
-    at: Math.min(1, Math.max(0, (a.action.time ?? 0) / duration)),
-    member: a.action.member,
-    weight: a.avg / biggest,
-    burst: a.action.move.hitType === 'burst',
-  }));
+  const avgById = new Map(result.actions.map((a) => [a.action.id, a.avg]));
+  const hits = rotationHits(project, (id) => avgById.get(id) ?? 0, hitTypeOf);
+  const lanes: CardLane[] = project.members.map((_, i) => ({ member: i, hits: hits.filter((h) => h.member === i) }));
   return {
     title: card.title?.trim() || project.name,
     badge: card.badge?.trim() ?? DEFAULT_BADGE,
@@ -139,13 +173,13 @@ export function buildCardModel(
     dps: result.totals.dps,
     dpr: result.totals.avg,
     duration: effectiveDuration(project),
-    sequence: sequenceText(project, hitTypeOf),
+    sequence: sequenceOf(hits, project.members.map((m) => m.character)),
     enemyLevel: project.config.enemyLevel,
     nick: card.nick?.trim() ?? '',
     accent: card.accent ?? DEFAULT_ACCENT,
     characterLevel: project.config.characterLevel,
     reaction: mainReaction(bundle),
-    timeline,
+    lanes,
   };
 }
 

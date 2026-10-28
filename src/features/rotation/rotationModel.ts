@@ -100,6 +100,38 @@ export function hitCascade(r: ActionResult): CascadeStep[] {
   return out;
 }
 
+/** Um número do golpe para mostrar no painel: `unit` diz como formatar (inteiro, percentual ou multiplicador). */
+export interface HitFigure {
+  key: string;
+  label: string;
+  value: number;
+  unit: 'int' | 'pct' | 'mult';
+}
+
+/** RES do inimigo que gerou o multiplicador (inverso de: <0 → 1−RES/2; <75% → 1−RES; senão 1/(4·RES+1)). */
+export function resFromMultiplier(mult: number): number {
+  if (mult > 1) return 2 * (1 - mult);
+  if (mult > 0.25) return 1 - mult;
+  return (1 / mult - 1) / 4;
+}
+
+/** Os números que importam num golpe: dano base, ATK, Proficiência, crítico, bônus de dano, DEF e RES do inimigo (e a reação, se houve). */
+export function hitFigures(r: ActionResult): HitFigure[] {
+  const b = r.breakdown;
+  const out: HitFigure[] = [
+    { key: 'base', label: 'Dano base', value: b.baseTotal, unit: 'int' },
+    { key: 'atk', label: 'ATK', value: r.stats.atk, unit: 'int' },
+    { key: 'em', label: 'Proficiência', value: r.stats.em, unit: 'int' },
+    { key: 'cr', label: 'Taxa crítica', value: r.critRate, unit: 'pct' },
+    { key: 'cd', label: 'Dano crítico', value: r.critDmg, unit: 'pct' },
+    { key: 'dmg', label: 'Bônus de dano', value: b.dmgMultiplier - 1, unit: 'pct' },
+    { key: 'def', label: 'DEF do inimigo', value: b.def, unit: 'pct' },
+    { key: 'res', label: 'RES do inimigo', value: resFromMultiplier(b.res), unit: 'pct' },
+  ];
+  if (b.amp !== 1) out.push({ key: 'reaction', label: 'Reação', value: b.amp, unit: 'mult' });
+  return out;
+}
+
 // ---------- Buffs que cobrem um golpe ----------
 
 export interface CoveringBuff {

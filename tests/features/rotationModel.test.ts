@@ -3,7 +3,7 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { analyzeProject, resolveProject, type EffectsData, type GameData } from '../../src/engine';
 import { sampleForApp } from '../../src/features/rotation/persistence';
-import { coveringBuffs, hitCascade, laneInfos } from '../../src/features/rotation/rotationModel';
+import { coveringBuffs, hitCascade, hitFigures, laneInfos, resFromMultiplier } from '../../src/features/rotation/rotationModel';
 
 const root = path.resolve(__dirname, '../..');
 const json = <T>(rel: string): T => JSON.parse(readFileSync(path.join(root, rel), 'utf8'));
@@ -97,5 +97,19 @@ describe('buffs que cobrem o golpe', () => {
 
   it('golpe inexistente devolve lista vazia', () => {
     expect(coveringBuffs(project, resolved, bundle, 'nao-existe')).toEqual([]);
+  });
+});
+
+describe('números do golpe', () => {
+  it('RES do inimigo: o inverso do multiplicador, nas 3 faixas', () => {
+    expect(resFromMultiplier(1.05)).toBeCloseTo(-0.1, 9); // RES -10%
+    expect(resFromMultiplier(0.9)).toBeCloseTo(0.1, 9); // RES 10%
+    expect(resFromMultiplier(1 / (4 * 0.9 + 1))).toBeCloseTo(0.9, 9); // RES 90%
+  });
+  it('mostra dano base, ATK, Proficiência, crítico, bônus, DEF e RES (e a reação, se houve)', () => {
+    const f = hitFigures(burst);
+    expect(f.slice(0, 8).map((x) => x.key)).toEqual(['base', 'atk', 'em', 'cr', 'cd', 'dmg', 'def', 'res']);
+    expect(f.find((x) => x.key === 'def')!.value).toBeCloseTo(0.487, 3);
+    expect(f.find((x) => x.key === 'dmg')!.value).toBeCloseTo(burst.breakdown.dmgMultiplier - 1, 9);
   });
 });

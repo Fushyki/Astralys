@@ -9,7 +9,7 @@ import { pointMoveOf, specialOfMove } from '../../engine/project';
 import { specialOfMoveRef } from '../../features/rotation/screenModel';
 import { REACTION_LABEL } from '../../features/character/characterModel';
 import { chainOf } from '../../features/rotation/projectOps';
-import { coveringBuffs, hitCascade } from '../../features/rotation/rotationModel';
+import { coveringBuffs, hitFigures } from '../../features/rotation/rotationModel';
 import { useRotationStore } from '../../features/rotation/store';
 import { formatInt, formatPercent } from '../../ui/format';
 import { Num, Sel, Seg, dec } from './ui';
@@ -197,14 +197,15 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
           {pointsSection}
           <Sel label="Elemento do dano" value={(action.element ?? '') as (typeof ELEMENTS)[number]} options={ELEMENTS.map((e) => ({ value: e, label: ELEMENT_LABEL[e] }))} onChange={(e) => update(action.id, { element: e === '' ? undefined : e })} />
           {result && (
-            <div className="rt-cascade" aria-label="Cascata de multiplicadores">
-              {hitCascade(result).map((s) => (
-                <div className="step" key={s.key}>
-                  <span className="k">{s.label}</span>
-                  <span className="num m">{s.factor === null ? '' : `×${dec(s.factor, 3)}`}</span>
-                  <span className="num v">{formatInt(s.value)}</span>
-                </div>
-              ))}
+            <div className="rt-cascade" aria-label="Números do golpe">
+              <div className="rt-figs">
+                {hitFigures(result).map((f) => (
+                  <div className="fig" key={f.key}>
+                    <span className="k">{f.label}</span>
+                    <span className="num v">{f.unit === 'int' ? formatInt(f.value) : f.unit === 'pct' ? `${dec(f.value * 100, 1)}%` : `×${dec(f.value, 2)}`}</span>
+                  </div>
+                ))}
+              </div>
               <div className="total">
                 <span className="rt-lbl">Dano médio · {formatPercent(total > 0 ? result.avg / total : 0)}</span>
                 <span className="num" data-testid="hit-avg">{formatInt(result.avg)}</span>

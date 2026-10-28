@@ -259,3 +259,7 @@
 
 .rt-exec .er .dmg { text-align: right; color: var(--text-hi); }
 .rt-two > .rt-fld { white-space: nowrap; }
+.rt-figs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--sp-3); }
+.rt-figs .fig { display: flex; align-items: baseline; justify-content: space-between; gap: var(--sp-2); min-width: 0; padding: 6px 0; border-bottom: 1px solid var(--line-0); font-size: var(--fs-2); }
+.rt-figs .k { color: var(--text-mid); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rt-figs .v { font-weight: 600; color: var(--text-hi); white-space: nowrap; }

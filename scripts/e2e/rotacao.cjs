@@ -53,8 +53,8 @@ const num = (s) => Number(String(s).replace(/\./g, '').replace(',', '.'));
   // ---- Selecionar golpe ----
   await page.locator('.rt-hit[aria-label*="Supremo (200 FS)"]').first().click({ force: true }); await settle();
   check('selecionar mostra o golpe e o dano médio 1.239.638', /Supremo \(200 FS\)/.test(await panel('Golpe selecionado').locator('.rt-title b').textContent()) && (await page.textContent('[data-testid="hit-avg"]')) === '1.239.638');
-  const cascade = await page.$$eval('.rt-cascade .step .k', (e) => e.map((x) => x.textContent));
-  check('cascata na ordem do mockup', cascade.join() === 'Dano base,Bônus de dano,DEF,RES,Reação,Crítico médio', cascade.join());
+  const cascade = await page.$$eval('.rt-figs .fig .k', (e) => e.map((x) => x.textContent));
+  check('o golpe mostra os números pedidos', cascade.join() === 'Dano base,ATK,Proficiência,Taxa crítica,Dano crítico,Bônus de dano,DEF do inimigo,RES do inimigo,Reação', cascade.join());
   const before = num(await dps());
   await panel('Golpe selecionado').locator('select[aria-label="Reação"]').selectOption('none'); await settle();
   check('trocar a reação para "Sem reação" reduz o DPS ao vivo', num(await dps()) < before * 0.8, `${before} → ${await dps()}`);

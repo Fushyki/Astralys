@@ -415,3 +415,23 @@
 /* aviso de build teórica */
 .pc-theory { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-3); padding: var(--sp-2) var(--sp-3); margin-bottom: var(--sp-2); border: 1px solid var(--border-ctl); border-radius: var(--r-inner); background: var(--surface-2); color: var(--text-2); font-size: var(--fs-2); }
 .pc-theory > span { flex: 1; min-width: 220px; }
+
+/* Cálculo do dano (Avançado): clicar num golpe abre a fórmula abaixo da linha */
+.pc-dmg .fx-row { cursor: pointer; }
+.pc-dmg .fx-row:hover td, .pc-dmg .fx-row[data-open='true'] td { background: var(--zebra); }
+.pc-dmg .fx-name { background: none; border: 0; padding: 0; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.pc-dmg .fx-name:hover { color: var(--gold-hi); }
+.pc-dmg .fx-detail > td { padding: 0; background: var(--bg-deep); }
+.fx-calc { display: flex; flex-direction: column; gap: var(--sp-3); padding: var(--sp-3) var(--sp-4); }
+.fx-calc .fx-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--sp-2); }
+.fx-calc .fx-acts { display: flex; gap: var(--sp-1); }
+.fx-calc .fx-expr { margin: 0; font-size: var(--fs-3); color: var(--text-hi); overflow-wrap: anywhere; }
+.fx-calc .fx-blocks { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: var(--sp-2); align-items: start; }
+.fx-calc details { border: 1px solid var(--line-2); border-radius: var(--r-inner); background: var(--panel-bg); min-width: 0; }
+.fx-calc summary { display: flex; justify-content: space-between; gap: var(--sp-2); padding: var(--sp-2) var(--sp-3); cursor: pointer; font: 700 var(--fs-3) var(--font-display); letter-spacing: .06em; text-transform: uppercase; color: var(--text-hi); }
+.fx-calc summary .num { color: var(--gold); white-space: nowrap; }
+.fx-calc .fx-sub { margin: 0; padding: 0 var(--sp-3) var(--sp-2); font-size: var(--fs-1); color: var(--text-soft); overflow-wrap: anywhere; }
+.fx-calc ul { list-style: none; margin: 0; padding: 0 var(--sp-3) var(--sp-2); }
+.fx-calc li { display: flex; justify-content: space-between; gap: var(--sp-2); padding: 4px 0; border-top: 1px solid var(--line-0); font-size: var(--fs-2); color: var(--text-mid); }
+.fx-calc li > span:first-child { min-width: 0; overflow-wrap: anywhere; }
+.fx-calc li .num { color: var(--text-hi); white-space: nowrap; }

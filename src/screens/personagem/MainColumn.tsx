@@ -1,6 +1,6 @@
 /** Coluna principal da calculadora: atributos, tabela de dano, reações do time e buffs recebidos. */
 import { useDamageView } from '../../features/character/damageView';
-import { useMemo, useState } from 'react';
+import { Fragment, useMemo, useState, type ReactNode } from 'react';
 import type { ProjectView } from '../../app/ProjectContext';
 import { Chip, Panel, Segmented } from '../../design/primitives';
 import { SUBSTATS, assembleTeam, damageTable, effectiveTalents, type ReactionChoice, type Substat } from '../../engine';
@@ -14,6 +14,7 @@ import {
 import { elementColor } from '../../design/elements';
 import { FamilyBadge, damageColor } from '../../design/damageFamily';
 import { useRotationStore } from '../../features/rotation/store';
+import { FormulaView } from './FormulaView';
 import { formatDecimal, formatInt, formatPercent } from '../../ui/format';
 
 export function Attributes({ v, index }: { v: ProjectView; index: number }) {
@@ -81,6 +82,8 @@ export function DamageTablePanel({ v, index }: { v: ProjectView; index: number }
   const options = reactionOptions(member.character.element, teamElements);
   const active = options.includes(reaction) ? reaction : 'none';
   const groups = useDamageGroups(v, index, active);
+  const assembly = useMemo(() => assembleTeam(v.resolved.team, { rolls: v.bundle.optimization.rolls }), [v.resolved.team, v.bundle.optimization.rolls]);
+  const [openId, setOpenId] = useState<string | null>(null);
 
   return (
     <Panel
@@ -101,27 +104,33 @@ export function DamageTablePanel({ v, index }: { v: ProjectView; index: number }
           </thead>
           <tbody>
             {groups.map((g) => (
-              <GroupRows key={g.talent} g={g} color={elementColor(member.character.element)} />
+              <GroupRows key={g.talent} g={g} color={elementColor(member.character.element)} openId={openId} onOpen={(id) => setOpenId(openId === id ? null : id)} calc={(l) => <FormulaView v={v} index={index} line={l} assembly={assembly} />} />
             ))}
           </tbody>
         </table>
       </div>
-      <p className="note">Uma execução de cada golpe, com o build e todos os buffs de time ativos. Não conta dano fixo de outros personagens.</p>
+      <p className="note">Uma execução de cada golpe, com o build e todos os buffs de time ativos. Não conta dano fixo de outros personagens. Clique num golpe para ver o cálculo.</p>
     </Panel>
   );
 }
 
-function GroupRows({ g, color }: { g: ReturnType<typeof moveGroups>[number]; color: string }) {
+function GroupRows({ g, color, openId, onOpen, calc }: { g: ReturnType<typeof moveGroups>[number]; color: string; openId: string | null; onOpen: (id: string) => void; calc: (l: ReturnType<typeof moveGroups>[number]['lines'][number]) => ReactNode }) {
   return (
     <>
       <tr className="grp"><td colSpan={4}>{g.title} · nv {g.level}</td></tr>
       {g.lines.map((l) => (
-        <tr key={l.id} style={{ ['--e' as string]: damageColor(l.element, l.special) ?? elementColor(l.element) ?? color }}>
-          <td className="el" title={l.special ? undefined : `Dano ${l.element === 'Physical' ? 'Físico' : l.element}`}>{l.name}{l.hits > 1 ? <span className="muted"> · {l.hits}×</span> : null} <FamilyBadge special={l.special} /></td>
-          <td>{formatInt(l.noCrit)}</td>
-          <td>{formatInt(l.crit)}</td>
-          <td className="avg">{formatInt(l.avg)}</td>
-        </tr>
+        <Fragment key={l.id}>
+          <tr className="fx-row" data-open={openId === l.id} onClick={() => onOpen(l.id)} style={{ ['--e' as string]: damageColor(l.element, l.special) ?? elementColor(l.element) ?? color }}>
+            <td className="el" title={l.special ? undefined : `Dano ${l.element === 'Physical' ? 'Físico' : l.element}`}>
+              <button type="button" className="fx-name" aria-expanded={openId === l.id} onClick={(e) => { e.stopPropagation(); onOpen(l.id); }}>{l.name}</button>
+              {l.hits > 1 ? <span className="muted"> · {l.hits}×</span> : null} <FamilyBadge special={l.special} />
+            </td>
+            <td>{formatInt(l.noCrit)}</td>
+            <td>{formatInt(l.crit)}</td>
+            <td className="avg">{formatInt(l.avg)}</td>
+          </tr>
+          {openId === l.id && <tr className="fx-detail"><td colSpan={4}>{calc(l)}</td></tr>}
+        </Fragment>
       ))}
     </>
   );

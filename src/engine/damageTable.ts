@@ -4,7 +4,7 @@
  */
 import type { Move } from '../data/schema';
 import type { ElementOrPhysical } from './constants/reactions';
-import { evaluateRotation, type DamageKind, type ExtraScale, type ReactionChoice, type ResolvedMove, type RotationAction, type RotationContext } from './rotation';
+import { evaluateRotation, type ActionResult, type DamageKind, type ExtraScale, type ReactionChoice, type ResolvedMove, type RotationAction, type RotationContext } from './rotation';
 import type { SpecialReaction } from './reactions';
 import { kitProcMoves, pointExtra, withSpecial } from './project';
 import type { Rolls } from './artifacts';
@@ -22,6 +22,8 @@ export interface DamageRow {
   kind: DamageKind;
   /** Reação Lunar/Estelar do golpe (ex.: lunarcharged), se for o caso. */
   special?: SpecialReaction;
+  /** O resultado completo do motor (stats, escala e fatores), para mostrar o cálculo. */
+  result: ActionResult;
 }
 
 export interface DamageTableInput {
@@ -80,6 +82,7 @@ export function damageTable(input: DamageTableInput): DamageRow[] {
     avg: r.avg,
     reactionApplied: r.breakdown.reactionApplied,
     kind: r.kind,
+    result: r,
     ...(r.action.move.special ? { special: r.action.move.special.reaction } : {}),
   }));
 }

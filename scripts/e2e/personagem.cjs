@@ -76,7 +76,7 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
   // Abas e cabeçalho
   const tabs = await page.$$eval('.pc-tabs a', (a) => a.map((x) => x.textContent));
   check('uma sub-aba por personagem com a % do dano', tabs.length === 4 && /Mavuika.*95,3%/.test(tabs[0]) && /Citlali.*2,7%/.test(tabs[1]), tabs.join(' | '));
-  check('a aba Equipe do time está marcada (o personagem fica dentro dela)', (await page.getAttribute('.dz-subnav a:has-text("Equipe")', 'aria-current')) === 'page');
+  check('a aba Personagens do time está marcada', (await page.getAttribute('.dz-subnav a:has-text("Personagens")', 'aria-current')) === 'page');
 
   // Atributos do gabarito
   const attrs = await page.locator('.db-panel:has(h3:text-is("Atributos"))').textContent();
@@ -90,6 +90,13 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
   const names = await page.$$eval('.pc-dmg tbody tr:not(.grp) td:first-child', (e) => e.map((x) => x.textContent.replace(/\s*·\s*\d+×$/, '').trim()));
   check('a tabela não tem nomes repetidos dentro do mesmo grupo', new Set(names).size >= names.length - 1, `${names.length} golpes`);
   check('as quedas viram "Queda (baixa altitude)" e "Queda (alta altitude)"', names.includes('Queda (baixa altitude)') && names.includes('Queda (alta altitude)'));
+  // Cálculo do dano: clicar num golpe abre a fórmula com os fatores
+  await page.click('.pc-dmg .fx-name >> text=Dano do supremo');
+  await page.waitForSelector('[data-testid="fx-expr"]');
+  check('clicar num golpe mostra a fórmula com o dano no fim', /^Base .* = [\d.]+$/.test(await page.textContent('[data-testid="fx-expr"]')), await page.textContent('[data-testid="fx-expr"]'));
+  check('o cálculo tem um bloco por fator (base, ATK, bônus, crítico, DEF, RES)', (await page.locator('.fx-calc details').count()) >= 8);
+  await page.click('.pc-dmg .fx-name >> text=Dano do supremo');
+  check('clicar de novo fecha o cálculo', (await page.locator('.fx-calc').count()) === 0);
   const groups = await page.$$eval('.pc-dmg tr.grp', (e) => e.map((x) => x.textContent));
   check('grupos com o nível do talento', groups.length === 3 && groups.every((g) => /nv 10/.test(g)), groups.join(' | '));
   const reactions = await page.$$eval('.dz-seg[aria-label="Reação da tabela de dano"] button', (b) => b.map((x) => x.textContent));

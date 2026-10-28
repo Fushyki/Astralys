@@ -16,7 +16,7 @@ import {
   type TeamBuff,
 } from '../../engine';
 import { deltaChips } from '../team/teamModel';
-import type { DamageRow } from '../../engine';
+import type { ActionResult, DamageRow } from '../../engine';
 import { stacksOf } from '../../engine';
 import { fourPieceActive } from '../../engine/stats';
 
@@ -38,6 +38,8 @@ export interface MoveLine {
   hitType: string;
   /** Reação Lunar/Estelar do golpe (undefined = dano elemental ou Físico comum). */
   special?: string;
+  /** Resultado do motor para o cálculo do dano. */
+  result: ActionResult;
 }
 
 export interface MoveGroup {
@@ -95,7 +97,7 @@ export function moveGroups(rows: DamageRow[], levels: Record<Talent, number>): M
     const lines: MoveLine[] = rows
       .map((r, i) => ({ r, name: finalNames[i] }))
       .filter(({ r }) => r.move.talent === talent)
-      .map(({ r, name }) => ({ id: r.move.id, name, hits: r.move.hits, noCrit: r.noCrit, crit: r.crit, avg: r.avg, reacted: r.reactionApplied, element: r.element, hitType: r.move.hitType, ...(r.special ? { special: r.special } : {}) }));
+      .map(({ r, name }) => ({ id: r.move.id, name, hits: r.move.hits, noCrit: r.noCrit, crit: r.crit, avg: r.avg, reacted: r.reactionApplied, element: r.element, hitType: r.move.hitType, result: r.result, ...(r.special ? { special: r.special } : {}) }));
     if (lines.length) groups.push({ talent, title: TALENT_TITLE[talent], level: levels[talent], lines });
   }
   return groups;

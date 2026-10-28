@@ -388,6 +388,13 @@ export function staticSources(m: MemberInput, member = 0): StatSource[] {
   return out;
 }
 
+/** Cópia de um bloco de stats (os mapas por tipo também), para somar mais um delta sem mexer no original. */
+export function cloneBlock(b: StatBlock): StatBlock {
+  const out = { ...b } as unknown as Record<string, unknown>;
+  for (const k of BY_TYPE_KEYS) out[k] = { ...(b as unknown as Record<string, object>)[k] };
+  return out as unknown as StatBlock;
+}
+
 export function foldSources(sources: readonly StatSource[]): StatBlock {
   const b = zeroBlock();
   for (const s of sources) addDelta(b, s.delta);

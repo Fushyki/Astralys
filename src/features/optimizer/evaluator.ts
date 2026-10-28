@@ -9,7 +9,11 @@ import type { Element } from '../../data/schema';
 import {
   activeTeamDelta,
   assembleTeam,
+  addDelta,
+  cloneBlock,
   foldSources,
+  type StatBlock,
+  type StatsShare,
   type TeamAssembly,
   applyFlatLevels,
   evaluateRotation,
@@ -113,7 +117,7 @@ export function createEvaluator(input: EvaluatorInput): Evaluator {
   const { resolved, member, game, effects } = input;
   const name = resolved.team.members[member].character.name;
   const rolls = input.rolls.map((r, i) => (i === member ? zeroRolls() : r));
-  const cache = new Map<string, { members: MemberInput[]; flat: ResolvedProject['flatEffects']; assembly?: TeamAssembly; moves?: Map<string, RotationAction | null> }>();
+  const cache = new Map<string, { members: MemberInput[]; flat: ResolvedProject['flatEffects']; assembly?: TeamAssembly; share?: StatsShare; baseStatics?: StatBlock; moves?: Map<string, RotationAction | null> }>();
 
   const forConfig = (config: SetConfig) => {
     const key = configKey(config);
@@ -151,8 +155,10 @@ export function createEvaluator(input: EvaluatorInput): Evaluator {
       hit.assembly ??= assembleTeam({ ...resolved.team, members: base.map((m, i) => (i === member ? { ...m, externalStats: {} } : m)) }, { rolls });
       const delta = vecToDelta(vec);
       const statics = hit.assembly.statics.slice();
-      statics[member] = foldSources([...hit.assembly.sources[member], { id: `m${member}:artifacts`, label: 'Artefatos (peças reais)', kind: 'main-stat', member, delta }]);
+      hit.baseStatics ??= foldSources(hit.assembly.sources[member]);
+      statics[member] = addDelta(cloneBlock(hit.baseStatics), delta);
       assembly = { ...hit.assembly, statics };
+      hit.share ??= { volatile: member, team: new Map(), final: new Map() };
     }
     const t1 = now();
     const stats = finalStats(mine, assembly.statics[member], zeroRolls(), activeTeamDelta(assembly.buffs, name, new Set<string>()), assembly.resonanceAtkPct);
@@ -179,7 +185,7 @@ export function createEvaluator(input: EvaluatorInput): Evaluator {
 
   const rotation = (r: ReturnType<typeof run>) =>
     evaluateRotation(
-      { members: r.members, assembly: r.assembly, config: r.team.config, rolls, flatEffects: r.flat, ampCoefficient: resolved.ampCoefficient },
+      { members: r.members, assembly: r.assembly, config: r.team.config, rolls, flatEffects: r.flat, ampCoefficient: resolved.ampCoefficient, shared: r.hit.share },
       resolved.actions,
     );
 
@@ -194,7 +200,7 @@ export function createEvaluator(input: EvaluatorInput): Evaluator {
       r.hit.moves.set(mk, action);
     }
     if (!action) return 0;
-    const res = evaluateRotation({ members: r.members, assembly: r.assembly, config: r.team.config, rolls, ampCoefficient: resolved.ampCoefficient }, [action]).actions[0];
+    const res = evaluateRotation({ members: r.members, assembly: r.assembly, config: r.team.config, rolls, ampCoefficient: resolved.ampCoefficient, shared: r.hit.share }, [action]).actions[0];
     return o.crit === 'crit' ? res.crit : o.crit === 'noCrit' ? res.noCrit : res.avg;
   };
 

@@ -12,7 +12,7 @@ import { computeHit, type EnemyStats, type HitBreakdown } from './damage';
 import { critFactor } from './formulas';
 import { computeLunarReaction, computeSpecial, computeStellarSwirlReaction, computeTransformative, type SpecialBreakdown } from './reactions';
 import type { Rolls } from './artifacts';
-import { activeTeamDelta, finalStats, hitDmgBonus, type FinalStats, type MemberInput } from './stats';
+import { activeTeamDelta, finalStats, hitDmgBonus, type FinalStats, type MemberInput, type StatBlock, type TeamBuff } from './stats';
 import type { GlobalConfig, TeamAssembly } from './team';
 
 export type ReactionChoice = 'none' | AmplifyingReaction | AdditiveReaction;
@@ -96,7 +96,40 @@ export interface RotationContext {
   flatEffects?: FlatDamageEffect[];
   /** Coeficiente de EM das amplificadoras (padrão 25/9; a planilha usa 2,78). */
   ampCoefficient?: number;
+  /** Cache de stats entre avaliações da MESMA montagem do time (o otimizador de artefatos); ver `StatsShare`. */
+  shared?: StatsShare;
 }
+
+/**
+ * Stats por (membro, etiquetas ativas) guardados entre avaliações quando só um membro (`volatile`, o das peças testadas) muda: a parte
+ * dos buffs de time vale para todos, e os stats finais dos outros membros também. Só vale com a mesma `assembly` em todas as chamadas.
+ */
+export interface StatsShare {
+  volatile: number;
+  team: Map<string, StatBlock>;
+  final: Map<string, FinalStats>;
+}
+
+/** Chave e conjunto das etiquetas de uma ação, feitos uma vez (a lista não muda depois de resolvida). */
+const TAGS_CACHE = new WeakMap<readonly string[], { len: number; key: string; id: number; set: ReadonlySet<string> }>();
+/** Cada combinação de etiquetas ganha um número curto: a chave do cache fica pequena em vez de uma string de centenas de letras. */
+const TAG_IDS = new Map<string, number>();
+function tagsOf(list: readonly string[]): { key: string; id: number; set: ReadonlySet<string> } {
+  let hit = TAGS_CACHE.get(list);
+  if (!hit || hit.len !== list.length) {
+    const key = [...list].sort().join(',');
+    let id = TAG_IDS.get(key);
+    if (id === undefined) TAG_IDS.set(key, (id = TAG_IDS.size));
+    hit = { len: list.length, key, id, set: new Set(list) };
+    TAGS_CACHE.set(list, hit);
+  }
+  return hit;
+}
+
+/** Etiquetas que caem com o tempo, por lista de buffs (a lista é a mesma em todas as avaliações de uma montagem). */
+const DECAY_CACHE = new WeakMap<readonly TeamBuff[], Set<string>>();
+/** Idades vivas das etiquetas que decaem, por (idades da ação, conjunto de etiquetas que decaem). */
+const LIVE_CACHE = new WeakMap<object, { dec: Set<string>; tags: number; live: Record<string, number>; key: string }>();
 
 export interface ActionResult {
   action: RotationAction;
@@ -281,15 +314,37 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
   const names = members.map((m) => m.character.name);
 
   const cache = new Map<string, FinalStats>();
-  const decaying = new Set(assembly.buffs.filter((b) => b.decay).map((b) => b.tag));
-  const statsFor = (member: number, tags: ReadonlySet<string> | 'all', ages?: Readonly<Record<string, number>>): FinalStats => {
+  let decaying = DECAY_CACHE.get(assembly.buffs);
+  if (!decaying) DECAY_CACHE.set(assembly.buffs, (decaying = new Set(assembly.buffs.filter((b) => b.decay).map((b) => b.tag))));
+  const dec = decaying;
+  const statsFor = (member: number, tags: ReadonlySet<string> | 'all', ages?: Readonly<Record<string, number>>, tg?: { key: string; id: number }): FinalStats => {
     // Só as idades das etiquetas que caem com o tempo entram na chave (e no cálculo).
-    const live = tags === 'all' || !ages ? undefined : Object.fromEntries([...tags].filter((t) => decaying.has(t) && ages[t] !== undefined).map((t) => [t, Math.round(ages[t] * 100) / 100]));
-    const key = `${member}|${tags === 'all' ? '*' : [...tags].sort().join(',')}|${live ? JSON.stringify(live) : ''}`;
+    let live: Record<string, number> | undefined;
+    let liveKey = '';
+    if (tags !== 'all' && ages && dec.size > 0) {
+      const cached = tg ? LIVE_CACHE.get(ages) : undefined;
+      if (cached && cached.dec === dec && cached.tags === tg!.id) ({ live, key: liveKey } = cached);
+      else {
+        live = Object.fromEntries([...tags].filter((t) => dec.has(t) && ages[t] !== undefined).map((t) => [t, Math.round(ages[t] * 100) / 100]));
+        liveKey = JSON.stringify(live);
+        if (tg) LIVE_CACHE.set(ages, { dec, tags: tg.id, live, key: liveKey });
+      }
+    }
+    const key = `${member}|${tags === 'all' ? '*' : tg ? tg.id : [...tags].sort().join(',')}|${liveKey}`;
     let s = cache.get(key);
     if (!s) {
-      const team = activeTeamDelta(assembly.buffs, names[member], tags, undefined, live);
-      s = finalStats(members[member], assembly.statics[member], ctx.rolls[member], team, assembly.resonanceAtkPct);
+      const sh = ctx.shared;
+      const stable = !!sh && member !== sh.volatile;
+      s = stable ? sh!.final.get(key) : undefined;
+      if (!s) {
+        let team = sh?.team.get(key);
+        if (!team) {
+          team = activeTeamDelta(assembly.buffs, names[member], tags, undefined, live);
+          sh?.team.set(key, team);
+        }
+        s = finalStats(members[member], assembly.statics[member], ctx.rolls[member], team, assembly.resonanceAtkPct);
+        if (stable) sh!.final.set(key, s);
+      }
       cache.set(key, s);
     }
     return s;
@@ -341,8 +396,9 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
   const results: ActionResult[] = actions.map((action, idx) => {
     const member = members[action.member];
     const move = action.move;
-    const tags = new Set(action.activeTags);
-    const stats = statsFor(action.member, tags, action.tagAges);
+    const tg = tagsOf(action.activeTags);
+    const tags = tg.set;
+    const stats = statsFor(action.member, tags, action.tagAges, tg);
     const enemy: EnemyStats = {
       level: config.enemyLevel,
       res: assembly.enemyRes,
@@ -360,7 +416,7 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
         // Reação do time: cada contribuinte vale por si (EM e crítico próprios) e o total é a soma ponderada 1 + 1/2 + 1/12 + 1/12.
         const who = [...new Set(action.contributors?.length ? action.contributors : defaultContributors(members.map((m) => m.character.element), move.label, action.member))].filter((i) => i >= 0 && i < members.length).slice(0, CONTRIBUTOR_WEIGHTS.length);
         const each = who.map((i) => {
-          const st = statsFor(i, tags, action.tagAges);
+          const st = statsFor(i, tags, action.tagAges, tg);
           const en: EnemyStats = { ...enemy, defIgnore: Math.min(1, (config.enemyDefIgnore ?? 0) + (st.defIgnore ?? 0)) };
           const x = reactionAction({ move, executions: 1, ownElement: members[i].character.element, stats: st, scale, characterLevel: members[i].level ?? config.characterLevel, enemy: en });
           const n = x.breakdown.total * REACTION_COEF_FACTOR;

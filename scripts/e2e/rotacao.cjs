@@ -66,7 +66,7 @@ const num = (s) => Number(String(s).replace(/\./g, '').replace(',', '.'));
 
   // ---- Inserir em ordem ----
   const n0 = (await hits()).length;
-  const nextVal = async () => parseFloat((await page.locator('.rt-mv-box .rt-fld:has-text("Próximo golpe entra em") .rt-inp').textContent()).replace(',', '.'));
+  const nextVal = async () => parseFloat((await page.locator('.rt-mv-box .rt-fld:has-text("Próximo entra em") .rt-inp').textContent()).replace(',', '.'));
   const nextTxt = await nextVal();
   await page.click('.rt-tabs button:has-text("Bennett")');
   for (let i = 0; i < 3; i++) { await page.click('.rt-mvgroup .rt-mv >> nth=0'); await page.waitForTimeout(150); }

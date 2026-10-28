@@ -23,7 +23,7 @@ function modelOf(id: string | null, data: LoadedData): CardModel | { error: stri
   try {
     const r = resolveProject(p, data.game, data.effects);
     const b = analyzeProject({ team: r.team, actions: r.actions, flatEffects: r.flatEffects, ampCoefficient: r.ampCoefficient });
-    return buildCardModel(p, b, data.game.characters, hitTypeLookup(r));
+    return buildCardModel(p, b, data.game.characters, hitTypeLookup(r), data.game.artifacts);
   } catch (e) {
     return { error: e instanceof Error ? e.message : String(e) };
   }

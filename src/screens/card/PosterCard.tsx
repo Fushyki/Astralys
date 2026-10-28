@@ -5,7 +5,7 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import type { CardModel } from '../../features/card/cardModel';
 import { compact, formatDecimal, formatPercent } from '../../ui/format';
-import { Donut, Face, Strip, css, thousands } from './cardParts';
+import { Donut, Face, GearLine, Strip, css, thousands } from './cardParts';
 import { RotationLanes, starPath } from './RotationLanes';
 import { TallCard } from './TallCard';
 import './card.css';
@@ -49,6 +49,7 @@ function WideCard({ model }: { model: CardModel }) {
               <div className="pw-cap">
                 <span className="n">{m.name}</span>
                 <span className="w">{m.weapon}</span>
+                <GearLine gear={m.gear} />
                 <span className="s num">{formatPercent(m.share, 0)} do dano</span>
               </div>
             </div>
@@ -147,6 +148,7 @@ function PortraitCard({ model }: { model: CardModel }) {
             <Face name={m.name} icon={m.icon} color={m.color} />
             <span className="n">{m.name}</span>
             <span className="w">{m.weapon}</span>
+            <GearLine gear={m.gear} />
             <span className="sh num" style={css({ '--c': m.color })}>{formatPercent(m.share, m.share < 0.1 ? 1 : 0)}</span>
           </div>
         ))}
@@ -176,7 +178,7 @@ function PortraitCard({ model }: { model: CardModel }) {
 
       <footer className="pc-foot">
         <div className="pc-rothead"><span className="k">Rotação</span><i /></div>
-        <RotationLanes model={model} width={w - 144} rowH={42} labelW={142} labelSize={19} />
+        <RotationLanes model={model} width={w - 144} rowH={38} labelW={142} labelSize={18} />
         <div className="pc-seq"><span>{model.sequence}</span></div>
       </footer>
     </article>

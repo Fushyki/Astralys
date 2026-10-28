@@ -34,6 +34,8 @@ const pngSize = (file) => { const b = fs.readFileSync(file); return { w: b.readU
   const text = await page.textContent('.pc');
   check('o card mostra DPS 216.600 e 3,79 mi', text.includes('216.600') && text.includes('3,79 mi'), '');
   check('mostra os 4 personagens e a reação (Derreter · 55% do dano)', ['Mavuika', 'Citlali', 'Iansan', 'Bennett'].every((n) => text.includes(n)) && /Derreter\s*·\s*55%\s*do dano/.test(text));
+  const gear = await page.locator('.pc .gl').allInnerTexts();
+  check('cada personagem mostra o set de artefatos que usa (ex.: Obsidian Codex 4p)', gear.length === 4 && gear.some((g) => /Obsidian Codex\s*4p/.test(g.replace(/\n/g, ' '))), gear.join(' | ').replace(/\n/g, ' '));
   check('rotação em faixas: 4 personagens e 24 golpes (4+ Supremos em destaque)', (await page.locator('.pc-lanes text').allTextContents()).filter((x) => /^(MAVUIKA|CITLALI|IANSAN|BENNETT)$/.test(x)).length === 4 && (await page.locator('.pc-lanes [data-hit]').count()) === 24 && (await page.locator('.pc-lanes [data-burst]').count()) >= 4);
 
   await page.fill('.cd-form input[placeholder*="apelido" i], .cd-form input[placeholder^="Aparece"]', 'Davi');

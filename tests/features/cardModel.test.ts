@@ -25,7 +25,7 @@ const model = (mutate?: (p: ReturnType<typeof sampleProject>) => void) => {
   mutate?.(p);
   const resolved = resolveProject(p, game, effects);
   const bundle = analyzeProject({ team: resolved.team, actions: resolved.actions, flatEffects: resolved.flatEffects, ampCoefficient: resolved.ampCoefficient });
-  return buildCardModel(p, bundle, game.characters, hitTypeLookup(resolved));
+  return buildCardModel(p, bundle, game.characters, hitTypeLookup(resolved), game.artifacts);
 };
 
 describe('modelo do card infográfico', () => {
@@ -113,5 +113,21 @@ describe('modelo do card para compartilhar', () => {
     const c = model((p) => { p.meta.card = { nick: ' Davi ', accent: '#8fd3e8' }; });
     expect(c.nick).toBe('Davi');
     expect(c.accent).toBe('#8fd3e8');
+  });
+});
+
+describe('artefatos no card', () => {
+  const m = model();
+  it('set sozinho = 4 peças; dois sets = 2 + 2', () => {
+    expect(m.members[0].gear).toEqual([{ name: 'Obsidian Codex', id: expect.any(Number), count: 4 }]);
+    const c = model((p) => { p.members[0] = { ...p.members[0], primarySet: 'Obsidian Codex', secondarySet: 'Gladiator\'s Finale' }; });
+    expect(c.members[0].gear.map((g) => [g.name, g.count])).toEqual([['Obsidian Codex', 2], ["Gladiator's Finale", 2]]);
+  });
+  it('com peças reais, conta as peças de cada set e ignora set com 1 peça', () => {
+    const slot = ['flower', 'plume', 'sands', 'goblet', 'circlet'] as const;
+    const c = model((p) => {
+      p.members[0] = { ...p.members[0], primarySet: undefined, secondarySet: undefined, pieces: slot.map((s, i) => ({ setKey: i < 4 ? 'ObsidianCodex' : 'GoldenTroupe', slotKey: s, rarity: 5, level: 20, mainStatKey: 'hp', substats: [], location: '' })) as never };
+    });
+    expect(c.members[0].gear.map((g) => [g.name, g.count])).toEqual([['Obsidian Codex', 4]]);
   });
 });

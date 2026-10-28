@@ -2,10 +2,18 @@
  * Modelo do card infográfico: reduz um projeto + sua análise aos números e textos que o card mostra
  * (participação de cada personagem no dano, builds, DPS/DPR e a sequência de golpes). Função pura.
  */
-import type { Character } from '../../data/schema';
-import { effectiveDuration, type AnalysisBundle, type ResolvedProject, type RotationProject } from '../../engine';
+import type { ArtifactSet, Character } from '../../data/schema';
+import { effectiveDuration, type AnalysisBundle, type MemberRef, type ResolvedProject, type RotationProject } from '../../engine';
+import { norm } from '../good/goodImport';
 import { memberColors } from '../../design/elements';
 import { mainReaction } from '../team/teamModel';
+
+/** Um set de artefatos que o personagem usa: o nome, o id (para a imagem) e quantas peças valem (2 ou 4). */
+export interface CardSet {
+  name: string;
+  id: number;
+  count: 2 | 4;
+}
 
 export interface CardMember {
   name: string;
@@ -17,6 +25,8 @@ export interface CardMember {
   avg: number;
   weapon: string;
   sets: string[];
+  /** Sets em uso com a contagem de peças (4 peças, ou 2 + 2); vem das peças reais do inventário quando o personagem as usa. */
+  gear: CardSet[];
   /** "ATK / DMG / CD": areia, cálice e tiara. */
   mains: string;
   /** Recarga de Energia final do build, em fração (1,11 = 111%). */
@@ -134,11 +144,34 @@ export function sequenceOf(hits: readonly CardHit[], names: readonly string[]): 
   return groups.map((g) => `${names[g.member] ?? '?'} ${g.parts.map((p) => (p.n > 1 ? `${p.letter}×${p.n}` : p.letter)).join(' ')}`).join(' · ');
 }
 
+/**
+ * Os sets que o personagem usa. Com peças reais (MemberRef.pieces) conta as peças de cada set (só 2 ou mais valem); sem elas, vem do
+ * set escolhido no build: um set sozinho = 4 peças (2 se o 4 peças está desligado), dois sets = 2 + 2.
+ */
+export function gearOf(ref: MemberRef, artifacts: readonly ArtifactSet[]): CardSet[] {
+  const find = (name: string) => artifacts.find((a) => norm(a.name) === norm(name));
+  const out: CardSet[] = [];
+  const push = (set: ArtifactSet | undefined, n: number) => {
+    if (set && n >= 2) out.push({ name: set.name, id: set.id, count: n >= 4 ? 4 : 2 });
+  };
+  if (ref.pieces?.length) {
+    const counts = new Map<string, number>();
+    for (const p of ref.pieces) counts.set(norm(p.setKey), (counts.get(norm(p.setKey)) ?? 0) + 1);
+    [...counts.entries()].sort((a, b) => b[1] - a[1]).forEach(([key, n]) => push(artifacts.find((a) => norm(a.name) === key), n));
+    return out;
+  }
+  const second = ref.secondarySet ? find(ref.secondarySet) : undefined;
+  if (ref.primarySet) push(find(ref.primarySet), second || ref.fourPiece === false ? 2 : 4);
+  if (second) push(second, 2);
+  return out;
+}
+
 export function buildCardModel(
   project: RotationProject,
   bundle: AnalysisBundle,
   characters: readonly Character[],
   hitTypeOf: (a: RotationProject['actions'][number]) => keyof typeof HIT_LETTER,
+  artifacts: readonly ArtifactSet[] = [],
 ): CardModel {
   const result = bundle.optimization.result;
   const colors = memberColors(project.members.map((m) => characters.find((x) => x.name === m.character)?.element));
@@ -154,6 +187,7 @@ export function buildCardModel(
       avg: totals?.avg ?? 0,
       weapon: m.weapon,
       sets: [m.primarySet, m.secondarySet].filter((s): s is string => !!s),
+      gear: gearOf(m, artifacts),
       mains: [abbr(m.artifacts.sands), abbr(m.artifacts.goblet), abbr(m.artifacts.circlet)].join(' / '),
       er: stats?.er ?? 1,
       critRate: stats?.critRate ?? 0,

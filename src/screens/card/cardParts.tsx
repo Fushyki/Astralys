@@ -1,6 +1,8 @@
 /** Peças compartilhadas pelos cards: retrato, faixa alta, rosca de participação e formatadores. */
 import { useState, type CSSProperties } from 'react';
+import { pieceIconUrl } from '../../design/images';
 import { faceIconUrl } from '../../design/primitives';
+import type { CardSet } from '../../features/card/cardModel';
 import { formatDecimal } from '../../ui/format';
 
 export const css = (vars: Record<string, string | number>): CSSProperties => vars as CSSProperties;
@@ -41,5 +43,27 @@ export function Donut({ parts, size }: { parts: { share: number; color: string }
         return el;
       })}
     </svg>
+  );
+}
+
+/** Imagem do set (a flor dele no Lunaris); some se não carregar. */
+function SetIcon({ id }: { id: number }) {
+  const [failed, setFailed] = useState(false);
+  return failed ? null : <img src={pieceIconUrl(id, 'flower')} alt="" crossOrigin="anonymous" onError={() => setFailed(true)} />;
+}
+
+/** Os artefatos do personagem: um item por set, com a imagem, o nome e as peças ("Obsidian Codex 4p"; "2p + 2p" quando são dois). */
+export function GearLine({ gear }: { gear: readonly CardSet[] }) {
+  if (gear.length === 0) return <span className="gl none">Sem set de artefatos</span>;
+  return (
+    <span className="gl" aria-label="Artefatos">
+      {gear.map((g) => (
+        <span className="it" key={g.id}>
+          <SetIcon id={g.id} />
+          <span className="nm">{g.name}</span>
+          <b>{g.count}p</b>
+        </span>
+      ))}
+    </span>
   );
 }

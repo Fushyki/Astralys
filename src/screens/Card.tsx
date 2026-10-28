@@ -29,7 +29,7 @@ export default function Card() {
   const analysis = useAnalysis(project, data);
 
   const model = useMemo(
-    () => (project && data && analysis.status === 'ready' ? buildCardModel(project, analysis.bundle, data.game.characters, hitTypeLookup(analysis.resolved)) : null),
+    () => (project && data && analysis.status === 'ready' ? buildCardModel(project, analysis.bundle, data.game.characters, hitTypeLookup(analysis.resolved), data.game.artifacts) : null),
     [project, data, analysis],
   );
 

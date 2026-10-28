@@ -82,7 +82,7 @@
 .pc-wide .pc-line span { top: 20px; }
 
 /* 4:5 (padrão): chips, constelação entre os retratos e participação com estrela */
-.pc-portrait { gap: 28px; padding: 56px 72px 52px; }
+.pc-portrait { gap: 22px; padding: 50px 72px 44px; }
 .pc-portrait .pc-title { gap: 10px; }
 .pc-portrait .pc-title h1 { font-size: 84px; }
 .pc-portrait .pc-title h1.long { font-size: 62px; }
@@ -112,6 +112,7 @@
 .tc-title { display: flex; flex-direction: column; gap: 10px; }
 .tc-title h1 { margin: 0; font-family: 'Saira Condensed', sans-serif; font-weight: 700; font-size: 104px; line-height: .92; letter-spacing: .01em; overflow-wrap: anywhere; }
 .tc-title h1.long { font-size: 76px; }
+.tc-title h1.xlong { font-size: 60px; }
 .tc-members { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 .tc-tile { position: relative; height: 290px; border-radius: 22px; overflow: hidden; background: linear-gradient(160deg, #1a2247, #0c1128); border: 1px solid var(--line); border-bottom: 6px solid var(--c); }
 .tc-tile .pw-img { left: auto; right: 0; width: 58%; object-position: center 20%; -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 38%); mask-image: linear-gradient(90deg, transparent 0, #000 38%); }
@@ -139,3 +140,17 @@
 .tc-seq { margin: 0; font-size: 17px; line-height: 1.35; color: var(--muted); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 
 .pc-box { width: 100%; max-width: 100%; overflow: hidden; border-radius: 12px; border: 1px solid #263057; }
+
+/* Artefatos do personagem nos 3 formatos */
+.pc .gl { display: flex; flex-direction: column; align-items: center; gap: 4px; margin-top: 2px; font-size: 14px; line-height: 1.15; color: #d4c28a; }
+.pc .gl .it { display: inline-flex; align-items: center; gap: 6px; max-width: 100%; }
+.pc .gl img { width: 26px; height: 26px; object-fit: contain; flex: none; }
+.pc .gl .nm { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pc .gl b { font-family: 'Saira Condensed', sans-serif; font-weight: 700; font-size: 16px; color: var(--accent); flex: none; }
+.pc .gl.none { color: var(--muted); font-size: 13px; }
+.pw-cap .gl, .tc-cap .gl { align-items: flex-start; margin-top: 4px; }
+.pw-cap .gl { font-size: 12.5px; gap: 3px; }
+.pw-cap .gl img { width: 22px; height: 22px; }
+.pw-cap .gl b { font-size: 14px; }
+.tc-cap .gl { font-size: 15px; }
+.pc-portrait .pc-char .gl { margin-top: 4px; }

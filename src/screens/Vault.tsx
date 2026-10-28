@@ -204,7 +204,7 @@ export default function Vault() {
             <p className="muted">{filtered ? 'Nenhum time bate com esses filtros.' : 'Crie um time ou importe uma planilha para começar.'}</p>
           </div>
         ) : (
-          <ul className="dz-grid c3 vt-list">
+          <ul className={`dz-grid c3 vt-list${cardFormat === 'portrait' ? ' vt-two' : ''}`}>
             {visible.map((p) => {
               const model = cards[p.id];
               const lead = p.members[0] ? elementColor(elementOf(p.members[0])) : '#e9c46a';

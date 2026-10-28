@@ -79,7 +79,10 @@ export function damageFormula(args: { result: ActionResult; team: TeamInput; ass
     { name: 'Proficiência', scale: sc.em, stat: r.stats.em, id: 'em' as const },
   ];
   const used = parts.filter((p) => p.scale > 0);
-  const baseExpr = [...used.map((p) => `${pct(p.scale)} × ${p.name} ${formatInt(p.stat)}`), ...(sc.flat > 0 ? [formatInt(sc.flat)] : [])].join(' + ') || '0';
+  // Multiplicador sobre o dano base (Skirk A4: ×1,7 no Normal): vale para escala × stat, não para o valor fixo do golpe.
+  const bm = byType(r.stats.baseMultByType);
+  const statExpr = used.map((p) => `${pct(p.scale)} × ${p.name} ${formatInt(p.stat)}`).join(' + ');
+  const baseExpr = (bm > 0 ? `(${statExpr || '0'}) × ${formatDecimal(1 + bm, 3)}${sc.flat > 0 ? ` + ${formatInt(sc.flat)}` : ''}` : [statExpr, ...(sc.flat > 0 ? [formatInt(sc.flat)] : [])].filter(Boolean).join(' + ')) || '0';
   // Escala do talento no nível atual e, se houver, o extra do golpe (ex.: pontos de Espírito Lutador da Mavuika).
   const ex = (r.action.move.extra ?? {}) as Record<string, number | undefined>;
   const move = r.action.move;
@@ -94,6 +97,7 @@ export function damageFormula(args: { result: ActionResult; team: TeamInput; ass
       ]
       : [{ label: `${pct(p.scale)} do ${p.name}`, value: formatInt(p.scale * p.stat) }],
   );
+  if (bm > 0) baseTerms.push({ label: 'Multiplicador do golpe (% do dano original, ex.: Skirk A4)', value: `×${formatDecimal(1 + bm, 3)}` });
   if (sc.flat > 0) baseTerms.push({ label: 'Valor fixo do golpe', value: formatInt(sc.flat) });
   if (b.additive > 0) baseTerms.push({ label: 'Termo aditivo da reação (Propagar/Intensificar)', value: formatInt(b.additive) });
   if (b.executions > 1) baseTerms.push({ label: 'Execuções', value: `× ${b.executions}` });

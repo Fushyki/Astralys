@@ -33,6 +33,8 @@ export interface BuffCuration {
     byType?: Partial<Record<'normal' | 'charged' | 'plunge' | 'skill' | 'burst', Val>>;
     critRateByType?: Partial<Record<'normal' | 'charged' | 'plunge' | 'skill' | 'burst', Val>>;
     critDmgByType?: Partial<Record<'normal' | 'charged' | 'plunge' | 'skill' | 'burst', Val>>;
+    /** Multiplicador sobre o dano base do tipo de golpe (0,7 = ×1,7): efeitos "X% do dano original" (Skirk A4). */
+    baseMultByType?: Partial<Record<'normal' | 'charged' | 'plunge' | 'skill' | 'burst', Val>>;
     /** Fração da DEF do inimigo ignorada pelos golpes do dono. */
     defIgnore?: Val;
     atkFlat?: Val; hpFlat?: Val; defFlat?: Val; er?: Val;

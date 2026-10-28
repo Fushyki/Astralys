@@ -16,6 +16,8 @@ export type StatsCur = Partial<Record<StatKey, Sum>> & {
   byType?: ByType;
   critRateByType?: ByType;
   critDmgByType?: ByType;
+  /** Multiplicador sobre o dano base do tipo de golpe (0,7 = ×1,7). */
+  baseMultByType?: ByType;
   /** Bônus de DMG Físico. */
   physDmgPct?: Sum;
   physCritDmg?: Sum;

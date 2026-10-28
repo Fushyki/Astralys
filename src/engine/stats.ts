@@ -48,6 +48,8 @@ export interface StatBlock {
   critRateByType: Record<HitType, number>;
   /** Dano crítico extra só para um tipo de golpe (ex.: Itto C6, Carregado). */
   critDmgByType: Record<HitType, number>;
+  /** Multiplicador sobre o dano BASE (escala × stat) por tipo de golpe: 0,7 = ×1,7 (Skirk A4). Não é bônus de dano. */
+  baseMultByType: Record<HitType, number>;
   meltBonus: number;
   vaporizeBonus: number;
   /** Fração da DEF do inimigo ignorada pelos golpes deste membro. */
@@ -72,12 +74,13 @@ const ZERO_REACTIONS = Object.fromEntries(REACTION_BONUS_KEYS.map((k) => [k, 0])
 const zeroReactions = () => ({ ...ZERO_REACTIONS });
 
 type ByType = Partial<Record<HitType, number>>;
-const BY_TYPE_KEYS = ['dmgByType', 'critRateByType', 'critDmgByType', 'reactionBonus'] as const;
+const BY_TYPE_KEYS = ['dmgByType', 'critRateByType', 'critDmgByType', 'baseMultByType', 'reactionBonus'] as const;
 
-export type StatDelta = Partial<Omit<StatBlock, 'dmgByType' | 'critRateByType' | 'critDmgByType' | 'reactionBonus'>> & {
+export type StatDelta = Partial<Omit<StatBlock, 'dmgByType' | 'critRateByType' | 'critDmgByType' | 'baseMultByType' | 'reactionBonus'>> & {
   dmgByType?: ByType;
   critRateByType?: ByType;
   critDmgByType?: ByType;
+  baseMultByType?: ByType;
   reactionBonus?: Partial<Record<ReactionBonusKey, number>>;
 };
 
@@ -85,6 +88,7 @@ export const zeroBlock = (): StatBlock => ({
   atkPct: 0, atkFlat: 0, hpPct: 0, hpFlat: 0, defPct: 0, defFlat: 0, em: 0, er: 0, critRate: 0, critDmg: 0,
   dmgBonus: 0, dmgByType: { normal: 0, charged: 0, plunge: 0, skill: 0, burst: 0 },
   critRateByType: { normal: 0, charged: 0, plunge: 0, skill: 0, burst: 0 }, critDmgByType: { normal: 0, charged: 0, plunge: 0, skill: 0, burst: 0 },
+  baseMultByType: { normal: 0, charged: 0, plunge: 0, skill: 0, burst: 0 },
   meltBonus: 0, vaporizeBonus: 0, defIgnore: 0, physDmg: 0, physCritDmg: 0, eleDmg: 0, reactionBonus: zeroReactions(),
 });
 
@@ -271,7 +275,7 @@ export function characterBuffDelta(stats: BuffStats | undefined, elemental = fal
   return {
     atkPct: stats.atkPct ?? 0, dmgBonus: stats.dmgPct ?? 0, critRate: stats.critRate ?? 0, critDmg: stats.critDmg ?? 0,
     em: stats.em ?? 0, er: stats.er ?? 0, hpPct: stats.hpPct ?? 0, defPct: stats.defPct ?? 0, dmgByType: stats.dmgPctByType ?? {},
-    critRateByType: stats.critRateByType ?? {}, critDmgByType: stats.critDmgByType ?? {}, defIgnore: stats.defIgnore ?? 0,
+    critRateByType: stats.critRateByType ?? {}, critDmgByType: stats.critDmgByType ?? {}, baseMultByType: stats.baseMultByType ?? {}, defIgnore: stats.defIgnore ?? 0,
     atkFlat: stats.atkFlat ?? 0, hpFlat: stats.hpFlat ?? 0, defFlat: stats.defFlat ?? 0,
     physDmg: stats.physDmgPct ?? 0, physCritDmg: stats.physCritDmg ?? 0, reactionBonus: stats.reactionBonus ?? {},
     // Buff só para certos elementos ("DMG Pyro +X%" para membros Pyro): é bônus elemental, não vale em golpe Físico.
@@ -464,6 +468,7 @@ export interface FinalStats {
   dmgByType: Record<HitType, number>;
   critRateByType: Record<HitType, number>;
   critDmgByType: Record<HitType, number>;
+  baseMultByType: Record<HitType, number>;
   meltBonus: number;
   vaporizeBonus: number;
   defIgnore: number;
@@ -517,9 +522,11 @@ export function finalStats(m: MemberInput, statics: StatBlock, rolls: Rolls, tea
   for (const t of Object.keys(dmgByType) as HitType[]) dmgByType[t] += team.dmgByType[t];
   const critRateByType = { ...statics.critRateByType };
   const critDmgByType = { ...statics.critDmgByType };
+  const baseMultByType = { ...statics.baseMultByType };
   for (const t of Object.keys(critRateByType) as HitType[]) {
     critRateByType[t] += team.critRateByType[t];
     critDmgByType[t] += team.critDmgByType[t];
+    baseMultByType[t] += team.baseMultByType[t];
   }
 
   return {
@@ -532,6 +539,7 @@ export function finalStats(m: MemberInput, statics: StatBlock, rolls: Rolls, tea
     dmgByType,
     critRateByType,
     critDmgByType,
+    baseMultByType,
     meltBonus: statics.meltBonus + team.meltBonus,
     vaporizeBonus: statics.vaporizeBonus + team.vaporizeBonus,
     defIgnore: statics.defIgnore + team.defIgnore,

@@ -449,7 +449,9 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
 
     const level = move.talent === 'proc' || move.talent === 'reaction' ? 1 : member.talents[move.talent];
     const scale = scaleAt(move, level);
-    const base = stats.atk * scale.atk + stats.em * scale.em + stats.hp * scale.hp + stats.def * scale.def + scale.flat;
+    // O multiplicador sobre o dano base (Skirk A4: ×1,7 no Normal) vale para a parte que vem da escala × stat, não para o valor fixo do golpe.
+    const baseMult = 1 + ((move.hitType === 'other' ? undefined : stats.baseMultByType?.[move.hitType]) ?? 0);
+    const base = (stats.atk * scale.atk + stats.em * scale.em + stats.hp * scale.hp + stats.def * scale.def) * baseMult + scale.flat;
 
     const byType = <T,>(r: Record<HitType, T> | undefined) => (move.hitType === 'other' ? undefined : r?.[move.hitType]);
     const critRate = stats.critRate + ((byType(stats.critRateByType) as number | undefined) ?? 0);

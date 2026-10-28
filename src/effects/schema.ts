@@ -60,6 +60,8 @@ const BuffStatsSchema = z.object({
   /** Taxa e Dano Crítico só para certos tipos de golpe. */
   critRateByType: z.record(HitTypeSchema, z.number()).default({}),
   critDmgByType: z.record(HitTypeSchema, z.number()).default({}),
+  /** Multiplicador sobre o dano BASE (escala × stat) por tipo de golpe: 0,7 = ×1,7 (Skirk A4, "% do dano original"). Não soma com o DMG%. */
+  baseMultByType: z.record(HitTypeSchema, z.number()).default({}),
   /** Fração da DEF do inimigo que os golpes do dono ignoram (soma com a do cenário, no máximo 100%). */
   defIgnore: frac,
   /** ATK, HP e DEF fixos (ex.: Nicole, +300 de ATK; Prune C6, +350). */

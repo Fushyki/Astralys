@@ -109,7 +109,7 @@ const valueOf = (v: Val, params: number[], where: string, text = ''): number => 
 /** Valor com multiplicador de stacks inteiro (`x` de 2 a 20), o mesmo critério de `stackInfo`. */
 const stackX = (v: Val): number | undefined => (typeof v === 'object' && 'x' in v && v.x !== undefined && Number.isInteger(v.x) && v.x >= 2 && v.x <= 20 && ('p' in v || 're' in v) ? v.x : undefined);
 const SUM_KEYS = ['atkPct', 'dmgPct', 'critRate', 'critDmg', 'em', 'er', 'hpPct', 'defPct', 'physDmgPct', 'physCritDmg', 'meltBonus'] as const;
-const REC_KEYS = ['byType', 'critRateByType', 'critDmgByType', 'reactionBonus'] as const;
+const REC_KEYS = ['byType', 'critRateByType', 'critDmgByType', 'baseMultByType', 'reactionBonus'] as const;
 
 /**
  * Separa os valores de arma/set que dependem de stacks (`x` = máximo) do resto: `base` fica na raiz e cada máximo vira um buff
@@ -274,7 +274,7 @@ function buffStats(cur: StatsCur, c: Ctx) {
   return {
     atkPct: sm(cur.atkPct, c), dmgPct: sm(cur.dmgPct, c), critRate: sm(cur.critRate, c), critDmg: sm(cur.critDmg, c),
     em: sm(cur.em, c), er: sm(cur.er, c), hpPct: sm(cur.hpPct, c), defPct: sm(cur.defPct, c),
-    dmgPctByType: byTypeOf(cur.byType, c), critRateByType: byTypeOf(cur.critRateByType, c), critDmgByType: byTypeOf(cur.critDmgByType, c),
+    dmgPctByType: byTypeOf(cur.byType, c), critRateByType: byTypeOf(cur.critRateByType, c), critDmgByType: byTypeOf(cur.critDmgByType, c), baseMultByType: byTypeOf(cur.baseMultByType, c),
     physDmgPct: sm(cur.physDmgPct, c), physCritDmg: sm(cur.physCritDmg, c), reactionBonus: reactionsOf(cur.reactionBonus, c),
   };
 }
@@ -467,6 +467,7 @@ function buildCharacters(): CharacterEffect[] {
                 dmgPctByType: Object.fromEntries(Object.entries(s.byType ?? {}).map(([k, x]) => [k, v(x)])),
                 critRateByType: Object.fromEntries(Object.entries(s.critRateByType ?? {}).map(([k, x]) => [k, v(x)])),
                 critDmgByType: Object.fromEntries(Object.entries(s.critDmgByType ?? {}).map(([k, x]) => [k, v(x)])),
+                baseMultByType: Object.fromEntries(Object.entries(s.baseMultByType ?? {}).map(([k, x]) => [k, v(x)])),
                 defIgnore: v(s.defIgnore),
                 atkFlat: v(s.atkFlat), hpFlat: v(s.hpFlat), defFlat: v(s.defFlat),
                 physDmgPct: v(s.physDmgPct), physCritDmg: v(s.physCritDmg),

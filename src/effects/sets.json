@@ -1874,7 +1874,8 @@
           "stats": {
             "dmgPct": 0.12
           },
-          "flat": []
+          "flat": [],
+          "duration": 15
         },
         {
           "id": "noite",
@@ -1886,7 +1887,8 @@
           "stats": {
             "dmgPct": 0.28
           },
-          "flat": []
+          "flat": [],
+          "duration": 20
         }
       ]
     },

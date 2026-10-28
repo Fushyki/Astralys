@@ -231,6 +231,8 @@ export const CharacterBuffSchema = z.object({
   forElements: z.array(ElementSchema).optional(),
   /** Só recebem personagens do elemento do dono ou de um elemento que ele reagiu (`MemberRef.reacted`, escolhido pelo usuário). */
   forReacted: z.boolean().optional(),
+  /** Duração do efeito em segundos, lida da descrição (ex.: Scroll of the Hero of Cinder City, 15 s e 20 s): tamanho padrão da janela. */
+  duration: z.number().positive().optional(),
   /** Só personagens destas facções recebem (ex.: Jahoda C6, "personagens Moonsign"). */
   forFactions: z.array(z.enum(['moonsign', 'hexerei'])).optional(),
   stats: BuffStatsSchema.optional(),

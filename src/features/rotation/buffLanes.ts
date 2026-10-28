@@ -10,6 +10,8 @@ export interface BuffLane {
   label: string;
   /** Descrição completa dos buffs desta fonte. */
   detail: string;
+  /** Duração do efeito (s) que o jogo informa; tamanho padrão da janela nova. */
+  duration?: number;
 }
 
 const KIND_ORDER: Record<string, number> = { gear: 0, char: 1, label: 2 };
@@ -18,21 +20,22 @@ export function buffLanes(team: TeamInput): BuffLane[] {
   const names = team.members.map((m) => m.character.name);
   const { buffs } = assembleTeam(team);
 
-  const byTag = new Map<string, { descriptions: string[] }>();
+  const byTag = new Map<string, { descriptions: string[]; duration?: number }>();
   for (const b of buffs) {
     if (b.always) continue;
     const entry = byTag.get(b.tag) ?? { descriptions: [] };
+    if (b.duration) entry.duration = entry.duration === undefined ? b.duration : Math.min(entry.duration, b.duration);
     if (b.description) entry.descriptions.push(b.description);
     byTag.set(b.tag, entry);
   }
 
-  const lanes: BuffLane[] = [...byTag.entries()].map(([tag, { descriptions }]) => {
+  const lanes: BuffLane[] = [...byTag.entries()].map(([tag, { descriptions, duration }]) => {
     const [kind, rest] = [tag.slice(0, tag.indexOf(':')), tag.slice(tag.indexOf(':') + 1)];
     let label: string;
     if (kind === 'gear') label = `Set de ${names[Number(rest)] ?? rest}`;
     else if (kind === 'char') label = `ATK fixo ${names[Number(rest)] ?? rest}`;
     else label = rest === '_geral' ? 'Buffs gerais' : rest;
-    return { tag, label, detail: descriptions.join('\n') || label };
+    return { tag, label, detail: descriptions.join('\n') || label, ...(duration ? { duration } : {}) };
   });
 
   const index = (t: string) => Number(t.slice(t.indexOf(':') + 1)) || 0;

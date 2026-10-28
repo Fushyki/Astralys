@@ -344,7 +344,7 @@ export function Timeline({ v, lanes }: { v: ProjectView; lanes: LaneInfo[] }) {
                         <div className="rt-nowin">
                           <span>Sem janela · não entra no cálculo</span>
                           <button type="button" className="dz-btn sm ghost" onClick={() => { const id = st().addWindow(lane.tag, 0, duration); if (id) st().setWindowMode(id, 'whole'); }}>Rotação inteira</button>
-                          <button type="button" className="dz-btn sm ghost" onClick={() => st().addWindow(lane.tag, snap(playhead))}>Definir tempo</button>
+                          <button type="button" className="dz-btn sm ghost" onClick={() => st().addWindow(lane.tag, snap(playhead), lane.duration)}>Definir tempo</button>
                         </div>
                       )}
                       {wins.map((w) => {

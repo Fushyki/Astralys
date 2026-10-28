@@ -195,7 +195,7 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
       });
       if (targets.length === 0) continue;
       const decays = b.decay && !(b.decay.noDecayFrom !== undefined && (m.constellation ?? 0) >= b.decay.noDecayFrom);
-      addBuff({ id: `cbuff-${i}-${b.id}`, tag: labelTag(b.label), targets, delta, description: `${names[i]}: ${b.label}`, ...(b.timed ? {} : { always: true as const }), ...(decays ? { decay: b.decay!.duration } : {}) });
+      addBuff({ id: `cbuff-${i}-${b.id}`, tag: labelTag(b.label), targets, delta, description: `${names[i]}: ${b.label}`, ...(b.timed ? {} : { always: true as const }), ...(decays ? { decay: b.decay!.duration } : {}), ...(b.duration ? { duration: b.duration } : {}) });
     }
   });
 

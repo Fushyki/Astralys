@@ -29,6 +29,8 @@ export interface LaneInfo {
   /** Índice do membro que dá o buff, se der para saber (colore a barra). */
   giver: number | null;
   detail: string;
+  /** Duração do efeito (s) que o jogo informa: tamanho padrão da janela nova. */
+  duration?: number;
 }
 
 const ownerOf = (b: TeamBuff): number | null => {
@@ -63,7 +65,7 @@ export function laneInfos(project: RotationProject, resolved: ResolvedProject): 
     const chips = [...new Set(group.flatMap((b) => deltaChips(b.delta)))];
     const source = giver !== null ? `${names[giver]} · ${lane.label}` : lane.label;
     void project;
-    return { tag: lane.tag, label: lane.label, source, target, value: chips.join(' · ') || lane.label, giver, detail: lane.detail };
+    return { tag: lane.tag, label: lane.label, source, target, value: chips.join(' · ') || lane.label, giver, detail: lane.detail, ...(lane.duration ? { duration: lane.duration } : {}) };
   });
 }
 

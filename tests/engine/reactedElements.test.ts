@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { analyzeProject, assembleTeam, resolveProject, type EffectsData, type GameData } from '../../src/engine';
 import { memberBuffCards } from '../../src/features/character/characterModel';
 import { sampleProject } from '../../src/features/rotation/persistence';
+import { buffLanes } from '../../src/features/rotation/buffLanes';
 import type { Element } from '../../src/data/schema';
 
 const root = path.resolve(__dirname, '../..');
@@ -78,5 +79,12 @@ describe('Equipe: cartões do Scroll', () => {
   it('quem não tem o elemento só recebe o buff depois de o elemento ser escolhido', () => {
     expect(cardsOf(0)).toHaveLength(0);
     expect(cardsOf(0, ['Pyro'])).toHaveLength(2);
+  });
+});
+
+describe('Scroll: duração do efeito vira o tamanho da janela', () => {
+  it('as faixas trazem 15 s e 20 s, lidas da descrição do artefato', () => {
+    const lanes = buffLanes(resolveProject(project(), game, effects).team).filter((l) => l.label.includes('Scroll of the Hero'));
+    expect(lanes.map((l) => l.duration).sort()).toEqual([15, 20]);
   });
 });

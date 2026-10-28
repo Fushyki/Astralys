@@ -415,6 +415,8 @@ export interface TeamBuff {
   derived?: true;
   /** Cai em linha reta até 0 em `decay` segundos depois do início da janela (ver `CharacterBuff.decay`). */
   decay?: number;
+  /** Quanto dura o efeito (s), quando o texto do jogo diz: é o tamanho da janela criada na linha do tempo. */
+  duration?: number;
 }
 
 export function receivesBuff(buff: TeamBuff, characterName: string): boolean {

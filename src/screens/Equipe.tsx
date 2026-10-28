@@ -11,6 +11,8 @@ import { effectStatus } from '../features/rotation/teamInfo';
 import { weaponsFor } from '../features/rotation/teamOps';
 import { SetPickerDialog } from './personagem/SetPicker';
 import { MemberBuffs } from './equipe/MemberBuffs';
+import { ReactedChips } from './equipe/ReactedChips';
+import type { Element } from '../data/schema';
 import { WeaponPickerDialog } from './personagem/WeaponPicker';
 import { downloadProject } from '../features/rotation/importFile';
 import { cloneProject, saveProject } from '../features/rotation/persistence';
@@ -85,6 +87,7 @@ export default function Equipe() {
   const v = useProjectView();
   const navigate = useNavigate();
   const replaceMember = useRotationStore((s) => s.replaceMember);
+  const updateMember = useRotationStore((s) => s.updateMember);
   const addMember = useRotationStore((s) => s.addMember);
   const removeMember = useRotationStore((s) => s.removeMember);
   const setCompat = useRotationStore((s) => s.setCompat);
@@ -215,6 +218,23 @@ export default function Equipe() {
                     {(gives[i] ?? []).map((g) => <Chip key={g}>{g}</Chip>)}
                   </div>
                 </div>
+
+                {(() => {
+                  // Set que depende dos elementos com que o dono reage: Scroll (bônus de DMG) e Viridescent (redução de RES).
+                  const fp = ref.fourPiece !== false && !ref.secondarySet ? data.effects.sets.find((e) => e.set === ref.primarySet)?.fourPiece : undefined;
+                  const resShred = fp?.resShred?.reacted ? fp.resShred : undefined;
+                  if (!character || !(resShred || fp?.buffs?.some((b) => b.forReacted))) return null;
+                  return (
+                    <div className="react">
+                      <span className="lbl">{ref.primarySet} · reage com</span>
+                      <ReactedChips own={character.element} choices={resShred?.elements.filter((e): e is Element => e !== 'Physical')} els={ref.reacted ?? []} onChange={(next) => updateMember(i, { reacted: next })} />
+                      <span className="muted small">
+                        {resShred ? 'Só estes elementos perdem RES. Sem escolha, valem os do time.' : `Buffa ${character.element} e os elementos marcados (pode marcar mais de um).`}
+                        {project.compat === 'planilha' && !resShred ? ' No modo planilha o Scroll é o buff fixo de 40%; "Usar todos os efeitos" faz a escolha valer.' : ''}
+                      </span>
+                    </div>
+                  );
+                })()}
 
                 <div className="acts">
                   <Link className="dz-btn gold" to={`/projeto/${v.id}/personagem/${encodeURIComponent(ref.character)}`}>Ajustar build</Link>

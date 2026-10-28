@@ -1,0 +1,1613 @@
+{
+  "kind": "astralys-compartilhamento",
+  "version": 1,
+  "name": "Novo time",
+  "gameVersion": "7.1.53",
+  "createdAt": "2026-10-28T15:06:35.760Z",
+  "parts": [
+    "rotation",
+    "scenario",
+    "extras",
+    "team"
+  ],
+  "members": [
+    "Mavuika",
+    "Iansan",
+    "Citlali",
+    "Bennett"
+  ],
+  "rotation": {
+    "actions": [
+      {
+        "id": "a2",
+        "member": 0,
+        "move": {
+          "character": "Mavuika",
+          "talent": "skill",
+          "label": "Ring of Searing Radiance DMG",
+          "variant": 0
+        },
+        "displayName": "Mavuika - Anéis das Chamas Esplendorosas",
+        "executions": 1,
+        "reaction": "none",
+        "activeTags": [],
+        "tagSource": "windows",
+        "dmgAdjust": 0,
+        "time": 0.5
+      },
+      {
+        "id": "a11",
+        "member": 1,
+        "move": {
+          "character": "Iansan",
+          "talent": "skill",
+          "label": "Skill DMG",
+          "variant": 0
+        },
+        "displayName": "Iansan - Habilidade",
+        "executions": 1,
+        "reaction": "none",
+        "activeTags": [],
+        "tagSource": "windows",
+        "dmgAdjust": 0,
+        "time": 1
+      },
+      {
+        "id": "a3",
+        "member": 1,
+        "move": {
+          "character": "Iansan",
+          "talent": "burst",
+          "label": "Skill DMG",
+          "variant": 0
+        },
+        "displayName": "Iansan - Habilidade",
+        "executions": 1,
+        "reaction": "none",
+        "activeTags": [],
+        "tagSource": "windows",
+        "dmgAdjust": 0,
+        "time": 2
+      },
+      {
+        "id": "a4",
+        "member": 3,
+        "move": {
+          "character": "Bennett",
+          "talent": "burst",
+          "label": "Skill DMG",
+          "variant": 0
+        },
+        "displayName": "Bennett - Habilidade",
+        "executions": 1,
+        "reaction": "none",
+        "activeTags": [],
+        "tagSource": "windows",
+        "dmgAdjust": 0,
+        "time": 3
+      },
+      {
+        "id": "a5",
+        "member": 2,
+        "move": {
+          "character": "Citlali",
+          "talent": "skill",
+          "label": "Obsidian Tzitzimitl DMG",
+          "variant": 0
+        },
+        "displayName": "Citlali - Tzitzimimeh de Obsidiana",
+        "executions": 1,
+        "reaction": "melt",
+        "activeTags": [],
+        "tagSource": "windows",
+        "dmgAdjust": 0,
+        "flatOff": [
+          "Citlali|Citlali A4 (habilidade): Frostfall Storm por Maestria"
+        ],
+        "time": 4
+      },
+      {
+        "id": "a6",
+        "member": 2,
+        "move": {
+          "character": "Citlali",
+          "talent": "burst",
+          "label": "Ice Storm DMG",
+          "variant": 0
+        },
+        "displayName": "Citlali - Tempestade de Gelo",
+        "executions": 1,
+        "reaction": "melt",
+        "activeTags": [],
+        "tagSource": "windows",
+        "dmgAdjust": 0,
+        "time": 6
+      },
+      {
+        "id": "a7",
+        "member": 2,
+        "move": {
+          "character": "Citlali",
+          "talent": "normal",
+          "label": "1-Hit DMG",
+          "variant": 0
+        },
+        "displayName": "Citlali - 1° golpe",
+        "executions": 1,
+        "reaction": "none",
+        "activeTags": [],
+        "tagSource": "windows",
+        "dmgAdjust": 0,
+        "time": 6.4
+      },
+      {
+        "id": "a8",
+        "member": 0,
+        "move": {
+          "character": "Mavuika",
+          "talent": "burst",
+          "label": "Skill DMG",
+          "variant": 0
+        },
+        "displayName": "Mavuika - Habilidade",
+        "points": 200,
+        "executions": 1,
+        "reaction": "melt",
+        "activeTags": [],
+        "tagSource": "windows",
+        "dmgAdjust": 0,
+        "time": 8.9
+      },
+      {
+        "id": "a9",
+        "member": 1,
+        "move": {
+          "character": "Iansan",
+          "talent": "reaction",
+          "label": "overloaded",
+          "variant": 0
+        },
+        "displayName": "Iansan - Sobrecarga",
+        "executions": 1,
+        "reaction": "none",
+        "activeTags": [],
+        "tagSource": "windows",
+        "dmgAdjust": 0,
+        "time": 1.1
+      },
+      {
+        "id": "a10",
+        "member": 3,
+        "move": {
+          "character": "Bennett",
+          "talent": "reaction",
+          "label": "overloaded",
+          "variant": 0
+        },
+        "displayName": "Bennett - Sobrecarga",
+        "executions": 1,
+        "reaction": "none",
+        "activeTags": [],
+        "tagSource": "windows",
+        "dmgAdjust": 0,
+        "time": 3.2
+      },
+      {
+        "id": "a12",
+        "member": 0,
+        "move": {
+          "character": "Mavuika",
+          "talent": "skill",
+          "label": "Flamestrider Charged Attack Cyclic DMG",
+          "variant": 0
+        },
+        "displayName": "Mavuika - Loop de ataque carregado da Ignimoto",
+        "points": 200,
+        "executions": 1,
+        "reaction": "melt",
+        "activeTags": [],
+        "tagSource": "windows",
+        "dmgAdjust": 0,
+        "time": 9.7
+      },
+      {
+        "id": "a13",
+        "member": 0,
+        "move": {
+          "character": "Mavuika",
+          "talent": "skill",
+          "label": "Flamestrider Charged Attack Cyclic DMG",
+          "variant": 0
+        },
+        "displayName": "Mavuika - Loop de ataque carregado da Ignimoto",
+        "points": 200,
+        "executions": 1,
+        "reaction": "none",
+        "activeTags": [],
+        "tagSource": "windows",
+        "dmgAdjust": 0,
+        "time": 10.2
+      },
+      {
+        "id": "a14",
+        "member": 0,
+        "move": {
+          "character": "Mavuika",
+          "talent": "skill",
+          "label": "Flamestrider Charged Attack Cyclic DMG",
+          "variant": 0
+        },
+        "displayName": "Mavuika - Loop de ataque carregado da Ignimoto",
+        "points": 200,
+        "executions": 1,
+        "reaction": "none",
+        "activeTags": [],
+        "tagSource": "windows",
+        "dmgAdjust": 0,
+        "time": 10.7
+      },
+      {
+        "id": "a15",
+        "member": 0,
+        "move": {
+          "character": "Mavuika",
+          "talent": "skill",
+          "label": "Flamestrider Charged Attack Final DMG",
+          "variant": 0
+        },
+        "displayName": "Mavuika - Dano Final de ataque carregado da Ignimoto",
+        "points": 200,
+        "executions": 1,
+        "reaction": "melt",
+        "activeTags": [],
+        "tagSource": "windows",
+        "dmgAdjust": 0,
+        "time": 12.4
+      },
+      {
+        "id": "a16",
+        "member": 0,
+        "move": {
+          "character": "Mavuika",
+          "talent": "skill",
+          "label": "Flamestrider Sprint DMG",
+          "variant": 0
+        },
+        "displayName": "Mavuika - Investida da Ignimoto",
+        "executions": 1,
+        "reaction": "none",
+        "activeTags": [],
+        "tagSource": "windows",
+        "dmgAdjust": 0,
+        "time": 12.5
+      },
+      {
+        "id": "a17",
+        "member": 0,
+        "move": {
+          "character": "Mavuika",
+          "talent": "skill",
+          "label": "Flamestrider Charged Attack Cyclic DMG",
+          "variant": 0
+        },
+        "displayName": "Mavuika - Loop de ataque carregado da Ignimoto",
+        "points": 200,
+        "executions": 1,
+        "reaction": "none",
+        "activeTags": [],
+        "tagSource": "windows",
+        "dmgAdjust": 0,
+        "time": 12.9
+      },
+      {
+        "id": "a18",
+        "member": 0,
+        "move": {
+          "character": "Mavuika",
+          "talent": "skill",
+          "label": "Flamestrider Charged Attack Final DMG",
+          "variant": 0
+        },
+        "displayName": "Mavuika - Dano Final de ataque carregado da Ignimoto",
+        "points": 200,
+        "executions": 1,
+        "reaction": "melt",
+        "activeTags": [],
+        "tagSource": "windows",
+        "dmgAdjust": 0,
+        "time": 14
+      },
+      {
+        "id": "a19",
+        "member": 0,
+        "move": {
+          "character": "Mavuika",
+          "talent": "skill",
+          "label": "Flamestrider Sprint DMG",
+          "variant": 0
+        },
+        "displayName": "Mavuika - Investida da Ignimoto",
+        "executions": 1,
+        "reaction": "none",
+        "activeTags": [],
+        "tagSource": "windows",
+        "dmgAdjust": 0,
+        "time": 14.1
+      },
+      {
+        "id": "a20",
+        "member": 0,
+        "move": {
+          "character": "Mavuika",
+          "talent": "skill",
+          "label": "Flamestrider Charged Attack Cyclic DMG",
+          "variant": 0
+        },
+        "displayName": "Mavuika - Loop de ataque carregado da Ignimoto",
+        "points": 200,
+        "executions": 1,
+        "reaction": "none",
+        "activeTags": [],
+        "tagSource": "windows",
+        "dmgAdjust": 0,
+        "time": 14.5
+      },
+      {
+        "id": "a21",
+        "member": 0,
+        "move": {
+          "character": "Mavuika",
+          "talent": "skill",
+          "label": "Flamestrider Charged Attack Final DMG",
+          "variant": 0
+        },
+        "displayName": "Mavuika - Dano Final de ataque carregado da Ignimoto",
+        "points": 0,
+        "executions": 1,
+        "reaction": "melt",
+        "activeTags": [],
+        "tagSource": "windows",
+        "dmgAdjust": 0,
+        "time": 15.6
+      },
+      {
+        "id": "a22",
+        "member": 0,
+        "move": {
+          "character": "Mavuika",
+          "talent": "skill",
+          "label": "Flamestrider Sprint DMG",
+          "variant": 0
+        },
+        "displayName": "Mavuika - Investida da Ignimoto",
+        "executions": 1,
+        "reaction": "none",
+        "activeTags": [],
+        "tagSource": "windows",
+        "dmgAdjust": 0,
+        "time": 15.7
+      },
+      {
+        "id": "a23",
+        "member": 0,
+        "move": {
+          "character": "Mavuika",
+          "talent": "skill",
+          "label": "Flamestrider Charged Attack Cyclic DMG",
+          "variant": 0
+        },
+        "displayName": "Mavuika - Loop de ataque carregado da Ignimoto",
+        "points": 0,
+        "executions": 1,
+        "reaction": "none",
+        "activeTags": [],
+        "tagSource": "windows",
+        "dmgAdjust": 0,
+        "time": 16.1
+      },
+      {
+        "id": "a24",
+        "member": 0,
+        "move": {
+          "character": "Mavuika",
+          "talent": "skill",
+          "label": "Flamestrider Charged Attack Final DMG",
+          "variant": 0
+        },
+        "displayName": "Mavuika - Dano Final de ataque carregado da Ignimoto",
+        "points": 0,
+        "executions": 1,
+        "reaction": "melt",
+        "activeTags": [],
+        "tagSource": "windows",
+        "dmgAdjust": 0,
+        "time": 17.2
+      },
+      {
+        "id": "a25",
+        "member": 0,
+        "move": {
+          "character": "Mavuika",
+          "talent": "skill",
+          "label": "Ring of Searing Radiance DMG",
+          "variant": 0
+        },
+        "displayName": "Mavuika - Anéis das Chamas Esplendorosas",
+        "executions": 1,
+        "reaction": "none",
+        "activeTags": [],
+        "tagSource": "windows",
+        "dmgAdjust": 0,
+        "chainId": "c1",
+        "time": 2.5
+      },
+      {
+        "id": "a26",
+        "member": 0,
+        "move": {
+          "character": "Mavuika",
+          "talent": "skill",
+          "label": "Ring of Searing Radiance DMG",
+          "variant": 0
+        },
+        "displayName": "Mavuika - Anéis das Chamas Esplendorosas",
+        "executions": 1,
+        "reaction": "none",
+        "activeTags": [],
+        "tagSource": "windows",
+        "dmgAdjust": 0,
+        "chainId": "c1",
+        "time": 4.5
+      },
+      {
+        "id": "a27",
+        "member": 0,
+        "move": {
+          "character": "Mavuika",
+          "talent": "skill",
+          "label": "Ring of Searing Radiance DMG",
+          "variant": 0
+        },
+        "displayName": "Mavuika - Anéis das Chamas Esplendorosas",
+        "executions": 1,
+        "reaction": "none",
+        "activeTags": [],
+        "tagSource": "windows",
+        "dmgAdjust": 0,
+        "chainId": "c1",
+        "time": 6.5
+      },
+      {
+        "id": "a28",
+        "member": 2,
+        "move": {
+          "character": "Citlali",
+          "talent": "burst",
+          "label": "Spiritvessel Skull DMG",
+          "variant": 0
+        },
+        "displayName": "Citlali - Crânio do Receptáculo Espiritual",
+        "executions": 1,
+        "reaction": "none",
+        "activeTags": [],
+        "tagSource": "windows",
+        "dmgAdjust": 0,
+        "flatOff": [
+          "Citlali|Citlali A4 (Supremo): Ice Storm por Maestria"
+        ],
+        "time": 7
+      },
+      {
+        "id": "a29",
+        "member": 2,
+        "move": {
+          "character": "Citlali",
+          "talent": "skill",
+          "label": "Frostfall Storm DMG",
+          "variant": 0
+        },
+        "displayName": "Citlali - Tempestade Gélida",
+        "executions": 1,
+        "reaction": "none",
+        "activeTags": [],
+        "tagSource": "windows",
+        "dmgAdjust": 0,
+        "chainId": "c2",
+        "time": 7
+      },
+      {
+        "id": "a30",
+        "member": 2,
+        "move": {
+          "character": "Citlali",
+          "talent": "skill",
+          "label": "Frostfall Storm DMG",
+          "variant": 0
+        },
+        "displayName": "Citlali - Tempestade Gélida",
+        "executions": 1,
+        "reaction": "none",
+        "activeTags": [],
+        "tagSource": "windows",
+        "dmgAdjust": 0,
+        "chainId": "c2",
+        "time": 8
+      },
+      {
+        "id": "a31",
+        "member": 2,
+        "move": {
+          "character": "Citlali",
+          "talent": "skill",
+          "label": "Frostfall Storm DMG",
+          "variant": 0
+        },
+        "displayName": "Citlali - Tempestade Gélida",
+        "executions": 1,
+        "reaction": "none",
+        "activeTags": [],
+        "tagSource": "windows",
+        "dmgAdjust": 0,
+        "chainId": "c2",
+        "time": 9
+      },
+      {
+        "id": "a32",
+        "member": 2,
+        "move": {
+          "character": "Citlali",
+          "talent": "skill",
+          "label": "Frostfall Storm DMG",
+          "variant": 0
+        },
+        "displayName": "Citlali - Tempestade Gélida",
+        "executions": 1,
+        "reaction": "none",
+        "activeTags": [],
+        "tagSource": "windows",
+        "dmgAdjust": 0,
+        "chainId": "c2",
+        "time": 10
+      },
+      {
+        "id": "a33",
+        "member": 2,
+        "move": {
+          "character": "Citlali",
+          "talent": "skill",
+          "label": "Frostfall Storm DMG",
+          "variant": 0
+        },
+        "displayName": "Citlali - Tempestade Gélida",
+        "executions": 1,
+        "reaction": "none",
+        "activeTags": [],
+        "tagSource": "windows",
+        "dmgAdjust": 0,
+        "chainId": "c2",
+        "time": 11
+      },
+      {
+        "id": "a34",
+        "member": 2,
+        "move": {
+          "character": "Citlali",
+          "talent": "skill",
+          "label": "Frostfall Storm DMG",
+          "variant": 0
+        },
+        "displayName": "Citlali - Tempestade Gélida",
+        "executions": 1,
+        "reaction": "none",
+        "activeTags": [],
+        "tagSource": "windows",
+        "dmgAdjust": 0,
+        "chainId": "c2",
+        "time": 12
+      },
+      {
+        "id": "a35",
+        "member": 2,
+        "move": {
+          "character": "Citlali",
+          "talent": "skill",
+          "label": "Frostfall Storm DMG",
+          "variant": 0
+        },
+        "displayName": "Citlali - Tempestade Gélida",
+        "executions": 1,
+        "reaction": "none",
+        "activeTags": [],
+        "tagSource": "windows",
+        "dmgAdjust": 0,
+        "chainId": "c2",
+        "time": 13
+      },
+      {
+        "id": "a36",
+        "member": 2,
+        "move": {
+          "character": "Citlali",
+          "talent": "skill",
+          "label": "Frostfall Storm DMG",
+          "variant": 0
+        },
+        "displayName": "Citlali - Tempestade Gélida",
+        "executions": 1,
+        "reaction": "none",
+        "activeTags": [],
+        "tagSource": "windows",
+        "dmgAdjust": 0,
+        "chainId": "c2",
+        "time": 14
+      },
+      {
+        "id": "a37",
+        "member": 2,
+        "move": {
+          "character": "Citlali",
+          "talent": "skill",
+          "label": "Frostfall Storm DMG",
+          "variant": 0
+        },
+        "displayName": "Citlali - Tempestade Gélida",
+        "executions": 1,
+        "reaction": "none",
+        "activeTags": [],
+        "tagSource": "windows",
+        "dmgAdjust": 0,
+        "chainId": "c2",
+        "time": 15
+      },
+      {
+        "id": "a38",
+        "member": 2,
+        "move": {
+          "character": "Citlali",
+          "talent": "skill",
+          "label": "Frostfall Storm DMG",
+          "variant": 0
+        },
+        "displayName": "Citlali - Tempestade Gélida",
+        "executions": 1,
+        "reaction": "none",
+        "activeTags": [],
+        "tagSource": "windows",
+        "dmgAdjust": 0,
+        "chainId": "c2",
+        "time": 16
+      },
+      {
+        "id": "a39",
+        "member": 2,
+        "move": {
+          "character": "Citlali",
+          "talent": "skill",
+          "label": "Frostfall Storm DMG",
+          "variant": 0
+        },
+        "displayName": "Citlali - Tempestade Gélida",
+        "executions": 1,
+        "reaction": "none",
+        "activeTags": [],
+        "tagSource": "windows",
+        "dmgAdjust": 0,
+        "chainId": "c2",
+        "time": 17
+      }
+    ],
+    "buffWindows": [
+      {
+        "id": "w1",
+        "tag": "char:0",
+        "start": 0.4,
+        "end": 17.6
+      },
+      {
+        "id": "w2",
+        "tag": "char:2",
+        "start": 0.4,
+        "end": 2.7
+      },
+      {
+        "id": "w3",
+        "tag": "char:2",
+        "start": 5.8,
+        "end": 17.6
+      },
+      {
+        "id": "w8",
+        "tag": "gear:0",
+        "start": 0.4,
+        "end": 17.6
+      },
+      {
+        "id": "w11",
+        "tag": "gear:1",
+        "start": 0.4,
+        "end": 2.7
+      },
+      {
+        "id": "w12",
+        "tag": "gear:1",
+        "start": 5.8,
+        "end": 17.6
+      },
+      {
+        "id": "w15",
+        "tag": "label:_geral",
+        "start": 0.4,
+        "end": 17.6
+      },
+      {
+        "id": "w16",
+        "tag": "label:Rótulo 3",
+        "start": 0.4,
+        "end": 2.7
+      },
+      {
+        "id": "w17",
+        "tag": "label:Rótulo 3",
+        "start": 5.8,
+        "end": 14.3
+      },
+      {
+        "id": "w18",
+        "tag": "label:Rótulo 4",
+        "start": 0.4,
+        "end": 2.7
+      },
+      {
+        "id": "w19",
+        "tag": "label:Rótulo 4",
+        "start": 5.8,
+        "end": 14.3
+      },
+      {
+        "id": "w13",
+        "tag": "gear:2",
+        "start": 6.1,
+        "end": 14.1
+      },
+      {
+        "id": "w14",
+        "tag": "label:TTDS",
+        "start": 6.4,
+        "end": 16.4
+      },
+      {
+        "id": "w20",
+        "tag": "char:1",
+        "start": 2,
+        "end": 17
+      },
+      {
+        "id": "w21",
+        "tag": "label:Scroll",
+        "start": 2,
+        "end": 22
+      },
+      {
+        "id": "w22",
+        "tag": "gear:3",
+        "start": 3,
+        "end": 15
+      },
+      {
+        "id": "w23",
+        "tag": "char:3",
+        "start": 3,
+        "end": 16
+      },
+      {
+        "id": "w24",
+        "tag": "label:Mavuika A1",
+        "start": 0.5,
+        "end": 20.5
+      },
+      {
+        "id": "w25",
+        "tag": "label:Mavuika A4",
+        "start": 7.3,
+        "end": 17.3
+      },
+      {
+        "id": "w26",
+        "tag": "label:Iansan A1",
+        "start": 2,
+        "end": 17
+      },
+      {
+        "id": "w27",
+        "tag": "label:Iansan C2",
+        "start": 2,
+        "end": 17
+      },
+      {
+        "id": "w28",
+        "tag": "label:Iansan C6",
+        "start": 2,
+        "end": 17
+      },
+      {
+        "id": "w29",
+        "tag": "label:Symphonist of Scents: ATK fora de campo",
+        "start": 2,
+        "end": 17
+      },
+      {
+        "id": "w30",
+        "tag": "label:Symphonist of Scents: Sweet Echoes (ATK de quem cura e de quem foi curado)",
+        "start": 2,
+        "end": 17
+      },
+      {
+        "id": "w31",
+        "tag": "label:Thrilling Tales of Dragon Slayers: ATK do próximo personagem",
+        "start": 6.5,
+        "end": 16.5
+      },
+      {
+        "id": "w32",
+        "tag": "label:Bennett C1",
+        "start": 3,
+        "end": 16
+      },
+      {
+        "id": "w33",
+        "tag": "label:Bennett C6",
+        "start": 3,
+        "end": 16
+      },
+      {
+        "id": "w34",
+        "tag": "label:Scroll of the Hero of Cinder City: DMG extra com Bênção do Espírito da Noite (20 s)",
+        "start": 2,
+        "end": 22
+      },
+      {
+        "id": "w35",
+        "tag": "label:Scroll of the Hero of Cinder City: DMG dos elementos da reação (15 s)",
+        "start": 2,
+        "end": 22
+      }
+    ],
+    "chains": {
+      "c1": {
+        "every": 2,
+        "until": 8.5
+      },
+      "c2": {
+        "every": 1,
+        "until": 17.01
+      }
+    },
+    "flatStacks": {},
+    "disabled": [
+      "gear-3@Iansan",
+      "cbuff-3-c6@Iansan",
+      "flat-atk-3@Iansan",
+      "cbuff-3-c1@Iansan",
+      "cbuff-2-arma:time@Iansan",
+      "cbuff-2-arma:time@Bennett",
+      "cbuff-0-a4@Iansan",
+      "cbuff-0-a4@Bennett",
+      "gear-2@Iansan",
+      "gear-2@Bennett",
+      "cbuff-0-a4@Citlali",
+      "flat-atk-3@Citlali",
+      "cbuff-3-c6@Citlali",
+      "cbuff-3-c1@Citlali",
+      "gear-3@Citlali"
+    ],
+    "enabled": [
+      "m1:weapon",
+      "cbuff-1-arma:offfield",
+      "cbuff-1-arma:echoes",
+      "m0:set4p",
+      "m0:weapon",
+      "m0:set2p-primary",
+      "m3:weapon",
+      "m3:set2p-primary",
+      "m2:set2p-primary",
+      "m2:weapon",
+      "gear-3",
+      "cbuff-2-arma:time",
+      "gear-2",
+      "cbuff-1-set4-Scroll of the Hero of Cinder City:reacao",
+      "cbuff-1-set4-Scroll of the Hero of Cinder City:noite"
+    ],
+    "profiles": {
+      "Todos": [
+        "char:0",
+        "gear:0",
+        "char:2",
+        "gear:2",
+        "char:1",
+        "gear:1",
+        "char:3",
+        "gear:3",
+        "label:_geral",
+        "label:TTDS",
+        "label:Scroll",
+        "label:Rótulo 3",
+        "label:Rótulo 4"
+      ],
+      "Iansan (início)": [
+        "char:0",
+        "gear:0",
+        "label:_geral"
+      ],
+      "Pós-Supremo": [
+        "char:0",
+        "gear:0",
+        "char:2",
+        "gear:2",
+        "gear:1",
+        "char:3",
+        "gear:3",
+        "label:_geral",
+        "label:TTDS",
+        "label:Scroll"
+      ],
+      "Final": [
+        "char:0",
+        "gear:0",
+        "char:2",
+        "gear:2",
+        "gear:1",
+        "char:3",
+        "label:_geral",
+        "label:Scroll"
+      ],
+      "Nenhum": []
+    }
+  },
+  "scenario": {
+    "config": {
+      "characterLevel": 90,
+      "enemyLevel": 100,
+      "enemyBaseRes": 0.1,
+      "enemyDefRed": 0,
+      "minRollsPerSubstat": 2,
+      "rotationDuration": 17.5,
+      "durationManual": true
+    },
+    "elementMode": "kit"
+  },
+  "extras": [],
+  "team": {
+    "members": [
+      {
+        "character": "Mavuika",
+        "weapon": "A Thousand Blazing Suns",
+        "artifacts": {
+          "rarity": {
+            "flower": 5,
+            "plume": 5,
+            "sands": 5,
+            "goblet": 5,
+            "circlet": 5
+          },
+          "sands": "ATK%",
+          "goblet": "DMG%",
+          "circlet": "CR"
+        },
+        "talents": {
+          "normal": 10,
+          "skill": 10,
+          "burst": 10
+        },
+        "gearManual": true,
+        "stacks": {
+          "a4": 5
+        },
+        "minER": 0,
+        "pieces": [
+          {
+            "setKey": "ObsidianCodex",
+            "slotKey": "flower",
+            "rarity": 5,
+            "level": 20,
+            "mainStatKey": "hp",
+            "substats": [
+              {
+                "key": "eleMas",
+                "value": 49
+              },
+              {
+                "key": "critDMG_",
+                "value": 21
+              },
+              {
+                "key": "atk",
+                "value": 14
+              },
+              {
+                "key": "critRate_",
+                "value": 6.6
+              }
+            ],
+            "location": ""
+          },
+          {
+            "setKey": "GoldenTroupe",
+            "slotKey": "plume",
+            "rarity": 5,
+            "level": 20,
+            "mainStatKey": "atk",
+            "substats": [
+              {
+                "key": "critDMG_",
+                "value": 21.8
+              },
+              {
+                "key": "def_",
+                "value": 5.8
+              },
+              {
+                "key": "critRate_",
+                "value": 7.4
+              },
+              {
+                "key": "eleMas",
+                "value": 51
+              }
+            ],
+            "location": "Gaming"
+          },
+          {
+            "setKey": "ObsidianCodex",
+            "slotKey": "sands",
+            "rarity": 5,
+            "level": 20,
+            "mainStatKey": "eleMas",
+            "substats": [
+              {
+                "key": "critRate_",
+                "value": 7
+              },
+              {
+                "key": "critDMG_",
+                "value": 18.7
+              },
+              {
+                "key": "atk_",
+                "value": 14
+              },
+              {
+                "key": "hp",
+                "value": 209
+              }
+            ],
+            "location": "Mavuika"
+          },
+          {
+            "setKey": "ObsidianCodex",
+            "slotKey": "goblet",
+            "rarity": 5,
+            "level": 20,
+            "mainStatKey": "pyro_dmg_",
+            "substats": [
+              {
+                "key": "atk_",
+                "value": 11.7
+              },
+              {
+                "key": "critRate_",
+                "value": 10.1
+              },
+              {
+                "key": "hp_",
+                "value": 4.1
+              },
+              {
+                "key": "critDMG_",
+                "value": 15.5
+              }
+            ],
+            "location": "Mavuika"
+          },
+          {
+            "setKey": "ObsidianCodex",
+            "slotKey": "circlet",
+            "rarity": 5,
+            "level": 20,
+            "mainStatKey": "critDMG_",
+            "substats": [
+              {
+                "key": "critRate_",
+                "value": 13.2
+              },
+              {
+                "key": "eleMas",
+                "value": 21
+              },
+              {
+                "key": "atk_",
+                "value": 9.3
+              },
+              {
+                "key": "hp_",
+                "value": 4.7
+              }
+            ],
+            "location": "Mavuika"
+          }
+        ]
+      },
+      {
+        "character": "Iansan",
+        "weapon": "Symphonist of Scents",
+        "artifacts": {
+          "rarity": {
+            "flower": 5,
+            "plume": 5,
+            "sands": 5,
+            "goblet": 5,
+            "circlet": 5
+          },
+          "sands": "ATK%",
+          "goblet": "DMG%",
+          "circlet": "CR"
+        },
+        "talents": {
+          "normal": 10,
+          "skill": 10,
+          "burst": 10
+        },
+        "constellation": 6,
+        "gearManual": true,
+        "reacted": [
+          "Pyro"
+        ],
+        "minER": 0,
+        "pieces": [
+          {
+            "setKey": "ScrollOfTheHeroOfCinderCity",
+            "slotKey": "flower",
+            "rarity": 5,
+            "level": 20,
+            "mainStatKey": "hp",
+            "substats": [
+              {
+                "key": "eleMas",
+                "value": 40
+              },
+              {
+                "key": "enerRech_",
+                "value": 9.7
+              },
+              {
+                "key": "critDMG_",
+                "value": 28
+              },
+              {
+                "key": "critRate_",
+                "value": 3.1
+              }
+            ],
+            "location": "Iansan"
+          },
+          {
+            "setKey": "ScrollOfTheHeroOfCinderCity",
+            "slotKey": "plume",
+            "rarity": 5,
+            "level": 20,
+            "mainStatKey": "atk",
+            "substats": [
+              {
+                "key": "enerRech_",
+                "value": 13
+              },
+              {
+                "key": "critRate_",
+                "value": 7
+              },
+              {
+                "key": "hp",
+                "value": 299
+              },
+              {
+                "key": "atk_",
+                "value": 14
+              }
+            ],
+            "location": "Iansan"
+          },
+          {
+            "setKey": "ScrollOfTheHeroOfCinderCity",
+            "slotKey": "sands",
+            "rarity": 5,
+            "level": 20,
+            "mainStatKey": "atk_",
+            "substats": [
+              {
+                "key": "enerRech_",
+                "value": 16.2
+              },
+              {
+                "key": "critRate_",
+                "value": 2.7
+              },
+              {
+                "key": "def",
+                "value": 53
+              },
+              {
+                "key": "hp_",
+                "value": 5.8
+              }
+            ],
+            "location": "Iansan"
+          },
+          {
+            "setKey": "GladiatorsFinale",
+            "slotKey": "goblet",
+            "rarity": 5,
+            "level": 20,
+            "mainStatKey": "atk_",
+            "substats": [
+              {
+                "key": "hp_",
+                "value": 5.3
+              },
+              {
+                "key": "enerRech_",
+                "value": 18.1
+              },
+              {
+                "key": "critDMG_",
+                "value": 20.2
+              },
+              {
+                "key": "critRate_",
+                "value": 3.1
+              }
+            ],
+            "location": "Iansan"
+          },
+          {
+            "setKey": "ScrollOfTheHeroOfCinderCity",
+            "slotKey": "circlet",
+            "rarity": 5,
+            "level": 20,
+            "mainStatKey": "critRate_",
+            "substats": [
+              {
+                "key": "def",
+                "value": 39
+              },
+              {
+                "key": "enerRech_",
+                "value": 11.7
+              },
+              {
+                "key": "atk",
+                "value": 19
+              },
+              {
+                "key": "atk_",
+                "value": 15.2
+              }
+            ],
+            "location": "Iansan"
+          }
+        ]
+      },
+      {
+        "character": "Citlali",
+        "weapon": "Thrilling Tales of Dragon Slayers",
+        "refinement": 5,
+        "artifacts": {
+          "rarity": {
+            "flower": 5,
+            "plume": 5,
+            "sands": 5,
+            "goblet": 5,
+            "circlet": 5
+          },
+          "sands": "ATK%",
+          "goblet": "DMG%",
+          "circlet": "CR"
+        },
+        "talents": {
+          "normal": 10,
+          "skill": 10,
+          "burst": 10
+        },
+        "gearManual": true,
+        "minER": 0,
+        "pieces": [
+          {
+            "setKey": "Instructor",
+            "slotKey": "flower",
+            "rarity": 4,
+            "level": 16,
+            "mainStatKey": "hp",
+            "substats": [
+              {
+                "key": "def",
+                "value": 13
+              },
+              {
+                "key": "enerRech_",
+                "value": 14.5
+              },
+              {
+                "key": "atk_",
+                "value": 3.3
+              },
+              {
+                "key": "hp_",
+                "value": 3.7
+              }
+            ],
+            "location": ""
+          },
+          {
+            "setKey": "SongOfDaysPast",
+            "slotKey": "plume",
+            "rarity": 5,
+            "level": 20,
+            "mainStatKey": "atk",
+            "substats": [
+              {
+                "key": "hp",
+                "value": 269
+              },
+              {
+                "key": "hp_",
+                "value": 11.1
+              },
+              {
+                "key": "enerRech_",
+                "value": 24.6
+              },
+              {
+                "key": "def_",
+                "value": 5.1
+              }
+            ],
+            "location": "Chevreuse"
+          },
+          {
+            "setKey": "Instructor",
+            "slotKey": "sands",
+            "rarity": 4,
+            "level": 16,
+            "mainStatKey": "enerRech_",
+            "substats": [
+              {
+                "key": "eleMas",
+                "value": 52
+              },
+              {
+                "key": "atk",
+                "value": 16
+              },
+              {
+                "key": "def",
+                "value": 17
+              },
+              {
+                "key": "hp_",
+                "value": 4.7
+              }
+            ],
+            "location": "Citlali"
+          },
+          {
+            "setKey": "Instructor",
+            "slotKey": "goblet",
+            "rarity": 4,
+            "level": 16,
+            "mainStatKey": "anemo_dmg_",
+            "substats": [
+              {
+                "key": "hp",
+                "value": 191
+              },
+              {
+                "key": "enerRech_",
+                "value": 14
+              },
+              {
+                "key": "critRate_",
+                "value": 5
+              },
+              {
+                "key": "def_",
+                "value": 4.7
+              }
+            ],
+            "location": ""
+          },
+          {
+            "setKey": "Instructor",
+            "slotKey": "circlet",
+            "rarity": 4,
+            "level": 16,
+            "mainStatKey": "atk_",
+            "substats": [
+              {
+                "key": "critDMG_",
+                "value": 12.4
+              },
+              {
+                "key": "critRate_",
+                "value": 3.1
+              },
+              {
+                "key": "enerRech_",
+                "value": 9.8
+              },
+              {
+                "key": "def",
+                "value": 28
+              }
+            ],
+            "location": "Citlali"
+          }
+        ]
+      },
+      {
+        "character": "Bennett",
+        "weapon": "Absolution",
+        "artifacts": {
+          "rarity": {
+            "flower": 5,
+            "plume": 5,
+            "sands": 5,
+            "goblet": 5,
+            "circlet": 5
+          },
+          "sands": "ATK%",
+          "goblet": "DMG%",
+          "circlet": "CR"
+        },
+        "talents": {
+          "normal": 10,
+          "skill": 10,
+          "burst": 10
+        },
+        "constellation": 6,
+        "gearManual": true,
+        "minER": 0,
+        "pieces": [
+          {
+            "setKey": "NoblesseOblige",
+            "slotKey": "flower",
+            "rarity": 5,
+            "level": 20,
+            "mainStatKey": "hp",
+            "substats": [
+              {
+                "key": "enerRech_",
+                "value": 22.7
+              },
+              {
+                "key": "atk_",
+                "value": 10.5
+              },
+              {
+                "key": "def",
+                "value": 16
+              },
+              {
+                "key": "eleMas",
+                "value": 21
+              }
+            ],
+            "location": ""
+          },
+          {
+            "setKey": "NoblesseOblige",
+            "slotKey": "plume",
+            "rarity": 5,
+            "level": 20,
+            "mainStatKey": "atk",
+            "substats": [
+              {
+                "key": "hp",
+                "value": 837
+              },
+              {
+                "key": "critRate_",
+                "value": 3.5
+              },
+              {
+                "key": "enerRech_",
+                "value": 16.2
+              },
+              {
+                "key": "def",
+                "value": 19
+              }
+            ],
+            "location": "Nicole"
+          },
+          {
+            "setKey": "NoblesseOblige",
+            "slotKey": "sands",
+            "rarity": 5,
+            "level": 20,
+            "mainStatKey": "enerRech_",
+            "substats": [
+              {
+                "key": "def",
+                "value": 39
+              },
+              {
+                "key": "critRate_",
+                "value": 13.2
+              },
+              {
+                "key": "def_",
+                "value": 6.6
+              },
+              {
+                "key": "critDMG_",
+                "value": 7.8
+              }
+            ],
+            "location": "Bennett"
+          },
+          {
+            "setKey": "HuskOfOpulentDreams",
+            "slotKey": "goblet",
+            "rarity": 5,
+            "level": 20,
+            "mainStatKey": "def_",
+            "substats": [
+              {
+                "key": "def",
+                "value": 42
+              },
+              {
+                "key": "enerRech_",
+                "value": 25.3
+              },
+              {
+                "key": "eleMas",
+                "value": 40
+              },
+              {
+                "key": "critRate_",
+                "value": 3.1
+              }
+            ],
+            "location": "YunJin"
+          },
+          {
+            "setKey": "NoblesseOblige",
+            "slotKey": "circlet",
+            "rarity": 5,
+            "level": 20,
+            "mainStatKey": "critRate_",
+            "substats": [
+              {
+                "key": "atk",
+                "value": 35
+              },
+              {
+                "key": "enerRech_",
+                "value": 22
+              },
+              {
+                "key": "def",
+                "value": 44
+              },
+              {
+                "key": "hp",
+                "value": 209
+              }
+            ],
+            "location": "Bennett"
+          }
+        ]
+      }
+    ],
+    "compat": "none"
+  }
+}

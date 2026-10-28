@@ -33,7 +33,7 @@ export default function Card() {
     [project, data, analysis],
   );
 
-  const setCard = (patch: { title?: string; badge?: string; tag?: string; nick?: string; accent?: string }) => {
+  const setCard = (patch: { title?: string; badge?: string; tag?: string; nick?: string; accent?: string; vault?: PosterFormat }) => {
     if (!project) return;
     const next: RotationProject = { ...project, meta: { ...project.meta, card: { ...project.meta.card, ...patch }, updatedAt: new Date().toISOString() } };
     setProject(next);
@@ -127,6 +127,7 @@ export default function Card() {
             <div className="dz-field">
               <span>Formato</span>
               <Segmented<PosterFormat> label="Formato" value={format} onChange={setFormat} options={FORMATS} />
+              <button type="button" className="dz-btn" aria-pressed={(card.vault ?? 'portrait') === format} disabled={(card.vault ?? 'portrait') === format} onClick={() => setCard({ vault: format })}>{(card.vault ?? 'portrait') === format ? `${POSTER_LABEL[format]} é o card da tela Times` : `Usar ${POSTER_LABEL[format]} na tela Times`}</button>
             </div>
             <div className="cd-acts">
               <button type="button" className="dz-btn gold" disabled={!model || busy} onClick={() => void act('download')}>Baixar PNG</button>

@@ -63,6 +63,8 @@ export interface ProjectSummary {
   shared: boolean;
   /** Versão do jogo (patch) com que o time foi montado; vazia se não se sabe. */
   gameVersion: string;
+  /** Formato do card que a tela Times mostra para este time (4:5 por padrão). */
+  cardFormat: 'portrait' | 'wide' | 'tall';
 }
 
 export const summarize = (p: RotationProject): ProjectSummary => ({
@@ -75,6 +77,7 @@ export const summarize = (p: RotationProject): ProjectSummary => ({
   favorite: !!p.meta.favorite,
   shared: !!p.meta.shared,
   gameVersion: p.gameVersion ?? '',
+  cardFormat: p.meta.card?.vault ?? 'portrait',
 });
 
 /** Projetos salvos neste navegador, do mais recente ao mais antigo; o exemplo entra se ainda não foi editado. */

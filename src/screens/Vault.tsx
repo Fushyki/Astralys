@@ -10,7 +10,7 @@ import { downloadProject, importJson, importXlsx, type ImportResult } from '../f
 import { SAMPLE_ID, cloneProject, deleteStoredProject, listProjects, loadProject, saveProject, sampleForApp } from '../features/rotation/persistence';
 import { useProjectCards } from '../features/rotation/useProjectCards';
 import { Menu } from '../design/Menu';
-import { PosterCard, ScaledPoster } from './card/PosterCard';
+import { POSTER_LABEL, POSTER_SIZE, PosterCard, ScaledPoster, type PosterFormat } from './card/PosterCard';
 import { deleteRemote } from '../online/api';
 import { ONLINE_ENABLED } from '../online/config';
 import { useSession } from '../online/session';
@@ -53,6 +53,7 @@ export default function Vault() {
     refresh();
   };
   const toggleFavorite = (id: string) => edit(id, (p) => ({ ...p, meta: { ...p.meta, favorite: !p.meta.favorite, updatedAt: new Date().toISOString() } }));
+  const setCardFormat = (id: string, vault: PosterFormat) => edit(id, (p) => ((p.meta.card?.vault ?? 'portrait') === vault ? null : { ...p, meta: { ...p.meta, card: { ...p.meta.card, vault }, updatedAt: new Date().toISOString() } }));
   const duplicate = (id: string) => edit(id, (p) => cloneProject(p));
   const rename = (id: string, name: string) => {
     setRenaming(null);
@@ -200,9 +201,9 @@ export default function Vault() {
                 <li key={p.id} className="vt-card" data-id={p.id} data-name={p.name} style={{ ['--c' as string]: lead }}>
                   <Link className="vt-poster" to={`/projeto/${p.id}`} aria-label={`Abrir ${p.name}`}>
                     {model && model !== 'error' ? (
-                      <ScaledPoster format="portrait"><PosterCard model={model} format="portrait" /></ScaledPoster>
+                      <ScaledPoster format={p.cardFormat}><PosterCard model={model} format={p.cardFormat} /></ScaledPoster>
                     ) : (
-                      <div className="vt-wait">
+                      <div className="vt-wait" style={{ aspectRatio: `${POSTER_SIZE[p.cardFormat].w} / ${POSTER_SIZE[p.cardFormat].h}` }}>
                         <div className="vt-faces" aria-hidden="true">
                           {p.members.map((n) => <CharacterAvatar key={n} name={n} icon={characterOf(n)?.icon} color={elementColor(elementOf(n))} size={48} />)}
                         </div>
@@ -227,6 +228,10 @@ export default function Vault() {
                             <Link role="menuitem" className="dz-menu-item" to={`/card/${p.id}`} onClick={close}>Editar o card</Link>
                             <Link role="menuitem" className="dz-menu-item" to={`/comparar?a=${p.id}`} onClick={close}>Comparar</Link>
                             {token && !p.isSample && <button type="button" role="menuitem" className="dz-menu-item" onClick={() => { close(); void toggleShare(p.id); }}>{p.shared ? 'Parar de compartilhar' : 'Compartilhar'}</button>}
+                            <span className="dz-menu-note">Card nesta tela</span>
+                            {(Object.keys(POSTER_LABEL) as PosterFormat[]).map((f) => (
+                              <button key={f} type="button" role="menuitemradio" aria-checked={p.cardFormat === f} className="dz-menu-item" onClick={() => { close(); setCardFormat(p.id, f); }}>{POSTER_LABEL[f]}{p.cardFormat === f ? ' ✓' : ''}</button>
+                            ))}
                             <button type="button" role="menuitem" className="dz-menu-item" onClick={() => { close(); duplicate(p.id); }}>Duplicar</button>
                             <button type="button" role="menuitem" className="dz-menu-item" onClick={() => { close(); setRenaming(p.id); }}>Renomear</button>
                             <button type="button" role="menuitem" className="dz-menu-item" onClick={() => { close(); const full = loadProject(p.id); if (full) downloadProject(full); }}>Exportar</button>

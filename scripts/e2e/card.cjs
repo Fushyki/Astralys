@@ -50,6 +50,14 @@ const pngSize = (file) => { const b = fs.readFileSync(file); return { w: b.readU
     await page.screenshot({ path: path.join(OUT, `r-card-${cls}.png`), fullPage: true });
   }
 
+  // Escolher o card que a tela Times mostra
+  await page.click('.dz-seg button:has-text("16:9")'); await settle();
+  await page.click('button:has-text("Usar 16:9 na tela Times")'); await settle();
+  check('o botão confirma que o 16:9 é o card da tela Times', (await page.locator('button:has-text("16:9 é o card da tela Times")').count()) === 1);
+  await page.goto(`${BASE}/vault`, { waitUntil: 'networkidle' }); await page.waitForSelector('.vt-card .pc');
+  check('a tela Times passa a mostrar o 16:9', (await page.locator('.vt-card .pc.pc-wide').count()) === 1);
+  await page.goto(`${BASE}/card/exemplo`, { waitUntil: 'networkidle' }); await page.waitForSelector('.pc');
+  await page.click('button:has-text("Usar 4:5 na tela Times")'); await settle();
   const [dl] = await Promise.all([page.waitForEvent('download', { timeout: 60000 }), page.click('button:has-text("Baixar PNG")')]);
   const file = path.join(OUT, 'r-card-download.png');
   await dl.saveAs(file);

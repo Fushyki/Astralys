@@ -9,6 +9,10 @@ import { useRotationStore } from '../../features/rotation/store';
 import { formatPercent } from '../../ui/format';
 import { StackInput } from '../personagem/StackInput';
 import { Button } from '../../design/Button';
+import type { Element } from '../../data/schema';
+import { elementColor } from '../../design/elements';
+
+const REACT_ELEMENTS: Element[] = ['Pyro', 'Hydro', 'Electro', 'Cryo', 'Dendro', 'Anemo', 'Geo'];
 
 interface Group {
   key: string;
@@ -87,6 +91,18 @@ export function MemberBuffs({ v, index, inline = false }: { v: ProjectView; inde
                       <span className="bc-stacks" role="group" aria-label={`Quantidade de ${c.stack.unit ?? 'stacks'}`}>
                         <span>{c.stack.unit ?? 'Stacks'}</span>
                         <StackInput value={c.stack.n} max={c.stack.max} step={c.stack.step} label={`${c.stack.unit ?? 'Stacks'} de ${c.name}`} onChange={(n) => updateMember(c.stack!.giver, { stacks: { ...v.project.members[c.stack!.giver].stacks, [c.stack!.buffId]: n } })} />
+                      </span>
+                    )}
+                    {c.reacted && (
+                      <span className="bc-react" role="group" aria-label="Elementos da reação">
+                        <span>Elementos da reação</span>
+                        {(c.reacted.choices ?? REACT_ELEMENTS).filter((e) => e !== c.reacted!.own).map((e) => {
+                          const on = c.reacted!.els.includes(e);
+                          return (
+                            <button key={e} type="button" aria-pressed={on} style={{ ['--c' as string]: elementColor(e) }}
+                              onClick={() => updateMember(c.reacted!.giver, { reacted: on ? c.reacted!.els.filter((x) => x !== e) : [...c.reacted!.els, e] })}>{e}</button>
+                          );
+                        })}
                       </span>
                     )}
                     <span className="bc-meta">

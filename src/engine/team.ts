@@ -118,6 +118,13 @@ export function pyroResonanceAtkPct(members: MemberInput[]): number {
   return members.filter((m) => m.character.element === 'Pyro').length >= 2 ? 0.25 : 0;
 }
 
+/** O buff chega a `target` pelo elemento? `forElements` fixo; `forReacted` = elemento do dono (`owner`) mais os que ele reagiu. */
+function receivesByElement(b: { forElements?: Element[]; forReacted?: boolean }, owner: MemberInput, target: MemberInput): boolean {
+  const el = target.character.element;
+  if (b.forReacted) return el === owner.character.element || !!owner.reacted?.includes(el);
+  return !b.forElements || b.forElements.includes(el);
+}
+
 export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): TeamAssembly {
   const { members, extras, config } = input;
   const warnings: string[] = [];
@@ -178,13 +185,13 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
     for (const b of activeCharacterBuffs(m)) {
       // Sem `timed`, o buff do próprio membro já está no bloco estático; o de equipe vale em toda ação (`always`).
       if (!b.stats || (!b.timed && b.scope === 'self')) continue;
-      const delta = characterBuffDelta(b.stats, !!b.forElements);
+      const delta = characterBuffDelta(b.stats, !!b.forElements || !!b.forReacted);
       if (isEmptyDelta(delta) || off(`cbuff-${i}-${b.id}`)) continue;
       const targets = names.filter((n, j) => {
         if (b.scope === 'self' && j !== i) return false;
         if (b.scope === 'others' && j === i) return false;
         if (b.forFactions && !b.forFactions.some((f) => members[j].factions?.includes(f))) return false;
-        return !b.forElements || b.forElements.includes(members[j].character.element);
+        return receivesByElement(b, m, members[j]);
       });
       if (targets.length === 0) continue;
       const decays = b.decay && !(b.decay.noDecayFrom !== undefined && (m.constellation ?? 0) >= b.decay.noDecayFrom);
@@ -256,7 +263,7 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
         if (b.scope === 'self' && j !== i) return false;
         if (b.scope === 'others' && j === i) return false;
         if (b.forFactions && !b.forFactions.some((f) => members[j].factions?.includes(f))) return false;
-        return !b.forElements || b.forElements.includes(members[j].character.element);
+        return receivesByElement(b, m, members[j]);
       });
       if (targets.length === 0) continue;
       const delta: StatDelta = { dmgByType: {} };
@@ -264,7 +271,7 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
         if (to === 'atkFlat' || to === 'hpFlat' || to === 'defFlat' || to === 'atkPct' || to === 'hpPct' || to === 'defPct' || to === 'em' || to === 'critRate' || to === 'critDmg' || to === 'er') delta[to] = value;
         else if (to === 'dmgPct') {
           delta.dmgBonus = value;
-          if (b.forElements) delta.eleDmg = value;
+          if (b.forElements || b.forReacted) delta.eleDmg = value;
         }
         else if (to === 'normal' || to === 'charged' || to === 'plunge' || to === 'skill' || to === 'burst') delta.dmgByType![to] = value;
         else delta.reactionBonus = { ...delta.reactionBonus, [to]: value };
@@ -290,7 +297,7 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
         if (br && br.value > 0 && br.elements.includes(el) && !off(`cbuff-res-${i}-${b.id}`)) shred += br.value;
       }
       const sr = fourPieceActive(m) ? m.primarySet?.effect?.fourPiece?.resShred : undefined;
-      if (sr && sr.value > 0 && sr.elements.includes(el) && (!sr.ifInTeam || members.some((x) => x.character.element === el)) && !off(`set-res-shred-${i}`)) shred += sr.value;
+      if (sr && sr.value > 0 && sr.elements.includes(el) && (sr.reacted && m.reacted ? m.reacted.includes(el as Element) : !sr.ifInTeam || members.some((x) => x.character.element === el)) && !off(`set-res-shred-${i}`)) shred += sr.value;
     });
     enemyRes[el] = config.enemyBaseRes - shred;
   }

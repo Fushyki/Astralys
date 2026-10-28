@@ -91,3 +91,8 @@
 .bcard .bc-stacks button:disabled { opacity: .4; cursor: not-allowed; }
 .bcard .bc-stacks b { min-width: 3.2em; text-align: center; color: var(--text); }
 .bcard .bc-stacks b small { color: var(--muted); font-weight: 400; }
+
+.bcard .bc-react { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-1); font-size: var(--fs-1); color: var(--muted); }
+.bcard .bc-react > span { flex: 1 0 100%; }
+.bcard .bc-react button { min-height: var(--ctl-sm); padding: 0 var(--sp-2); border-radius: var(--r-ctl); border: 1px solid var(--border-ctl); background: var(--bg-header); color: var(--muted); font: inherit; cursor: pointer; }
+.bcard .bc-react button[aria-pressed='true'] { border-color: var(--c); color: var(--c); }

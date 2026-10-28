@@ -35,7 +35,7 @@ export interface FourCuration {
   partial?: true;
   /** Trecho que TEM de aparecer na descrição do 4 peças. */
   expect?: string;
-  resShred?: { value: Val; elements: Element[]; ifInTeam?: true };
+  resShred?: { value: Val; elements: Element[]; ifInTeam?: true; reacted?: true };
   /** Suposições e o que não entra no cálculo. */
   note: string;
 }

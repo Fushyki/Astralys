@@ -493,7 +493,8 @@
           "Electro",
           "Cryo"
         ],
-        "ifInTeam": true
+        "ifInTeam": true,
+        "reacted": true
       },
       "buffs": [],
       "flat": [],
@@ -1861,9 +1862,35 @@
       "vaporizeBonus": 0,
       "er": 0,
       "hpPct": 0,
-      "defPct": 0
+      "defPct": 0,
+      "buffs": [
+        {
+          "id": "reacao",
+          "label": "DMG dos elementos da reação (15 s)",
+          "minConstellation": 0,
+          "scope": "team",
+          "timed": true,
+          "forReacted": true,
+          "stats": {
+            "dmgPct": 0.12
+          },
+          "flat": []
+        },
+        {
+          "id": "noite",
+          "label": "DMG extra com Bênção do Espírito da Noite (20 s)",
+          "minConstellation": 0,
+          "scope": "team",
+          "timed": true,
+          "forReacted": true,
+          "stats": {
+            "dmgPct": 0.28
+          },
+          "flat": []
+        }
+      ]
     },
-    "note": "Os bônus de 4 peças (12% + 28% em Nightsoul) entram como buffs extras do projeto, não aqui."
+    "note": "Duas faixas na linha do tempo, para o dono e a equipe: +12% por 15 s e, se o dono estava em Bênção do Espírito da Noite, +28% por 20 s. Valem para quem tem o elemento do dono ou um elemento da reação (escolhidos na Equipe, em \"Elementos da reação\"). Conjuntos com o mesmo nome não acumulam."
   },
   {
     "set": "Obsidian Codex",

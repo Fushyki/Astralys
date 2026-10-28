@@ -229,6 +229,8 @@ export const CharacterBuffSchema = z.object({
   timed: z.boolean(),
   /** Só personagens destes elementos recebem (ex.: "+15% de DMG Pyro" para a equipe). */
   forElements: z.array(ElementSchema).optional(),
+  /** Só recebem personagens do elemento do dono ou de um elemento que ele reagiu (`MemberRef.reacted`, escolhido pelo usuário). */
+  forReacted: z.boolean().optional(),
   /** Só personagens destas facções recebem (ex.: Jahoda C6, "personagens Moonsign"). */
   forFactions: z.array(z.enum(['moonsign', 'hexerei'])).optional(),
   stats: BuffStatsSchema.optional(),
@@ -379,7 +381,7 @@ export const SetEffectSchema = z.object({
       hpPct: frac,
       defPct: frac,
       /** Redução de RES do inimigo nos elementos listados (ex.: Deepwood Memories, Dendro -30%). */
-      resShred: z.object({ value: z.number(), elements: z.array(ElementOrPhysicalSchema).min(1), /** Só vale para os elementos que existem entre os membros do time (ex.: Viridescent Venerer: elemento espalhado). */ ifInTeam: z.boolean().optional() }).optional(),
+      resShred: z.object({ value: z.number(), elements: z.array(ElementOrPhysicalSchema).min(1), /** Só vale para os elementos que existem entre os membros do time (ex.: Viridescent Venerer: elemento espalhado). */ ifInTeam: z.boolean().optional(), /** O usuário escolhe os elementos espalhados (`MemberRef.reacted`); sem escolha vale `ifInTeam`. */ reacted: z.boolean().optional() }).optional(),
       team: TeamBuffSchema.optional(),
       buffs: z.array(CharacterBuffSchema).default([]),
       flat: z.array(WeaponFlatSchema).default([]),

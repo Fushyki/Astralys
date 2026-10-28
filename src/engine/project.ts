@@ -5,7 +5,7 @@
  */
 import { withStacks } from './stacks';
 import { z } from 'zod';
-import type { ArtifactSet, Character, Move, Talent, Weapon } from '../data/schema';
+import { ElementSchema, type ArtifactSet, type Character, type Move, type Talent, type Weapon } from '../data/schema';
 import { characterAtLevel, type LevelsData } from '../data/levels';
 import { planilhaEffect } from './compat/planilha';
 import { activeCharacterBuffs } from './stats';
@@ -81,6 +81,8 @@ export const MemberRefSchema = z.object({
   gearManual: z.boolean().optional(),
   /** Quantos stacks (ou pontos) de cada buff do personagem valem, por id do buff (`CharacterBuff.stacks`). Ausente = o máximo. */
   stacks: z.record(z.string(), z.number().int().min(0)).optional(),
+  /** Elementos com que o personagem reage em campo (buffs `forReacted`, ex.: Scroll of the Hero of Cinder City). */
+  reacted: z.array(ElementSchema).optional(),
   /** Infusão dos ataques normais, carregados e de queda (Hu Tao no Paramita, Xiao no Supremo…). Ausente = sem infusão (Físico em quem usa arma física). */
   normalInfusion: z.enum(['Pyro', 'Hydro', 'Anemo', 'Electro', 'Dendro', 'Cryo', 'Geo']).optional(),
   minER: z.number().min(0).optional(),
@@ -567,6 +569,7 @@ export function resolveMember(ref: MemberRef, data: GameData, effects: EffectsDa
     level,
     weapon,
     characterEffect,
+    reacted: ref.reacted,
     weaponEffect,
     primarySet,
     secondarySet,

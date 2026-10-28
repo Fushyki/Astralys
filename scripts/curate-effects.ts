@@ -224,7 +224,7 @@ function buildSets(): SetEffect[] {
         atkPct: v(base.atkPct), dmgPct: v(base.dmgPct), critRate: v(base.critRate), critDmg: v(base.critDmg), em: v(base.em),
         dmgPctByType: Object.fromEntries(Object.entries(base.byType ?? {}).map(([k, x]) => [k, v(x)])),
         meltBonus: v(base.meltBonus), vaporizeBonus: 0, er: v(base.er), hpPct: v(base.hpPct), defPct: v(base.defPct),
-        ...(cur.resShred ? { resShred: { value: v(cur.resShred.value), elements: cur.resShred.elements, ...(cur.resShred.ifInTeam ? { ifInTeam: true } : {}) } } : {}),
+        ...(cur.resShred ? { resShred: { value: v(cur.resShred.value), elements: cur.resShred.elements, ...(cur.resShred.ifInTeam ? { ifInTeam: true } : {}), ...(cur.resShred.reacted ? { reacted: true } : {}) } } : {}),
         ...(cur.team ? { team: { atkPct: v(cur.team.atkPct), dmgPct: v(cur.team.dmgPct), em: v(cur.team.em) } } : {}),
         buffs: [...crit, ...stackBuffs(groups, ctx, set.name), ...(cur.buffs ?? []).map((b) => buildBuff(b, ctx))],
         flat: (cur.flat ?? []).map((f) => buildFlat(f, ctx)),

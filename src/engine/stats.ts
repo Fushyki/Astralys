@@ -6,6 +6,7 @@
  * planilha viram ETIQUETAS (tags). Cada ação da rotação diz quais etiquetas estão ativas; no editor visual
  * as janelas de tempo dos buffs preenchem isso.
  */
+import type { Element } from '../data/schema';
 import type { ElementOrPhysical } from './constants/reactions';
 import type { Character, HitType, Weapon } from '../data/schema';
 import { REACTION_BONUS_KEYS, weaponStatsAt, type BuffStats, type CharacterBuff, type CharacterEffect, type ReactionBonusKey, type SetEffect, type WeaponEffect } from '../effects/schema';
@@ -183,6 +184,8 @@ export interface MemberInput {
   level?: number;
   weapon: Weapon;
   characterEffect?: CharacterEffect;
+  /** Elementos com que reage em campo, além do próprio (buffs `forReacted`). */
+  reacted?: Element[];
   weaponEffect?: WeaponEffect;
   /** Refinamento da arma (1 a 5) para efeitos com tabela por refinamento. Padrão: 1. */
   refinement?: number;
@@ -354,7 +357,7 @@ export function staticSources(m: MemberInput, member = 0): StatSource[] {
   }
 
   for (const b of activeCharacterBuffs(m)) {
-    if (!b.timed && b.scope === 'self') add(`cbuff-${b.id}`, b.label, 'character', characterBuffDelta(b.stats, !!b.forElements));
+    if (!b.timed && b.scope === 'self') add(`cbuff-${b.id}`, b.label, 'character', characterBuffDelta(b.stats, !!b.forElements || !!b.forReacted));
   }
 
   const we = m.weaponEffect ? weaponStatsAt(m.weaponEffect, m.refinement) : undefined;

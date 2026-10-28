@@ -18,6 +18,7 @@ import {
 import { deltaChips } from '../team/teamModel';
 import type { DamageRow } from '../../engine';
 import { stacksOf } from '../../engine';
+import { fourPieceActive } from '../../engine/stats';
 
 // ---------- Tabela de dano ----------
 
@@ -318,6 +319,8 @@ export interface BuffCard {
   timed: boolean;
   /** Buff com stacks ou pontos: quem dá, o id do buff, o máximo, quantos valem hoje e como chamar. */
   stack?: { giver: number; buffId: string; max: number; n: number; unit?: string; step?: number };
+  /** Buff que vale para o elemento do dono e os elementos que ele reagiu (`forReacted`): quem escolhe, o elemento dele e os escolhidos. */
+  reacted?: { giver: number; own: Element; els: Element[]; choices?: Element[] };
 }
 
 const STATIC_TAG: Record<string, string> = { weapon: 'Arma', 'set-2p': 'Set · 2 peças', 'set-4p': 'Set · 4 peças', character: 'Passiva', resonance: 'Ressonância', extra: 'Extra' };
@@ -352,6 +355,15 @@ export function memberBuffCards(project: RotationProject, resolved: ResolvedProj
     return { giver, buffId: m[2], max: buff.stacks.max, n: stacksOf(buff, project.members[giver].stacks?.[m[2]]), ...(buff.stacks.unit ? { unit: buff.stacks.unit } : {}), ...(buff.stacks.step ? { step: buff.stacks.step } : {}) };
   };
 
+  /** Elementos da reação de um buff `forReacted` (`cbuff-<membro>-<id>`), se ele é desse tipo. */
+  const reactedOf = (id: string): BuffCard['reacted'] => {
+    const m = /^cbuff-(d+)-(.+)$/.exec(id) ?? (/^m(d+):cbuff-(.+)$/.exec(id));
+    if (!m) return undefined;
+    const giver = Number(m[1]);
+    const buff = project.members[giver] && resolved.team.members[giver]?.characterEffect?.buffs.find((x) => x.id === m[2]);
+    return buff?.forReacted ? { giver, own: resolved.team.members[giver].character.element, els: project.members[giver].reacted ?? [] } : undefined;
+  };
+
   const cards: BuffCard[] = [];
   for (const src of full.sources[member]) {
     if (!(src.kind in STATIC_TAG)) continue;
@@ -378,6 +390,20 @@ export function memberBuffCards(project: RotationProject, resolved: ResolvedProj
       needsConfirmation: flagged,
       timed: false,
       stack: stackOf(src.id),
+      reacted: reactedOf(src.id),
+    });
+  }
+  // Set que reduz a RES dos elementos espalhados (Viridescent Venerer): o dono escolhe quais elementos reagiu.
+  const shredSet = resolved.team.members[member].primarySet;
+  const sr = fourPieceActive(resolved.team.members[member]) ? shredSet?.effect?.fourPiece?.resShred : undefined;
+  if (sr?.reacted) {
+    const id = `set-res-shred-${member}`;
+    const active = !project.disabled.includes(id);
+    const mine = project.members[member].reacted;
+    cards.push({
+      id, toggleId: id, name: `${shredSet!.name}: redução de RES do inimigo`, tag: 'Set · 4 peças', giver: member, giverName: name, window: 'o tempo todo',
+      chips: [`RES −${Math.round(sr.value * 100)}%`], active, lockedOff: false, gear: false, receivers: [name], share: null, needsConfirmation: false, timed: false,
+      reacted: { giver: member, own: resolved.team.members[member].character.element, els: mine ?? [], choices: sr.elements.filter((e): e is Element => e !== 'Physical') },
     });
   }
   if (full.resonanceAtkPct > 0) {
@@ -396,7 +422,7 @@ export function memberBuffCards(project: RotationProject, resolved: ResolvedProj
     const tag = b.id.startsWith('gear-') ? 'Arma/set' : b.id.startsWith('flat-atk-') ? 'Passiva' : idMatch ? characterBuffTag(resolved, Number(idMatch[1]), idMatch[2]) : 'Extra';
     cards.push({
       id: b.id, toggleId: b.toggleId, name: b.name, tag, giver: b.giver, giverName: b.giverName, window: b.window, chips: b.value === '—' ? [] : b.value.split(', '),
-      active: b.active, lockedOff: b.lockedOff, gear: b.gear, receivers: b.receivers, share: b.share, needsConfirmation: b.needsConfirmation, timed: b.window !== 'o tempo todo', stack: stackOf(b.id),
+      active: b.active, lockedOff: b.lockedOff, gear: b.gear, receivers: b.receivers, share: b.share, needsConfirmation: b.needsConfirmation, timed: b.window !== 'o tempo todo', stack: stackOf(b.id), reacted: reactedOf(b.id),
     });
   }
   return cards;

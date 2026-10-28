@@ -54,18 +54,16 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   const poster = (await page.textContent('.vt-card .pc')).replace(/\s+/g, ' ');
   check('o cartão é o card do time (DPS 216.600 e dano 3,79 mi)', /216\.600/.test(poster) && /3,79\s*mi/.test(poster), poster.slice(0, 120));
   check('o card mostra os 4 retratos e as barras de participação', (await page.locator('.vt-card .pc-face').count()) === 4 && (await page.locator('.vt-card .pc-bar').count()) >= 4);
-  // Escolher qual card aparece na tela Times
-  await openCardMenu(cards().first());
-  await cards().first().getByRole('menuitemradio', { name: /16:9/ }).click(); await page.waitForTimeout(900);
-  check('o card da tela Times pode ser trocado para 16:9', (await page.locator('.vt-card .pc.pc-wide').count()) === 1 && (await page.locator('.vt-card .pc.pc-portrait').count()) === 0);
+  // Escolher o card que a tela Times mostra: vale para TODOS os times de uma vez
+  const all = async (cls) => (await page.locator('.vt-card').count()) === (await page.locator(`.vt-card .pc.${cls}`).count());
+  await page.click('.vt-cardpick button:has-text("16:9")'); await page.waitForTimeout(900);
+  check('o seletor da tela Times troca o card de todos os times para 16:9', (await all('pc-wide')) && (await page.locator('.vt-card .pc.pc-portrait').count()) === 0);
   await page.reload({ waitUntil: 'networkidle' }); await page.waitForSelector('.vt-card .pc');
-  check('a escolha do card sobrevive ao recarregar', (await page.locator('.vt-card .pc.pc-wide').count()) === 1);
-  await openCardMenu(cards().first());
-  await cards().first().getByRole('menuitemradio', { name: /9:16/ }).click(); await page.waitForTimeout(900);
-  check('também aceita o 9:16', (await page.locator('.vt-card .pc.pc-tall').count()) === 1);
-  await openCardMenu(cards().first());
-  await cards().first().getByRole('menuitemradio', { name: /4:5/ }).click(); await page.waitForTimeout(900);
-  check('e volta ao 4:5', (await page.locator('.vt-card .pc.pc-portrait').count()) === 1);
+  check('a escolha do card sobrevive ao recarregar', await all('pc-wide'));
+  await page.click('.vt-cardpick button:has-text("9:16")'); await page.waitForTimeout(900);
+  check('também aceita o 9:16', await all('pc-tall'));
+  await page.click('.vt-cardpick button:has-text("4:5")'); await page.waitForTimeout(900);
+  check('e volta ao 4:5', await all('pc-portrait'));
   check('o card cabe na largura do cartão (miniatura escalada)', await page.evaluate(() => { const c = document.querySelector('.vt-card'); const p = document.querySelector('.vt-card .pc-box'); return !!c && !!p && p.getBoundingClientRect().width <= c.getBoundingClientRect().width + 1; }));
 
   // Novo time -> editor -> volta

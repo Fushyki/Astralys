@@ -224,7 +224,7 @@ export const RotationProjectSchema = z
         /** Compartilhado por link público na conta online (o servidor guarda `is_public`). */
         shared: z.boolean().optional(),
         /** Textos e cor do card (título, selo, etiqueta de versão, apelido do autor e cor de destaque). */
-        card: z.object({ title: z.string().max(60), badge: z.string().max(40), tag: z.string().max(40), nick: z.string().max(30), accent: z.string().regex(/^#[0-9a-fA-F]{6}$/), vault: z.enum(['portrait', 'wide', 'tall']) }).partial().optional(),
+        card: z.object({ title: z.string().max(60), badge: z.string().max(40), tag: z.string().max(40), nick: z.string().max(30), accent: z.string().regex(/^#[0-9a-fA-F]{6}$/) }).partial().optional(),
         /** Calculadora de recarga: partículas de inimigos e a configuração de cada personagem (pelo nome). */
         energy: z
           .object({

@@ -9,7 +9,7 @@ import type { RotationProject } from '../engine';
 import { ACCENTS, DEFAULT_ACCENT, DEFAULT_BADGE, buildCardModel, hitTypeLookup } from '../features/card/cardModel';
 import { embeddedFontCss } from '../features/card/fontCss';
 import { useGameData } from '../features/rotation/data';
-import { SAMPLE_ID, loadProject, saveProject } from '../features/rotation/persistence';
+import { SAMPLE_ID, loadProject, loadVaultCardFormat, saveProject, saveVaultCardFormat } from '../features/rotation/persistence';
 import { useAnalysis } from '../features/rotation/useAnalysis';
 import { POSTER_LABEL, POSTER_SIZE, PosterCard, ScaledPoster, type PosterFormat } from './card/PosterCard';
 import './cardpage.css';
@@ -22,6 +22,7 @@ export default function Card() {
   const { data } = useGameData();
   const [project, setProject] = useState<RotationProject | null>(() => loadProject(id));
   const [format, setFormat] = useState<PosterFormat>('portrait');
+  const [vaultFormat, setVaultFormat] = useState<PosterFormat>(loadVaultCardFormat);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState<string | null>(null);
@@ -33,7 +34,7 @@ export default function Card() {
     [project, data, analysis],
   );
 
-  const setCard = (patch: { title?: string; badge?: string; tag?: string; nick?: string; accent?: string; vault?: PosterFormat }) => {
+  const setCard = (patch: { title?: string; badge?: string; tag?: string; nick?: string; accent?: string }) => {
     if (!project) return;
     const next: RotationProject = { ...project, meta: { ...project.meta, card: { ...project.meta.card, ...patch }, updatedAt: new Date().toISOString() } };
     setProject(next);
@@ -127,7 +128,7 @@ export default function Card() {
             <div className="dz-field">
               <span>Formato</span>
               <Segmented<PosterFormat> label="Formato" value={format} onChange={setFormat} options={FORMATS} />
-              <button type="button" className="dz-btn" aria-pressed={(card.vault ?? 'portrait') === format} disabled={(card.vault ?? 'portrait') === format} onClick={() => setCard({ vault: format })}>{(card.vault ?? 'portrait') === format ? `${POSTER_LABEL[format]} é o card da tela Times` : `Usar ${POSTER_LABEL[format]} na tela Times`}</button>
+              <button type="button" className="dz-btn" disabled={vaultFormat === format} onClick={() => { saveVaultCardFormat(format); setVaultFormat(format); }}>{vaultFormat === format ? `${POSTER_LABEL[format]} é o card de todos os times` : `Usar ${POSTER_LABEL[format]} em todos os times`}</button>
             </div>
             <div className="cd-acts">
               <button type="button" className="dz-btn gold" disabled={!model || busy} onClick={() => void act('download')}>Baixar PNG</button>

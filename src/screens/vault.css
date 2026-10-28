@@ -26,3 +26,4 @@
 .vt-rename { position: absolute; left: 10px; right: 10px; bottom: 10px; z-index: 2; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 8px; }
 .vt-empty { text-align: center; }
 .vt-notes p { margin: 2px 0; }
+.vt-cardpick { display: inline-flex; align-items: center; gap: 10px; }

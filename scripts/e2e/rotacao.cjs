@@ -160,7 +160,7 @@ const num = (s) => Number(String(s).replace(/\./g, '').replace(',', '.'));
   // ---- Sequência ----
   check('a Sequência mostra 8 linhas e "Mostrar os 24"', (await rows().count()) === 8 && (await page.locator('button:has-text("Mostrar os 24")').count()) === 1);
   const heads = await page.$$eval('.rt-table th', (e) => e.map((x) => x.textContent.trim()));
-  check('colunas da Sequência', heads.join('|') === '||#|Tempo|Personagem|Golpe|Repetição|Hits|Reação|Buffs|', heads.join('|'));
+  check('colunas da Sequência', heads.join('|') === '||#|Tempo|Personagem|Golpe|Repetição|Hits|Dano|Reação|Buffs|', heads.join('|'));
   await page.click('button:has-text("Mostrar os 24")'); await settle();
   check('"Mostrar os 24" lista todas', (await rows().count()) === 24);
   await rows().nth(1).locator('input[type=checkbox]').check();

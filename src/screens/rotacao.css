@@ -111,7 +111,7 @@
 .rt-exec { display: flex; flex-direction: column; border-radius: var(--r-inner); background: var(--bg-deep); border: 1px solid var(--line-2); overflow: hidden; }
 .rt-exec .eh { display: flex; align-items: center; gap: var(--sp-2); padding: 8px 10px; border-bottom: 1px solid var(--line-1); background: var(--panel-hd); }
 .rt-exec .eh .rt-lbl { flex: 1; }
-.rt-exec .er { display: grid; grid-template-columns: 22px 74px minmax(0, 1fr) 28px; gap: 6px; align-items: center; padding: 4px 8px; border-bottom: 1px solid var(--line-0); }
+.rt-exec .er { display: grid; grid-template-columns: 22px 74px minmax(0, 1fr) auto 28px; gap: 6px; align-items: center; padding: 4px 8px; border-bottom: 1px solid var(--line-0); }
 .rt-exec .er .mk { width: 11px; height: 11px; box-sizing: border-box; transform: rotate(45deg); margin-left: 4px; border: 2px solid; }
 .rt-exec .ef { display: flex; gap: 6px; padding: 8px; }
 .rt-exec .ef .dz-btn { min-height: 28px; font-size: var(--fs-1); }
@@ -256,3 +256,5 @@
 .rt-share .part span { display: flex; flex-direction: column; min-width: 0; }
 .rt-share .part small { color: var(--muted); font-size: var(--fs-1); }
 .rt-share .rt-acts { display: flex; justify-content: flex-end; }
+
+.rt-exec .er .dmg { text-align: right; color: var(--text-hi); }

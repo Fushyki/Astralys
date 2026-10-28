@@ -10,6 +10,7 @@ import { REACTION_LABEL } from '../../features/character/characterModel';
 import type { LaneInfo } from '../../features/rotation/rotationModel';
 import { sequenceRows, specialOfMoveRef } from '../../features/rotation/screenModel';
 import { useRotationStore } from '../../features/rotation/store';
+import { formatInt } from '../../ui/format';
 import { dec } from './ui';
 
 const SHOWN = 8;
@@ -72,6 +73,7 @@ export function Sequence({ v, lanes }: { v: ProjectView; lanes: LaneInfo[] }) {
               <th>Golpe</th>
               <th style={{ width: 150 }}>Repetição</th>
               <th style={{ width: 60 }}>Hits</th>
+              <th style={{ width: 100 }}>Dano</th>
               <th style={{ width: 140 }}>Reação</th>
               <th style={{ width: 100 }}>Buffs</th>
               <th style={{ width: 44 }} />
@@ -112,6 +114,7 @@ export function Sequence({ v, lanes }: { v: ProjectView; lanes: LaneInfo[] }) {
                   <td className="mv" onClick={() => st().select(a.id)}>{name}</td>
                   <td className={`num rep ${r.repeat ? 'on' : 'off'}`}>{r.repeat ? `a cada ${dec(r.repeat.every, 1)} s · ×${r.repeat.count}` : '—'}</td>
                   <td className="num">{res ? res.action.move.hits * a.executions : a.executions}</td>
+                  <td className="num" title={r.repeat ? 'Soma de todas as execuções' : 'Dano médio'}>{formatInt(r.ids.reduce((sum, id) => sum + (results.find((x) => x.action.id === id)?.avg ?? 0), 0))}</td>
                   <td>{reaction}</td>
                   <td className="num">{active} de {lanes.length}</td>
                   <td><button type="button" className="rt-ico" aria-label="Remover este golpe" onClick={() => removeRows([r])}><Bin /></button></td>

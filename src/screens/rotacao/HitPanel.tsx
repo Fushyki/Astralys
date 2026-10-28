@@ -62,6 +62,9 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
 
   const covering = useMemo(() => (chainId || !result ? [] : coveringBuffs(project, v.resolved, v.bundle, action.id)), [project, v.resolved, v.bundle, action.id, chainId, result]);
   const total = v.bundle.optimization.result.totals.avg;
+  /** Dano médio de cada execução do golpe contínuo e a soma (cada execução é uma ação com o próprio instante, reação e buffs). */
+  const execAvg = (id: string) => v.bundle.optimization.result.actions.find((r) => r.action.id === id)?.avg ?? 0;
+  const chainTotal = execs.reduce((sum, e) => sum + execAvg(e.id), 0);
   const kindLine = chainId ? 'Dano contínuo' : 'Golpe único';
   const reactionLine = special ? SPECIAL_LABEL[special] : action.reaction === 'none' ? 'sem reação' : REACTION_LABEL[action.reaction];
   const familyColor = familyOf(special) ? FAMILY_COLOR[familyOf(special)!] : undefined;
@@ -135,6 +138,7 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
           <div className="rt-exec">
             <div className="eh">
               <span className="rt-lbl">Execuções · {execs.length}</span>
+              <span className="num" data-testid="chain-total" title="Soma do dano médio de todas as execuções">{formatInt(chainTotal)} · {formatPercent(total > 0 ? chainTotal / total : 0)} do time</span>
               <span style={{ fontSize: 'var(--fs-1)', color: '#a7b0d6' }}>Reação em</span>
               <span style={{ width: 84 }}>
                 <Sel className="sm" ariaLabel="Reação em 1 de N" value={everyN} options={EVERY_N} onChange={(n) => { setEveryN(n); if (chainId) st().reactionEveryN(chainId, Number(n), action.reaction === 'none' ? 'melt' : action.reaction); }} />
@@ -147,6 +151,7 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
                   <span className="mk" style={{ background: on ? color : '#0c1128', borderColor: on ? '#eef1ff' : color }} />
                   <Num ariaLabel={`Instante da execução ${dec(e.time, 1)} s`} className="sm" value={e.time} unit="s" onCommit={(t) => st().moveAction(e.id, t)} min={0} />
                   <Sel className="sm" ariaLabel="Reação desta execução" value={e.reaction} options={REACTION_OPTIONS} onChange={(r) => update(e.id, { reaction: r })} />
+                  <span className="num dmg" title="Dano médio desta execução">{formatInt(execAvg(e.id))}</span>
                   <button type="button" className="rt-ico sm" aria-label="Remover esta execução" onClick={() => st().removeAction(e.id)}><TrashX /></button>
                 </div>
               );

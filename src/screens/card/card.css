@@ -1,5 +1,5 @@
 /* Card para compartilhar. Tamanhos fixos em px (a imagem exportada sai sempre igual); ver PosterCard.tsx. */
-.pc { --bg: #0a0e1c; --line: #263057; --muted: #9aa3c7; --text: #e7eaf6; --track: #141b38;
+.pc { --bg: var(--bg); --line: #263057; --muted: #9aa3c7; --text: #e7eaf6; --track: #141b38;
   position: relative; overflow: hidden; box-sizing: border-box; display: flex; flex-direction: column; gap: 34px;
   background: var(--bg); color: var(--text); font-family: 'IBM Plex Sans', system-ui, sans-serif; padding: 64px 72px; line-height: 1.2; }
 .pc *, .pc *::before, .pc *::after { box-sizing: border-box; }

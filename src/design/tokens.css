@@ -44,6 +44,13 @@
   --dmg-lunar-bg: #1d2250;
   --dmg-stellar: #f58ad6;
   --dmg-stellar-bg: #3a1a38;
+  /* paleta noite (guia estelar): painéis, linhas e textos usados pelas telas */
+  --panel-bg: #0c1128; --panel-hd: #0f1532; --zebra: #0e1430; --ctl-bg: #121a3a; --bg-deep: #0a0f24; --bg-sunk: #080c1d;
+  --line-0: #131b40; --line-1: #18204a; --line-2: #232d5c; --line-3: #2a356a;
+  --text-hi: #eef1ff; --text-mid: #c3caea; --text-soft: #a7b0d6; --text-dim: #7e88b6;
+  /* molduras de raridade: um fundo chapado e uma borda por estrela (5★ dourado, 4★ lilás) */
+  --rar5-bg: #2a2010; --rar5-border: #6b5524; --rar4-bg: #241f3d; --rar4-border: #4a3f7a; --rar4-accent: #7a68c0;
+  --rar3-bg: #17233a; --rar1-bg: #1a1f3d;
   /* tipografia */
   --font-display: 'Saira Condensed', 'Arial Narrow', sans-serif;
   --font-body: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;

@@ -12,7 +12,7 @@
 .nt-panel p { margin: 0; }
 .nt-slots { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
 @media (max-width: 720px) { .nt-slots { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-.nt-slot { min-height: 190px; border: 1px dashed var(--border-strong, #2e3966); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding: 12px; text-align: center; min-width: 0; overflow-wrap: anywhere; }
+.nt-slot { min-height: 190px; border: 1px dashed var(--border-strong, var(--border-ctl-hi)); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding: 12px; text-align: center; min-width: 0; overflow-wrap: anywhere; }
 .nt-slot[data-filled="true"] { border-style: solid; background: var(--bg-header); }
 .nt-slot b { font-family: var(--font-display); font-size: 22px; line-height: 1.1; }
 .nt-slot-acts { display: flex; gap: 12px; font-size: 13px; }

@@ -10,12 +10,13 @@ import { downloadProject, importJson, importXlsx, type ImportResult } from '../f
 import { SAMPLE_ID, cloneProject, deleteStoredProject, listProjects, loadProject, loadVaultCardFormat, saveProject, saveVaultCardFormat, sampleForApp } from '../features/rotation/persistence';
 import { useProjectCards } from '../features/rotation/useProjectCards';
 import { Menu } from '../design/Menu';
+import { copyCardImage } from './card/copyCard';
 import { POSTER_LABEL, POSTER_SIZE, PosterCard, ScaledPoster, type PosterFormat } from './card/PosterCard';
 import { deleteRemote } from '../online/api';
 import { ONLINE_ENABLED } from '../online/config';
 import { useSession } from '../online/session';
 import { summaryText, syncNow } from '../online/syncNow';
-import { NO_FILTERS, NO_PATCH, filterProjects, patchesOf, type VaultFilters } from '../features/vault/vaultModel';
+import { NO_FILTERS, filterProjects, type VaultFilters } from '../features/vault/vaultModel';
 import './vault.css';
 import { Button } from '../design/Button';
 
@@ -42,8 +43,6 @@ export default function Vault() {
 
   const visible = useMemo(() => filterProjects(items, filters, elementOf), [items, filters, characters]);
   const allCharacters = useMemo(() => [...new Set(items.flatMap((p) => p.members))].sort(), [items]);
-  const patches = useMemo(() => patchesOf(items), [items]);
-  const hasUnversioned = items.some((p) => !p.gameVersion);
   const set = (patch: Partial<VaultFilters>) => setFilters((f) => ({ ...f, ...patch }));
 
   const edit = (id: string, fn: (p: NonNullable<ReturnType<typeof loadProject>>) => ReturnType<typeof loadProject>) => {
@@ -55,6 +54,19 @@ export default function Vault() {
   const toggleFavorite = (id: string) => edit(id, (p) => ({ ...p, meta: { ...p.meta, favorite: !p.meta.favorite, updatedAt: new Date().toISOString() } }));
   const [cardFormat, setCardFormatState] = useState<PosterFormat>(loadVaultCardFormat);
   const setCardFormat = (f: PosterFormat) => { setCardFormatState(f); saveVaultCardFormat(f); };
+  const [notice, setNotice] = useState<string | null>(null);
+  /** Copia a imagem do card do time (no formato escolhido) para a área de transferência. */
+  const copyCard = async (id: string, name: string) => {
+    const el = document.querySelector<HTMLElement>(`.vt-card[data-id="${id}"] .pc`);
+    try {
+      if (!el) throw new Error('o card ainda está sendo calculado');
+      await copyCardImage(el, cardFormat);
+      setNotice(`Card de “${name}” copiado.`);
+    } catch (e) {
+      setNotice(`Não foi possível copiar o card: ${e instanceof Error ? e.message : String(e)}`);
+    }
+    setTimeout(() => setNotice(null), 3500);
+  };
   const duplicate = (id: string) => edit(id, (p) => cloneProject(p));
   const rename = (id: string, name: string) => {
     setRenaming(null);
@@ -134,7 +146,7 @@ export default function Vault() {
 
   const createNew = () => navigate('/novo');
 
-  const filtered = filters.query || filters.character || filters.element || filters.favoritesOnly || filters.patch;
+  const filtered = filters.query || filters.character || filters.element || filters.favoritesOnly;
 
   return (
     <div className="dz">
@@ -171,6 +183,7 @@ export default function Vault() {
         {shareMsg && <p className="dz-error vt-share" role="status">{shareMsg}</p>}
         {notes.length > 0 && <div className="dz-error vt-notes" role="status">{notes.map((n, i) => <p key={i}>{n}</p>)}</div>}
 
+        {notice && <p className="note vt-notice" role="status">{notice}</p>}
         <section className="vt-filters" aria-label="Filtros">
           <input className="dz-input" type="search" placeholder="Buscar por nome ou personagem" aria-label="Buscar times" value={filters.query} onChange={(e) => set({ query: e.target.value })} />
           <select className="dz-input" aria-label="Personagem" value={filters.character} onChange={(e) => set({ character: e.target.value })}>
@@ -181,13 +194,6 @@ export default function Vault() {
             <option value="">Todos os elementos</option>
             {ELEMENTS.map((el) => <option key={el} value={el}>{el}</option>)}
           </select>
-          {(patches.length > 0 || hasUnversioned) && (
-            <select className="dz-input" aria-label="Patch" value={filters.patch} onChange={(e) => set({ patch: e.target.value })}>
-              <option value="">Todos os patches</option>
-              {patches.map((v) => <option key={v} value={v}>Patch {v}</option>)}
-              {hasUnversioned && <option value={NO_PATCH}>Sem patch registrado</option>}
-            </select>
-          )}
           <button type="button" className="dz-btn" aria-pressed={filters.favoritesOnly} onClick={() => set({ favoritesOnly: !filters.favoritesOnly })}>★ Favoritos</button>
           {filtered && <Button variant="ghost" size="sm" onClick={() => setFilters(NO_FILTERS)}>Limpar filtros</Button>}
         </section>
@@ -230,6 +236,7 @@ export default function Vault() {
                         ) : (
                           <>
                             <Link role="menuitem" className="dz-menu-item" to={`/projeto/${p.id}`} onClick={close}>Abrir</Link>
+                            <button type="button" role="menuitem" className="dz-menu-item" onClick={() => { close(); void copyCard(p.id, p.name); }}>Copiar card</button>
                             <Link role="menuitem" className="dz-menu-item" to={`/card/${p.id}`} onClick={close}>Editar o card</Link>
                             <Link role="menuitem" className="dz-menu-item" to={`/comparar?a=${p.id}`} onClick={close}>Comparar</Link>
                             {token && !p.isSample && <button type="button" role="menuitem" className="dz-menu-item" onClick={() => { close(); void toggleShare(p.id); }}>{p.shared ? 'Parar de compartilhar' : 'Compartilhar'}</button>}

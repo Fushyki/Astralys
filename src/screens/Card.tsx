@@ -1,5 +1,4 @@
 /** Card (/card/:id): personaliza e exporta a imagem do time (4:5, 16:9 ou 9:16). Sai dos mesmos números do projeto. */
-import { toPng } from 'html-to-image';
 import { useMemo, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { AppHeader } from '../app/AppHeader';
@@ -7,11 +6,11 @@ import '../design/design.css';
 import { Segmented, StateCard } from '../design/primitives';
 import type { RotationProject } from '../engine';
 import { ACCENTS, DEFAULT_ACCENT, DEFAULT_BADGE, buildCardModel, hitTypeLookup } from '../features/card/cardModel';
-import { embeddedFontCss } from '../features/card/fontCss';
 import { useGameData } from '../features/rotation/data';
 import { SAMPLE_ID, loadProject, loadVaultCardFormat, saveProject, saveVaultCardFormat } from '../features/rotation/persistence';
 import { useAnalysis } from '../features/rotation/useAnalysis';
-import { POSTER_LABEL, POSTER_SIZE, PosterCard, ScaledPoster, type PosterFormat } from './card/PosterCard';
+import { copyCardImage } from './card/copyCard';
+import { POSTER_LABEL, PosterCard, ScaledPoster, type PosterFormat } from './card/PosterCard';
 import './cardpage.css';
 
 const BADGES = ['Theorycraft', 'F2P', 'Investimento baixo', 'Investimento alto', 'Meta'];
@@ -41,33 +40,17 @@ export default function Card() {
     saveProject(next);
   };
 
-  const render = async () => {
-    const el = viewRef.current?.querySelector<HTMLElement>('.pc');
-    if (!el) throw new Error('O card ainda não está pronto.');
-    const { w, h } = POSTER_SIZE[format];
-    const fontEmbedCSS = await embeddedFontCss();
-    return toPng(el, { width: w, height: h, pixelRatio: 1, cacheBust: true, fontEmbedCSS, style: { transform: 'none', margin: '0' } });
-  };
-
-  const act = async (kind: 'download' | 'copy') => {
+  const copy = async () => {
     setBusy(true);
     setError(null);
     setDone(null);
     try {
-      const url = await render();
-      if (kind === 'download') {
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `${(project?.name ?? 'card').replace(/[^\w-]+/g, '_')}-${POSTER_LABEL[format].replace(':', 'x')}.png`;
-        a.click();
-        setDone('Imagem baixada.');
-      } else {
-        const blob = await (await fetch(url)).blob();
-        await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
-        setDone('Imagem copiada.');
-      }
+      const el = viewRef.current?.querySelector<HTMLElement>('.pc');
+      if (!el) throw new Error('O card ainda não está pronto.');
+      await copyCardImage(el, format);
+      setDone('Imagem copiada.');
     } catch (e) {
-      setError(`${kind === 'download' ? 'Não foi possível gerar a imagem' : 'Não foi possível copiar a imagem'}: ${e instanceof Error ? e.message : String(e)}${kind === 'copy' ? '. Use "Baixar PNG".' : ''}`);
+      setError(`Não foi possível copiar a imagem: ${e instanceof Error ? e.message : String(e)}`);
     } finally {
       setBusy(false);
     }
@@ -131,8 +114,7 @@ export default function Card() {
               <button type="button" className="dz-btn" disabled={vaultFormat === format} onClick={() => { saveVaultCardFormat(format); setVaultFormat(format); }}>{vaultFormat === format ? `${POSTER_LABEL[format]} é o card de todos os times` : `Usar ${POSTER_LABEL[format]} em todos os times`}</button>
             </div>
             <div className="cd-acts">
-              <button type="button" className="dz-btn gold" disabled={!model || busy} onClick={() => void act('download')}>Baixar PNG</button>
-              <button type="button" className="dz-btn" disabled={!model || busy} onClick={() => void act('copy')}>Copiar imagem</button>
+              <button type="button" className="dz-btn gold" disabled={!model || busy} onClick={() => void copy()}>Copiar imagem</button>
             </div>
             {error && <p className="dz-error" role="alert">{error}</p>}
             {done && <p className="note" role="status">{done}</p>}

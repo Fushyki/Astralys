@@ -1,5 +1,5 @@
 /**
- * Redesign, Card (/card/:id): formatos 4:5/16:9/9:16, textos, apelido, cor, e PNG baixado com o tamanho certo.
+ * Redesign, Card (/card/:id): formatos 4:5/16:9/9:16, textos, apelido, cor, e a imagem copiada com o tamanho certo.
  *   1) npm run build && npx vite preview --port 4173
  *   2) node scripts/e2e/card.cjs
  */
@@ -18,7 +18,7 @@ const pngSize = (file) => { const b = fs.readFileSync(file); return { w: b.readU
 
 (async () => {
   const browser = await chromium.launch({ channel: CHANNEL, headless: true });
-  const page = await (await browser.newContext({ viewport: { width: 1440, height: 1000 }, acceptDownloads: true })).newPage();
+  const page = await (await browser.newContext({ viewport: { width: 1440, height: 1000 }, permissions: ['clipboard-read', 'clipboard-write'] })).newPage();
   const problems = [];
   page.on('console', (m) => { if (['error', 'warning'].includes(m.type()) && !/404/.test(m.text())) problems.push(`console.${m.type()}: ${m.text().slice(0, 200)}`); });
   page.on('pageerror', (e) => problems.push(`pageerror: ${e.message.slice(0, 200)}`));
@@ -58,11 +58,11 @@ const pngSize = (file) => { const b = fs.readFileSync(file); return { w: b.readU
   check('a tela Times passa a mostrar o 16:9', (await page.locator('.vt-card .pc.pc-wide').count()) === 1);
   await page.goto(`${BASE}/card/exemplo`, { waitUntil: 'networkidle' }); await page.waitForSelector('.pc');
   await page.click('button:has-text("Usar 4:5 em todos os times")'); await settle();
-  const [dl] = await Promise.all([page.waitForEvent('download', { timeout: 60000 }), page.click('button:has-text("Baixar PNG")')]);
-  const file = path.join(OUT, 'r-card-download.png');
-  await dl.saveAs(file);
-  const sz = pngSize(file);
-  check('o PNG baixado tem 1080×1350 e nome com 4x5', sz.w === 1080 && sz.h === 1350 && /4x5\.png$/.test(dl.suggestedFilename()), `${sz.w}×${sz.h} ${dl.suggestedFilename()}`);
+  check('a tela do Card não tem mais o botão de baixar', (await page.locator('button:has-text("Baixar")').count()) === 0 && (await page.locator('button:has-text("Copiar imagem")').count()) === 1);
+  await page.click('button:has-text("Copiar imagem")');
+  await page.waitForSelector('[role="status"]:has-text("Imagem copiada")', { timeout: 60000 });
+  const clip = await page.evaluate(async () => { const items = await navigator.clipboard.read(); const blob = await items[0].getType('image/png'); const bmp = await createImageBitmap(blob); return `${bmp.width}x${bmp.height}`; });
+  check('copiar põe na área de transferência uma imagem 1080×1350', clip === '1080x1350', clip);
 
   await page.reload({ waitUntil: 'networkidle' }); await page.waitForSelector('.pc');
   check('apelido e cor sobrevivem ao recarregar', (await page.textContent('.pc-nick')) === 'por Davi');

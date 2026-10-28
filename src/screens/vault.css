@@ -27,3 +27,4 @@
 .vt-empty { text-align: center; }
 .vt-notes p { margin: 2px 0; }
 .vt-cardpick { display: inline-flex; align-items: center; gap: 10px; }
+.vt-notice { margin: 0; color: var(--gold-hi); }

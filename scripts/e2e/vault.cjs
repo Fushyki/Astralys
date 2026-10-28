@@ -17,7 +17,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
 
 (async () => {
   const browser = await chromium.launch({ channel: CHANNEL, headless: true });
-  const page = await (await browser.newContext({ viewport: { width: 1440, height: 1000 } })).newPage();
+  const page = await (await browser.newContext({ viewport: { width: 1440, height: 1000 }, permissions: ['clipboard-read', 'clipboard-write'] })).newPage();
   const problems = [];
   page.on('console', (m) => { if (['error', 'warning'].includes(m.type()) && !/404/.test(m.text())) problems.push(`console.${m.type()}: ${m.text().slice(0, 200)}`); });
   page.on('pageerror', (e) => problems.push(`pageerror: ${e.message.slice(0, 200)}`));
@@ -54,6 +54,11 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   const poster = (await page.textContent('.vt-card .pc')).replace(/\s+/g, ' ');
   check('o cartão é o card do time (DPS 216.600 e dano 3,79 mi)', /216\.600/.test(poster) && /3,79\s*mi/.test(poster), poster.slice(0, 120));
   check('o card mostra os 4 retratos e as barras de participação', (await page.locator('.vt-card .pc-face').count()) === 4 && (await page.locator('.vt-card .pc-bar').count()) >= 4);
+  // Copiar o card pelo menu ⋯
+  await openCardMenu(cards().first());
+  await cards().first().getByRole('menuitem', { name: 'Copiar card', exact: true }).click();
+  await page.waitForSelector('.vt-notice:has-text("copiado")', { timeout: 60000 });
+  check('o menu ⋯ copia o card do time (aviso "copiado")', true);
   // Escolher o card que a tela Times mostra: vale para TODOS os times de uma vez
   const all = async (cls) => (await page.locator('.vt-card').count()) === (await page.locator(`.vt-card .pc.${cls}`).count());
   await page.click('.vt-cardpick button:has-text("16:9")'); await page.waitForTimeout(900);
@@ -88,11 +93,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.click('button:has-text("Favoritos")');
   check('só favoritos mostra 1', (await cards().count()) === 1);
   await page.click('button:has-text("Favoritos")');
-  const patchOptions = await page.locator('select[aria-label="Patch"] option').allTextContents();
-  check('o filtro de patch lista a versão dos times', patchOptions.some((t) => /^Patch [0-9]/.test(t)), patchOptions.join(' | '));
-  await page.selectOption('select[aria-label="Patch"]', { index: 1 });
-  check('filtrar pelo patch atual mantém os dois times', (await cards().count()) === 2);
-  await page.click('button:has-text("Limpar filtros")');
+  check('a tela Times não tem mais o filtro de patch', (await page.locator('select[aria-label="Patch"]').count()) === 0);
 
   check('o cartão não tem botões soltos, só o card, o favorito e o menu', (await cards().first().locator('button').count()) === 2 && (await cards().first().locator('a').count()) === 1);
   check('o título aparece uma vez só (dentro do card)', (await cards().first().locator('h1').count()) === 1);

@@ -126,10 +126,10 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
     <div className="rt-bufs" role="group" aria-label="Buffs ligados neste golpe">
       <span className="rt-lbl">Buffs neste golpe{chainId ? ' (todas as execuções)' : ''}</span>
       {buffRows.map((b) => (
-        <label className="br" key={b.tag} data-off={!b.on}>
-          <input type="checkbox" checked={b.on} onChange={(e) => toggleTag(b.tag, e.target.checked)} aria-label={`${b.name} vale neste golpe`} />
+        <label className="br" key={b.tag} data-off={!b.on} title={b.limited ? 'A janela deste buff vale só para os primeiros golpes e este já ficou de fora' : undefined}>
+          <input type="checkbox" checked={b.on} disabled={b.limited} onChange={(e) => toggleTag(b.tag, e.target.checked)} aria-label={`${b.name} vale neste golpe`} />
           <span className="n">{b.name}<small>{b.value}</small></span>
-          <span className="num v">{b.effect > 0.0005 ? `${b.on ? '+' : 'ganharia +'}${dec(b.effect * 100, 1)}%` : ''}</span>
+          <span className="num v">{b.limited ? 'passou do limite' : b.effect > 0.0005 ? `${b.on ? '+' : 'ganharia +'}${dec(b.effect * 100, 1)}%` : ''}</span>
         </label>
       ))}
     </div>

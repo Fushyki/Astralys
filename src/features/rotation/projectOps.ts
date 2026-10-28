@@ -152,13 +152,17 @@ export function addWindow(project: RotationProject, tag: string, start: number, 
 }
 
 /** Move/redimensiona uma janela garantindo início ≥ 0 e duração mínima. */
-export function updateWindow(project: RotationProject, id: string, patch: { start?: number; end?: number }): RotationProject {
+/** `maxHits`: limite de golpes do buff na janela; `null` tira o limite. */
+export function updateWindow(project: RotationProject, id: string, patch: { start?: number; end?: number; maxHits?: number | null }): RotationProject {
   const w = project.buffWindows.find((x) => x.id === id);
   if (!w) return project;
   const start = clampTime(patch.start ?? w.start);
   const end = Math.max(clampTime(patch.end ?? w.end), start + MIN_WINDOW);
-  if (start === w.start && end === w.end) return project;
-  return touch({ ...project, buffWindows: project.buffWindows.map((x) => (x.id === id ? { ...x, start, end: clampTime(end) } : x)) });
+  const maxHits = patch.maxHits === undefined ? w.maxHits : patch.maxHits ?? undefined;
+  if (start === w.start && end === w.end && maxHits === w.maxHits) return project;
+  const { maxHits: _old, ...rest } = w;
+  void _old;
+  return touch({ ...project, buffWindows: project.buffWindows.map((x) => (x.id === id ? { ...rest, start, end: clampTime(end), ...(maxHits ? { maxHits } : {}) } : x)) });
 }
 
 /** Desloca a janela inteira mantendo a duração. */

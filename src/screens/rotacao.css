@@ -271,3 +271,8 @@
 .rt-bufs .br[data-off='true'] .n { color: var(--text-dim); text-decoration: line-through; }
 .rt-bufs .br[data-off='true'] .v { color: var(--text-dim); }
 .rt-bufs input[type='checkbox'] { width: var(--ico-1); height: var(--ico-1); accent-color: var(--gold); }
+
+/* Buff manual: formulário dobrável no painel "Buff selecionado" */
+.rt-manual { margin-top: var(--sp-3); border-top: 1px solid var(--line-1); padding-top: var(--sp-2); display: flex; flex-direction: column; gap: var(--sp-2); }
+.rt-manual > summary { cursor: pointer; font: 700 var(--fs-3) var(--font-display); letter-spacing: .06em; text-transform: uppercase; color: var(--gold); }
+.rt-manual[open] > summary { margin-bottom: var(--sp-1); }

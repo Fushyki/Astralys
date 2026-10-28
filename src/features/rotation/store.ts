@@ -66,7 +66,7 @@ export interface RotationState {
   setFavorite: (favorite: boolean) => void;
 
   addWindow: (tag: string, start: number, length?: number) => string | null;
-  updateWindow: (id: string, patch: { start?: number; end?: number }) => void;
+  updateWindow: (id: string, patch: { start?: number; end?: number; maxHits?: number | null }) => void;
   shiftWindow: (id: string, start: number) => void;
   removeWindow: (id: string) => void;
   setTagSource: (id: string, source: 'manual' | 'windows') => void;

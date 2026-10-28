@@ -145,6 +145,8 @@ export interface HitBuffRow {
   on: boolean;
   /** Ligado: quanto do dano do golpe some sem o buff. Desligado: quanto ele ganharia com o buff. */
   effect: number;
+  /** A janela só vale para os N primeiros golpes e este já passou do limite (não dá para ligar só nele). */
+  limited?: boolean;
 }
 
 /**
@@ -170,10 +172,11 @@ export function hitBuffRows(project: RotationProject, resolved: ResolvedProject,
   return base
     .filter((tag) => assembly.buffs.some((b) => b.tag === tag && !b.always && (b.targets === 'all' || b.targets.includes(member))))
     .map((tag) => {
-      const on = !off.has(tag);
-      const effect = result.avg <= 0 ? 0 : on ? Math.max(0, 1 - avgWith(current.filter((t) => t !== tag)) / result.avg) : Math.max(0, avgWith([...current, tag]) / result.avg - 1);
+      const limited = !off.has(tag) && !current.includes(tag);
+      const on = !off.has(tag) && !limited;
+      const effect = limited || result.avg <= 0 ? 0 : on ? Math.max(0, 1 - avgWith(current.filter((t) => t !== tag)) / result.avg) : Math.max(0, avgWith([...current, tag]) / result.avg - 1);
       const lane = lanes.get(tag);
-      return { tag, name: lane?.source ?? tag, value: lane?.value ?? '', on, effect };
+      return { tag, name: lane?.source ?? tag, value: lane?.value ?? '', on, effect, ...(limited ? { limited } : {}) };
     });
 }
 

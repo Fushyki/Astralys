@@ -9,6 +9,8 @@ import { ElementSchema, type ArtifactSet, type Character, type Move, type Talent
 import { characterAtLevel, type LevelsData } from '../data/levels';
 import { planilhaEffect } from './compat/planilha';
 import { activeCharacterBuffs } from './stats';
+import { applyHitLimits } from './hitLimits';
+import { assembleTeam } from './team';
 import { weaponStatsAt, type CharacterBuff, type CharacterEffect, type FlatDamageEffect, type Proc, type SetEffect, type WeaponEffect, type WeaponFlat } from '../effects/schema';
 import { SUBSTATS, zeroRolls, type Rolls } from './artifacts';
 import { RealPieceSchema, buildFromPieces } from './pieces';
@@ -146,6 +148,8 @@ export const BuffWindowSchema = z
     whole: z.boolean().optional(),
     /** 'Por golpe': a janela começa `delay` s depois do golpe `actionId` e o acompanha se ele mudar de lugar. */
     anchor: z.object({ actionId: z.string().min(1), delay: z.number() }).optional(),
+    /** Vale só para os N primeiros golpes que o buff afeta dentro da janela (ex.: Rift da Skirk: 10 Normais); ausente = todos. */
+    maxHits: z.number().int().positive().optional(),
   })
   .refine((w) => w.end > w.start, { message: 'O fim da janela deve ser depois do início.', path: ['end'] });
 export type BuffWindow = z.infer<typeof BuffWindowSchema>;
@@ -810,8 +814,10 @@ export function resolveProject(project: RotationProject, data: GameData, effects
 
   const gearIds = members.flatMap((m, i) => (project.members[i]?.gearManual ? gearSourceIds(m, i) : []));
   const gearOff = gearIds.filter((id) => !project.enabled.includes(id));
+  const team: TeamInput = { members, extras: project.extras, config, disabled: [...project.disabled, ...gearOff] };
+  if (project.buffWindows.some((w) => w.maxHits)) applyHitLimits(project.buffWindows, actions, assembleTeam(team, {}), members.map((m) => m.character.name));
   return {
-    team: { members, extras: project.extras, config, disabled: [...project.disabled, ...gearOff] },
+    team,
     gearIds,
     actions,
     flatEffects: [...applyFlatLevels(effects.flatDamage, members), ...gearFlat(members)].map((e) => {

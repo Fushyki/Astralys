@@ -4,7 +4,7 @@
  * (rótulo de 200 px + trilha). Arrastar muda o tempo (uma entrada de histórico ao soltar); setas movem (Shift = 0,5 s) e
  * Delete apaga o item selecionado.
  */
-import { useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
+import { Fragment, useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
 import type { ProjectView } from '../../app/ProjectContext';
 import { Panel } from '../../design/primitives';
 import { effectiveDuration, type ActionResult } from '../../engine';
@@ -199,7 +199,7 @@ export function Timeline({ v, lanes }: { v: ProjectView; lanes: LaneInfo[] }) {
   return (
     <Panel bar title="Linha do tempo" aside={<Seg label="Zoom" value={zoom} onChange={setZoom} options={[{ value: 'fit', label: 'Ajustar' }, { value: '1', label: '1×' }, { value: '2', label: '2×' }]} />} className="rt-p0">
       <div className="rt-zoomscroll" ref={wrapRef} onScroll={syncFromTop}>
-        <div className="rt-tlw" style={{ width: labelW + trackW }}>
+        <div className="rt-tlw" style={{ width: labelW + trackW, ['--cols' as string]: tmax }}>
           <div className="rt-caret" style={{ left: caretPx }} data-testid="caret" data-pushing={push ? true : undefined}>
             <span className="grab" role="slider" aria-label="Linha do tempo: arraste para empurrar tudo que está à direita" aria-valuenow={Math.round(caret * 100) / 100} onPointerDown={onCaretDown} onPointerMove={onCaretMove} onPointerUp={onCaretUp} onPointerCancel={onCaretUp} />
             <span className="flag num">{dec(caret, 1)} s{atHit ? ` · ${names[atHit.member]}: ${(atHit.displayName ?? atHit.move.label).replace(`${atHit.move.character} - `, '')}` : ''}{push && push.delta ? ` (${push.delta > 0 ? '+' : ''}${dec(push.delta, 1)} s)` : ''}</span>
@@ -231,46 +231,14 @@ export function Timeline({ v, lanes }: { v: ProjectView; lanes: LaneInfo[] }) {
             const chains = [...new Set(mine.map((a) => a.chainId).filter((c): c is string => !!c))];
             const color = v.colors[mi];
             return (
-              <div className="rt-lane" key={name} style={{ gridTemplateColumns: `${labelW}px ${trackW}px`, minHeight: 56 }}>
+              <Fragment key={name}>
+              <div className="rt-lane" style={{ gridTemplateColumns: `${labelW}px ${trackW}px`, minHeight: 56 }}>
                 <span className="lname">
                   <span className="dot" style={{ background: color }} />
                   <span className="nm" title={name}>{name}</span>
                   <span className="pct">{formatPercent(shares[mi] ?? 0)}</span>
                 </span>
                 <div className="trk" onPointerDown={(e) => e.target === e.currentTarget && st().setPlayhead(snap(timeAt(e.clientX)))}>
-                  {chains.map((cid) => {
-                    const list = mine.filter((a) => a.chainId === cid).sort((a, b) => a.time - b.time);
-                    const sel = list.some((a) => a.id === selectedActionId);
-                    const first = timeOf(list[0].id, list[0].time);
-                    const last = timeOf(list[list.length - 1].id, list[list.length - 1].time);
-                    const label = `${(list[0].displayName ?? list[0].move.label).replace(`${list[0].move.character} - `, '')} ×${list.length}`;
-                    return (
-                      <div key={cid}>
-                        <div className="rt-chainline" style={{ top: 'calc(50% + 14px)', left: `${x(first)}%`, width: `${x(Math.max(0, last - first))}%`, background: sel ? GOLD : color }} />
-                        <span className="rt-chaintag" style={{ top: 'calc(50% + 6px)', left: `calc(${x(first)}% + 10px)`, color: sel ? '#f8de9e' : undefined }}>{label}</span>
-                        {list.map((a) => {
-                          const full = a.reaction !== 'none';
-                          const size = full ? 12 : 10;
-                          return (
-                            <button
-                              key={a.id}
-                              type="button"
-                              className={`rt-diamond ${full ? 'full' : 'empty'}`}
-                              aria-pressed={selectedActionId === a.id}
-                              aria-label={`${label}, execução em ${dec(a.time, 1)} s, ${full ? 'com' : 'sem'} reação`}
-                              title={title(byId.get(a.id), a)}
-                              style={{ top: 'calc(50% + 15px)', left: `${x(timeOf(a.id, a.time))}%`, width: size, height: size, background: full ? color : undefined, borderColor: full ? undefined : color }}
-                              onPointerDown={(e) => begin(e, { kind: 'action', id: a.id, grab: timeAt(e.clientX) - a.time })}
-                              onPointerMove={drag}
-                              onPointerUp={finish}
-                              onPointerCancel={finish}
-                              onKeyDown={(e) => onKey(e, 'action', a.id, a.time)}
-                            />
-                          );
-                        })}
-                      </div>
-                    );
-                  })}
                   {mine.filter((a) => !a.chainId).map((a) => {
                     const res = byId.get(a.id);
                     const size = Math.round(sizeOf(res?.avg ?? 0, maxAvg));
@@ -298,6 +266,49 @@ export function Timeline({ v, lanes }: { v: ProjectView; lanes: LaneInfo[] }) {
                   })}
                 </div>
               </div>
+              {chains.map((cid) => {
+                const list = mine.filter((a) => a.chainId === cid).sort((a, b) => a.time - b.time);
+                const sel = list.some((a) => a.id === selectedActionId);
+                const first = timeOf(list[0].id, list[0].time);
+                const last = timeOf(list[list.length - 1].id, list[list.length - 1].time);
+                const label = `${(list[0].displayName ?? list[0].move.label).replace(`${list[0].move.character} - `, '')} ×${list.length}`;
+                const every = project.chains?.[cid]?.every;
+                return (
+                  <div className="rt-lane chain" key={cid} style={{ gridTemplateColumns: `${labelW}px ${trackW}px`, minHeight: 44 }}>
+                    <span className="lname">
+                      <span className="dot" style={{ background: color }} />
+                      <span className="cn">
+                        <span className="nm" title={`${name} · ${label}`}>{label}</span>
+                        <span className="sub">{name} · contínuo{every ? `, a cada ${dec(every, 1)} s` : ''}</span>
+                      </span>
+                    </span>
+                    <div className="trk" onPointerDown={(e) => e.target === e.currentTarget && st().setPlayhead(snap(timeAt(e.clientX)))}>
+                      <div className="rt-chainline" style={{ top: '50%', left: `${x(first)}%`, width: `${x(Math.max(0, last - first))}%`, background: sel ? GOLD : color }} />
+                      {list.map((a) => {
+                        const full = a.reaction !== 'none';
+                        const size = full ? 12 : 10;
+                        return (
+                          <button
+                            key={a.id}
+                            type="button"
+                            className={`rt-diamond ${full ? 'full' : 'empty'}`}
+                            aria-pressed={selectedActionId === a.id}
+                            aria-label={`${label}, execução em ${dec(a.time, 1)} s, ${full ? 'com' : 'sem'} reação`}
+                            title={title(byId.get(a.id), a)}
+                            style={{ top: '50%', left: `${x(timeOf(a.id, a.time))}%`, width: size, height: size, background: full ? color : undefined, borderColor: full ? undefined : color }}
+                            onPointerDown={(e) => begin(e, { kind: 'action', id: a.id, grab: timeAt(e.clientX) - a.time })}
+                            onPointerMove={drag}
+                            onPointerUp={finish}
+                            onPointerCancel={finish}
+                            onKeyDown={(e) => onKey(e, 'action', a.id, a.time)}
+                          />
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+              </Fragment>
             );
           })}
 
@@ -318,7 +329,7 @@ export function Timeline({ v, lanes }: { v: ProjectView; lanes: LaneInfo[] }) {
       )}
       {/* A barra de rolagem fica aqui, logo acima de "Buffs no time"; a parte de baixo anda junto com ela. */}
       <div className="rt-zoomscroll rt-zoomlow" ref={lowRef} onWheel={wheelLow}>
-        <div className="rt-tlw" style={{ width: labelW + trackW }}>
+        <div className="rt-tlw" style={{ width: labelW + trackW, ['--cols' as string]: tmax }}>
           <div className="rt-caret low" style={{ left: caretPx }} aria-hidden />
           {/* Buffs no time */}
           <div className="rt-sect rt-stick" style={{ width: wrapW }}>

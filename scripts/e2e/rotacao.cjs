@@ -117,6 +117,7 @@ const num = (s) => Number(String(s).replace(/\./g, '').replace(',', '.'));
   const execLabel = await sel.locator('.rt-exec .rt-lbl').textContent();
   check('"Contínuo" cria execuções editáveis uma a uma', /Execuções · \d+/.test(execLabel) && (await sel.locator('.rt-exec .er').count()) >= 2, execLabel);
   check('a linha do tempo mostra losangos', (await page.locator('.rt-diamond').count()) >= 2);
+  await page.locator('.rt-zoomscroll').first().screenshot({ path: path.join(OUT, 'r-rotacao-continuo.png') });
   const total = await sel.locator('.rt-exec .er').count();
   await sel.locator('.rt-exec .er button[aria-label="Remover esta execução"]').nth(1).click(); await settle();
   check('remover uma execução não apaga as outras', (await sel.locator('.rt-exec .er').count()) === total - 1);

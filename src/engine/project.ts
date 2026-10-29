@@ -492,9 +492,9 @@ export function pointExtra(move: { talent: string; label: string }, effect: Pick
 }
 
 /** Pontos do recurso que o golpe aceita (máximo e nome), se tiver. */
-export function pointMoveOf(move: { talent: string; label: string }, effect: Pick<CharacterEffect, 'pointMoves'> | undefined): { max: number; unit: string } | undefined {
+export function pointMoveOf(move: { talent: string; label: string }, effect: Pick<CharacterEffect, 'pointMoves'> | undefined): { max: number; unit: string; cadinho?: number } | undefined {
   const pm = effect?.pointMoves?.find((p) => p.talent === move.talent && p.labels.includes(move.label));
-  return pm ? { max: pm.max, unit: pm.unit } : undefined;
+  return pm ? { max: pm.max, unit: pm.unit, ...(pm.cadinho ? { cadinho: pm.cadinho } : {}) } : undefined;
 }
 
 /** Golpe do kit com dano Lunar/Estelar (curadoria `CharacterEffect.specialMoves`): marca a reação e aplica o multiplicador extra. */
@@ -771,10 +771,33 @@ export function effectiveDuration(project: Pick<RotationProject, 'config' | 'act
   return Math.max(MIN_AUTO_DURATION, Math.round(last * 100) / 100);
 }
 
-/** Escala extra da ação: a manual (planilha) mais o bônus por pontos de recurso, se a ação tem `points`. */
-function withPoints(a: Pick<ActionRef, 'move' | 'extraScale' | 'points'>, member: MemberInput | undefined): ExtraScale | undefined {
-  if (a.points === undefined || !member) return a.extraScale;
-  const p = pointExtra(a.move, member.characterEffect, member.talents, a.points);
+/**
+ * Pontos de recurso de cada ação (mesma ordem de `chronological`). Golpe com `cadinho` (Ignimoto da Mavuika) usa os pontos do último
+ * Supremo do mesmo membro lançado até `cadinho` s antes; fora dessa janela, 0. A janela também acaba quando outro membro age
+ * (Normal, habilidade ou Supremo) depois do Supremo: a Mavuika saiu de campo.
+ * shortcut: "outro membro agiu" no lugar de um "em campo" real, a rotação não guarda quem está em campo; trocar se ela passar a guardar.
+ */
+export function effectivePoints(chronological: Pick<ActionRef, 'member' | 'move' | 'points' | 'time'>[], members: Pick<MemberInput, 'characterEffect'>[]): (number | undefined)[] {
+  const pmOf = (a: Pick<ActionRef, 'member' | 'move'>) => members[a.member]?.characterEffect?.pointMoves?.find((p) => p.talent === a.move.talent && p.labels.includes(a.move.label));
+  return chronological.map((a, i) => {
+    const pm = pmOf(a);
+    if (!pm?.cadinho) return a.points;
+    for (let j = i - 1; j >= 0; j--) {
+      const b = chronological[j];
+      if (a.time - b.time > pm.cadinho) break;
+      if (b.member === a.member) {
+        const bp = pmOf(b);
+        if (bp && !bp.cadinho) return b.points ?? 0;
+      } else if (['normal', 'skill', 'burst'].includes(b.move.talent)) break;
+    }
+    return 0;
+  });
+}
+
+/** Escala extra da ação: a manual (planilha) mais o bônus por pontos de recurso, se a ação tem pontos. */
+function withPoints(a: Pick<ActionRef, 'move' | 'extraScale'>, points: number | undefined, member: MemberInput | undefined): ExtraScale | undefined {
+  if (points === undefined || !member) return a.extraScale;
+  const p = pointExtra(a.move, member.characterEffect, member.talents, points);
   if (!p) return a.extraScale;
   return { ...a.extraScale, atk: (a.extraScale?.atk ?? 0) + (p.atk ?? 0) };
 }
@@ -789,11 +812,12 @@ export function resolveProject(project: RotationProject, data: GameData, effects
   // Cronológico: os stacks de dano fixo são consumidos pelos primeiros hits elegíveis NO TEMPO (ordem estável nos empates).
   const chronological = [...project.actions].sort((a, b) => a.time - b.time);
   const procs = members.map((m) => memberProcs(m, data.moves));
-  const actions: RotationAction[] = chronological.map((a) => {
+  const points = effectivePoints(chronological, members);
+  const actions: RotationAction[] = chronological.map((a, i) => {
     const base =
       a.move.talent === 'proc' ? procMove(procs[a.member] ?? [], a.move, a.displayName)
       : a.move.talent === 'reaction' ? reactionMove(a.move, a.displayName)
-      : withSpecial(resolveMove(moves, a.move, a.displayName, withPoints(a, members[a.member])), a.move.variant, members[a.member]?.characterEffect);
+      : withSpecial(resolveMove(moves, a.move, a.displayName, withPoints(a, points[i], members[a.member])), a.move.variant, members[a.member]?.characterEffect);
     // Sem `element` na ação, o golpe é do elemento do personagem (no modo planilha, sempre).
     const move = a.element ? { ...base, element: a.element } : base;
     return {

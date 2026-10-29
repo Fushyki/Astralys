@@ -87,7 +87,7 @@ export function Moves({ v }: { v: ProjectView }) {
                     className="rt-mv"
                     title={m.label}
                     style={{ ['--c' as string]: colorOf(m) }}
-                    onClick={() => insert({ member, move: { character: m.character, talent: m.talent, label: m.label, variant: m.variant }, displayName: `${m.character} - ${label}`, points: pointMoveOf(m, effect)?.max })}
+                    onClick={() => insert({ member, move: { character: m.character, talent: m.talent, label: m.label, variant: m.variant }, displayName: `${m.character} - ${label}`, points: pointMoveOf(m, effect)?.cadinho ? undefined : pointMoveOf(m, effect)?.max })}
                   >
                     <span className="dot" />
                     <span className="n">{label}</span>

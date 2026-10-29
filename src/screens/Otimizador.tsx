@@ -29,7 +29,7 @@ import { BlockedDialog } from './otimizar/BlockedDialog';
 import { ResultCard, pieceSig, type CardCompare, type Owner } from './otimizar/ResultCard';
 import { MIN_DEFS, activeMins, firstUnmet, formatMin, type MinKey } from './otimizar/minimos';
 import { FamilyBadge, damageColor } from '../design/damageFamily';
-import { specialOfMove } from '../engine/project';
+import { pointMoveOf, specialOfMove } from '../engine/project';
 import { MovePickerDialog, KindBadge, kindOf } from './otimizador/MovePicker';
 import { elementColor } from '../design/elements';
 
@@ -69,6 +69,8 @@ interface UiState {
   moveId: string;
   reaction: string;
   crit: Crit;
+  /** Pontos de recurso do golpe (Espírito Lutador da Mavuika), só no alvo "um golpe". */
+  points: number;
   buffId: string;
   stat: StatKey;
   mins: Record<'er' | 'cr' | 'cd' | 'em' | 'hp' | 'atk' | 'def', string>;
@@ -86,7 +88,7 @@ interface UiState {
 }
 
 const initial: UiState = {
-  goal: 'dano', scope: 'team', moveId: '', reaction: 'none', crit: 'avg', buffId: '', stat: 'hp', mins: { er: '', cr: '', cd: '', em: '', hp: '', atk: '', def: '' },
+  goal: 'dano', scope: 'team', moveId: '', reaction: 'none', crit: 'avg', points: 200, buffId: '', stat: 'hp', mins: { er: '', cr: '', cd: '', em: '', hp: '', atk: '', def: '' },
   levelMin: 0, levelMax: 20, topN: 5, borrow: false, offMains: { sands: [], goblet: [], circlet: [] }, offSets: [], fillerSets: true, blocked: [],
 };
 
@@ -274,7 +276,7 @@ export function OtimizadorPanel({ index }: { index: number }) {
     const objective: Objective =
       ui.goal === 'stat' ? { kind: 'stat', stat: ui.stat }
       : ui.goal === 'buff' ? { kind: 'buff', buffId: buffChosen?.id ?? '' }
-      : ui.scope === 'move' && moveChosen ? { kind: 'move', moveId: moveChosen.id, reaction, crit: critPick }
+      : ui.scope === 'move' && moveChosen ? { kind: 'move', moveId: moveChosen.id, reaction, crit: critPick, points: ui.points }
       : ui.scope === 'member' ? { kind: 'member' }
       : { kind: 'team' };
     const mainStats: OptimizerConfig['mainStats'] = {};
@@ -572,6 +574,12 @@ export function OtimizadorPanel({ index }: { index: number }) {
                       ))}
                     </div>
                   </div>
+                  {moveChosen && pointMoveOf(moveChosen, effect) && (
+                    <div className="ot-field">
+                      <span className="lbl">{pointMoveOf(moveChosen, effect)!.unit}</span>
+                      <input type="number" min={0} max={pointMoveOf(moveChosen, effect)!.max} value={ui.points} disabled={!moveOn} aria-label={`Pontos de ${pointMoveOf(moveChosen, effect)!.unit}`} onChange={(e) => setUi({ ...ui, points: Math.min(pointMoveOf(moveChosen, effect)!.max, Math.max(0, Math.round(Number(e.target.value) || 0))) })} />
+                    </div>
+                  )}
                   <div className="ot-field">
                     <span className="lbl">Crítico</span>
                     <div className="ot-seg" role="group" aria-label="Crítico" data-off={!moveOn}>

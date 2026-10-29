@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { analyzeProject, assembleTeam, damageTable, resolveProject, type EffectsData, type GameData } from '../../src/engine';
-import { pointExtra } from '../../src/engine/project';
+import { effectivePoints, pointExtra } from '../../src/engine/project';
 import { sampleProject } from '../../src/features/rotation/persistence';
 
 const root = path.resolve(__dirname, '../..');
@@ -39,5 +39,23 @@ describe('Mavuika: Espírito Lutador (pontos × % do ATK por ponto, lido do Luna
     console.log('SUPREMO crit melt', Math.round(burst.crit));
     expect(burst.crit).toBeGreaterThan(1_200_000);
     expect(burst.crit).toBeLessThan(1_320_000);
+  });
+});
+
+describe('Mavuika: pontos do Supremo valem no Cadinho da Vida e da Morte (7 s, acaba se ela sai de campo)', () => {
+  const mav = effects.characters.find((c) => c.character === 'Mavuika')!;
+  const members = [{ characterEffect: mav }, { characterEffect: undefined }];
+  const burst = { talent: 'burst', label: 'Skill DMG' };
+  const normal = { talent: 'skill', label: 'Flamestrider Normal Attack 1-Hit DMG' };
+  const act = (member: number, move: { talent: string; label: string }, time: number, points?: number) => ({ member, move, time, points }) as Parameters<typeof effectivePoints>[0][number];
+
+  it('Ignimoto herda os pontos do Supremo dentro de 7 s e vale 0 fora', () => {
+    const p = effectivePoints([act(0, burst, 0, 150), act(0, normal, 3), act(0, normal, 7), act(0, normal, 7.5)], members);
+    expect(p).toEqual([150, 150, 150, 0]);
+  });
+  it('sem Supremo antes, 0; outro membro agindo no meio encerra a janela; o campo do próprio golpe é ignorado', () => {
+    expect(effectivePoints([act(0, normal, 1, 200)], members)).toEqual([0]);
+    const p = effectivePoints([act(0, burst, 0, 200), act(1, { talent: 'skill', label: 'x' }, 2), act(0, normal, 3, 200), act(1, { talent: 'proc', label: 'y' }, 3.5)], members);
+    expect(p).toEqual([200, undefined, 0, undefined]);
   });
 });

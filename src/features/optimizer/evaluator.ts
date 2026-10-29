@@ -47,7 +47,7 @@ export type Objective =
   /** Um golpe da rotação (índice em `actions`). */
   | { kind: 'action'; index: number }
   /** Um golpe do kit, avaliado sozinho com todos os buffs do time, com a reação e o tipo de crítico escolhidos. */
-  | { kind: 'move'; moveId: string; reaction: ReactionChoice; crit: 'avg' | 'crit' | 'noCrit' }
+  | { kind: 'move'; moveId: string; reaction: ReactionChoice; crit: 'avg' | 'crit' | 'noCrit'; /** Pontos de recurso do golpe (padrão: o máximo, 200 do Espírito Lutador). */ points?: number }
   /** O valor de um buff que este personagem dá e que depende dos stats dele (id do buff como montado pelo time). */
   | { kind: 'buff'; buffId: string }
   | { kind: 'stat'; stat: 'hp' | 'atk' | 'def' | 'em' | 'er' };
@@ -192,7 +192,7 @@ export function createEvaluator(input: EvaluatorInput): Evaluator {
   /** Um golpe do kit sozinho, com todas as etiquetas de buff ligadas (como a tabela de dano do personagem). */
   const moveValue = (r: ReturnType<typeof run>, o: Extract<Objective, { kind: 'move' }>): number => {
     // O golpe e as etiquetas ligadas só mudam com o set (não com as peças): monta uma vez por set.
-    const mk = `${o.moveId}|${o.reaction}`;
+    const mk = `${o.moveId}|${o.reaction}|${o.points ?? ""}`;
     r.hit.moves ??= new Map();
     let action = r.hit.moves.get(mk);
     if (action === undefined) {
@@ -211,7 +211,7 @@ export function createEvaluator(input: EvaluatorInput): Evaluator {
     return {
       id: move.id, member,
       // Golpe Lunar/Estelar do kit usa a fórmula dele (sem DMG% elemental), como na tabela de dano.
-      move: proc?.resolved ?? withSpecial({ id: move.id, character: move.character, talent: move.talent, hitType: move.hitType, label: move.label, displayName: move.label, hits: move.hits, scale: move.scale, extra: pointExtra(move, r.members[member].characterEffect, r.members[member].talents) }, move.variant, r.members[member].characterEffect),
+      move: proc?.resolved ?? withSpecial({ id: move.id, character: move.character, talent: move.talent, hitType: move.hitType, label: move.label, displayName: move.label, hits: move.hits, scale: move.scale, extra: pointExtra(move, r.members[member].characterEffect, r.members[member].talents, o.points) }, move.variant, r.members[member].characterEffect),
       executions: 1, reaction: o.reaction, activeTags: [...new Set(r.assembly.buffs.map((b) => b.tag))], dmgAdjust: 0,
     };
   };

@@ -101,7 +101,9 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
     else update(action.id, { flatOff: next.length ? next : undefined });
   };
   const point = pointMoveOf(action.move, effect);
-  const pointsSection = point ? (
+  const pointsSection = point?.cadinho ? (
+    <span className="rt-lbl" title={`Os pontos são os do último Supremo, até ${point.cadinho} s depois e enquanto o personagem fica em campo (Cadinho da Vida e da Morte). Fora disso, 0.`}>{point.unit}: do Supremo (janela de {point.cadinho} s)</span>
+  ) : point ? (
     <Num label={point.unit} value={action.points ?? 0} unit="pts" digits={0} min={0} onCommit={(n) => (chainId ? setAll({ points: Math.min(point.max, Math.max(0, Math.round(n))) }) : update(action.id, { points: Math.min(point.max, Math.max(0, Math.round(n))) }))} />
   ) : null;
   const flatSection = result?.flatUse && result.flatUse.length > 0 ? (

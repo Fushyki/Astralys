@@ -137,6 +137,8 @@ export const PointMoveSchema = z.object({
   perPoint: z.array(z.number()).length(15),
   max: z.number().int().positive(),
   unit: z.string().min(1),
+  /** Duração (s) da janela em que o golpe usa os pontos do Supremo lançado antes (Cadinho da Vida e da Morte da Mavuika). Ausente = pontos do próprio golpe. Fora da janela, 0. */
+  cadinho: z.number().positive().optional(),
 });
 export type PointMove = z.infer<typeof PointMoveSchema>;
 

@@ -208,7 +208,8 @@
           0.0069
         ],
         "max": 200,
-        "unit": "Espírito Lutador"
+        "unit": "Espírito Lutador",
+        "cadinho": 7
       },
       {
         "talent": "skill",
@@ -235,7 +236,8 @@
           0.0138
         ],
         "max": 200,
-        "unit": "Espírito Lutador"
+        "unit": "Espírito Lutador",
+        "cadinho": 7
       }
     ],
     "fonte_info": "planilha Mavuika_Iansan_Combo2, aba \"Personagens (efeitos)\". A1 +30% ATK (Lunaris p1); A4 +40% DMG decaindo (use 'Ajuste DMG%' na Rotação)."

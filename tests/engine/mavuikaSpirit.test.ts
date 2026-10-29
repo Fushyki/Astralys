@@ -58,4 +58,8 @@ describe('Mavuika: pontos do Supremo valem no Cadinho da Vida e da Morte (7 s, a
     const p = effectivePoints([act(0, burst, 0, 200), act(1, { talent: 'skill', label: 'x' }, 2), act(0, normal, 3, 200), act(1, { talent: 'proc', label: 'y' }, 3.5)], members);
     expect(p).toEqual([200, undefined, 0, undefined]);
   });
+  it('golpe contínuo de outro membro (ex.: Tempestade Gélida da Citlali, a cada 1 s) não encerra a janela', () => {
+    const tick = (time: number) => ({ ...act(1, { talent: 'skill', label: 'Frostfall Storm DMG' }, time), chainId: 'c1' }) as Parameters<typeof effectivePoints>[0][number];
+    expect(effectivePoints([act(0, burst, 0, 200), tick(1), tick(2), act(0, normal, 3, 200)], members)).toEqual([200, undefined, undefined, 200]);
+  });
 });

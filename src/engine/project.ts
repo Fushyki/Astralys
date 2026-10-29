@@ -774,10 +774,10 @@ export function effectiveDuration(project: Pick<RotationProject, 'config' | 'act
 /**
  * Pontos de recurso de cada ação (mesma ordem de `chronological`). Golpe com `cadinho` (Ignimoto da Mavuika) usa os pontos do último
  * Supremo do mesmo membro lançado até `cadinho` s antes; fora dessa janela, 0. A janela também acaba quando outro membro age
- * (Normal, habilidade ou Supremo) depois do Supremo: a Mavuika saiu de campo.
+ * (Normal, habilidade ou Supremo lançado; golpe contínuo, como a Tempestade Gélida da Citlali, não conta) depois do Supremo: a Mavuika saiu de campo.
  * shortcut: "outro membro agiu" no lugar de um "em campo" real, a rotação não guarda quem está em campo; trocar se ela passar a guardar.
  */
-export function effectivePoints(chronological: Pick<ActionRef, 'member' | 'move' | 'points' | 'time'>[], members: Pick<MemberInput, 'characterEffect'>[]): (number | undefined)[] {
+export function effectivePoints(chronological: Pick<ActionRef, 'member' | 'move' | 'points' | 'time' | 'chainId'>[], members: Pick<MemberInput, 'characterEffect'>[]): (number | undefined)[] {
   const pmOf = (a: Pick<ActionRef, 'member' | 'move'>) => members[a.member]?.characterEffect?.pointMoves?.find((p) => p.talent === a.move.talent && p.labels.includes(a.move.label));
   return chronological.map((a, i) => {
     const pm = pmOf(a);
@@ -788,7 +788,7 @@ export function effectivePoints(chronological: Pick<ActionRef, 'member' | 'move'
       if (b.member === a.member) {
         const bp = pmOf(b);
         if (bp && !bp.cadinho) return b.points ?? 0;
-      } else if (['normal', 'skill', 'burst'].includes(b.move.talent)) break;
+      } else if (!b.chainId && ['normal', 'skill', 'burst'].includes(b.move.talent)) break; // contínuo de outro membro (zona, invocação) não o tira de campo
     }
     return 0;
   });

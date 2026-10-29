@@ -20,6 +20,8 @@ export function Face({ name, icon, color }: { name: string; icon?: string; color
 }
 
 const GACHA = 'https://api.lunaris.moe/data/assets/gachaicon';
+/** Arte alta do personagem (a mesma dos cards). */
+export const splashUrl = (icon: string) => `${GACHA}/${icon.replace('UI_AvatarIcon_', 'UI_Gacha_AvatarIcon_')}.webp`;
 
 /** Retrato alto do personagem (faixa de gacha do Lunaris); sem imagem mostra a inicial na cor dele. */
 export function Strip({ name, icon, color }: { name: string; icon?: string; color: string }) {

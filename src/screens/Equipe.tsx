@@ -3,7 +3,8 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useProjectView } from '../app/ProjectContext';
 import { CharacterPickerDialog } from '../design/CharacterPickerDialog';
-import { CharacterAvatar, Chip, KpiCard, StackedBar } from '../design/primitives';
+import { Chip, StackedBar } from '../design/primitives';
+import { splashUrl } from './card/cardParts';
 import { pieceIconUrl, weaponIconUrl } from '../design/images';
 import { MAX_TEAM_SIZE, effectiveDuration, effectiveTalents, type MemberRef } from '../engine';
 import type { LoadedData } from '../features/rotation/data';
@@ -25,6 +26,11 @@ import './equipe.css';
 
 const PIECES = ['flower', 'plume', 'sands', 'goblet', 'circlet'] as const;
 const PIECE_NAME = { flower: 'Flor', plume: 'Pluma', sands: 'Areia', goblet: 'Cálice', circlet: 'Tiara' } as const;
+
+function Splash({ icon, name }: { icon?: string; name: string }) {
+  const [failed, setFailed] = useState(false);
+  return icon && !failed ? <img className="splash" src={splashUrl(icon)} alt="" loading="lazy" crossOrigin="anonymous" onError={() => setFailed(true)} /> : <b className="splash init" aria-hidden="true">{name.charAt(0)}</b>;
+}
 
 function GearImg({ src, fallback }: { src?: string; fallback: string }) {
   const [failed, setFailed] = useState(false);
@@ -141,22 +147,25 @@ export default function Equipe() {
         </div>
       </section>
 
-      <section className="dz-grid c4" aria-label="Indicadores do time">
-        <KpiCard label="DPS do time" value={formatInt(summary.dps)} hint="dano médio por segundo" tone="gold" />
-        <KpiCard label="Dano da rotação" value={formatInt(summary.avg)} hint={`${summary.actionCount} golpes · média com crítico`} />
-        <div className="dz-kpi">
-          <span className="lbl">Divisão do dano</span>
-          <StackedBar
-            parts={summary.members.map((m, i) => ({ key: m.name, label: m.name, fraction: m.fraction, color: colors[i] }))}
-            format={(f) => formatPercent(f, f < 0.1 ? 2 : 1)}
-          />
+      <section className="eq-hero" aria-label="Indicadores do time">
+        <div className="dps">
+          <span className="k">DPS do time</span>
+          <span className="big num">{formatInt(summary.dps)}</span>
         </div>
-        <KpiCard
-          label="Reação principal"
-          small
-          value={reaction ? reaction.name : 'Sem reação'}
-          hint={reaction ? `${formatPercent(reaction.fraction)} do dano vem da amplificação` : 'Nenhum golpe usa reação'}
-        />
+        <div className="kpis">
+          <div><span className="v num">{formatInt(summary.avg)}</span><span className="l">dano da rotação · {summary.actionCount} golpes, média com crítico</span></div>
+          <div>
+            <span className="v">{reaction ? reaction.name : 'Sem reação'}</span>
+            <span className="l">{reaction ? `${formatPercent(reaction.fraction)} do dano vem da amplificação` : 'Nenhum golpe usa reação'}</span>
+          </div>
+          <div className="split">
+            <span className="l">Divisão do dano</span>
+            <StackedBar
+              parts={summary.members.map((m, i) => ({ key: m.name, label: m.name, fraction: m.fraction, color: colors[i] }))}
+              format={(f) => formatPercent(f, f < 0.1 ? 2 : 1)}
+            />
+          </div>
+        </div>
       </section>
 
       {error && <p className="dz-error" role="alert">{error}</p>}
@@ -184,17 +193,16 @@ export default function Equipe() {
           const set = setPiecesText(ref);
           return (
             <article className="eq-card" key={ref.character} style={{ ['--c' as string]: colors[i] }} aria-label={`Personagem ${ref.character}`}>
-              <div className="top" />
+              <button type="button" className="who" onClick={() => setPicker({ mode: 'replace', index: i })} aria-label={`Trocar ${ref.character} por outro personagem`} title="Tocar aqui troca o personagem">
+                <Splash icon={character?.icon} name={ref.character} />
+                <div className="meta">
+                  <span className="name">{ref.character}</span>
+                  <span className="role">{role} · {character?.element}</span>
+                  <span className="num sub">Nv {Math.min(90, ref.level ?? project.config.characterLevel)} · C{ref.constellation ?? 0} · talentos {talents.normal}/{talents.skill}/{talents.burst}</span>
+                </div>
+                <span className="swap" aria-hidden="true">⇄</span>
+              </button>
               <div className="body">
-                <button type="button" className="who" onClick={() => setPicker({ mode: 'replace', index: i })} aria-label={`Trocar ${ref.character} por outro personagem`} title="Tocar aqui troca o personagem">
-                  <CharacterAvatar name={ref.character} icon={character?.icon} color={colors[i]} size={64} />
-                  <div className="meta">
-                    <span className="name">{ref.character}</span>
-                    <span className="role">{role} · {character?.element}</span>
-                    <span className="num sub">Nv {Math.min(90, ref.level ?? project.config.characterLevel)} · C{ref.constellation ?? 0} · talentos {talents.normal}/{talents.skill}/{talents.burst}</span>
-                  </div>
-                  <span className="swap" aria-hidden="true">⇄</span>
-                </button>
 
                 <EquipGear index={i} memberRef={ref} data={data} mains={mainsText(ref, character?.element)} setText={`${set.name} · ${set.pieces}`} />
 

@@ -24,7 +24,8 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   page.on('pageerror', (e) => problems.push(`pageerror: ${e.message.slice(0, 200)}`));
   const settle = () => page.waitForTimeout(900);
   const cards = () => page.$$eval('.eq-card .name', (e) => e.map((x) => x.textContent));
-  const kpi = (label) => page.locator(`.dz-kpi:has(.lbl:text-is("${label}")) .v`).textContent();
+  const kpiSel = { 'DPS do time': '.eq-hero .big', 'Dano da rotação': '.eq-hero .kpis > div:nth-child(1) .v', 'Reação principal': '.eq-hero .kpis > div:nth-child(2) .v' };
+  const kpi = (label) => page.locator(kpiSel[label]).textContent();
 
   await page.goto(`${BASE}/projeto/exemplo`, { waitUntil: 'networkidle' });
   await page.evaluate(() => localStorage.clear());

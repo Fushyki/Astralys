@@ -4,9 +4,9 @@
 .rt-head h1 { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 30px; line-height: 1; }
 .rt-head .sub { font-size: var(--fs-2); color: var(--muted); }
 .rt-head .acts { display: flex; flex-wrap: wrap; gap: var(--sp-2); margin-left: auto; align-items: center; }
-.rt-live { display: flex; flex-direction: column; justify-content: center; padding: 6px var(--sp-3); border: 1px solid var(--rar5-border); border-radius: var(--r-inner); background: #17140e; }
+.rt-live { display: flex; flex-direction: column; justify-content: center; padding: 0 var(--sp-3); border-left: 1px solid var(--line-2); }
 .rt-live .lbl { font: 600 var(--fs-1) var(--font-display); letter-spacing: .1em; text-transform: uppercase; color: var(--gold); }
-.rt-live .num { font: 700 28px/1 var(--font-display); color: var(--gold); font-variant-numeric: tabular-nums; }
+.rt-live .num { font: 700 56px/.95 var(--font-display); color: var(--accent, var(--gold)); font-variant-numeric: tabular-nums; }
 
 .rt-grid { display: grid; grid-template-columns: 300px minmax(0, 1fr) 360px; gap: var(--panel-gap); align-items: stretch; }
 .rt-col { display: flex; flex-direction: column; gap: var(--panel-gap); min-width: 0; }

@@ -5,6 +5,11 @@ html, body { margin: 0; background: var(--bg); color: var(--text); }
 body { font-family: var(--font-body); font-size: 15px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
 .dz *, .dz *::before, .dz *::after { box-sizing: border-box; }
 .dz { min-height: 100vh; background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 15px; }
+/* Fundo do card 16:9: arcos finos de constelação no canto, atrás de tudo. */
+.dz { position: relative; isolation: isolate; }
+.dz::before { content: ''; position: fixed; top: 0; right: 0; width: min(900px, 90vw); height: 900px; pointer-events: none; z-index: -1; background:
+  radial-gradient(circle at 100% 0, transparent 698px, #1E2647 698px, #1E2647 699px, transparent 699px),
+  radial-gradient(circle at 100% 0, transparent 818px, #161D3B 818px, #161D3B 819px, transparent 819px); }
 .dz a { color: var(--gold); }
 .dz a:hover { color: var(--gold-hi); }
 .dz :focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }

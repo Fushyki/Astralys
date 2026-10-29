@@ -1,9 +1,21 @@
 /* Tela Equipe: cartão de personagem (também é a base do cartão do Vault). */
 .eq-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-panel); overflow: hidden; display: flex; flex-direction: column; min-width: 0; }
-.eq-card .top { height: 4px; background: var(--c); }
+.eq-card { border-bottom: 4px solid var(--c); }
 .eq-card .body { padding: 20px; display: flex; flex-direction: column; gap: 16px; flex: 1; }
-.eq-card .who { display: flex; gap: 14px; align-items: center; min-width: 0; }
-.eq-card .meta { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+/* Identidade do card 16:9: arte alta do personagem, nome por cima, DPS grande na cor de destaque. */
+.eq-card .who { position: relative; display: flex; align-items: flex-end; min-width: 0; height: 240px; overflow: hidden; background: linear-gradient(180deg, #1a2247, #0f1530); }
+.eq-card .splash { position: absolute; top: 0; right: 0; width: 56%; height: 100%; object-fit: cover; object-position: center 4%; -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 40%); mask-image: linear-gradient(90deg, transparent 0, #000 40%); }
+.eq-card .splash.init { left: auto; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 90px; color: var(--c); }
+.eq-card .meta { position: relative; width: 100%; padding: 16px 20px; display: flex; flex-direction: column; gap: 4px; min-width: 0; background: linear-gradient(0deg, rgba(8, 11, 24, .85), transparent); }
+.eq-card button.who .swap { position: absolute; top: 12px; right: 12px; }
+.eq-hero { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 16px 56px; }
+.eq-hero .k { display: block; font-family: var(--font-display); font-weight: 600; font-size: 14px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.eq-hero .big { display: block; font-family: var(--font-display); font-weight: 700; font-size: clamp(64px, 11vw, 128px); line-height: .9; color: var(--accent, var(--gold)); }
+.eq-hero .kpis { flex: 1; min-width: 280px; display: flex; flex-wrap: wrap; gap: 16px 40px; padding: 14px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.eq-hero .kpis > div { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.eq-hero .kpis .split { flex: 1; min-width: 220px; }
+.eq-hero .v { font-family: var(--font-display); font-weight: 700; font-size: 32px; line-height: 1; }
+.eq-hero .l { font-size: 13px; color: var(--muted); }
 .eq-card .name { font-family: var(--font-display); font-weight: 700; font-size: 26px; line-height: 1; }
 .eq-card .role { font-size: 13px; color: var(--muted); }
 .eq-card .sub { font-size: 13px; color: var(--text-2); }

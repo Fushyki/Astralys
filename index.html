@@ -2,15 +2,73 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d8b668'><path d='M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z'/></svg>" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+    <link rel="apple-touch-icon" href="/icon-192.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Astralys</title>
+    <meta name="theme-color" content="#0c1128" />
+    <title>Astralys: teorycraft de Genshin Impact com rotação e buffs</title>
+    <meta name="description" content="Calculadora de dano de Genshin Impact que mostra de onde vem cada número: monte o time, arraste a rotação numa linha do tempo e veja o que cada buff rende." />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link rel="canonical" href="https://astralys.vercel.app/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Astralys" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:title" content="Astralys: teorycraft de Genshin Impact com rotação e buffs" />
+    <meta property="og:description" content="Monte o time, arraste a rotação e veja quanto dano cada personagem, buff e reação realmente rende." />
+    <meta property="og:url" content="https://astralys.vercel.app/" />
+    <meta property="og:image" content="https://astralys.vercel.app/og.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Tela inicial do Astralys: golpes de uma rotação ligados por uma linha dourada que termina numa estrela" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Astralys: teorycraft de Genshin Impact" />
+    <meta name="twitter:description" content="Cada número tem origem. Monte o time, arraste a rotação e veja de onde vem cada buff." />
+    <meta name="twitter:image" content="https://astralys.vercel.app/og.jpg" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          { "@type": "WebSite", "@id": "https://astralys.vercel.app/#site", "name": "Astralys", "url": "https://astralys.vercel.app/", "inLanguage": "pt-BR" },
+          {
+            "@type": "WebApplication",
+            "@id": "https://astralys.vercel.app/#app",
+            "name": "Astralys",
+            "url": "https://astralys.vercel.app/",
+            "applicationCategory": "GameApplication",
+            "operatingSystem": "Qualquer navegador moderno",
+            "inLanguage": "pt-BR",
+            "description": "Calculadora de dano e teorycraft de Genshin Impact: rotação em linha do tempo, buffs por janela, otimizador de artefatos e card para compartilhar.",
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "BRL" },
+            "isPartOf": { "@id": "https://astralys.vercel.app/#site" },
+            "sameAs": ["https://github.com/Fushyki/Astralys"]
+          },
+          {
+            "@type": "FAQPage",
+            "mainEntity": [
+              { "@type": "Question", "name": "O que é o Astralys?", "acceptedAnswer": { "@type": "Answer", "text": "Uma ferramenta gratuita de teorycraft de Genshin Impact que calcula o dano de um time e mostra de onde vem cada número: personagem, buff, reação e tipo de golpe." } },
+              { "@type": "Question", "name": "As fórmulas batem com o Genshin Optimizer?", "acceptedAnswer": { "@type": "Answer", "text": "Sim. O motor segue as fórmulas do Genshin Optimizer e reproduz uma planilha de theorycraft de referência. Diferenças pequenas aparecem só quando um buff decai com o tempo, que o Astralys modela e o Genshin Optimizer não." } },
+              { "@type": "Question", "name": "Preciso criar conta?", "acceptedAnswer": { "@type": "Answer", "text": "Não. Os times ficam salvos no navegador. Dá para importar o build pelo UID do jogo ou por um arquivo do Genshin Optimizer e compartilhar o resultado como imagem ou link." } }
+            ]
+          }
+        ]
+      }
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=Saira+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap"></noscript>
   </head>
   <body>
     <div id="root"></div>
+    <noscript>
+      <main style="max-width:640px;margin:48px auto;padding:0 16px;font-family:system-ui,sans-serif;line-height:1.5">
+        <h1>Astralys: teorycraft de Genshin Impact</h1>
+        <p>O Astralys é uma ferramenta gratuita que calcula o dano de um time de Genshin Impact e mostra de onde vem cada número. Monte o time, arraste a rotação numa linha do tempo e veja quanto cada personagem, buff e reação rende.</p>
+        <p>Ele precisa de JavaScript para funcionar. Código aberto em <a href="https://github.com/Fushyki/Astralys">github.com/Fushyki/Astralys</a>.</p>
+      </main>
+    </noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

@@ -1,0 +1,23 @@
+# Astralys
+
+> Ferramenta gratuita de teorycraft de Genshin Impact, em português. Calcula o dano de um time e mostra de onde vem cada número: personagem, buff, reação e tipo de golpe. As fórmulas seguem o Genshin Optimizer.
+
+Os times ficam salvos no navegador, sem conta. O código é aberto.
+
+## Páginas
+
+- [Início](https://astralys.vercel.app/): o que é e os dois caminhos (montar um time ou abrir um salvo).
+- [Time de exemplo](https://astralys.vercel.app/projeto/exemplo): Mavuika, Citlali, Iansan e Bennett com rotação, buffs e dano por fonte.
+- [Montar um time](https://astralys.vercel.app/novo): escolha de personagens, build (padrão ou importado do UID) e início da rotação.
+
+## O que calcula
+
+- Dano por golpe, por personagem e por fonte (golpe, reação, dano fixo).
+- Valor de cada buff: desmarcar um buff mostra quanto do dano do time some.
+- Melhor conjunto de artefatos a partir do inventário importado.
+- Card em imagem (4:5, 16:9, 9:16) e link para compartilhar o time.
+
+## Fontes
+
+- [Código no GitHub](https://github.com/Fushyki/Astralys)
+- [Genshin Optimizer](https://github.com/frzyc/genshin-optimizer): referência das fórmulas.

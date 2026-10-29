@@ -1,0 +1,31 @@
+# Astralys é aberto de propósito a buscadores e a bots de IA: quanto mais citado, melhor.
+User-agent: *
+Allow: /
+Disallow: /card/
+Disallow: /entrar
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+Sitemap: https://astralys.vercel.app/sitemap.xml

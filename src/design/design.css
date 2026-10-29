@@ -72,7 +72,7 @@ body { font-family: var(--font-body); font-size: 15px; line-height: 1.5; -webkit
 @media (max-width: 720px) { .dz-grid.c4, .dz-grid.c5, .dz-grid.c2 { grid-template-columns: minmax(0, 1fr); } }
 
 /* ---- Chips e segmentado ---- */
-.dz-chip { font-size: 13px; padding: 4px 10px; border-radius: 999px; background: var(--surface-2); color: var(--text-2); border: 1px solid var(--border-ctl); white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; }
+.dz-chip { font-size: 13px; padding: 4px 10px; border-radius: 999px; background: var(--surface-2); color: var(--text-2); border: 1px solid var(--border-ctl); white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; display: inline-flex; align-items: center; gap: 6px; }
 .dz-chip.warn { color: var(--warn); border-color: var(--warn-border); background: var(--warn-bg); }
 .dz-chip.tone { color: var(--tone, var(--text-2)); border-color: color-mix(in srgb, var(--tone, var(--border-ctl)) 40%, transparent); background: color-mix(in srgb, var(--tone, var(--surface-2)) 14%, var(--bg)); }
 .dz-seg { display: inline-flex; flex-wrap: wrap; gap: 4px; padding: 4px; background: var(--bg-header); border: 1px solid var(--border-ctl); border-radius: 10px; }

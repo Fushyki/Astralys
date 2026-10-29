@@ -2,7 +2,7 @@
 
 Ambiente de theorycrafting de Genshin Impact: monta rotações de time numa timeline, mostra de onde vem cada buff e quanto vale, guarda tudo num Vault e gera cards para partilhar. Meta: melhor que o Genshin Optimizer em times/rotações e mais legível que o GCSim.
 
-Dono: Davi. UI em pt-BR. Commits em português. Trabalhar numa branch longa (agora `v2/importar-uid`), nunca direto no `main`; várias entregas por branch e o Davi abre e mescla UM PR por lote no GitHub (decisão de 19/10/2026, para ele mesclar menos).
+Dono: Davi. UI em pt-BR. Commits em português. Siga a seção "Fluxo de trabalho" abaixo: toda tarefa vira uma Issue, o trabalho vai direto para a `main` depois dos testes, e mudança em `src/engine/` abre um branch e espera a aprovação do Davi.
 
 ## Fluxo de trabalho
 Toda tarefa (correção, melhoria ou função nova) vira uma Issue no GitHub antes de começar. Ao começar, comente na Issue "em andamento" e diga qual sessão está trabalhando, para outra sessão não repetir o trabalho. O commit, em português, cita a Issue (ex.: "Corrige o padrão do Espírito Lutador (#12)"). O trabalho vai direto para a main depois dos testes, sem Pull Request, como já combinado. A exceção: mudança no motor de dano (src/engine/) abre um branch e espera a minha aprovação antes de ir para a main. Ao terminar, feche a Issue com um comentário curto: o que mudou e quais testes rodaram.

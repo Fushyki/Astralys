@@ -195,7 +195,19 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
       });
       if (targets.length === 0) continue;
       const decays = b.decay && !(b.decay.noDecayFrom !== undefined && (m.constellation ?? 0) >= b.decay.noDecayFrom);
-      addBuff({ id: `cbuff-${i}-${b.id}`, tag: labelTag(b.label), targets, delta, description: `${names[i]}: ${b.label}`, ...(b.timed ? {} : { always: true as const }), ...(decays ? { decay: b.decay!.duration } : {}), ...(b.duration ? { duration: b.duration } : {}) });
+      addBuff({ id: `cbuff-${i}-${b.id}`, tag: b.onCharTag ? characterTag(i) : labelTag(b.label), targets, delta, description: `${names[i]}: ${b.label}`, ...(b.timed ? {} : { always: true as const }), ...(decays ? { decay: b.decay!.duration } : {}), ...(b.duration ? { duration: b.duration } : {}) });
+    }
+  });
+
+  // 2c) Redução de RES/DEF com duração (`timed`): janela na linha do tempo, vale só nos golpes dentro dela (no inimigo, então para todos)
+  members.forEach((m, i) => {
+    for (const b of activeCharacterBuffs(m)) {
+      if (!b.timed || (!b.resShred && !b.defShred)) continue;
+      const resShred = b.resShred && b.resShred.value > 0 ? Object.fromEntries(b.resShred.elements.map((el) => [el, b.resShred!.value])) : undefined;
+      if (!resShred && !b.defShred) continue;
+      const id = `cbuff-shred-${i}-${b.id}`;
+      if (off(id)) continue;
+      addBuff({ id, tag: labelTag(b.label), targets: 'all', delta: { ...(resShred ? { resShred } : {}), ...(b.defShred ? { defShred: b.defShred } : {}) }, description: `${names[i]}: ${b.label}`, ...(b.duration ? { duration: b.duration } : {}) });
     }
   });
 
@@ -277,7 +289,7 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
         else delta.reactionBonus = { ...delta.reactionBonus, [to]: value };
       }
       addBuff({
-        id, tag: labelTag(b.label), targets, delta, description: `${names[i]}: ${b.label}`, derived: true,
+        id, tag: b.onCharTag ? characterTag(i) : labelTag(b.label), targets, delta, description: `${names[i]}: ${b.label}`, derived: true,
         ...(b.timed ? {} : { always: true }),
       });
     }
@@ -294,7 +306,7 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
       if (r && r.value > 0 && r.elements.includes(el) && !off(`res-shred-${i}`)) shred += r.value;
       for (const b of activeCharacterBuffs(m)) {
         const br = b.resShred;
-        if (br && br.value > 0 && br.elements.includes(el) && !off(`cbuff-res-${i}-${b.id}`)) shred += br.value;
+        if (br && !b.timed && br.value > 0 && br.elements.includes(el) && !off(`cbuff-res-${i}-${b.id}`)) shred += br.value;
       }
       const sr = fourPieceActive(m) ? m.primarySet?.effect?.fourPiece?.resShred : undefined;
       if (sr && sr.value > 0 && sr.elements.includes(el) && (sr.reacted && m.reacted ? m.reacted.includes(el as Element) : !sr.ifInTeam || members.some((x) => x.character.element === el)) && !off(`set-res-shred-${i}`)) shred += sr.value;
@@ -304,7 +316,7 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
 
   let defShred = 0;
   members.forEach((m, i) => {
-    for (const b of activeCharacterBuffs(m)) if (b.defShred && !off(`cbuff-def-${i}-${b.id}`)) defShred += b.defShred;
+    for (const b of activeCharacterBuffs(m)) if (b.defShred && !b.timed && !off(`cbuff-def-${i}-${b.id}`)) defShred += b.defShred;
   });
   const enemyDefRed = Math.min(0.9, config.enemyDefRed + defShred);
 

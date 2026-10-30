@@ -125,7 +125,9 @@ export function createEvaluator(input: EvaluatorInput): Evaluator {
     if (!hit) {
       const ref: MemberRef = { ...input.ref, primarySet: config.primarySet, secondarySet: config.secondarySet, fourPiece: config.fourPiece };
       const base = resolved.team.members.map((m, i) => (i === member ? resolveMember(ref, game, effects, resolved.team.config.minRollsPerSubstat, resolved.team.config.characterLevel) : m));
-      const members = finalizeMembers(base, !!input.planilha);
+      // Só o membro refeito passa pelas regras: os outros já vieram finalizados e rodá-las de novo contaria duas vezes o que escala por nível.
+      const done = finalizeMembers(base, !!input.planilha);
+      const members = base.map((m, i) => (i === member ? done[i] : resolved.team.members[i]));
       hit = { members, flat: [...applyFlatLevels(effects.flatDamage, members), ...gearFlat(members)] };
       cache.set(key, hit);
     }

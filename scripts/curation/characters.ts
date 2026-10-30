@@ -28,6 +28,10 @@ export interface BuffCuration {
   forElements?: Element[];
   /** Só membros destas facções recebem. */
   forFactions?: ('moonsign' | 'hexerei')[];
+  /** Id do buff que este reforça e substitui quando ativo. */
+  replaces?: string;
+  /** Ver `CharacterBuff.onCharTag`. */
+  onCharTag?: boolean;
   stats?: {
     atkPct?: Val; dmgPct?: Val; critRate?: Val; critDmg?: Val; em?: Val; hpPct?: Val; defPct?: Val;
     byType?: Partial<Record<'normal' | 'charged' | 'plunge' | 'skill' | 'burst', Val>>;
@@ -37,7 +41,7 @@ export interface BuffCuration {
     baseMultByType?: Partial<Record<'normal' | 'charged' | 'plunge' | 'skill' | 'burst', Val>>;
     /** Fração da DEF do inimigo ignorada pelos golpes do dono. */
     defIgnore?: Val;
-    atkFlat?: Val; hpFlat?: Val; defFlat?: Val; er?: Val;
+    atkFlat?: Val; atkBaseFlat?: Val; hpFlat?: Val; defFlat?: Val; er?: Val;
     /** Bônus de DMG Físico. */
     physDmgPct?: Val;
     /** Dano Crítico só em golpes Físicos. */
@@ -46,7 +50,7 @@ export interface BuffCuration {
     reactionBonus?: Partial<Record<ReactionKey, Val>>;
   };
   /** Dano fixo por golpe elegível (ex.: Gorou A4, 156% da DEF no dano da habilidade). */
-  flat?: { name: string; sourceStat: 'ATK' | 'HP' | 'DEF' | 'EM' | 'BaseATK'; perPoint: Val; cap?: Val; hitTypes: ('normal' | 'charged' | 'plunge' | 'skill' | 'burst')[]; stacks?: number; targets?: 'self' | 'team' | 'others'; elements?: Element[] }[];
+  flat?: { name: string; sourceStat: 'ATK' | 'HP' | 'DEF' | 'EM' | 'BaseATK'; perPoint: Val; cap?: Val; hitTypes: ('normal' | 'charged' | 'plunge' | 'skill' | 'burst')[]; labels?: string[]; stacks?: number; targets?: 'self' | 'team' | 'others'; elements?: Element[] }[];
   resShred?: { value: Val; elements: (Element | 'Physical')[] };
   /** Redução de DEF do inimigo, em fração (vale o tempo todo). */
   defShred?: Val;
@@ -54,7 +58,7 @@ export interface BuffCuration {
    * Efeito do kit (habilidade ou supremo) que cresce com o nível do talento: `src: 'kit'`, os valores em `stats`,
    * `resShred` ou `convert` valem 1 e são multiplicados pela linha `key` da tabela de multiplicadores do Lunaris.
    */
-  kit?: { talent: 'normal' | 'skill' | 'burst'; key?: string; /** Tabela dos 15 níveis (fração) que o Lunaris não traz; vem do Genshin Optimizer (`skillParam.json`). */ table?: number[] };
+  kit?: { talent: 'normal' | 'skill' | 'burst'; key?: string; /** Linha do kit (números puros, 15 níveis) que vira o teto da conversão por nível. */ capKey?: string; /** Tabela dos 15 níveis (fração) que o Lunaris não traz; vem do Genshin Optimizer (`skillParam.json`). */ table?: number[] };
   /** Regras de composição do time (ver `BuffTeamRulesSchema`); `scale.table` vem de parâmetros do Lunaris. */
   team?: { only?: Element[]; eachOf?: Element[]; scale?: { of: 'distinct' | 'same' | 'different' | Element[]; table: Val[] }; /** Mínimo de membros Moonsign / Hexerei no time. */ moonsign?: number; moonsignMax?: number; hexerei?: number };
   /** Bônus que depende de um stat da fonte (ver `BuffConvertSchema`). Substitui `stats`. */
@@ -66,6 +70,7 @@ export interface BuffCuration {
     cap?: Val;
     /** Teto em múltiplos do ATK base da fonte (Hu Tao: 4). */
     capBaseAtk?: number;
+    /** Teto por nível do talento, lido da linha `key` do kit (`kit.capKey`). */
     to: ConvertTarget[];
   };
   expect: string;

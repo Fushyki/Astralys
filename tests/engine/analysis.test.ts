@@ -11,6 +11,7 @@ import {
   type Variant,
 } from '../../src/engine';
 import { loadPlanilhaFixture } from '../helpers/planilhaFixture';
+import { planilhaWeapon } from '../../src/engine/compat/planilha';
 
 const fx = loadPlanilhaFixture();
 const { ctx, optimized, imported, data, effects } = fx;
@@ -122,7 +123,7 @@ describe('comparação de variantes', () => {
     apply: (m: MemberInput) => ({
       ...m,
       weapon: data.weapons.find((w) => w.name === name)!,
-      weaponEffect: effects.weapons.find((e) => e.weapon === name),
+      weaponEffect: planilhaWeapon(effects.weapons.find((e) => e.weapon === name)),
     }),
   });
   const input = { team: imported.team, actions: imported.actions, flatEffects: imported.flatEffects, ampCoefficient: ctx.ampCoefficient };

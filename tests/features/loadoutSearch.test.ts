@@ -60,7 +60,7 @@ const run = (artifacts: unknown[], allowEquippedByOthers = false) =>
     ampCoefficient: resolved.ampCoefficient,
     game,
     effects,
-    minRolls: project.config.minRollsPerSubstat,
+    minRolls: project.config.minRollsPerSubstat, planilha: true,
     weights: weightsFromGains(bundle.gains, 0),
     allowEquippedByOthers,
   });

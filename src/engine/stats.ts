@@ -65,6 +65,12 @@ export interface StatBlock {
   eleDmg: number;
   /** Bônus de dano de reação (ex.: +40% de Sobrecarga do Thundering Fury), em fração. */
   reactionBonus: Record<ReactionBonusKey, number>;
+  /** ATK base fixo (soma ao ATK de personagem + arma, antes dos % de ATK). */
+  atkBaseFlat: number;
+  /** Redução de DEF do inimigo em janela (fração); só buffs `timed`, somada à `enemyDefRed` fixa. */
+  defShred: number;
+  /** Redução de RES do inimigo em janela, por elemento (ou Physical); só buffs `timed`. */
+  resShred: Record<string, number>;
 }
 
 /** Reações com bônus de dano próprio além de Derreter/Vaporizar (que têm campo separado); ver `REACTION_BONUS_KEYS`. */
@@ -74,9 +80,10 @@ const ZERO_REACTIONS = Object.fromEntries(REACTION_BONUS_KEYS.map((k) => [k, 0])
 const zeroReactions = () => ({ ...ZERO_REACTIONS });
 
 type ByType = Partial<Record<HitType, number>>;
-const BY_TYPE_KEYS = ['dmgByType', 'critRateByType', 'critDmgByType', 'baseMultByType', 'reactionBonus'] as const;
+const BY_TYPE_KEYS = ['dmgByType', 'critRateByType', 'critDmgByType', 'baseMultByType', 'reactionBonus', 'resShred'] as const;
 
-export type StatDelta = Partial<Omit<StatBlock, 'dmgByType' | 'critRateByType' | 'critDmgByType' | 'baseMultByType' | 'reactionBonus'>> & {
+export type StatDelta = Partial<Omit<StatBlock, 'dmgByType' | 'critRateByType' | 'critDmgByType' | 'baseMultByType' | 'reactionBonus' | 'resShred'>> & {
+  resShred?: Record<string, number>;
   dmgByType?: ByType;
   critRateByType?: ByType;
   critDmgByType?: ByType;
@@ -89,7 +96,7 @@ export const zeroBlock = (): StatBlock => ({
   dmgBonus: 0, dmgByType: { normal: 0, charged: 0, plunge: 0, skill: 0, burst: 0 },
   critRateByType: { normal: 0, charged: 0, plunge: 0, skill: 0, burst: 0 }, critDmgByType: { normal: 0, charged: 0, plunge: 0, skill: 0, burst: 0 },
   baseMultByType: { normal: 0, charged: 0, plunge: 0, skill: 0, burst: 0 },
-  meltBonus: 0, vaporizeBonus: 0, defIgnore: 0, physDmg: 0, physCritDmg: 0, eleDmg: 0, reactionBonus: zeroReactions(),
+  meltBonus: 0, vaporizeBonus: 0, defIgnore: 0, physDmg: 0, physCritDmg: 0, eleDmg: 0, reactionBonus: zeroReactions(), atkBaseFlat: 0, defShred: 0, resShred: {},
 });
 
 const BY_TYPE_SET: ReadonlySet<string> = new Set(BY_TYPE_KEYS);
@@ -276,7 +283,7 @@ export function characterBuffDelta(stats: BuffStats | undefined, elemental = fal
     atkPct: stats.atkPct ?? 0, dmgBonus: stats.dmgPct ?? 0, critRate: stats.critRate ?? 0, critDmg: stats.critDmg ?? 0,
     em: stats.em ?? 0, er: stats.er ?? 0, hpPct: stats.hpPct ?? 0, defPct: stats.defPct ?? 0, dmgByType: stats.dmgPctByType ?? {},
     critRateByType: stats.critRateByType ?? {}, critDmgByType: stats.critDmgByType ?? {}, baseMultByType: stats.baseMultByType ?? {}, defIgnore: stats.defIgnore ?? 0,
-    atkFlat: stats.atkFlat ?? 0, hpFlat: stats.hpFlat ?? 0, defFlat: stats.defFlat ?? 0,
+    atkFlat: stats.atkFlat ?? 0, atkBaseFlat: stats.atkBaseFlat ?? 0, hpFlat: stats.hpFlat ?? 0, defFlat: stats.defFlat ?? 0,
     physDmg: stats.physDmgPct ?? 0, physCritDmg: stats.physCritDmg ?? 0, reactionBonus: stats.reactionBonus ?? {},
     // Buff só para certos elementos ("DMG Pyro +X%" para membros Pyro): é bônus elemental, não vale em golpe Físico.
     ...(elemental ? { eleDmg: stats.dmgPct ?? 0 } : {}),
@@ -284,8 +291,11 @@ export function characterBuffDelta(stats: BuffStats | undefined, elemental = fal
 }
 
 /** Buffs de personagem que valem na constelação do membro. */
-export const activeCharacterBuffs = (m: MemberInput): CharacterBuff[] =>
-  (m.characterEffect?.buffs ?? []).filter((b) => (m.constellation ?? 0) >= (b.minConstellation ?? 0));
+export const activeCharacterBuffs = (m: MemberInput): CharacterBuff[] => {
+  const on = (m.characterEffect?.buffs ?? []).filter((b) => (m.constellation ?? 0) >= (b.minConstellation ?? 0));
+  const replaced = new Set(on.flatMap((b) => (b.replaces ? [b.replaces] : [])));
+  return replaced.size ? on.filter((b) => !replaced.has(b.id)) : on;
+};
 
 /** Bônus de 2 peças como "stat nomeado + valor" (modelo da planilha). */
 function twoPieceDelta(set: SetSelection | undefined, element: string): StatDelta | null {
@@ -477,6 +487,8 @@ export interface FinalStats {
   physCritDmg: number;
   eleDmg: number;
   reactionBonus: Record<ReactionBonusKey, number>;
+  defShred: number;
+  resShred: Record<string, number>;
   /** Bônus de ATK% que a arma ganha com ER (ex.: Engulfing Lightning). */
   weaponErAtkPct: number;
 }
@@ -505,7 +517,7 @@ export function finalStats(m: MemberInput, statics: StatBlock, rolls: Rolls, tea
   const erAtk = weaponErAtkPct(m, er);
   const a = m.artifacts;
 
-  const atkBase = m.character.baseAtk + m.weapon.baseAtk;
+  const atkBase = m.character.baseAtk + m.weapon.baseAtk + (statics.atkBaseFlat ?? 0) + (team.atkBaseFlat ?? 0);
   const atk =
     atkBase * (1 + statics.atkPct + team.atkPct + resonanceAtkPct + rolls['ATK%'] * rv['ATK%'] + erAtk) +
     (m.externalStats ? 0 : pick(PLUME_ATK, a.rarity.plume)) + statics.atkFlat + team.atkFlat + rolls.ATK * rv.ATK;
@@ -547,6 +559,8 @@ export function finalStats(m: MemberInput, statics: StatBlock, rolls: Rolls, tea
     physCritDmg: (statics.physCritDmg ?? 0) + (team.physCritDmg ?? 0),
     eleDmg: (statics.eleDmg ?? 0) + (team.eleDmg ?? 0),
     reactionBonus: sumReactions(statics.reactionBonus, team.reactionBonus),
+    defShred: (statics.defShred ?? 0) + (team.defShred ?? 0),
+    resShred: { ...statics.resShred, ...Object.fromEntries(Object.entries(team.resShred ?? {}).map(([k, v]) => [k, (statics.resShred?.[k] ?? 0) + v])) },
     weaponErAtkPct: erAtk,
   };
 }

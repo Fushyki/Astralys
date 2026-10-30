@@ -23,17 +23,23 @@ const effects: EffectsData = {
 describe('sem contar duas vezes os números semeados da planilha', () => {
   const team = () => resolveProject({ ...sampleProject(), compat: undefined }, game, effects).team;
 
-  it('RES do inimigo: só os -20% da Citlali (não -40%)', () => {
+  it('RES do inimigo: o -20% da Citlali é uma janela (não fixo, e não -40% com a semente)', () => {
     const t = team();
-    expect(assembleTeam(t, {}).enemyRes.Pyro).toBeCloseTo(t.config.enemyBaseRes - 0.2, 9);
+    const asm = assembleTeam(t, {});
+    expect(asm.enemyRes.Pyro).toBeCloseTo(t.config.enemyBaseRes, 9);
+    const w = asm.buffs.find((x) => x.id.endsWith('-a1') && x.delta.resShred);
+    expect(w?.delta.resShred?.Pyro).toBeCloseTo(0.2, 9);
   });
   it('Mavuika: o ATK% e o DMG% semeados saem do bloco estático (os buffs A1 e A4 valem por faixa)', () => {
     const e = team().members[0].characterEffect!;
     expect([e.atkPct, e.dmgPct]).toEqual([0, 0]);
     expect(e.buffs.map((b) => b.id)).toEqual(expect.arrayContaining(['a1', 'a4']));
   });
-  it('Bennett: o ATK fixo do Supremo não leva o C1 de novo (139% da planilha menos os 20% do buff C1)', () => {
-    expect(team().members[3].characterEffect!.teamFlatAtk!.perBaseAtk).toBeCloseTo(1.19, 9);
+  it('Bennett: o ATK fixo do Supremo vem do buff por nível (sem o semeado, que levaria o C1 de novo)', () => {
+    const e = team().members[3].characterEffect!;
+    expect(e.teamFlatAtk).toBeUndefined();
+    const b = e.buffs.find((x) => x.id === 'inspiracao')!;
+    expect(b.convert!.perPoint).toBeCloseTo(1.19, 9); // nível 13 do exemplo: 119% do ATK base
   });
   it('modo planilha continua com os números dela', () => {
     const e = resolveProject(sampleProject(), game, effects).team.members[0].characterEffect!;

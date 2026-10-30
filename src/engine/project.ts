@@ -7,7 +7,7 @@ import { withStacks } from './stacks';
 import { z } from 'zod';
 import { ElementSchema, type ArtifactSet, type Character, type Move, type Talent, type Weapon } from '../data/schema';
 import { characterAtLevel, type LevelsData } from '../data/levels';
-import { planilhaEffect } from './compat/planilha';
+import { planilhaEffect, planilhaWeapon } from './compat/planilha';
 import { activeCharacterBuffs } from './stats';
 import { applyHitLimits } from './hitLimits';
 import { assembleTeam } from './team';
@@ -538,7 +538,7 @@ export function gearFlat(members: MemberInput[]): FlatDamageEffect[] {
         if (Array.isArray(targets) && targets.length === 0) continue;
         out.push({
           name: `${origin}: ${f.name}`, source: m.character.name, sourceStat: f.sourceStat, perPoint: f.perPoint, threshold: 0,
-          ...(f.capPerHit !== undefined ? { capPerHit: f.capPerHit } : {}), targets, elements: f.elements ?? [], hitTypes: f.hitTypes,
+          ...(f.capPerHit !== undefined ? { capPerHit: f.capPerHit } : {}), targets, elements: f.elements ?? [], hitTypes: f.hitTypes, ...(f.labels?.length ? { labels: f.labels } : {}),
           ...(f.stacks !== undefined ? { stacks: f.stacks } : {}), active: true, fonte_info: `Passiva de ${origin} (curadoria do Lunaris)`,
         });
       }
@@ -556,7 +556,8 @@ export function factionsOf(chosen: readonly ('moonsign' | 'hexerei')[] | undefin
   return chosen === undefined ? list.filter((f) => f === 'moonsign') : list.filter((f) => chosen.includes(f));
 }
 
-export function resolveMember(ref: MemberRef, data: GameData, effects: EffectsData, minRolls = 0, defaultLevel = 90): MemberInput {
+/** `planilha`: o projeto está no modo planilha (a arma leva o extra de Nightsoul fixo; ver `planilhaWeapon`). */
+export function resolveMember(ref: MemberRef, data: GameData, effects: EffectsData, minRolls = 0, defaultLevel = 90, planilha = false): MemberInput {
   const setOf = (name?: string) => (name ? { name, effect: effects.sets.find((s) => s.set === name) } : undefined);
   const level = ref.level ?? defaultLevel;
   const character = characterAtLevel(byName(data.characters, ref.character, 'Personagem'), level, data.levels);
@@ -586,7 +587,7 @@ export function resolveMember(ref: MemberRef, data: GameData, effects: EffectsDa
     weapon,
     characterEffect,
     reacted: ref.reacted,
-    weaponEffect,
+    weaponEffect: planilha ? planilhaWeapon(weaponEffect) : weaponEffect,
     primarySet,
     secondarySet,
     fourPiece,
@@ -633,9 +634,11 @@ export function applyTeamRules(members: MemberInput[]): MemberInput[] {
   const hexerei = faction('hexerei');
   return withMoonsignGleam(members, moonsign).map((m, self) => {
     const buffs = m.characterEffect?.buffs;
-    if (!buffs?.some((b) => b.team || b.level)) return m;
+    if (!buffs?.some((b) => b.team || b.level || b.convert?.capByLevel)) return m;
     const others = members.filter((_, j) => j !== self);
-    const next = buffs.flatMap((b) => {
+    const next = buffs.flatMap((b0) => {
+      const cl = b0.convert?.capByLevel;
+      const b = cl ? { ...b0, convert: { ...b0.convert!, cap: cl.table[Math.min(15, Math.max(1, Math.round(m.talents[cl.talent]))) - 1] } } : b0;
       const t = b.team;
       if (t?.moonsign && moonsign < t.moonsign) return [];
       if (t?.moonsignMax && moonsign > t.moonsignMax) return [];
@@ -734,12 +737,14 @@ function withoutPlanilhaSeed(m: MemberInput): MemberInput {
   const c1 = e.buffs.find((b) => b.id === 'c1' && b.convert?.from === 'baseAtk')?.convert?.perPoint ?? 0;
   const { resShred: _drop, ...rest } = e;
   void _drop;
+  // Um buff curado que substitui o ATK fixo semeado (Iansan, Bennett por nível) tira o semeado: senão contaria duas vezes.
+  const curatedFlat = e.buffs.some((b) => b.replaces === 'teamFlatAtk');
   return {
     ...m,
     characterEffect: {
       // O prefixo evita tratar de novo (o otimizador finaliza membros que já vieram finalizados).
-      ...rest, fonte_info: `sem a semente da planilha; ${e.fonte_info}`, atkPct: 0, dmgPct: 0, critRate: 0, critDmg: 0, em: 0,
-      ...(e.teamFlatAtk ? { teamFlatAtk: { ...e.teamFlatAtk, perBaseAtk: Math.max(0, e.teamFlatAtk.perBaseAtk - c1) } } : {}),
+      ...rest, ...(curatedFlat ? { teamFlatAtk: undefined } : {}), fonte_info: `sem a semente da planilha; ${e.fonte_info}`, atkPct: 0, dmgPct: 0, critRate: 0, critDmg: 0, em: 0,
+      ...(e.teamFlatAtk && !curatedFlat ? { teamFlatAtk: { ...e.teamFlatAtk, perBaseAtk: Math.max(0, e.teamFlatAtk.perBaseAtk - c1) } } : {}),
     },
   };
 }
@@ -751,7 +756,7 @@ function withoutPlanilhaSeed(m: MemberInput): MemberInput {
 export function finalizeMembers(members: MemberInput[], planilha: boolean): MemberInput[] {
   return applyTeamRules(members).map((m) =>
     planilha
-      ? m.characterEffect && !m.characterEffect.fonte_info.includes('scripts/curation/') ? { ...m, characterEffect: planilhaEffect(m.characterEffect) } : m
+      ? { ...(m.characterEffect && !m.characterEffect.fonte_info.includes('scripts/curation/') ? { ...m, characterEffect: planilhaEffect(m.characterEffect) } : m), weaponEffect: planilhaWeapon(m.weaponEffect) }
       : withoutPlanilhaSeed(m),
   );
 }

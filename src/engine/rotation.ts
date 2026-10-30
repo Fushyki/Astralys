@@ -8,7 +8,7 @@ import { kitElement } from './kitElement';
 import type { Element, HitType, Move, Talent } from '../data/schema';
 import type { FlatDamageEffect, SpecialMove } from '../effects/schema';
 import { CONTRIBUTOR_WEIGHTS, REACTION_COEF_FACTOR, SPECIAL_RESIST, TRANSFORMATIVE, type AdditiveReaction, type AmplifyingReaction, type ElementOrPhysical, type LunarReaction, type SpecialReaction, type TransformativeReaction } from './constants/reactions';
-import { computeHit, type EnemyStats, type HitBreakdown } from './damage';
+import { computeHit, type EnemyStats, type HitBreakdown, type ResistanceMap } from './damage';
 import { critFactor } from './formulas';
 import { computeLunarReaction, computeSpecial, computeStellarSwirlReaction, computeTransformative, type SpecialBreakdown } from './reactions';
 import type { Rolls } from './artifacts';
@@ -309,6 +309,15 @@ function sourceStatValue(effect: FlatDamageEffect, stats: FinalStats, source: Me
   }
 }
 
+/** RES do inimigo menos a redução em janela dos buffs ativos neste golpe (sem janela, o mesmo mapa). */
+function windowRes(base: ResistanceMap, shred: Record<string, number>): ResistanceMap {
+  const keys = Object.keys(shred);
+  if (!keys.length) return base;
+  const out = { ...base } as Record<string, number>;
+  for (const k of keys) out[k] = (out[k] ?? 0) - shred[k];
+  return out as ResistanceMap;
+}
+
 export function evaluateRotation(ctx: RotationContext, actions: readonly RotationAction[]): RotationResult {
   const { members, assembly, config } = ctx;
   const names = members.map((m) => m.character.name);
@@ -383,7 +392,8 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
       const targetOk = e.targets === 'all' || e.targets.includes(member.character.name);
       const elementOk = e.elements.length === 0 || (element !== 'Physical' && e.elements.some((x) => sameEl(x, element)));
       const typeOk = e.hitTypes.length === 0 || (move.hitType !== 'other' && e.hitTypes.includes(move.hitType));
-      if (!(targetOk && elementOk && typeOk)) continue;
+      const labelOk = !e.labels?.length || e.labels.includes(move.label);
+      if (!(targetOk && elementOk && typeOk && labelOk)) continue;
       const id = flatId(e);
       const off = !!action.flatOff?.includes(id);
       const covered = off || f.remaining <= 0 ? 0 : Math.min(hitsOfAction, f.remaining);
@@ -401,8 +411,8 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
     const stats = statsFor(action.member, tags, action.tagAges, tg);
     const enemy: EnemyStats = {
       level: config.enemyLevel,
-      res: assembly.enemyRes,
-      defRed: assembly.enemyDefRed,
+      res: windowRes(assembly.enemyRes, stats.resShred),
+      defRed: Math.min(0.9, assembly.enemyDefRed + stats.defShred),
       defIgnore: Math.min(1, (config.enemyDefIgnore ?? 0) + (stats.defIgnore ?? 0)),
     };
     const kind = damageKind(move);

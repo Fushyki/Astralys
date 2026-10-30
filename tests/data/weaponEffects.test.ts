@@ -44,7 +44,7 @@ describe('efeitos de armas cadastrados', () => {
 
   it('mais de 70 armas cobertas e os 7 efeitos da planilha continuam iguais', () => {
     expect(weapons.length).toBeGreaterThan(70);
-    expect(get('A Thousand Blazing Suns')).toMatchObject({ atkPct: 0.49, critDmg: 0.35 });
+    expect(weaponStatsAt(get('A Thousand Blazing Suns'), 1)).toMatchObject({ atkPct: 0.28, critDmg: 0.2 }); // base do Scorching Brilliance por refino (piloto-armas); o extra de Nightsoul é um buff à parte
     expect(get('Engulfing Lightning').atkPctPerEr).toEqual({ coef: 0.28, cap: 0.8 });
   });
 
@@ -77,7 +77,7 @@ describe('efeitos de armas cadastrados', () => {
   });
 
   it('sem tabela por refinamento (efeitos da planilha), qualquer refino devolve os valores da raiz', () => {
-    expect(weaponStatsAt(get('A Thousand Blazing Suns'), 4).atkPct).toBe(0.49);
+    expect(weaponStatsAt(get("Wolf's Gravestone"), 4).atkPct).toBe(0.2);
   });
 });
 

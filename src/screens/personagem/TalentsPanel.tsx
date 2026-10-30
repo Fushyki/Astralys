@@ -11,7 +11,7 @@ import { Button } from '../../design/Button';
 import { elementColor } from '../../design/elements';
 import { DamageLegend, FamilyBadge, damageColor } from '../../design/damageFamily';
 import { Segmented, StarIcon } from '../../design/primitives';
-import type { CharacterBuff } from '../../effects/schema';
+import type { CharacterBuff, CharacterInfo } from '../../effects/schema';
 import { KIT_INFUSIONS, assembleTeam, characterBuffDelta, effectiveTalents, scaleBuffStacks, stacksOf } from '../../engine';
 import type { MemberRef, ReactionChoice } from '../../engine';
 import { REACTION_LABEL, characterReactions, memberBuffCards, reactionOptions, type MoveLine } from '../../features/character/characterModel';
@@ -108,6 +108,20 @@ interface CondProps {
   /** Stacks escolhidos (undefined = o máximo) e como mudar, se o buff tem stacks. */
   chosen?: number;
   onStacks?: (n: number) => void;
+  /** Stats finais do dono (para mostrar quanto vale o dano fixo na build atual). */
+  stats?: { atk: number; hp: number; def: number; em: number };
+}
+
+const FLAT_STAT = { ATK: ['atk', 'do ATK'], HP: ['hp', 'do HP'], DEF: ['def', 'da DEF'], EM: ['em', 'da Maestria'], BaseATK: ['atk', 'do ATK base'] } as const;
+
+/** Linhas do dano fixo do buff: "120% do ATK" e, com os stats do dono, o valor por golpe na build atual. */
+function flatRows(buff: CharacterBuff, stats?: CondProps['stats']): { name: string; value: string }[] {
+  return (buff.flat ?? []).map((f) => {
+    const [key, of] = FLAT_STAT[f.sourceStat];
+    const base = `${formatDecimal(f.perPoint * 100, 1).replace(/,0$/, '')}% ${of}`;
+    const now = stats && f.sourceStat !== 'BaseATK' ? Math.min(f.perPoint * stats[key], f.capPerHit ?? Infinity) : undefined;
+    return { name: f.name, value: now === undefined ? base : `${base} ≈ ${formatInt(now)}` };
+  });
 }
 
 /** Id do motor do buff do personagem: fonte estática (só dele, sempre) ou buff de time (faixa/regra). */
@@ -116,13 +130,13 @@ function toggleIdOf(index: number, b: CharacterBuff): string {
 }
 
 /** Condição: caixa dourada com o checkbox, o texto, o valor em destaque e os efeitos que ela dá. */
-function Condition({ buff, index, constellation, disabled, chips, onToggle, chosen, onStacks }: CondProps) {
+function Condition({ buff, index, constellation, disabled, chips, onToggle, chosen, onStacks, stats }: CondProps) {
   const id = toggleIdOf(index, buff);
   const locked = buff.minConstellation > constellation;
   const active = !locked && !disabled.includes(id);
   const fallback = buff.stats ? deltaChips(characterBuffDelta(scaleBuffStacks(buff, chosen).stats, !!buff.forElements)) : [];
   const n = stacksOf(buff, chosen);
-  const rows = ratio((chips.length ? chips : fallback).map(splitChip));
+  const rows = ratio([...(chips.length ? chips : fallback).map(splitChip), ...flatRows(buff, stats)]);
   return (
     <div className="tl-cond" data-active={active} data-locked={locked}>
       <label>
@@ -146,6 +160,27 @@ function Condition({ buff, index, constellation, disabled, chips, onToggle, chos
   );
 }
 
+function KitLegend() {
+  return (
+    <span className="kit-legend" role="group" aria-label="Legenda dos números do kit">
+      <span className="dz-badge gold">no cálculo</span>
+      <span className="dz-badge">só informativo</span>
+      <span className="dz-badge warn">pendente</span>
+    </span>
+  );
+}
+
+function InfoRows({ list }: { list: CharacterInfo[] }) {
+  if (!list.length) return null;
+  return (
+    <div className="rows">
+      {list.map((i) => (
+        <div className="r" key={i.label + i.text}><span className="k">{i.label} <span className="dz-badge">só informativo</span></span><span className="v">{i.text}</span></div>
+      ))}
+    </div>
+  );
+}
+
 export function TalentsPanel({ v, index }: { v: ProjectView; index: number }) {
   const { data: all } = useTalents();
   const setSourceEnabled = useRotationStore((s) => s.setSourceEnabled);
@@ -165,6 +200,7 @@ export function TalentsPanel({ v, index }: { v: ProjectView; index: number }) {
   const effects = v.data.effects.characters.find((c) => c.character === ref.character);
   const buffs = effects?.buffs ?? [];
   const notes = effects?.notes ?? [];
+  const infoOf = (src: string) => (effects?.infos ?? []).filter((i) => i.src === src);
   const disabled = v.project.disabled;
   const cards = useMemo(() => memberBuffCards(v.project, v.resolved, v.bundle, index), [v.project, v.resolved, v.bundle, index]);
   const chipsOf = (b: CharacterBuff) => cards.find((c) => c.id === `cbuff-${index}-${b.id}` || c.id === `m${index}:cbuff-${b.id}`)?.chips ?? [];
@@ -184,7 +220,7 @@ export function TalentsPanel({ v, index }: { v: ProjectView; index: number }) {
   if (!tl) return <p className="note" role="status">Carregando os textos dos talentos…</p>;
 
   const conds = (pred: (b: CharacterBuff) => boolean) =>
-    buffs.filter(pred).map((b) => <Condition key={b.id} buff={b} index={index} constellation={constellation} disabled={disabled} chips={chipsOf(b)} onToggle={setSourceEnabled} chosen={ref.stacks?.[b.stacks?.of ?? b.id]} onStacks={(n) => updateMember(index, { stacks: { ...ref.stacks, [b.stacks?.of ?? b.id]: n } })} />);
+    buffs.filter(pred).map((b) => <Condition key={b.id} buff={b} index={index} constellation={constellation} disabled={disabled} chips={chipsOf(b)} stats={v.bundle.memberStats[index]} onToggle={setSourceEnabled} chosen={ref.stacks?.[b.stacks?.of ?? b.id]} onStacks={(n) => updateMember(index, { stacks: { ...ref.stacks, [b.stacks?.of ?? b.id]: n } })} />);
   const noteOf = (src: string) => notes.find((n) => n.src === src);
   const valueOf = (l: MoveLine) => `${l.hits > 1 ? `${l.hits}× ` : ''}${formatInt(l[crit])}`;
   const rowsOf = (lines: MoveLine[]) => lines.map((l) => ({ key: l.id, name: l.name, value: valueOf(l), tone: damageColor(l.element, l.special), special: l.special }));
@@ -268,7 +304,8 @@ export function TalentsPanel({ v, index }: { v: ProjectView; index: number }) {
             <OneLine title={p.name} text={p.description} />
             <div className="body">
               {mine}
-              {mine.length === 0 && <span className="empty">{note?.kind === 'utility' ? `Sem efeito no dano: ${note.note}` : note ? `Parcial: ${note.note}` : 'Sem efeito numérico cadastrado para este time.'}</span>}
+              <InfoRows list={infoOf(p.id)} />
+              {mine.length === 0 && <span className="empty">{note?.kind === 'utility' ? `Sem efeito no dano: ${note.note}` : note ? `Pendente: ${note.note}` : 'Pendente: sem número cadastrado para este time.'}</span>}
             </div>
             {i < list.length - 1 && <hr />}
           </section>
@@ -286,6 +323,7 @@ export function TalentsPanel({ v, index }: { v: ProjectView; index: number }) {
     <div className="tl" style={{ ['--e' as string]: color }}>
       <div className="tl-bar">
         <DamageLegend />
+        <KitLegend />
         <span className="grow" />
         <Segmented label="Crítico" value={crit} options={CRIT_OPTIONS} onChange={setCrit} />
         <Segmented label="Reação da tabela de dano" value={activeReaction} options={options.map((o) => ({ value: o, label: REACTION_LABEL[o] }))} onChange={setReaction} />
@@ -356,7 +394,8 @@ export function TalentsPanel({ v, index }: { v: ProjectView; index: number }) {
                   </button>
                   <OneLine title={`C${c.n} · ${c.name}`} text={c.description} limit={230} />
                   {mine.length > 0 && <div className="body">{mine}</div>}
-                  {mine.length === 0 && lit && note && <span className="empty">{note.kind === 'utility' ? `Sem efeito no dano: ${note.note}` : `Parcial: ${note.note}`}</span>}
+                  <InfoRows list={infoOf(`const${c.n}`)} />
+                  {mine.length === 0 && lit && note && <span className="empty">{note.kind === 'utility' ? `Sem efeito no dano: ${note.note}` : `Pendente: ${note.note}`}</span>}
                 </div>
               );
             })}

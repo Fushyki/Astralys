@@ -66,6 +66,8 @@ const BuffStatsSchema = z.object({
   defIgnore: frac,
   /** ATK, HP e DEF fixos (ex.: Nicole, +300 de ATK; Prune C6, +350). */
   atkFlat: frac,
+  /** ATK BASE fixo (soma ao ATK base de personagem + arma, antes dos % de ATK; ex.: Mavuika C2, +200). */
+  atkBaseFlat: frac,
   hpFlat: frac,
   defFlat: frac,
   /** Bônus de DMG Físico (só golpes Físicos; ex.: Eula C1, Mika A1). */
@@ -162,6 +164,8 @@ export const BuffConvertSchema = z.object({
   cap: z.number().optional(),
   /** Teto em múltiplos do ATK base da fonte (ex.: Hu Tao, 4 = 400%). */
   capBaseAtk: z.number().optional(),
+  /** Teto que muda com o nível do talento (15 valores; ex.: Iansan, 330 a 890 de ATK). Troca `cap` ao montar o projeto. */
+  capByLevel: z.object({ talent: z.enum(['normal', 'skill', 'burst']), table: z.array(z.number()).length(15) }).optional(),
   to: z.array(ConvertTargetSchema).min(1),
 });
 export type BuffConvert = z.infer<typeof BuffConvertSchema>;
@@ -212,6 +216,8 @@ export const WeaponFlatSchema = z.object({
   perPoint: z.number(),
   capPerHit: z.number().optional(),
   hitTypes: z.array(HitTypeSchema).default([]),
+  /** Só estes golpes, pelo rótulo do Lunaris (ex.: "Frostfall Storm DMG"); vazio = qualquer golpe do tipo. */
+  labels: z.array(z.string().min(1)).optional(),
   stacks: z.number().int().positive().optional(),
   /** Quem recebe: o dono (padrão), a equipe inteira ou só os outros (ex.: Xilonen C4, nos Normais dos aliados). */
   targets: z.enum(['self', 'team', 'others']).optional(),
@@ -239,6 +245,10 @@ export const CharacterBuffSchema = z.object({
   duration: z.number().positive().optional(),
   /** Só personagens destas facções recebem (ex.: Jahoda C6, "personagens Moonsign"). */
   forFactions: z.array(z.enum(['moonsign', 'hexerei'])).optional(),
+  /** Id de outro buff do mesmo personagem que este REFORÇA: com este ativo (constelação), o outro sai e este entra no lugar (não somam; ex.: Flins C4 sobre o A4). */
+  replaces: z.string().optional(),
+  /** Usa a faixa do personagem (`char:<membro>`) em vez de uma faixa com o nome do buff: mantém as janelas de projetos que já tinham o ATK fixo dele. */
+  onCharTag: z.boolean().optional(),
   stats: BuffStatsSchema.optional(),
   /** Bônus que depende de um stat da fonte (no lugar de `stats`). Os `timed: false` valem o tempo todo. */
   convert: BuffConvertSchema.optional(),
@@ -283,6 +293,16 @@ export const CharacterNoteSchema = z.object({
 });
 export type CharacterNote = z.infer<typeof CharacterNoteSchema>;
 
+/** Número que NÃO entra no cálculo de dano (cura, escudo, energia, recarga): só aparece na aba de talentos para o usuário saber. */
+export const CharacterInfoSchema = z.object({
+  src: z.enum(['p1', 'p2', 'p3', 'const1', 'const2', 'const3', 'const4', 'const5', 'const6']),
+  kind: z.enum(['cura', 'escudo', 'energia', 'recarga']),
+  label: z.string().min(1),
+  /** Texto com o número já preenchido (do parâmetro do Lunaris), ex.: "15 de Energia a cada 6 pontos, a cada 18 s". */
+  text: z.string().min(1),
+});
+export type CharacterInfo = z.infer<typeof CharacterInfoSchema>;
+
 export const CharacterEffectSchema = z.object({
   character: z.string().min(1),
   atkPct: frac,
@@ -299,6 +319,8 @@ export const CharacterEffectSchema = z.object({
   buffs: z.array(CharacterBuffSchema).default([]),
   /** Passivas e constelações sem buff: "utility" (nada a calcular em dano) ou "partial" (parte do dano fora do cálculo). */
   notes: z.array(CharacterNoteSchema).default([]),
+  /** Cura, escudo, energia e recarga do kit: informativos, fora do cálculo de dano. */
+  infos: z.array(CharacterInfoSchema).optional(),
   /** Golpes extras de passiva/constelação (a partir de `minConstellation`), para pôr na linha do tempo. */
   procs: z.array(ProcSchema).default([]),
   /** Facções que contam para regras de time (Genshin Optimizer `flags.isMoonsign` / `flags.isHexerei`). */
@@ -427,6 +449,8 @@ export const FlatDamageEffectSchema = z.object({
   /** Vazio = qualquer elemento / qualquer tipo de golpe. */
   elements: z.array(ElementSchema),
   hitTypes: z.array(HitTypeSchema),
+  /** Só estes golpes pelo rótulo (ver `WeaponFlat.labels`); ausente/vazio = qualquer. */
+  labels: z.array(z.string().min(1)).optional(),
   /** Quantos hits consomem o buff (undefined = ilimitado). Consumidos pelos primeiros hits elegíveis. */
   stacks: z.number().int().positive().optional(),
   /** Efeito do kit: `perPoint` é multiplicado por `table[nível do talento da fonte - 1]` ao montar o projeto. */

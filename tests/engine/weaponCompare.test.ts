@@ -29,7 +29,7 @@ const candidatesFor = (names: string[], member = 0) =>
     team: {
       ...resolved.team,
       members: resolved.team.members.map((m, i) =>
-        i === member ? resolveMember({ ...project.members[member], weapon }, game, effects, project.config.minRollsPerSubstat) : m,
+        i === member ? resolveMember({ ...project.members[member], weapon }, game, effects, project.config.minRollsPerSubstat, undefined, true) : m,
       ),
     },
   }));

@@ -16,10 +16,12 @@ import path from 'node:path';
 import { CharacterBuffSchema, CharacterEffectSchema, ProcSchema, SetEffectSchema, WeaponEffectSchema, type CharacterBuff, type CharacterEffect, type Proc, type SetEffect, type WeaponEffect, type WeaponFlat, type WeaponStats } from '../src/effects/schema';
 import { FOUR_PIECE, type Val } from './curation/sets';
 import { FOUR_PIECE_2 } from './curation/sets2';
+import { PILOTO_SETS } from './curation/piloto-sets';
 import { parseTwoPiece } from './lib/twoPiece';
 import { POINT_MOVES } from './curation/points';
 import { WEAPONS } from './curation/weapons';
 import { WEAPONS_2 } from './curation/weapons2';
+import { PILOTO_ARMAS } from './curation/piloto-armas';
 import type { BuffCur, FlatCur, GearCur, ProcCur, StatsCur, Sum } from './curation/gear';
 import { CHARACTERS as CHARACTERS_1 } from './curation/characters';
 import { CHARACTERS_2 } from './curation/characters2';
@@ -38,6 +40,7 @@ import { CHARACTER_NOTES } from './curation/charnotes';
 import { CHARACTER_PROCS, CHARACTERS_PROC_BUFFS } from './curation/procs';
 import { FACTIONS as LUNAR_FACTIONS, LUNAR_BUFFS, LUNAR_PROCS as MOON_PROCS, SPECIAL_MOVES as MOON_SPECIAL } from './curation/lunar';
 import { EXTRA_BUFFS, EXTRA_FACTIONS, EXTRA_PROCS, EXTRA_SPECIAL } from './curation/extras';
+import { PILOTO_BUFFS, PILOTO_INFOS, PILOTO_NOTES, PILOTO_PROCS } from './curation/piloto-personagens';
 
 /** Junta listas por personagem de vários arquivos de curadoria. */
 const mergeLists = <T>(...all: Record<string, T[]>[]): Record<string, T[]> => {
@@ -46,12 +49,18 @@ const mergeLists = <T>(...all: Record<string, T[]>[]): Record<string, T[]> => {
   return out;
 };
 const FACTIONS = mergeLists(LUNAR_FACTIONS, EXTRA_FACTIONS);
-const LUNAR_PROCS = mergeLists(MOON_PROCS, EXTRA_PROCS);
+const LUNAR_PROCS = mergeLists(MOON_PROCS, EXTRA_PROCS, PILOTO_PROCS);
+// Notas do piloto por agente: sobrepõem as dos lotes antigos (`null` apaga).
+for (const [name, list] of Object.entries(PILOTO_NOTES)) {
+  const cur: Record<string, unknown> = { ...(CHARACTER_NOTES[name] ?? {}) };
+  for (const [src, n] of Object.entries(list)) { if (n === null) delete cur[src]; else cur[src] = n; }
+  CHARACTER_NOTES[name] = cur as (typeof CHARACTER_NOTES)[string];
+}
 const SPECIAL_MOVES = mergeLists(MOON_SPECIAL, EXTRA_SPECIAL);
 
 /** Junta os lotes: o mesmo personagem pode aparecer em mais de um e as listas se somam. */
 const CHARACTER_BUFFS: Record<string, BuffCuration[]> = {};
-for (const batch of [CHARACTERS_1, CHARACTERS_2, CHARACTERS_3, CHARACTERS_4, CHARACTERS_5, CHARACTERS_6, CHARACTERS_7, CHARACTERS_8, CHARACTERS_9, CHARACTERS_10, CHARACTERS_11, CHARACTERS_12, CHARACTERS_13, CHARACTERS_14, CHARACTERS_15, CHARACTERS_16, CHARACTERS_PROC_BUFFS, LUNAR_BUFFS, EXTRA_BUFFS]) {
+for (const batch of [CHARACTERS_1, CHARACTERS_2, CHARACTERS_3, CHARACTERS_4, CHARACTERS_5, CHARACTERS_6, CHARACTERS_7, CHARACTERS_8, CHARACTERS_9, CHARACTERS_10, CHARACTERS_11, CHARACTERS_12, CHARACTERS_13, CHARACTERS_14, CHARACTERS_15, CHARACTERS_16, CHARACTERS_PROC_BUFFS, LUNAR_BUFFS, EXTRA_BUFFS, PILOTO_BUFFS]) {
   for (const [name, list] of Object.entries(batch)) CHARACTER_BUFFS[name] = [...(CHARACTER_BUFFS[name] ?? []), ...list];
 }
 
@@ -204,8 +213,8 @@ function buildSets(): SetEffect[] {
       out.push(old);
       continue;
     }
-    const two = parseTwoPiece(set.bonuses.twoPiece.description);
-    const cur = FOUR_PIECE[set.name] ?? FOUR_PIECE_2[set.name];
+    const cur = PILOTO_SETS[set.name] ?? FOUR_PIECE[set.name] ?? FOUR_PIECE_2[set.name];
+    const two = PILOTO_SETS[set.name]?.twoPiece ?? parseTwoPiece(set.bonuses.twoPiece.description);
     const params = set.bonuses.fourPiece.params;
     const notes: string[] = [];
     if (!two) notes.push(`2 peças ("${set.bonuses.twoPiece.description.trim()}") não entra: sem efeito em dano.`);
@@ -244,11 +253,11 @@ function buildSets(): SetEffect[] {
       ...(cur?.partial ? { partial: true } : {}),
       ...(fourPiece ? { fourPiece } : {}),
       note: notes.join(' '),
-      fonte_info: `${source}; curadoria em scripts/curation/sets.ts.`,
+      fonte_info: `${source}; curadoria em scripts/curation/${set.name in PILOTO_SETS ? 'piloto-sets' : 'sets'}.ts.`,
     };
     out.push(SetEffectSchema.parse(entry));
   }
-  const unknown = Object.keys({ ...FOUR_PIECE, ...FOUR_PIECE_2 }).filter((n) => !raw.some((r) => r.name === n));
+  const unknown = Object.keys({ ...FOUR_PIECE, ...FOUR_PIECE_2, ...PILOTO_SETS }).filter((n) => !raw.some((r) => r.name === n));
   if (unknown.length) throw new Error(`Curadoria com sets que não existem no Lunaris: ${unknown.join(', ')}`);
   return out;
 }
@@ -311,7 +320,7 @@ function buildBuff(b: BuffCur, c: Ctx): CharacterBuff {
 
 const buildFlat = (f: FlatCur, c: Ctx): WeaponFlat => ({
   name: f.name, sourceStat: f.sourceStat, perPoint: sm(f.perPoint, c),
-  ...(f.cap !== undefined ? { capPerHit: sm(f.cap, c) } : {}), hitTypes: f.hitTypes, ...(f.stacks !== undefined ? { stacks: f.stacks } : {}),
+  ...(f.cap !== undefined ? { capPerHit: sm(f.cap, c) } : {}), hitTypes: f.hitTypes, ...(f.labels ? { labels: f.labels } : {}), ...(f.stacks !== undefined ? { stacks: f.stacks } : {}),
   ...(f.targets ? { targets: f.targets } : {}), ...(f.elements ? { elements: f.elements } : {}),
 });
 
@@ -346,7 +355,7 @@ function buildWeapons(): WeaponEffect[] {
   const out: WeaponEffect[] = [...existing];
   const errors: string[] = [];
   const source = `Lunaris ${meta.gameVersion} (descrição e parâmetros por refinamento)`;
-  const all: Record<string, GearCur> = { ...WEAPONS, ...WEAPONS_2 };
+  const all: Record<string, GearCur> = { ...WEAPONS, ...WEAPONS_2, ...PILOTO_ARMAS };
 
   for (const [name, cur] of Object.entries(all)) {
     if (keep.has(name)) continue; // já veio da planilha de referência: não sobrescrever
@@ -356,7 +365,7 @@ function buildWeapons(): WeaponEffect[] {
       continue;
     }
     const flags = { ...(cur.noDamage ? { noDamage: true } : {}), ...(cur.partial ? { partial: true } : {}) };
-    const fonte = `${source}; curadoria em scripts/curation/${name in WEAPONS_2 ? 'weapons2' : 'weapons'}.ts.`;
+    const fonte = `${source}; curadoria em scripts/curation/${name in PILOTO_ARMAS ? 'piloto-armas' : name in WEAPONS_2 ? 'weapons2' : 'weapons'}.ts.`;
     if (!w.passive || w.passive.refinements.length !== 5) {
       if (cur.expect) {
         errors.push(`${name}: tem "expect", mas a arma não tem passiva no Lunaris`);
@@ -390,7 +399,7 @@ console.log(`weapons.json: ${weapons.length} armas (${weapons.filter((w) => w.re
 interface RawChar {
   passives?: Record<string, { description: string; params: number[] }>;
   constellations?: Record<string, { description: string; params: number[] }>;
-  skills?: Record<string, { description: string; multipliers?: Record<string, string[]> }>;
+  skills?: Record<string, { description: string; params?: number[]; multipliers?: Record<string, string[]> }>;
 }
 
 const SKILL_KEY = { normal: 'normalattack', skill: 'elementalskill', burst: 'elementalburst' } as const;
@@ -432,7 +441,7 @@ function buildCharacters(): CharacterEffect[] {
       const isConst = b.src.startsWith('const');
       const kitNode = b.kit ? raw.skills?.[SKILL_KEY[b.kit.talent]] : undefined;
       if (b.kit && !kitNode) throw new Error(`${name} ${b.id}: o talento ${b.kit.talent} não existe`);
-      const node = b.kit ? { description: kitNode!.description, params: [] as number[] } : (isConst ? raw.constellations : raw.passives)?.[b.src];
+      const node = b.kit ? { description: kitNode!.description, params: (kitNode!.params ?? []) as number[] } : (isConst ? raw.constellations : raw.passives)?.[b.src];
       if (!node) throw new Error(`${name} ${b.id}: ${b.src} não existe`);
       let levelTable: number[] | undefined;
       if (b.kit?.table) {
@@ -442,6 +451,12 @@ function buildCharacters(): CharacterEffect[] {
         const row = kitNode!.multipliers?.[b.kit.key];
         if (!row || row.length !== 15) throw new Error(`${name} ${b.id}: a linha "${b.kit.key}" não existe ou não tem 15 níveis`);
         levelTable = row.map(percentOf);
+      }
+      let capTable: number[] | undefined;
+      if (b.kit?.capKey) {
+        const row = kitNode!.multipliers?.[b.kit.capKey];
+        if (!row || row.length !== 15) throw new Error(`${name} ${b.id}: a linha "${b.kit.capKey}" não existe ou não tem 15 níveis`);
+        capTable = row.map((t) => { const n = Number(String(t).trim()); if (!Number.isFinite(n)) throw new Error(`${name} ${b.id}: "${t}" não é número`); return n; });
       }
       if (!strip(node.description).includes(b.expect)) {
         errors.push(`${name} ${b.id}: a descrição de ${b.src} não contém "${b.expect}" (o Lunaris mudou?)`);
@@ -459,6 +474,8 @@ function buildCharacters(): CharacterEffect[] {
         ...(b.forElements ? { forElements: b.forElements } : {}),
         ...(b.decay ? { decay: b.decay } : {}),
         ...(b.forFactions ? { forFactions: b.forFactions } : {}),
+        ...(b.replaces ? { replaces: b.replaces } : {}),
+        ...(b.onCharTag ? { onCharTag: true } : {}),
         ...(s
           ? {
               stats: {
@@ -469,7 +486,7 @@ function buildCharacters(): CharacterEffect[] {
                 critDmgByType: Object.fromEntries(Object.entries(s.critDmgByType ?? {}).map(([k, x]) => [k, v(x)])),
                 baseMultByType: Object.fromEntries(Object.entries(s.baseMultByType ?? {}).map(([k, x]) => [k, v(x)])),
                 defIgnore: v(s.defIgnore),
-                atkFlat: v(s.atkFlat), hpFlat: v(s.hpFlat), defFlat: v(s.defFlat),
+                atkFlat: v(s.atkFlat), atkBaseFlat: v(s.atkBaseFlat), hpFlat: v(s.hpFlat), defFlat: v(s.defFlat),
                 physDmgPct: v(s.physDmgPct), physCritDmg: v(s.physCritDmg),
                 reactionBonus: Object.fromEntries(Object.entries(s.reactionBonus ?? {}).map(([k, x]) => [k, v(x)])),
               },
@@ -479,7 +496,7 @@ function buildCharacters(): CharacterEffect[] {
           ? {
               flat: b.flat.map((f) => ({
                 name: f.name, sourceStat: f.sourceStat, perPoint: v(f.perPoint), ...(f.cap !== undefined ? { capPerHit: v(f.cap) } : {}),
-                hitTypes: f.hitTypes, ...(f.stacks !== undefined ? { stacks: f.stacks } : {}),
+                hitTypes: f.hitTypes, ...(f.labels ? { labels: f.labels } : {}), ...(f.stacks !== undefined ? { stacks: f.stacks } : {}),
                 ...(f.targets ? { targets: f.targets } : {}), ...(f.elements ? { elements: f.elements } : {}),
               })),
             }
@@ -505,6 +522,7 @@ function buildCharacters(): CharacterEffect[] {
                 threshold: v(b.convert.threshold),
                 ...(b.convert.cap !== undefined ? { cap: v(b.convert.cap) } : {}),
                 ...(b.convert.capBaseAtk !== undefined ? { capBaseAtk: b.convert.capBaseAtk } : {}),
+                ...(capTable ? { capByLevel: { talent: b.kit!.talent, table: capTable } } : {}),
                 to: b.convert.to,
               },
             }
@@ -515,6 +533,17 @@ function buildCharacters(): CharacterEffect[] {
       };
     });
     const notes = Object.entries(CHARACTER_NOTES[name] ?? {}).map(([src, n]) => ({ src, kind: n!.kind, note: n!.note }));
+    const infos = (PILOTO_INFOS[name] ?? []).map((i) => {
+      const isConst = i.src.startsWith('const');
+      const node = (isConst ? raw.constellations : raw.passives)?.[i.src];
+      if (!node) throw new Error(`${name} ${i.label}: ${i.src} não existe`);
+      if (!strip(node.description).includes(i.expect)) errors.push(`${name} ${i.label}: a descrição de ${i.src} não contém "${i.expect}" (o Lunaris mudou?)`);
+      const text = i.text.replace(/\{(\d+)(%?)\}/g, (_, n: string, pct: string) => {
+        const val = valueOf(i.values[Number(n)], node.params, `${name} ${i.label}`);
+        return String(pct ? round(val * 100) + '%' : val);
+      });
+      return { src: i.src, kind: i.kind, label: i.label, text };
+    });
     const procs = [...(CHARACTER_PROCS[name] ?? []), ...(LUNAR_PROCS[name] ?? [])].map((p) => {
       const isConst = p.src.startsWith('const');
       const node = (isConst ? raw.constellations : raw.passives)?.[p.src];
@@ -541,7 +570,7 @@ function buildCharacters(): CharacterEffect[] {
       const row = raw.skills?.[SKILL_KEY[p.kitTalent]]?.multipliers?.[p.key];
       if (!row || row.length !== 15) throw new Error(`${name}: a linha "${p.key}" não existe ou não tem 15 níveis`);
       for (const l of p.labels) if (!moves.some((m) => m.character === name && m.talent === p.talent && m.label === l)) errors.push(`${name}: golpe "${l}" (${p.talent}) não existe no Lunaris`);
-      return { talent: p.talent, labels: p.labels, levelTalent: p.kitTalent, perPoint: row.map((t) => percentOf(String(t))), max: p.max, unit: p.unit };
+      return { talent: p.talent, labels: p.labels, levelTalent: p.kitTalent, perPoint: row.map((t) => percentOf(String(t))), max: p.max, unit: p.unit, ...(p.cadinho ? { cadinho: p.cadinho } : {}) };
     });
     const specialMoves = SPECIAL_MOVES[name] ?? [];
     for (const s of specialMoves) {
@@ -552,7 +581,7 @@ function buildCharacters(): CharacterEffect[] {
     if (handMadeEntry) {
       // Personagem que já veio da planilha de referência: os efeitos dela ficam e a curadoria soma os buffs e as notas.
       const at = out.findIndex((e) => e.character === name);
-      out[at] = CharacterEffectSchema.parse({ ...handMadeEntry, buffs: [...(handMadeEntry.buffs ?? []).filter((old) => !buffs.some((n) => n.id === old.id)), ...buffs], notes, procs, factions, specialMoves, pointMoves });
+      out[at] = CharacterEffectSchema.parse({ ...handMadeEntry, buffs: [...(handMadeEntry.buffs ?? []).filter((old) => !buffs.some((n) => n.id === old.id)), ...buffs], notes, infos, procs, factions, specialMoves, pointMoves });
       continue;
     }
     out.push(CharacterEffectSchema.parse({
@@ -560,6 +589,7 @@ function buildCharacters(): CharacterEffect[] {
       atkPct: 0, dmgPct: 0, critRate: 0, critDmg: 0, em: 0,
       buffs,
       notes,
+      infos,
       procs,
       factions,
       specialMoves,

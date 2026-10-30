@@ -37,7 +37,7 @@ export interface BuffCuration {
     baseMultByType?: Partial<Record<'normal' | 'charged' | 'plunge' | 'skill' | 'burst', Val>>;
     /** Fração da DEF do inimigo ignorada pelos golpes do dono. */
     defIgnore?: Val;
-    atkFlat?: Val; hpFlat?: Val; defFlat?: Val; er?: Val;
+    atkFlat?: Val; atkBaseFlat?: Val; hpFlat?: Val; defFlat?: Val; er?: Val;
     /** Bônus de DMG Físico. */
     physDmgPct?: Val;
     /** Dano Crítico só em golpes Físicos. */

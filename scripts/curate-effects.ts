@@ -478,7 +478,7 @@ function buildCharacters(): CharacterEffect[] {
                 critDmgByType: Object.fromEntries(Object.entries(s.critDmgByType ?? {}).map(([k, x]) => [k, v(x)])),
                 baseMultByType: Object.fromEntries(Object.entries(s.baseMultByType ?? {}).map(([k, x]) => [k, v(x)])),
                 defIgnore: v(s.defIgnore),
-                atkFlat: v(s.atkFlat), hpFlat: v(s.hpFlat), defFlat: v(s.defFlat),
+                atkFlat: v(s.atkFlat), atkBaseFlat: v(s.atkBaseFlat), hpFlat: v(s.hpFlat), defFlat: v(s.defFlat),
                 physDmgPct: v(s.physDmgPct), physCritDmg: v(s.physCritDmg),
                 reactionBonus: Object.fromEntries(Object.entries(s.reactionBonus ?? {}).map(([k, x]) => [k, v(x)])),
               },

@@ -87,3 +87,12 @@ describe('Bennett C6: +15% de DMG Pyro só para quem é Pyro', () => {
     expect(on[1].stats.dmgBonus - off[1].stats.dmgBonus).toBeCloseTo(0, 9);
   });
 });
+
+describe('Mavuika C2: +200 de ATK base', () => {
+  it('soma 200 ao ATK base antes dos % de ATK (C1 não tem)', () => {
+    const act: Act = { member: 0, talent: 'burst', label: 'Skill DMG' };
+    const [c1] = run([{ character: 'Mavuika', constellation: 1 }], [act]);
+    const [c2] = run([{ character: 'Mavuika', constellation: 2 }], [act]);
+    expect(c2.stats.atk).toBeGreaterThan(c1.stats.atk + 200);
+  });
+});

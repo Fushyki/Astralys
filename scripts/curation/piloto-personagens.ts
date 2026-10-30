@@ -18,6 +18,11 @@ export const PILOTO_BUFFS: Record<string, BuffCuration[]> = {
       note: 'Soma 120% do ATK ao dano base do Sunfell Slice (o único golpe do Supremo; ela o lança na forma Ignimoto).',
     },
     {
+      id: 'c2base', label: 'Mavuika C2 (ATK base)', src: 'const2', scope: 'self', timed: false, stats: { atkBaseFlat: { p: 0 } },
+      expect: "Mavuika's Base ATK is increased by 200",
+      note: 'Soma 200 ao ATK base (personagem + arma), antes dos % de ATK. Assume a Bênção do Espírito da Noite sempre ativa.',
+    },
+    {
       id: 'c2norm', label: 'Mavuika C2 (Normais da Ignimoto)', src: 'const2', scope: 'self', timed: false,
       flat: [{ name: 'Normais da Ignimoto por ATK (C2)', sourceStat: 'ATK', perPoint: { p: 2 }, hitTypes: ['normal'], labels: [1, 2, 3, 4, 5].map((n) => `Flamestrider Normal Attack ${n}-Hit DMG`) }],
       expect: 'deal 60%, 90%, and 120% of her ATK as increased DMG respectively',
@@ -56,7 +61,7 @@ export const PILOTO_PROCS: Record<string, ProcCuration[]> = {
 export const PILOTO_NOTES: Record<string, Partial<Record<Src, NoteCuration | null>>> = {
   Mavuika: {
     p3: u(NIGHTSOUL_TRANSMISSION),
-    const2: x('Os +200 de ATK base (a Nightsoul) não entram ainda; entram o -20% de DEF do inimigo (janela, forma Anel) e o dano fixo de 60%, 90% e 120% do ATK (Normais, Carregados e Sunfell Slice da Ignimoto).'),
+    const2: x('Entram o +200 de ATK base (assumindo a Nightsoul sempre ativa), o -20% de DEF do inimigo (janela, forma Anel) e o dano fixo de 60%, 90% e 120% do ATK (Normais, Carregados e Sunfell Slice da Ignimoto).'),
     const6: x('Os dois golpes (200% e 500% do ATK) entram como golpes extras; a redução de 20% de DEF do Anel de Incêndio não entra (debuff com condição de forma). Os 80 pontos de Espírito da Noite não mudam o dano.'),
   },
   Citlali: { p3: u(NIGHTSOUL_TRANSMISSION) },

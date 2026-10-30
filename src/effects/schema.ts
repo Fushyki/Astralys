@@ -66,6 +66,8 @@ const BuffStatsSchema = z.object({
   defIgnore: frac,
   /** ATK, HP e DEF fixos (ex.: Nicole, +300 de ATK; Prune C6, +350). */
   atkFlat: frac,
+  /** ATK BASE fixo (soma ao ATK base de personagem + arma, antes dos % de ATK; ex.: Mavuika C2, +200). */
+  atkBaseFlat: frac,
   hpFlat: frac,
   defFlat: frac,
   /** Bônus de DMG Físico (só golpes Físicos; ex.: Eula C1, Mika A1). */

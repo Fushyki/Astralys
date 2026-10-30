@@ -165,7 +165,7 @@ export function optimizeMember(ctx: OptimizerContext, memberIndex: number, flatB
   // Peso de cada stat = Σ(W × escala) × valor do stat com rolls mínimos e SEM o bônus de ATK% por ER da arma.
   const allTeam = activeTeamDelta(assembly.buffs, names[memberIndex], 'all');
   const full = finalStats(m, statics, minimumRolls(minR), allTeam, assembly.resonanceAtkPct);
-  const atkBase = m.character.baseAtk + m.weapon.baseAtk;
+  const atkBase = m.character.baseAtk + m.weapon.baseAtk + (statics.atkBaseFlat ?? 0) + (allTeam.atkBaseFlat ?? 0);
   const statWeight = {
     atk: full.atk - atkBase * full.weaponErAtkPct,
     hp: full.hp,

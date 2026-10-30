@@ -633,9 +633,11 @@ export function applyTeamRules(members: MemberInput[]): MemberInput[] {
   const hexerei = faction('hexerei');
   return withMoonsignGleam(members, moonsign).map((m, self) => {
     const buffs = m.characterEffect?.buffs;
-    if (!buffs?.some((b) => b.team || b.level)) return m;
+    if (!buffs?.some((b) => b.team || b.level || b.convert?.capByLevel)) return m;
     const others = members.filter((_, j) => j !== self);
-    const next = buffs.flatMap((b) => {
+    const next = buffs.flatMap((b0) => {
+      const cl = b0.convert?.capByLevel;
+      const b = cl ? { ...b0, convert: { ...b0.convert!, cap: cl.table[Math.min(15, Math.max(1, Math.round(m.talents[cl.talent]))) - 1] } } : b0;
       const t = b.team;
       if (t?.moonsign && moonsign < t.moonsign) return [];
       if (t?.moonsignMax && moonsign > t.moonsignMax) return [];
@@ -734,12 +736,14 @@ function withoutPlanilhaSeed(m: MemberInput): MemberInput {
   const c1 = e.buffs.find((b) => b.id === 'c1' && b.convert?.from === 'baseAtk')?.convert?.perPoint ?? 0;
   const { resShred: _drop, ...rest } = e;
   void _drop;
+  // Um buff curado que substitui o ATK fixo semeado (Iansan, Bennett por nível) tira o semeado: senão contaria duas vezes.
+  const curatedFlat = e.buffs.some((b) => b.replaces === 'teamFlatAtk');
   return {
     ...m,
     characterEffect: {
       // O prefixo evita tratar de novo (o otimizador finaliza membros que já vieram finalizados).
-      ...rest, fonte_info: `sem a semente da planilha; ${e.fonte_info}`, atkPct: 0, dmgPct: 0, critRate: 0, critDmg: 0, em: 0,
-      ...(e.teamFlatAtk ? { teamFlatAtk: { ...e.teamFlatAtk, perBaseAtk: Math.max(0, e.teamFlatAtk.perBaseAtk - c1) } } : {}),
+      ...rest, ...(curatedFlat ? { teamFlatAtk: undefined } : {}), fonte_info: `sem a semente da planilha; ${e.fonte_info}`, atkPct: 0, dmgPct: 0, critRate: 0, critDmg: 0, em: 0,
+      ...(e.teamFlatAtk && !curatedFlat ? { teamFlatAtk: { ...e.teamFlatAtk, perBaseAtk: Math.max(0, e.teamFlatAtk.perBaseAtk - c1) } } : {}),
     },
   };
 }

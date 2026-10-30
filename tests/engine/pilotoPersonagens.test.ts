@@ -107,3 +107,16 @@ describe('Flins C4: reforça o A4 em vez de somar', () => {
     expect(c4.stats.em - c3.stats.em).toBeCloseTo(em0(c4.stats, 0.1, 220) - em0(c3.stats, 0.08, 160), 6);
   });
 });
+
+describe('Iansan: ATK do Supremo por nível e por pontos de Espírito da Noite', () => {
+  const effect = JSON.parse(readFileSync(path.join(root, 'src/effects/characters.json'), 'utf8')).find((c: { character: string }) => c.character === 'Iansan');
+  const b = effect.buffs.find((x: { id: string }) => x.id === 'escala');
+  it('27% do ATK com 42 pontos, 0,5% por ponto abaixo; teto do nível 1 ao 15 (330 a 890)', () => {
+    expect(b.convert.perPoint).toBeCloseTo(0.27, 9);
+    expect(b.stacks.max).toBe(42);
+    expect(b.stacks.table[20] * 0.27).toBeCloseTo(20 * 0.005, 5);
+    expect(b.stacks.table[42]).toBe(1);
+    expect(b.convert.capByLevel.table[0]).toBe(330);
+    expect(b.convert.capByLevel.table[14]).toBe(890);
+  });
+});

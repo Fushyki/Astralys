@@ -399,7 +399,7 @@ console.log(`weapons.json: ${weapons.length} armas (${weapons.filter((w) => w.re
 interface RawChar {
   passives?: Record<string, { description: string; params: number[] }>;
   constellations?: Record<string, { description: string; params: number[] }>;
-  skills?: Record<string, { description: string; multipliers?: Record<string, string[]> }>;
+  skills?: Record<string, { description: string; params?: number[]; multipliers?: Record<string, string[]> }>;
 }
 
 const SKILL_KEY = { normal: 'normalattack', skill: 'elementalskill', burst: 'elementalburst' } as const;
@@ -441,7 +441,7 @@ function buildCharacters(): CharacterEffect[] {
       const isConst = b.src.startsWith('const');
       const kitNode = b.kit ? raw.skills?.[SKILL_KEY[b.kit.talent]] : undefined;
       if (b.kit && !kitNode) throw new Error(`${name} ${b.id}: o talento ${b.kit.talent} não existe`);
-      const node = b.kit ? { description: kitNode!.description, params: [] as number[] } : (isConst ? raw.constellations : raw.passives)?.[b.src];
+      const node = b.kit ? { description: kitNode!.description, params: (kitNode!.params ?? []) as number[] } : (isConst ? raw.constellations : raw.passives)?.[b.src];
       if (!node) throw new Error(`${name} ${b.id}: ${b.src} não existe`);
       let levelTable: number[] | undefined;
       if (b.kit?.table) {
@@ -451,6 +451,12 @@ function buildCharacters(): CharacterEffect[] {
         const row = kitNode!.multipliers?.[b.kit.key];
         if (!row || row.length !== 15) throw new Error(`${name} ${b.id}: a linha "${b.kit.key}" não existe ou não tem 15 níveis`);
         levelTable = row.map(percentOf);
+      }
+      let capTable: number[] | undefined;
+      if (b.kit?.capKey) {
+        const row = kitNode!.multipliers?.[b.kit.capKey];
+        if (!row || row.length !== 15) throw new Error(`${name} ${b.id}: a linha "${b.kit.capKey}" não existe ou não tem 15 níveis`);
+        capTable = row.map((t) => { const n = Number(String(t).trim()); if (!Number.isFinite(n)) throw new Error(`${name} ${b.id}: "${t}" não é número`); return n; });
       }
       if (!strip(node.description).includes(b.expect)) {
         errors.push(`${name} ${b.id}: a descrição de ${b.src} não contém "${b.expect}" (o Lunaris mudou?)`);
@@ -469,6 +475,7 @@ function buildCharacters(): CharacterEffect[] {
         ...(b.decay ? { decay: b.decay } : {}),
         ...(b.forFactions ? { forFactions: b.forFactions } : {}),
         ...(b.replaces ? { replaces: b.replaces } : {}),
+        ...(b.onCharTag ? { onCharTag: true } : {}),
         ...(s
           ? {
               stats: {
@@ -515,6 +522,7 @@ function buildCharacters(): CharacterEffect[] {
                 threshold: v(b.convert.threshold),
                 ...(b.convert.cap !== undefined ? { cap: v(b.convert.cap) } : {}),
                 ...(b.convert.capBaseAtk !== undefined ? { capBaseAtk: b.convert.capBaseAtk } : {}),
+                ...(capTable ? { capByLevel: { talent: b.kit!.talent, table: capTable } } : {}),
                 to: b.convert.to,
               },
             }

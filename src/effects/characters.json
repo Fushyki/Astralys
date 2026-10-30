@@ -764,6 +764,96 @@
         },
         "flat": [],
         "note": "+25% de DMG do personagem ativo por 3 s (Extreme Force): ligue na janela."
+      },
+      {
+        "id": "escala",
+        "label": "Iansan: Escala de Energia Cinética (ATK)",
+        "minConstellation": 0,
+        "scope": "others",
+        "timed": true,
+        "replaces": "teamFlatAtk",
+        "onCharTag": true,
+        "convert": {
+          "from": "atk",
+          "source": "self",
+          "perPoint": 0.27,
+          "threshold": 0,
+          "capByLevel": {
+            "talent": "burst",
+            "table": [
+              330,
+              370,
+              410,
+              450,
+              490,
+              530,
+              570,
+              610,
+              650,
+              690,
+              730,
+              770,
+              810,
+              850,
+              890
+            ]
+          },
+          "to": [
+            "atkFlat"
+          ]
+        },
+        "flat": [],
+        "stacks": {
+          "max": 42,
+          "unit": "pontos de Espírito da Noite",
+          "table": [
+            0,
+            0.018519,
+            0.037037,
+            0.055556,
+            0.074074,
+            0.092593,
+            0.111111,
+            0.12963,
+            0.148148,
+            0.166667,
+            0.185185,
+            0.203704,
+            0.222222,
+            0.240741,
+            0.259259,
+            0.277778,
+            0.296296,
+            0.314815,
+            0.333333,
+            0.351852,
+            0.37037,
+            0.388889,
+            0.407407,
+            0.425926,
+            0.444444,
+            0.462963,
+            0.481481,
+            0.5,
+            0.518519,
+            0.537037,
+            0.555556,
+            0.574074,
+            0.592593,
+            0.611111,
+            0.62963,
+            0.648148,
+            0.666667,
+            0.685185,
+            0.703704,
+            0.722222,
+            0.740741,
+            0.759259,
+            1
+          ],
+          "default": 42
+        },
+        "note": "ATK fixo para quem está em campo (não a própria Iansan): com 42 pontos ou mais, 27% do ATK dela; com menos, 0,5% do ATK por ponto. Teto por nível do Supremo (330 no nível 1 a 890 no 15). Escolha os pontos de 0 a 42."
       }
     ],
     "notes": [
@@ -859,6 +949,46 @@
         },
         "flat": [],
         "note": "+15% de DMG Pyro de quem está dentro do Supremo (só personagens Pyro recebem): ligue na janela. A infusão Pyro de quem usa espada, montante ou lança não entra, então um não Pyro com essas armas fica sem o bônus."
+      },
+      {
+        "id": "inspiracao",
+        "label": "Bennett: Inspiration Field (ATK)",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "replaces": "teamFlatAtk",
+        "onCharTag": true,
+        "convert": {
+          "from": "baseAtk",
+          "source": "self",
+          "perPoint": 1,
+          "threshold": 0,
+          "to": [
+            "atkFlat"
+          ]
+        },
+        "level": {
+          "talent": "burst",
+          "table": [
+            0.56,
+            0.602,
+            0.644,
+            0.7,
+            0.742,
+            0.784,
+            0.84,
+            0.896,
+            0.952,
+            1.008,
+            1.064,
+            1.12,
+            1.19,
+            1.26,
+            1.33
+          ]
+        },
+        "flat": [],
+        "note": "ATK fixo = % do ATK BASE do Bennett (personagem + arma) por nível do Supremo (56% no nível 1 a 133% no 15). A constelação 1 (+20%) continua no buff próprio dela."
       }
     ],
     "notes": [

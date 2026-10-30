@@ -32,8 +32,11 @@ describe('sem contar duas vezes os números semeados da planilha', () => {
     expect([e.atkPct, e.dmgPct]).toEqual([0, 0]);
     expect(e.buffs.map((b) => b.id)).toEqual(expect.arrayContaining(['a1', 'a4']));
   });
-  it('Bennett: o ATK fixo do Supremo não leva o C1 de novo (139% da planilha menos os 20% do buff C1)', () => {
-    expect(team().members[3].characterEffect!.teamFlatAtk!.perBaseAtk).toBeCloseTo(1.19, 9);
+  it('Bennett: o ATK fixo do Supremo vem do buff por nível (sem o semeado, que levaria o C1 de novo)', () => {
+    const e = team().members[3].characterEffect!;
+    expect(e.teamFlatAtk).toBeUndefined();
+    const b = e.buffs.find((x) => x.id === 'inspiracao')!;
+    expect(b.convert!.perPoint).toBeCloseTo(1.19, 9); // nível 13 do exemplo: 119% do ATK base
   });
   it('modo planilha continua com os números dela', () => {
     const e = resolveProject(sampleProject(), game, effects).team.members[0].characterEffect!;

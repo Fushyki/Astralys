@@ -164,6 +164,8 @@ export const BuffConvertSchema = z.object({
   cap: z.number().optional(),
   /** Teto em múltiplos do ATK base da fonte (ex.: Hu Tao, 4 = 400%). */
   capBaseAtk: z.number().optional(),
+  /** Teto que muda com o nível do talento (15 valores; ex.: Iansan, 330 a 890 de ATK). Troca `cap` ao montar o projeto. */
+  capByLevel: z.object({ talent: z.enum(['normal', 'skill', 'burst']), table: z.array(z.number()).length(15) }).optional(),
   to: z.array(ConvertTargetSchema).min(1),
 });
 export type BuffConvert = z.infer<typeof BuffConvertSchema>;
@@ -245,6 +247,8 @@ export const CharacterBuffSchema = z.object({
   forFactions: z.array(z.enum(['moonsign', 'hexerei'])).optional(),
   /** Id de outro buff do mesmo personagem que este REFORÇA: com este ativo (constelação), o outro sai e este entra no lugar (não somam; ex.: Flins C4 sobre o A4). */
   replaces: z.string().optional(),
+  /** Usa a faixa do personagem (`char:<membro>`) em vez de uma faixa com o nome do buff: mantém as janelas de projetos que já tinham o ATK fixo dele. */
+  onCharTag: z.boolean().optional(),
   stats: BuffStatsSchema.optional(),
   /** Bônus que depende de um stat da fonte (no lugar de `stats`). Os `timed: false` valem o tempo todo. */
   convert: BuffConvertSchema.optional(),

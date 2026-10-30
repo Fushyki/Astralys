@@ -113,10 +113,12 @@ describe('buffs de personagem no motor', () => {
   });
 
   it('redução de RES de constelação: Ganyu C1 tira 15% da RES Cryo, e só a partir da C1', () => {
-    const c0 = assemble(team(['Ganyu', 'Hu Tao', 'Xingqiu', 'Albedo'], 0)).enemyRes;
-    const c1 = assemble(team(['Ganyu', 'Hu Tao', 'Xingqiu', 'Albedo'], 1)).enemyRes;
-    expect(c0.Cryo! - c1.Cryo!).toBeCloseTo(0.15, 9);
-    expect(c1.Pyro).toBeCloseTo(c0.Pyro!, 9);
+    // Debuff com duração: não muda o mapa fixo, vira janela (-15% de RES Cryo só dentro dela).
+    const c0 = assemble(team(['Ganyu', 'Hu Tao', 'Xingqiu', 'Albedo'], 0));
+    const c1 = assemble(team(['Ganyu', 'Hu Tao', 'Xingqiu', 'Albedo'], 1));
+    expect(c1.enemyRes.Cryo).toBeCloseTo(c0.enemyRes.Cryo!, 9);
+    expect(c0.buffs.some((b) => b.id === 'cbuff-shred-0-c1')).toBe(false);
+    expect(c1.buffs.find((b) => b.id === 'cbuff-shred-0-c1')?.delta.resShred?.Cryo).toBeCloseTo(0.15, 9);
   });
 
   it('os efeitos existentes da planilha não mudam (DPR de referência)', () => {

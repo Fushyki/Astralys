@@ -101,9 +101,11 @@ describe('buffs de arma e set', () => {
 
 describe('mecânicas novas dos buffs', () => {
   it('redução de DEF de constelação soma ao cenário (Ayaka C4 -30%)', () => {
+    // Debuff com duração: vira janela, o cenário fixo não muda.
     const none = assembleTeam(project([{ character: 'Kamisato Ayaka', constellation: 3 }]).team, {});
     const c4 = assembleTeam(project([{ character: 'Kamisato Ayaka', constellation: 4 }]).team, {});
-    expect(c4.enemyDefRed - none.enemyDefRed).toBeCloseTo(0.3, 6);
+    expect(c4.enemyDefRed).toBeCloseTo(none.enemyDefRed, 9);
+    expect(c4.buffs.find((b) => b.id === 'cbuff-shred-0-c4')?.delta.defShred).toBeCloseTo(0.3, 6);
   });
 
   it('Ayato: Namisen é dano fixo por HP, e na C2 ganha o 5º stack', () => {

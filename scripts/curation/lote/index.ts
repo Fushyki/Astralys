@@ -18,4 +18,11 @@ import { LOTE as PYRO_A } from './pyro-a';
 import { LOTE as PYRO_B } from './pyro-b';
 import { LOTE as PYRO_C } from './pyro-c';
 
-export const LOTES: Lote[] = [PYRO_A, PYRO_B, PYRO_C];
+import { LOTE as CRYO_A } from './cryo-a';
+import { LOTE as CRYO_B } from './cryo-b';
+import { LOTE as CRYO_C } from './cryo-c';
+import { LOTE as ELECTRO_B } from './electro-b';
+import { LOTE as MISTO_D } from './misto-d';
+import { LOTE as ELECTRO_C } from './electro-c';
+
+export const LOTES: Lote[] = [PYRO_A, PYRO_B, PYRO_C, CRYO_A, CRYO_B, CRYO_C, ELECTRO_B, MISTO_D, ELECTRO_C];

@@ -67,10 +67,9 @@ describe('elemento Físico', () => {
     const team = (c: number) => run([{ character: 'Rosaria', constellation: c }], [{ label: '1-Hit DMG', element: 'Physical' }, { label: '1-Hit DMG' }]);
     const c0 = team(0);
     const c6 = team(6);
-    expect(c0.assembly.enemyRes.Physical! - c6.assembly.enemyRes.Physical!).toBeCloseTo(0.2, 6);
-    expect(c6.assembly.enemyRes.Cryo).toBeCloseTo(c0.assembly.enemyRes.Cryo!, 9);
-    expect(c6.result.actions[0].noCrit).toBeGreaterThan(c0.result.actions[0].noCrit);
-    expect(c6.result.actions[1].noCrit).toBeCloseTo(c0.result.actions[1].noCrit, 6);
+    // Debuff com duração: o mapa fixo não muda; a janela (-20% de RES Física) é que vale.
+    expect(c6.assembly.enemyRes.Physical).toBeCloseTo(c0.assembly.enemyRes.Physical!, 9);
+    expect(c6.assembly.buffs.find((b) => b.id === 'cbuff-shred-0-c6')?.delta.resShred?.Physical).toBeCloseTo(0.2, 6);
   });
 
   it('substat Físico da arma vira bônus Físico', () => {

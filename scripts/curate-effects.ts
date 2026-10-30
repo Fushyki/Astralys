@@ -468,6 +468,7 @@ function buildCharacters(): CharacterEffect[] {
         ...(b.forElements ? { forElements: b.forElements } : {}),
         ...(b.decay ? { decay: b.decay } : {}),
         ...(b.forFactions ? { forFactions: b.forFactions } : {}),
+        ...(b.replaces ? { replaces: b.replaces } : {}),
         ...(s
           ? {
               stats: {

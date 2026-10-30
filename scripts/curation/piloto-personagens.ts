@@ -10,6 +10,14 @@ const x = (note: string) => ({ kind: 'partial' as const, note });
 const NIGHTSOUL_TRANSMISSION = 'Só Transmissão do Espírito da Noite e Flogisto (mobilidade e exploração).';
 
 export const PILOTO_BUFFS: Record<string, BuffCuration[]> = {
+  Flins: [
+    {
+      id: 'c4em', label: 'Flins C4 (A4 reforçado)', src: 'const4', scope: 'self', timed: false, replaces: 'a4',
+      convert: { from: 'atk', perPoint: { p: 1 }, cap: { p: 2 }, to: ['em'] },
+      expect: 'Elemental Mastery is increased by 10% of his ATK',
+      note: 'Maestria = 10% do ATK, até 220. SUBSTITUI o A4 (8%, até 160) a partir da C4: não somam.',
+    },
+  ],
   Mavuika: [
     {
       id: 'c2sol', label: 'Mavuika C2 (Golpe Solar)', src: 'const2', scope: 'self', timed: false,
@@ -69,6 +77,6 @@ export const PILOTO_NOTES: Record<string, Partial<Record<Src, NoteCuration | nul
   Bennett: { p3: u('Só tempo de expedição.'), const4: null },
   Flins: {
     p3: x('A conversão de Eletrocarregado em Lunar-Carregado e o +1 nível de Presságio Lunar da equipe não entram; a base do Lunar-Carregado (0,7% por 100 de ATK) entra.'),
-    const4: x('O reforço da Maestria (10% do ATK, até 220, no lugar de 8% e 160 do A4) não entra: o formato não troca um efeito pelo outro.'),
+    const4: x('Entra o +20% de ATK e o reforço do A4 (Maestria = 10% do ATK, até 220, no lugar dos 8% e 160).'),
   },
 };

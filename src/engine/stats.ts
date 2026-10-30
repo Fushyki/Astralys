@@ -291,8 +291,11 @@ export function characterBuffDelta(stats: BuffStats | undefined, elemental = fal
 }
 
 /** Buffs de personagem que valem na constelação do membro. */
-export const activeCharacterBuffs = (m: MemberInput): CharacterBuff[] =>
-  (m.characterEffect?.buffs ?? []).filter((b) => (m.constellation ?? 0) >= (b.minConstellation ?? 0));
+export const activeCharacterBuffs = (m: MemberInput): CharacterBuff[] => {
+  const on = (m.characterEffect?.buffs ?? []).filter((b) => (m.constellation ?? 0) >= (b.minConstellation ?? 0));
+  const replaced = new Set(on.flatMap((b) => (b.replaces ? [b.replaces] : [])));
+  return replaced.size ? on.filter((b) => !replaced.has(b.id)) : on;
+};
 
 /** Bônus de 2 peças como "stat nomeado + valor" (modelo da planilha). */
 function twoPieceDelta(set: SetSelection | undefined, element: string): StatDelta | null {

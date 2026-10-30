@@ -243,6 +243,8 @@ export const CharacterBuffSchema = z.object({
   duration: z.number().positive().optional(),
   /** Só personagens destas facções recebem (ex.: Jahoda C6, "personagens Moonsign"). */
   forFactions: z.array(z.enum(['moonsign', 'hexerei'])).optional(),
+  /** Id de outro buff do mesmo personagem que este REFORÇA: com este ativo (constelação), o outro sai e este entra no lugar (não somam; ex.: Flins C4 sobre o A4). */
+  replaces: z.string().optional(),
   stats: BuffStatsSchema.optional(),
   /** Bônus que depende de um stat da fonte (no lugar de `stats`). Os `timed: false` valem o tempo todo. */
   convert: BuffConvertSchema.optional(),

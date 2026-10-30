@@ -12079,6 +12079,26 @@
         },
         "flat": [],
         "note": "Com Moonsign: Ascendant Gleam, dano Lunar-Carregado da equipe elevado em 10%."
+      },
+      {
+        "id": "c4em",
+        "label": "Flins C4 (A4 reforçado)",
+        "minConstellation": 4,
+        "scope": "self",
+        "timed": false,
+        "replaces": "a4",
+        "convert": {
+          "from": "atk",
+          "source": "self",
+          "perPoint": 0.1,
+          "threshold": 0,
+          "cap": 220,
+          "to": [
+            "em"
+          ]
+        },
+        "flat": [],
+        "note": "Maestria = 10% do ATK, até 220. SUBSTITUI o A4 (8%, até 160) a partir da C4: não somam."
       }
     ],
     "notes": [
@@ -12095,7 +12115,7 @@
       {
         "src": "const4",
         "kind": "partial",
-        "note": "O reforço da Maestria (10% do ATK, até 220, no lugar de 8% e 160 do A4) não entra: o formato não troca um efeito pelo outro."
+        "note": "Entra o +20% de ATK e o reforço do A4 (Maestria = 10% do ATK, até 220, no lugar dos 8% e 160)."
       }
     ],
     "procs": [

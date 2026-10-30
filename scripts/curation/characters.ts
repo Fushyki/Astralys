@@ -28,6 +28,8 @@ export interface BuffCuration {
   forElements?: Element[];
   /** Só membros destas facções recebem. */
   forFactions?: ('moonsign' | 'hexerei')[];
+  /** Id do buff que este reforça e substitui quando ativo. */
+  replaces?: string;
   stats?: {
     atkPct?: Val; dmgPct?: Val; critRate?: Val; critDmg?: Val; em?: Val; hpPct?: Val; defPct?: Val;
     byType?: Partial<Record<'normal' | 'charged' | 'plunge' | 'skill' | 'burst', Val>>;

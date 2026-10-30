@@ -96,3 +96,14 @@ describe('Mavuika C2: +200 de ATK base', () => {
     expect(c2.stats.atk).toBeGreaterThan(c1.stats.atk + 200);
   });
 });
+
+describe('Flins C4: reforça o A4 em vez de somar', () => {
+  it('C3 usa 8% (teto 160); C4 usa 10% (teto 220) no lugar', () => {
+    const act: Act = { member: 0, talent: 'normal', label: '1-Hit DMG' };
+    const [c3] = run([{ character: 'Flins', constellation: 3 }], [act]);
+    const [c4] = run([{ character: 'Flins', constellation: 4 }], [act]);
+    const em0 = (st: { atk: number }, per: number, cap: number) => Math.min(per * st.atk, cap);
+    // C4 ganha +20% de ATK; compara cada um com a própria fórmula
+    expect(c4.stats.em - c3.stats.em).toBeCloseTo(em0(c4.stats, 0.1, 220) - em0(c3.stats, 0.08, 160), 6);
+  });
+});

@@ -1,25 +1,36 @@
 /* Inventário: importação e grade de peças e armas (os cartões de peça usam `.piece` do otimizador). */
-.inv-import { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
-.inv-import .opt { display: flex; flex-direction: column; gap: 10px; align-items: flex-start; padding: 16px; background: var(--bg-header); border: 1px solid var(--border); border-radius: var(--radius-card); }
-.inv-import .opt.now { border-color: var(--gold); }
+.inv-hero { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 16px 56px; }
+.inv-hero .k { display: block; font: 600 14px var(--font-display); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.inv-hero .big { display: block; font: 700 clamp(64px, 11vw, 128px) var(--font-display); line-height: .9; color: var(--accent, var(--gold)); }
+.inv-hero .big.txt { font-size: clamp(44px, 7vw, 84px); }
+.inv-hero .kpis { flex: 1; min-width: 280px; display: flex; flex-wrap: wrap; align-items: flex-end; gap: 16px 40px; padding: 14px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.inv-hero .kpis > div { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.inv-hero .v { font: 700 32px var(--font-display); line-height: 1; }
+.inv-hero .l { font-size: 13px; color: var(--muted); }
+.inv-hero .kpis.empty { flex-direction: column; align-items: flex-start; }
+.inv-const { width: min(360px, 100%); height: auto; }
+.inv-h { margin: 0 0 12px; font: 600 14px var(--font-display); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.inv-import { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; }
+.inv-import .opt { display: flex; flex-direction: column; gap: 10px; align-items: flex-start; padding: 2px 0 2px 16px; border-left: 1px solid var(--border-ctl-hi); }
+.inv-import .opt.now { border-left-color: var(--gold); }
 .inv-import .row { display: flex; flex-wrap: wrap; gap: 8px; width: 100%; }
 .inv-import .row .dz-input { flex: 1; min-width: 120px; }
 .inv-tools { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin: 20px 0 12px; }
 .inv-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; margin: 12px 0; }
 .inv-grid.weapons { grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); }
-.inv-weapon { display: flex; flex-direction: column; gap: 6px; align-items: center; text-align: center; padding: 12px; background: var(--surface); border: 2px solid var(--border); border-radius: 12px; }
-.inv-weapon[data-rarity='5'] { border-color: var(--rar5-border); background: var(--rar5-bg); }
-.inv-weapon[data-rarity='4'] { border-color: var(--rar4-border); background: var(--rar4-bg); }
+.inv-weapon { display: flex; flex-direction: column; gap: 6px; align-items: center; text-align: center; padding: 12px; background: linear-gradient(180deg, var(--surface), transparent); border-bottom: 3px solid var(--border); }
+.inv-weapon[data-rarity='5'] { border-bottom-color: var(--rar5-border); }
+.inv-weapon[data-rarity='4'] { border-bottom-color: var(--rar4-border); }
 .inv-weapon .art { height: 72px; display: grid; place-items: center; }
 .inv-weapon .art img { max-height: 72px; max-width: 100%; object-fit: contain; }
 .inv-weapon .n { font-weight: 600; font-size: 14px; overflow-wrap: anywhere; }
 .piece .main small { color: var(--muted); font-weight: 400; margin-left: 4px; }
 
 .inv-grid.arts { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: var(--sp-3); }
-.inv-art { display: flex; flex-direction: column; gap: var(--sp-2); min-width: 0; padding: var(--sp-3); border-radius: var(--r-inner); background: linear-gradient(160deg, #1b2144 0%, var(--zebra) 65%); border: 1px solid var(--line-2); transition: border-color .15s, transform .15s; }
-.inv-art:hover { transform: translateY(-2px); border-color: var(--gold); }
-.inv-art[data-rarity='5'] { background: var(--rar5-bg); border-color: var(--rar5-border); }
-.inv-art[data-rarity='4'] { background: var(--rar4-bg); border-color: var(--rar4-border); }
+.inv-art { --rc: var(--border-ctl-hi); position: relative; display: flex; flex-direction: column; gap: var(--sp-2); min-width: 0; padding: var(--sp-3); background: linear-gradient(180deg, var(--surface), transparent 85%); border-bottom: 3px solid var(--rc); transition: transform .15s; }
+.inv-art:hover { transform: translateY(-2px); }
+.inv-art[data-rarity='5'] { --rc: var(--gold); }
+.inv-art[data-rarity='4'] { --rc: var(--rar4-border); }
 .inv-art header { display: flex; justify-content: space-between; align-items: center; font-size: var(--fs-1); }
 .inv-art .slot { font: 600 11px var(--font-display); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 .inv-art .lvl { padding: 0 var(--sp-2); border-radius: var(--r-chip); background: var(--bg); color: var(--gold); font-weight: 600; }
@@ -29,7 +40,7 @@
 .inv-art .art .ph { font-size: 32px; color: var(--gold); }
 .inv-art .mainstat { display: flex; flex-direction: column; min-width: 0; }
 .inv-art .mainstat .k { font-size: var(--fs-1); color: var(--muted); }
-.inv-art .mainstat .v { font: 700 var(--fs-5) var(--font-display); color: var(--gold-hi); line-height: 1.1; }
+.inv-art .mainstat .v { font: 700 30px var(--font-display); color: var(--rc); line-height: 1; }
 .inv-art .stars { font-size: var(--fs-1); color: var(--gold); letter-spacing: 1px; }
 .inv-art .subs { list-style: none; margin: 0; padding: var(--sp-2) 0 0; border-top: 1px solid #ffffff14; display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-1) var(--sp-3); }
 .inv-art .subs li { display: flex; justify-content: space-between; gap: var(--sp-1); font-size: var(--fs-2); color: var(--muted); }

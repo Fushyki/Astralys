@@ -1,15 +1,32 @@
-/* Personagens: grade de cartões por personagem. */
-.pe-tools { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 16px; }
+/* Personagens: o número gigante, a arte alta de cada um e linhas finas (mesma linguagem do card 16:9). */
+.pe-hero { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 16px 56px; }
+.pe-hero .k { display: block; font: 600 14px var(--font-display); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.pe-hero .big { display: block; font: 700 clamp(64px, 11vw, 128px) var(--font-display); line-height: .9; color: var(--accent, var(--gold)); }
+.pe-hero .side { flex: 1; min-width: 280px; display: flex; flex-direction: column; align-items: flex-start; gap: 12px; padding: 14px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.pe-hero .side p { margin: 0; color: var(--text-2); font-size: 14px; }
+.pe-hero .mix { display: flex; width: 100%; height: 6px; gap: 2px; }
+.pe-hero .mix i { display: block; min-width: 3px; border-radius: 2px; opacity: .85; }
+
+.pe-tools { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
 .pe-tools .dz-input { max-width: 260px; }
 .pe-els { display: flex; flex-wrap: wrap; gap: 6px; }
-.pe-els button { border: 1px solid var(--border-ctl); background: var(--bg-header); color: var(--muted); border-radius: 999px; padding: 6px 12px; min-height: 34px; font: 500 13px var(--font-body); cursor: pointer; }
-.pe-els button[aria-pressed='true'] { border-color: var(--c); color: var(--text); background: color-mix(in srgb, var(--c) 22%, var(--bg-header)); }
-.pe-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
-.pe-card { background: var(--surface); border: 1px solid var(--border); border-top: 4px solid var(--c); border-radius: var(--radius-card); padding: 14px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
-.pe-card .top { display: flex; gap: 12px; align-items: center; }
-.pe-card .meta { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-.pe-card .meta b { font-family: var(--font-display); font-size: 20px; overflow-wrap: anywhere; }
-.pe-card .small { font-size: 13px; }
-.pe-card .teams { display: flex; flex-wrap: wrap; gap: 6px; }
-.pe-team { padding: 4px 10px; border-radius: 999px; background: var(--bg-header); border: 1px solid var(--border-ctl); color: var(--text-2); font-size: 12px; text-decoration: none; }
+.pe-els button { border: 0; border-bottom: 2px solid transparent; background: none; color: var(--muted); padding: 6px 10px; min-height: 34px; font: 600 14px var(--font-display); letter-spacing: .08em; text-transform: uppercase; cursor: pointer; }
+.pe-els button:hover { color: var(--text); }
+.pe-els button[aria-pressed='true'] { border-bottom-color: var(--c); color: var(--c); }
+
+.pe-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px 16px; }
+.pe-card { position: relative; display: flex; min-height: 210px; min-width: 0; overflow: hidden; border-bottom: 3px solid var(--c); background: linear-gradient(100deg, var(--surface) 30%, color-mix(in srgb, var(--c) 14%, var(--bg)) 100%); }
+.pe-card .splash { position: absolute; top: 0; right: 0; width: 140px; height: 100%; object-fit: cover; object-position: center 12%; -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 45%); mask-image: linear-gradient(90deg, transparent 0, #000 45%); opacity: .92; }
+.pe-card:not([data-mine]) .splash { filter: saturate(.55); opacity: .7; }
+.pe-card .info { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; padding: 16px 20px; min-width: 0; max-width: 78%; }
+.pe-card .el { font: 600 12px var(--font-display); letter-spacing: .14em; text-transform: uppercase; color: var(--c); }
+.pe-card .nm { font: 700 28px var(--font-display); line-height: 1; overflow-wrap: anywhere; }
+.pe-card .cn { display: flex; align-items: baseline; gap: 10px; }
+.pe-card .cn i { font: 700 44px var(--font-display); line-height: .9; font-style: normal; color: var(--c); }
+.pe-card .cn span { color: var(--muted); font-size: 14px; }
+.pe-card .st { color: var(--gold); letter-spacing: 2px; font-size: 13px; }
+.pe-card .gear { font-size: 12px; color: var(--muted); }
+.pe-card .teams { display: flex; flex-wrap: wrap; gap: 6px 10px; margin-top: auto; padding-top: 4px; }
+.pe-card .none { font-size: 12px; color: var(--faint); }
+.pe-team { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 0 0 1px; border-bottom: 1px solid var(--border-ctl-hi); color: var(--text-2); font-size: 12px; text-decoration: none; }
 .pe-team:hover { border-color: var(--gold); color: var(--gold-hi); }

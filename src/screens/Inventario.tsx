@@ -5,7 +5,7 @@ import { AppHeader } from '../app/AppHeader';
 import '../design/design.css';
 import { pieceIconUrl, weaponIconUrl } from '../design/images';
 import { mainStatValue, pieceLevel } from '../engine';
-import { Chip, Panel, Segmented } from '../design/primitives';
+import { Chip, Segmented } from '../design/primitives';
 import { enkaToGood, mergeGood } from '../features/enka/enkaImport';
 import { norm, parseGood, type Good, type GoodArtifact } from '../features/good/goodImport';
 import { clearGood, loadGood, saveGood } from '../features/good/goodStore';
@@ -108,15 +108,36 @@ export default function Inventario() {
     <div className="dz">
       <AppHeader />
       <main className="dz-page inv">
-        <section className="dz-pagehead">
-          <div className="titles">
-            <span className="lbl">Inventário</span>
-            <h1 className="h1">Suas peças e armas</h1>
-            <span className="muted">Importe uma vez e use no Otimizador e na tela de cada personagem. Fica só neste navegador.</span>
+        <section className="inv-hero">
+          <div>
+            <span className="k">{good ? 'Artefatos' : 'Inventário'}</span>
+            <b className={`big${good ? ' num' : ' txt'}`}>{good ? formatInt(good.artifacts.length) : 'Suas peças'}</b>
           </div>
+          {good ? (
+            <div className="kpis">
+              <div><b className="v num">{formatInt(good.weapons.length)}</b><span className="l">armas</span></div>
+              <div><b className="v num">{formatInt(good.characters.length)}</b><span className="l">personagens</span></div>
+              <div><b className="v num">{formatInt(good.artifacts.filter((x) => !x.location).length)}</b><span className="l">peças livres</span></div>
+              {sets[0] && <div><b className="v">{setName(sets[0][0])?.name ?? sets[0][0]}</b><span className="l">set mais comum · {sets[0][1]} peças</span></div>}
+            </div>
+          ) : (
+            <div className="kpis empty">
+              <svg className="inv-const" viewBox="0 0 360 90" role="img" aria-label="As cinco posições de artefato ligadas como uma constelação">
+                <path d="M24 62 L96 30 L180 52 L264 22 L336 56" fill="none" stroke="#f1c96b" strokeOpacity=".4" />
+                {[[24, 62, 'Flor'], [96, 30, 'Pluma'], [180, 52, 'Areia'], [264, 22, 'Cálice'], [336, 56, 'Tiara']].map(([x, y, n]) => (
+                  <g key={String(n)}>
+                    <path d="M0 -9 L2.4 -2.4 L9 0 L2.4 2.4 L0 9 L-2.4 2.4 L-9 0 L-2.4 -2.4 Z" transform={`translate(${x} ${y})`} fill="#f1c96b" />
+                    <text x={Number(x)} y={Number(y) + 26} textAnchor="middle" fontSize="11" fill="#8f98c4">{n}</text>
+                  </g>
+                ))}
+              </svg>
+              <span className="l">Importe uma vez e use no Otimizador e na tela de cada personagem. Fica só neste navegador.</span>
+            </div>
+          )}
         </section>
 
-        <Panel title={good ? 'Inventário importado' : 'Importar'}>
+        <section className="inv-imp" aria-label={good ? 'Inventário importado' : 'Importar'}>
+          <h2 className="inv-h">{good ? 'Atualizar inventário' : 'Importar'}</h2>
           <div className="inv-import">
             <div className="opt">
               <b>Arquivo do Genshin Optimizer</b>
@@ -146,7 +167,7 @@ export default function Inventario() {
           </div>
           {error && <p className="dz-error" role="alert">{error}</p>}
           {notes.map((n) => <p key={n} className="note">{n}</p>)}
-        </Panel>
+        </section>
 
         {good && (
           <>

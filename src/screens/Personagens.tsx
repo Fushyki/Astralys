@@ -4,7 +4,8 @@ import { Link } from 'react-router-dom';
 import { AppHeader } from '../app/AppHeader';
 import '../design/design.css';
 import { elementColor } from '../design/elements';
-import { CharacterAvatar, Segmented } from '../design/primitives';
+import { Segmented } from '../design/primitives';
+import { splashUrl } from './card/cardParts';
 import { norm } from '../features/good/goodImport';
 import { loadGood } from '../features/good/goodStore';
 import { useGameData } from '../features/rotation/data';
@@ -31,17 +32,26 @@ export default function Personagens() {
       .sort((a, b) => b.rarity - a.rarity || a.name.localeCompare(b.name));
   }, [data, owned, scope, element, query]);
 
+  const mix = useMemo(() => {
+    const m = new Map<string, number>();
+    for (const c of list) m.set(c.element, (m.get(c.element) ?? 0) + 1);
+    return [...m.entries()].sort((a, b) => b[1] - a[1]);
+  }, [list]);
+
   return (
     <div className="dz">
       <AppHeader />
       <main className="dz-page">
-        <section className="dz-pagehead">
-          <div className="titles">
-            <span className="lbl">Personagens</span>
-            <h1 className="h1">{scope === 'meus' ? 'Seus personagens' : 'Todos os personagens'}</h1>
-            <span className="muted">{good ? 'Do seu inventário importado.' : 'Importe o inventário para ver só os que você tem.'} Toque em um time para ajustar o build dele lá.</span>
+        <section className="pe-hero">
+          <div>
+            <span className="k">{scope === 'meus' ? 'Seus personagens' : 'Personagens'}</span>
+            <b className="big num">{list.length}</b>
           </div>
-          <div className="actions">
+          <div className="side">
+            <p>{good ? 'Do seu inventário importado.' : 'Importe o inventário para ver só os que você tem.'} Toque em um time para ajustar o build dele lá.</p>
+            <div className="mix" role="img" aria-label={mix.map(([e, n]) => `${e} ${n}`).join(', ')}>
+              {mix.map(([e, n]) => <i key={e} style={{ flex: n, background: elementColor(e) }} title={`${e}: ${n}`} />)}
+            </div>
             {!good && <Link className="dz-btn gold" to="/inventario">Importar o inventário</Link>}
           </div>
         </section>
@@ -66,29 +76,32 @@ export default function Personagens() {
               const weapon = good?.weapons.find((w) => norm(w.location) === norm(c.name));
               const pieces = good?.artifacts.filter((a) => norm(a.location) === norm(c.name)).length ?? 0;
               return (
-                <article className="pe-card" key={c.id} style={{ ['--c' as string]: elementColor(c.element) }} data-rarity={c.rarity}>
-                  <div className="top"><CharacterAvatar name={c.name} icon={c.icon} color={elementColor(c.element)} size={56} />
-                    <div className="meta">
-                      <b>{c.name}</b>
-                      <span className="muted small">{c.element} · {c.weapon}</span>
-                      {mine && <span className="num small">Nv {mine.level ?? '?'} · C{mine.constellation ?? 0}</span>}
+                <article className="pe-card" key={c.id} style={{ ['--c' as string]: elementColor(c.element) }} data-rarity={c.rarity} data-mine={mine ? '' : undefined}>
+                  <img className="splash" src={splashUrl(c.icon ?? '')} alt="" loading="lazy" crossOrigin="anonymous" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+                  <div className="info">
+                    <span className="el">{c.element} · {c.weapon}</span>
+                    <b className="nm">{c.name}</b>
+                    {mine ? (
+                      <div className="cn"><i className="num">C{mine.constellation ?? 0}</i><span className="num">Nv {mine.level ?? '?'}</span></div>
+                    ) : (
+                      <span className="st" aria-label={`${c.rarity} estrelas`}>{'★'.repeat(c.rarity)}</span>
+                    )}
+                    {mine && (
+                      <span className="gear">
+                        {weapon ? `${data.game.weapons.find((w) => norm(w.name) === norm(weapon.key))?.name ?? weapon.key} R${weapon.refinement ?? 1}` : 'Sem arma no inventário'} · {pieces}/5 peças
+                      </span>
+                    )}
+                    <div className="teams">
+                      {teams.length === 0 && <span className="none">Em nenhum time</span>}
+                      {teams.slice(0, 3).map((p) => (
+                        <Link key={p.id} className="pe-team" to={`/projeto/${p.id}/personagem/${encodeURIComponent(c.name)}`} title={`Abrir ${c.name} em ${p.name}`}>{p.name}</Link>
+                      ))}
+                      {teams.length > 3 && <span className="none">+{teams.length - 3}</span>}
                     </div>
+                    {teams.length > 0 && good && (
+                      <ButtonLink variant="ghost" size="sm" to={`/projeto/${teams[0].id}/personagem/${encodeURIComponent(c.name)}?aba=otimizar`}>Otimizar artefatos</ButtonLink>
+                    )}
                   </div>
-                  {mine && (
-                    <div className="gear small muted">
-                      {weapon ? `${data.game.weapons.find((w) => norm(w.name) === norm(weapon.key))?.name ?? weapon.key} R${weapon.refinement ?? 1}` : 'Sem arma no inventário'} · {pieces}/5 peças
-                    </div>
-                  )}
-                  <div className="teams">
-                    {teams.length === 0 && <span className="muted small">Em nenhum time</span>}
-                    {teams.slice(0, 4).map((p) => (
-                      <Link key={p.id} className="pe-team" to={`/projeto/${p.id}/personagem/${encodeURIComponent(c.name)}`} title={`Abrir ${c.name} em ${p.name}`}>{p.name}</Link>
-                    ))}
-                    {teams.length > 4 && <span className="muted small">+{teams.length - 4}</span>}
-                  </div>
-                  {teams.length > 0 && good && (
-                    <ButtonLink variant="ghost" size="sm" to={`/projeto/${teams[0].id}/personagem/${encodeURIComponent(c.name)}?aba=otimizar`}>Otimizar artefatos</ButtonLink>
-                  )}
                 </article>
               );
             })}

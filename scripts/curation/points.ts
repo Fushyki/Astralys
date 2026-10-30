@@ -12,6 +12,8 @@ export interface PointMoveCur {
   key: string;
   unit: string;
   max: number;
+  /** Duração (s) da janela em que o golpe usa os pontos do Supremo lançado antes (Cadinho da Vida e da Morte). */
+  cadinho?: number;
 }
 
 export const POINT_MOVES: Record<string, PointMoveCur[]> = {
@@ -20,8 +22,8 @@ export const POINT_MOVES: Record<string, PointMoveCur[]> = {
     {
       talent: 'skill',
       labels: ['Flamestrider Normal Attack 1-Hit DMG', 'Flamestrider Normal Attack 2-Hit DMG', 'Flamestrider Normal Attack 3-Hit DMG', 'Flamestrider Normal Attack 4-Hit DMG', 'Flamestrider Normal Attack 5-Hit DMG'],
-      kitTalent: 'burst', key: 'Flamestrider Normal Attack DMG Bonus', unit: 'Espírito Lutador', max: 200,
+      kitTalent: 'burst', key: 'Flamestrider Normal Attack DMG Bonus', unit: 'Espírito Lutador', max: 200, cadinho: 7,
     },
-    { talent: 'skill', labels: ['Flamestrider Charged Attack Cyclic DMG', 'Flamestrider Charged Attack Final DMG'], kitTalent: 'burst', key: 'Flamestrider Charged Attack DMG Bonus', unit: 'Espírito Lutador', max: 200 },
+    { talent: 'skill', labels: ['Flamestrider Charged Attack Cyclic DMG', 'Flamestrider Charged Attack Final DMG'], kitTalent: 'burst', key: 'Flamestrider Charged Attack DMG Bonus', unit: 'Espírito Lutador', max: 200, cadinho: 7 },
   ],
 };

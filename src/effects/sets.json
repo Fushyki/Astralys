@@ -211,6 +211,7 @@
       "stat": "EM",
       "value": 80
     },
+    "twoPieceMore": [],
     "fourPiece": {
       "atkPct": 0,
       "dmgPct": 0,
@@ -220,13 +221,22 @@
       "dmgPctByType": {},
       "meltBonus": 0,
       "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0,
       "team": {
         "atkPct": 0,
         "dmgPct": 0,
         "em": 120
-      }
+      },
+      "buffs": [],
+      "flat": [],
+      "reactionBonus": {},
+      "procs": []
     },
-    "fonte_info": "planilha Mavuika_Iansan_Combo2, aba \"Sets (efeitos)\""
+    "twoPieceBuffs": [],
+    "note": "Os +120 de Maestria (parâmetro 1) vão para a equipe inteira, dono incluído, nas janelas de buff. O gatilho (qualquer Reação Elemental causada, 8 s, parâmetro 0) é do usuário: a janela é ligada onde a reação acontece. 2 peças: +80 de Maestria, sempre.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/piloto-sets.ts."
   },
   {
     "set": "Gambler",
@@ -1914,6 +1924,7 @@
       "stat": "DMG%",
       "value": 0.15
     },
+    "twoPieceMore": [],
     "fourPiece": {
       "atkPct": 0,
       "dmgPct": 0,
@@ -1922,9 +1933,18 @@
       "em": 0,
       "dmgPctByType": {},
       "meltBonus": 0,
-      "vaporizeBonus": 0
+      "vaporizeBonus": 0,
+      "er": 0,
+      "hpPct": 0,
+      "defPct": 0,
+      "buffs": [],
+      "flat": [],
+      "reactionBonus": {},
+      "procs": []
     },
-    "fonte_info": "planilha Mavuika_Iansan_Combo2, aba \"Sets (efeitos)\""
+    "twoPieceBuffs": [],
+    "note": "Assume o dono sempre em Bênção do Espírito da Noite e em campo: 2 peças = +15% de DMG (parâmetro 0 do 2 peças, vale para qualquer elemento) e 4 peças = +40% de Taxa CRIT (6 s, gatilho 1 vez por segundo ao gastar 1 ponto de Espírito da Noite; com o gasto contínuo a cobertura é total). Fora da Bênção ou fora de campo os dois bônus não valem: o motor não tem essa condição, o usuário deve tirar o set.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/piloto-sets.ts."
   },
   {
     "set": "Long Night's Oath",

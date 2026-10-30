@@ -16,6 +16,7 @@ import path from 'node:path';
 import { CharacterBuffSchema, CharacterEffectSchema, ProcSchema, SetEffectSchema, WeaponEffectSchema, type CharacterBuff, type CharacterEffect, type Proc, type SetEffect, type WeaponEffect, type WeaponFlat, type WeaponStats } from '../src/effects/schema';
 import { FOUR_PIECE, type Val } from './curation/sets';
 import { FOUR_PIECE_2 } from './curation/sets2';
+import { PILOTO_SETS } from './curation/piloto-sets';
 import { parseTwoPiece } from './lib/twoPiece';
 import { POINT_MOVES } from './curation/points';
 import { WEAPONS } from './curation/weapons';
@@ -212,8 +213,8 @@ function buildSets(): SetEffect[] {
       out.push(old);
       continue;
     }
-    const two = parseTwoPiece(set.bonuses.twoPiece.description);
-    const cur = FOUR_PIECE[set.name] ?? FOUR_PIECE_2[set.name];
+    const cur = PILOTO_SETS[set.name] ?? FOUR_PIECE[set.name] ?? FOUR_PIECE_2[set.name];
+    const two = PILOTO_SETS[set.name]?.twoPiece ?? parseTwoPiece(set.bonuses.twoPiece.description);
     const params = set.bonuses.fourPiece.params;
     const notes: string[] = [];
     if (!two) notes.push(`2 peças ("${set.bonuses.twoPiece.description.trim()}") não entra: sem efeito em dano.`);
@@ -252,11 +253,11 @@ function buildSets(): SetEffect[] {
       ...(cur?.partial ? { partial: true } : {}),
       ...(fourPiece ? { fourPiece } : {}),
       note: notes.join(' '),
-      fonte_info: `${source}; curadoria em scripts/curation/sets.ts.`,
+      fonte_info: `${source}; curadoria em scripts/curation/${set.name in PILOTO_SETS ? 'piloto-sets' : 'sets'}.ts.`,
     };
     out.push(SetEffectSchema.parse(entry));
   }
-  const unknown = Object.keys({ ...FOUR_PIECE, ...FOUR_PIECE_2 }).filter((n) => !raw.some((r) => r.name === n));
+  const unknown = Object.keys({ ...FOUR_PIECE, ...FOUR_PIECE_2, ...PILOTO_SETS }).filter((n) => !raw.some((r) => r.name === n));
   if (unknown.length) throw new Error(`Curadoria com sets que não existem no Lunaris: ${unknown.join(', ')}`);
   return out;
 }
@@ -549,7 +550,7 @@ function buildCharacters(): CharacterEffect[] {
       const row = raw.skills?.[SKILL_KEY[p.kitTalent]]?.multipliers?.[p.key];
       if (!row || row.length !== 15) throw new Error(`${name}: a linha "${p.key}" não existe ou não tem 15 níveis`);
       for (const l of p.labels) if (!moves.some((m) => m.character === name && m.talent === p.talent && m.label === l)) errors.push(`${name}: golpe "${l}" (${p.talent}) não existe no Lunaris`);
-      return { talent: p.talent, labels: p.labels, levelTalent: p.kitTalent, perPoint: row.map((t) => percentOf(String(t))), max: p.max, unit: p.unit };
+      return { talent: p.talent, labels: p.labels, levelTalent: p.kitTalent, perPoint: row.map((t) => percentOf(String(t))), max: p.max, unit: p.unit, ...(p.cadinho ? { cadinho: p.cadinho } : {}) };
     });
     const specialMoves = SPECIAL_MOVES[name] ?? [];
     for (const s of specialMoves) {

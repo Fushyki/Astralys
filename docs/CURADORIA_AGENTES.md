@@ -5,7 +5,7 @@ Os agentes `curador-personagem`, `curador-arma` e `curador-artefato` leem o text
 ## Regras que não mudam
 1. **Nunca invente número.** Todo valor vem de um parâmetro do Lunaris (`p` + `x`), de um literal que está na descrição (`lit`/`re`) ou do Genshin Optimizer (MIT, como segunda fonte). Texto ambíguo vira **pendente**, com o motivo em uma linha.
 2. Não altere `src/engine/`, `src/effects/schema.ts`, `src/data/generated/` nem a curadoria de outro alvo.
-3. Escreva só em `scripts/curation/` (e rode `npx tsx scripts/curate-effects.ts`). Depois do gerador: `git checkout src/effects/characters.json` se ele apagar edições à mão que não são suas (já aconteceu com `cadinho`). Entradas antigas de `src/effects/*.json` sem "scripts/curation/" na `fonte_info` só são substituídas se você as remover do JSON antes.
+3. Escreva só em `scripts/curation/` (e rode `npx tsx scripts/curate-effects.ts`). Depois do gerador, confira `git diff src/effects`: só pode ter mudado o que é seu. Entradas antigas de `src/effects/*.json` sem "scripts/curation/" na `fonte_info` só são substituídas se você as remover do JSON antes.
 4. Todo efeito leva `expect` (trecho do texto do Lunaris que trava o efeito se o texto mudar) e `note` (o que foi assumido e o que não entra).
 5. Nada vira "no cálculo" sem um teste de motor pequeno e determinístico (build fixa, golpe fixo) em `tests/`.
 6. Antes de mexer: `git status`, e não toque em arquivo com mudança de outra sessão.

@@ -1,7 +1,6 @@
 /* Página inicial: o céu do Astralys, a frase e dois caminhos. Só tokens de src/design/tokens.css. */
 .in-page { min-height: 100vh; display: flex; flex-direction: column; background: var(--bg); }
-.in-hero { position: relative; flex: 1; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); align-items: center; gap: var(--sp-6); padding: var(--sp-6) var(--gutter) 72px; max-width: var(--page-max); width: 100%; margin: 0 auto; box-sizing: border-box; overflow: hidden; }
-@media (max-width: 960px) { .in-hero { grid-template-columns: minmax(0, 1fr); padding-bottom: var(--sp-6); } }
+.in-hero { position: relative; flex: 1; display: grid; grid-template-columns: minmax(0, 1fr); align-items: center; gap: var(--sp-6); padding: var(--sp-6) var(--gutter) 72px; max-width: var(--page-max); width: 100%; margin: 0 auto; box-sizing: border-box; overflow: hidden; }
 
 .in-sky { position: absolute; inset: 0; pointer-events: none; }
 .in-sky i { position: absolute; border-radius: 50%; background: var(--text); opacity: .4; animation: in-twinkle 5s ease-in-out infinite; }
@@ -24,5 +23,6 @@
 .in-demo { color: var(--muted); font-size: var(--fs-3); text-decoration: none; }
 .in-demo:hover { color: var(--gold-hi); }
 
-.in-art { position: relative; width: 100%; height: auto; max-height: 520px; filter: drop-shadow(0 0 40px #f1c96b14); }
-@media (max-width: 960px) { .in-art { order: -1; max-height: 260px; } }
+/* A rotação ao fundo: baixa opacidade, some atrás do texto. */
+.in-rot { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: .9; -webkit-mask-image: linear-gradient(90deg, transparent 28%, #000 62%); mask-image: linear-gradient(90deg, transparent 28%, #000 62%); }
+@media (max-width: 960px) { .in-rot { opacity: .3; -webkit-mask-image: none; mask-image: none; } }

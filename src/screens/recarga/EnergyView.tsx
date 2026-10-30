@@ -1,6 +1,7 @@
 /** Cartões da calculadora de recarga (um por slot), usados na aba do projeto e na calculadora avulsa. */
 import { useMemo } from 'react';
-import { CharacterAvatar, Chip } from '../../design/primitives';
+import { Chip } from '../../design/primitives';
+import { splashUrl } from '../card/cardParts';
 import { elementColor } from '../../design/elements';
 import { NumberInput, SelectField } from '../../design/fields';
 import { RAIDEN_TEAM_ENERGY, SAFETY_MARGIN, type RotationProject } from '../../engine';
@@ -80,8 +81,26 @@ export function EnergyView({
   const hasRaiden = results.some((r) => r.teamFlat > 0);
   const allNames = useMemo(() => data.game.characters.map((c) => c.name).sort((a, b) => a.localeCompare(b)), [data]);
 
+  const top = results.reduce<number>((best, r, i) => (r.status !== 'ignored' && (best < 0 || r.neededER > results[best].neededER) ? i : best), -1);
+
   return (
     <>
+      <section className="rc-hero" aria-label="Resumo da recarga">
+        <div style={{ ['--accent' as string]: top >= 0 ? elementColor(infos[top].member.element) : undefined }}>
+          <span className="k">Maior recarga necessária</span>
+          <b className="big num">{top >= 0 ? formatPercent(results[top].neededER, 0) : '—'}</b>
+          {top >= 0 && <span className="who-top">{infos[top].member.name}</span>}
+        </div>
+        <div className="kpis">
+          {infos.map((info, i) => (
+            <div key={info.member.name} style={{ ['--c' as string]: elementColor(info.member.element) }}>
+              <b className="v num">{results[i].status === 'ignored' ? '—' : formatPercent(results[i].neededER, 0)}</b>
+              <span className="l">{info.member.name}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
       <section className="dz-panel rc-scenario" aria-label="Cenário da recarga">
         <NumberInput label="Partículas dos inimigos" value={enemyParticles} min={0} step={1} onCommit={(v) => onChange(withEnergy(project, { enemyParticles: Math.max(0, v) }))} />
         <SelectField<Margin>
@@ -111,6 +130,7 @@ export function EnergyView({
           const funOpts = funnelOptions(m.name, names);
           return (
             <section className="dz-panel rc-card" key={m.name} style={{ ['--c' as string]: color }} aria-label={`Recarga de ${m.name}`}>
+              <img className="splash" src={splashUrl(character?.icon ?? '')} alt="" loading="lazy" crossOrigin="anonymous" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
               <div className="rc-head">
                 <span className="rc-slot">Slot {i + 1}</span>
                 <span className="rc-pills">
@@ -121,7 +141,6 @@ export function EnergyView({
               </div>
 
               <div className="who">
-                <CharacterAvatar name={m.name} icon={character?.icon} color={color} size={56} />
                 {onSwap ? (
                   <select className="dz-input" aria-label={`Personagem do slot ${i + 1}`} value={m.name} onChange={(e) => onSwap(i, e.target.value)}>
                     {allNames.map((n) => (

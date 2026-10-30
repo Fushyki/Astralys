@@ -1,18 +1,31 @@
 /* Tela Recarga: cartões por slot no estilo da calculadora do Davi (4 por linha em telas largas). */
+.rc-hero { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 16px 56px; }
+.rc-hero .k { display: block; font: 600 14px var(--font-display); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.rc-hero .big { display: block; font: 700 clamp(64px, 11vw, 128px) var(--font-display); line-height: .9; color: var(--accent, var(--gold)); }
+.rc-hero .who-top { display: block; margin-top: 4px; font: 600 18px var(--font-display); letter-spacing: .06em; text-transform: uppercase; color: var(--text-2); }
+.rc-hero .kpis { flex: 1; min-width: 280px; display: flex; flex-wrap: wrap; gap: 16px 40px; padding: 14px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.rc-hero .kpis > div { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.rc-hero .kpis .v { font: 700 32px var(--font-display); line-height: 1; color: var(--c); }
+.rc-hero .kpis .l { font-size: 13px; color: var(--muted); }
+/* Sem caixas: linhas finas, como no resto do Astralys. */
+.dz-panel.rc-scenario, .dz-panel.rc-saves, details.dz-panel.rc-tips { background: none; border: 0; border-top: 1px solid var(--border); border-radius: 0; padding: 14px 0 0; box-shadow: none; }
 .dz-panel.rc-scenario { flex-direction: row; display: flex; flex-wrap: wrap; gap: 16px; align-items: end; }
 .rc-scenario .dz-field { width: 200px; }
 .rc-scenario .note { flex: 1; min-width: 240px; margin: 0; font-size: 13px; color: var(--muted); }
 .rc-team { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; }
 .rc-head .x { border: 0; background: none; color: #e06c75; font-size: 20px; line-height: 1; cursor: pointer; padding: 0 4px; }
 .rc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); gap: 16px; }
-.rc-card { display: flex; flex-direction: column; gap: 14px; border-top: 4px solid var(--c); min-width: 0; }
+.dz-panel.rc-card { position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 14px; min-width: 0; border: 0; border-bottom: 3px solid var(--c); border-radius: 0; box-shadow: none; background: linear-gradient(100deg, var(--surface) 35%, color-mix(in srgb, var(--c) 13%, var(--bg)) 100%); }
+.rc-card .splash { position: absolute; top: 0; right: 0; width: 150px; height: 250px; object-fit: cover; object-position: center 12%; opacity: .6; pointer-events: none; -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 45%), linear-gradient(180deg, #000 55%, transparent 100%); -webkit-mask-composite: source-in; mask-image: linear-gradient(90deg, transparent 0, #000 45%), linear-gradient(180deg, #000 55%, transparent 100%); mask-composite: intersect; }
+.rc-card > :not(.splash) { position: relative; }
 .rc-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding-bottom: 10px; border-bottom: 1px solid var(--divider); }
 .rc-slot { font-size: 12px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; padding: 3px 10px; border-radius: 6px; background: var(--bg-header); color: var(--text-2); }
 .rc-pills { display: flex; gap: 6px; flex-wrap: wrap; }
 .rc-card .who { display: flex; gap: 12px; align-items: center; }
-.rc-card .who .dz-input { flex: 1; min-width: 0; font-weight: 700; }
-.rc-card .need { display: flex; flex-direction: column; gap: 8px; align-items: center; text-align: center; padding: 14px; border-radius: 14px; background: linear-gradient(145deg, color-mix(in srgb, var(--c) 14%, var(--bg-header)), var(--bg-header)); border: 1px solid color-mix(in srgb, var(--c) 35%, var(--border)); }
-.rc-card .need .v { font-family: var(--font-display); font-weight: 700; font-size: 46px; line-height: 1; color: var(--text); }
+.rc-card .who .dz-input { flex: 0 1 62%; min-width: 0; font-weight: 700; }
+.rc-card .who .h2 { font: 700 28px var(--font-display); }
+.rc-card .need { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; text-align: left; }
+.rc-card .need .v { font-family: var(--font-display); font-weight: 700; font-size: 72px; line-height: .9; color: var(--c); }
 .rc-card .need .safe { font-size: 13px; color: var(--muted); }
 .rc-card .need .safe b { color: var(--text-2); }
 .rc-card .meter { position: relative; width: 100%; height: 10px; border-radius: 5px; background: var(--bg); }
@@ -23,7 +36,7 @@
 .rc-params .dz-field { grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 10px; }
 .rc-params .dz-field input { width: 84px; text-align: center; }
 .rc-params .dz-field select { width: 190px; max-width: 100%; }
-.rc-break { margin: 0; display: flex; flex-direction: column; gap: 5px; padding: 10px 12px; border-radius: 10px; background: var(--bg-header); border: 1px solid var(--border); font-size: 13px; }
+.rc-break { margin: 0; display: flex; flex-direction: column; gap: 5px; padding: 10px 0 0; border-top: 1px solid var(--border); font-size: 13px; }
 .rc-break div { display: flex; justify-content: space-between; gap: 8px; color: var(--muted); }
 .rc-break dt, .rc-break dd { margin: 0; }
 .rc-break .hl { color: var(--gold-hi); }

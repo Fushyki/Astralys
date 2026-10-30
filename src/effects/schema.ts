@@ -105,7 +105,7 @@ export const ProcSchema = z.object({
   /** Passiva/constelação: vale a partir desta constelação. */
   minConstellation: z.number().int().min(0).max(6).default(0),
   /** De qual passiva/constelação vem (para a cobertura do kit). */
-  src: z.enum(['p1', 'p2', 'p3', 'const1', 'const2', 'const3', 'const4', 'const5', 'const6']).optional(),
+  src: z.enum(['p1', 'p2', 'p3', 'p4', 'const1', 'const2', 'const3', 'const4', 'const5', 'const6']).optional(),
   /** Dano Lunar/Estelar (fórmula do Genshin Optimizer `lunarDmgNode`/`stellarDmgNode`, base = stat do dono). */
   special: SpecialMoveSchema.optional(),
   /**
@@ -287,7 +287,7 @@ export type CharacterBuff = z.infer<typeof CharacterBuffSchema>;
 
 /** O que o cálculo faz com uma passiva ou constelação que NÃO virou buff: só utilidade (energia, cura, CD) ou só em parte. */
 export const CharacterNoteSchema = z.object({
-  src: z.enum(['p1', 'p2', 'p3', 'const1', 'const2', 'const3', 'const4', 'const5', 'const6']),
+  src: z.enum(['p1', 'p2', 'p3', 'p4', 'const1', 'const2', 'const3', 'const4', 'const5', 'const6']),
   kind: z.enum(['utility', 'partial']),
   note: z.string().min(1),
 });
@@ -295,7 +295,7 @@ export type CharacterNote = z.infer<typeof CharacterNoteSchema>;
 
 /** Número que NÃO entra no cálculo de dano (cura, escudo, energia, recarga): só aparece na aba de talentos para o usuário saber. */
 export const CharacterInfoSchema = z.object({
-  src: z.enum(['p1', 'p2', 'p3', 'const1', 'const2', 'const3', 'const4', 'const5', 'const6']),
+  src: z.enum(['p1', 'p2', 'p3', 'p4', 'const1', 'const2', 'const3', 'const4', 'const5', 'const6']),
   kind: z.enum(['cura', 'escudo', 'energia', 'recarga']),
   label: z.string().min(1),
   /** Texto com o número já preenchido (do parâmetro do Lunaris), ex.: "15 de Energia a cada 6 pontos, a cada 18 s". */

@@ -1210,21 +1210,6 @@
         "note": "ATK ao pegar a pimenta (10 s): ligue nas janelas."
       },
       {
-        "id": "c1",
-        "label": "Xiangling C1",
-        "minConstellation": 1,
-        "scope": "self",
-        "timed": false,
-        "resShred": {
-          "value": 0.15,
-          "elements": [
-            "Pyro"
-          ]
-        },
-        "flat": [],
-        "note": "Assume a redução de RES Pyro (6 s) sempre ativa."
-      },
-      {
         "id": "c6",
         "label": "Xiangling C6",
         "minConstellation": 6,
@@ -1257,6 +1242,21 @@
         },
         "flat": [],
         "note": "+15% de DMG Pyro durante o Pyronado: ligue nas janelas. Só personagens Pyro recebem."
+      },
+      {
+        "id": "c1",
+        "label": "Xiangling C1",
+        "minConstellation": 1,
+        "scope": "self",
+        "timed": true,
+        "resShred": {
+          "value": 0.15,
+          "elements": [
+            "Pyro"
+          ]
+        },
+        "flat": [],
+        "note": "RES Pyro do inimigo -15% por 6 s depois de ser atingido pelo Guoba: janela de tempo, o usuário liga e decide a duração."
       }
     ],
     "notes": [
@@ -1269,6 +1269,11 @@
         "src": "const4",
         "kind": "utility",
         "note": "Só duração do Supremo (mais golpes: ajuste as execuções do Supremo na rotação)."
+      },
+      {
+        "src": "p3",
+        "kind": "utility",
+        "note": "Só culinária (chance de produto em dobro)."
       }
     ],
     "infos": [],
@@ -1633,10 +1638,13 @@
             "perPoint": 0.1,
             "hitTypes": [
               "skill"
+            ],
+            "labels": [
+              "Blood Blossom DMG"
             ]
           }
         ],
-        "note": "Soma 10% do HP máximo a cada Blood Blossom (o único dano da habilidade dela). Usa o HP final, não o do momento da aplicação."
+        "note": "Soma 10% do HP máximo a cada Blood Blossom (só esse golpe). Usa o HP final do build, não o do momento da aplicação. O Spirit Soother aplicar Blood Blossom não muda o número: adicione o Blood Blossom na rotação."
       }
     ],
     "notes": [
@@ -1644,6 +1652,16 @@
         "src": "const1",
         "kind": "utility",
         "note": "Só estamina."
+      },
+      {
+        "src": "p3",
+        "kind": "utility",
+        "note": "Só culinária (chance de prato extra)."
+      },
+      {
+        "src": "const6",
+        "kind": "partial",
+        "note": "Entra +100% de Taxa Crítica por 10 s (janela). A RES +200%, a imunidade a morte e a resistência a interrupção não mudam o dano."
       }
     ],
     "infos": [],
@@ -2430,6 +2448,11 @@
         "src": "p1",
         "kind": "utility",
         "note": "Só estamina e duração."
+      },
+      {
+        "src": "p3",
+        "kind": "utility",
+        "note": "Só reembolso de minério na forja."
       }
     ],
     "infos": [],
@@ -2478,16 +2501,6 @@
         },
         "flat": [],
         "note": "+60% de ATK por 12 s depois das faíscas: ligue nas janelas."
-      },
-      {
-        "id": "c2",
-        "label": "Klee C2",
-        "minConstellation": 2,
-        "scope": "self",
-        "timed": false,
-        "defShred": 0.23,
-        "flat": [],
-        "note": "Assume a redução de DEF do inimigo (23%, 10 s) sempre ativa."
       },
       {
         "id": "c6s",
@@ -2553,6 +2566,16 @@
         },
         "flat": [],
         "note": "+10% de DMG Pyro dos outros por 25 s depois do Supremo: ligue na janela. Só personagens Pyro recebem."
+      },
+      {
+        "id": "c2",
+        "label": "Klee C2",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": true,
+        "defShred": 0.23,
+        "flat": [],
+        "note": "DEF do inimigo -23% por 10 s depois do golpe da habilidade (23% é literal do texto; o Lunaris traz 0): janela de tempo, o usuário liga e decide a duração."
       }
     ],
     "notes": [
@@ -2564,10 +2587,48 @@
       {
         "src": "p2",
         "kind": "utility",
-        "note": "Só energia."
+        "note": "Só energia (2 para o time, informativo)."
+      },
+      {
+        "src": "p3",
+        "kind": "utility",
+        "note": "Só exploração (recursos de Mondstadt no mapa)."
+      },
+      {
+        "src": "p4",
+        "kind": "partial",
+        "note": "Hexerei não está modelado: o Boom Badge (Boom-Boom Strike a 115%, 130% ou 150% do dano) e o Carregado especial não entram."
+      },
+      {
+        "src": "const1",
+        "kind": "partial",
+        "note": "Entra o +60% de ATK por 12 s (janela) e o golpe das faíscas (120% do dano do Supremo). A chance de as faíscas ocorrerem não tem número no texto: o usuário decide quando lançá-las."
+      },
+      {
+        "src": "const4",
+        "kind": "partial",
+        "note": "Entra a explosão de 555% do ATK. O dobro (+100%) com a Klee em campo não entra."
+      },
+      {
+        "src": "const6",
+        "kind": "partial",
+        "note": "Entram os +50% de DMG Pyro dela e +10% dos outros Pyro, por 25 s (janela). A energia (3 a cada 3 s) é só informativa. Os efeitos Hexerei (50% de não gastar a Faísca, 40% de ataque extra) não entram."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "p2",
+        "kind": "energia",
+        "label": "Energia para o time",
+        "text": "2 de Energia para todos quando o Carregado dá crítico"
+      },
+      {
+        "src": "const6",
+        "kind": "energia",
+        "label": "Energia para os outros",
+        "text": "3 de Energia para os outros a cada 3 s com o Supremo ativo"
+      }
+    ],
     "procs": [
       {
         "id": "c4",
@@ -2578,6 +2639,20 @@
         "minConstellation": 4,
         "src": "const4",
         "note": "Explosão de 555% do ATK ao sair de campo ou ao fim do Supremo (o dobro com a Klee em campo não entra)."
+      },
+      {
+        "id": "c1",
+        "label": "Klee C1: faíscas",
+        "scale": {},
+        "minConstellation": 1,
+        "src": "const1",
+        "of": {
+          "talent": "burst",
+          "label": "Sparks 'n' Splash DMG",
+          "variant": 0,
+          "fraction": 1.2
+        },
+        "note": "120% do dano de um golpe do Sparks 'n' Splash (conta como Supremo, nível do Supremo). A chance de ocorrer não tem número no texto: o usuário insere o golpe quando quiser."
       }
     ],
     "factions": [
@@ -3600,7 +3675,7 @@
       },
       {
         "id": "a4",
-        "label": "Thoma A4",
+        "label": "Thoma A4 (Fiery Collapse)",
         "minConstellation": 0,
         "scope": "self",
         "timed": false,
@@ -3611,10 +3686,13 @@
             "perPoint": 0.022,
             "hitTypes": [
               "burst"
+            ],
+            "labels": [
+              "Fiery Collapse DMG"
             ]
           }
         ],
-        "note": "Soma 2,2% do HP máximo ao dano base do Supremo (Fiery Collapse), em cada golpe do Supremo."
+        "note": "Soma 2,2% do HP máximo ao dano base de cada Fiery Collapse (os golpes que o Supremo dispara nos Normais). O golpe inicial do Supremo (Skill DMG) NÃO recebe."
       }
     ],
     "notes": [
@@ -3639,7 +3717,26 @@
         "note": "Só energia."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "p1",
+        "kind": "escudo",
+        "label": "Força do escudo",
+        "text": "+5% de força do escudo por 6 s, até 5 acúmulos, ao obter ou renovar uma Blazing Barrier"
+      },
+      {
+        "src": "const1",
+        "kind": "recarga",
+        "label": "Recarga da habilidade e do Supremo",
+        "text": "a habilidade cai 3 s e o Supremo 3 s; no máximo uma vez a cada 20 s"
+      },
+      {
+        "src": "const4",
+        "kind": "energia",
+        "label": "Energia que ele recupera",
+        "text": "15 de Energia depois de usar o Crimson Ooyoroi"
+      }
+    ],
     "procs": [],
     "factions": [],
     "specialMoves": [],
@@ -4099,37 +4196,6 @@
     "appliesToSelf": false,
     "buffs": [
       {
-        "id": "a4",
-        "label": "Lyney A4",
-        "minConstellation": 0,
-        "scope": "self",
-        "timed": false,
-        "stats": {
-          "atkPct": 0,
-          "dmgPct": 0.6,
-          "critRate": 0,
-          "critDmg": 0,
-          "em": 0,
-          "er": 0,
-          "hpPct": 0,
-          "defPct": 0,
-          "dmgPctByType": {},
-          "critRateByType": {},
-          "critDmgByType": {},
-          "baseMultByType": {},
-          "defIgnore": 0,
-          "atkFlat": 0,
-          "atkBaseFlat": 0,
-          "hpFlat": 0,
-          "defFlat": 0,
-          "physDmgPct": 0,
-          "physCritDmg": 0,
-          "reactionBonus": {}
-        },
-        "flat": [],
-        "note": "Assume inimigo sob Pyro (+60% de DMG). Os +20% por outro personagem Pyro NÃO entram."
-      },
-      {
         "id": "c2",
         "label": "Lyney C2",
         "minConstellation": 2,
@@ -4164,11 +4230,86 @@
         "note": "Assume 3 stacks de +20% de Dano Crítico: ligue nas janelas."
       },
       {
+        "id": "a4",
+        "label": "Lyney A4",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.6,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "note": "Assume o inimigo sob Pyro: +60% de DMG. Os +20% por outro Pyro do time estão em \"Lyney A4 (outros Pyro)\"."
+      },
+      {
+        "id": "a4t",
+        "label": "Lyney A4 (outros Pyro)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 1,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "team": {
+          "scale": {
+            "of": [
+              "Pyro"
+            ],
+            "table": [
+              0,
+              0.2,
+              0.4,
+              0.4
+            ]
+          }
+        },
+        "flat": [],
+        "note": "+20% de DMG por outro membro Pyro do time (o time conta o Lyney: 2 Pyro = +20%, 3 ou 4 = +40%, teto de 100% com os 60% do A4). Assume o inimigo sob Pyro."
+      },
+      {
         "id": "c4",
         "label": "Lyney C4",
         "minConstellation": 4,
         "scope": "self",
-        "timed": false,
+        "timed": true,
         "resShred": {
           "value": 0.2,
           "elements": [
@@ -4176,14 +4317,35 @@
           ]
         },
         "flat": [],
-        "note": "Assume a redução de RES Pyro (6 s) sempre ativa."
+        "note": "RES Pyro do inimigo -20% por 6 s depois de um Carregado Pyro dele acertar: janela de tempo, o usuário liga e decide a duração. Antes estava sempre ligado."
+      },
+      {
+        "id": "a1",
+        "label": "Lyney A1 (chapéu)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "flat": [
+          {
+            "name": "Pyrotechnic Strike do chapéu (A1)",
+            "sourceStat": "ATK",
+            "perPoint": 0.8,
+            "hitTypes": [
+              "normal"
+            ],
+            "labels": [
+              "Pyrotechnic Strike DMG"
+            ]
+          }
+        ],
+        "note": "Soma 80% do ATK ao dano base do Pyrotechnic Strike (o golpe do chapéu), assumindo que o Prop Arrow gastou HP. A explosão do chapéu feita pela habilidade NÃO entra (o texto não diz se recebe)."
       }
     ],
     "notes": [
       {
         "src": "p1",
         "kind": "partial",
-        "note": "O dano extra do chapéu Grin-Malkin (80% do ATK) não entra."
+        "note": "Entra o +80% do ATK no Pyrotechnic Strike (assumindo gasto de HP). A explosão do chapéu feita pela habilidade fica de fora e a Energia (3) é só informativa."
       },
       {
         "src": "const1",
@@ -4191,7 +4353,14 @@
         "note": "Só chapéus e stacks."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "p1",
+        "kind": "energia",
+        "label": "Energia do chapéu",
+        "text": "3 de Energia quando o chapéu (com gasto de HP) acerta um inimigo"
+      }
+    ],
     "procs": [
       {
         "id": "c6",
@@ -5268,6 +5437,11 @@
         "src": "const4",
         "kind": "utility",
         "note": "Só recarga e cargas da habilidade."
+      },
+      {
+        "src": "p3",
+        "kind": "utility",
+        "note": "Só estamina de planar."
       }
     ],
     "infos": [],
@@ -5337,7 +5511,7 @@
         "label": "Xinyan C4",
         "minConstellation": 4,
         "scope": "self",
-        "timed": false,
+        "timed": true,
         "resShred": {
           "value": 0.15,
           "elements": [
@@ -5345,7 +5519,7 @@
           ]
         },
         "flat": [],
-        "note": "Assume a redução de RES Física (12 s) depois do golpe da habilidade sempre ativa."
+        "note": "RES Física do inimigo -15% por 12 s depois do golpe da habilidade (Swing): janela de tempo, o usuário liga e decide a duração."
       }
     ],
     "notes": [
@@ -5362,12 +5536,17 @@
       {
         "src": "const2",
         "kind": "partial",
-        "note": "Taxa Crítica +100% só no dano Físico do Supremo: o motor não tem Taxa Crítica por elemento e tipo de golpe juntos."
+        "note": "Taxa Crítica +100% só no dano Físico do Supremo (Skill DMG): o motor só aplica Taxa Crítica por tipo de golpe, e o Supremo inteiro inclui o Pyro DoT, que não recebe o bônus. Não entra."
       },
       {
         "src": "const6",
         "kind": "partial",
-        "note": "ATK extra só nos Carregados (50% da DEF): o motor ainda não tem ATK por tipo de golpe. A estamina não muda o dano."
+        "note": "ATK = 50% da DEF só nos Carregados: o motor não tem ATK por tipo de golpe (não cabe em dano fixo, que não é multiplicado pelo talento). Não entra; a estamina não muda o dano."
+      },
+      {
+        "src": "p3",
+        "kind": "utility",
+        "note": "Só culinária (chance de produto em dobro)."
       }
     ],
     "infos": [],
@@ -7211,7 +7390,14 @@
         "note": "A flecha extra do Normal (60% do dano original, 50% de chance) não entra."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "const4",
+        "kind": "recarga",
+        "label": "Recarga do Niwabi Fire-Dance",
+        "text": "cai 1.2 s quando a explosão da Aurous Blaze dela dispara"
+      }
+    ],
     "procs": [],
     "factions": [],
     "specialMoves": [],
@@ -9775,7 +9961,7 @@
         "label": "Chevreuse A1",
         "minConstellation": 0,
         "scope": "self",
-        "timed": false,
+        "timed": true,
         "team": {
           "only": [
             "Pyro",
@@ -9794,7 +9980,7 @@
           ]
         },
         "flat": [],
-        "note": "Só com time de Pyro e Electro (ao menos um de cada). Assume a redução de RES Pyro e Electro (6 s, depois de Sobrecarregar) sempre ativa."
+        "note": "Só com time só de Pyro e Electro (ao menos um de cada). RES Pyro e Electro do inimigo -40% por 6 s depois de Sobrecarregar: janela de tempo, o usuário liga e decide a duração. Antes estava sempre ligado."
       }
     ],
     "notes": [
@@ -9809,7 +9995,26 @@
         "note": "Só recarga."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "const1",
+        "kind": "energia",
+        "label": "Energia do aliado",
+        "text": "6 de Energia ao aliado que dispara Sobrecarregar; no máximo uma vez a cada 10 s"
+      },
+      {
+        "src": "const4",
+        "kind": "recarga",
+        "label": "Recarga do modo Hold",
+        "text": "o Hold não entra em recarga por até 2 disparos ou 6 s depois do Ring of Bursting Grenades"
+      },
+      {
+        "src": "const6",
+        "kind": "cura",
+        "label": "Cura em 12 s",
+        "text": "os aliados próximos recuperam 10% do HP máximo dela, uma vez, 12 s depois da cura da habilidade"
+      }
+    ],
     "procs": [
       {
         "id": "c2",
@@ -9837,39 +10042,6 @@
     "em": 0,
     "appliesToSelf": false,
     "buffs": [
-      {
-        "id": "a4",
-        "label": "Gaming A4",
-        "minConstellation": 0,
-        "scope": "self",
-        "timed": true,
-        "stats": {
-          "atkPct": 0,
-          "dmgPct": 0,
-          "critRate": 0,
-          "critDmg": 0,
-          "em": 0,
-          "er": 0,
-          "hpPct": 0,
-          "defPct": 0,
-          "dmgPctByType": {
-            "plunge": 0.2
-          },
-          "critRateByType": {},
-          "critDmgByType": {},
-          "baseMultByType": {},
-          "defIgnore": 0,
-          "atkFlat": 0,
-          "atkBaseFlat": 0,
-          "hpFlat": 0,
-          "defFlat": 0,
-          "physDmgPct": 0,
-          "physCritDmg": 0,
-          "reactionBonus": {}
-        },
-        "flat": [],
-        "note": "+20% de DMG do Plunging da habilidade com HP de 50% ou mais: ligue nas janelas."
-      },
       {
         "id": "c2",
         "label": "Gaming C2",
@@ -9902,6 +10074,39 @@
         "note": "+20% de ATK por 5 s depois de cura com overflow: ligue nas janelas."
       },
       {
+        "id": "a4",
+        "label": "Gaming A4",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {
+            "skill": 0.2
+          },
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "note": "+20% de DMG do Charmed Cloudstrider com HP de 50% ou mais: ligue nas janelas. No Lunaris esse golpe é de habilidade (o único golpe de habilidade dele), então o bônus vai em \"habilidade\" e não em Imersivo; o Imersivo comum não recebe."
+      },
+      {
         "id": "c6",
         "label": "Gaming C6",
         "minConstellation": 6,
@@ -9918,10 +10123,10 @@
           "defPct": 0,
           "dmgPctByType": {},
           "critRateByType": {
-            "plunge": 0.2
+            "skill": 0.2
           },
           "critDmgByType": {
-            "plunge": 0.4
+            "skill": 0.4
           },
           "baseMultByType": {},
           "defIgnore": 0,
@@ -9934,27 +10139,62 @@
           "reactionBonus": {}
         },
         "flat": [],
-        "note": "+20% de Taxa e +40% de Dano Crítico do Plunging da habilidade, sempre."
+        "note": "+20% de Taxa e +40% de Dano Crítico do Charmed Cloudstrider, sempre (é o único golpe de habilidade dele no Lunaris). O Imersivo comum não recebe. O raio maior não muda o dano."
       }
     ],
     "notes": [
       {
         "src": "p1",
         "kind": "utility",
-        "note": "Só cura."
+        "note": "Só cura (informativo)."
       },
       {
         "src": "const1",
         "kind": "utility",
-        "note": "Só cura."
+        "note": "Só cura (informativo)."
       },
       {
         "src": "const4",
         "kind": "utility",
-        "note": "Só energia."
+        "note": "Só energia (informativo)."
+      },
+      {
+        "src": "p2",
+        "kind": "partial",
+        "note": "Entra o +20% de DMG do Charmed Cloudstrider com HP de 50% ou mais; a cura recebida +20% abaixo de 50% de HP é só informativa."
+      },
+      {
+        "src": "p3",
+        "kind": "utility",
+        "note": "Só velocidade de movimento de dia."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "p1",
+        "kind": "cura",
+        "label": "Cura do Dance of Amity",
+        "text": "Recupera 1.5% do HP máximo a cada 0,2 s por 0,8 s depois que o Charmed Cloudstrider acerta"
+      },
+      {
+        "src": "p2",
+        "kind": "cura",
+        "label": "Cura recebida com HP baixo",
+        "text": "+20% de cura recebida com menos de 50% de HP"
+      },
+      {
+        "src": "const1",
+        "kind": "cura",
+        "label": "Cura do Suanni Man Chai",
+        "text": "Cura 15% do HP quando o Man Chai volta a ele"
+      },
+      {
+        "src": "const4",
+        "kind": "energia",
+        "label": "Energia que ele recupera",
+        "text": "2 de Energia quando o Charmed Cloudstrider acerta; no máximo uma vez a cada 0,2 s"
+      }
+    ],
     "procs": [],
     "factions": [],
     "specialMoves": [],
@@ -10336,15 +10576,43 @@
       {
         "src": "const1",
         "kind": "partial",
-        "note": "O aumento do Masque of the Red Death (+100% do ATK dos Normais) não entra: depende do valor do talento."
+        "note": "O aumento do Masque of the Red Death (+100% do ATK dos Normais) não entra: o dano extra dos Normais depende da % de Bond of Life no momento."
       },
       {
         "src": "const4",
         "kind": "utility",
-        "note": "Só recarga e energia."
+        "note": "Só recarga e energia (informativo)."
+      },
+      {
+        "src": "p2",
+        "kind": "utility",
+        "note": "Só RES própria (defesa), sem efeito no dano."
+      },
+      {
+        "src": "const2",
+        "kind": "partial",
+        "note": "Entra o golpe de 900% do ATK (a cada 10 s). A RES +20% por 15 s não muda o dano."
+      },
+      {
+        "src": "const6",
+        "kind": "partial",
+        "note": "Entram +10% de Taxa e +70% de Dano Crítico de Normal e Supremo por 20 s (janela). O dano extra do Balemoon Rising (ATK x 700% da % de Bond of Life) não entra: depende da % de Bond of Life no momento."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "const4",
+        "kind": "recarga",
+        "label": "Recarga do Balemoon Rising",
+        "text": "cai 2 s ao absorver uma Directive; no máximo uma vez a cada 10 s"
+      },
+      {
+        "src": "const4",
+        "kind": "energia",
+        "label": "Energia que ela recupera",
+        "text": "15 de Energia ao absorver uma Directive; no máximo uma vez a cada 10 s"
+      }
+    ],
     "procs": [
       {
         "id": "c2",
@@ -12822,21 +13090,6 @@
     "appliesToSelf": false,
     "buffs": [
       {
-        "id": "a1",
-        "label": "Durin A1",
-        "minConstellation": 0,
-        "scope": "self",
-        "timed": false,
-        "resShred": {
-          "value": 0.2,
-          "elements": [
-            "Pyro"
-          ]
-        },
-        "flat": [],
-        "note": "Assume a redução de RES Pyro (forma Dragão da Chama Branca) sempre ativa. A do elemento da reação não entra."
-      },
-      {
         "id": "c2",
         "label": "Durin C2",
         "minConstellation": 2,
@@ -12902,25 +13155,6 @@
         },
         "flat": [],
         "note": "+40% de DMG do Supremo, sempre."
-      },
-      {
-        "id": "a4",
-        "label": "Durin A4",
-        "minConstellation": 0,
-        "scope": "self",
-        "timed": false,
-        "convert": {
-          "from": "atk",
-          "source": "self",
-          "perPoint": 0.0003,
-          "threshold": 0,
-          "cap": 0.75,
-          "to": [
-            "burst"
-          ]
-        },
-        "flat": [],
-        "note": "+3% de DMG do Supremo por 100 de ATK, até 75% (assume os 10 stacks)."
       },
       {
         "id": "c6",
@@ -12997,16 +13231,6 @@
         "note": "Principle of Darkness: 150% do ATK nos 10 primeiros golpes de Supremo dele (20 stacks, 2 por golpe). As duas formas valem juntas na rotação."
       },
       {
-        "id": "c6def",
-        "label": "Durin C6 (DEF do inimigo)",
-        "minConstellation": 6,
-        "scope": "self",
-        "timed": false,
-        "defShred": 0.3,
-        "flat": [],
-        "note": "Assume a redução de 30% de DEF (6 s depois do Principle of Purity) sempre ativa."
-      },
-      {
         "id": "c6dark",
         "label": "Durin C6 (Darkness)",
         "minConstellation": 6,
@@ -13036,9 +13260,113 @@
         },
         "flat": [],
         "note": "Principle of Darkness e Dragon of Dark Decay ignoram mais 40% da DEF: ligue na janela desses golpes."
+      },
+      {
+        "id": "a1",
+        "label": "Durin A1",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "resShred": {
+          "value": 0.2,
+          "elements": [
+            "Pyro"
+          ]
+        },
+        "flat": [],
+        "note": "RES Pyro do inimigo -20% por 6 s depois de uma reação Pyro ou de dano Pyro/Dendro em inimigo com Burning (forma Dragão da Chama Branca, 20 s): janela de tempo, o usuário liga e decide a duração. A RES do elemento da reação (Dendro, Electro...) não entra. Com 2 Hexerei, veja \"Durin A1 (Hexerei)\"."
+      },
+      {
+        "id": "a1hex",
+        "label": "Durin A1 (Hexerei)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "replaces": "a1",
+        "team": {
+          "hexerei": 2
+        },
+        "resShred": {
+          "value": 0.35,
+          "elements": [
+            "Pyro"
+          ]
+        },
+        "flat": [],
+        "note": "Hexerei: Secret Rite (2 ou mais Hexerei no time, marque o Durin como Hexerei) aumenta o A1 em 75%: 20% x 1,75 = 35% (conta feita com os dois números do texto). Substitui o \"Durin A1\" comum. Janela de tempo, igual ao A1. O +75% do Vaporizar/Derreter da forma Dark Decay não cabe no formato."
+      },
+      {
+        "id": "a4",
+        "label": "Durin A4",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "convert": {
+          "from": "atk",
+          "source": "self",
+          "perPoint": 0.0003,
+          "threshold": 0,
+          "cap": 0.75,
+          "to": [
+            "burst"
+          ]
+        },
+        "flat": [],
+        "note": "Aproximação: +3% de DMG do Supremo por 100 de ATK, até 75% (assume os 10 stacks), durante os 20 s depois do Supremo: ligue a janela. No jogo vale só para os ataques periódicos do dragão, 1 stack por ataque (10 no total), e é \"% do dano original\"; aqui entra como DMG% do Supremo inteiro, então ligue só sobre os golpes do dragão."
+      },
+      {
+        "id": "c6def",
+        "label": "Durin C6 (DEF do inimigo)",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": true,
+        "defShred": 0.3,
+        "flat": [],
+        "note": "DEF do inimigo -30% por 6 s depois que o Principle of Purity e o Dragon of White Flame acertam: janela de tempo, o usuário liga e decide a duração."
       }
     ],
-    "notes": [],
+    "notes": [
+      {
+        "src": "p1",
+        "kind": "partial",
+        "note": "Entra a RES Pyro -20% (janela, 35% com Hexerei). Não entram a RES do elemento da reação nem o +40% (70% com Hexerei) de Vaporizar/Derreter da forma Dark Decay: o formato dos buffs não tem bônus de Vaporizar/Derreter."
+      },
+      {
+        "src": "p2",
+        "kind": "partial",
+        "note": "Entra como DMG% do Supremo (aproximação, janela de 20 s): no jogo só os ataques periódicos do dragão recebem, 1 stack cada, e o bônus é \"% do dano original\"."
+      },
+      {
+        "src": "p3",
+        "kind": "utility",
+        "note": "Só recompensa de expedição."
+      },
+      {
+        "src": "p4",
+        "kind": "partial",
+        "note": "Entra o +75% do A1 (RES Pyro 35%) com 2 Hexerei. O +75% do Vaporizar/Derreter não entra."
+      },
+      {
+        "src": "const1",
+        "kind": "partial",
+        "note": "Entram os stacks de Cycle of Enlightenment (60% do ATK dele nos 20 primeiros golpes dos aliados; 150% nos 10 primeiros Supremos dele). O limite de 20 s e os stacks individuais por aliado são simplificados."
+      },
+      {
+        "src": "const2",
+        "kind": "partial",
+        "note": "Entra +50% de DMG Pyro da equipe Pyro por 6 s (janela). O bônus do elemento da reação (Hydro, Dendro...) não entra."
+      },
+      {
+        "src": "const4",
+        "kind": "partial",
+        "note": "Entra o +40% de DMG do Supremo. A chance de 30% de não gastar stacks do C1 não entra."
+      },
+      {
+        "src": "const6",
+        "kind": "partial",
+        "note": "Entram: ignora 30% da DEF no Supremo (janela), -30% de DEF do inimigo por 6 s (janela) e +40% de DEF ignorada no Principle of Darkness e no Dragon of Dark Decay (janela)."
+      }
+    ],
     "infos": [],
     "procs": [],
     "factions": [
@@ -14680,37 +15008,6 @@
     "appliesToSelf": false,
     "buffs": [
       {
-        "id": "c1",
-        "label": "Viajante C1",
-        "minConstellation": 1,
-        "scope": "team",
-        "timed": true,
-        "stats": {
-          "atkPct": 0,
-          "dmgPct": 0.06,
-          "critRate": 0,
-          "critDmg": 0,
-          "em": 0,
-          "er": 0,
-          "hpPct": 0,
-          "defPct": 0,
-          "dmgPctByType": {},
-          "critRateByType": {},
-          "critDmgByType": {},
-          "baseMultByType": {},
-          "defIgnore": 0,
-          "atkFlat": 0,
-          "atkBaseFlat": 0,
-          "hpFlat": 0,
-          "defFlat": 0,
-          "physDmgPct": 0,
-          "physCritDmg": 0,
-          "reactionBonus": {}
-        },
-        "flat": [],
-        "note": "+6% de DMG do personagem em campo com o Limiar ativo: ligue nas janelas. Os +9% extras com Bênção Nightsoul não entram."
-      },
-      {
         "id": "c4",
         "label": "Viajante C4",
         "minConstellation": 4,
@@ -14778,6 +15075,90 @@
         },
         "flat": [],
         "note": "+40% de Dano Crítico de Normal, Carregado e Imersivo no Nightsoul's Blessing: ligue na janela. A conversão para Pyro não entra."
+      },
+      {
+        "id": "c1",
+        "label": "Viajante C1",
+        "minConstellation": 1,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.06,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "note": "+6% de DMG do personagem em campo com o Blazing/Scorching Threshold ativo (6% é literal do texto; o Lunaris traz 0): ligue nas janelas. Os +9% extras em Nightsoul's Blessing estão no buff \"Viajante C1 (Nightsoul)\"."
+      },
+      {
+        "id": "c1ns",
+        "label": "Viajante C1 (Nightsoul)",
+        "minConstellation": 1,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.09,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "note": "+9% de DMG a mais, só para quem está em Nightsoul's Blessing (9% é literal do texto). Ligue só nas janelas em que o personagem em campo (Mavuika, Citlali...) está nesse estado; a janela vale para todos que a recebem."
+      },
+      {
+        "id": "a4inferno",
+        "label": "Viajante A4 (Carregado: Inferno)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "flat": [
+          {
+            "name": "Charged Attack: Inferno por ATK (A4)",
+            "sourceStat": "ATK",
+            "perPoint": 2,
+            "hitTypes": [
+              "charged"
+            ],
+            "labels": [
+              "Charged Attack DMG"
+            ],
+            "stacks": 2
+          }
+        ],
+        "note": "Soma 200% do ATK ao dano base de CADA um dos 2 acertos do Carregado, uma vez a cada 15 s (precisa de 2 stacks de Blade of the Sacred Flame, dados pelos Nightsoul Burst dos aliados). Entra nos 2 primeiros acertos de Carregado da rotação (1 Inferno); para mais Infernos, aumente os stacks do efeito."
       }
     ],
     "notes": [
@@ -14795,6 +15176,26 @@
         "src": "const2",
         "kind": "utility",
         "note": "Só pontos de Nightsoul."
+      },
+      {
+        "src": "p3",
+        "kind": "partial",
+        "note": "Entra o Carregado: Inferno (+200% do ATK por acerto, 1 vez a cada 15 s). Os buffs \"para cada elemento ressonado\" (Pyro +20% de ATK, Cryo +20% de Dano Crítico etc.) não entram: o texto não diz quais ressonâncias contam nem como o time as define."
+      },
+      {
+        "src": "const1",
+        "kind": "partial",
+        "note": "Entram +6% e +9% (Nightsoul's Blessing) de DMG do personagem em campo, como janelas."
+      },
+      {
+        "src": "const4",
+        "kind": "partial",
+        "note": "+20% de DMG Pyro por 9 s depois do Supremo, como janela."
+      },
+      {
+        "src": "const6",
+        "kind": "partial",
+        "note": "+40% de Dano Crítico de Normal, Carregado e Imersivo em Nightsoul's Blessing, como janela. A conversão para Pyro já é o padrão do cálculo."
       }
     ],
     "infos": [],
@@ -15203,37 +15604,6 @@
     "appliesToSelf": false,
     "buffs": [
       {
-        "id": "c1",
-        "label": "Viajante C1",
-        "minConstellation": 1,
-        "scope": "team",
-        "timed": true,
-        "stats": {
-          "atkPct": 0,
-          "dmgPct": 0.06,
-          "critRate": 0,
-          "critDmg": 0,
-          "em": 0,
-          "er": 0,
-          "hpPct": 0,
-          "defPct": 0,
-          "dmgPctByType": {},
-          "critRateByType": {},
-          "critDmgByType": {},
-          "baseMultByType": {},
-          "defIgnore": 0,
-          "atkFlat": 0,
-          "atkBaseFlat": 0,
-          "hpFlat": 0,
-          "defFlat": 0,
-          "physDmgPct": 0,
-          "physCritDmg": 0,
-          "reactionBonus": {}
-        },
-        "flat": [],
-        "note": "+6% de DMG do personagem em campo com o Limiar ativo: ligue nas janelas. Os +9% extras com Bênção Nightsoul não entram."
-      },
-      {
         "id": "c4",
         "label": "Viajante C4",
         "minConstellation": 4,
@@ -15301,6 +15671,90 @@
         },
         "flat": [],
         "note": "+40% de Dano Crítico de Normal, Carregado e Imersivo no Nightsoul's Blessing: ligue na janela. A conversão para Pyro não entra."
+      },
+      {
+        "id": "c1",
+        "label": "Viajante C1",
+        "minConstellation": 1,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.06,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "note": "+6% de DMG do personagem em campo com o Blazing/Scorching Threshold ativo (6% é literal do texto; o Lunaris traz 0): ligue nas janelas. Os +9% extras em Nightsoul's Blessing estão no buff \"Viajante C1 (Nightsoul)\"."
+      },
+      {
+        "id": "c1ns",
+        "label": "Viajante C1 (Nightsoul)",
+        "minConstellation": 1,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.09,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "note": "+9% de DMG a mais, só para quem está em Nightsoul's Blessing (9% é literal do texto). Ligue só nas janelas em que o personagem em campo (Mavuika, Citlali...) está nesse estado; a janela vale para todos que a recebem."
+      },
+      {
+        "id": "a4inferno",
+        "label": "Viajante A4 (Carregado: Inferno)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "flat": [
+          {
+            "name": "Charged Attack: Inferno por ATK (A4)",
+            "sourceStat": "ATK",
+            "perPoint": 2,
+            "hitTypes": [
+              "charged"
+            ],
+            "labels": [
+              "Charged Attack DMG"
+            ],
+            "stacks": 2
+          }
+        ],
+        "note": "Soma 200% do ATK ao dano base de CADA um dos 2 acertos do Carregado, uma vez a cada 15 s (precisa de 2 stacks de Blade of the Sacred Flame, dados pelos Nightsoul Burst dos aliados). Entra nos 2 primeiros acertos de Carregado da rotação (1 Inferno); para mais Infernos, aumente os stacks do efeito."
       }
     ],
     "notes": [
@@ -15318,6 +15772,26 @@
         "src": "const2",
         "kind": "utility",
         "note": "Só pontos de Nightsoul."
+      },
+      {
+        "src": "p3",
+        "kind": "partial",
+        "note": "Entra o Carregado: Inferno (+200% do ATK por acerto, 1 vez a cada 15 s). Os buffs \"para cada elemento ressonado\" (Pyro +20% de ATK, Cryo +20% de Dano Crítico etc.) não entram: o texto não diz quais ressonâncias contam nem como o time as define."
+      },
+      {
+        "src": "const1",
+        "kind": "partial",
+        "note": "Entram +6% e +9% (Nightsoul's Blessing) de DMG do personagem em campo, como janelas."
+      },
+      {
+        "src": "const4",
+        "kind": "partial",
+        "note": "+20% de DMG Pyro por 9 s depois do Supremo, como janela."
+      },
+      {
+        "src": "const6",
+        "kind": "partial",
+        "note": "+40% de Dano Crítico de Normal, Carregado e Imersivo em Nightsoul's Blessing, como janela. A conversão para Pyro já é o padrão do cálculo."
       }
     ],
     "infos": [],
@@ -16938,13 +17412,14 @@
       },
       {
         "id": "c6",
-        "label": "Yanfei C6",
+        "label": "Yanfei C6 (A1 com 4 Selos)",
         "minConstellation": 6,
         "scope": "self",
         "timed": true,
+        "replaces": "a1",
         "stats": {
           "atkPct": 0,
-          "dmgPct": 1,
+          "dmgPct": 0.2,
           "critRate": 0,
           "critDmg": 0,
           "em": 0,
@@ -16965,7 +17440,12 @@
           "reactionBonus": {}
         },
         "flat": [],
-        "note": "O 4º Selo soma +5% de DMG Pyro ao A1: ligue junto com o A1."
+        "stacks": {
+          "max": 4,
+          "unit": "selos",
+          "default": 4
+        },
+        "note": "REFORÇA o A1 (não soma): com 4 Selos gastos no Carregado, +5% de DMG Pyro por Selo (5% é literal do A1), 20% no máximo, por 6 s. Assume que o limite base é 3 Selos (o texto só diz \"+1\"; o 3 vem do jogo, confirmar). Escolha os Selos de 0 a 4."
       }
     ],
     "notes": [
@@ -16980,7 +17460,14 @@
         "note": "Só escudo."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "const4",
+        "kind": "escudo",
+        "label": "Escudo do Done Deal",
+        "text": "Escudo de 45% do HP máximo por 15 s (absorve Pyro 250% melhor)"
+      }
+    ],
     "procs": [
       {
         "id": "a4",
@@ -17809,24 +18296,6 @@
         "note": "+20% de HP máximo."
       },
       {
-        "id": "c1s",
-        "label": "Dehya C1 (habilidade)",
-        "minConstellation": 1,
-        "scope": "self",
-        "timed": false,
-        "flat": [
-          {
-            "name": "Molten Inferno por HP",
-            "sourceStat": "HP",
-            "perPoint": 0.036,
-            "hitTypes": [
-              "skill"
-            ]
-          }
-        ],
-        "note": "Soma 3,6% do HP máximo ao dano base da habilidade (Molten Inferno)."
-      },
-      {
         "id": "c1b",
         "label": "Dehya C1 (Supremo)",
         "minConstellation": 1,
@@ -17845,8 +18314,30 @@
         "note": "Soma 6% do HP máximo ao dano base do Supremo (Leonine Bite)."
       },
       {
+        "id": "c1s",
+        "label": "Dehya C1 (Molten Inferno)",
+        "minConstellation": 1,
+        "scope": "self",
+        "timed": false,
+        "flat": [
+          {
+            "name": "Molten Inferno por HP",
+            "sourceStat": "HP",
+            "perPoint": 0.036,
+            "hitTypes": [
+              "skill"
+            ],
+            "labels": [
+              "Indomitable Flame DMG",
+              "Ranging Flame DMG"
+            ]
+          }
+        ],
+        "note": "Soma 3,6% do HP máximo ao dano base do Indomitable Flame e do Ranging Flame (as duas formas do Molten Inferno). O Field DMG do Fiery Sanctum NÃO recebe."
+      },
+      {
         "id": "c6",
-        "label": "Dehya C6",
+        "label": "Dehya C6 (Taxa Crítica)",
         "minConstellation": 6,
         "scope": "self",
         "timed": false,
@@ -17863,8 +18354,39 @@
           "critRateByType": {
             "burst": 0.1
           },
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "note": "+10% de Taxa Crítica nos golpes do Leonine Bite (Flame-Mane's Fist e Incineration Drive), sempre."
+      },
+      {
+        "id": "c6cd",
+        "label": "Dehya C6 (Dano Crítico)",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
           "critDmgByType": {
-            "burst": 0.15
+            "burst": 0.6
           },
           "baseMultByType": {},
           "defIgnore": 0,
@@ -17877,7 +18399,12 @@
           "reactionBonus": {}
         },
         "flat": [],
-        "note": "+10% de Taxa Crítica e +15% de Dano Crítico no Supremo (assume o stack de Dano Crítico ativo)."
+        "stacks": {
+          "max": 4,
+          "unit": "acúmulos de Dano Crítico",
+          "default": 4
+        },
+        "note": "+15% de Dano Crítico do Leonine Bite por acúmulo (Flame-Mane's Fist com crítico), até 60% (4 acúmulos, o teto do texto). Assume o teto; escolha de 0 a 4. Substitui o +15% único da curadoria antiga."
       }
     ],
     "notes": [
@@ -17894,7 +18421,7 @@
       {
         "src": "const2",
         "kind": "partial",
-        "note": "+50% do ataque coordenado do Fiery Sanctum não entra."
+        "note": "Entra o +50% do próximo ataque coordenado do Fiery Sanctum (golpe extra). A duração do campo (+6 s) não entra."
       },
       {
         "src": "const4",
@@ -17902,8 +18429,43 @@
         "note": "Só energia e cura."
       }
     ],
-    "infos": [],
-    "procs": [],
+    "infos": [
+      {
+        "src": "p2",
+        "kind": "cura",
+        "label": "Cura de emergência",
+        "text": "Com HP abaixo de 40%, recupera 20% do HP máximo e mais 6% a cada 2 s por 10 s; uma vez a cada 20 s"
+      },
+      {
+        "src": "const4",
+        "kind": "energia",
+        "label": "Energia que ela recupera",
+        "text": "1.5 de Energia por acerto do Flame-Mane's Fist e da Incineration Drive; no máximo uma vez a cada 0.2 s"
+      },
+      {
+        "src": "const4",
+        "kind": "cura",
+        "label": "Cura do Leonine Bite",
+        "text": "2.5% do HP máximo dela por acerto do Flame-Mane's Fist e da Incineration Drive; no máximo uma vez a cada 0.2 s"
+      }
+    ],
+    "procs": [
+      {
+        "id": "c2",
+        "label": "Dehya C2: ataque coordenado reforçado",
+        "scale": {},
+        "hitType": "skill",
+        "minConstellation": 2,
+        "src": "const2",
+        "of": {
+          "talent": "skill",
+          "label": "Field DMG",
+          "variant": 0,
+          "fraction": 0.5
+        },
+        "note": "+50% do Field DMG do Fiery Sanctum, somado como golpe extra de 50% desse golpe (só o PRÓXIMO ataque coordenado, depois que um personagem do campo é atacado: adicione uma execução quando acontecer). Conta como habilidade."
+      }
+    ],
     "factions": [],
     "specialMoves": [],
     "pointMoves": [],
@@ -18695,68 +19257,6 @@
     "appliesToSelf": false,
     "buffs": [
       {
-        "id": "a1",
-        "label": "Nicole A1",
-        "minConstellation": 0,
-        "scope": "others",
-        "timed": true,
-        "stats": {
-          "atkPct": 0,
-          "dmgPct": 0,
-          "critRate": 0,
-          "critDmg": 0,
-          "em": 0,
-          "er": 0,
-          "hpPct": 0,
-          "defPct": 0,
-          "dmgPctByType": {},
-          "critRateByType": {},
-          "critDmgByType": {},
-          "baseMultByType": {},
-          "defIgnore": 0,
-          "atkFlat": 300,
-          "atkBaseFlat": 0,
-          "hpFlat": 0,
-          "defFlat": 0,
-          "physDmgPct": 0,
-          "physCritDmg": 0,
-          "reactionBonus": {}
-        },
-        "flat": [],
-        "note": "+300 de ATK dos aliados observados por 3 s no campo (Guidance of Theosis): ligue na janela."
-      },
-      {
-        "id": "c2",
-        "label": "Nicole C2",
-        "minConstellation": 2,
-        "scope": "others",
-        "timed": true,
-        "stats": {
-          "atkPct": 0,
-          "dmgPct": 0,
-          "critRate": 0,
-          "critDmg": 0,
-          "em": 0,
-          "er": 0,
-          "hpPct": 0,
-          "defPct": 0,
-          "dmgPctByType": {},
-          "critRateByType": {},
-          "critDmgByType": {},
-          "baseMultByType": {},
-          "defIgnore": 0,
-          "atkFlat": 300,
-          "atkBaseFlat": 0,
-          "hpFlat": 0,
-          "defFlat": 0,
-          "physDmgPct": 0,
-          "physCritDmg": 0,
-          "reactionBonus": {}
-        },
-        "flat": [],
-        "note": "+300 de ATK extra do Grace of Kenosis (fora do limite do bônus): ligue na janela. A redução de RES não entra."
-      },
-      {
         "id": "c6",
         "label": "Nicole C6",
         "minConstellation": 6,
@@ -18810,18 +19310,273 @@
           }
         ],
         "note": "70% do ATK dela somados aos 8 primeiros golpes da equipe na rotação (no jogo cada membro tem as próprias 8 cargas)."
+      },
+      {
+        "id": "graca",
+        "label": "Nicole: Grace of Kenosis (ATK)",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "convert": {
+          "from": "atk",
+          "source": "self",
+          "perPoint": 1,
+          "threshold": 0,
+          "capByLevel": {
+            "talent": "skill",
+            "table": [
+              330,
+              360,
+              390,
+              420,
+              450,
+              480,
+              510,
+              540,
+              570,
+              600,
+              636,
+              672,
+              708,
+              744,
+              780
+            ]
+          },
+          "to": [
+            "atkFlat"
+          ]
+        },
+        "level": {
+          "talent": "skill",
+          "table": [
+            0.0825,
+            0.09,
+            0.0975,
+            0.105,
+            0.1125,
+            0.12,
+            0.1275,
+            0.135,
+            0.1425,
+            0.15,
+            0.159,
+            0.168,
+            0.177,
+            0.186,
+            0.195
+          ]
+        },
+        "flat": [],
+        "note": "ATK fixo = % do ATK da Nicole por nível da habilidade (8,25% no nível 1 a 19,5% no 15), com teto por nível (330 a 780), por 20 s depois da habilidade. Vale para o time inteiro, inclusive ela (o A4 dela fala do Grace dela mesma). Os +300 do Guidance (A1) e do C2 ficam fora do teto e são buffs à parte."
+      },
+      {
+        "id": "a1",
+        "label": "Nicole A1",
+        "minConstellation": 0,
+        "scope": "others",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 300,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "note": "+300 de ATK dos aliados observados, depois de 3 s em campo (Guidance of Theosis), por 20 s depois da habilidade: ligue na janela. Aliado Hexerei recebe na hora."
+      },
+      {
+        "id": "c2",
+        "label": "Nicole C2",
+        "minConstellation": 2,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 300,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "note": "+300 de ATK extra do Grace of Kenosis (fora do limite do bônus) para o time inteiro, inclusive a Nicole: ligue na janela. A RES do inimigo está nos buffs \"Nicole C2: RES <elemento>\"; o escudo não entra."
+      },
+      {
+        "id": "c2res-pyro",
+        "label": "Nicole C2: RES Pyro do inimigo",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": true,
+        "resShred": {
+          "value": 0.25,
+          "elements": [
+            "Pyro"
+          ]
+        },
+        "flat": [],
+        "note": "RES Pyro do inimigo -25% enquanto o personagem Pyro tem o Guidance of Theosis (não soma duas vezes no mesmo elemento). Janela de tempo: ligue só a do elemento de quem está com o Guidance."
+      },
+      {
+        "id": "c2res-hydro",
+        "label": "Nicole C2: RES Hydro do inimigo",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": true,
+        "resShred": {
+          "value": 0.25,
+          "elements": [
+            "Hydro"
+          ]
+        },
+        "flat": [],
+        "note": "RES Hydro do inimigo -25% enquanto o personagem Hydro tem o Guidance of Theosis (não soma duas vezes no mesmo elemento). Janela de tempo: ligue só a do elemento de quem está com o Guidance."
+      },
+      {
+        "id": "c2res-electro",
+        "label": "Nicole C2: RES Electro do inimigo",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": true,
+        "resShred": {
+          "value": 0.25,
+          "elements": [
+            "Electro"
+          ]
+        },
+        "flat": [],
+        "note": "RES Electro do inimigo -25% enquanto o personagem Electro tem o Guidance of Theosis (não soma duas vezes no mesmo elemento). Janela de tempo: ligue só a do elemento de quem está com o Guidance."
+      },
+      {
+        "id": "c2res-cryo",
+        "label": "Nicole C2: RES Cryo do inimigo",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": true,
+        "resShred": {
+          "value": 0.25,
+          "elements": [
+            "Cryo"
+          ]
+        },
+        "flat": [],
+        "note": "RES Cryo do inimigo -25% enquanto o personagem Cryo tem o Guidance of Theosis (não soma duas vezes no mesmo elemento). Janela de tempo: ligue só a do elemento de quem está com o Guidance."
+      },
+      {
+        "id": "c2res-dendro",
+        "label": "Nicole C2: RES Dendro do inimigo",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": true,
+        "resShred": {
+          "value": 0.25,
+          "elements": [
+            "Dendro"
+          ]
+        },
+        "flat": [],
+        "note": "RES Dendro do inimigo -25% enquanto o personagem Dendro tem o Guidance of Theosis (não soma duas vezes no mesmo elemento). Janela de tempo: ligue só a do elemento de quem está com o Guidance."
+      },
+      {
+        "id": "c2res-anemo",
+        "label": "Nicole C2: RES Anemo do inimigo",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": true,
+        "resShred": {
+          "value": 0.25,
+          "elements": [
+            "Anemo"
+          ]
+        },
+        "flat": [],
+        "note": "RES Anemo do inimigo -25% enquanto o personagem Anemo tem o Guidance of Theosis (não soma duas vezes no mesmo elemento). Janela de tempo: ligue só a do elemento de quem está com o Guidance."
+      },
+      {
+        "id": "c2res-geo",
+        "label": "Nicole C2: RES Geo do inimigo",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": true,
+        "resShred": {
+          "value": 0.25,
+          "elements": [
+            "Geo"
+          ]
+        },
+        "flat": [],
+        "note": "RES Geo do inimigo -25% enquanto o personagem Geo tem o Guidance of Theosis (não soma duas vezes no mesmo elemento). Janela de tempo: ligue só a do elemento de quem está com o Guidance."
       }
     ],
     "notes": [
       {
         "src": "p2",
-        "kind": "utility",
-        "note": "Só faz o Grace of Kenosis virar Guidance of Theosis (o ATK está no A1)."
+        "kind": "partial",
+        "note": "Pendente: o A4 faz o Grace dela virar Guidance of Theosis por 8 s, mas o texto não diz o ATK que ela mesma ganha; não entra."
       },
       {
         "src": "const1",
         "kind": "partial",
-        "note": "A Arcane Projection (600% do ATK do personagem ativo) não entra."
+        "note": "A Arcane Projection: Unity (600% do ATK do personagem ativo, a cada 6 s) não entra: o golpe usa o ATK de outro personagem, não o da Nicole."
+      },
+      {
+        "src": "p1",
+        "kind": "partial",
+        "note": "Entram +300 de ATK dos aliados observados (janela). O tempo de observação (3 s) e o Hexerei imediato dependem de você ligar a janela no instante certo."
+      },
+      {
+        "src": "p3",
+        "kind": "utility",
+        "note": "Só exploração (Treasure Compass)."
+      },
+      {
+        "src": "p4",
+        "kind": "partial",
+        "note": "Hexerei: Secret Rite (+300% do ATK da Nicole nas Arcane Projections dos Hexerei) não entra: a Arcane Projection é golpe de outro personagem com o ATK dele."
+      },
+      {
+        "src": "const2",
+        "kind": "partial",
+        "note": "Entram +300 de ATK do Grace (time) e a RES do inimigo -25% por elemento (janelas). O escudo de Blazing Light não entra."
+      },
+      {
+        "src": "const4",
+        "kind": "partial",
+        "note": "Entra o dano fixo de 70% do ATK da Nicole nos 8 primeiros golpes da equipe. O consumo por inimigo atingido e as cargas separadas por personagem são simplificados."
+      },
+      {
+        "src": "const6",
+        "kind": "partial",
+        "note": "Entra ignorar 40% da DEF de quem tem o Guidance (janela). A troca permanente de Grace por Guidance é você ligar os +300 do A1 para todos."
       }
     ],
     "infos": [],

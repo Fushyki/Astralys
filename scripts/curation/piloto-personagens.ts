@@ -64,6 +64,11 @@ export const PILOTO_BUFFS: Record<string, BuffCuration[]> = {
       note: 'Soma 90% do ATK ao dano base de cada golpe do Carregado da Ignimoto (Cyclic e Final). O Carregado comum não recebe.',
     },
     {
+      id: 'c6def', label: 'Mavuika C6 (Anel seguidor: DEF do inimigo)', src: 'const6', scope: 'self', timed: true, defShred: { lit: 0.2 },
+      expect: "decrease nearby opponents' DEF by 20%",
+      note: 'DEF do inimigo -20% enquanto ela cavalga a Flamestrider com o Anel seguidor (20% é literal do texto). Janela de tempo: o usuário liga e decide a duração.',
+    },
+    {
       id: 'c2anel', label: 'Mavuika C2 (Anel: DEF do inimigo)', src: 'const2', scope: 'self', timed: true, defShred: { p: 1 },
       expect: "Nearby opponents' DEF is decreased by 20%",
       note: 'DEF do inimigo -20% enquanto ela está na forma Anel (Ring of Searing Radiance), em Bênção do Espírito da Noite. Janela de tempo: o usuário liga e decide a duração.',
@@ -104,7 +109,7 @@ export const PILOTO_NOTES: Record<string, Partial<Record<Src, NoteCuration | nul
   Mavuika: {
     p3: u(NIGHTSOUL_TRANSMISSION),
     const2: x('Entram o +200 de ATK base (assumindo a Nightsoul sempre ativa), o -20% de DEF do inimigo (janela, forma Anel) e o dano fixo de 60%, 90% e 120% do ATK (Normais, Carregados e Sunfell Slice da Ignimoto).'),
-    const6: x('Os dois golpes (200% e 500% do ATK) entram como golpes extras; a redução de 20% de DEF do Anel de Incêndio não entra (debuff com condição de forma). Os 80 pontos de Espírito da Noite não mudam o dano.'),
+    const6: x('Os dois golpes (200% e 500% do ATK) entram como golpes extras; o -20% de DEF do Anel seguidor entra como janela. Os 80 pontos de Espírito da Noite não mudam o dano.'),
   },
   Citlali: { p3: u(NIGHTSOUL_TRANSMISSION) },
   Iansan: { p3: u(NIGHTSOUL_TRANSMISSION) },

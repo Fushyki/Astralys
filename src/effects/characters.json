@@ -238,6 +238,16 @@
         "note": "Soma 90% do ATK ao dano base de cada golpe do Carregado da Ignimoto (Cyclic e Final). O Carregado comum não recebe."
       },
       {
+        "id": "c6def",
+        "label": "Mavuika C6 (Anel seguidor: DEF do inimigo)",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": true,
+        "defShred": 0.2,
+        "flat": [],
+        "note": "DEF do inimigo -20% enquanto ela cavalga a Flamestrider com o Anel seguidor (20% é literal do texto). Janela de tempo: o usuário liga e decide a duração."
+      },
+      {
         "id": "c2anel",
         "label": "Mavuika C2 (Anel: DEF do inimigo)",
         "minConstellation": 2,
@@ -257,7 +267,7 @@
       {
         "src": "const6",
         "kind": "partial",
-        "note": "Os dois golpes (200% e 500% do ATK) entram como golpes extras; a redução de 20% de DEF do Anel de Incêndio não entra (debuff com condição de forma). Os 80 pontos de Espírito da Noite não mudam o dano."
+        "note": "Os dois golpes (200% e 500% do ATK) entram como golpes extras; o -20% de DEF do Anel seguidor entra como janela. Os 80 pontos de Espírito da Noite não mudam o dano."
       },
       {
         "src": "p3",

@@ -4,7 +4,7 @@
  * ações, janelas e perfis para que nada passe a apontar para a pessoa errada.
  */
 import type { Character, Weapon } from '../../data/schema';
-import { MAX_TEAM_SIZE, SUBSTATS, type GameData, type MemberRef, type RotationProject, type Substat } from '../../engine';
+import { MAX_TEAM_SIZE, NO_WEAPON, SUBSTATS, type GameData, type MemberRef, type RotationProject, type Substat } from '../../engine';
 
 const touch = (p: RotationProject): RotationProject => ({ ...p, meta: { ...p.meta, updatedAt: new Date().toISOString() } });
 
@@ -116,6 +116,11 @@ export function defaultMember(characterName: string, data: Pick<GameData, 'chara
     minER: 0,
     gearManual: true,
   };
+}
+
+/** Personagem recém-escolhido: sem arma e sem artefatos (o usuário equipa o que quiser), talentos 10. */
+export function nakedMember(characterName: string, data: Pick<GameData, 'characters' | 'weapons'>): MemberRef {
+  return { ...defaultMember(characterName, data), weapon: NO_WEAPON, noArtifacts: true, piecesChoice: 'generic' };
 }
 
 export const ALL_SUBSTATS = SUBSTATS;

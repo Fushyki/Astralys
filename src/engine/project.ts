@@ -55,7 +55,10 @@ export const ArtifactConfigSchema = z.object({
 
 export const MemberRefSchema = z.object({
   character: z.string().min(1),
+  /** Nome da arma, ou `NO_WEAPON` para o personagem sem arma. */
   weapon: z.string().min(1),
+  /** true = sem artefatos (nem main stats nem substats) enquanto não houver peças reais. Personagem novo nasce assim. */
+  noArtifacts: z.boolean().optional(),
   /** Refinamento da arma (1 a 5). Ausente = 1. */
   refinement: z.number().int().min(1).max(5).optional(),
   primarySet: z.string().min(1).optional(),
@@ -339,6 +342,9 @@ export function resolveMove(index: MoveIndex, ref: MoveRef, displayName?: string
   };
 }
 
+/** Valor de `MemberRef.weapon` para o personagem sem arma (ATK base 0, sem passiva). */
+export const NO_WEAPON = 'Sem arma';
+
 function byName<T extends { name: string }>(list: T[], name: string, what: string): T {
   const found = list.find((x) => x.name === name);
   if (!found) throw new ProjectResolveError(`${what} "${name}" não existe nos dados do jogo.`);
@@ -552,11 +558,15 @@ export function factionsOf(chosen: readonly ('moonsign' | 'hexerei')[] | undefin
 
 export function resolveMember(ref: MemberRef, data: GameData, effects: EffectsData, minRolls = 0, defaultLevel = 90): MemberInput {
   const setOf = (name?: string) => (name ? { name, effect: effects.sets.find((s) => s.set === name) } : undefined);
-  const weapon = byName(data.weapons, ref.weapon, 'Arma');
   const level = ref.level ?? defaultLevel;
   const character = characterAtLevel(byName(data.characters, ref.character, 'Personagem'), level, data.levels);
+  const weapon: Weapon = ref.weapon === NO_WEAPON
+    ? { id: 0, name: NO_WEAPON, namePt: NO_WEAPON, type: character.weapon, rarity: 1, baseAtk: 0, substat: null, passive: null }
+    : byName(data.weapons, ref.weapon, 'Arma');
   const weaponEffect = effects.weapons.find((w) => w.weapon === weapon.name);
-  const real = ref.pieces?.length ? buildFromPieces(ref.pieces, character.element, data.artifacts.map((a) => a.name)) : undefined;
+  const real = ref.pieces?.length
+    ? buildFromPieces(ref.pieces, character.element, data.artifacts.map((a) => a.name))
+    : ref.noArtifacts ? { stats: {}, primarySet: undefined, secondarySet: undefined, fourPiece: false } : undefined;
   const primarySet = setOf(real ? real.primarySet : ref.primarySet);
   const secondarySet = setOf(real ? real.secondarySet : ref.secondarySet);
   const fourPiece = real ? real.fourPiece : ref.fourPiece;

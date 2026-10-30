@@ -126,7 +126,7 @@ export function BuildStrip({ data, index, member: memberRef, projectId, compact,
   const acts = (editBtn: boolean) => (
     <span className="pc-gearacts">
       {memberRef.pieces ? (
-        <button type="button" className={compact ? "dz-btn" : "dz-btn sm"} onClick={() => update(index, { pieces: undefined, piecesChoice: 'generic' })} title="Volta ao build genérico (rolls e main stats)">Voltar ao build genérico</button>
+        <button type="button" className={compact ? "dz-btn" : "dz-btn sm"} onClick={() => update(index, { pieces: undefined, piecesChoice: 'generic', noArtifacts: undefined })} title="Volta ao build genérico (rolls e main stats)">Voltar ao build genérico</button>
       ) : inventoryPieces ? (
         <button type="button" className={compact ? "dz-btn" : "dz-btn sm"} onClick={() => update(index, { pieces: inventoryPieces, piecesChoice: undefined })} title="Usa as 5 peças que ele tem equipadas no inventário importado">Usar as peças dele do inventário</button>
       ) : null}

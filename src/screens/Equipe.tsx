@@ -19,7 +19,7 @@ import { WeaponPickerDialog } from './personagem/WeaponPicker';
 import { downloadProject } from '../features/rotation/importFile';
 import { cloneProject, saveProject } from '../features/rotation/persistence';
 import { useRotationStore } from '../features/rotation/store';
-import { defaultMember } from '../features/rotation/teamOps';
+import { nakedMember } from '../features/rotation/teamOps';
 import { configChips, givenBuffs, keyStats, mainReaction, mainsText, receivedBuffCount, roleOf, setPiecesText } from '../features/team/teamModel';
 import { norm } from '../features/good/goodImport';
 import { formatDecimal, formatInt, formatPercent } from '../ui/format';
@@ -113,7 +113,7 @@ export default function Equipe() {
 
   const pick = (name: string) => {
     try {
-      const ref = defaultMember(name, data.game);
+      const ref = nakedMember(name, data.game);
       if (picker?.mode === 'replace') replaceMember(picker.index, ref);
       else addMember(ref);
       setError(null);

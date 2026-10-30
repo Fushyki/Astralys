@@ -7,7 +7,7 @@ import type { Move } from '../../data/schema';
 import type { GameData, MemberRef, RotationProject } from '../../engine';
 import { newProjectId, sampleProject } from './persistence';
 import { addAction } from './projectOps';
-import { defaultMember } from './teamOps';
+import { nakedMember } from './teamOps';
 
 export type RotationStart = 'basic' | 'blank';
 
@@ -44,7 +44,7 @@ export function buildNewTeam(input: NewTeamInput, game: Pick<GameData, 'characte
     name: (input.name?.trim() || defaultTeamName(names)).slice(0, MAX_START_NAME),
     gameVersion: input.gameVersion ?? '',
     compat: 'none',
-    members: names.map((n) => input.builds?.[n] ?? defaultMember(n, game)),
+    members: names.map((n) => input.builds?.[n] ?? nakedMember(n, game)),
     extras: [],
     flatStacks: {},
     actions: [],

@@ -19,6 +19,7 @@ export function deltaChips(d: StatDelta): string[] {
   const out: string[] = [];
   if (d.atkPct) out.push(`${pct(d.atkPct)} ATK`);
   if (d.atkFlat) out.push(`ATK fixo +${formatInt(d.atkFlat)}`);
+  if (d.atkBaseFlat) out.push(`ATK base +${formatInt(d.atkBaseFlat)}`);
   if (d.hpPct) out.push(`${pct(d.hpPct)} HP`);
   if (d.defPct) out.push(`${pct(d.defPct)} DEF`);
   if (d.em) out.push(`${d.em > 0 ? '+' : '−'}${formatInt(Math.abs(d.em))} EM`);
@@ -29,6 +30,8 @@ export function deltaChips(d: StatDelta): string[] {
   for (const [type, v] of Object.entries(d.dmgByType ?? {})) if (v) out.push(`${pct(v)} DMG ${TYPE_LABEL[type] ?? type}`);
   if (d.meltBonus) out.push(`${pct(d.meltBonus)} Derreter`);
   if (d.vaporizeBonus) out.push(`${pct(d.vaporizeBonus)} Vaporizar`);
+  for (const [el, v] of Object.entries(d.resShred ?? {})) if (v) out.push(`RES ${el} do inimigo −${formatDecimal(v * 100, 0)}%`);
+  if (d.defShred) out.push(`DEF do inimigo −${formatDecimal(d.defShred * 100, 0)}%`);
   return out;
 }
 

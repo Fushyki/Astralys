@@ -108,6 +108,20 @@ interface CondProps {
   /** Stacks escolhidos (undefined = o máximo) e como mudar, se o buff tem stacks. */
   chosen?: number;
   onStacks?: (n: number) => void;
+  /** Stats finais do dono (para mostrar quanto vale o dano fixo na build atual). */
+  stats?: { atk: number; hp: number; def: number; em: number };
+}
+
+const FLAT_STAT = { ATK: ['atk', 'do ATK'], HP: ['hp', 'do HP'], DEF: ['def', 'da DEF'], EM: ['em', 'da Maestria'], BaseATK: ['atk', 'do ATK base'] } as const;
+
+/** Linhas do dano fixo do buff: "120% do ATK" e, com os stats do dono, o valor por golpe na build atual. */
+function flatRows(buff: CharacterBuff, stats?: CondProps['stats']): { name: string; value: string }[] {
+  return (buff.flat ?? []).map((f) => {
+    const [key, of] = FLAT_STAT[f.sourceStat];
+    const base = `${formatDecimal(f.perPoint * 100, 1).replace(/,0$/, '')}% ${of}`;
+    const now = stats && f.sourceStat !== 'BaseATK' ? Math.min(f.perPoint * stats[key], f.capPerHit ?? Infinity) : undefined;
+    return { name: f.name, value: now === undefined ? base : `${base} ≈ ${formatInt(now)}` };
+  });
 }
 
 /** Id do motor do buff do personagem: fonte estática (só dele, sempre) ou buff de time (faixa/regra). */
@@ -116,13 +130,13 @@ function toggleIdOf(index: number, b: CharacterBuff): string {
 }
 
 /** Condição: caixa dourada com o checkbox, o texto, o valor em destaque e os efeitos que ela dá. */
-function Condition({ buff, index, constellation, disabled, chips, onToggle, chosen, onStacks }: CondProps) {
+function Condition({ buff, index, constellation, disabled, chips, onToggle, chosen, onStacks, stats }: CondProps) {
   const id = toggleIdOf(index, buff);
   const locked = buff.minConstellation > constellation;
   const active = !locked && !disabled.includes(id);
   const fallback = buff.stats ? deltaChips(characterBuffDelta(scaleBuffStacks(buff, chosen).stats, !!buff.forElements)) : [];
   const n = stacksOf(buff, chosen);
-  const rows = ratio((chips.length ? chips : fallback).map(splitChip));
+  const rows = ratio([...(chips.length ? chips : fallback).map(splitChip), ...flatRows(buff, stats)]);
   return (
     <div className="tl-cond" data-active={active} data-locked={locked}>
       <label>
@@ -206,7 +220,7 @@ export function TalentsPanel({ v, index }: { v: ProjectView; index: number }) {
   if (!tl) return <p className="note" role="status">Carregando os textos dos talentos…</p>;
 
   const conds = (pred: (b: CharacterBuff) => boolean) =>
-    buffs.filter(pred).map((b) => <Condition key={b.id} buff={b} index={index} constellation={constellation} disabled={disabled} chips={chipsOf(b)} onToggle={setSourceEnabled} chosen={ref.stacks?.[b.stacks?.of ?? b.id]} onStacks={(n) => updateMember(index, { stacks: { ...ref.stacks, [b.stacks?.of ?? b.id]: n } })} />);
+    buffs.filter(pred).map((b) => <Condition key={b.id} buff={b} index={index} constellation={constellation} disabled={disabled} chips={chipsOf(b)} stats={v.bundle.memberStats[index]} onToggle={setSourceEnabled} chosen={ref.stacks?.[b.stacks?.of ?? b.id]} onStacks={(n) => updateMember(index, { stacks: { ...ref.stacks, [b.stacks?.of ?? b.id]: n } })} />);
   const noteOf = (src: string) => notes.find((n) => n.src === src);
   const valueOf = (l: MoveLine) => `${l.hits > 1 ? `${l.hits}× ` : ''}${formatInt(l[crit])}`;
   const rowsOf = (lines: MoveLine[]) => lines.map((l) => ({ key: l.id, name: l.name, value: valueOf(l), tone: damageColor(l.element, l.special), special: l.special }));

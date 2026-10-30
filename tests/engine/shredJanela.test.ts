@@ -46,3 +46,10 @@ describe('redução de RES/DEF com duração', () => {
     expect(outside.defShred).toBe(0);
   });
 });
+
+describe('chips dos buffs novos', () => {
+  it('mostram ATK base e a redução de RES/DEF em janela', async () => {
+    const { deltaChips } = await import('../../src/features/team/teamModel');
+    expect(deltaChips({ atkBaseFlat: 200, defShred: 0.2, resShred: { Pyro: 0.2 } })).toEqual(['ATK base +200', 'RES Pyro do inimigo −20%', 'DEF do inimigo −20%']);
+  });
+});

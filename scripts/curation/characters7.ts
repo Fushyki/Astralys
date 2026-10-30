@@ -32,7 +32,7 @@ export const CHARACTERS_11: Record<string, BuffCuration[]> = {
   ],
   Bennett: [
     { id: 'c1', label: 'Bennett C1', src: 'const1', scope: 'team', timed: true, convert: { from: 'baseAtk', perPoint: { p: 0 }, to: ['atkFlat'] }, expect: "additional 20% of Bennett's Base ATK", note: 'ATK fixo extra de 20% do ATK base dele dentro do Fantastic Voyage: ligue na janela do Supremo (sem a restrição de HP).' },
-    { id: 'c6', label: 'Bennett C6', src: 'const6', scope: 'team', timed: true, stats: { dmgPct: { p: 0 } }, expect: 'gain a 15% Pyro DMG Bonus', note: '+15% de DMG Pyro de quem usa espada, montante ou lança dentro do Supremo: ligue só em quem se aplica. A infusão Pyro dos Normais não entra.' },
+    { id: 'c6', label: 'Bennett C6', src: 'const6', scope: 'team', timed: true, forElements: ['Pyro'], stats: { dmgPct: { p: 0 } }, expect: 'gain a 15% Pyro DMG Bonus', note: '+15% de DMG Pyro de quem está dentro do Supremo (só personagens Pyro recebem): ligue na janela. A infusão Pyro de quem usa espada, montante ou lança não entra, então um não Pyro com essas armas fica sem o bônus.' },
   ],
   Ganyu: [
     { id: 'c4', label: 'Ganyu C4', src: 'const4', scope: 'team', timed: true, stats: { dmgPct: { lit: 0.25 } }, expect: 'up to a maximum of 25%', note: 'Assume o DMG recebido pelo inimigo no máximo (+25%) dentro da área da Chuva Celestial: ligue na janela. Entra como DMG% da equipe.' },

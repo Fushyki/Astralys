@@ -38,6 +38,7 @@ import { CHARACTER_NOTES } from './curation/charnotes';
 import { CHARACTER_PROCS, CHARACTERS_PROC_BUFFS } from './curation/procs';
 import { FACTIONS as LUNAR_FACTIONS, LUNAR_BUFFS, LUNAR_PROCS as MOON_PROCS, SPECIAL_MOVES as MOON_SPECIAL } from './curation/lunar';
 import { EXTRA_BUFFS, EXTRA_FACTIONS, EXTRA_PROCS, EXTRA_SPECIAL } from './curation/extras';
+import { PILOTO_BUFFS, PILOTO_NOTES, PILOTO_PROCS } from './curation/piloto-personagens';
 
 /** Junta listas por personagem de vários arquivos de curadoria. */
 const mergeLists = <T>(...all: Record<string, T[]>[]): Record<string, T[]> => {
@@ -46,12 +47,18 @@ const mergeLists = <T>(...all: Record<string, T[]>[]): Record<string, T[]> => {
   return out;
 };
 const FACTIONS = mergeLists(LUNAR_FACTIONS, EXTRA_FACTIONS);
-const LUNAR_PROCS = mergeLists(MOON_PROCS, EXTRA_PROCS);
+const LUNAR_PROCS = mergeLists(MOON_PROCS, EXTRA_PROCS, PILOTO_PROCS);
+// Notas do piloto por agente: sobrepõem as dos lotes antigos (`null` apaga).
+for (const [name, list] of Object.entries(PILOTO_NOTES)) {
+  const cur: Record<string, unknown> = { ...(CHARACTER_NOTES[name] ?? {}) };
+  for (const [src, n] of Object.entries(list)) { if (n === null) delete cur[src]; else cur[src] = n; }
+  CHARACTER_NOTES[name] = cur as (typeof CHARACTER_NOTES)[string];
+}
 const SPECIAL_MOVES = mergeLists(MOON_SPECIAL, EXTRA_SPECIAL);
 
 /** Junta os lotes: o mesmo personagem pode aparecer em mais de um e as listas se somam. */
 const CHARACTER_BUFFS: Record<string, BuffCuration[]> = {};
-for (const batch of [CHARACTERS_1, CHARACTERS_2, CHARACTERS_3, CHARACTERS_4, CHARACTERS_5, CHARACTERS_6, CHARACTERS_7, CHARACTERS_8, CHARACTERS_9, CHARACTERS_10, CHARACTERS_11, CHARACTERS_12, CHARACTERS_13, CHARACTERS_14, CHARACTERS_15, CHARACTERS_16, CHARACTERS_PROC_BUFFS, LUNAR_BUFFS, EXTRA_BUFFS]) {
+for (const batch of [CHARACTERS_1, CHARACTERS_2, CHARACTERS_3, CHARACTERS_4, CHARACTERS_5, CHARACTERS_6, CHARACTERS_7, CHARACTERS_8, CHARACTERS_9, CHARACTERS_10, CHARACTERS_11, CHARACTERS_12, CHARACTERS_13, CHARACTERS_14, CHARACTERS_15, CHARACTERS_16, CHARACTERS_PROC_BUFFS, LUNAR_BUFFS, EXTRA_BUFFS, PILOTO_BUFFS]) {
   for (const [name, list] of Object.entries(batch)) CHARACTER_BUFFS[name] = [...(CHARACTER_BUFFS[name] ?? []), ...list];
 }
 

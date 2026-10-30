@@ -135,7 +135,7 @@ export const LOTE: Lote = {
     },
     Nicole: {
       p1: x('Entram +300 de ATK dos aliados observados (janela). O tempo de observação (3 s) e o Hexerei imediato dependem de você ligar a janela no instante certo.'),
-      p2: x('Hipótese: o A4 faz o Grace dela virar Guidance of Theosis (+300 de ATK, buff "Nicole A4") por 8 s.'),
+      p2: x('Pendente: o A4 faz o Grace dela virar Guidance of Theosis por 8 s, mas o texto não diz o ATK que ela mesma ganha; não entra.'),
       p3: u('Só exploração (Treasure Compass).'),
       p4: x('Hexerei: Secret Rite (+300% do ATK da Nicole nas Arcane Projections dos Hexerei) não entra: a Arcane Projection é golpe de outro personagem com o ATK dele.'),
       const1: x('A Arcane Projection: Unity (600% do ATK do personagem ativo, a cada 6 s) não entra: o golpe usa o ATK de outro personagem, não o da Nicole.'),

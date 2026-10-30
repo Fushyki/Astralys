@@ -7,7 +7,7 @@ import { withStacks } from './stacks';
 import { z } from 'zod';
 import { ElementSchema, type ArtifactSet, type Character, type Move, type Talent, type Weapon } from '../data/schema';
 import { characterAtLevel, type LevelsData } from '../data/levels';
-import { planilhaEffect } from './compat/planilha';
+import { planilhaEffect, planilhaWeapon } from './compat/planilha';
 import { activeCharacterBuffs } from './stats';
 import { applyHitLimits } from './hitLimits';
 import { assembleTeam } from './team';
@@ -556,7 +556,8 @@ export function factionsOf(chosen: readonly ('moonsign' | 'hexerei')[] | undefin
   return chosen === undefined ? list.filter((f) => f === 'moonsign') : list.filter((f) => chosen.includes(f));
 }
 
-export function resolveMember(ref: MemberRef, data: GameData, effects: EffectsData, minRolls = 0, defaultLevel = 90): MemberInput {
+/** `planilha`: o projeto está no modo planilha (a arma leva o extra de Nightsoul fixo; ver `planilhaWeapon`). */
+export function resolveMember(ref: MemberRef, data: GameData, effects: EffectsData, minRolls = 0, defaultLevel = 90, planilha = false): MemberInput {
   const setOf = (name?: string) => (name ? { name, effect: effects.sets.find((s) => s.set === name) } : undefined);
   const level = ref.level ?? defaultLevel;
   const character = characterAtLevel(byName(data.characters, ref.character, 'Personagem'), level, data.levels);
@@ -586,7 +587,7 @@ export function resolveMember(ref: MemberRef, data: GameData, effects: EffectsDa
     weapon,
     characterEffect,
     reacted: ref.reacted,
-    weaponEffect,
+    weaponEffect: planilha ? planilhaWeapon(weaponEffect) : weaponEffect,
     primarySet,
     secondarySet,
     fourPiece,
@@ -755,7 +756,7 @@ function withoutPlanilhaSeed(m: MemberInput): MemberInput {
 export function finalizeMembers(members: MemberInput[], planilha: boolean): MemberInput[] {
   return applyTeamRules(members).map((m) =>
     planilha
-      ? m.characterEffect && !m.characterEffect.fonte_info.includes('scripts/curation/') ? { ...m, characterEffect: planilhaEffect(m.characterEffect) } : m
+      ? { ...(m.characterEffect && !m.characterEffect.fonte_info.includes('scripts/curation/') ? { ...m, characterEffect: planilhaEffect(m.characterEffect) } : m), weaponEffect: planilhaWeapon(m.weaponEffect) }
       : withoutPlanilhaSeed(m),
   );
 }

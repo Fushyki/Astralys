@@ -8,11 +8,13 @@ import type { GearCur } from './gear';
 export const PILOTO_ARMAS: Record<string, GearCur> = {
   // Antes: entrada da planilha (R1 em Nightsoul valendo para todo refino: 49% ATK / 35% CD também no R5).
   'A Thousand Blazing Suns': {
-    // x 1,75 = 1 + os 75% do Nightsoul Blessing (parâmetro 2 do Lunaris); o gabarito da planilha (49% / 35% no R1) depende dele.
-    atkPct: { p: 1, x: 1.75 },
-    critDmg: { p: 0, x: 1.75 },
+    atkPct: { p: 1 },
+    critDmg: { p: 0 },
+    buffs: [
+      { id: 'nightsoul', label: 'Bênção do Espírito da Noite (+75%)', timed: true, stats: { atkPct: { p: 1, x: 0.75 }, critDmg: { p: 0, x: 0.75 } } },
+    ],
     expect: 'Scorching Brilliance',
-    note: 'Assume Scorching Brilliance sempre ativo (habilidade ou Supremo, 6 s, 1 vez a cada 10 s) E o dono em Nightsoul Blessing (x1,75): +49% ATK e +35% Dano Crítico no R1 (28% e 20% x 1,75), como a planilha, agora por refinamento. Fora da Nightsoul os valores são 1/1,75 disso. A extensão de 2 s por Normal/Carregado e o contador que não corre fora de campo NÃO entram. Não é faixa na linha do tempo: o gabarito da planilha exige o valor fixo.',
+    note: 'Base: Scorching Brilliance sempre ativo (habilidade ou Supremo, 6 s, 1 vez a cada 10 s): +28% ATK e +20% Dano Crítico no R1. Com o dono em Nightsoul Blessing os efeitos sobem 75% (parâmetro 2): o buff "Bênção do Espírito da Noite" soma esse extra (+21% ATK e +15% CD no R1) e o usuário decide quando ele vale. A extensão de 2 s por Normal/Carregado e o contador que não corre fora de campo NÃO entram. No modo planilha o extra vale o tempo todo (o gabarito dela assume Nightsoul).',
   },
   // Antes: 0,0000108 (R1) na equipe, dez vezes menos que 30% de 0,036%/ponto.
   "Xiphos' Moonlight": {

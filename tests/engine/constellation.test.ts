@@ -74,7 +74,7 @@ describe('constelações e níveis de talento', () => {
     const cands = [0, 3].map((c) => ({
       weapon: project.members[0].weapon,
       constellation: c,
-      team: { ...resolved.team, members: resolved.team.members.map((m, i) => (i === 0 ? resolveMember({ ...project.members[0], constellation: c || undefined }, game, effects, project.config.minRollsPerSubstat) : m)) },
+      team: { ...resolved.team, members: resolved.team.members.map((m, i) => (i === 0 ? resolveMember({ ...project.members[0], constellation: c || undefined }, game, effects, project.config.minRollsPerSubstat, undefined, true) : m)) },
     }));
     const rows = compareWeapons({ member: 0, candidates: cands, actions: resolved.actions, flatEffects: resolved.flatEffects, ampCoefficient: resolved.ampCoefficient });
     const get = (c: number) => rows.find((r) => r.constellation === c)!.teamAvg;

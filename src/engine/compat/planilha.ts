@@ -9,7 +9,7 @@
  */
 import type { WorkBook, WorkSheet } from 'xlsx';
 import type { Talent } from '../../data/schema';
-import type { FlatDamageEffect } from '../../effects/schema';
+import type { FlatDamageEffect, WeaponEffect } from '../../effects/schema';
 import { AMP_EM_COEFFICIENT_SHEET } from '../constants/reactions';
 import type { Rarity, PieceSlot } from '../artifacts';
 import type { ExtraScale, ReactionChoice, ResolvedMove, RotationAction } from '../rotation';
@@ -72,6 +72,21 @@ function rarityOf(v: unknown): Rarity {
   return v === 4 || v === false || String(v) === '4' ? 4 : 5;
 }
 
+/**
+ * A planilha assume o dono em Nightsoul: o extra de +75% da A Thousand Blazing Suns (buff `nightsoul`, uma janela no modo normal)
+ * entra somado ao ATK e ao Dano Crítico fixos da arma, como ela faz.
+ */
+export function planilhaWeapon(effect: WeaponEffect | undefined): WeaponEffect | undefined {
+  if (!effect?.refinements?.some((r) => r.buffs.some((b) => b.id === 'nightsoul'))) return effect;
+  return {
+    ...effect,
+    refinements: effect.refinements.map((r) => {
+      const extra = r.buffs.find((b) => b.id === 'nightsoul')?.stats;
+      return { ...r, atkPct: r.atkPct + (extra?.atkPct ?? 0), critDmg: r.critDmg + (extra?.critDmg ?? 0), buffs: r.buffs.filter((b) => b.id !== 'nightsoul') };
+    }),
+  } as WeaponEffect;
+}
+
 /** A planilha só conhece os efeitos dela: as passivas e constelações curadas depois (`buffs`) ficam de fora no modo compat. */
 export function planilhaEffect<T extends { buffs?: unknown[] } | undefined>(effect: T): T {
   return effect ? ({ ...effect, buffs: [] } as T) : effect;
@@ -130,7 +145,7 @@ export function importPlanilha(wb: WorkBook, data: GameData, effects: EffectsDat
       character: findByName(data.characters, name, 'Personagem'),
       weapon: findByName(data.weapons, weaponName, 'Arma'),
       characterEffect: planilhaEffect(effects.characters.find((c) => c.character === name)),
-      weaponEffect: effects.weapons.find((w) => w.weapon === weaponName),
+      weaponEffect: planilhaWeapon(effects.weapons.find((w) => w.weapon === weaponName)),
       primarySet: setOf(`${col}6`),
       secondarySet: setOf(`${col}7`),
       artifacts: {

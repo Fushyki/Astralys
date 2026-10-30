@@ -47,6 +47,9 @@ describe('GO: Supremo da Mavuika de ponta a ponta (1.516.981)', () => {
     const project = (res.project ?? res) as ReturnType<typeof sampleProject>;
     project.members[0] = { ...project.members[0], stacks: { ...(project.members[0].stacks ?? {}), a4: 10 } };
     const a4 = project.buffWindows.find((w) => w.tag === 'label:Mavuika A4')!;
+    // O GO assume o dono em Nightsoul: o extra de +75% da arma vira uma janela cobrindo a rotação.
+    project.enabled = [...(project.enabled ?? []), 'cbuff-0-arma:nightsoul']; // projeto com fontes de gear escolhidas à mão
+    project.buffWindows.push({ id: 'w-nightsoul', tag: 'label:A Thousand Blazing Suns: Bênção do Espírito da Noite (+75%)', start: 0, end: 30 });
     a4.start = 8.9;
     a4.end = 18.9;
     const r = resolveProject(project, game, effects);

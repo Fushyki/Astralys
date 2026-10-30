@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { weaponStatsAt } from '../../src/effects/schema';
 import { analyzeProject, resolveProject, type EffectsData, type GameData } from '../../src/engine';
 import type { RotationProject } from '../../src/engine/project';
+import { planilhaWeapon } from '../../src/engine/compat/planilha';
 import { sampleProject } from '../../src/features/rotation/persistence';
 
 const root = path.resolve(__dirname, '../..');
@@ -25,13 +26,17 @@ const buff = (p: RotationProject, id: string) => resolveProject(p, game, effects
 const bennett = sampleProject().members.findIndex((m) => m.character === 'Bennett');
 
 describe('piloto de armas: valores por refinamento no cálculo', () => {
-  it('A Thousand Blazing Suns: Dano Crítico e ATK em Nightsoul (x1,75), R1 = 35%/49% e R5 = 70%/98%', () => {
-    const a = stats(project('A Thousand Blazing Suns', 1));
-    const b = stats(project('A Thousand Blazing Suns', 5));
-    expect(b.critDmg - a.critDmg).toBeCloseTo(0.7 - 0.35, 9);
-    expect(b.atk).toBeGreaterThan(a.atk);
+  it('A Thousand Blazing Suns: base 28%/20% (R1) sempre; Nightsoul liga um extra de +75% (21%/15%); planilha soma os dois (49%/35%)', () => {
     const w = (r: number) => weaponStatsAt(resolveProject(project('A Thousand Blazing Suns', r), game, effects).team.members[0].weaponEffect!, r);
-    expect([w(1).atkPct, w(5).atkPct]).toEqual([0.49, 0.98]);
+    expect([w(1).atkPct, w(1).critDmg]).toEqual([0.28, 0.2]);
+    expect([w(5).atkPct, w(5).critDmg]).toEqual([0.56, 0.4]);
+    const extra = (r: number) => w(r).buffs.find((x) => x.id === 'nightsoul')!;
+    expect(extra(1).timed).toBe(true);
+    expect([extra(1).stats!.atkPct, extra(1).stats!.critDmg]).toEqual([0.21, 0.15]);
+    const fold = (r: number) => weaponStatsAt(planilhaWeapon(w(r) && resolveProject(project('A Thousand Blazing Suns', r), game, effects).team.members[0].weaponEffect)!, r);
+    expect([fold(1).atkPct, fold(1).critDmg]).toEqual([0.49, 0.35]);
+    expect([fold(5).atkPct, fold(5).critDmg]).toEqual([0.98, 0.7]);
+    expect(fold(1).buffs.some((x) => x.id === 'nightsoul')).toBe(false);
   });
 
   it('Calamity Queller: DMG elemental 12% -> 24% e ATK por stack 3,2% -> 6,4% (6 stacks; 3 stacks = metade)', () => {

@@ -65,7 +65,7 @@
 .tl-cond[data-locked='true'] { opacity: .6; }
 .tl-cond > label { display: flex; align-items: center; gap: var(--sp-3); padding: var(--sp-2) var(--sp-3); background: #211b0c; border-bottom: 1px solid #3a3016; cursor: pointer; }
 .tl-cond[data-locked='true'] > label { cursor: not-allowed; }
-.tl-cond input { width: var(--ico-1); height: var(--ico-1); accent-color: var(--gold); }
+.tl-cond input[type="checkbox"] { width: var(--ico-1); height: var(--ico-1); accent-color: var(--gold); }
 .tl-cond .txt { flex: 1; min-width: 0; font-size: var(--fs-1); line-height: 1.35; color: #f8de9e; }
 .tl-cond[data-active='false'] .txt { color: var(--muted); text-decoration: line-through; }
 .tl-cond[data-active='false'] .dz-badge { opacity: .45; }

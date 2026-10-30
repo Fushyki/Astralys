@@ -81,7 +81,7 @@
 .eq-buffs .bcard[data-active='true'] { border-color: color-mix(in srgb, var(--good) 55%, var(--border)); background: color-mix(in srgb, var(--good) 9%, var(--bg-header)); }
 .eq-buffs .bcard[data-active='false'] .bc-n { color: var(--muted); text-decoration: line-through; }
 .eq-buffs .bcard[data-locked='true'] { cursor: not-allowed; opacity: .6; }
-.eq-buffs .bcard input { width: 20px; height: 20px; margin: 2px 0 0; accent-color: var(--good); cursor: inherit; }
+.eq-buffs .bcard input[type="checkbox"] { width: 20px; height: 20px; margin: 2px 0 0; accent-color: var(--good); cursor: inherit; }
 .eq-buffs .bcard .bc-body { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 .eq-buffs .bcard .bc-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
 .eq-buffs .bcard .bc-n { font-weight: 600; font-size: 13px; line-height: 1.3; overflow-wrap: anywhere; }

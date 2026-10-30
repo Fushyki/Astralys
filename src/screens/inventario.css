@@ -51,3 +51,22 @@
 .inv-art .loc { flex: none; padding: 0 var(--sp-2); border-radius: var(--r-chip); background: #ffffff12; color: var(--text); }
 .inv-tools { gap: var(--sp-3); margin: var(--sp-5) 0 var(--sp-3); }
 .inv-tools select.dz-input { width: auto; min-width: 220px; flex: 0 1 260px; }
+
+/* Bases de dados e prévia da importação: linhas finas, sem caixas. */
+.inv-dbs ul { list-style: none; margin: 0; padding: 0; }
+.inv-dbs li { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 20px; padding: 12px 0 12px 16px; border-left: 1px solid var(--border-ctl-hi); border-bottom: 1px solid var(--border); }
+.inv-dbs li[data-active] { border-left: 2px solid var(--gold); }
+.inv-dbs .who { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.inv-dbs .nm { font: 700 22px var(--font-display); }
+.inv-dbs .nm .on { margin-left: 10px; font: 600 11px var(--font-display); font-style: normal; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); }
+.inv-dbs .sub { font-size: 13px; color: var(--muted); }
+.inv-dbs .acts { display: flex; flex-wrap: wrap; gap: 8px; }
+.inv-preview { display: flex; flex-direction: column; gap: 14px; padding-top: 14px; border-top: 1px solid var(--gold); }
+.inv-preview .row { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; }
+.inv-preview .dz-field { width: 260px; max-width: 100%; }
+.inv-diff { border-collapse: collapse; width: 100%; max-width: 640px; }
+.inv-diff th, .inv-diff td { padding: 8px 12px; text-align: right; border-bottom: 1px solid var(--border); font-size: 14px; }
+.inv-diff thead th { font: 600 12px var(--font-display); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.inv-diff tbody th { text-align: left; font: 700 16px var(--font-display); }
+.inv-diff td[data-warn] { color: var(--warn); font-weight: 600; }
+.inv-preview .opts { display: flex; flex-direction: column; gap: 8px; }

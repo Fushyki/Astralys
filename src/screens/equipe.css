@@ -109,3 +109,5 @@
 .bc-react button { min-height: var(--ctl-sm); padding: 0 var(--sp-2); border-radius: var(--r-ctl); border: 1px solid var(--border-ctl); background: var(--bg-header); color: var(--muted); font: inherit; cursor: pointer; }
 .bc-react button[aria-pressed='true'] { border-color: var(--c); color: var(--c); }
 .eq-card .react { display: flex; flex-direction: column; gap: var(--sp-2); margin-bottom: var(--sp-3); }
+.eq-db { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); font-size: 13px; }
+.eq-db select { width: auto; min-width: 140px; min-height: 40px; }

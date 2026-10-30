@@ -38,7 +38,7 @@ export default function ProjectLayout() {
     const loaded = loadProject(id);
     if (!loaded) return;
     // Com inventário importado, o projeto abre com as PEÇAS do usuário (e não com o build teórico).
-    const p = withInventoryPieces(loaded, loadGood());
+    const p = withInventoryPieces(loaded, loadGood(id));
     if (p !== loaded) saveProject(p);
     open(p);
   }, [id, open]);

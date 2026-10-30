@@ -35,6 +35,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   // ---- Inventário ----
   check('sem inventário, a tela oferece importar o arquivo', (await page.locator('button:has-text("Escolher arquivo")').count()) === 1);
   await page.setInputFiles('input[type=file]', FIXTURE);
+  await page.click('.inv-preview .dz-btn.gold');
   await page.waitForSelector('.inv-grid .inv-art');
   const counts = await page.textContent('.inv-import .opt.now b');
   check('importa o arquivo GOOD e mostra a contagem', /40 artefatos/.test(counts), counts);

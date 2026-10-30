@@ -167,3 +167,7 @@ Plano completo: `C:\Users\dabiv\.claude\plans\hashed-nibbling-island.md`. Strix 
 - **Rotação**: desligar um buff só para um golpe (`ActionRef.tagsOff`, lista em "Golpe selecionado"); dano de cada execução dos golpes contínuos; números do golpe (dano base, ATK, Proficiência, crítico, bônus, DEF e RES).
 - **Avançado**: clicar num golpe abre o cálculo do dano com a fonte de cada fator (`features/character/damageFormula.ts`).
 - **Otimizador**: `assembleTeam` uma vez por set e `StatsShare` em `evaluateRotation` (3 a 10× mais rápido).
+
+## Bases de dados do inventário (29/10/2026)
+- Como o "Base de Dados" do Genshin Optimizer: várias bases GOOD separadas no navegador (`features/good/goodStore.ts`: índice `astralys:bases`, dados `astralys:base:<id>`; o inventário antigo vira "Base 1"). Uma é a ativa (Personagens, Inventário); cada time fica ligado à base com que abriu (`astralys:base-dos-times`, fora do projeto), e a Equipe deixa trocar. `loadGood(projectId?)`.
+- Importar (`features/good/goodDiff.ts`, `screens/inventario/Bases.tsx`): prévia com novos, atualizados (artefato evoluído: mesmo set/posição/raridade/main, nível e substats maiores; arma por nível e refinamento), iguais e fora do arquivo; opções: atualizar existentes, apagar armas e artefatos fora do arquivo, apagar personagens fora do arquivo. Testes: `tests/features/goodDiff.test.ts`, `goodStore.test.ts` e `scripts/e2e/bases.cjs`.

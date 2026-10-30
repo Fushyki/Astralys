@@ -93,7 +93,7 @@ export function BuildStrip({ data, index, member: memberRef, projectId, compact,
   const refine = Math.min(5, Math.max(1, memberRef.refinement ?? 1));
   const substat = weapon?.substat ? `${weapon.substat.stat} ${formatDecimal(weapon.substat.value < 1 ? weapon.substat.value * 100 : weapon.substat.value, 1)}${weapon.substat.value < 1 ? '%' : ''}` : '';
   const real = memberRef.pieces?.length ? buildFromPieces(memberRef.pieces, character?.element ?? 'Pyro', data.game.artifacts.map((a) => a.name)) : undefined;
-  const good = loadGood();
+  const good = loadGood(projectId);
   const goodKey = good?.characters.find((c) => norm(c.key) === norm(memberRef.character))?.key ?? memberRef.character;
   /** As 5 peças que o personagem tem equipadas no inventário (se tiver todas). */
   const inventoryPieces: GoodArtifact[] | null = (() => {

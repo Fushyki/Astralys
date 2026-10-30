@@ -32,6 +32,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.evaluate(() => localStorage.clear());
   await page.reload({ waitUntil: 'networkidle' });
   await page.setInputFiles('input[type=file]', { name: 'otimizador.good.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(good)) });
+  await page.click('.inv-preview .dz-btn.gold');
   await page.waitForSelector('.inv-grid .inv-art');
   await page.goto(`${BASE}/projeto/exemplo/personagem/Mavuika?aba=otimizar`, { waitUntil: 'networkidle' });
   await page.waitForSelector('.ot-top');
@@ -176,6 +177,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.evaluate(() => localStorage.clear());
   await page.reload({ waitUntil: 'networkidle' });
   await page.setInputFiles('input[type=file]', { name: 'many.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(many)) });
+  await page.click('.inv-preview .dz-btn.gold');
   await page.waitForSelector('.inv-grid .inv-art');
   await page.goto(`${BASE}/projeto/exemplo/personagem/Mavuika?aba=otimizar`, { waitUntil: 'networkidle' });
   await page.waitForSelector('.ot-sets-wrap');

@@ -136,7 +136,7 @@ export function OtimizadorPanel({ index }: { index: number }) {
   const ref = project.members[index];
   const character = data.game.characters.find((c) => c.name === ref?.character);
 
-  const [good, setGood] = useState<Good | null>(() => loadGood());
+  const [good, setGood] = useState<Good | null>(() => loadGood(v.id));
   const key = storageKey(v.id, ref?.character ?? '');
   const erDefault = (() => {
     if (!ref) return null;
@@ -189,7 +189,7 @@ export function OtimizadorPanel({ index }: { index: number }) {
     setShowMore(false);
   }, [key]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
-    const refresh = () => setGood(loadGood());
+    const refresh = () => setGood(loadGood(v.id));
     window.addEventListener('focus', refresh);
     return () => window.removeEventListener('focus', refresh);
   }, []);

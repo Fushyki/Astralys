@@ -5,6 +5,7 @@ import { useProjectView } from '../app/ProjectContext';
 import { CharacterPickerDialog } from '../design/CharacterPickerDialog';
 import { Chip, StackedBar } from '../design/primitives';
 import { splashUrl } from './card/cardParts';
+import { activeDatabaseId, bindProject, databaseOfProject, listDatabases } from '../features/good/goodStore';
 import { pieceIconUrl, weaponIconUrl } from '../design/images';
 import { MAX_TEAM_SIZE, effectiveDuration, effectiveTalents, type MemberRef } from '../engine';
 import type { LoadedData } from '../features/rotation/data';
@@ -122,9 +123,14 @@ export default function Equipe() {
     }
   };
 
+  const databases = listDatabases();
+  const [dbId, setDbId] = useState<string | null>(() => databaseOfProject(v.id) ?? activeDatabaseId());
+
   const duplicate = () => {
     const copy = cloneProject(project);
     saveProject(copy);
+    const db = databaseOfProject(project.id);
+    if (db) bindProject(copy.id, db);
     navigate(`/projeto/${copy.id}`);
   };
 
@@ -141,6 +147,14 @@ export default function Equipe() {
           </div>
         </div>
         <div className="actions">
+          {databases.length > 1 && (
+            <label className="eq-db" title="Base de dados do inventário usada por este time">
+              <span>Base</span>
+              <select className="dz-input" value={dbId ?? ''} onChange={(e) => { bindProject(v.id, e.target.value); setDbId(e.target.value); }} aria-label="Base de dados deste time">
+                {databases.map((d) => <option key={d.id} value={d.id}>{d.name}</option>)}
+              </select>
+            </label>
+          )}
           <button type="button" className="dz-btn" onClick={duplicate}>Duplicar</button>
           <button type="button" className="dz-btn" onClick={() => downloadProject(project)} title="Baixa o projeto como arquivo do Astralys (.json)">Exportar</button>
           <Link className="dz-btn gold" to={`/projeto/${v.id}/rotacao`}>Editar rotação</Link>

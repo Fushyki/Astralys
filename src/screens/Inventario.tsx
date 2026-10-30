@@ -8,7 +8,8 @@ import { mainStatValue, pieceLevel } from '../engine';
 import { Chip, Segmented } from '../design/primitives';
 import { enkaToGood, mergeGood } from '../features/enka/enkaImport';
 import { norm, parseGood, type Good, type GoodArtifact } from '../features/good/goodImport';
-import { clearGood, loadGood, saveGood } from '../features/good/goodStore';
+import { activeDatabaseId, listDatabases, loadGood, saveGood } from '../features/good/goodStore';
+import { DatabaseList, ImportPreview } from './inventario/Bases';
 import { useGameData } from '../features/rotation/data';
 import { ONLINE_ENABLED } from '../online/config';
 import { fetchEnka } from '../online/enka';
@@ -28,6 +29,10 @@ type Who = 'todos' | 'livres' | 'equipados';
 export default function Inventario() {
   const { data } = useGameData();
   const [good, setGood] = useState<Good | null>(() => loadGood());
+  const [activeId, setActiveId] = useState<string | null>(() => activeDatabaseId());
+  const [pending, setPending] = useState<{ good: Good; name: string } | null>(null);
+  const refresh = () => { setGood(loadGood()); setActiveId(activeDatabaseId()); setShown(PAGE); };
+  const activeName = listDatabases().find((d) => d.id === activeId)?.name;
   const [tab, setTab] = useState<Tab>('artefatos');
   const [slots, setSlots] = useState<string[]>([]);
   const [set, setSet] = useState('');
@@ -50,10 +55,7 @@ export default function Inventario() {
     setError(null);
     setNotes([]);
     try {
-      const g = parseGood(JSON.parse(await f.text()));
-      if (!saveGood(g)) throw new Error('Não foi possível guardar o inventário: o armazenamento do navegador está cheio ou bloqueado.');
-      setGood(g);
-      setNotes([`Importado: ${g.artifacts.length} artefatos, ${g.weapons.length} armas e ${g.characters.length} personagens.`]);
+      setPending({ good: parseGood(JSON.parse(await f.text())), name: f.name });
     } catch (e) {
       setError(e instanceof SyntaxError ? 'O arquivo não é um JSON válido.' : e instanceof Error ? e.message : String(e));
     }
@@ -78,7 +80,7 @@ export default function Inventario() {
       } catch {
         /* sem armazenamento: o UID não fica lembrado */
       }
-      setGood(merged);
+      refresh();
       setNotes([`${r.nickname ? `${r.nickname} (UID ${r.uid})` : `UID ${r.uid}`}: ${r.characters.length} personagens da vitrine (${r.characters.join(', ')}).`, ...r.notes]);
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
@@ -110,7 +112,7 @@ export default function Inventario() {
       <main className="dz-page inv">
         <section className="inv-hero">
           <div>
-            <span className="k">{good ? 'Artefatos' : 'Inventário'}</span>
+            <span className="k">{good ? `Artefatos${activeName ? ` · ${activeName}` : ''}` : 'Inventário'}</span>
             <b className={`big${good ? ' num' : ' txt'}`}>{good ? formatInt(good.artifacts.length) : 'Suas peças'}</b>
           </div>
           {good ? (
@@ -136,8 +138,10 @@ export default function Inventario() {
           )}
         </section>
 
+        <DatabaseList activeId={activeId} onChange={refresh} />
+
         <section className="inv-imp" aria-label={good ? 'Inventário importado' : 'Importar'}>
-          <h2 className="inv-h">{good ? 'Atualizar inventário' : 'Importar'}</h2>
+          <h2 className="inv-h">{good ? 'Importar para uma base' : 'Importar'}</h2>
           <div className="inv-import">
             <div className="opt">
               <b>Arquivo do Genshin Optimizer</b>
@@ -160,7 +164,6 @@ export default function Inventario() {
                 <b>{formatInt(good.artifacts.length)} artefatos · {formatInt(good.weapons.length)} armas · {formatInt(good.characters.length)} personagens</b>
                 <div className="row">
                   <Link className="dz-btn gold" to="/otimizador">Otimizar um time</Link>
-                  <button type="button" className="dz-btn" onClick={() => { clearGood(); setGood(null); setNotes([]); }}>Apagar do navegador</button>
                 </div>
               </div>
             )}
@@ -168,6 +171,16 @@ export default function Inventario() {
           {error && <p className="dz-error" role="alert">{error}</p>}
           {notes.map((n) => <p key={n} className="note">{n}</p>)}
         </section>
+
+        {pending && (
+          <ImportPreview
+            incoming={pending.good}
+            fileName={pending.name}
+            activeId={activeId}
+            onCancel={() => setPending(null)}
+            onDone={(msg) => { setPending(null); refresh(); setNotes([msg]); }}
+          />
+        )}
 
         {good && (
           <>

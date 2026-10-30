@@ -1,15 +1,5 @@
 [
   {
-    "weapon": "A Thousand Blazing Suns",
-    "atkPct": 0.49,
-    "dmgPct": 0,
-    "critRate": 0,
-    "critDmg": 0.35,
-    "em": 0,
-    "er": 0,
-    "fonte_info": "planilha Mavuika_Iansan_Combo2, aba \"Armas (efeitos)\". R1 em Nightsoul (×1,75): 28%→49% ATK, 20%→35% CD."
-  },
-  {
     "weapon": "Engulfing Lightning",
     "atkPct": 0,
     "dmgPct": 0,
@@ -15135,7 +15125,7 @@
         "convert": {
           "from": "em",
           "source": "self",
-          "perPoint": 0.000011,
+          "perPoint": 0.000108,
           "threshold": 0,
           "to": [
             "er"
@@ -15185,7 +15175,7 @@
             "convert": {
               "from": "em",
               "source": "self",
-              "perPoint": 0.000011,
+              "perPoint": 0.000108,
               "threshold": 0,
               "to": [
                 "er"
@@ -15234,7 +15224,7 @@
             "convert": {
               "from": "em",
               "source": "self",
-              "perPoint": 0.000014,
+              "perPoint": 0.000135,
               "threshold": 0,
               "to": [
                 "er"
@@ -15283,7 +15273,7 @@
             "convert": {
               "from": "em",
               "source": "self",
-              "perPoint": 0.000016,
+              "perPoint": 0.000162,
               "threshold": 0,
               "to": [
                 "er"
@@ -15332,7 +15322,7 @@
             "convert": {
               "from": "em",
               "source": "self",
-              "perPoint": 0.000019,
+              "perPoint": 0.000189,
               "threshold": 0,
               "to": [
                 "er"
@@ -15381,7 +15371,7 @@
             "convert": {
               "from": "em",
               "source": "self",
-              "perPoint": 0.000022,
+              "perPoint": 0.000216,
               "threshold": 0,
               "to": [
                 "er"
@@ -15394,8 +15384,8 @@
         "procs": []
       }
     ],
-    "note": "Recarga = 0,036% (R1) por ponto de Maestria, sempre ativa; a equipe recebe 30% disso nas janelas de buff.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "note": "Recarga = 0,036% (R1) por ponto de Maestria do dono, sempre ativa (renova a cada 10 s por 12 s); a equipe recebe 30% disso (0,0108% por ponto no R1) nas janelas de buff. Várias cópias da arma somando não entram.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/piloto-armas.ts."
   },
   {
     "atkPct": 0,
@@ -19177,7 +19167,7 @@
             "timed": false,
             "stats": {
               "atkPct": 0,
-              "dmgPct": 0.2,
+              "dmgPct": 0.25,
               "critRate": 0,
               "critDmg": 0,
               "em": 0,
@@ -19242,7 +19232,7 @@
             "timed": false,
             "stats": {
               "atkPct": 0,
-              "dmgPct": 0.2,
+              "dmgPct": 0.3,
               "critRate": 0,
               "critDmg": 0,
               "em": 0,
@@ -19307,7 +19297,7 @@
             "timed": false,
             "stats": {
               "atkPct": 0,
-              "dmgPct": 0.2,
+              "dmgPct": 0.35,
               "critRate": 0,
               "critDmg": 0,
               "em": 0,
@@ -19372,7 +19362,7 @@
             "timed": false,
             "stats": {
               "atkPct": 0,
-              "dmgPct": 0.2,
+              "dmgPct": 0.4,
               "critRate": 0,
               "critDmg": 0,
               "em": 0,
@@ -19419,8 +19409,8 @@
         "procs": []
       }
     ],
-    "note": "Assume os 2 stacks (DEF e DMG elemental). O DMG elemental da equipe (8% por 1.000 de DEF, até 25,6%) vale nas janelas de buff.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "note": "Assume os 2 stacks de Ode to Flowers (DEF 8% e DMG elemental 10% por stack no R1; 16% e 20% no R5). O DMG elemental da equipe (8% por 1.000 de DEF do dono, até 25,6% no R1; 16% e 51,2% no R5) vale nas janelas de buff. A DEF do dono já inclui o bônus dos stacks. Gatilho (Normal ou Plunge, 1 vez por 0,1 s, 6 s por stack; 15 s para a equipe) é do usuário.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/piloto-armas.ts."
   },
   {
     "atkPct": 0.48,
@@ -48480,5 +48470,94 @@
     ],
     "note": "Assume o DMG máximo (60% no R1) em Normal, habilidade e Supremo, sempre. No jogo ele cai 10% por segundo em combate e sobe 10% por acerto; o Hexerei só acelera a subida (20% por acerto), o máximo não muda.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+  },
+  {
+    "atkPct": 0.49,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0.35,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "buffs": [],
+    "flat": [],
+    "procs": [],
+    "weapon": "A Thousand Blazing Suns",
+    "refinements": [
+      {
+        "atkPct": 0.49,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0.35,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {},
+        "buffs": [],
+        "flat": [],
+        "procs": []
+      },
+      {
+        "atkPct": 0.6125,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0.4375,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {},
+        "buffs": [],
+        "flat": [],
+        "procs": []
+      },
+      {
+        "atkPct": 0.735,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0.525,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {},
+        "buffs": [],
+        "flat": [],
+        "procs": []
+      },
+      {
+        "atkPct": 0.8575,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0.6125,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {},
+        "buffs": [],
+        "flat": [],
+        "procs": []
+      },
+      {
+        "atkPct": 0.98,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0.7,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {},
+        "buffs": [],
+        "flat": [],
+        "procs": []
+      }
+    ],
+    "note": "Assume Scorching Brilliance sempre ativo (habilidade ou Supremo, 6 s, 1 vez a cada 10 s) E o dono em Nightsoul Blessing (x1,75): +49% ATK e +35% Dano Crítico no R1 (28% e 20% x 1,75), como a planilha, agora por refinamento. Fora da Nightsoul os valores são 1/1,75 disso. A extensão de 2 s por Normal/Carregado e o contador que não corre fora de campo NÃO entram. Não é faixa na linha do tempo: o gabarito da planilha exige o valor fixo.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/piloto-armas.ts."
   }
 ]

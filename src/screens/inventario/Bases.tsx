@@ -2,6 +2,7 @@
 import { useMemo, useState } from 'react';
 import { DEFAULT_IMPORT, applyImport, diffGood, summarize, type ImportOptions } from '../../features/good/goodDiff';
 import type { Good } from '../../features/good/goodImport';
+import { deleteStoredProject, projectIdsOfDatabase } from '../../features/rotation/persistence';
 import { createDatabase, deleteDatabase, listDatabases, loadDatabase, renameDatabase, saveGood, setActiveDatabase, type DatabaseInfo } from '../../features/good/goodStore';
 import { formatInt } from '../../ui/format';
 
@@ -48,7 +49,7 @@ export function DatabaseList({ activeId, onChange }: { activeId: string | null; 
               {d.id !== activeId && <button type="button" className="dz-btn" onClick={() => { setActiveDatabase(d.id); onChange(); }}>Usar esta</button>}
               <button type="button" className="dz-btn" onClick={() => { setName(d.name); setEditing(d.id); }}>Renomear</button>
               <button type="button" className="dz-btn" onClick={() => download(d)} title="Baixa a base como arquivo GOOD (.json)">Exportar</button>
-              <button type="button" className="dz-btn" onClick={() => { if (window.confirm(`Excluir a base "${d.name}"? Os outros times e bases não mudam.`)) { deleteDatabase(d.id); onChange(); } }}>Excluir</button>
+              <button type="button" className="dz-btn" onClick={() => { const teams = projectIdsOfDatabase(d.id); if (window.confirm(`Excluir a base "${d.name}" e ${teams.length === 1 ? 'o time' : `os ${teams.length} times`} dela? As outras bases não mudam.`)) { teams.forEach(deleteStoredProject); deleteDatabase(d.id); onChange(); } }}>Excluir</button>
             </div>
           </li>
         ))}

@@ -4,6 +4,7 @@
  * (modo privado, cota cheia): todas as funções toleram isso.
  */
 import { parseProject, type RotationProject } from '../../engine';
+import { bindNewProject, databaseOfProject, projectInActiveDatabase, unbindProject } from '../good/goodStore';
 import { windowsFromProfiles } from './projectOps';
 import sample from './sample/mavuika-iansan.json';
 
@@ -18,7 +19,9 @@ export const sampleForApp = (): RotationProject => windowsFromProfiles(samplePro
 
 export function saveProject(project: RotationProject): boolean {
   try {
+    const isNew = localStorage.getItem(KEY(project.id)) === null;
     localStorage.setItem(KEY(project.id), JSON.stringify(project));
+    if (isNew) bindNewProject(project.id);
     return true;
   } catch {
     return false;
@@ -37,6 +40,7 @@ export function loadStoredProject(id: string): RotationProject | null {
 export function deleteStoredProject(id: string): void {
   try {
     localStorage.removeItem(KEY(id));
+    unbindProject(id);
   } catch {
     /* sem armazenamento: nada a apagar */
   }
@@ -98,7 +102,7 @@ export const summarize = (p: RotationProject): ProjectSummary => ({
   gameVersion: p.gameVersion ?? '',
 });
 
-/** Projetos salvos neste navegador, do mais recente ao mais antigo; o exemplo entra se ainda não foi editado. */
+/** Projetos da base em uso, do mais recente ao mais antigo; o exemplo entra se ainda não foi editado. */
 export function listProjects(): ProjectSummary[] {
   const out: ProjectSummary[] = [];
   try {
@@ -106,7 +110,7 @@ export function listProjects(): ProjectSummary[] {
       const key = localStorage.key(i);
       if (!key?.startsWith(PREFIX)) continue;
       const p = loadStoredProject(key.slice(PREFIX.length));
-      if (p) out.push(summarize(p));
+      if (p && projectInActiveDatabase(p.id)) out.push(summarize(p));
     }
   } catch {
     /* sem armazenamento: só o exemplo */
@@ -139,3 +143,6 @@ export function cloneProject(p: RotationProject, name = `${p.name} (cópia)`): R
   const now = new Date().toISOString();
   return { ...p, id: newProjectId(), name, meta: { ...p.meta, createdAt: now, updatedAt: now } };
 }
+
+/** Ids dos times guardados que pertencem a essa base. */
+export const projectIdsOfDatabase = (databaseId: string): string[] => listStoredProjects().filter((p) => databaseOfProject(p.id) === databaseId).map((p) => p.id);

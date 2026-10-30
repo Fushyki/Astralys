@@ -66,23 +66,30 @@ const file = (name, good) => ({ name, mimeType: 'application/json', buffer: Buff
   await page.waitForFunction((k) => document.querySelectorAll('.inv-grid .inv-art').length === k, n - 3 + 1);
   check('trocar de base troca a grade', true);
 
-  // 5) time preso à base com que foi aberto
+  // 5) os times são da base: trocar de base troca a lista de times
   await page.goto(`${BASE}/projeto/exemplo`, { waitUntil: 'networkidle' });
-  const bound = await page.evaluate(() => JSON.parse(localStorage.getItem('astralys:base-dos-times') || '{}').exemplo);
-  const active = await page.evaluate(() => JSON.parse(localStorage.getItem('astralys:bases')).active);
-  check('o time abre ligado à base em uso', bound === active);
+  check('a Equipe não tem seletor de base (o time é da base em uso)', (await page.locator('select[aria-label="Base de dados deste time"]').count()) === 0);
+  await page.getByRole('button', { name: 'Duplicar' }).click();
+  await page.waitForURL((u) => !u.pathname.endsWith('/exemplo'));
+  const copyId = page.url().split('/projeto/')[1];
+  await page.goto(`${BASE}/vault`, { waitUntil: 'networkidle' });
+  check('o time novo aparece nos Times da base em uso', (await page.locator('text=(cópia)').count()) > 0);
   await page.goto(`${BASE}/inventario`, { waitUntil: 'networkidle' });
   await page.click('.inv-dbs li:not([data-active]) >> text=Usar esta');
-  await page.goto(`${BASE}/projeto/exemplo`, { waitUntil: 'networkidle' });
-  check('trocar a base em uso não troca a base do time', (await page.evaluate(() => JSON.parse(localStorage.getItem('astralys:base-dos-times')).exemplo)) === bound);
-  check('com mais de uma base, a Equipe oferece escolher a base do time', (await page.locator('select[aria-label="Base de dados deste time"]').count()) === 1);
+  await page.goto(`${BASE}/vault`, { waitUntil: 'networkidle' });
+  check('em outra base, esse time não aparece', (await page.locator('text=(cópia)').count()) === 0);
+  await page.goto(`${BASE}/inventario`, { waitUntil: 'networkidle' });
+  await page.click('.inv-dbs li:not([data-active]) >> text=Usar esta');
+  await page.goto(`${BASE}/vault`, { waitUntil: 'networkidle' });
+  check('voltando à base, o time volta', (await page.locator('text=(cópia)').count()) > 0);
 
-  // 6) excluir uma base não toca na outra
+  // 6) excluir a base leva os times dela, e só deles
   await page.goto(`${BASE}/inventario`, { waitUntil: 'networkidle' });
   page.once('dialog', (d) => d.accept());
-  await page.locator('.inv-dbs li').first().locator('text=Excluir').click();
+  await page.locator('.inv-dbs li[data-active]').locator('text=Excluir').click();
   await page.waitForFunction(() => document.querySelectorAll('.inv-dbs li').length === 1);
-  check('excluir uma base mantém a outra', (await page.locator('.inv-dbs li').count()) === 1);
+  check('excluir a base apaga os times dela', (await page.evaluate((id) => localStorage.getItem('astralys:projeto:' + id), copyId)) === null);
+  check('a outra base continua', (await page.locator('.inv-dbs li').count()) === 1);
 
   await browser.close();
   console.log('\nProblemas de consola:', problems.length ? '\n' + problems.join('\n') : 'nenhum');

@@ -1,7 +1,7 @@
 /**
  * Bases de dados do inventário GOOD no navegador (localStorage), como o "Base de Dados" do Genshin Optimizer: o usuário pode
  * ter várias (a dele, a de um amigo...) e uma fica ativa. Cada base é guardada separada, então trocar de base nunca mistura itens.
- * Cada time fica ligado à base com que foi aberto pela primeira vez; abrir outra base não troca as peças dele.
+ * Os times também são da base: trocar de base troca tudo (personagens, armas, artefatos e times), e nada se mistura.
  * Tudo é validado na leitura; falhas de armazenamento são toleradas.
  */
 import { parseGood, type Good } from './goodImport';
@@ -89,28 +89,42 @@ function loadById(id: string | null): Good | null {
 
 const bindings = (): Record<string, string> => (read(BIND_KEY) as Record<string, string> | null) ?? {};
 
-/** Base ligada ao time (a ativa de quando ele foi aberto); some se a base foi apagada. */
+/**
+ * Base a que o time pertence. Time sem ligação (de antes das bases) fica na primeira base; sem nenhuma base, é de todas.
+ * Os times de cada base aparecem só quando ela está em uso, como no Genshin Optimizer.
+ */
 export function databaseOfProject(projectId: string): string | null {
+  const { list } = readIndex();
   const id = bindings()[projectId];
-  return id && readIndex().list.some((d) => d.id === id) ? id : null;
+  return id && list.some((d) => d.id === id) ? id : (list[0]?.id ?? null);
+}
+
+/** O time aparece na lista da base em uso? (O exemplo embutido aparece em todas.) */
+export function projectInActiveDatabase(projectId: string): boolean {
+  if (projectId === 'exemplo' || readIndex().list.length === 0) return true;
+  return databaseOfProject(projectId) === activeDatabaseId();
+}
+
+/** Time novo (criado, duplicado, importado) nasce na base em uso. */
+export function bindNewProject(projectId: string): void {
+  const id = activeDatabaseId();
+  if (id && projectId !== 'exemplo') bindProject(projectId, id);
+}
+
+/** Tira a ligação de um time (ao apagá-lo). */
+export function unbindProject(projectId: string): void {
+  const b = bindings();
+  delete b[projectId];
+  write(BIND_KEY, b);
 }
 
 export function bindProject(projectId: string, databaseId: string): void {
   write(BIND_KEY, { ...bindings(), [projectId]: databaseId });
 }
 
-/**
- * Inventário em uso. Sem argumento: a base ativa (telas gerais). Com o id de um time: a base dele, e se ele ainda não tem
- * uma, liga o time à base ativa agora.
- */
+/** Inventário em uso. Sem argumento: a base ativa (telas gerais). Com o id de um time: a base dele. */
 export function loadGood(projectId?: string): Good | null {
-  if (!projectId) return loadById(activeDatabaseId());
-  let id = databaseOfProject(projectId);
-  if (!id) {
-    id = activeDatabaseId();
-    if (id) bindProject(projectId, id);
-  }
-  return loadById(id);
+  return loadById(projectId ? databaseOfProject(projectId) : activeDatabaseId());
 }
 
 /** Grava na base dada (padrão: a ativa; sem nenhuma, cria "Base 1"). */

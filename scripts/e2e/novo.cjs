@@ -71,8 +71,8 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.waitForSelector('.eq-card');
   const cardNames = await page.$$eval('.eq-card .name', (e) => e.map((x) => x.textContent));
   check('o time abre na Equipe com os 4 personagens', cardNames.join() === 'Hu Tao,Xingqiu,Zhongli,Citlali', cardNames.join());
-  const dpsBox = page.locator('.dz-kpi:has(.lbl:text-is("DPS do time")) .v');
-  await page.waitForFunction(() => /[1-9]/.test(document.querySelector('.dz-kpi .v')?.textContent ?? ''), null, { timeout: 30000 });
+  const dpsBox = page.locator('.eq-hero .big');
+  await page.waitForFunction(() => /[1-9]/.test(document.querySelector('.eq-hero .big')?.textContent ?? ''), null, { timeout: 30000 });
   const dps = Number((await dpsBox.textContent()).replace(/\D/g, ''));
   check('a rotação básica já dá um DPS maior que zero', dps > 0, String(dps));
   await page.screenshot({ path: path.join(OUT, 'r-novo-equipe.png'), fullPage: true });

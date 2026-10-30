@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import type { Good } from '../../src/features/good/goodImport';
-import { activeDatabaseId, bindProject, createDatabase, databaseOfProject, deleteDatabase, listDatabases, loadGood, saveGood, setActiveDatabase } from '../../src/features/good/goodStore';
+import { activeDatabaseId, bindNewProject, bindProject, createDatabase, databaseOfProject, deleteDatabase, listDatabases, loadGood, projectInActiveDatabase, saveGood, setActiveDatabase } from '../../src/features/good/goodStore';
 
 const store = new Map<string, string>();
 beforeEach(() => {
@@ -41,16 +41,27 @@ describe('bases de dados do inventário', () => {
     expect(listDatabases().find((d) => d.id === a)!.characters).toBe(2);
   });
 
-  it('um time fica na base com que foi aberto, mesmo se a ativa mudar', () => {
-    createDatabase('Minha', good(['Mavuika']));
+  it('os times são da base: cada um usa o inventário da sua e só aparece com ela em uso', () => {
+    const a = createDatabase('Minha', good(['Mavuika']))!;
     const b = createDatabase('Amigo', good(['Citlali']))!;
-    expect(loadGood('t1')!.characters[0].key).toBe('Mavuika');
+    bindNewProject('t1'); // nasce na base em uso (Minha)
     setActiveDatabase(b);
+    bindNewProject('t2'); // nasce na base em uso (Amigo)
+    expect(databaseOfProject('t1')).toBe(a);
+    expect(databaseOfProject('t2')).toBe(b);
     expect(loadGood('t1')!.characters[0].key).toBe('Mavuika');
     expect(loadGood('t2')!.characters[0].key).toBe('Citlali');
-    bindProject('t1', b);
-    expect(databaseOfProject('t1')).toBe(b);
-    expect(loadGood('t1')!.characters[0].key).toBe('Citlali');
+    expect([projectInActiveDatabase('t1'), projectInActiveDatabase('t2'), projectInActiveDatabase('exemplo')]).toEqual([false, true, true]);
+    setActiveDatabase(a);
+    expect([projectInActiveDatabase('t1'), projectInActiveDatabase('t2')]).toEqual([true, false]);
+  });
+
+  it('time de antes das bases (sem ligação) fica na primeira base; sem bases, aparece sempre', () => {
+    expect(projectInActiveDatabase('velho')).toBe(true);
+    const a = createDatabase('Minha', good(['Mavuika']))!;
+    createDatabase('Amigo', good(['Citlali']));
+    expect(databaseOfProject('velho')).toBe(a);
+    bindProject('velho', a);
   });
 
   it('excluir a base ativa passa para outra; excluir a última deixa sem inventário', () => {

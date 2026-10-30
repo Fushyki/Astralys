@@ -66,6 +66,8 @@ export interface FlatCur {
   perPoint: Sum;
   cap?: Sum;
   hitTypes: HitType[];
+  /** Só estes golpes (rótulo do Lunaris), dentro dos tipos de `hitTypes`. */
+  labels?: string[];
   stacks?: number;
 }
 

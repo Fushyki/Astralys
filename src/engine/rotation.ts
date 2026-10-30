@@ -392,7 +392,8 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
       const targetOk = e.targets === 'all' || e.targets.includes(member.character.name);
       const elementOk = e.elements.length === 0 || (element !== 'Physical' && e.elements.some((x) => sameEl(x, element)));
       const typeOk = e.hitTypes.length === 0 || (move.hitType !== 'other' && e.hitTypes.includes(move.hitType));
-      if (!(targetOk && elementOk && typeOk)) continue;
+      const labelOk = !e.labels?.length || e.labels.includes(move.label);
+      if (!(targetOk && elementOk && typeOk && labelOk)) continue;
       const id = flatId(e);
       const off = !!action.flatOff?.includes(id);
       const covered = off || f.remaining <= 0 ? 0 : Math.min(hitsOfAction, f.remaining);

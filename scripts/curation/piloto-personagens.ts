@@ -15,7 +15,24 @@ export const PILOTO_BUFFS: Record<string, BuffCuration[]> = {
       id: 'c2sol', label: 'Mavuika C2 (Golpe Solar)', src: 'const2', scope: 'self', timed: false,
       flat: [{ name: 'Sunfell Slice por ATK (C2)', sourceStat: 'ATK', perPoint: { p: 4 }, hitTypes: ['burst'] }],
       expect: 'deal 60%, 90%, and 120% of her ATK as increased DMG respectively',
-      note: 'Soma 120% do ATK ao dano base do Sunfell Slice (o único golpe do Supremo; ela o lança na forma Ignimoto). Os 60% dos Normais e 90% dos Carregados da Ignimoto não entram: o dano fixo não separa a Ignimoto dos Normais comuns.',
+      note: 'Soma 120% do ATK ao dano base do Sunfell Slice (o único golpe do Supremo; ela o lança na forma Ignimoto).',
+    },
+    {
+      id: 'c2norm', label: 'Mavuika C2 (Normais da Ignimoto)', src: 'const2', scope: 'self', timed: false,
+      flat: [{ name: 'Normais da Ignimoto por ATK (C2)', sourceStat: 'ATK', perPoint: { p: 2 }, hitTypes: ['normal'], labels: [1, 2, 3, 4, 5].map((n) => `Flamestrider Normal Attack ${n}-Hit DMG`) }],
+      expect: 'deal 60%, 90%, and 120% of her ATK as increased DMG respectively',
+      note: 'Soma 60% do ATK ao dano base de cada Normal da forma Ignimoto (Flamestrider). Os Normais comuns não recebem.',
+    },
+    {
+      id: 'c2carr', label: 'Mavuika C2 (Carregados da Ignimoto)', src: 'const2', scope: 'self', timed: false,
+      flat: [{ name: 'Carregados da Ignimoto por ATK (C2)', sourceStat: 'ATK', perPoint: { p: 3 }, hitTypes: ['charged'], labels: ['Flamestrider Charged Attack Cyclic DMG', 'Flamestrider Charged Attack Final DMG'] }],
+      expect: 'deal 60%, 90%, and 120% of her ATK as increased DMG respectively',
+      note: 'Soma 90% do ATK ao dano base de cada golpe do Carregado da Ignimoto (Cyclic e Final). O Carregado comum não recebe.',
+    },
+    {
+      id: 'c2anel', label: 'Mavuika C2 (Anel: DEF do inimigo)', src: 'const2', scope: 'self', timed: true, defShred: { p: 1 },
+      expect: "Nearby opponents' DEF is decreased by 20%",
+      note: 'DEF do inimigo -20% enquanto ela está na forma Anel (Ring of Searing Radiance), em Bênção do Espírito da Noite. Janela de tempo: o usuário liga e decide a duração.',
     },
   ],
 };
@@ -39,7 +56,7 @@ export const PILOTO_PROCS: Record<string, ProcCuration[]> = {
 export const PILOTO_NOTES: Record<string, Partial<Record<Src, NoteCuration | null>>> = {
   Mavuika: {
     p3: u(NIGHTSOUL_TRANSMISSION),
-    const2: x('Os +200 de ATK base (a Nightsoul), a redução de 20% de DEF do inimigo (forma Anel) e os +60% dos Normais e +90% dos Carregados da Ignimoto não entram; o +120% do Sunfell Slice entra.'),
+    const2: x('Os +200 de ATK base (a Nightsoul) não entram ainda; entram o -20% de DEF do inimigo (janela, forma Anel) e o dano fixo de 60%, 90% e 120% do ATK (Normais, Carregados e Sunfell Slice da Ignimoto).'),
     const6: x('Os dois golpes (200% e 500% do ATK) entram como golpes extras; a redução de 20% de DEF do Anel de Incêndio não entra (debuff com condição de forma). Os 80 pontos de Espírito da Noite não mudam o dano.'),
   },
   Citlali: { p3: u(NIGHTSOUL_TRANSMISSION) },

@@ -538,7 +538,7 @@ export function gearFlat(members: MemberInput[]): FlatDamageEffect[] {
         if (Array.isArray(targets) && targets.length === 0) continue;
         out.push({
           name: `${origin}: ${f.name}`, source: m.character.name, sourceStat: f.sourceStat, perPoint: f.perPoint, threshold: 0,
-          ...(f.capPerHit !== undefined ? { capPerHit: f.capPerHit } : {}), targets, elements: f.elements ?? [], hitTypes: f.hitTypes,
+          ...(f.capPerHit !== undefined ? { capPerHit: f.capPerHit } : {}), targets, elements: f.elements ?? [], hitTypes: f.hitTypes, ...(f.labels?.length ? { labels: f.labels } : {}),
           ...(f.stacks !== undefined ? { stacks: f.stacks } : {}), active: true, fonte_info: `Passiva de ${origin} (curadoria do Lunaris)`,
         });
       }

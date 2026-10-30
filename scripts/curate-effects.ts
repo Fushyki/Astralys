@@ -320,7 +320,7 @@ function buildBuff(b: BuffCur, c: Ctx): CharacterBuff {
 
 const buildFlat = (f: FlatCur, c: Ctx): WeaponFlat => ({
   name: f.name, sourceStat: f.sourceStat, perPoint: sm(f.perPoint, c),
-  ...(f.cap !== undefined ? { capPerHit: sm(f.cap, c) } : {}), hitTypes: f.hitTypes, ...(f.stacks !== undefined ? { stacks: f.stacks } : {}),
+  ...(f.cap !== undefined ? { capPerHit: sm(f.cap, c) } : {}), hitTypes: f.hitTypes, ...(f.labels ? { labels: f.labels } : {}), ...(f.stacks !== undefined ? { stacks: f.stacks } : {}),
   ...(f.targets ? { targets: f.targets } : {}), ...(f.elements ? { elements: f.elements } : {}),
 });
 
@@ -488,7 +488,7 @@ function buildCharacters(): CharacterEffect[] {
           ? {
               flat: b.flat.map((f) => ({
                 name: f.name, sourceStat: f.sourceStat, perPoint: v(f.perPoint), ...(f.cap !== undefined ? { capPerHit: v(f.cap) } : {}),
-                hitTypes: f.hitTypes, ...(f.stacks !== undefined ? { stacks: f.stacks } : {}),
+                hitTypes: f.hitTypes, ...(f.labels ? { labels: f.labels } : {}), ...(f.stacks !== undefined ? { stacks: f.stacks } : {}),
                 ...(f.targets ? { targets: f.targets } : {}), ...(f.elements ? { elements: f.elements } : {}),
               })),
             }

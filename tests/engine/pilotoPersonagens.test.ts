@@ -38,9 +38,13 @@ describe('Mavuika C2: Sunfell Slice soma 120% do ATK ao dano base', () => {
     expect(c2.flatDamage).toBeCloseTo(1.2 * c2.stats.atk, 6);
     expect(c2.avg).toBeGreaterThan(c1.avg);
   });
-  it('não vale para o habilidade (Flamestrider Normal)', () => {
-    const [c2] = run([{ character: 'Mavuika', constellation: 2 }], [{ member: 0, talent: 'skill', label: 'Flamestrider Normal Attack 1-Hit DMG' }]);
-    expect(c2.flatDamage).toBe(0);
+  it('Normal da Ignimoto soma 0,6 x ATK; Normal comum não recebe', () => {
+    const mk = (label: string, talent: 'normal' | 'skill') => ({ member: 0, talent, label });
+    const all = run([{ character: 'Mavuika', constellation: 2 }], [mk('Flamestrider Normal Attack 1-Hit DMG', 'skill')]).tags;
+    const [ign] = run([{ character: 'Mavuika', constellation: 2 }], [{ ...mk('Flamestrider Normal Attack 1-Hit DMG', 'skill'), tags: all }]);
+    const [comum] = run([{ character: 'Mavuika', constellation: 2 }], [{ ...mk('1-Hit DMG', 'normal'), tags: all }]);
+    expect(ign.flatDamage).toBeCloseTo(0.6 * ign.stats.atk * ign.action.executions * Math.max(1, ign.action.move.hits), 6);
+    expect(comum.flatDamage).toBe(0);
   });
 });
 

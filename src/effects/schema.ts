@@ -212,6 +212,8 @@ export const WeaponFlatSchema = z.object({
   perPoint: z.number(),
   capPerHit: z.number().optional(),
   hitTypes: z.array(HitTypeSchema).default([]),
+  /** Só estes golpes, pelo rótulo do Lunaris (ex.: "Frostfall Storm DMG"); vazio = qualquer golpe do tipo. */
+  labels: z.array(z.string().min(1)).optional(),
   stacks: z.number().int().positive().optional(),
   /** Quem recebe: o dono (padrão), a equipe inteira ou só os outros (ex.: Xilonen C4, nos Normais dos aliados). */
   targets: z.enum(['self', 'team', 'others']).optional(),
@@ -427,6 +429,8 @@ export const FlatDamageEffectSchema = z.object({
   /** Vazio = qualquer elemento / qualquer tipo de golpe. */
   elements: z.array(ElementSchema),
   hitTypes: z.array(HitTypeSchema),
+  /** Só estes golpes pelo rótulo (ver `WeaponFlat.labels`); ausente/vazio = qualquer. */
+  labels: z.array(z.string().min(1)).optional(),
   /** Quantos hits consomem o buff (undefined = ilimitado). Consumidos pelos primeiros hits elegíveis. */
   stacks: z.number().int().positive().optional(),
   /** Efeito do kit: `perPoint` é multiplicado por `table[nível do talento da fonte - 1]` ao montar o projeto. */

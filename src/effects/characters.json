@@ -153,14 +153,71 @@
             ]
           }
         ],
-        "note": "Soma 120% do ATK ao dano base do Sunfell Slice (o único golpe do Supremo; ela o lança na forma Ignimoto). Os 60% dos Normais e 90% dos Carregados da Ignimoto não entram: o dano fixo não separa a Ignimoto dos Normais comuns."
+        "note": "Soma 120% do ATK ao dano base do Sunfell Slice (o único golpe do Supremo; ela o lança na forma Ignimoto)."
+      },
+      {
+        "id": "c2norm",
+        "label": "Mavuika C2 (Normais da Ignimoto)",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": false,
+        "flat": [
+          {
+            "name": "Normais da Ignimoto por ATK (C2)",
+            "sourceStat": "ATK",
+            "perPoint": 0.6,
+            "hitTypes": [
+              "normal"
+            ],
+            "labels": [
+              "Flamestrider Normal Attack 1-Hit DMG",
+              "Flamestrider Normal Attack 2-Hit DMG",
+              "Flamestrider Normal Attack 3-Hit DMG",
+              "Flamestrider Normal Attack 4-Hit DMG",
+              "Flamestrider Normal Attack 5-Hit DMG"
+            ]
+          }
+        ],
+        "note": "Soma 60% do ATK ao dano base de cada Normal da forma Ignimoto (Flamestrider). Os Normais comuns não recebem."
+      },
+      {
+        "id": "c2carr",
+        "label": "Mavuika C2 (Carregados da Ignimoto)",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": false,
+        "flat": [
+          {
+            "name": "Carregados da Ignimoto por ATK (C2)",
+            "sourceStat": "ATK",
+            "perPoint": 0.9,
+            "hitTypes": [
+              "charged"
+            ],
+            "labels": [
+              "Flamestrider Charged Attack Cyclic DMG",
+              "Flamestrider Charged Attack Final DMG"
+            ]
+          }
+        ],
+        "note": "Soma 90% do ATK ao dano base de cada golpe do Carregado da Ignimoto (Cyclic e Final). O Carregado comum não recebe."
+      },
+      {
+        "id": "c2anel",
+        "label": "Mavuika C2 (Anel: DEF do inimigo)",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": true,
+        "defShred": 0.2,
+        "flat": [],
+        "note": "DEF do inimigo -20% enquanto ela está na forma Anel (Ring of Searing Radiance), em Bênção do Espírito da Noite. Janela de tempo: o usuário liga e decide a duração."
       }
     ],
     "notes": [
       {
         "src": "const2",
         "kind": "partial",
-        "note": "Os +200 de ATK base (a Nightsoul), a redução de 20% de DEF do inimigo (forma Anel) e os +60% dos Normais e +90% dos Carregados da Ignimoto não entram; o +120% do Sunfell Slice entra."
+        "note": "Os +200 de ATK base (a Nightsoul) não entram ainda; entram o -20% de DEF do inimigo (janela, forma Anel) e o dano fixo de 60%, 90% e 120% do ATK (Normais, Carregados e Sunfell Slice da Ignimoto)."
       },
       {
         "src": "const6",
@@ -331,10 +388,13 @@
             "perPoint": 0.9,
             "hitTypes": [
               "skill"
+            ],
+            "labels": [
+              "Frostfall Storm DMG"
             ]
           }
         ],
-        "note": "Soma 90% da Maestria ao dano base da habilidade (Frostfall Storm). O formato soma em todo golpe de habilidade, então o Obsidian Tzitzimitl também recebe (a mais)."
+        "note": "Soma 90% da Maestria ao dano base do Frostfall Storm, só nele (o Obsidian Tzitzimitl não recebe)."
       },
       {
         "id": "a4b",
@@ -349,10 +409,13 @@
             "perPoint": 12,
             "hitTypes": [
               "burst"
+            ],
+            "labels": [
+              "Ice Storm DMG"
             ]
           }
         ],
-        "note": "Soma 1.200% da Maestria ao dano base do Supremo (Ice Storm). O formato soma em todo golpe de Supremo, então o Spiritvessel Skull também recebe (a mais)."
+        "note": "Soma 1.200% da Maestria ao dano base do Ice Storm, só nele (o Spiritvessel Skull não recebe)."
       },
       {
         "id": "c2em",

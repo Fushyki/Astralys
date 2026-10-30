@@ -41,6 +41,8 @@ import { CHARACTER_PROCS, CHARACTERS_PROC_BUFFS } from './curation/procs';
 import { FACTIONS as LUNAR_FACTIONS, LUNAR_BUFFS, LUNAR_PROCS as MOON_PROCS, SPECIAL_MOVES as MOON_SPECIAL } from './curation/lunar';
 import { EXTRA_BUFFS, EXTRA_FACTIONS, EXTRA_PROCS, EXTRA_SPECIAL } from './curation/extras';
 import { PILOTO_BUFFS, PILOTO_INFOS, PILOTO_NOTES, PILOTO_PROCS } from './curation/piloto-personagens';
+import { LOTES } from './curation/lote';
+import type { InfoCuration } from './curation/piloto-personagens';
 
 /** Junta listas por personagem de vários arquivos de curadoria. */
 const mergeLists = <T>(...all: Record<string, T[]>[]): Record<string, T[]> => {
@@ -64,9 +66,30 @@ for (const batch of [CHARACTERS_1, CHARACTERS_2, CHARACTERS_3, CHARACTERS_4, CHA
   for (const [name, list] of Object.entries(batch)) CHARACTER_BUFFS[name] = [...(CHARACTER_BUFFS[name] ?? []), ...list];
 }
 
+// Lotes da Fase 5: sobrepõem pelo id (ver `curation/lote/index.ts`).
+const upsert = <T extends { id: string }>(list: T[], add: T[]): T[] => [...list.filter((x) => !add.some((y) => y.id === x.id)), ...add];
+const INFOS: Record<string, InfoCuration[]> = { ...PILOTO_INFOS };
+for (const lote of LOTES) {
+  for (const [name, ids] of Object.entries(lote.remove ?? {})) {
+    CHARACTER_BUFFS[name] = (CHARACTER_BUFFS[name] ?? []).filter((b) => !ids.includes(b.id));
+    for (const src of [CHARACTER_PROCS, LUNAR_PROCS]) if (src[name]) src[name] = src[name].filter((p) => !ids.includes(p.id));
+  }
+  for (const [name, list] of Object.entries(lote.buffs ?? {})) CHARACTER_BUFFS[name] = upsert(CHARACTER_BUFFS[name] ?? [], list);
+  for (const [name, list] of Object.entries(lote.procs ?? {})) {
+    for (const src of [CHARACTER_PROCS, LUNAR_PROCS]) if (src[name]) src[name] = src[name].filter((p) => !list.some((y) => y.id === p.id));
+    LUNAR_PROCS[name] = [...(LUNAR_PROCS[name] ?? []), ...list];
+  }
+  for (const [name, list] of Object.entries(lote.notes ?? {})) {
+    const cur: Record<string, unknown> = { ...(CHARACTER_NOTES[name] ?? {}) };
+    for (const [src, n] of Object.entries(list)) { if (n === null) delete cur[src]; else cur[src] = n; }
+    CHARACTER_NOTES[name] = cur as (typeof CHARACTER_NOTES)[string];
+  }
+  for (const [name, list] of Object.entries(lote.infos ?? {})) INFOS[name] = [...(INFOS[name] ?? []).filter((x) => !list.some((y) => y.src === x.src && y.label === x.label)), ...list];
+}
+
 const root = process.cwd();
 const read = <T>(rel: string): T => JSON.parse(readFileSync(path.join(root, rel), 'utf8'));
-const write = (rel: string, data: unknown) => writeFileSync(path.join(root, rel), JSON.stringify(data, null, 2) + '\n', 'utf8');
+const write = (rel: string, data: unknown) => process.env.CURATE_DRY ? undefined : writeFileSync(path.join(root, rel), JSON.stringify(data, null, 2) + '\n', 'utf8');
 
 interface Bonus { description: string; params: number[] }
 interface RawSet { name: string; bonuses: { onePiece?: Bonus; twoPiece?: Bonus; fourPiece?: Bonus } }
@@ -533,7 +556,7 @@ function buildCharacters(): CharacterEffect[] {
       };
     });
     const notes = Object.entries(CHARACTER_NOTES[name] ?? {}).map(([src, n]) => ({ src, kind: n!.kind, note: n!.note }));
-    const infos = (PILOTO_INFOS[name] ?? []).map((i) => {
+    const infos = (INFOS[name] ?? []).map((i) => {
       const isConst = i.src.startsWith('const');
       const node = (isConst ? raw.constellations : raw.passives)?.[i.src];
       if (!node) throw new Error(`${name} ${i.label}: ${i.src} não existe`);

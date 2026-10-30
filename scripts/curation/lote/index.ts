@@ -14,4 +14,8 @@ export interface Lote {
   remove?: Record<string, string[]>;
 }
 
-export const LOTES: Lote[] = [];
+import { LOTE as PYRO_A } from './pyro-a';
+import { LOTE as PYRO_B } from './pyro-b';
+import { LOTE as PYRO_C } from './pyro-c';
+
+export const LOTES: Lote[] = [PYRO_A, PYRO_B, PYRO_C];

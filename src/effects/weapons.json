@@ -44,16 +44,6 @@
     "fonte_info": "planilha Mavuika_Iansan_Combo2, aba \"Armas (efeitos)\". R1: +20% ATK (buff condicional de time não incluído)."
   },
   {
-    "weapon": "Serpent Spine",
-    "atkPct": 0,
-    "dmgPct": 0.3,
-    "critRate": 0,
-    "critDmg": 0,
-    "em": 0,
-    "er": 0,
-    "fonte_info": "planilha Mavuika_Iansan_Combo2, aba \"Armas (efeitos)\". R1, 5 stacks."
-  },
-  {
     "weapon": "Beacon of the Reed Sea",
     "atkPct": 0.4,
     "dmgPct": 0,
@@ -3450,6 +3440,293 @@
       }
     ],
     "note": "Assume os stacks máximos sempre ativos. (5 stacks; sem o dobro com escudo).",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+  },
+  {
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "er": 0,
+    "hpPct": 0,
+    "defPct": 0,
+    "dmgPctByType": {},
+    "buffs": [
+      {
+        "id": "stacks",
+        "label": "Stacks da passiva",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.3,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "stacks": {
+          "max": 5
+        }
+      }
+    ],
+    "flat": [],
+    "procs": [],
+    "weapon": "Serpent Spine",
+    "refinements": [
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {},
+        "buffs": [
+          {
+            "id": "stacks",
+            "label": "Stacks da passiva",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0.3,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "baseMultByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": [],
+            "stacks": {
+              "max": 5
+            }
+          }
+        ],
+        "flat": [],
+        "procs": []
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {},
+        "buffs": [
+          {
+            "id": "stacks",
+            "label": "Stacks da passiva",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0.35,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "baseMultByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": [],
+            "stacks": {
+              "max": 5
+            }
+          }
+        ],
+        "flat": [],
+        "procs": []
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {},
+        "buffs": [
+          {
+            "id": "stacks",
+            "label": "Stacks da passiva",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0.4,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "baseMultByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": [],
+            "stacks": {
+              "max": 5
+            }
+          }
+        ],
+        "flat": [],
+        "procs": []
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {},
+        "buffs": [
+          {
+            "id": "stacks",
+            "label": "Stacks da passiva",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0.45,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "baseMultByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": [],
+            "stacks": {
+              "max": 5
+            }
+          }
+        ],
+        "flat": [],
+        "procs": []
+      },
+      {
+        "atkPct": 0,
+        "dmgPct": 0,
+        "critRate": 0,
+        "critDmg": 0,
+        "em": 0,
+        "er": 0,
+        "hpPct": 0,
+        "defPct": 0,
+        "dmgPctByType": {},
+        "buffs": [
+          {
+            "id": "stacks",
+            "label": "Stacks da passiva",
+            "minConstellation": 0,
+            "scope": "self",
+            "timed": false,
+            "stats": {
+              "atkPct": 0,
+              "dmgPct": 0.5,
+              "critRate": 0,
+              "critDmg": 0,
+              "em": 0,
+              "er": 0,
+              "hpPct": 0,
+              "defPct": 0,
+              "dmgPctByType": {},
+              "critRateByType": {},
+              "critDmgByType": {},
+              "baseMultByType": {},
+              "defIgnore": 0,
+              "atkFlat": 0,
+              "hpFlat": 0,
+              "defFlat": 0,
+              "physDmgPct": 0,
+              "physCritDmg": 0,
+              "reactionBonus": {}
+            },
+            "flat": [],
+            "stacks": {
+              "max": 5
+            }
+          }
+        ],
+        "flat": [],
+        "procs": []
+      }
+    ],
+    "note": "DMG +6% (R1) por stack, até 5 (um a cada 4 s em campo): a quantidade de stacks é escolha sua (padrão: 5). O dano recebido a mais (3% por stack) não muda o seu dano.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
   },
   {

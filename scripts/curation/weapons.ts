@@ -89,6 +89,7 @@ export const WEAPONS: Record<string, WeaponCuration> = {
     note: 'ATK próprio sempre ativo. O ATK da equipe (4 Sigils) vale só nas janelas de buff.',
   },
   'The Unforged': { atkPct: { p: 1, x: 5 }, expect: 'Scoring hits on opponents increases ATK by', note: `${STACKS} (5 stacks; sem o dobro com escudo).` },
+  'Serpent Spine': { dmgPct: { p: 1, x: 5 }, expect: 'Every 4s a character is on the field', note: 'DMG +6% (R1) por stack, até 5 (um a cada 4 s em campo): a quantidade de stacks é escolha sua (padrão: 5). O dano recebido a mais (3% por stack) não muda o seu dano.' },
   'Redhorn Stonethresher': { defPct: { p: 0 }, expect: 'DEF is increased by', note: 'Só o DEF. O dano de Normal/Carregado por DEF NÃO entra.' },
   'Fang of the Mountain King': {
     byType: { skill: { p: 2, x: 6 }, burst: { p: 2, x: 6 } },

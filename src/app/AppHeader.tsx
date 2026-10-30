@@ -1,11 +1,10 @@
 /**
- * Barra superior fixa, igual em todas as telas: Times · Personagens · Inventário · Otimizador · Ferramentas.
+ * Barra superior fixa, igual em todas as telas: Times · Personagens · Inventário · Recarga · Comparar (e, dentro de um time, Armas e Card).
  * Dentro de um time aparece uma faixa com as 3 telas dele: Equipe, Personagens e Rotação e buffs.
  */
 import { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import '../design/design.css';
-import { Menu } from '../design/Menu';
 import { ONLINE_ENABLED } from '../online/config';
 import { useSession } from '../online/session';
 import { ButtonLink } from '../design/Button';
@@ -51,13 +50,21 @@ export function AppHeader({ projectId, memberName, projectName, favorite, onTogg
   const { pathname } = useLocation();
   const base = projectId ? `/projeto/${projectId}` : '';
   const nav: { to: string; label: string; on: boolean }[] = [
-    { to: '/vault', label: 'Times', on: (pathname.startsWith('/vault') || pathname.startsWith('/projeto') || pathname.startsWith('/card') || pathname.startsWith('/comparar') || pathname.startsWith('/novo')) },
+    { to: '/vault', label: 'Times', on: pathname.startsWith('/vault') || pathname.startsWith('/novo') || (pathname.startsWith('/projeto') && !pathname.startsWith(`${base}/armas`) && !pathname.startsWith(`${base}/recarga`)) },
     { to: '/personagens', label: 'Personagens', on: pathname.startsWith('/personagens') },
     { to: '/inventario', label: 'Inventário', on: pathname.startsWith('/inventario') },
+    { to: projectId ? `${base}/recarga` : '/recarga', label: 'Recarga', on: pathname.endsWith('/recarga') },
+    { to: projectId ? `/comparar?a=${projectId}` : '/comparar', label: 'Comparar', on: pathname.startsWith('/comparar') },
+    ...(projectId
+      ? [
+          { to: `${base}/armas`, label: 'Armas', on: pathname.startsWith(`${base}/armas`) },
+          { to: `/card/${projectId}`, label: 'Card', on: pathname.startsWith('/card') },
+        ]
+      : []),
   ];
   const tabs = projectId
     ? [
-        { to: base, label: 'Equipe', on: pathname === base || pathname.startsWith(`${base}/armas`) },
+        { to: base, label: 'Equipe', on: pathname === base },
         { to: memberName ? `${base}/personagem/${encodeURIComponent(memberName)}` : base, label: 'Personagens', on: pathname.startsWith(`${base}/personagem`) },
         { to: `${base}/rotacao`, label: 'Rotação e buffs', on: pathname.startsWith(`${base}/rotacao`) },
       ]
@@ -75,16 +82,6 @@ export function AppHeader({ projectId, memberName, projectName, favorite, onTogg
             <Link key={t.label} to={t.to} aria-current={t.on ? 'page' : undefined}>{t.label}</Link>
           ))}
         </nav>
-        <Menu label="Ferramentas ▾" ariaLabel="Ferramentas" className="dz-navbtn" align="left">
-          {(close) => (
-            <>
-              <Link role="menuitem" className="dz-menu-item" to={projectId ? `${base}/recarga` : '/recarga'} onClick={close}>Recarga de energia</Link>
-              <Link role="menuitem" className="dz-menu-item" to={projectId ? `/comparar?a=${projectId}` : '/comparar'} onClick={close}>Comparar dois times</Link>
-              {projectId && <Link role="menuitem" className="dz-menu-item" to={`${base}/armas`} onClick={close}>Armas e constelações</Link>}
-              {projectId && <Link role="menuitem" className="dz-menu-item" to={`/card/${projectId}`} onClick={close}>Card para compartilhar</Link>}
-            </>
-          )}
-        </Menu>
         <Account />
       </header>
       {projectId && (

@@ -1,5 +1,5 @@
 /**
- * Navegação nova (Times · Personagens · Inventário · Otimizador · Ferramentas), Inventário e Otimizador de artefatos.
+ * Navegação nova (Times · Personagens · Inventário · Recarga · Comparar), Inventário e Otimizador de artefatos.
  *   1) npm run build && npx vite preview --port 4173
  *   2) node scripts/e2e/otimizador.cjs
  */
@@ -28,8 +28,8 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.reload({ waitUntil: 'networkidle' });
 
   // ---- Menu ----
-  const nav = await page.$$eval('.dz-nav > a, .dz-header .dz-navbtn', (a) => a.map((x) => x.textContent.trim()));
-  check('o menu é Times · Personagens · Inventário · Ferramentas (otimizar é individual: fica no personagem)', nav.join('|') === 'Times|Personagens|Inventário|Ferramentas ▾', nav.join('|'));
+  const nav = await page.$$eval('.dz-header .dz-nav > a', (a) => a.map((x) => x.textContent.trim()));
+  check('o menu é Times · Personagens · Inventário · Recarga · Comparar (otimizar é individual: fica no personagem)', nav.join('|') === 'Times|Personagens|Inventário|Recarga|Comparar', nav.join('|'));
   check('Inventário está marcado', (await page.getAttribute('.dz-nav a:has-text("Inventário")', 'aria-current')) === 'page');
 
   // ---- Inventário ----
@@ -212,11 +212,8 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   check('"Todos" lista bem mais personagens', (await page.locator('.pe-card').count()) > 50);
   await page.screenshot({ path: path.join(OUT, 'personagens.png') });
 
-  // ---- Ferramentas ----
-  await page.click('.dz-navbtn');
-  const tools = await page.$$eval('.dz-menu-item', (a) => a.map((x) => x.textContent.trim()));
-  check('Ferramentas reúne Recarga e Comparar fora de um time', tools.join('|') === 'Recarga de energia|Comparar dois times', tools.join('|'));
-  await page.keyboard.press('Escape');
+  // ---- Recarga e Comparar na barra ----
+  check('não existe mais o botão Ferramentas', (await page.locator('.dz-navbtn').count()) === 0);
 
   // ---- celular ----
   await page.setViewportSize({ width: 390, height: 800 });

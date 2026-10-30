@@ -31,7 +31,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
 
   const tabs = await page.$$eval('.dz-subnav nav a', (a) => a.map((x) => x.textContent.replace(/\s+/g, ' ').trim()));
   check('a faixa do time tem os 3 passos numerados', tabs.join('|') === '1 · Equipe|2 · Personagens|3 · Rotação e buffs', tabs.join('|'));
-  check('o menu geral é Times, Personagens, Inventário, Otimizador e Ferramentas', (await page.$$eval('.dz-nav > a, .dz-header .dz-navbtn', (a) => a.map((x) => x.textContent.trim()))).join('|') === 'Times|Personagens|Inventário|Ferramentas ▾');
+  check('o menu geral é Times, Personagens, Inventário, Recarga, Comparar, Armas e Card (dentro do time)', (await page.$$eval('.dz-header .dz-nav > a', (a) => a.map((x) => x.textContent.trim()))).join('|') === 'Times|Personagens|Inventário|Recarga|Comparar|Armas|Card');
   check('o passo 1 explica o que fazer e oferece o próximo', /Passo 1 de 3/.test(await bar()) && (await page.locator('.dz-stepbar a:has-text("Próximo passo: Personagens")').count()) === 1);
   check('no passo 1 não há botão de voltar', (await page.locator('.dz-stepbar a:has-text("←")').count()) === 0);
 
@@ -48,14 +48,10 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   check('/time redireciona para a rotação', /\/rotacao$/.test(page.url()));
   await page.screenshot({ path: path.join(OUT, 'r-passos-time.png') });
 
-  // Menu Ferramentas: telas de apoio do time
-  await page.click('button[aria-label="Ferramentas"]');
-  const items = await page.$$eval('[role="menuitem"]', (e) => e.map((x) => x.textContent.trim()));
-  check('Ferramentas reúne Recarga, Comparar, Armas e Card', items.join('|') === 'Recarga de energia|Comparar dois times|Armas e constelações|Card para compartilhar', items.join('|'));
-  await page.keyboard.press('Escape');
-  check('Esc fecha o menu Ferramentas', (await page.locator('[role="menuitem"]').count()) === 0);
-  await page.click('button[aria-label="Ferramentas"]');
-  await page.click('[role="menuitem"]:has-text("Armas e constelações")');
+  // Barra geral: telas de apoio do time
+  const items = await page.$$eval('.dz-header .dz-nav > a', (e) => e.map((x) => x.textContent.trim()));
+  check('a barra reúne Times, Personagens, Inventário, Recarga, Comparar, Armas e Card dentro de um time', items.join('|') === 'Times|Personagens|Inventário|Recarga|Comparar|Armas|Card', items.join('|'));
+  await page.click('.dz-header .dz-nav a:has-text("Armas")');
   await page.waitForURL(/armas/);
   await settle();
   check('Armas e constelações é tela de apoio: sem a barra de passos', (await page.locator('.dz-stepbar').count()) === 0);

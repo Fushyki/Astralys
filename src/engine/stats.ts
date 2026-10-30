@@ -65,6 +65,10 @@ export interface StatBlock {
   eleDmg: number;
   /** Bônus de dano de reação (ex.: +40% de Sobrecarga do Thundering Fury), em fração. */
   reactionBonus: Record<ReactionBonusKey, number>;
+  /** Redução de DEF do inimigo em janela (fração); só buffs `timed`, somada à `enemyDefRed` fixa. */
+  defShred: number;
+  /** Redução de RES do inimigo em janela, por elemento (ou Physical); só buffs `timed`. */
+  resShred: Record<string, number>;
 }
 
 /** Reações com bônus de dano próprio além de Derreter/Vaporizar (que têm campo separado); ver `REACTION_BONUS_KEYS`. */
@@ -74,9 +78,10 @@ const ZERO_REACTIONS = Object.fromEntries(REACTION_BONUS_KEYS.map((k) => [k, 0])
 const zeroReactions = () => ({ ...ZERO_REACTIONS });
 
 type ByType = Partial<Record<HitType, number>>;
-const BY_TYPE_KEYS = ['dmgByType', 'critRateByType', 'critDmgByType', 'baseMultByType', 'reactionBonus'] as const;
+const BY_TYPE_KEYS = ['dmgByType', 'critRateByType', 'critDmgByType', 'baseMultByType', 'reactionBonus', 'resShred'] as const;
 
-export type StatDelta = Partial<Omit<StatBlock, 'dmgByType' | 'critRateByType' | 'critDmgByType' | 'baseMultByType' | 'reactionBonus'>> & {
+export type StatDelta = Partial<Omit<StatBlock, 'dmgByType' | 'critRateByType' | 'critDmgByType' | 'baseMultByType' | 'reactionBonus' | 'resShred'>> & {
+  resShred?: Record<string, number>;
   dmgByType?: ByType;
   critRateByType?: ByType;
   critDmgByType?: ByType;
@@ -89,7 +94,7 @@ export const zeroBlock = (): StatBlock => ({
   dmgBonus: 0, dmgByType: { normal: 0, charged: 0, plunge: 0, skill: 0, burst: 0 },
   critRateByType: { normal: 0, charged: 0, plunge: 0, skill: 0, burst: 0 }, critDmgByType: { normal: 0, charged: 0, plunge: 0, skill: 0, burst: 0 },
   baseMultByType: { normal: 0, charged: 0, plunge: 0, skill: 0, burst: 0 },
-  meltBonus: 0, vaporizeBonus: 0, defIgnore: 0, physDmg: 0, physCritDmg: 0, eleDmg: 0, reactionBonus: zeroReactions(),
+  meltBonus: 0, vaporizeBonus: 0, defIgnore: 0, physDmg: 0, physCritDmg: 0, eleDmg: 0, reactionBonus: zeroReactions(), defShred: 0, resShred: {},
 });
 
 const BY_TYPE_SET: ReadonlySet<string> = new Set(BY_TYPE_KEYS);
@@ -477,6 +482,8 @@ export interface FinalStats {
   physCritDmg: number;
   eleDmg: number;
   reactionBonus: Record<ReactionBonusKey, number>;
+  defShred: number;
+  resShred: Record<string, number>;
   /** Bônus de ATK% que a arma ganha com ER (ex.: Engulfing Lightning). */
   weaponErAtkPct: number;
 }
@@ -547,6 +554,8 @@ export function finalStats(m: MemberInput, statics: StatBlock, rolls: Rolls, tea
     physCritDmg: (statics.physCritDmg ?? 0) + (team.physCritDmg ?? 0),
     eleDmg: (statics.eleDmg ?? 0) + (team.eleDmg ?? 0),
     reactionBonus: sumReactions(statics.reactionBonus, team.reactionBonus),
+    defShred: (statics.defShred ?? 0) + (team.defShred ?? 0),
+    resShred: { ...statics.resShred, ...Object.fromEntries(Object.entries(team.resShred ?? {}).map(([k, v]) => [k, (statics.resShred?.[k] ?? 0) + v])) },
     weaponErAtkPct: erAtk,
   };
 }

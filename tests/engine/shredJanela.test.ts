@@ -27,7 +27,7 @@ describe('redução de RES/DEF com duração', () => {
     const fixed = team(withShred(false));
     expect(fixed.enemyRes.Pyro).toBeCloseTo(none.enemyRes.Pyro - 0.2, 9);
     expect(fixed.enemyDefRed).toBeCloseTo(none.enemyDefRed + 0.1, 9);
-    expect(fixed.buffs.some((b) => b.id.includes('shred'))).toBe(false);
+    expect(fixed.buffs.some((b) => b.id.includes('teste-shred'))).toBe(false);
   });
 
   it('com duração vira janela: o mapa fixo não muda e o golpe dentro da janela recebe a redução', () => {

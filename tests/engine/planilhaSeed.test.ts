@@ -23,9 +23,12 @@ const effects: EffectsData = {
 describe('sem contar duas vezes os números semeados da planilha', () => {
   const team = () => resolveProject({ ...sampleProject(), compat: undefined }, game, effects).team;
 
-  it('RES do inimigo: só os -20% da Citlali (não -40%)', () => {
+  it('RES do inimigo: o -20% da Citlali é uma janela (não fixo, e não -40% com a semente)', () => {
     const t = team();
-    expect(assembleTeam(t, {}).enemyRes.Pyro).toBeCloseTo(t.config.enemyBaseRes - 0.2, 9);
+    const asm = assembleTeam(t, {});
+    expect(asm.enemyRes.Pyro).toBeCloseTo(t.config.enemyBaseRes, 9);
+    const w = asm.buffs.find((x) => x.id.endsWith('-a1') && x.delta.resShred);
+    expect(w?.delta.resShred?.Pyro).toBeCloseTo(0.2, 9);
   });
   it('Mavuika: o ATK% e o DMG% semeados saem do bloco estático (os buffs A1 e A4 valem por faixa)', () => {
     const e = team().members[0].characterEffect!;

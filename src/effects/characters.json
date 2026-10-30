@@ -410,7 +410,7 @@
         "label": "Citlali A1",
         "minConstellation": 0,
         "scope": "self",
-        "timed": false,
+        "timed": true,
         "resShred": {
           "value": 0.2,
           "elements": [
@@ -419,7 +419,7 @@
           ]
         },
         "flat": [],
-        "note": "Assume a redução de RES Pyro e Hydro do inimigo (20%, 12 s depois de Congelar ou Derreter) sempre ativa."
+        "note": "Assume a redução de RES Pyro e Hydro do inimigo (20%, 12 s depois de Congelar ou Derreter) como janela de tempo (o usuário liga e decide a duração)."
       },
       {
         "id": "a4s",
@@ -530,7 +530,7 @@
         "label": "Citlali C2 (RES)",
         "minConstellation": 2,
         "scope": "self",
-        "timed": false,
+        "timed": true,
         "resShred": {
           "value": 0.2,
           "elements": [
@@ -539,7 +539,7 @@
           ]
         },
         "flat": [],
-        "note": "Soma mais 20% de redução de RES Pyro e Hydro ao A1 (assume sempre ativa)."
+        "note": "Soma mais 20% de redução de RES Pyro e Hydro ao A1 (janela de tempo: o usuário liga e decide a duração)."
       },
       {
         "id": "c6t",
@@ -12227,7 +12227,7 @@
         "label": "Flins C2 (RES Electro)",
         "minConstellation": 2,
         "scope": "self",
-        "timed": false,
+        "timed": true,
         "team": {
           "moonsign": 2
         },
@@ -12238,7 +12238,7 @@
           ]
         },
         "flat": [],
-        "note": "Com Moonsign: Ascendant Gleam, -25% de RES Electro (assumida sempre ativa)."
+        "note": "Com Moonsign: Ascendant Gleam, -25% de RES Electro (janela de tempo: o usuário liga e decide a duração)."
       },
       {
         "id": "c6",

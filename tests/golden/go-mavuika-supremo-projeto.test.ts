@@ -49,6 +49,8 @@ describe('GO: Supremo da Mavuika de ponta a ponta (1.516.981)', () => {
     const a4 = project.buffWindows.find((w) => w.tag === 'label:Mavuika A4')!;
     // O GO assume o dono em Nightsoul: o extra de +75% da arma vira uma janela cobrindo a rotação.
     project.enabled = [...(project.enabled ?? []), 'cbuff-0-arma:nightsoul']; // projeto com fontes de gear escolhidas à mão
+    // A redução de RES da Citlali (A1) é uma janela de 12 s; aqui cobre a rotação, como o GO assume.
+    project.buffWindows.push({ id: 'w-citlali-res', tag: 'label:Citlali A1', start: 0, end: 30 });
     project.buffWindows.push({ id: 'w-nightsoul', tag: 'label:A Thousand Blazing Suns: Bênção do Espírito da Noite (+75%)', start: 0, end: 30 });
     a4.start = 8.9;
     a4.end = 18.9;

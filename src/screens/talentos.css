@@ -5,6 +5,7 @@
 .tl { display: flex; flex-direction: column; gap: var(--panel-gap); min-width: 0; }
 .tl-bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-3); }
 .tl-bar .grow { flex: 1; }
+.kit-legend { display: inline-flex; flex-wrap: wrap; gap: var(--sp-2); align-items: center; }
 .tl-reacts { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-2) var(--sp-5); padding: var(--sp-3) var(--panel-pad); background: var(--panel-bg); border: 1px solid var(--line-2); border-radius: var(--r-panel); }
 .tl-reacts .lb { display: inline-flex; align-items: center; gap: var(--sp-2); font-family: var(--font-display); font-weight: 600; font-size: var(--fs-1); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
 .tl-reacts .x { display: inline-flex; align-items: baseline; gap: var(--sp-2); font-size: var(--fs-2); }

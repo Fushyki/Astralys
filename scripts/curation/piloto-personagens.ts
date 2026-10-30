@@ -4,6 +4,7 @@
  * se o texto mudar. As notas aqui SOBREPÕEM as de `charnotes*.ts` (`null` apaga a nota).
  */
 import type { BuffCuration, NoteCuration, ProcCuration, Src } from './characters';
+import type { Val } from './sets';
 
 const u = (note: string) => ({ kind: 'utility' as const, note });
 const x = (note: string) => ({ kind: 'partial' as const, note });
@@ -67,6 +68,19 @@ export const PILOTO_BUFFS: Record<string, BuffCuration[]> = {
       expect: "Nearby opponents' DEF is decreased by 20%",
       note: 'DEF do inimigo -20% enquanto ela está na forma Anel (Ring of Searing Radiance), em Bênção do Espírito da Noite. Janela de tempo: o usuário liga e decide a duração.',
     },
+  ],
+};
+
+/** Cura, escudo, energia e recarga: números só informativos (aba de talentos), fora do cálculo de dano. `{n}` = valor n, `{n%}` = em porcentagem. */
+export interface InfoCuration { src: Src; kind: 'cura' | 'escudo' | 'energia' | 'recarga'; label: string; text: string; values: Val[]; expect: string }
+
+export const PILOTO_INFOS: Record<string, InfoCuration[]> = {
+  Iansan: [
+    { src: 'const1', kind: 'energia', label: 'Energia que ela recupera', text: '{1} de Energia a cada {0} pontos de Espírito da Noite gastos; no máximo uma vez a cada {2} s', values: [{ p: 0 }, { p: 1 }, { p: 2 }], expect: 'she will restore 15 Elemental Energy for every 6 Nightsoul points' },
+  ],
+  Flins: [
+    { src: 'const1', kind: 'energia', label: 'Energia que ele recupera', text: '{0} de Energia quando o time dispara Lunar-Carregado; no máximo uma vez a cada {1} s', values: [{ p: 0 }, { p: 1 }], expect: 'Flins will recover 8 Elemental Energy' },
+    { src: 'const1', kind: 'recarga', label: 'Recarga básica do Northland Spearstorm', text: 'cai para {0} s', values: [{ lit: 4 }], expect: 'is reduced to 4s' },
   ],
 };
 

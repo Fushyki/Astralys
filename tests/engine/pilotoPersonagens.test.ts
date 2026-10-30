@@ -120,3 +120,12 @@ describe('Iansan: ATK do Supremo por nível e por pontos de Espírito da Noite',
     expect(b.convert.capByLevel.table[14]).toBe(890);
   });
 });
+
+describe('Informativos (cura, escudo, energia, recarga): fora do cálculo', () => {
+  const chars = JSON.parse(readFileSync(path.join(root, 'src/effects/characters.json'), 'utf8'));
+  it('Iansan C1: energia com o número do Lunaris, sem buff no cálculo', () => {
+    const e = chars.find((c: { character: string }) => c.character === 'Iansan');
+    expect(e.infos).toEqual([expect.objectContaining({ src: 'const1', kind: 'energia', text: expect.stringContaining('15 de Energia a cada 6 pontos') })]);
+    expect(e.buffs.some((b: { minConstellation: number }) => b.minConstellation === 1)).toBe(false);
+  });
+});

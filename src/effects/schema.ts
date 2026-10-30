@@ -293,6 +293,16 @@ export const CharacterNoteSchema = z.object({
 });
 export type CharacterNote = z.infer<typeof CharacterNoteSchema>;
 
+/** Número que NÃO entra no cálculo de dano (cura, escudo, energia, recarga): só aparece na aba de talentos para o usuário saber. */
+export const CharacterInfoSchema = z.object({
+  src: z.enum(['p1', 'p2', 'p3', 'const1', 'const2', 'const3', 'const4', 'const5', 'const6']),
+  kind: z.enum(['cura', 'escudo', 'energia', 'recarga']),
+  label: z.string().min(1),
+  /** Texto com o número já preenchido (do parâmetro do Lunaris), ex.: "15 de Energia a cada 6 pontos, a cada 18 s". */
+  text: z.string().min(1),
+});
+export type CharacterInfo = z.infer<typeof CharacterInfoSchema>;
+
 export const CharacterEffectSchema = z.object({
   character: z.string().min(1),
   atkPct: frac,
@@ -309,6 +319,8 @@ export const CharacterEffectSchema = z.object({
   buffs: z.array(CharacterBuffSchema).default([]),
   /** Passivas e constelações sem buff: "utility" (nada a calcular em dano) ou "partial" (parte do dano fora do cálculo). */
   notes: z.array(CharacterNoteSchema).default([]),
+  /** Cura, escudo, energia e recarga do kit: informativos, fora do cálculo de dano. */
+  infos: z.array(CharacterInfoSchema).optional(),
   /** Golpes extras de passiva/constelação (a partir de `minConstellation`), para pôr na linha do tempo. */
   procs: z.array(ProcSchema).default([]),
   /** Facções que contam para regras de time (Genshin Optimizer `flags.isMoonsign` / `flags.isHexerei`). */

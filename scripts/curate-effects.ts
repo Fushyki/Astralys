@@ -40,7 +40,7 @@ import { CHARACTER_NOTES } from './curation/charnotes';
 import { CHARACTER_PROCS, CHARACTERS_PROC_BUFFS } from './curation/procs';
 import { FACTIONS as LUNAR_FACTIONS, LUNAR_BUFFS, LUNAR_PROCS as MOON_PROCS, SPECIAL_MOVES as MOON_SPECIAL } from './curation/lunar';
 import { EXTRA_BUFFS, EXTRA_FACTIONS, EXTRA_PROCS, EXTRA_SPECIAL } from './curation/extras';
-import { PILOTO_BUFFS, PILOTO_NOTES, PILOTO_PROCS } from './curation/piloto-personagens';
+import { PILOTO_BUFFS, PILOTO_INFOS, PILOTO_NOTES, PILOTO_PROCS } from './curation/piloto-personagens';
 
 /** Junta listas por personagem de vários arquivos de curadoria. */
 const mergeLists = <T>(...all: Record<string, T[]>[]): Record<string, T[]> => {
@@ -533,6 +533,17 @@ function buildCharacters(): CharacterEffect[] {
       };
     });
     const notes = Object.entries(CHARACTER_NOTES[name] ?? {}).map(([src, n]) => ({ src, kind: n!.kind, note: n!.note }));
+    const infos = (PILOTO_INFOS[name] ?? []).map((i) => {
+      const isConst = i.src.startsWith('const');
+      const node = (isConst ? raw.constellations : raw.passives)?.[i.src];
+      if (!node) throw new Error(`${name} ${i.label}: ${i.src} não existe`);
+      if (!strip(node.description).includes(i.expect)) errors.push(`${name} ${i.label}: a descrição de ${i.src} não contém "${i.expect}" (o Lunaris mudou?)`);
+      const text = i.text.replace(/\{(\d+)(%?)\}/g, (_, n: string, pct: string) => {
+        const val = valueOf(i.values[Number(n)], node.params, `${name} ${i.label}`);
+        return String(pct ? round(val * 100) + '%' : val);
+      });
+      return { src: i.src, kind: i.kind, label: i.label, text };
+    });
     const procs = [...(CHARACTER_PROCS[name] ?? []), ...(LUNAR_PROCS[name] ?? [])].map((p) => {
       const isConst = p.src.startsWith('const');
       const node = (isConst ? raw.constellations : raw.passives)?.[p.src];
@@ -570,7 +581,7 @@ function buildCharacters(): CharacterEffect[] {
     if (handMadeEntry) {
       // Personagem que já veio da planilha de referência: os efeitos dela ficam e a curadoria soma os buffs e as notas.
       const at = out.findIndex((e) => e.character === name);
-      out[at] = CharacterEffectSchema.parse({ ...handMadeEntry, buffs: [...(handMadeEntry.buffs ?? []).filter((old) => !buffs.some((n) => n.id === old.id)), ...buffs], notes, procs, factions, specialMoves, pointMoves });
+      out[at] = CharacterEffectSchema.parse({ ...handMadeEntry, buffs: [...(handMadeEntry.buffs ?? []).filter((old) => !buffs.some((n) => n.id === old.id)), ...buffs], notes, infos, procs, factions, specialMoves, pointMoves });
       continue;
     }
     out.push(CharacterEffectSchema.parse({
@@ -578,6 +589,7 @@ function buildCharacters(): CharacterEffect[] {
       atkPct: 0, dmgPct: 0, critRate: 0, critDmg: 0, em: 0,
       buffs,
       notes,
+      infos,
       procs,
       factions,
       specialMoves,

@@ -113,7 +113,8 @@ describe('mecânicas novas dos buffs', () => {
     const c0 = flat(0);
     expect(c0).toHaveLength(1);
     expect(c0[0]).toMatchObject({ sourceStat: 'HP', hitTypes: ['normal'] });
-    expect(flat(2)).toHaveLength(2);
+    // A C2 reforça (substitui) o efeito base: um só (os 5 stacks são a escolha do buff).
+    expect(flat(2)).toHaveLength(1);
   });
 
   it('Vodyanitsa C1: ATK fixo dos aliados = 0,8% do HP máximo dela', () => {

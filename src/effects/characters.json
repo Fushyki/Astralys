@@ -4036,7 +4036,14 @@
         "note": "Só velocidade de ataque."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "const1",
+        "kind": "recarga",
+        "label": "Recarga do Opening Flourish",
+        "text": "a recarga cai 18%"
+      }
+    ],
     "procs": [],
     "factions": [],
     "specialMoves": [],
@@ -5241,21 +5248,6 @@
     "appliesToSelf": false,
     "buffs": [
       {
-        "id": "c4",
-        "label": "Navia C4",
-        "minConstellation": 4,
-        "scope": "self",
-        "timed": false,
-        "resShred": {
-          "value": 0.2,
-          "elements": [
-            "Geo"
-          ]
-        },
-        "flat": [],
-        "note": "Assume a redução de RES Geo (8 s) sempre ativa."
-      },
-      {
         "id": "a1",
         "label": "Navia A1",
         "minConstellation": 0,
@@ -5408,6 +5400,21 @@
           "unit": "stacks acima de 3"
         },
         "note": "Assume 6 stacks de Crystal Shrapnel (3 acima de 3): +135% de Dano Crítico no Ceremonial Crystalshot: ligue na janela do golpe."
+      },
+      {
+        "id": "c4",
+        "label": "Navia C4",
+        "minConstellation": 4,
+        "scope": "self",
+        "timed": true,
+        "resShred": {
+          "value": 0.2,
+          "elements": [
+            "Geo"
+          ]
+        },
+        "flat": [],
+        "note": "RES Geo do inimigo -20% por 8 s depois do Singing Salute acertar: janela de tempo, o usuário liga e decide a duração (antes estava sempre ligado)."
       }
     ],
     "notes": [
@@ -5415,9 +5422,21 @@
         "src": "const1",
         "kind": "utility",
         "note": "Só energia e recarga."
+      },
+      {
+        "src": "p1",
+        "kind": "partial",
+        "note": "Entra o +40% de DMG de Normal, Carregado e Imersivo (janela de 4 s). A conversão para Geo (infusão) não entra: escolha o elemento do golpe à mão."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "const1",
+        "kind": "energia",
+        "label": "Energia por Crystal Shrapnel",
+        "text": "cada acúmulo gasto devolve 3 de Energia (até 9) e reduz a recarga do Singing Salute em 1 s (até 3 s)"
+      }
+    ],
     "procs": [
       {
         "id": "c2",
@@ -5677,9 +5696,21 @@
         "src": "const1",
         "kind": "partial",
         "note": "O Tamoto extra não entra."
+      },
+      {
+        "src": "p1",
+        "kind": "partial",
+        "note": "Entra o ataque coordenado do Tamoto (100% do golpe para cima, conta como habilidade). A infusão Geo do efeito Tailoring (5 s) não entra: escolha o elemento do golpe à mão."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "const6",
+        "kind": "recarga",
+        "label": "Recarga do Fluttering Hasode",
+        "text": "cai 12 s depois de um efeito do Tailor-Made"
+      }
+    ],
     "procs": [
       {
         "id": "a1",
@@ -12883,28 +12914,10 @@
         "note": "+20% de DMG Geo por 12 s depois de um Nightsoul Burst: ligue nas janelas."
       },
       {
-        "id": "a4",
-        "label": "Kachina A4",
-        "minConstellation": 0,
-        "scope": "self",
-        "timed": false,
-        "flat": [
-          {
-            "name": "Turbo Twirly por DEF",
-            "sourceStat": "DEF",
-            "perPoint": 0.2,
-            "hitTypes": [
-              "skill"
-            ]
-          }
-        ],
-        "note": "Soma 20% da DEF ao dano base da habilidade (Turbo Twirly)."
-      },
-      {
         "id": "c4",
         "label": "Kachina C4",
         "minConstellation": 4,
-        "scope": "self",
+        "scope": "team",
         "timed": true,
         "stats": {
           "atkPct": 0,
@@ -12941,7 +12954,29 @@
           ],
           "default": 1
         },
-        "note": "Assume 1 inimigo (+8% de DEF): ligue na janela. Com 4 ou mais inimigos é 20%."
+        "note": "DEF do personagem ATIVO dentro do Turbo Drill Field: 8/12/16/20% com 1/2/3/4+ inimigos (escolha os inimigos; padrão 1). Vale para quem estiver em campo na janela, não só para a Kachina. Ligue na janela do Supremo."
+      },
+      {
+        "id": "a4",
+        "label": "Kachina A4",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "flat": [
+          {
+            "name": "Turbo Twirly por DEF",
+            "sourceStat": "DEF",
+            "perPoint": 0.2,
+            "hitTypes": [
+              "skill"
+            ],
+            "labels": [
+              "Turbo Twirly Mounted DMG",
+              "Turbo Twirly Independent DMG"
+            ]
+          }
+        ],
+        "note": "Soma 20% da DEF ao dano base do Turbo Twirly (montado e independente). O Supremo e os Normais não recebem."
       }
     ],
     "notes": [
@@ -12956,7 +12991,14 @@
         "note": "Só pontos de Nightsoul (a mecânica de estado não muda o dano calculado)."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "const1",
+        "kind": "energia",
+        "label": "Energia que ela recupera",
+        "text": "3 de Energia quando um aliado pega um Estilhaço ou causa Lunar-Cristalizar; no máximo uma vez a cada 5 s"
+      }
+    ],
     "procs": [
       {
         "id": "c6",
@@ -13300,25 +13342,6 @@
         "note": "+20% de DEF por 15 s depois do Nightsoul Burst de um aliado: ligue na janela."
       },
       {
-        "id": "c6",
-        "label": "Xilonen C6",
-        "minConstellation": 6,
-        "scope": "self",
-        "timed": false,
-        "flat": [
-          {
-            "name": "Normal e Imersivo por DEF",
-            "sourceStat": "DEF",
-            "perPoint": 3,
-            "hitTypes": [
-              "normal",
-              "plunge"
-            ]
-          }
-        ],
-        "note": "Soma 300% da DEF ao dano base dos Normais e Imersivos (assume o Imperishable Night sempre ativo)."
-      },
-      {
         "id": "c4",
         "label": "Xilonen C4 (Blooming Blessing)",
         "minConstellation": 4,
@@ -13339,6 +13362,25 @@
           }
         ],
         "note": "65% da DEF dela somados aos 6 primeiros Normais, Carregados e Imersivos da equipe na rotação (no jogo cada membro tem 6 cargas)."
+      },
+      {
+        "id": "c6",
+        "label": "Xilonen C6",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": false,
+        "flat": [
+          {
+            "name": "Normal e Imersivo por DEF",
+            "sourceStat": "DEF",
+            "perPoint": 3,
+            "hitTypes": [
+              "normal",
+              "plunge"
+            ]
+          }
+        ],
+        "note": "Soma 300% da DEF ao dano base dos Normais e Imersivos dela (assume o Nightsoul's Blessing ativo; o dano fixo não tem liga/desliga). O bônus de DMG do Imperishable Night (5 s) não tem número no texto e não entra."
       }
     ],
     "notes": [
@@ -13353,7 +13395,20 @@
         "note": "Só consumo de Nightsoul."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "const2",
+        "kind": "energia",
+        "label": "Energia e recarga (aliados Electro)",
+        "text": "aliados Electro recuperam 25 de Energia e o Supremo deles cai 6 s"
+      },
+      {
+        "src": "const6",
+        "kind": "cura",
+        "label": "Cura do Imperishable Night",
+        "text": "cura os aliados próximos em 120% da DEF dela a cada 1,5 s"
+      }
+    ],
     "procs": [],
     "factions": [],
     "specialMoves": [],
@@ -23177,24 +23232,24 @@
           "max": 30,
           "unit": "pontos acima de 70"
         },
-        "note": "Assume 100 pontos de Phase Shift Radiance (30 acima de 70): dano Lunar-Cristalizar dela elevado em 48% por 3 s: ligue na janela."
+        "note": "+1,6% por ponto consumido acima de 70, por 3 s, no Spirit Steed's Stride e no Lunar-Cristalizar dela (não acumula): ligue na janela. HIPÓTESE: o teto de 100 pontos (30 acima de 70, 48%) não está no texto do C6; escolha de 0 a 30 pontos."
       }
     ],
     "notes": [
       {
         "src": "p1",
         "kind": "partial",
-        "note": "O dano extra do 2º golpe do Spirit Steed's Stride (60% da DEF) não entra: o motor não tem bônus Lunar só de um golpe."
+        "note": "Pendente: o +60% da DEF no 2º golpe do Spirit Steed's Stride não entra. É dano fixo de um golpe Lunar e o dano fixo só vale para golpes diretos."
       },
       {
         "src": "const1",
         "kind": "partial",
-        "note": "Os +220% de DMG Lunar-Cristalizar só no 1º Spirit Steed's Stride não entram (bônus de um golpe só)."
+        "note": "Pendente: o +220% de DMG Lunar-Cristalizar só no 1º Spirit Steed's Stride de cada modo não entra (bônus de um golpe só). O uso extra e os 100 pontos de Radiance são mecânica."
       },
       {
         "src": "const2",
         "kind": "partial",
-        "note": "O +30% da equipe entra (faixa); os +550% da DEF no 2º golpe do Spirit Steed's Stride não entram (bônus de um golpe só)."
+        "note": "Entra o +30% de DMG Lunar-Cristalizar da equipe (janela). Pendente: os +550% da DEF no 2º golpe do Spirit Steed's Stride (Moonsign: Ascendant Gleam) não entram, pelo mesmo motivo do A1."
       }
     ],
     "infos": [],

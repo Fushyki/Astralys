@@ -2,6 +2,7 @@
  * Leitor independente (Fase 3, item 2): compara os efeitos que um segundo agente leu SÓ do texto do Lunaris com a curadoria.
  * Uso: `npx tsx scripts/compare-reader.ts <leitor.json> [saida.md]`. Não resolve discordância: escreve a fila de revisão.
  * Compara por personagem: (stat, valor, alvo). Não compara nó nem condição (o buff não guarda o nó).
+ * Buffs com `level`/`convert` e bônus de reação ficam de fora. Cada discordância ainda pede olho humano (o leitor lê o valor máximo, a curadoria pode usar stacks).
  * shortcut: golpes extras (`extraDamage`) e valores por nível de talento ficam de fora; ampliar quando precisar.
  */
 import { readFileSync, writeFileSync } from 'node:fs';
@@ -20,8 +21,10 @@ function ourItems(c: string): Item[] {
   const e = ours.find((x) => x.character === c);
   const out: Item[] = [];
   for (const b of e?.buffs ?? []) {
+    if (b.level || b.convert) continue; // valor por nível de talento ou por ponto de stat: o leitor lê o valor máximo, não comparável
     const label = `${b.id} (${b.scope}${b.timed ? ', janela' : ''})`;
     for (const [k, v] of Object.entries(b.stats ?? {})) {
+      if (k === 'reactionBonus' || k === 'baseMultByType') continue; // o leitor não separa reação do dano comum
       if (typeof v === 'number' && v) out.push({ stat: k, value: v, label });
       else if (v && typeof v === 'object') for (const x of Object.values(v as Record<string, number>)) if (x) out.push({ stat: k.replace(/ByType$/, ''), value: x, label });
     }

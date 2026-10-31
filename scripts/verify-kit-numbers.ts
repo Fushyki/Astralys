@@ -8,7 +8,7 @@
  */
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
-import type { CharacterEffect, WeaponEffect } from '../src/effects/schema';
+import type { CharacterEffect, SetEffect, WeaponEffect } from '../src/effects/schema';
 
 const root = process.cwd();
 const read = <T>(rel: string): T => JSON.parse(readFileSync(path.join(root, rel), 'utf8'));
@@ -62,6 +62,24 @@ export function verifyWeapon(effect: WeaponEffect): Failure[] {
   return out;
 }
 
+interface SetText { name: string; bonuses: Record<string, { description: string; params: number[] }> }
+const setTexts = read<SetText[]>('src/data/generated/artifacts.json');
+
+/** Sets: cada número do efeito (2 e 4 peças) tem que estar nos parâmetros ou na descrição do set no Lunaris. */
+export function verifySet(effect: SetEffect): Failure[] {
+  const t = setTexts.find((x) => x.name === effect.set);
+  if (!t) return [];
+  const ok: number[] = [];
+  for (const b of Object.values(t.bonuses)) {
+    const ns = [...b.params, ...[...b.description.matchAll(/\d+(?:[.,]\d+)?/g)].map((m) => Number(m[0].replace(',', '.')))];
+    for (const n of ns) for (let k = 1; k <= 20; k++) ok.push(n * k, (n / 100) * k);
+  }
+  const { fonte_info, note, ...rest } = effect as SetEffect & { fonte_info?: string; note?: string };
+  return numbersOf(rest)
+    .filter(([, v]) => !ok.some((a) => close(a, v) || close(a, -v)))
+    .map(([path, value]) => ({ weapon: effect.set, refinement: 0, path, value }));
+}
+
 interface Talents { character: { name?: string } | string; passives: unknown; constellations: unknown; skills: unknown }
 const talents = read<Talents[]>('src/data/generated/talents.json');
 /** Mantissa: tira as potências de 10 (coeficiente por ponto de stat, ex.: 0,1% por 1000 de HP = 0,000001). */
@@ -106,4 +124,8 @@ if (process.argv[1]?.endsWith('verify-kit-numbers.ts')) {
   console.log(`${effectsChars.length} personagens conferidos, ${chars.length} números que o Lunaris não autoriza.`);
   for (const f of chars.slice(0, 40)) console.log(`  ${f.weapon} ${f.path} = ${f.value}`);
   if (chars.length) process.exitCode = 1;
+  const sets = read<SetEffect[]>('src/effects/sets.json').filter((e) => !only.length || only.includes(e.set)).flatMap(verifySet);
+  console.log(`${sets.length} números de sets que o Lunaris não autoriza.`);
+  for (const f of sets.slice(0, 40)) console.log(`  ${f.weapon} ${f.path} = ${f.value}`);
+  if (sets.length) process.exitCode = 1;
 }

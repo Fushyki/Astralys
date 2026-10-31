@@ -2,7 +2,7 @@
  * Leitor independente (Fase 3, item 2): compara os efeitos que um segundo agente leu SÓ do texto do Lunaris com a curadoria.
  * Uso: `npx tsx scripts/compare-reader.ts <leitor.json> [saida.md]`. Não resolve discordância: escreve a fila de revisão.
  * Compara por personagem: (stat, valor, alvo). Não compara nó nem condição (o buff não guarda o nó).
- * Buffs com `level`/`convert` e bônus de reação ficam de fora. Cada discordância ainda pede olho humano (o leitor lê o valor máximo, a curadoria pode usar stacks).
+ * Buffs com `level`/`convert` ficam de fora; bônus de reação conta como dano; valor com stacks casa também pelo máximo. Cada discordância ainda pede olho humano (o leitor lê o valor máximo, a curadoria pode usar stacks).
  * shortcut: golpes extras (`extraDamage`) e valores por nível de talento ficam de fora; ampliar quando precisar.
  */
 import { readFileSync, writeFileSync } from 'node:fs';
@@ -15,7 +15,7 @@ const ours: CharacterEffect[] = JSON.parse(readFileSync('src/effects/characters.
 
 const SKIP = new Set(['extraDamage', 'pendente']);
 const close = (a: number, b: number) => Math.abs(a - b) <= 1e-6 * Math.max(1, Math.abs(a), Math.abs(b)) + 1e-9;
-interface Item { stat: string; value: number; label: string }
+interface Item { stat: string; value: number; label: string; /** bônus de reação: pode casar com o dano do leitor, mas sem par não é discordância (o leitor não modela reação) */ soft?: boolean; /** valores aceitos: o do buff e o do buff com todos os stacks (o leitor lê o máximo) */ any: number[] }
 
 function ourItems(c: string): Item[] {
   const e = ours.find((x) => x.character === c);
@@ -23,13 +23,15 @@ function ourItems(c: string): Item[] {
   for (const b of e?.buffs ?? []) {
     if (b.level || b.convert) continue; // valor por nível de talento ou por ponto de stat: o leitor lê o valor máximo, não comparável
     const label = `${b.id} (${b.scope}${b.timed ? ', janela' : ''})`;
+    const mult = Math.max(1, b.stacks?.max ?? 1, ...(b.stacks?.table ?? []));
+    const push = (stat: string, value: number, soft = false) => out.push({ stat: stat === 'defIgnore' ? 'defShred' : stat, value, label, soft, any: [value, value * mult] });
     for (const [k, v] of Object.entries(b.stats ?? {})) {
-      if (k === 'reactionBonus' || k === 'baseMultByType') continue; // o leitor não separa reação do dano comum
-      if (typeof v === 'number' && v) out.push({ stat: k, value: v, label });
-      else if (v && typeof v === 'object') for (const x of Object.values(v as Record<string, number>)) if (x) out.push({ stat: k.replace(/ByType$/, ''), value: x, label });
+      if (k === 'baseMultByType') continue;
+      if (typeof v === 'number' && v) push(k, v);
+      else if (v && typeof v === 'object') for (const x of Object.values(v as Record<string, number>)) if (x) push(k === 'reactionBonus' ? 'dmgPct' : k.replace(/ByType$/, ''), x, k === 'reactionBonus'); // o leitor não separa reação do dano comum
     }
-    if (b.resShred) out.push({ stat: 'resShred', value: b.resShred.value, label });
-    if (b.defShred) out.push({ stat: 'defShred', value: b.defShred, label });
+    if (b.resShred) push('resShred', b.resShred.value);
+    if (b.defShred) push('defShred', b.defShred);
   }
   return out;
 }
@@ -42,11 +44,17 @@ for (const c of names) {
   const mine = ourItems(c);
   const used = new Set<number>();
   const miss: Read[] = [];
-  for (const r of theirs) {
-    const i = mine.findIndex((m, j) => !used.has(j) && close(m.value, Math.abs(r.value)) && (m.stat === r.stat || m.stat === 'dmgPct' || r.stat === 'dmgPct'));
-    if (i < 0) miss.push(r); else { used.add(i); agree++; }
+  const matched = new Set<Read>();
+  const hit = (m: Item, r: Read, anyStat: boolean) => m.any.some((a) => close(a, Math.abs(r.value))) && (m.stat === r.stat || (anyStat && (m.stat === 'dmgPct' || r.stat === 'dmgPct')));
+  for (const anyStat of [false, true]) {
+    for (const r of theirs) {
+      if (matched.has(r)) continue;
+      const i = mine.findIndex((m, j) => !used.has(j) && hit(m, r, anyStat));
+      if (i >= 0) { used.add(i); matched.add(r); agree++; }
+    }
   }
-  const extra = mine.filter((_, j) => !used.has(j));
+  for (const r of theirs) if (!matched.has(r)) miss.push(r);
+  const extra = mine.filter((m, j) => !used.has(j) && !m.soft);
   onlyReader += miss.length; onlyOurs += extra.length;
   md.push(`## ${c}`, '');
   for (const r of miss) md.push(`- SÓ NO LEITOR: ${r.node} ${r.stat} = ${r.value} (${r.scope ?? '?'}) ${r.condition ?? ''}`);

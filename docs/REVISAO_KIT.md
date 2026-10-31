@@ -1,7 +1,7 @@
 # Fila de revisão do leitor independente
 
 Gerado por `scripts/compare-reader.ts`. Discordância não é resolvida sozinha: o Davi decide.
-Concordam: 295. Só no leitor: 136. Só na curadoria: 76.
+Concordam: 328. Só no leitor: 103. Só na curadoria: 72.
 
 
 ## Xingqiu
@@ -30,7 +30,7 @@ Concordam: 295. Só no leitor: 136. Só na curadoria: 76.
 
 ## Kamisato Ayaka
 
-- SÓ NA CURADORIA: c4 (self, janela) defShred = 0.3
+- SÓ NA CURADORIA: a1 (self, janela) dmgPct = 0.3
 
 ## Qiqi
 
@@ -95,8 +95,8 @@ Concordam: 295. Só no leitor: 136. Só na curadoria: 76.
 
 ## Skirk
 
+- SÓ NO LEITOR: p2 dmgPct = 0.7 (self) Normal Attack em Seven-Phase Flash, 3 stacks max (170%)
 - SÓ NO LEITOR: p2 dmgPct = 0.6 (self) Burst Havoc: Ruin, 3 stacks max (160%)
-- SÓ NO LEITOR: const2 atkPct = 0.7 (self) 12.5s apos Havoc: Extinction
 
 ## Lohen
 
@@ -128,7 +128,7 @@ Concordam: 295. Só no leitor: 136. Só na curadoria: 76.
 
 ## Sucrose
 
-- SÓ NO LEITOR: const6 dmgPct = 0.2 (team) Elemental DMG do elemento absorvido
+- SÓ NO LEITOR: p2 em = 0.2 (team) valor = 20% do EM da Sucrose (fracao), excl. Sucrose, 8s
 - SÓ NA CURADORIA: p4s (team, janela) dmgPct = 0.057143
 - SÓ NA CURADORIA: p4s (team, janela) dmgPct = 0.057143
 - SÓ NA CURADORIA: p4s (team, janela) dmgPct = 0.057143
@@ -162,7 +162,7 @@ Concordam: 295. Só no leitor: 136. Só na curadoria: 76.
 
 ## Lynette
 
-- SÓ NO LEITOR: const6 dmgPct = 0.2 (self) Anemo DMG apos Enigma Thrust, 6s
+- SÓ NO LEITOR: p1 atkPct = 0.2 (team) 4 elementos no time, max, 10s
 - SÓ NA CURADORIA: a1 (team, janela) atkPct = 1
 
 ## Xianyun
@@ -179,9 +179,7 @@ Concordam: 295. Só no leitor: 136. Só na curadoria: 76.
 
 ## Yumemizuki Mizuki
 
-- SÓ NO LEITOR: p4 em = 0.1 (team) valor = 10% do EM da Mizuki (fracao), em Dreamdrifter
 - SÓ NO LEITOR: const2 dmgPct = 0.0004 (team) Pyro/Hydro/Cryo/Electro, por ponto de EM da Mizuki
-- SÓ NO LEITOR: const6 critRate = 0.2 (self) max, 0.04% por EM acima de 500
 - SÓ NO LEITOR: const6 critDmg = 0.8 (self) max, 0.16% por EM acima de 500
 
 ## Ifa
@@ -220,7 +218,6 @@ Concordam: 295. Só no leitor: 136. Só na curadoria: 76.
 
 - SÓ NO LEITOR: p2 dmgPct = 0.2 (self) Hydro DMG = 20% do ER (value = fator por ER)
 - SÓ NO LEITOR: const1 dmgPct = 0.24 (team) max: reacoes Hydro (Vaporize/EC/Swirl/Lunar) +15%, off-field 160% = 24%, alvo com Omen
-- SÓ NO LEITOR: const4 critRate = 0.15 (team) atacando inimigo com Omen
 - SÓ NO LEITOR: const6 dmgPct = 1 (self) Charged Attack em inimigo com Omen = 200% do dano (+100%)
 
 ## Sangonomiya Kokomi
@@ -272,19 +269,12 @@ Concordam: 295. Só no leitor: 136. Só na curadoria: 76.
 
 ## Columbina
 
-- SÓ NO LEITOR: p3 dmgPct = 0.07 (team) max: Base DMG de reacoes Lunares, 0.2% por 1000 Max HP
-- SÓ NO LEITOR: const1 dmgPct = 0.015 (team) Lunar Reaction DMG elevado
-- SÓ NO LEITOR: const2 dmgPct = 0.07 (team) Lunar Reaction DMG elevado
-- SÓ NO LEITOR: const3 dmgPct = 0.015 (team) Lunar Reaction DMG elevado
-- SÓ NO LEITOR: const4 dmgPct = 0.015 (team) Lunar Reaction DMG elevado
-- SÓ NO LEITOR: const5 dmgPct = 0.015 (team) Lunar Reaction DMG elevado
-- SÓ NO LEITOR: const6 dmgPct = 0.07 (team) Lunar Reaction DMG elevado
 - SÓ NA CURADORIA: c6lb (team, janela) critDmg = 0.8
 - SÓ NA CURADORIA: c6lcr (team, janela) critDmg = 0.8
 
 ## Vodyanitsa
 
-- SÓ NO LEITOR: const6 dmgPct = 0.25 (team) Stellar Swirl reaction DMG, Song ativo
+- Sem discordância.
 
 ## Razor
 
@@ -302,8 +292,6 @@ Concordam: 295. Só no leitor: 136. Só na curadoria: 76.
 ## Raiden Shogun
 
 - SÓ NO LEITOR: p2 dmgPct = 0.004 (self) bonus Electro por cada 1% de ER acima de 100% (por unidade)
-- SÓ NO LEITOR: const2 defShred = 0.6 (self) durante Musou Isshin
-- SÓ NA CURADORIA: c2 (self, janela) defIgnore = 0.6
 
 ## Kujou Sara
 
@@ -312,9 +300,7 @@ Concordam: 295. Só no leitor: 136. Só na curadoria: 76.
 ## Yae Miko
 
 - SÓ NO LEITOR: p2 dmgPct = 0.0015 (self) dano do Sesshou Sakura por ponto de EM (por unidade)
-- SÓ NO LEITOR: const6 defShred = 0.6 (self) ataques do Sesshou Sakura ignoram 60% DEF
 - SÓ NO LEITOR: const6 critDmg = 2 (self) apenas dano Stellar-Conduct
-- SÓ NA CURADORIA: c6 (self, janela) defIgnore = 0.6
 
 ## Kuki Shinobu
 
@@ -349,7 +335,7 @@ Concordam: 295. Só no leitor: 136. Só na curadoria: 76.
 ## Varesa
 
 - SÓ NA CURADORIA: c6 (self) critRate = 0.1
-- SÓ NA CURADORIA: c4 (self, janela) dmgPct = 1
+- SÓ NA CURADORIA: c6 (self) critDmg = 1
 
 ## Ineffa
 
@@ -360,26 +346,20 @@ Concordam: 295. Só no leitor: 136. Só na curadoria: 76.
 
 - SÓ NO LEITOR: p2 em = 160 (self) max (8% do ATK)
 - SÓ NO LEITOR: p3 dmgPct = 0.14 (self) Base DMG de Lunar-Charged, max (0.7% por 100 ATK)
-- SÓ NO LEITOR: const4 atkPct = 0.2 (self) bonus permanente
 - SÓ NO LEITOR: const4 em = 220 (self) max (10% do ATK), substitui o EM do p2
-- SÓ NO LEITOR: const6 dmgPct = 0.35 (self) dano de Lunar-Charged de Flins (elevated)
-- SÓ NO LEITOR: const6 dmgPct = 0.1 (team) Lunar-Charged de aliados, Moonsign Ascendant Gleam (elevated)
 
 ## Mitya
 
 - SÓ NO LEITOR: p3 dmgPct = 0.14 (team) Base DMG de Stellar-Conduct, max (texto 0.028% por EM)
-- SÓ NO LEITOR: const6 dmgPct = 0.2 (team) dano Stellar-Conduct (elevated)
 - SÓ NA CURADORIA: a1 (team, janela) em = 150
 
 ## Valeriy
 
 - SÓ NO LEITOR: const6 dmgPct = 1 (self) Charged especial e Thunderburst Shells
-- SÓ NO LEITOR: const6 critDmg = 0.4 (enemy) apenas dano Stellar-Conduct recebido, 7s
 
 ## Alyosha
 
 - SÓ NO LEITOR: p2 dmgPct = 0.7 (self) Skill e Burst, max (0.35% por 1% ER)
-- SÓ NO LEITOR: p3 dmgPct = 0.2 (self) Stellar-Conduct do personagem, Radiance, Hunter's Precision
 
 ## Amber
 
@@ -450,15 +430,11 @@ Concordam: 295. Só no leitor: 136. Só na curadoria: 76.
 ## Durin
 
 - SÓ NO LEITOR: p2 dmgPct = 0.75 (self) ataques periodicos dos dragoes, 3% por 100 ATK max 75%, 20s
-- SÓ NO LEITOR: const6 defShred = 0.3 (enemy) Purity+White Flame acertam, 6s
-- SÓ NO LEITOR: const6 defShred = 0.4 (self) Darkness/Dark Decay ignora 40% adicional
-- SÓ NA CURADORIA: c6 (self, janela) defIgnore = 0.3
+- SÓ NO LEITOR: const4 dmgPct = 0.4 (self) dano de Q
 - SÓ NA CURADORIA: a1hex (self, janela) resShred = 0.35
 
 ## Nicole
 
-- SÓ NO LEITOR: const6 defShred = 0.4 (team) personagens com Guidance of Theosis ignoram 40% DEF
-- SÓ NA CURADORIA: c6 (team, janela) defIgnore = 0.4
 - SÓ NA CURADORIA: c2res-hydro (self, janela) resShred = 0.25
 - SÓ NA CURADORIA: c2res-electro (self, janela) resShred = 0.25
 - SÓ NA CURADORIA: c2res-cryo (self, janela) resShred = 0.25
@@ -557,10 +533,6 @@ Concordam: 295. Só no leitor: 136. Só na curadoria: 76.
 - SÓ NO LEITOR: p1 em = 250 (others) max; 25% do maior EM do time para o ativo no campo (Shrine of Maya)
 - SÓ NO LEITOR: p2 dmgPct = 0.8 (self) max; Tri-Karma Purification, 0.1% por EM acima de 200
 - SÓ NO LEITOR: p2 critRate = 0.24 (self) max; Tri-Karma Purification, 0.03% por EM acima de 200
-- SÓ NO LEITOR: const2 critRate = 0.2 (enemy) reacoes Burning/Bloom/Hyperbloom/Burgeon podem critar, CR 20% CD 100% fixos (Seed)
-- SÓ NO LEITOR: const2 critDmg = 1 (enemy) idem, CD fixo 100% nessas reacoes
-- SÓ NO LEITOR: const2 critRate = 0.1 (enemy) Lunar-Bloom recebido CR +10% (Seed)
-- SÓ NO LEITOR: const2 critDmg = 0.2 (enemy) Lunar-Bloom recebido CD +20% (Seed)
 - SÓ NO LEITOR: const4 em = 160 (self) max; 4+ inimigos com Seed (100/120/140/160)
 - SÓ NA CURADORIA: c4 (self, janela) em = 100
 
@@ -572,13 +544,13 @@ Concordam: 295. Só no leitor: 136. Só na curadoria: 76.
 
 - SÓ NO LEITOR: p2 dmgPct = 1 (self) max; 0.1% por EM; Projection Attacks e Particular Field
 - SÓ NO LEITOR: const4 em = 30 (others) 15s; por Mirror consumido (valor por Mirror)
-- SÓ NO LEITOR: const6 critRate = 0.1 (self) 6s ao gerar Mirror com maximo
+- SÓ NO LEITOR: const4 dmgPct = 0.1 (self) Dendro DMG Bonus 15s por Mirror gerado
 - SÓ NA CURADORIA: c4m (others, janela) em = 90
 - SÓ NA CURADORIA: c4d (self, janela) dmgPct = 0.3
 
 ## Kaveh
 
-- SÓ NO LEITOR: const4 dmgPct = 0.6 (self) Dendro Cores de Bloom/Lunar-Bloom que Kaveh causa: +60% DMG
+- Sem discordância.
 
 ## Baizhu
 
@@ -595,18 +567,11 @@ Concordam: 295. Só no leitor: 136. Só na curadoria: 76.
 
 ## Lauma
 
-- SÓ NO LEITOR: p1 critRate = 0.15 (team) Moonsign Nascent: Bloom/Hyperbloom/Burgeon podem critar CR 15% CD 100% fixos, 20s
-- SÓ NO LEITOR: p1 critDmg = 1 (team) Moonsign Nascent: idem CD 100%
-- SÓ NO LEITOR: p1 critRate = 0.1 (team) Moonsign Ascendant: Lunar-Bloom CR +10%, 20s
-- SÓ NO LEITOR: p1 critDmg = 0.2 (team) Moonsign Ascendant: Lunar-Bloom CD +20%
 - SÓ NO LEITOR: p2 dmgPct = 0.32 (self) max; 0.04% por EM; Elemental Skill
 - SÓ NO LEITOR: p3 dmgPct = 0.14 (team) max; 0.0175% por EM de Lauma no Base DMG de Lunar-Bloom (nao e multiplicativo comum)
-- SÓ NO LEITOR: const2 dmgPct = 0.4 (team) Moonsign Ascendant: Lunar-Bloom DMG +40% (burst ativo)
-- SÓ NO LEITOR: const6 dmgPct = 0.25 (team) Moonsign Ascendant: Lunar-Bloom DMG elevado +25%
 
 ## Nefer
 
 - SÓ NO LEITOR: p3 dmgPct = 0.14 (team) max; 0.0175% por EM de Nefer no Base DMG de Lunar-Bloom
 - SÓ NO LEITOR: const2 em = 200 (self) substitui p1 (100); 5 stacks Veil, 8s
-- SÓ NO LEITOR: const6 dmgPct = 0.15 (self) Moonsign Ascendant: Lunar-Bloom DMG de Nefer +15% (elevado)
 - SÓ NA CURADORIA: a1 (self, janela) em = 100

@@ -1304,37 +1304,6 @@
     "appliesToSelf": false,
     "buffs": [
       {
-        "id": "a4",
-        "label": "Yelan A4",
-        "minConstellation": 0,
-        "scope": "team",
-        "timed": true,
-        "stats": {
-          "atkPct": 0,
-          "dmgPct": 0.5,
-          "critRate": 0,
-          "critDmg": 0,
-          "em": 0,
-          "er": 0,
-          "hpPct": 0,
-          "defPct": 0,
-          "dmgPctByType": {},
-          "critRateByType": {},
-          "critDmgByType": {},
-          "baseMultByType": {},
-          "defIgnore": 0,
-          "atkFlat": 0,
-          "atkBaseFlat": 0,
-          "hpFlat": 0,
-          "defFlat": 0,
-          "physDmgPct": 0,
-          "physCritDmg": 0,
-          "reactionBonus": {}
-        },
-        "flat": [],
-        "note": "Assume o máximo de +50% de DMG do personagem ativo (cresce 3,5% por segundo): ligue nas janelas."
-      },
-      {
         "id": "c4",
         "label": "Yelan C4",
         "minConstellation": 4,
@@ -1410,6 +1379,60 @@
         },
         "flat": [],
         "note": "HP máximo por número de elementos diferentes no time (6%, 12%, 18%, 30%)."
+      },
+      {
+        "id": "a4",
+        "label": "Yelan A4",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.5,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "stacks": {
+          "max": 15,
+          "unit": "s (1 = início, 1%)",
+          "table": [
+            0,
+            0.02,
+            0.09,
+            0.16,
+            0.23,
+            0.3,
+            0.37,
+            0.44,
+            0.51,
+            0.58,
+            0.65,
+            0.72,
+            0.79,
+            0.86,
+            0.93,
+            1
+          ],
+          "default": 15
+        },
+        "note": "+1% de DMG do personagem em campo, subindo 3,5% por segundo até 50% (14 s depois): ligue a janela e escolha o ponto de 1 (início, 1%) a 15 (50%). Vale para todo golpe do personagem, de qualquer elemento."
       }
     ],
     "notes": [
@@ -2034,21 +2057,6 @@
         "note": "+20% de DMG Hydro, sempre."
       },
       {
-        "id": "c2",
-        "label": "Xingqiu C2",
-        "minConstellation": 2,
-        "scope": "self",
-        "timed": false,
-        "resShred": {
-          "value": 0.15,
-          "elements": [
-            "Hydro"
-          ]
-        },
-        "flat": [],
-        "note": "Assume a redução de RES Hydro (4 s) sempre ativa."
-      },
-      {
         "id": "c4",
         "label": "Xingqiu C4",
         "minConstellation": 4,
@@ -2080,6 +2088,21 @@
         },
         "flat": [],
         "note": "+50% de DMG da habilidade durante o Supremo: ligue na janela do Supremo."
+      },
+      {
+        "id": "c2",
+        "label": "Xingqiu C2",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": true,
+        "resShred": {
+          "value": 0.15,
+          "elements": [
+            "Hydro"
+          ]
+        },
+        "flat": [],
+        "note": "RES Hydro do inimigo -15% por 4 s depois de ser atingido pela chuva de espadas do Supremo: janela de tempo (antes estava sempre ligado). Os +3 s de duração do Supremo não entram no dano."
       }
     ],
     "notes": [
@@ -2095,11 +2118,24 @@
       },
       {
         "src": "const6",
-        "kind": "utility",
-        "note": "Só energia (e a terceira espada de chuva já tem dano no kit)."
+        "kind": "partial",
+        "note": "Pendente: o texto diz que a terceira chuva de espadas fica \"muito mais forte\" sem dar o número, então o aumento de dano não entra. A Energia (3) é só informativa."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "p1",
+        "kind": "cura",
+        "label": "Cura da espada de chuva",
+        "text": "Recupera 6% do HP máximo dele ao personagem atual quando a espada de chuva quebra ou acaba"
+      },
+      {
+        "src": "const6",
+        "kind": "energia",
+        "label": "Energia que ele recupera",
+        "text": "3 de Energia quando a terceira chuva de espadas reforçada acerta"
+      }
+    ],
     "procs": [],
     "factions": [],
     "specialMoves": [],
@@ -2262,16 +2298,85 @@
           "unit": "stacks de Fatal Reckoning"
         },
         "note": "Assume 4 stacks: soma 120% da DEF a todo golpe do Supremo dele."
+      },
+      {
+        "id": "a4hs",
+        "label": "Albedo A4 Hexerei (Solar Isotoma)",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "convert": {
+          "from": "def",
+          "source": "self",
+          "perPoint": 0.00004,
+          "threshold": 0,
+          "cap": 0.12,
+          "to": [
+            "dmgPct"
+          ]
+        },
+        "team": {
+          "hexerei": 2
+        },
+        "flat": [],
+        "note": "Hexerei: Secret Rite (2+ membros Hexerei, Albedo Hexerei): depois de criar um Solar Isotoma, o DMG de Normal, Carregado, Imersivo, habilidade e Supremo de quem está perto sobe 4% por 1.000 de DEF dele, no máximo 12%, por 20 s: ligue a janela. 0,00004 por ponto de DEF é o 4%/1.000 do texto."
+      },
+      {
+        "id": "a4hx",
+        "label": "Albedo A4 Hexerei (Silver Isotoma)",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "forFactions": [
+          "hexerei"
+        ],
+        "convert": {
+          "from": "def",
+          "source": "self",
+          "perPoint": 0.0001,
+          "threshold": 0,
+          "cap": 0.3,
+          "to": [
+            "dmgPct"
+          ]
+        },
+        "team": {
+          "hexerei": 2
+        },
+        "flat": [],
+        "note": "Hexerei: depois de gerar um Silver Isotoma, o DMG de Normal, Carregado, Imersivo, habilidade e Supremo dos membros HEXEREI sobe 10% por 1.000 de DEF dele, no máximo 30%, por 20 s: ligue a janela. Soma com o bônus do Solar Isotoma. 0,0001 por ponto de DEF é o 10%/1.000 do texto."
       }
     ],
     "notes": [
       {
         "src": "p1",
         "kind": "partial",
-        "note": "Os +25% de dano das Flores Transitórias (inimigo com menos de 50% de HP) e os +240% da DEF não entram."
+        "note": "Pendente: os +25% de DMG das Transient Blossoms (inimigo com menos de 50% de HP) não entram, porque o formato não limita um bônus em % a um golpe só (valeria para o Skill DMG também). Os +240% da DEF só valem com um Silver Isotoma dele em campo (Hexerei) e dano fixo não tem liga/desliga."
+      },
+      {
+        "src": "p4",
+        "kind": "partial",
+        "note": "Entram os dois bônus de DMG por DEF do Secret Rite (Solar Isotoma, 12%; Silver Isotoma para Hexerei, 30%). A geração do Silver Isotoma e das Transient Blossoms extras não entra."
+      },
+      {
+        "src": "const4",
+        "kind": "partial",
+        "note": "Entra o +30% de Imersivo dentro do Solar Isotoma. Pendente: o +30% do impacto no solo depois de pular num Silver Isotoma (3 s) é de um golpe só e não entra."
+      },
+      {
+        "src": "const6",
+        "kind": "partial",
+        "note": "Entra o +17% de DMG (janela). Pendente: o +250% da DEF no Fatal Blossom por 20 s depende de destruir Silver Isotomas (Hexerei) e dano fixo não tem liga/desliga."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "const1",
+        "kind": "energia",
+        "label": "Energia que ele recupera",
+        "text": "1.2 de Energia por Transient Blossom gerada"
+      }
+    ],
     "procs": [
       {
         "id": "c2",
@@ -3408,7 +3513,7 @@
           "atkPct": 0,
           "dmgPct": 0,
           "critRate": 0,
-          "critDmg": 0.4,
+          "critDmg": 1,
           "em": 0,
           "er": 0,
           "hpPct": 0,
@@ -3426,15 +3531,27 @@
           "physCritDmg": 0,
           "reactionBonus": {}
         },
+        "team": {
+          "scale": {
+            "of": [
+              "Geo"
+            ],
+            "table": [
+              0.1,
+              0.2,
+              0.4
+            ]
+          }
+        },
         "flat": [],
-        "note": "Assume o nível Crunch (+40% de Dano Crítico do dano Geo) por 12 s: ligue na janela. Só personagens Geo recebem."
+        "note": "+10% (1 Geo no time), +20% (2) ou +40% (3 ou mais) de Dano Crítico do dano Geo por 12 s depois da habilidade ou do Supremo: o nível do campo vem de quantos Geo há no time (o Gorou conta). Ligue a janela. Só personagens Geo recebem; não acumula. Antes assumia sempre o +40%."
       }
     ],
     "notes": [
       {
         "src": "const1",
         "kind": "utility",
-        "note": "Só recarga da habilidade."
+        "note": "Só recarga da habilidade (informativo)."
       },
       {
         "src": "const2",
@@ -3447,7 +3564,20 @@
         "note": "Só cura."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "const1",
+        "kind": "recarga",
+        "label": "Recarga do Inuzaka All-Round Defense",
+        "text": "cai 2 s quando um aliado causa dano Geo dentro do estandarte ou do General's Glory; no máximo uma vez a cada 10 s"
+      },
+      {
+        "src": "const4",
+        "kind": "cura",
+        "label": "Cura do General's Glory",
+        "text": "Em \"Impregnable\" ou \"Crunch\", cura os personagens em campo em 50% da DEF dele a cada 1,5 s"
+      }
+    ],
     "procs": [],
     "factions": [],
     "specialMoves": [],
@@ -5490,7 +5620,7 @@
         "label": "Jean C4",
         "minConstellation": 4,
         "scope": "self",
-        "timed": false,
+        "timed": true,
         "resShred": {
           "value": 0.4,
           "elements": [
@@ -5498,7 +5628,7 @@
           ]
         },
         "flat": [],
-        "note": "Assume a redução de RES Anemo dentro do campo do Supremo sempre ativa."
+        "note": "RES Anemo do inimigo -40% enquanto ele estiver dentro do campo do Supremo (o campo dura 10 s): janela de tempo (antes estava sempre ligado)."
       }
     ],
     "notes": [
@@ -5523,7 +5653,20 @@
         "note": "Só redução de dano recebido."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "p1",
+        "kind": "cura",
+        "label": "Cura dos Normais",
+        "text": "50% de chance de curar 15% do ATK dela em todo o grupo a cada Normal que acerta"
+      },
+      {
+        "src": "p2",
+        "kind": "energia",
+        "label": "Energia do Dandelion Breeze",
+        "text": "16 de Energia (20% do custo) ao usar o Dandelion Breeze"
+      }
+    ],
     "procs": [],
     "factions": [],
     "specialMoves": [],
@@ -5601,7 +5744,26 @@
         "note": "Só reviver."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "const1",
+        "kind": "energia",
+        "label": "Energia que ela recupera",
+        "text": "1 de Energia a cada 10 s"
+      },
+      {
+        "src": "const2",
+        "kind": "recarga",
+        "label": "Recarga do Let the Show Begin",
+        "text": "a recarga cai 15%"
+      },
+      {
+        "src": "const4",
+        "kind": "energia",
+        "label": "Energia do Carregado",
+        "text": "1 de Energia por inimigo atingido pelo Carregado; no máximo 5 por golpe"
+      }
+    ],
     "procs": [],
     "factions": [],
     "specialMoves": [],
@@ -6124,22 +6286,6 @@
     "appliesToSelf": false,
     "buffs": [
       {
-        "id": "c2",
-        "label": "Venti C2",
-        "minConstellation": 2,
-        "scope": "self",
-        "timed": false,
-        "resShred": {
-          "value": 0.24,
-          "elements": [
-            "Anemo",
-            "Physical"
-          ]
-        },
-        "flat": [],
-        "note": "Assume a redução de RES Anemo e Física (10 s) sempre ativa."
-      },
-      {
         "id": "c4",
         "label": "Venti C4",
         "minConstellation": 4,
@@ -6174,21 +6320,6 @@
         "note": "+25% de DMG Anemo por 10 s depois da habilidade ou do Supremo: ligue nas janelas."
       },
       {
-        "id": "c6",
-        "label": "Venti C6",
-        "minConstellation": 6,
-        "scope": "self",
-        "timed": false,
-        "resShred": {
-          "value": 0.2,
-          "elements": [
-            "Anemo"
-          ]
-        },
-        "flat": [],
-        "note": "Assume a redução de RES Anemo do Supremo sempre ativa (a do elemento absorvido não entra). Os +100% de Dano Crítico estão no buff Venti C6 (Dano Crítico)."
-      },
-      {
         "id": "c6cd",
         "label": "Venti C6 (Dano Crítico)",
         "minConstellation": 6,
@@ -6218,6 +6349,37 @@
         },
         "flat": [],
         "note": "+100% de Dano Crítico contra alvos atingidos pelo Supremo: ligue nas janelas."
+      },
+      {
+        "id": "c2",
+        "label": "Venti C2",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": true,
+        "resShred": {
+          "value": 0.24,
+          "elements": [
+            "Anemo",
+            "Physical"
+          ]
+        },
+        "flat": [],
+        "note": "RES Anemo e Física do inimigo -24% por 10 s depois da habilidade (24% é literal do texto): janela de tempo (antes estava sempre ligado). O \"Wherever a Breeze Blows\" (300% do dano do Press) não entra."
+      },
+      {
+        "id": "c6",
+        "label": "Venti C6",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": true,
+        "resShred": {
+          "value": 0.2,
+          "elements": [
+            "Anemo"
+          ]
+        },
+        "flat": [],
+        "note": "RES Anemo do inimigo -20% (20% é literal do texto) para os alvos que levam dano do Supremo: janela de tempo (antes estava sempre ligado). A RES do elemento absorvido não entra. Os +100% de Dano Crítico estão em \"Venti C6 (Dano Crítico)\"."
       }
     ],
     "notes": [
@@ -6234,15 +6396,33 @@
       {
         "src": "const1",
         "kind": "partial",
-        "note": "As 2 flechas extras do Windsunder Arrow (20% da original) não entram; as do Tiro Mirado entram como golpe extra."
+        "note": "Entram as 2 flechas extras do Tiro Mirado Carregado (golpe extra). Pendente: as do Tiro Mirado sem carga (Físico, o texto não diz o elemento) e as do Windsunder Arrow (20%, golpe não cadastrado) não entram."
+      },
+      {
+        "src": "const2",
+        "kind": "partial",
+        "note": "Entra a RES Anemo e Física -24% por 10 s (janela). Pendente: o \"Wherever a Breeze Blows\" diz \"300% of the original amount of DMG\" no Press e não deixa claro se é 3x o total ou +300%."
+      },
+      {
+        "src": "p4",
+        "kind": "partial",
+        "note": "Pendente: Hexerei (+50% de DMG por 4 s depois de Espalhar e Stormeye a 135%). O texto não diz se quem ganha os 50% precisa ser Hexerei, e o \"135% do dano original\" do Stormeye não tem um parâmetro de bônus."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "p2",
+        "kind": "energia",
+        "label": "Energia depois do Supremo",
+        "text": "15 de Energia para ele quando o Wind's Grand Ode termina; com absorção, 15 para os personagens do elemento absorvido"
+      }
+    ],
     "procs": [
       {
         "id": "c1",
         "label": "Venti C1: flecha extra",
         "scale": {},
+        "hitType": "charged",
         "minConstellation": 1,
         "src": "const1",
         "of": {
@@ -6251,7 +6431,7 @@
           "variant": 0,
           "fraction": 0.33
         },
-        "note": "33% do Tiro Mirado Carregado por flecha; são 2 (conta como Carregado). As do Windsunder Arrow NÃO entram."
+        "note": "33% do Tiro Mirado Carregado por flecha extra (33% é literal do texto); são 2 por tiro (use 2 execuções). Conta como Carregado. As flechas extras do Tiro Mirado sem carga e as do Windsunder Arrow (20%) não entram."
       }
     ],
     "factions": [
@@ -6359,73 +6539,6 @@
     "appliesToSelf": false,
     "buffs": [
       {
-        "id": "a1",
-        "label": "Xiao A1",
-        "minConstellation": 0,
-        "scope": "self",
-        "timed": true,
-        "stats": {
-          "atkPct": 0,
-          "dmgPct": 0.25,
-          "critRate": 0,
-          "critDmg": 0,
-          "em": 0,
-          "er": 0,
-          "hpPct": 0,
-          "defPct": 0,
-          "dmgPctByType": {},
-          "critRateByType": {},
-          "critDmgByType": {},
-          "baseMultByType": {},
-          "defIgnore": 0,
-          "atkFlat": 0,
-          "atkBaseFlat": 0,
-          "hpFlat": 0,
-          "defFlat": 0,
-          "physDmgPct": 0,
-          "physCritDmg": 0,
-          "reactionBonus": {}
-        },
-        "flat": [],
-        "note": "Assume o teto de +25% de DMG (cresce 5% a cada 3 s do Supremo): ligue nas janelas."
-      },
-      {
-        "id": "a4",
-        "label": "Xiao A4",
-        "minConstellation": 0,
-        "scope": "self",
-        "timed": true,
-        "stats": {
-          "atkPct": 0,
-          "dmgPct": 0,
-          "critRate": 0,
-          "critDmg": 0,
-          "em": 0,
-          "er": 0,
-          "hpPct": 0,
-          "defPct": 0,
-          "dmgPctByType": {
-            "skill": 0.45
-          },
-          "critRateByType": {},
-          "critDmgByType": {},
-          "baseMultByType": {},
-          "defIgnore": 0,
-          "atkFlat": 0,
-          "atkBaseFlat": 0,
-          "hpFlat": 0,
-          "defFlat": 0,
-          "physDmgPct": 0,
-          "physCritDmg": 0,
-          "reactionBonus": {}
-        },
-        "flat": [],
-        "stacks": {
-          "max": 3
-        },
-        "note": "Assume 3 stacks (+45% de DMG da habilidade): ligue nas janelas."
-      },
-      {
         "id": "burst",
         "label": "Xiao: Máscara Yaksha",
         "minConstellation": 0,
@@ -6479,6 +6592,80 @@
         },
         "flat": [],
         "note": "DMG de Normal/Carregado/Plunging pelo nível do Supremo, durante a máscara: ligue nas janelas."
+      },
+      {
+        "id": "a1",
+        "label": "Xiao A1",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.25,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "stacks": {
+          "max": 5,
+          "unit": "degraus de 5% (o 1º no início, mais um a cada 3 s)",
+          "default": 5
+        },
+        "note": "+5% de DMG ao ativar o Supremo e +5% a cada 3 s, teto de 25% (5 degraus, 12 s): ligue a janela e escolha os degraus de 0 a 5 (o padrão é o teto)."
+      },
+      {
+        "id": "a4",
+        "label": "Xiao A4",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {
+            "skill": 0.45
+          },
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "stacks": {
+          "max": 3,
+          "unit": "stacks do Lemniscatic Wind Cycling",
+          "default": 3
+        },
+        "note": "+15% de DMG da habilidade por stack (cada uso dá um stack ao seguinte), até 3 stacks (+45%), por 7 s: ligue a janela e escolha os stacks de 0 a 3 (o padrão é o teto)."
       }
     ],
     "notes": [
@@ -6704,7 +6891,26 @@
         "note": "Só cura."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "p1",
+        "kind": "escudo",
+        "label": "Escudo de emergência",
+        "text": "Com o HP do personagem em campo abaixo de 30%, cria um escudo que absorve 400% da DEF dela (150% de absorção) por 20 s; uma vez a cada 60 s"
+      },
+      {
+        "src": "p2",
+        "kind": "recarga",
+        "label": "Recarga da Breastplate",
+        "text": "cai 1 s a cada 4 acertos de Normal ou Carregado (um acerto a cada 0,1 s)"
+      },
+      {
+        "src": "const1",
+        "kind": "cura",
+        "label": "Chance de cura da Breastplate",
+        "text": "com o Sweeping Time e a Breastplate ativos, a chance de cura sobe para 100%"
+      }
+    ],
     "procs": [
       {
         "id": "c4",
@@ -7327,70 +7533,6 @@
         "note": "+80 de Maestria da equipe por 12 s depois do Ataque Carregado da Mona: ligue nas janelas."
       },
       {
-        "id": "c4",
-        "label": "Mona C4",
-        "minConstellation": 4,
-        "scope": "team",
-        "timed": true,
-        "stats": {
-          "atkPct": 0,
-          "dmgPct": 0,
-          "critRate": 0.15,
-          "critDmg": 0,
-          "em": 0,
-          "er": 0,
-          "hpPct": 0,
-          "defPct": 0,
-          "dmgPctByType": {},
-          "critRateByType": {},
-          "critDmgByType": {},
-          "baseMultByType": {},
-          "defIgnore": 0,
-          "atkFlat": 0,
-          "atkBaseFlat": 0,
-          "hpFlat": 0,
-          "defFlat": 0,
-          "physDmgPct": 0,
-          "physCritDmg": 0,
-          "reactionBonus": {}
-        },
-        "flat": [],
-        "note": "+15% de Taxa Crítica da equipe contra inimigos com Presságio: ligue nas janelas."
-      },
-      {
-        "id": "c6",
-        "label": "Mona C6",
-        "minConstellation": 6,
-        "scope": "self",
-        "timed": true,
-        "stats": {
-          "atkPct": 0,
-          "dmgPct": 0,
-          "critRate": 0,
-          "critDmg": 0,
-          "em": 0,
-          "er": 0,
-          "hpPct": 0,
-          "defPct": 0,
-          "dmgPctByType": {
-            "charged": 1.8
-          },
-          "critRateByType": {},
-          "critDmgByType": {},
-          "baseMultByType": {},
-          "defIgnore": 0,
-          "atkFlat": 0,
-          "atkBaseFlat": 0,
-          "hpFlat": 0,
-          "defFlat": 0,
-          "physDmgPct": 0,
-          "physCritDmg": 0,
-          "reactionBonus": {}
-        },
-        "flat": [],
-        "note": "Assume o teto de +180% de DMG do próximo Ataque Carregado: ligue nas janelas. Os 200% extras contra Presságio não entram."
-      },
-      {
         "id": "a4",
         "label": "Mona A4",
         "minConstellation": 0,
@@ -7492,14 +7634,127 @@
           }
         },
         "flat": [],
-        "note": "+15% de Eletrocarregado, Lunar-Carregado e Lunar-Cristalizar por 8 s depois de acertar inimigo com Presságio: ligue nas janelas. Vaporizar e Redemoinho Hydro NÃO entram (o bônus de Redemoinho do motor vale para todo elemento)."
+        "note": "+15% de Eletrocarregado, Lunar-Carregado e Lunar-Cristalizar por 8 s depois que um aliado acerta inimigo com Presságio: ligue a janela. Pendente: Vaporizar (o formato não tem bônus de Vaporizar) e Redemoinho Hydro (o bônus de Redemoinho do motor vale para todo elemento) não entram; o reforço para 160% quando quem aciona está fora de campo também não."
+      },
+      {
+        "id": "c4",
+        "label": "Mona C4",
+        "minConstellation": 4,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0.15,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "note": "+15% de Taxa Crítica de qualquer personagem do time que ataca um inimigo com Presságio (4 s depois do Supremo): ligue a janela. O +15% de Dano Crítico dos Hexerei está em \"Mona C4 (Hexerei)\"."
+      },
+      {
+        "id": "c4h",
+        "label": "Mona C4 (Hexerei)",
+        "minConstellation": 4,
+        "scope": "team",
+        "timed": true,
+        "forFactions": [
+          "hexerei"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0.15,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "note": "+15% de Dano Crítico só dos membros Hexerei (marque-os como Hexerei na página do personagem) que atacam inimigo com Presságio: ligue a janela junto com o C4."
+      },
+      {
+        "id": "c6",
+        "label": "Mona C6",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {
+            "charged": 1.8
+          },
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "stacks": {
+          "max": 3,
+          "unit": "s de acúmulo",
+          "default": 3
+        },
+        "note": "+60% de DMG do próximo Carregado por segundo, até 180% (3 s, o teto do texto), por no máximo 8 s: ligue a janela e escolha os segundos de 0 a 3. Pendente: o aumento do Carregado para 200% do dano original contra inimigo com Presságio não entra (o texto não diz se multiplica o dano final ou só a base)."
       }
     ],
     "notes": [
       {
         "src": "const1",
         "kind": "partial",
-        "note": "Eletrocarregado, Lunar-Carregado e Lunar-Cristalizar entram (faixa); os +15% de Vaporizar e de Redemoinho Hydro e o reforço para 160% fora de campo não entram."
+        "note": "Entram Eletrocarregado, Lunar-Carregado e Lunar-Cristalizar +15% (janela). Pendente: Vaporizar, Redemoinho Hydro e o reforço para 160% fora de campo não entram."
+      },
+      {
+        "src": "const6",
+        "kind": "partial",
+        "note": "Entra o +60% por segundo de DMG do Carregado, até 180% (stacks). Pendente: o aumento para 200% do dano original contra Presságio não entra."
+      },
+      {
+        "src": "p4",
+        "kind": "partial",
+        "note": "Pendente: os stacks de Astral Glow of Mercury aumentam em 5% cada o Vaporizar de OUTRO aliado, e o formato não tem bônus de Vaporizar. Só a extensão do Presságio (+2 s) é utilidade."
       }
     ],
     "infos": [],
@@ -7751,6 +8006,123 @@
         },
         "flat": [],
         "note": "+20% da Maestria da Sucrose para os demais por 8 s depois da habilidade ou Supremo: ligue nas janelas."
+      },
+      {
+        "id": "p4s",
+        "label": "Sucrose Hexerei (espírito pequeno)",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {
+            "normal": 0.057143,
+            "charged": 0.057143,
+            "plunge": 0.057143,
+            "skill": 0.057143,
+            "burst": 0.057143
+          },
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "team": {
+          "hexerei": 2
+        },
+        "flat": [],
+        "note": "Hexerei: Secret Rite (2 ou mais Hexerei no time, marque a Sucrose como Hexerei): +5,71428% de DMG de Normal, Carregado, Imersivo, habilidade e Supremo da equipe por 15 s depois que ela cria um Small Wind Spirit: ligue a janela."
+      },
+      {
+        "id": "p4l",
+        "label": "Sucrose Hexerei (espírito grande)",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "forFactions": [
+          "hexerei"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {
+            "normal": 0.071429,
+            "charged": 0.071429,
+            "plunge": 0.071429,
+            "skill": 0.071429,
+            "burst": 0.071429
+          },
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "team": {
+          "hexerei": 2
+        },
+        "flat": [],
+        "note": "Hexerei: Secret Rite (2 ou mais Hexerei no time): +7,14285% de DMG de Normal, Carregado, Imersivo, habilidade e Supremo, só dos membros Hexerei, por 20 s depois que ela cria um Large Wind Spirit: ligue a janela. Se o espírito pequeno também estiver ligado, os dois somam (o texto não os faz substituir um ao outro)."
+      },
+      {
+        "id": "c6hex",
+        "label": "Sucrose C6 (Hexerei)",
+        "minConstellation": 6,
+        "scope": "team",
+        "timed": true,
+        "forFactions": [
+          "hexerei"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.085714,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "note": "+8,57142% de DMG do elemento absorvido, além dos 20% do C6, só dos membros Hexerei durante o Supremo: ligue junto com o C6 nas janelas em que o elemento bate com o de quem ataca. O texto não pede 2 Hexerei no time para este extra."
       }
     ],
     "notes": [
@@ -7770,7 +8142,14 @@
         "note": "Só recarga da habilidade."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "const4",
+        "kind": "recarga",
+        "label": "Recarga da habilidade",
+        "text": "a recarga da habilidade cai de 1 a 7 s a cada 7 acertos de Normal ou Carregado"
+      }
+    ],
     "procs": [],
     "factions": [
       "hexerei"
@@ -8151,6 +8530,37 @@
         },
         "flat": [],
         "note": "+40% de DMG Hydro por 4 s quando Normal/Carregado curam alguém com 80% de HP ou mais: ligue nas janelas."
+      },
+      {
+        "id": "p4",
+        "label": "Kokomi A4 (Taxa Crítica)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": -1,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "note": "Taxa Crítica -100%: com a Taxa Crítica da build limitada a no mínimo 0, ela não critica. O Bônus de Cura de 25% é só informativo."
       }
     ],
     "notes": [
@@ -8162,7 +8572,7 @@
       {
         "src": "p2",
         "kind": "partial",
-        "note": "O bônus de dano de Normal e Carregado por Bônus de Cura não entra: o motor não acompanha cura."
+        "note": "Pendente: o dano extra de Normal e Carregado por 15% do Bônus de Cura não entra, porque o motor não tem o stat Bônus de Cura (nem o 25% do A4, nem o do artefato)."
       },
       {
         "src": "const2",
@@ -8173,9 +8583,33 @@
         "src": "const4",
         "kind": "utility",
         "note": "Só velocidade de ataque e energia."
+      },
+      {
+        "src": "p4",
+        "kind": "partial",
+        "note": "Entra a Taxa Crítica -100%. O Bônus de Cura de 25% é só informativo."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "p4",
+        "kind": "cura",
+        "label": "Bônus de Cura",
+        "text": "Bônus de Cura de 25%"
+      },
+      {
+        "src": "const2",
+        "kind": "cura",
+        "label": "Bônus de Cura em quem está com pouco HP",
+        "text": "Para quem está com 50% de HP ou menos: Bake-Kurage 4.5% e Normal/Carregado 0.6% do HP máximo dela"
+      },
+      {
+        "src": "const4",
+        "kind": "energia",
+        "label": "Energia que ela recupera",
+        "text": "0.8 de Energia por Normal que acerta; no máximo uma vez a cada 0.2 s"
+      }
+    ],
     "procs": [
       {
         "id": "c1",
@@ -8421,39 +8855,6 @@
         "note": "ATK fixo = % da DEF pelo nível do Supremo, durante o Rei Oni: ligue nas janelas. A queda de 20% de RES dele não entra."
       },
       {
-        "id": "c6",
-        "label": "Itto C6",
-        "minConstellation": 6,
-        "scope": "self",
-        "timed": false,
-        "stats": {
-          "atkPct": 0,
-          "dmgPct": 0,
-          "critRate": 0,
-          "critDmg": 0,
-          "em": 0,
-          "er": 0,
-          "hpPct": 0,
-          "defPct": 0,
-          "dmgPctByType": {},
-          "critRateByType": {},
-          "critDmgByType": {
-            "charged": 0.7
-          },
-          "baseMultByType": {},
-          "defIgnore": 0,
-          "atkFlat": 0,
-          "atkBaseFlat": 0,
-          "hpFlat": 0,
-          "defFlat": 0,
-          "physDmgPct": 0,
-          "physCritDmg": 0,
-          "reactionBonus": {}
-        },
-        "flat": [],
-        "note": "+70% de Dano Crítico de Ataque Carregado, sempre."
-      },
-      {
         "id": "a4",
         "label": "Itto A4",
         "minConstellation": 0,
@@ -8465,11 +8866,15 @@
             "sourceStat": "DEF",
             "perPoint": 0.35,
             "hitTypes": [
-              "charged"
+              "normal"
+            ],
+            "labels": [
+              "Arataki Kesagiri Combo Slash DMG",
+              "Arataki Kesagiri Final Slash DMG"
             ]
           }
         ],
-        "note": "Soma 35% da DEF ao dano base do Arataki Kesagiri (o Carregado dele)."
+        "note": "Soma 35% da DEF ao dano base de cada Arataki Kesagiri (Combo Slash e Final Slash). O Saichimonji Slash (sem stacks) NÃO recebe: o texto fala só do Kesagiri. A curadoria antiga filtrava por \"charged\" e nunca somava, porque no cadastro esses golpes são \"normal\"."
       }
     ],
     "notes": [
@@ -8487,9 +8892,21 @@
         "src": "const2",
         "kind": "utility",
         "note": "Só recarga e energia."
+      },
+      {
+        "src": "const6",
+        "kind": "partial",
+        "note": "Pendente: o +70% de Dano Crítico dos Carregados não entra. No cadastro (moves.json) os golpes de Carregado dele (Arataki Kesagiri e Saichimonji Slash) são \"normal\", e o formato só filtra o crítico por tipo: valer para \"normal\" subiria também os 4 golpes do Normal. A curadoria antiga usava \"charged\", que não casa com nenhum golpe dele. A chance de 50% de não gastar stacks também não entra."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "const2",
+        "kind": "recarga",
+        "label": "Recarga e energia do Supremo",
+        "text": "cada membro Geo reduz a recarga do Supremo em 1.5 s (até 4,5 s) e dá 6 de Energia ao Itto (até 18)"
+      }
+    ],
     "procs": [],
     "factions": [],
     "specialMoves": [],
@@ -8538,7 +8955,7 @@
       },
       {
         "id": "c6",
-        "label": "Heizou C6",
+        "label": "Heizou C6 (Taxa Crítica)",
         "minConstellation": 6,
         "scope": "self",
         "timed": true,
@@ -8555,6 +8972,42 @@
           "critRateByType": {
             "skill": 0.16
           },
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "stacks": {
+          "max": 4,
+          "unit": "Declension",
+          "default": 4
+        },
+        "note": "+4% de Taxa Crítica por Declension (até 4 = 16%) no Heartstopper Strike (o Skill DMG dele): ligue a janela só no golpe e escolha os stacks de 0 a 4. O máximo de 4 stacks vem do multiplicador do texto antigo; confirmar."
+      },
+      {
+        "id": "c6cd",
+        "label": "Heizou C6 (Convicção)",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
           "critDmgByType": {
             "skill": 0.32
           },
@@ -8569,10 +9022,7 @@
           "reactionBonus": {}
         },
         "flat": [],
-        "stacks": {
-          "max": 4
-        },
-        "note": "Assume 4 stacks (+16% de Taxa Crítica) e Convicção (+32% de Dano Crítico) no Heartstopper Strike (habilidade): ligue na janela."
+        "note": "+32% de Dano Crítico no Heartstopper Strike quando ele tem Convicção. O texto não diz como se ganha a Convicção: ligue a janela só quando tiver. Antes estava junto do bônus de Taxa e sempre ligado."
       }
     ],
     "notes": [
@@ -8595,9 +9045,21 @@
         "src": "const4",
         "kind": "utility",
         "note": "Só energia."
+      },
+      {
+        "src": "const6",
+        "kind": "partial",
+        "note": "Entram +4% de Taxa Crítica por Declension e +32% de Dano Crítico com Convicção (duas janelas) no Heartstopper Strike."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "const4",
+        "kind": "energia",
+        "label": "Energia que ele recupera",
+        "text": "9 de Energia na 1ª explosão do Windmuster Iris de cada Windmuster Kick e +1.5 em cada explosão seguinte, no máximo 13.5 por uso"
+      }
+    ],
     "procs": [],
     "factions": [],
     "specialMoves": [],
@@ -9849,35 +10311,69 @@
         "flat": [],
         "stacks": {
           "max": 50,
-          "unit": "pontos de Kuugoryoku"
+          "unit": "pontos de Kuugoryoku",
+          "default": 0
         },
-        "note": "Assume o bônus máximo de +200% de DMG do Supremo (depende dos pontos Kuugoryoku gastos): ligue na janela."
+        "note": "+4% de DMG do Supremo por ponto de Kuugoryoku que faltava até o máximo, no máximo +200% (50 pontos). Escolha os pontos de 0 a 50 (padrão 0; antes assumia o máximo)."
       }
     ],
     "notes": [
       {
         "src": "p2",
         "kind": "partial",
-        "note": "As flechas de vento extras (Descent) não entram."
+        "note": "Entram as 4 flechas de 35% do ATK como golpe extra (adicione quando o Descent ocorrer). O Descent também poupa Kuugoryoku, o que não muda o dano."
       },
       {
         "src": "const1",
         "kind": "partial",
-        "note": "Velocidade de ataque e +25% do ATK nas flechas extras: não entram."
+        "note": "Entram os +25% do ATK nas flechas do Descent (golpe extra). A velocidade de ataque não muda o dano."
       },
       {
         "src": "const4",
         "kind": "partial",
-        "note": "O buff elemental aleatório do Hanega não entra."
+        "note": "Pendente: o buff do elemento aleatório não tem elemento definido no texto; os buffs de elemento tocado já estão no A1 de ascensão."
       },
       {
         "src": "const6",
         "kind": "partial",
-        "note": "O Fushoudan extra (40% do dano original) não entra."
+        "note": "Pendente: o Fushoudan extra (40% do dano original, conta como Normal) não entra porque o Kuugo: Fushoudan não está no cadastro de golpes (é definido como % de outro ataque). A restauração de 4 pontos de Kuugoryoku não muda o dano."
+      },
+      {
+        "src": "p1",
+        "kind": "partial",
+        "note": "Entram Pyro (+30% de ATK) e Cryo (+20% de Taxa Crítica) como janelas; escolha até 2 elementos. Hydro (+20 no teto de Kuugoryoku) não muda o dano; Electro (energia) está só em informativo."
       }
     ],
-    "infos": [],
-    "procs": [],
+    "infos": [
+      {
+        "src": "p1",
+        "kind": "energia",
+        "label": "Energia com Electro",
+        "text": "0.8 de Energia por acerto de Normal ou Carregado no Windfavored com Electro; no máximo uma vez a cada 0.2 s"
+      }
+    ],
+    "procs": [
+      {
+        "id": "p2",
+        "label": "Wanderer: flechas do Descent (A1 de ascensão)",
+        "scale": {
+          "atk": 1.4
+        },
+        "minConstellation": 0,
+        "src": "p2",
+        "note": "4 flechas de 35% do ATK (Anemo, sem tipo de golpe) por Descent. O Descent vem de 16% de chance (+12% a cada falha): adicione uma execução quando acontecer."
+      },
+      {
+        "id": "c1",
+        "label": "Wanderer C1: flechas do Descent (+25% do ATK)",
+        "scale": {
+          "atk": 1
+        },
+        "minConstellation": 1,
+        "src": "const1",
+        "note": "Soma 25% do ATK em cada uma das 4 flechas do Descent: adicione junto do golpe \"flechas do Descent\" (mesma execução). A velocidade de ataque de +10% não entra."
+      }
+    ],
     "factions": [],
     "specialMoves": [],
     "pointMoves": [],
@@ -9981,11 +10477,37 @@
         "note": "DMG Anemo da equipe pelo nível do Supremo: ligue nas janelas. Só personagens Anemo recebem."
       },
       {
+        "id": "a4",
+        "label": "Faruzan A4 (Hurricane Guard)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "flat": [
+          {
+            "name": "Hurricane Guard",
+            "sourceStat": "BaseATK",
+            "perPoint": 0.32,
+            "hitTypes": [
+              "normal",
+              "charged",
+              "plunge",
+              "skill",
+              "burst"
+            ],
+            "targets": "team",
+            "elements": [
+              "Anemo"
+            ]
+          }
+        ],
+        "note": "Soma 32% do ATK base dela a todo golpe Anemo da equipe (assume todos dentro do Prayerful Wind's Benefit e respeitando o intervalo de 0,8 s)."
+      },
+      {
         "id": "burst-res",
         "label": "Faruzan: Pulso (RES)",
         "minConstellation": 0,
         "scope": "self",
-        "timed": false,
+        "timed": true,
         "level": {
           "talent": "burst",
           "table": [
@@ -10013,33 +10535,7 @@
           ]
         },
         "flat": [],
-        "note": "Assume a redução de RES Anemo do Supremo sempre ativa."
-      },
-      {
-        "id": "a4",
-        "label": "Faruzan A4 (Hurricane Guard)",
-        "minConstellation": 0,
-        "scope": "self",
-        "timed": false,
-        "flat": [
-          {
-            "name": "Hurricane Guard",
-            "sourceStat": "BaseATK",
-            "perPoint": 0.32,
-            "hitTypes": [
-              "normal",
-              "charged",
-              "plunge",
-              "skill",
-              "burst"
-            ],
-            "targets": "team",
-            "elements": [
-              "Anemo"
-            ]
-          }
-        ],
-        "note": "Soma 32% do ATK base dela a todo golpe Anemo da equipe (assume todos dentro do Prayerful Wind's Benefit e respeitando o intervalo de 0,8 s)."
+        "note": "RES Anemo do inimigo reduzida pelo nível do Supremo enquanto o Perfidious Wind's Bale durar (a duração está no kit): janela de tempo (antes estava sempre ligado)."
       }
     ],
     "notes": [
@@ -10062,9 +10558,26 @@
         "src": "const4",
         "kind": "utility",
         "note": "Só energia."
+      },
+      {
+        "src": "p2",
+        "kind": "partial",
+        "note": "Entra o Hurricane Guard (32% do ATK base dela em golpes Anemo da equipe, dano fixo). No jogo ele dispara uma vez por 0,8 s e se apaga ao disparar: ajuste os usos do dano fixo na rotação, senão vale em todo golpe Anemo."
+      },
+      {
+        "src": "const6",
+        "kind": "partial",
+        "note": "Entra o +40% de Dano Crítico Anemo de quem está sob o Benefício do Vento (janela). A aplicação do Pressurized Collapse a cada 3 s não entra."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "const4",
+        "kind": "energia",
+        "label": "Energia que ela recupera",
+        "text": "2 de Energia com 1 inimigo no vórtice e +0.5 por inimigo a mais, no máximo 4 por vórtice"
+      }
+    ],
     "procs": [],
     "factions": [],
     "specialMoves": [],
@@ -10598,6 +11111,11 @@
         "src": "const4",
         "kind": "utility",
         "note": "Só cargas."
+      },
+      {
+        "src": "const6",
+        "kind": "partial",
+        "note": "Entram +20% de DMG Anemo por 6 s (janela). A infusão Anemo do Enigma Thrust NÃO muda o elemento sozinha: marque o elemento Anemo nos golpes dela que seriam Físicos."
       }
     ],
     "infos": [],
@@ -11192,6 +11710,26 @@
         "note": "Assume 4 stacks (+10% de Taxa Crítica de Plunging da equipe) por 20 s: ligue nas janelas."
       },
       {
+        "id": "a4",
+        "label": "Xianyun A4 (Imersivo dos aliados)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "flat": [
+          {
+            "name": "Starwicker",
+            "sourceStat": "ATK",
+            "perPoint": 2,
+            "capPerHit": 9000,
+            "hitTypes": [
+              "plunge"
+            ],
+            "targets": "team"
+          }
+        ],
+        "note": "Soma 200% do ATK dela a todo Imersivo da equipe (Starwicker com stacks), até 9.000 (teto do Genshin Optimizer: 200% × 4.500 de ATK)."
+      },
+      {
         "id": "c6",
         "label": "Xianyun C6",
         "minConstellation": 6,
@@ -11209,7 +11747,7 @@
           "dmgPctByType": {},
           "critRateByType": {},
           "critDmgByType": {
-            "plunge": 0.7
+            "skill": 0.7
           },
           "baseMultByType": {},
           "defIgnore": 0,
@@ -11232,27 +11770,28 @@
             1
           ]
         },
-        "note": "Assume 3 Skyladders (+70% de Dano Crítico do Driftcloud Wave): ligue na janela."
+        "note": "Dano Crítico do Driftcloud Wave: 15%/35%/70% com 1/2/3 Skyladders (escolha de 0 a 3). No cadastro o Driftcloud Wave é golpe de habilidade, então o bônus vale em TODO golpe de habilidade dela dentro da janela: ligue só nos Driftcloud Wave (o Skill DMG da cast inicial também receberia). Antes estava em Imersivo, onde o Wave não cai."
       },
       {
-        "id": "a4",
-        "label": "Xianyun A4 (Imersivo dos aliados)",
-        "minConstellation": 0,
+        "id": "c2f",
+        "label": "Xianyun C2 (Starwicker reforçado)",
+        "minConstellation": 2,
         "scope": "self",
         "timed": false,
+        "replaces": "a4",
         "flat": [
           {
-            "name": "Starwicker",
+            "name": "Starwicker (C2)",
             "sourceStat": "ATK",
-            "perPoint": 2,
-            "capPerHit": 9000,
+            "perPoint": 4,
+            "capPerHit": 18000,
             "hitTypes": [
               "plunge"
             ],
             "targets": "team"
           }
         ],
-        "note": "Soma 200% do ATK dela a todo Imersivo da equipe (Starwicker com stacks), até 9.000 (teto do Genshin Optimizer: 200% × 4.500 de ATK)."
+        "note": "REFORÇA o A4: 400% do ATK dela (teto 18.000, literais do texto) somados ao dano de cada Imersivo da equipe, no lugar dos 200% / 9.000. Assume Adeptal Assistance ativo; o intervalo de 0,4 s por personagem não é limitado (use os usos do dano fixo na rotação)."
       }
     ],
     "notes": [
@@ -11265,9 +11804,31 @@
         "src": "const4",
         "kind": "utility",
         "note": "Só cura."
+      },
+      {
+        "src": "p1",
+        "kind": "partial",
+        "note": "Entra o +4/6/8/10% de Taxa Crítica de Imersivo da equipe (escolha os stacks). Pendente: o Driftcloud Wave conta como Imersivo no jogo, mas no cadastro é golpe de habilidade, então o bônus não chega nele."
+      },
+      {
+        "src": "p2",
+        "kind": "partial",
+        "note": "Entra o dano fixo de 200% do ATK dela (teto 9.000) em todo Imersivo da equipe, assumindo Adeptal Assistance ativo."
+      },
+      {
+        "src": "const2",
+        "kind": "partial",
+        "note": "Entram +20% de ATK por 15 s (janela) e o Starwicker reforçado (400% / 18.000, no lugar do A4)."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "const4",
+        "kind": "cura",
+        "label": "Cura do Driftcloud Wave",
+        "text": "Com 1/2/3 Skyladders, o Driftcloud Wave cura os aliados próximos em 50%/80%/150% do ATK dela; no máximo uma vez a cada 5 s"
+      }
+    ],
     "procs": [],
     "factions": [],
     "specialMoves": [],
@@ -13978,7 +14539,14 @@
         "note": "Só energia."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "const4",
+        "kind": "energia",
+        "label": "Energia que ela recupera",
+        "text": "10 de Energia quando o Musecatcher acerta; no máximo uma vez a cada 10 s"
+      }
+    ],
     "procs": [
       {
         "id": "c2",
@@ -14739,61 +15307,6 @@
         "note": "Moonsign Benediction: base das reações Lunares da equipe pelo stat, com teto (Genshin Optimizer soma as de vários membros)."
       },
       {
-        "id": "domain",
-        "label": "Columbina: Domínio Lunar",
-        "minConstellation": 0,
-        "scope": "team",
-        "timed": true,
-        "stats": {
-          "atkPct": 0,
-          "dmgPct": 0,
-          "critRate": 0,
-          "critDmg": 0,
-          "em": 0,
-          "er": 0,
-          "hpPct": 0,
-          "defPct": 0,
-          "dmgPctByType": {},
-          "critRateByType": {},
-          "critDmgByType": {},
-          "baseMultByType": {},
-          "defIgnore": 0,
-          "atkFlat": 0,
-          "atkBaseFlat": 0,
-          "hpFlat": 0,
-          "defFlat": 0,
-          "physDmgPct": 0,
-          "physCritDmg": 0,
-          "reactionBonus": {
-            "lunarcharged": 1,
-            "lunarbloom": 1,
-            "lunarcrystallize": 1
-          }
-        },
-        "level": {
-          "talent": "burst",
-          "table": [
-            0.13,
-            0.16,
-            0.19,
-            0.22,
-            0.25,
-            0.28,
-            0.31,
-            0.34,
-            0.37,
-            0.4,
-            0.43,
-            0.46,
-            0.49,
-            0.52,
-            0.55
-          ]
-        },
-        "flat": [],
-        "note": "DMG das reações Lunares da equipe pelo nível do Supremo (13% no nível 1 a 55% no 15; tabela do Genshin Optimizer, o Lunaris não traz o número) enquanto durar o Domínio Lunar (20 s): ligue nas janelas."
-      },
-      {
         "id": "c1",
         "label": "Columbina C1",
         "minConstellation": 1,
@@ -14960,60 +15473,6 @@
         },
         "flat": [],
         "note": "Dano das reações Lunares da equipe elevado em 1,5% (além do +3 de talento)."
-      },
-      {
-        "id": "c4lc",
-        "label": "Columbina C4 (Lunar-Carregado)",
-        "minConstellation": 4,
-        "scope": "self",
-        "timed": true,
-        "convert": {
-          "from": "hp",
-          "source": "self",
-          "perPoint": 0.125,
-          "threshold": 0,
-          "to": [
-            "lunarchargedFlat"
-          ]
-        },
-        "flat": [],
-        "note": "Gravity Interference de Lunar-Carregado com +12,5% do HP máximo dela (1 vez a cada 15 s): ligue na janela do golpe. Vale para todo dano Lunar-Carregado dela na janela."
-      },
-      {
-        "id": "c4lb",
-        "label": "Columbina C4 (Lunar-Florescer)",
-        "minConstellation": 4,
-        "scope": "self",
-        "timed": true,
-        "convert": {
-          "from": "hp",
-          "source": "self",
-          "perPoint": 0.025,
-          "threshold": 0,
-          "to": [
-            "lunarbloomFlat"
-          ]
-        },
-        "flat": [],
-        "note": "Idem, +2,5% do HP no Lunar-Florescer (vale também no Moondew Cleanse dentro da janela)."
-      },
-      {
-        "id": "c4lcr",
-        "label": "Columbina C4 (Lunar-Cristalizar)",
-        "minConstellation": 4,
-        "scope": "self",
-        "timed": true,
-        "convert": {
-          "from": "hp",
-          "source": "self",
-          "perPoint": 0.125,
-          "threshold": 0,
-          "to": [
-            "lunarcrystallizeFlat"
-          ]
-        },
-        "flat": [],
-        "note": "Idem, +12,5% do HP no Lunar-Cristalizar."
       },
       {
         "id": "c4s",
@@ -15224,6 +15683,97 @@
         },
         "flat": [],
         "note": "Dano das reações Lunares da equipe elevado em 7%."
+      },
+      {
+        "id": "domain",
+        "label": "Columbina: Domínio Lunar",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "lunarcharged": 1,
+            "lunarbloom": 1,
+            "lunarcrystallize": 1
+          }
+        },
+        "level": {
+          "talent": "burst",
+          "table": [
+            0.13,
+            0.16,
+            0.19,
+            0.22,
+            0.25,
+            0.28,
+            0.31,
+            0.34,
+            0.37,
+            0.4,
+            0.43,
+            0.46,
+            0.49,
+            0.52,
+            0.55
+          ]
+        },
+        "flat": [],
+        "note": "DMG das reações Lunares da equipe pelo nível do Supremo (13% no nível 1 a 55% no 15, linha \"Lunar Reaction DMG Bonus\" do Lunaris) enquanto durar o Domínio Lunar (20 s): ligue nas janelas."
+      },
+      {
+        "id": "c4lc",
+        "label": "Columbina C4 (Lunar-Carregado)",
+        "minConstellation": 4,
+        "scope": "self",
+        "timed": true,
+        "convert": {
+          "from": "hp",
+          "source": "self",
+          "perPoint": 0.125,
+          "threshold": 0,
+          "to": [
+            "lunarchargedFlat"
+          ]
+        },
+        "flat": [],
+        "note": "+12,5% do HP máximo dela no dano Lunar-Carregado do Gravity Interference (1 vez a cada 15 s, só o Lunar-Carregado ter acumulado mais Gravity): ligue a janela SÓ na ação \"Gravity Interference: Lunar-Charged DMG\", porque o formato não separa o golpe e o bônus vale para todo dano Lunar-Carregado dela na janela."
+      },
+      {
+        "id": "c4lcr",
+        "label": "Columbina C4 (Lunar-Cristalizar)",
+        "minConstellation": 4,
+        "scope": "self",
+        "timed": true,
+        "convert": {
+          "from": "hp",
+          "source": "self",
+          "perPoint": 0.125,
+          "threshold": 0,
+          "to": [
+            "lunarcrystallizeFlat"
+          ]
+        },
+        "flat": [],
+        "note": "+12,5% do HP máximo dela no dano Lunar-Cristalizar do Gravity Interference (1 vez a cada 15 s): ligue a janela SÓ na ação \"Gravity Interference: Lunar-Crystallize DMG\" (o formato não separa o golpe)."
       }
     ],
     "notes": [
@@ -15231,9 +15781,38 @@
         "src": "p2",
         "kind": "partial",
         "note": "Os golpes extras por chance (33%) do Lunar-Carregado e do Lunar-Cristalizar e o Moonridge Dew não entram: dependem de chance; ponha os golpes a mais na rotação."
+      },
+      {
+        "src": "const1",
+        "kind": "partial",
+        "note": "Entra o +1,5% de dano das reações Lunares. A energia (6), a resistência a interrupção e o escudo são informativos ou não afetam o dano."
+      },
+      {
+        "src": "const4",
+        "kind": "partial",
+        "note": "Entram o +12,5% do HP no Lunar-Carregado e no Lunar-Cristalizar do Gravity Interference (janelas) e o +1,5% de dano Lunar. Pendente: o +2,5% do HP no Lunar-Florescer (5 acertos) não entra, o texto não diz se é por acerto ou no total."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "const1",
+        "kind": "energia",
+        "label": "Energia do personagem ativo (Lunar-Carregado)",
+        "text": "Com Moonsign: Ascendant Gleam, o personagem ativo recupera 6 de Energia no Gravity Interference (uma vez a cada 15 s)"
+      },
+      {
+        "src": "const1",
+        "kind": "escudo",
+        "label": "Rainsea Shield (Lunar-Cristalizar)",
+        "text": "Com Moonsign: Ascendant Gleam, escudo de 12% do HP máximo dela por 8 s (absorve Hydro 250% melhor)"
+      },
+      {
+        "src": "const4",
+        "kind": "energia",
+        "label": "Energia que ela recupera",
+        "text": "4 de Energia a cada Gravity Interference"
+      }
+    ],
     "procs": [],
     "factions": [
       "moonsign"
@@ -17997,21 +18576,6 @@
     "appliesToSelf": false,
     "buffs": [
       {
-        "id": "a1",
-        "label": "Vodyanitsa A1",
-        "minConstellation": 0,
-        "scope": "self",
-        "timed": false,
-        "resShred": {
-          "value": 0.35,
-          "elements": [
-            "Anemo"
-          ]
-        },
-        "flat": [],
-        "note": "Assume a redução de RES Anemo (6 s) sempre ativa."
-      },
-      {
         "id": "c2",
         "label": "Vodyanitsa C2",
         "minConstellation": 2,
@@ -18082,60 +18646,6 @@
         "note": "+60% de DMG Hydro/Cryo da equipe enquanto a Canção das Eras Passadas estiver ativa: ligue nas janelas."
       },
       {
-        "id": "skill",
-        "label": "Vodyanitsa: Canção (RES)",
-        "minConstellation": 0,
-        "scope": "self",
-        "timed": false,
-        "level": {
-          "talent": "skill",
-          "table": [
-            0.165,
-            0.18,
-            0.195,
-            0.21,
-            0.225,
-            0.24,
-            0.255,
-            0.27,
-            0.285,
-            0.3,
-            0.318,
-            0.336,
-            0.354,
-            0.372,
-            0.39
-          ]
-        },
-        "resShred": {
-          "value": 1,
-          "elements": [
-            "Hydro",
-            "Cryo"
-          ]
-        },
-        "flat": [],
-        "note": "Assume a redução de RES Hydro e Cryo sempre ativa."
-      },
-      {
-        "id": "c1",
-        "label": "Vodyanitsa C1",
-        "minConstellation": 1,
-        "scope": "others",
-        "timed": true,
-        "convert": {
-          "from": "hp",
-          "source": "self",
-          "perPoint": 0.008,
-          "threshold": 0,
-          "to": [
-            "atkFlat"
-          ]
-        },
-        "flat": [],
-        "note": "ATK fixo dos aliados = 0,8% do HP máximo dela por 5 s a cada cura da Song of Ages Past: ligue na janela. É por isso que a build dela foca em HP."
-      },
-      {
         "id": "c4",
         "label": "Vodyanitsa C4",
         "minConstellation": 4,
@@ -18168,16 +18678,231 @@
           "max": 3
         },
         "note": "Assume 3 stacks (+60% de HP máximo): ligue na janela. O HP maior eleva todos os buffs dela que escalam com HP."
+      },
+      {
+        "id": "a1",
+        "label": "Vodyanitsa A1",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "resShred": {
+          "value": 0.35,
+          "elements": [
+            "Anemo"
+          ]
+        },
+        "flat": [],
+        "note": "RES Anemo do inimigo -35% por 6 s depois que um Wandering Vortex é gerado ou detona: janela de tempo, o usuário liga e decide a duração (antes estava sempre ligado). Os Vortex em si e os +4 s de Radiance: Stellar Swirl não entram."
+      },
+      {
+        "id": "skill",
+        "label": "Vodyanitsa: Canção (RES)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "level": {
+          "talent": "skill",
+          "table": [
+            0.165,
+            0.18,
+            0.195,
+            0.21,
+            0.225,
+            0.24,
+            0.255,
+            0.27,
+            0.285,
+            0.3,
+            0.318,
+            0.336,
+            0.354,
+            0.372,
+            0.39
+          ]
+        },
+        "resShred": {
+          "value": 1,
+          "elements": [
+            "Hydro",
+            "Cryo"
+          ]
+        },
+        "flat": [],
+        "note": "RES Hydro e Cryo do inimigo -16,5% a -39% por nível por 6 s depois de cada golpe do Skill ou do Horn of Spring's Call: janela de tempo (antes estava sempre ligado)."
+      },
+      {
+        "id": "burst",
+        "label": "Vodyanitsa: Koda na Canção (DMG do Supremo)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {
+            "burst": 1
+          },
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "level": {
+          "talent": "burst",
+          "table": [
+            0.48,
+            0.516,
+            0.552,
+            0.6,
+            0.636,
+            0.672,
+            0.72,
+            0.768,
+            0.816,
+            0.864,
+            0.912,
+            0.96,
+            1.02,
+            1.08,
+            1.14
+          ]
+        },
+        "flat": [],
+        "note": "+48% a +114% por nível de DMG do Supremo (linha \"Song of Ages Past DMG Bonus\" do Lunaris) enquanto a Song of Ages Past estiver ativa (16 s depois da habilidade): ligue a janela no Supremo."
+      },
+      {
+        "id": "c1",
+        "label": "Vodyanitsa C1",
+        "minConstellation": 1,
+        "scope": "team",
+        "timed": true,
+        "convert": {
+          "from": "hp",
+          "source": "self",
+          "perPoint": 0.008,
+          "threshold": 0,
+          "to": [
+            "atkFlat"
+          ]
+        },
+        "flat": [],
+        "note": "ATK fixo de todos os membros, ela inclusive (antes o formato excluía ela), = 0,8% do HP máximo dela por 5 s a cada cura da Song of Ages Past: ligue na janela. É por isso que a build dela foca em HP."
+      },
+      {
+        "id": "c2s",
+        "label": "Vodyanitsa C2 (Redemoinho Estelar)",
+        "minConstellation": 2,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "stellarswirlCritDmg": 0.6
+          }
+        },
+        "flat": [],
+        "note": "+60% de Dano Crítico do dano de Redemoinho Estelar do personagem em campo por 5 s, quando há um Wandering Vortex em campo (ou até 5 s depois de explodir): janela de tempo. No lugar do +50% de Hydro/Cryo (não ligue os dois). Até a C5 vale só para o ativo; a C6 estende a todos."
+      },
+      {
+        "id": "c6s",
+        "label": "Vodyanitsa C6 (Redemoinho Estelar)",
+        "minConstellation": 6,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "stellarswirlSpecial": 0.25
+          }
+        },
+        "flat": [],
+        "note": "Dano de Redemoinho Estelar dos membros próximos elevado em 25% enquanto a Song of Ages Past estiver ativa: ligue na janela. O +60% de DMG Hydro/Cryo está em \"Vodyanitsa C6\"."
       }
     ],
     "notes": [
       {
         "src": "p2",
-        "kind": "utility",
-        "note": "Os 25 stacks de Lead Vocal e 10 de Chorus já estão no dano fixo cadastrado dela."
+        "kind": "partial",
+        "note": "Pendente: o texto só dá o número de stacks (25 de Lead Vocal, 10 de Chorus); como esses efeitos agem não está na descrição (só os params 40000, 260/140, 6500/3500), então não entram. Os dados de dano fixo antigos em flatDamage.json são da planilha e valem só para os alvos dela (Skirk, Furina, Escoffier)."
+      },
+      {
+        "src": "p1",
+        "kind": "partial",
+        "note": "Entra a RES Anemo -35% por 6 s (janela). Os Wandering Vortex e os +4 s de Radiance: Stellar Swirl não entram."
+      },
+      {
+        "src": "const2",
+        "kind": "partial",
+        "note": "Entram os +50% de Dano Crítico Hydro/Cryo e os +60% do Redemoinho Estelar (janelas). Os +9 s da Song of Ages Past são só duração."
+      },
+      {
+        "src": "const4",
+        "kind": "partial",
+        "note": "Entra o +20% de HP máximo (até 3 stacks de 6 s; precisa de aliado com 40% de HP ou mais). A cura +50% abaixo de 40% é só informativa."
+      },
+      {
+        "src": "const6",
+        "kind": "partial",
+        "note": "Entram +60% de DMG Hydro/Cryo e +25% de Redemoinho Estelar enquanto a Song of Ages Past estiver ativa (janelas)."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "const4",
+        "kind": "cura",
+        "label": "Cura reforçada da Song of Ages Past",
+        "text": "Com o alvo abaixo de 40% de HP, a cura aumenta 50%"
+      }
+    ],
     "procs": [],
     "factions": [],
     "specialMoves": [],
@@ -18626,7 +19351,14 @@
         "note": "Só energia."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "const4",
+        "kind": "energia",
+        "label": "Energia que ele recupera",
+        "text": "Com menos de 45 de Energia: 3 (Press) ou 4 (Hold) de Energia pela habilidade e 2 por segundo planando"
+      }
+    ],
     "procs": [
       {
         "id": "a1",
@@ -19169,7 +19901,7 @@
         "label": "Zhongli: Escudo de Jade",
         "minConstellation": 0,
         "scope": "self",
-        "timed": false,
+        "timed": true,
         "resShred": {
           "value": 0.2,
           "elements": [
@@ -19184,7 +19916,25 @@
           ]
         },
         "flat": [],
-        "note": "Assume a redução de 20% de RES elemental e Física (com o Escudo de Jade ativo) sempre ativa."
+        "note": "RES elemental e Física do inimigo -20% (20 é literal do texto) enquanto o Escudo de Jade protege alguém (dura 20 s, ver \"Shield Duration\"): janela de tempo, o usuário liga e decide o tempo (antes estava sempre ligado). Não acumula."
+      },
+      {
+        "id": "a4s",
+        "label": "Zhongli A4 (Stone Stele)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "flat": [
+          {
+            "name": "Stone Stele, ressonância e Hold por HP",
+            "sourceStat": "HP",
+            "perPoint": 0.019,
+            "hitTypes": [
+              "skill"
+            ]
+          }
+        ],
+        "note": "Soma 1,9% do HP máximo ao dano base do Stone Stele, da ressonância e do Hold (os golpes de habilidade dele). Os +1,39% de Normal/Carregado/Imersivo e +33% do Planet Befall já estão em flatDamage.json."
       }
     ],
     "notes": [
@@ -19214,7 +19964,20 @@
         "note": "Só cura."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "p1",
+        "kind": "escudo",
+        "label": "Força do escudo",
+        "text": "+5% de força do escudo por acúmulo, até 5 acúmulos, enquanto o Jade Shield durar"
+      },
+      {
+        "src": "const6",
+        "kind": "cura",
+        "label": "Cura do Jade Shield",
+        "text": "40% do dano que o Jade Shield recebe vira HP do personagem atual; no máximo 8% do HP máximo dele por vez"
+      }
+    ],
     "procs": [],
     "factions": [],
     "specialMoves": [],
@@ -19572,7 +20335,12 @@
           "reactionBonus": {}
         },
         "flat": [],
-        "note": "Assume o bônus máximo (+66%) do Fuufuu Whirlwind Kick segurando o Windwheel: ligue na janela."
+        "stacks": {
+          "max": 20,
+          "unit": "degraus de 3,3% (Press = 1; Hold +1 a cada 0,5 s)",
+          "default": 20
+        },
+        "note": "+3,3% de DMG do Fuufuu Whirlwind Kick (Press: 1 degrau; Hold: +1 degrau a cada 0,5 s no Windwheel), teto de 66% (20 degraus). O formato dá o bônus à habilidade inteira: ligue a janela só nas ações do Whirlwind Kick (o Windwheel e os golpes elementais não recebem no jogo)."
       }
     ],
     "notes": [
@@ -19599,10 +20367,40 @@
       {
         "src": "const6",
         "kind": "partial",
-        "note": "O dano extra do Daruma por Maestria (0,2% do ATK por ponto, até 400%) não entra."
+        "note": "Pendente: o dano extra do Daruma (0,2% do ATK por ponto de Maestria, até 400% do ATK) não entra: o formato não multiplica o ATK pela Maestria. A cura extra é só informativa."
+      },
+      {
+        "src": "const2",
+        "kind": "partial",
+        "note": "Entra o +3,3% por degrau (até 66%) em janela. O formato aplica à habilidade inteira, e no jogo só o Whirlwind Kick recebe: ligue só nas ações dele."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "p1",
+        "kind": "cura",
+        "label": "Cura do Espalhar",
+        "text": "Ao causar Espalhar em campo, cura 300 PV de todos mais 1.2 PV por ponto de Maestria dela; no máximo uma vez a cada 2 s"
+      },
+      {
+        "src": "p2",
+        "kind": "cura",
+        "label": "Cura em área do Daruma",
+        "text": "O Daruma cura também os personagens ao redor com 20% da cura"
+      },
+      {
+        "src": "const4",
+        "kind": "energia",
+        "label": "Energia que ela recupera",
+        "text": "1.2 de Energia ao causar Espalhar em campo; no máximo uma vez a cada 2 s"
+      },
+      {
+        "src": "const6",
+        "kind": "cura",
+        "label": "Cura extra do Daruma",
+        "text": "O Daruma cura +3 PV por ponto de Maestria dela, até 6000 PV a mais"
+      }
+    ],
     "procs": [],
     "factions": [],
     "specialMoves": [],
@@ -22856,6 +23654,395 @@
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
+    "character": "Chasca",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "a1",
+        "label": "Chasca A1 (Spirit of the Radiant Shadow)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {
+            "skill": 0.65
+          },
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "stacks": {
+          "max": 3,
+          "unit": "Spirit of the Radiant Shadow",
+          "table": [
+            0,
+            0.230769,
+            0.538462,
+            1
+          ]
+        },
+        "note": "DMG do Shining Shadowhunt Shell: 15%/35%/65% com 1/2/3 stacks (um por elemento diferente elegível no time; na C2 ela já começa com 1). No cadastro o Shining é golpe de habilidade, então o bônus vale em todo golpe de habilidade dela na janela: ligue só nos Shining Shadowhunt Shell. A conversão por chance do 3º projétil não entra."
+      },
+      {
+        "id": "c6",
+        "label": "Chasca C6 (Fatal Rounds)",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {
+            "skill": 1.2
+          },
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "note": "+120% de Dano Crítico dos Shadowhunt Shells e Shining Shadowhunt Shells de um Multitarget Fire depois de uma Spiritbinding Conversion (estado de 3 s). No cadastro esses golpes são de habilidade: o bônus vale em todo golpe de habilidade dela na janela, ligue só no Multitarget Fire. O carregamento instantâneo não muda o dano."
+      }
+    ],
+    "notes": [
+      {
+        "src": "p1",
+        "kind": "partial",
+        "note": "Entram os stacks de dano do Shining Shadowhunt Shell (janela). Pendente: a conversão do 3º projétil por chance e o elemento resultante dependem do time e da sorte; o elemento do Shining não é calculado."
+      },
+      {
+        "src": "p2",
+        "kind": "partial",
+        "note": "Pendente: o Burning Shadowhunt Shot (150% do dano do Shadowhunt Shell, conta como Carregado) tem elemento que depende do time (Anemo ou o elemento convertido) e gatilho em Nightsoul Burst de aliado, então não entra."
+      },
+      {
+        "src": "const1",
+        "kind": "partial",
+        "note": "Só chance de conversão e redução do custo de Nightsoul/Phlogiston fora de combate: não muda o dano."
+      },
+      {
+        "src": "const2",
+        "kind": "partial",
+        "note": "Entra o stack inicial do A1 (escolha 1+ stacks). Pendente: o dano extra de 400% do ATK (conta como Carregado) tem o elemento do Shining Shell, que depende do time e da conversão, então não entra."
+      },
+      {
+        "src": "const4",
+        "kind": "partial",
+        "note": "Pendente: o dano extra de 400% do ATK dos Radiant Soulseeker Shells (conta como Carregado) tem o elemento do Shell, que depende do time e da conversão, então não entra. A energia está em informativo."
+      },
+      {
+        "src": "const6",
+        "kind": "partial",
+        "note": "Entra o +120% de Dano Crítico dos Shells (janela). O carregamento instantâneo e a chance de conversão não mudam o dano."
+      },
+      {
+        "src": "p4",
+        "kind": "utility",
+        "note": "Só Phlogiston ao derrotar inimigo."
+      }
+    ],
+    "infos": [
+      {
+        "src": "p4",
+        "kind": "energia",
+        "label": "Phlogiston ao derrotar inimigo",
+        "text": "25 de Phlogiston quando alguém do time derrota um inimigo; no máximo uma vez a cada 12 s (sem efeito em domínios e Abismo)"
+      },
+      {
+        "src": "const4",
+        "kind": "energia",
+        "label": "Energia que ela recupera",
+        "text": "1.5 de Energia quando os Radiant Soulseeker Shells acertam"
+      }
+    ],
+    "procs": [],
+    "factions": [],
+    "specialMoves": [],
+    "pointMoves": [],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Aether (Hydro)",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "p3tide",
+        "label": "Viajante A4 (Carregado: Tidebound)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "flat": [
+          {
+            "name": "Carregado: Tidebound por ATK",
+            "sourceStat": "ATK",
+            "perPoint": 1.5,
+            "hitTypes": [
+              "charged"
+            ],
+            "labels": [
+              "Charged Attack DMG"
+            ],
+            "stacks": 2
+          }
+        ],
+        "note": "Soma 150% do ATK ao dano base de CADA um dos 2 acertos do Carregado, uma vez a cada 15 s (precisa de 3 stacks de Blade of Many Waters, dados pelas variações de 5% de HP dos aliados). Entra nos 2 primeiros acertos de Carregado da rotação (1 Tidebound)."
+      },
+      {
+        "id": "p3hp",
+        "label": "Viajante A4 (Tidebound com HP >= 50%)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "flat": [
+          {
+            "name": "Tidebound com HP >= 50% por ATK",
+            "sourceStat": "ATK",
+            "perPoint": 1,
+            "hitTypes": [
+              "charged"
+            ],
+            "labels": [
+              "Charged Attack DMG"
+            ],
+            "stacks": 2
+          }
+        ],
+        "note": "Soma mais 100% do ATK em cada acerto do Tidebound, só com HP de 50% ou mais (gasta 10% do HP máximo; o gasto não entra). Assume HP >= 50%: com HP abaixo, desligue este efeito no golpe (flatOff)."
+      }
+    ],
+    "notes": [
+      {
+        "src": "p1",
+        "kind": "utility",
+        "note": "Só cura (informativa)."
+      },
+      {
+        "src": "p2",
+        "kind": "partial",
+        "note": "Pendente: o bônus do Torrent Surge é 45% do HP gasto na Suffusion (teto 5.000), mas o HP gasto depende de quantos segundos de Hold e o texto não diz se o 4% do Lunaris é por segundo; não entra. O bônus de DMG da Suffusion no Dewdrop também não entra."
+      },
+      {
+        "src": "const1",
+        "kind": "utility",
+        "note": "Só energia (informativa)."
+      },
+      {
+        "src": "const2",
+        "kind": "utility",
+        "note": "Só bolha."
+      },
+      {
+        "src": "const4",
+        "kind": "utility",
+        "note": "Só escudo (informativo)."
+      },
+      {
+        "src": "const6",
+        "kind": "utility",
+        "note": "Só cura (informativa)."
+      },
+      {
+        "src": "p3",
+        "kind": "partial",
+        "note": "Entra o Carregado: Tidebound (+150% do ATK por acerto, mais +100% com HP >= 50%, 1 vez a cada 15 s). Os buffs \"para cada elemento ressonado\" não entram: o texto não diz quais ressonâncias contam nem o valor de cada uma. A cura de 25% do HP com HP < 50% é só informativa."
+      }
+    ],
+    "infos": [
+      {
+        "src": "p1",
+        "kind": "cura",
+        "label": "Cura da Sourcewater Droplet",
+        "text": "Recupera 7% do HP ao pegar a gota (no máximo 4 gotas por uso, 1 por segundo)"
+      },
+      {
+        "src": "const1",
+        "kind": "energia",
+        "label": "Energia da gota",
+        "text": "2 de Energia ao pegar uma Sourcewater Droplet"
+      },
+      {
+        "src": "const4",
+        "kind": "escudo",
+        "label": "Aquacrest Aegis",
+        "text": "Escudo de 10% do HP máximo (absorve Hydro 250% melhor), renovado a cada 2 s"
+      },
+      {
+        "src": "const6",
+        "kind": "cura",
+        "label": "Cura do aliado de menor HP",
+        "text": "Recupera 6% do HP máximo do aliado com menor % de HP ao pegar a gota"
+      }
+    ],
+    "procs": [],
+    "factions": [],
+    "specialMoves": [],
+    "pointMoves": [],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Lumine (Hydro)",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "p3tide",
+        "label": "Viajante A4 (Carregado: Tidebound)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "flat": [
+          {
+            "name": "Carregado: Tidebound por ATK",
+            "sourceStat": "ATK",
+            "perPoint": 1.5,
+            "hitTypes": [
+              "charged"
+            ],
+            "labels": [
+              "Charged Attack DMG"
+            ],
+            "stacks": 2
+          }
+        ],
+        "note": "Soma 150% do ATK ao dano base de CADA um dos 2 acertos do Carregado, uma vez a cada 15 s (precisa de 3 stacks de Blade of Many Waters, dados pelas variações de 5% de HP dos aliados). Entra nos 2 primeiros acertos de Carregado da rotação (1 Tidebound)."
+      },
+      {
+        "id": "p3hp",
+        "label": "Viajante A4 (Tidebound com HP >= 50%)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "flat": [
+          {
+            "name": "Tidebound com HP >= 50% por ATK",
+            "sourceStat": "ATK",
+            "perPoint": 1,
+            "hitTypes": [
+              "charged"
+            ],
+            "labels": [
+              "Charged Attack DMG"
+            ],
+            "stacks": 2
+          }
+        ],
+        "note": "Soma mais 100% do ATK em cada acerto do Tidebound, só com HP de 50% ou mais (gasta 10% do HP máximo; o gasto não entra). Assume HP >= 50%: com HP abaixo, desligue este efeito no golpe (flatOff)."
+      }
+    ],
+    "notes": [
+      {
+        "src": "p1",
+        "kind": "utility",
+        "note": "Só cura (informativa)."
+      },
+      {
+        "src": "p2",
+        "kind": "partial",
+        "note": "Pendente: o bônus do Torrent Surge é 45% do HP gasto na Suffusion (teto 5.000), mas o HP gasto depende de quantos segundos de Hold e o texto não diz se o 4% do Lunaris é por segundo; não entra. O bônus de DMG da Suffusion no Dewdrop também não entra."
+      },
+      {
+        "src": "const1",
+        "kind": "utility",
+        "note": "Só energia (informativa)."
+      },
+      {
+        "src": "const2",
+        "kind": "utility",
+        "note": "Só bolha."
+      },
+      {
+        "src": "const4",
+        "kind": "utility",
+        "note": "Só escudo (informativo)."
+      },
+      {
+        "src": "const6",
+        "kind": "utility",
+        "note": "Só cura (informativa)."
+      },
+      {
+        "src": "p3",
+        "kind": "partial",
+        "note": "Entra o Carregado: Tidebound (+150% do ATK por acerto, mais +100% com HP >= 50%, 1 vez a cada 15 s). Os buffs \"para cada elemento ressonado\" não entram: o texto não diz quais ressonâncias contam nem o valor de cada uma. A cura de 25% do HP com HP < 50% é só informativa."
+      }
+    ],
+    "infos": [
+      {
+        "src": "p1",
+        "kind": "cura",
+        "label": "Cura da Sourcewater Droplet",
+        "text": "Recupera 7% do HP ao pegar a gota (no máximo 4 gotas por uso, 1 por segundo)"
+      },
+      {
+        "src": "const1",
+        "kind": "energia",
+        "label": "Energia da gota",
+        "text": "2 de Energia ao pegar uma Sourcewater Droplet"
+      },
+      {
+        "src": "const4",
+        "kind": "escudo",
+        "label": "Aquacrest Aegis",
+        "text": "Escudo de 10% do HP máximo (absorve Hydro 250% melhor), renovado a cada 2 s"
+      },
+      {
+        "src": "const6",
+        "kind": "cura",
+        "label": "Cura do aliado de menor HP",
+        "text": "Recupera 6% do HP máximo do aliado com menor % de HP ao pegar a gota"
+      }
+    ],
+    "procs": [],
+    "factions": [],
+    "specialMoves": [],
+    "pointMoves": [],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
     "character": "Tartaglia",
     "atkPct": 0,
     "dmgPct": 0,
@@ -22888,15 +24075,33 @@
       {
         "src": "const4",
         "kind": "partial",
-        "note": "Os golpes de Maré automáticos (Slash e Flash) não entram."
+        "note": "Pendente: o Riptide Slash (estilo Corpo a Corpo, conta como habilidade) e o Riptide Flash (estilo Distância, conta como Normal) a cada 4 s já existem no kit dele; adicione as execuções na rotação conforme a duração. Nada é automático."
       },
       {
         "src": "const6",
         "kind": "utility",
         "note": "Só recarga."
+      },
+      {
+        "src": "p3",
+        "kind": "partial",
+        "note": "Pendente: +1 nível de Ataque Normal dos aliados muda o dano deles, mas o formato só soma nível de talento pelas constelações do próprio personagem; não entra."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "const1",
+        "kind": "recarga",
+        "label": "Recarga do Foul Legacy: Raging Tide",
+        "text": "a recarga cai 20%"
+      },
+      {
+        "src": "const2",
+        "kind": "energia",
+        "label": "Energia que ele recupera",
+        "text": "4 de Energia quando derrota um inimigo com Maré"
+      }
+    ],
     "procs": [],
     "factions": [],
     "specialMoves": [],
@@ -22994,54 +24199,6 @@
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
-    "character": "Chasca",
-    "atkPct": 0,
-    "dmgPct": 0,
-    "critRate": 0,
-    "critDmg": 0,
-    "em": 0,
-    "appliesToSelf": false,
-    "buffs": [],
-    "notes": [
-      {
-        "src": "p1",
-        "kind": "partial",
-        "note": "Os stacks de Spirit of the Radiant Shadow (+15%/35%/65% nos Shining Shadowhunt Shell) e a conversão de elemento dos tiros não entram."
-      },
-      {
-        "src": "p2",
-        "kind": "partial",
-        "note": "O Burning Shadowhunt Shot (150% do dano do Shadowhunt Shell) não entra."
-      },
-      {
-        "src": "const1",
-        "kind": "partial",
-        "note": "A conversão extra do 2º Shadowhunt Shell não entra."
-      },
-      {
-        "src": "const2",
-        "kind": "partial",
-        "note": "O dano extra dos Shining Shadowhunt Shells não entra."
-      },
-      {
-        "src": "const4",
-        "kind": "partial",
-        "note": "O dano extra dos Radiant Soulseeker Shells (400% do ATK, conta como Carregado) não entra."
-      },
-      {
-        "src": "const6",
-        "kind": "partial",
-        "note": "O +120% de Dano Crítico dos tiros do Multitarget Fire depois da conversão não entra."
-      }
-    ],
-    "infos": [],
-    "procs": [],
-    "factions": [],
-    "specialMoves": [],
-    "pointMoves": [],
-    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
-  },
-  {
     "character": "Dahlia",
     "atkPct": 0,
     "dmgPct": 0,
@@ -23082,103 +24239,20 @@
         "note": "Só velocidade de ataque e reviver."
       }
     ],
-    "infos": [],
-    "procs": [],
-    "factions": [],
-    "specialMoves": [],
-    "pointMoves": [],
-    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
-  },
-  {
-    "character": "Aether (Hydro)",
-    "atkPct": 0,
-    "dmgPct": 0,
-    "critRate": 0,
-    "critDmg": 0,
-    "em": 0,
-    "appliesToSelf": false,
-    "buffs": [],
-    "notes": [
-      {
-        "src": "p1",
-        "kind": "utility",
-        "note": "Só cura."
-      },
-      {
-        "src": "p2",
-        "kind": "partial",
-        "note": "O dano extra do Torrent Surge por HP consumido (45%, até 5.000) não entra."
-      },
+    "infos": [
       {
         "src": "const1",
-        "kind": "utility",
-        "note": "Só energia."
+        "kind": "energia",
+        "label": "Energia que ele recupera",
+        "text": "2.5 de Energia a cada stack de Benison que ele ganha"
       },
       {
         "src": "const2",
-        "kind": "utility",
-        "note": "Só bolha."
-      },
-      {
-        "src": "const4",
-        "kind": "utility",
-        "note": "Só escudo."
-      },
-      {
-        "src": "const6",
-        "kind": "utility",
-        "note": "Só cura."
+        "kind": "escudo",
+        "label": "Força do escudo",
+        "text": "+25% de força do escudo por 12 s no personagem protegido pelo Shield of Sacred Favor"
       }
     ],
-    "infos": [],
-    "procs": [],
-    "factions": [],
-    "specialMoves": [],
-    "pointMoves": [],
-    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
-  },
-  {
-    "character": "Lumine (Hydro)",
-    "atkPct": 0,
-    "dmgPct": 0,
-    "critRate": 0,
-    "critDmg": 0,
-    "em": 0,
-    "appliesToSelf": false,
-    "buffs": [],
-    "notes": [
-      {
-        "src": "p1",
-        "kind": "utility",
-        "note": "Só cura."
-      },
-      {
-        "src": "p2",
-        "kind": "partial",
-        "note": "O dano extra do Torrent Surge por HP consumido (45%, até 5.000) não entra."
-      },
-      {
-        "src": "const1",
-        "kind": "utility",
-        "note": "Só energia."
-      },
-      {
-        "src": "const2",
-        "kind": "utility",
-        "note": "Só bolha."
-      },
-      {
-        "src": "const4",
-        "kind": "utility",
-        "note": "Só escudo."
-      },
-      {
-        "src": "const6",
-        "kind": "utility",
-        "note": "Só cura."
-      }
-    ],
-    "infos": [],
     "procs": [],
     "factions": [],
     "specialMoves": [],

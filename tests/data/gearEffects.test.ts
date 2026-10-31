@@ -120,7 +120,7 @@ describe('mecânicas novas dos buffs', () => {
     const r = project([{ character: 'Vodyanitsa', constellation: 1 }, { character: 'Bennett' }]);
     const b = r.team.members[0].characterEffect!.buffs.find((x) => x.id === 'c1')!;
     expect(b.convert).toMatchObject({ from: 'hp', perPoint: 0.008, to: ['atkFlat'] });
-    expect(b.scope).toBe('others');
+    expect(b.scope).toBe('team');
   });
 
   it('modo planilha: os 4 personagens da planilha ficam sem passivas curadas (o gabarito não muda)', () => {

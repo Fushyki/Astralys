@@ -9,10 +9,14 @@ import { ONLINE_ENABLED } from '../online/config';
 import { useSession } from '../online/session';
 import { ButtonLink } from '../design/Button';
 
+/** Marca do Astralys: três fios (os buffs) que convergem num ponto (o golpe). Ver `public/favicon.svg`. */
 export function StarMark({ size = 26 }: { size?: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="#E9C46A" strokeWidth="1.6" aria-hidden="true">
-      <path d="M12 2l2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2z" />
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="#E9C46A" strokeWidth="1.9" strokeLinecap="round" aria-hidden="true">
+      <path d="M2 4.5C9 4.5 9 12 15 12" opacity=".6" />
+      <path d="M2 12H15" />
+      <path d="M2 19.5C9 19.5 9 12 15 12" opacity=".6" />
+      <circle cx="18" cy="12" r="3.8" fill="#E9C46A" stroke="none" />
     </svg>
   );
 }

@@ -8,11 +8,11 @@ const effects = json<CharacterEffect[]>('src/effects/characters.json');
 const talents = json<{ character: { name?: string } | string; passives: { id: string; description: string }[]; constellations: { n: number; description: string }[] }[]>('src/data/generated/talents.json');
 
 /** Teto de órfãos aceitos hoje. Só pode DESCER: ao curar nós, baixe o número; subir quebra o teste. */
-const MAX_ORPHANS = 47;
+const MAX_ORPHANS = 0;
 
 /**
  * Órfão (aproximado): nó com número no texto e nenhum destino: nota `src`, buff da constelação (`minConstellation`),
- * qualquer buff/golpe extra/golpe especial do personagem (passivas), ou +3 de talento (C3 e C5).
+ * golpe extra ou buff com id `cN` (constelação N), qualquer buff/golpe extra/golpe especial do personagem (passivas), ou +3 de talento (C3 e C5).
  * shortcut: o buff não guarda o nó de origem, então passiva com algum buff conta como coberta; apertar quando o buff guardar `src`.
  */
 function orphans(): string[] {
@@ -23,9 +23,10 @@ function orphans(): string[] {
     const notes = new Set((e.notes ?? []).map((n) => n.src));
     const hasEffect = [e.buffs, e.procs, e.specialMoves, e.pointMoves, e.infos].some((l) => (l ?? []).length > 0);
     const byConst = new Set((e.buffs ?? []).filter((b) => b.minConstellation).map((b) => `const${b.minConstellation}`));
+    const ids = [e.buffs, e.procs, e.specialMoves, e.pointMoves].flatMap((l) => ((l ?? []) as { id?: string }[]).map((x) => x.id ?? ''));
     const nodes: [string, string][] = [...t.passives.map((p): [string, string] => [p.id, p.description]), ...t.constellations.map((c): [string, string] => [`const${c.n}`, c.description])];
     for (const [id, text] of nodes) {
-      if (!/\d/.test(text) || notes.has(id) || byConst.has(id) || id === 'const3' || id === 'const5') continue;
+      if (!/\d/.test(text) || notes.has(id) || byConst.has(id) || ids.some((i) => i.startsWith(`c${id.slice(5)}`) && id.startsWith('const')) || id === 'const3' || id === 'const5') continue;
       if (id.startsWith('p') && hasEffect) continue;
       out.push(`${e.character}:${id}`);
     }

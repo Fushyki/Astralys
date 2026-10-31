@@ -101,7 +101,8 @@ export function AppHeader({ projectId, memberName, projectName, favorite, onTogg
           </nav>
           {onToggleFavorite && (
             <button type="button" className="dz-btn" onClick={onToggleFavorite} aria-pressed={favorite}>
-              {favorite ? 'Salvo nos Times' : 'Salvar nos Times'}
+              <span aria-hidden="true" className="star">{favorite ? '★' : '☆'}</span>
+              <span className="lbl">{favorite ? 'Salvo nos Times' : 'Salvar nos Times'}</span>
             </button>
           )}
         </div>

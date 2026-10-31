@@ -435,3 +435,14 @@
 .fx-calc li { display: flex; justify-content: space-between; gap: var(--sp-2); padding: 4px 0; border-top: 1px solid var(--line-0); font-size: var(--fs-2); color: var(--text-mid); }
 .fx-calc li > span:first-child { min-width: 0; overflow-wrap: anywhere; }
 .fx-calc li .num { color: var(--text-hi); white-space: nowrap; }
+
+/* Celular: personagens e abas em uma linha cada, rolando para o lado, em vez de ocupar quatro linhas. */
+@media (max-width: 640px) {
+  .pc-tabs-in { gap: 6px; padding-block: 6px; }
+  .pc-tabs { flex-wrap: nowrap; overflow-x: auto; width: 100%; scrollbar-width: none; }
+  .pc-tabs::-webkit-scrollbar, .pc-views::-webkit-scrollbar { display: none; }
+  .pc-tabs a { flex: none; padding: 5px 12px 5px 6px; }
+  .pc-tabs .who .pct { display: none; }
+  .pc-views { flex-wrap: nowrap; overflow-x: auto; width: 100%; scrollbar-width: none; }
+  .pc-views button { flex: none; min-height: 40px; }
+}

@@ -246,3 +246,27 @@ body { font-family: var(--font-body); font-size: 15px; line-height: 1.5; -webkit
 .fam[data-family='stellar'] { background: var(--dmg-stellar-bg); color: var(--dmg-stellar); }
 .fam-legend { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--sp-1) var(--sp-4); font-size: var(--fs-1); color: var(--muted); }
 .fam-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: var(--sp-1); vertical-align: -1px; }
+
+/* Celular: a moldura (cabeçalho, faixa do time e barra de passos) cabe em pouco espaço e deixa a tela para o conteúdo. */
+@media (max-width: 640px) {
+  .dz-header { position: static; padding-top: 8px; row-gap: 0; }
+  .dz-nav { gap: 22px; -webkit-mask-image: linear-gradient(90deg, #000 90%, transparent); mask-image: linear-gradient(90deg, #000 90%, transparent); padding-right: 24px; }
+  .dz-nav a { padding: 12px 0 10px; }
+  .dz-subnav { flex-wrap: wrap; gap: 8px 12px; padding: 8px var(--gutter); }
+  .dz-subnav .name { flex: 1; min-width: 0; font-size: 18px; max-width: none; }
+  .dz-subnav nav { order: 3; flex: 1 1 100%; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+  .dz-subnav nav::-webkit-scrollbar { display: none; }
+  .dz-subnav nav a { flex: none; padding: 6px 14px; min-height: 40px; font-size: 15px; }
+  .dz-subnav > .dz-btn { min-width: 44px; padding-inline: 12px; }
+  .dz-subnav > .dz-btn .lbl { display: none; }
+  .dz-subnav > .dz-btn .star { font-size: 18px; }
+  .dz-stepbar { flex-wrap: nowrap; align-items: center; gap: 8px 12px; padding: 8px var(--gutter); }
+  .dz-stepbar .txt { flex: 1; }
+  .dz-stepbar .txt > span:last-child { display: none; }
+  .dz-stepbar .acts { flex: none; flex-wrap: nowrap; }
+  .dz-stepbar .acts .dz-btn { min-height: 44px; padding-inline: 14px; white-space: nowrap; }
+}
+@media (min-width: 641px) { .dz-subnav > .dz-btn .star { display: none; } }
+@media (max-width: 640px) { .dz-stepbar .lbl { white-space: nowrap; } .dz-stepbar .lbl .ttl, .dz-stepbar .dz-btn .pre { display: none; } }
+/* Celular: alvos de toque de pelo menos 40 px (o dedo é mais largo que o cursor). */
+@media (max-width: 900px) { .dz-btn.sm, .dz-btn.ghost, .dz-btn.secondary.sm { min-height: 40px; } }

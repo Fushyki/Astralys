@@ -282,3 +282,25 @@
 .rt-manual { margin-top: var(--sp-3); border-top: 1px solid var(--line-1); padding-top: var(--sp-2); display: flex; flex-direction: column; gap: var(--sp-2); }
 .rt-manual > summary { cursor: pointer; font: 700 var(--fs-3) var(--font-display); letter-spacing: .06em; text-transform: uppercase; color: var(--gold); }
 .rt-manual[open] > summary { margin-bottom: var(--sp-1); }
+
+/* Celular: o que se usa mais (desfazer, refazer) fica à mão e o resto vai para "Mais"; a linha do tempo vem antes da lista de golpes. */
+.rt-more-btn { display: none; }
+@media (max-width: 900px) {
+  .rt-head .acts { margin-left: 0; width: 100%; }
+  .rt-more-btn { display: inline-flex; }
+  .rt-sec { display: none; }
+  .rt-sec.open { display: flex; flex-wrap: wrap; gap: var(--sp-2); flex-basis: 100%; }
+  .rt-grid > .rt-timeline { order: 1; }
+  .rt-grid > .rt-col { order: 2; }
+  .rt-grid > .rt-moves { order: 3; }
+}
+@media (min-width: 901px) { .rt-sec { display: contents; } }
+@media (max-width: 900px) {
+  .rt-mv { min-height: 44px; }
+  .rt-search { min-height: 44px; }
+  .rt-ico { min-width: 40px; min-height: 40px; }
+  .rt-bar { min-height: 32px; }
+  /* Os golpes da linha do tempo ficam pequenos para caber; a área de toque cresce sem mudar o desenho. */
+  .rt-hit { position: relative; }
+  .rt-hit::after { content: ''; position: absolute; inset: -8px; }
+}

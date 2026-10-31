@@ -23,6 +23,7 @@ import './rotacao.css';
 export default function Rotacao() {
   const v = useProjectView();
   const [settings, setSettings] = useState(false);
+  const [more, setMore] = useState(false);
   const [share, setShare] = useState<'share' | 'import' | null>(null);
   const canUndo = useRotationStore((s) => s.past.length > 0);
   const canRedo = useRotationStore((s) => s.future.length > 0);
@@ -66,11 +67,14 @@ export default function Rotacao() {
         <div className="acts">
           <Button variant="secondary" size="sm" onClick={undo} disabled={!canUndo}>Desfazer</Button>
           <Button variant="secondary" size="sm" onClick={redo} disabled={!canRedo}>Refazer</Button>
+          <Button variant="secondary" size="sm" className="rt-more-btn" aria-expanded={more} onClick={() => setMore((x) => !x)}>{more ? 'Menos' : 'Mais'}</Button>
+          <div className={`rt-sec${more ? ' open' : ''}`}>
           <Button variant="secondary" size="sm" onClick={() => realign()} disabled={!canTighten}>Apertar a linha</Button>
           <Link className="dz-btn sm" to={`/comparar?a=${v.id}`}>Comparar A / B</Link>
           <Button variant="secondary" size="sm" onClick={() => setShare('share')} title="Baixa um arquivo com a rotação (e, se quiser, a equipe) para mandar a amigos">Compartilhar</Button>
           <Button variant="secondary" size="sm" onClick={() => setShare('import')} title="Aplica neste time uma rotação que um amigo compartilhou">Importar</Button>
           <Button variant="secondary" size="sm" onClick={() => setSettings(true)}>Configurações</Button>
+          </div>
         </div>
         <div className="rt-live" aria-live="polite">
           <span className="lbl">DPS ao vivo</span>

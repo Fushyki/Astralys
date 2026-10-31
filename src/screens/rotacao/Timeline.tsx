@@ -197,7 +197,7 @@ export function Timeline({ v, lanes }: { v: ProjectView; lanes: LaneInfo[] }) {
   };
 
   return (
-    <Panel bar title="Linha do tempo" aside={<Seg label="Zoom" value={zoom} onChange={setZoom} options={[{ value: 'fit', label: 'Ajustar' }, { value: '1', label: '1×' }, { value: '2', label: '2×' }]} />} className="rt-p0">
+    <Panel bar title="Linha do tempo" aside={<Seg label="Zoom" value={zoom} onChange={setZoom} options={[{ value: 'fit', label: 'Ajustar' }, { value: '1', label: '1×' }, { value: '2', label: '2×' }]} />} className="rt-p0 rt-timeline">
       <div className="rt-zoomscroll" ref={wrapRef} onScroll={syncFromTop}>
         <div className="rt-tlw" style={{ width: labelW + trackW, ['--cols' as string]: tmax }}>
           <div className="rt-caret" style={{ left: caretPx }} data-testid="caret" data-pushing={push ? true : undefined}>

@@ -38,12 +38,12 @@ export function ProjectSteps({ id, member }: { id: string; member: string }) {
   return (
     <footer className="dz-stepbar" aria-label="Passos do time">
       <div className="txt">
-        <span className="lbl">Passo {s.n} de 3 · {s.title}</span>
+        <span className="lbl">Passo {s.n} de 3<span className="ttl"> · {s.title}</span></span>
         <span>{s.hint}</span>
       </div>
       <div className="acts">
         {s.prev && <Link className="dz-btn" to={s.prev.to}>← {s.prev.label}</Link>}
-        {s.next && <Link className="dz-btn gold" to={s.next.to}>{s.n === 3 ? s.next.label : `Próximo passo: ${s.next.label}`}</Link>}
+        {s.next && <Link className="dz-btn gold" to={s.next.to}>{s.n === 3 ? s.next.label : <><span className="pre">Próximo passo: </span>{s.next.label}</>}</Link>}
       </div>
     </footer>
   );

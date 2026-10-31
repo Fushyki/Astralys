@@ -1162,7 +1162,20 @@
         "note": "Só recarga do Supremo dos aliados."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "p2",
+        "kind": "energia",
+        "label": "Energia do Musou Isshin",
+        "text": "+0.6% de Energia restaurada pelo Musou Isshin para cada 1% de Recarga acima de 100%"
+      },
+      {
+        "src": "const6",
+        "kind": "recarga",
+        "label": "Recarga do Supremo dos aliados",
+        "text": "cai 1 s por acerto do Supremo dela no Musou Isshin; no máximo uma vez a cada 1 s"
+      }
+    ],
     "procs": [],
     "factions": [],
     "specialMoves": [],
@@ -5877,10 +5890,10 @@
         "label": "Razor C4",
         "minConstellation": 4,
         "scope": "self",
-        "timed": false,
+        "timed": true,
         "defShred": 0.15,
         "flat": [],
-        "note": "Assume a redução de DEF do inimigo (15%, 7 s) sempre ativa."
+        "note": "DEF do inimigo -15% por 7 s depois do Claw and Thunder (Press): janela de tempo, o usuário liga e decide a duração (15% é literal do texto). Antes estava sempre ligado."
       }
     ],
     "notes": [
@@ -5893,10 +5906,60 @@
         "src": "p2",
         "kind": "utility",
         "note": "Só Recarga de Energia quando a energia está abaixo de 50%: depende do momento, não entra."
+      },
+      {
+        "src": "p4",
+        "kind": "partial",
+        "note": "Entra o raio de 150% do ATK (golpe extra). Pendente: o +70% do ATK no dano do Wolf Within, que não é um golpe do cadastro (vale % do Normal). A Energia (7) é só informativa."
+      },
+      {
+        "src": "const6",
+        "kind": "partial",
+        "note": "Entram o +10% de Taxa e +50% de Dano Crítico e o relâmpago de 100% do ATK. Os 3 Sigilos extras não entram (só Recarga)."
       }
     ],
-    "infos": [],
-    "procs": [],
+    "infos": [
+      {
+        "src": "p1",
+        "kind": "recarga",
+        "label": "Recarga do Claw and Thunder",
+        "text": "cai 18% e o Lightning Fang zera a recarga"
+      },
+      {
+        "src": "p2",
+        "kind": "energia",
+        "label": "Recarga de Energia com pouca Energia",
+        "text": "+30% de Recarga de Energia com a Energia abaixo de 50%"
+      },
+      {
+        "src": "p4",
+        "kind": "energia",
+        "label": "Energia do raio Hexerei",
+        "text": "7 de Energia a cada raio do Wolf Within"
+      }
+    ],
+    "procs": [
+      {
+        "id": "c6l",
+        "label": "Razor C6: relâmpago do Normal",
+        "scale": {
+          "atk": 1
+        },
+        "minConstellation": 6,
+        "src": "const6",
+        "note": "100% do ATK (literal do texto) como DMG Electro, a cada 10 s (o próximo Normal): adicione uma execução quando acontecer. O texto não diz se conta como Normal, então não recebe bônus de tipo de golpe."
+      },
+      {
+        "id": "a4h",
+        "label": "Razor A4: raio Hexerei",
+        "scale": {
+          "atk": 1.5
+        },
+        "minConstellation": 0,
+        "src": "p4",
+        "note": "150% do ATK em área, com o Wolf Within ativo, quando os Sigilos Electro transbordam (uma vez a cada 1 s). Só com a facção Hexerei ligada e 2 ou mais Hexerei no time: adicione uma execução quando acontecer."
+      }
+    ],
     "factions": [
       "hexerei"
     ],
@@ -6489,7 +6552,7 @@
         "label": "Beidou C6",
         "minConstellation": 6,
         "scope": "self",
-        "timed": false,
+        "timed": true,
         "resShred": {
           "value": 0.15,
           "elements": [
@@ -6497,7 +6560,7 @@
           ]
         },
         "flat": [],
-        "note": "Assume a redução de RES Electro durante o Supremo sempre ativa. Os efeitos de Radiância não entram."
+        "note": "RES Electro do inimigo -15% enquanto o Stormbreaker está ativo: janela de tempo, ligue na janela do Supremo. A parte da Radiância (RES Cryo e +200 de Maestria) NÃO entra. Antes estava sempre ligado."
       }
     ],
     "notes": [
@@ -6519,10 +6582,33 @@
       {
         "src": "const4",
         "kind": "partial",
-        "note": "O dano extra de 20% Electro dos Normais depois de levar dano não entra."
+        "note": "Pendente: \"20% Electro DMG\" extra nos Normais depois de levar dano, o texto não diz 20% de quê (ATK ou dano do Normal)."
+      },
+      {
+        "src": "p4",
+        "kind": "partial",
+        "note": "Pendente: o texto não dá o número do dano extra do Tidecaller com os acúmulos de poder. A recarga e a Energia são só informativas; a Radiância não entra."
+      },
+      {
+        "src": "const6",
+        "kind": "partial",
+        "note": "Entra a RES Electro. Pendente: a Radiância (RES Cryo -15% e +200 de Maestria do personagem ativo) só vale dentro de um Polestar Field, condição que o texto não define."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "p4",
+        "kind": "recarga",
+        "label": "Recarga e Energia do Tidecaller",
+        "text": "a habilidade cai 4 s e ela recupera 8 de Energia por acúmulo ao soltar o Tidecaller acertando; no máximo uma vez a cada 15 s"
+      },
+      {
+        "src": "const1",
+        "kind": "escudo",
+        "label": "Escudo do Stormbreaker",
+        "text": "Escudo de 16% do HP máximo por 15 s (absorve Electro 250% melhor)"
+      }
+    ],
     "procs": [],
     "factions": [],
     "specialMoves": [],
@@ -7791,37 +7877,6 @@
     "appliesToSelf": false,
     "buffs": [
       {
-        "id": "a4",
-        "label": "Keqing A4",
-        "minConstellation": 0,
-        "scope": "self",
-        "timed": true,
-        "stats": {
-          "atkPct": 0,
-          "dmgPct": 0,
-          "critRate": 0.15,
-          "critDmg": 0,
-          "em": 0,
-          "er": 0,
-          "hpPct": 0,
-          "defPct": 0,
-          "dmgPctByType": {},
-          "critRateByType": {},
-          "critDmgByType": {},
-          "baseMultByType": {},
-          "defIgnore": 0,
-          "atkFlat": 0,
-          "atkBaseFlat": 0,
-          "hpFlat": 0,
-          "defFlat": 0,
-          "physDmgPct": 0,
-          "physCritDmg": 0,
-          "reactionBonus": {}
-        },
-        "flat": [],
-        "note": "+15% de Taxa Crítica por 8 s depois da habilidade: ligue nas janelas. Os +15% de Recarga não entram."
-      },
-      {
         "id": "c4",
         "label": "Keqing C4",
         "minConstellation": 4,
@@ -7851,6 +7906,37 @@
         },
         "flat": [],
         "note": "+25% de ATK por 10 s depois de uma reação com Electro: ligue nas janelas."
+      },
+      {
+        "id": "a4",
+        "label": "Keqing A4",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0.15,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0.15,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "note": "+15% de Taxa Crítica e +15% de Recarga de Energia por 8 s depois da habilidade: ligue nas janelas."
       },
       {
         "id": "c6",
@@ -7883,16 +7969,17 @@
         "flat": [],
         "stacks": {
           "max": 4,
-          "unit": "efeitos ativos"
+          "unit": "efeitos ativos",
+          "default": 4
         },
-        "note": "Assume 4 efeitos independentes ativos (+24% de DMG Electro): ligue nas janelas."
+        "note": "+6% de DMG Electro por efeito independente (Normal, Carregado, habilidade e Supremo, 4 no máximo), 8 s cada. Assume o teto de 4; escolha de 0 a 4."
       }
     ],
     "notes": [
       {
         "src": "p1",
         "kind": "partial",
-        "note": "A infusão Electro dos Normais e Carregados não entra."
+        "note": "A infusão Electro dos Normais e Carregados (5 s) não entra: o elemento é o do personagem."
       },
       {
         "src": "const2",
@@ -20255,10 +20342,10 @@
         "label": "Lisa A4",
         "minConstellation": 0,
         "scope": "self",
-        "timed": false,
+        "timed": true,
         "defShred": 0.15,
         "flat": [],
-        "note": "Assume a redução de DEF do inimigo (15%, 10 s) sempre ativa."
+        "note": "DEF do inimigo -15% por 10 s depois de acertar o Lightning Rose: janela de tempo, o usuário liga e decide a duração. Antes estava sempre ligado."
       }
     ],
     "notes": [
@@ -20280,12 +20367,12 @@
       {
         "src": "const4",
         "kind": "partial",
-        "note": "Os raios extras da Rosa Relâmpago não entram."
+        "note": "Pendente: o Lightning Rose dispara de 1 a 3 raios e o texto não diz quantos; o Discharge usa o dano do kit."
       },
       {
         "src": "const6",
         "kind": "utility",
-        "note": "Só aplica o status Condutivo."
+        "note": "Só aplica 3 acúmulos do status Condutivo."
       }
     ],
     "infos": [],
@@ -23572,7 +23659,14 @@
       }
     ],
     "notes": [],
-    "infos": [],
+    "infos": [
+      {
+        "src": "const4",
+        "kind": "cura",
+        "label": "Cura ao fim do Midnight Phantasmagoria",
+        "text": "recupera 20% do HP ao fim da habilidade"
+      }
+    ],
     "procs": [
       {
         "id": "a4",

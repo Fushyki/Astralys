@@ -3296,26 +3296,6 @@
         "note": "Assume 4 stacks de +50 de Maestria: ligue nas janelas."
       },
       {
-        "id": "a4",
-        "label": "Alhaitham A4",
-        "minConstellation": 0,
-        "scope": "self",
-        "timed": false,
-        "convert": {
-          "from": "em",
-          "source": "self",
-          "perPoint": 0.001,
-          "threshold": 0,
-          "cap": 1,
-          "to": [
-            "skill",
-            "burst"
-          ]
-        },
-        "flat": [],
-        "note": "+0,1% de DMG da habilidade (Projection Attacks) e do Supremo por ponto de Maestria, até 100%."
-      },
-      {
         "id": "c6",
         "label": "Alhaitham C6",
         "minConstellation": 6,
@@ -3345,6 +3325,98 @@
         },
         "flat": [],
         "note": "+10% de Taxa Crítica e +70% de Dano Crítico por 6 s quando gera Espelhos com o limite cheio: ligue na janela."
+      },
+      {
+        "id": "a4",
+        "label": "Alhaitham A4",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "convert": {
+          "from": "em",
+          "source": "self",
+          "perPoint": 0.001,
+          "threshold": 0,
+          "cap": 1,
+          "to": [
+            "skill",
+            "burst"
+          ]
+        },
+        "flat": [],
+        "note": "+0,1% de DMG por ponto de Maestria, até 100%, na habilidade (Projection Attacks) e no Supremo (Particular Field), sempre. Pendente: o Rush Attack também é habilidade e recebe por engano (o formato só separa por tipo)."
+      },
+      {
+        "id": "c4m",
+        "label": "Alhaitham C4 (Maestria dos aliados)",
+        "minConstellation": 4,
+        "scope": "others",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 90,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "stacks": {
+          "max": 3,
+          "unit": "Espelhos consumidos",
+          "default": 3
+        },
+        "note": "+30 de Maestria dos demais por Espelho consumido pelo Supremo, por 15 s. Escolha de 0 a 3 Espelhos (3 é o máximo de Espelhos do kit; o padrão assume os 3 consumidos)."
+      },
+      {
+        "id": "c4d",
+        "label": "Alhaitham C4 (DMG Dendro)",
+        "minConstellation": 4,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.3,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "stacks": {
+          "max": 3,
+          "unit": "Espelhos gerados",
+          "default": 3
+        },
+        "note": "+10% de DMG Dendro por Espelho gerado depois do Supremo (consumidos + gerados = 3), por 15 s. Escolha de 0 a 3 (o padrão assume 3 gerados, como o C6 garante)."
       }
     ],
     "notes": [
@@ -3357,11 +3429,6 @@
         "src": "const1",
         "kind": "utility",
         "note": "Só recarga."
-      },
-      {
-        "src": "const4",
-        "kind": "partial",
-        "note": "Os +10% de DMG Dendro por Espelho gerado e +30 de Maestria dos aliados por Espelho consumido dependem do número de Espelhos: não entram."
       }
     ],
     "infos": [],
@@ -9280,8 +9347,8 @@
       },
       {
         "src": "const1",
-        "kind": "utility",
-        "note": "Só Cat Grass Cardamom extra."
+        "kind": "partial",
+        "note": "Pendente: cada Cat Grass Cardamom extra (1 a cada 8.000 de HP máximo, até 4) explode no Supremo, mas o texto não diz quantas explosões acertam; some execuções do Cat Grass Cardamom Explosion DMG à mão."
       },
       {
         "src": "const2",
@@ -9289,7 +9356,20 @@
         "note": "Só escudos."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "p1",
+        "kind": "escudo",
+        "label": "Escudos do Reinforced Packaging",
+        "text": "Cada acúmulo (até 3) cria um escudo com 20% da absorção do Shield of Safe Transport"
+      },
+      {
+        "src": "const2",
+        "kind": "escudo",
+        "label": "Critical Transport Shield",
+        "text": "Escudo de 40% da absorção máxima do Shield of Safe Transport por 12 s (absorve Dendro 250% melhor); uma vez a cada 10 s por personagem"
+      }
+    ],
     "procs": [
       {
         "id": "c4",
@@ -9831,7 +9911,14 @@
         "note": "Só faz o Sprout da A1 (golpe extra na paleta) vir sem reação e durar mais."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "const1",
+        "kind": "energia",
+        "label": "Recarga fora de campo",
+        "text": "+20% de Recarga de Energia enquanto está no time e fora de campo"
+      }
+    ],
     "procs": [
       {
         "id": "a1",
@@ -9963,25 +10050,6 @@
         "note": "+60 de Maestria da equipe por 8 s depois do Supremo: ligue nas janelas. Os +60 extras por reação não entram."
       },
       {
-        "id": "a4",
-        "label": "Tighnari A4",
-        "minConstellation": 0,
-        "scope": "self",
-        "timed": false,
-        "convert": {
-          "from": "em",
-          "source": "self",
-          "perPoint": 0.0006,
-          "threshold": 0,
-          "cap": 0.6,
-          "to": [
-            "charged"
-          ]
-        },
-        "flat": [],
-        "note": "+0,06% de DMG de Ataque Carregado por ponto de Maestria, teto de 60%, sempre. O Tanglevine Shaft (Supremo) não entra."
-      },
-      {
         "id": "c1",
         "label": "Tighnari C1",
         "minConstellation": 1,
@@ -10013,9 +10081,71 @@
         },
         "flat": [],
         "note": "+15% de Taxa Crítica de Ataque Carregado, sempre."
+      },
+      {
+        "id": "a4",
+        "label": "Tighnari A4",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "convert": {
+          "from": "em",
+          "source": "self",
+          "perPoint": 0.0006,
+          "threshold": 0,
+          "cap": 0.6,
+          "to": [
+            "charged",
+            "burst"
+          ]
+        },
+        "flat": [],
+        "note": "+0,06% de DMG por ponto de Maestria, teto de 60%, nos Carregados e no Supremo (Fashioner's Tanglevine Shaft e o Secondary Tanglevine Shaft), sempre. Pendente: o Wreath Arrow e o Clusterbloom Arrow estão cadastrados como Normal em moves.json, então não recebem."
+      },
+      {
+        "id": "c4r",
+        "label": "Tighnari C4 (reação)",
+        "minConstellation": 4,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 60,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "note": "Soma +60 de Maestria à equipe (além dos +60 do C4) quando o Fashioner's Tanglevine Shaft dispara Queimadura, Florescer, Lunar-Florescer, Acelerar ou Propagar: ligue a janela só quando a reação acontecer (renova os 8 s)."
       }
     ],
-    "notes": [],
+    "notes": [
+      {
+        "src": "p2",
+        "kind": "partial",
+        "note": "Pendente: Wreath Arrow e Clusterbloom Arrow estão cadastrados como Normal e ficam sem o bônus de Carregado."
+      },
+      {
+        "src": "const1",
+        "kind": "partial",
+        "note": "Pendente: a Taxa Crítica só entra no Carregado cadastrado como tal (Aimed Shot); Wreath Arrow e Clusterbloom Arrow estão como Normal."
+      }
+    ],
     "infos": [],
     "procs": [
       {
@@ -10024,10 +10154,9 @@
         "scale": {
           "atk": 1.5
         },
-        "hitType": "charged",
         "minConstellation": 6,
         "src": "const6",
-        "note": "150% do ATK por Wreath Arrow (conta como Carregado, Genshin Optimizer)."
+        "note": "150% do ATK por Wreath Arrow, como dano Dendro. Pendente: o texto não diz o tipo do golpe, então não recebe bônus de Carregado."
       }
     ],
     "factions": [],
@@ -10320,17 +10449,59 @@
           ]
         },
         "flat": [],
-        "note": "+0,1% de DMG da habilidade (Tri-Karma Purification) por ponto de Maestria acima de 200, até 80%. A Taxa Crítica (0,03% por ponto, até 24%) não entra."
+        "note": "+0,1% de DMG por ponto de Maestria acima de 200, até 80%, sempre. Pendente: vale só na Tri-Karma Purification, mas entra em todo golpe de habilidade dela (o Press e o Hold recebem por engano; o formato só separa por tipo). A Taxa Crítica (0,03% por ponto, até 24%) não entra."
       },
       {
         "id": "c2",
-        "label": "Nahida C2",
+        "label": "Nahida C2 (DEF)",
         "minConstellation": 2,
         "scope": "self",
-        "timed": false,
+        "timed": true,
         "defShred": 0.3,
         "flat": [],
-        "note": "Assume a redução de DEF do inimigo (30%, 8 s depois de Quicken, Aggravate ou Spread) sempre ativa. O crítico das reações de Dendro não entra."
+        "note": "DEF do inimigo -30% por 8 s depois de Acelerar, Intensificar ou Propagar, só em inimigo marcado pelas Sementes de Skandha da própria Nahida: janela de tempo, o usuário liga. Antes estava sempre ligado."
+      },
+      {
+        "id": "c2c",
+        "label": "Nahida C2 (crítico das reações)",
+        "minConstellation": 2,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "burningCritRate": 0.2,
+            "burningCritDmg": 1,
+            "bloomCritRate": 0.2,
+            "bloomCritDmg": 1,
+            "hyperbloomCritRate": 0.2,
+            "hyperbloomCritDmg": 1,
+            "burgeonCritRate": 0.2,
+            "burgeonCritDmg": 1,
+            "lunarbloomCritRate": 0.1,
+            "lunarbloomCritDmg": 0.2
+          }
+        },
+        "flat": [],
+        "note": "Em inimigo marcado pelas Sementes da própria Nahida: Queimadura, Florescer, Hiperflorescer e Brotar podem critar (Taxa 20%, Dano Crítico 100%) e o Lunar-Florescer ganha +10% de Taxa e +20% de Dano Crítico. A duração das Sementes não está no texto: o usuário liga a janela."
       }
     ],
     "notes": [
@@ -10338,6 +10509,11 @@
         "src": "const1",
         "kind": "utility",
         "note": "Só a contagem de elementos do A1."
+      },
+      {
+        "src": "p2",
+        "kind": "partial",
+        "note": "Entra o DMG da Tri-Karma Purification (e, por limite do formato, de todo golpe de habilidade). Pendente: a Taxa Crítica (0,03% por ponto, até 24%) não cabe no formato."
       }
     ],
     "infos": [],
@@ -10804,7 +10980,7 @@
       {
         "src": "p1",
         "kind": "partial",
-        "note": "O dano dos rabanetes lançados correndo não entra."
+        "note": "Pendente: o dano dos rabanetes lançados correndo (um a cada 0,6 s) não entra, pois o texto não diz quanto tempo ela corre; adicione execuções do White Jade Radish DMG à mão."
       },
       {
         "src": "p2",
@@ -10817,7 +10993,26 @@
         "note": "Só energia."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "p2",
+        "kind": "cura",
+        "label": "Cura dos rabanetes",
+        "text": "O personagem ativo recupera 0.8% do HP máximo dela a cada 1 s por 5 s"
+      },
+      {
+        "src": "const2",
+        "kind": "energia",
+        "label": "Energia que ela recupera",
+        "text": "3 de Energia por explosão de rabanete; no máximo uma vez a cada 0.8 s"
+      },
+      {
+        "src": "const6",
+        "kind": "cura",
+        "label": "Cura do Mega Rabanete",
+        "text": "7.5% do HP máximo dela para o personagem ativo"
+      }
+    ],
     "procs": [
       {
         "id": "c6",
@@ -10825,10 +11020,9 @@
         "scale": {
           "atk": 0.75
         },
-        "hitType": "burst",
         "minConstellation": 6,
         "src": "const6",
-        "note": "75% do ATK, até 2 por Supremo (conta como Supremo, Genshin Optimizer)."
+        "note": "75% do ATK por Mega Radish (até 2 por Yuegui: Throwing Mode). Pendente: o texto não diz o tipo do golpe, então não recebe bônus de Supremo."
       }
     ],
     "factions": [],
@@ -10935,7 +11129,14 @@
         "note": "Os +60% de Florescer entram; o de Lunar-Florescer não entra: o Genshin Optimizer não modela e o núcleo de Lunar-Florescer não tem fórmula verificável."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "p1",
+        "kind": "cura",
+        "label": "Cura com o Dendro Core",
+        "text": "Recupera 300% da Maestria dele em HP quando o dano de um Dendro Core o atinge; no máximo uma vez a cada 0.5 s"
+      }
+    ],
     "procs": [
       {
         "id": "c6",

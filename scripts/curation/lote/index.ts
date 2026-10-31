@@ -35,4 +35,6 @@ import { LOTE as ELECTRO_A } from './electro-a';
 
 import { LOTE as HYDRO_B } from './hydro-b';
 
-export const LOTES: Lote[] = [PYRO_A, PYRO_B, PYRO_C, CRYO_A, CRYO_B, CRYO_C, ELECTRO_B, MISTO_D, ELECTRO_C, ANEMO_A, ANEMO_B, HYDRO_A, HYDRO_C, GEO_A, ELECTRO_A, HYDRO_B];
+import { LOTE as DENDRO_A } from './dendro-a';
+
+export const LOTES: Lote[] = [PYRO_A, PYRO_B, PYRO_C, CRYO_A, CRYO_B, CRYO_C, ELECTRO_B, MISTO_D, ELECTRO_C, ANEMO_A, ANEMO_B, HYDRO_A, HYDRO_C, GEO_A, ELECTRO_A, HYDRO_B, DENDRO_A];

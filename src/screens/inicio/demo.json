@@ -1,0 +1,761 @@
+{
+ "members": [
+  {
+   "name": "Mavuika",
+   "color": "#f08a5d"
+  },
+  {
+   "name": "Citlali",
+   "color": "#8fd3e8"
+  },
+  {
+   "name": "Iansan",
+   "color": "#c49cf2"
+  },
+  {
+   "name": "Bennett",
+   "color": "#b85f3a"
+  }
+ ],
+ "duration": 18.4,
+ "dps": 216600,
+ "total": 3790496,
+ "hits": [
+  {
+   "id": "row-22",
+   "t": 0.4,
+   "m": 1,
+   "kind": "skill",
+   "label": "Dano do Tzitzimimeh de Obsidiana",
+   "avg": 8526,
+   "rows": [
+    {
+     "tag": "char:2",
+     "effect": 0.249866
+    },
+    {
+     "tag": "char:3",
+     "effect": 0.370897
+    },
+    {
+     "tag": "gear:1",
+     "effect": 0.105544
+    },
+    {
+     "tag": "gear:3",
+     "effect": 0.032575
+    }
+   ]
+  },
+  {
+   "id": "row-23",
+   "t": 1.6,
+   "m": 1,
+   "kind": "skill",
+   "label": "Dano da Tempestade Gélida",
+   "avg": 8982,
+   "rows": [
+    {
+     "tag": "char:2",
+     "effect": 0.189901
+    },
+    {
+     "tag": "char:3",
+     "effect": 0.281886
+    },
+    {
+     "tag": "gear:1",
+     "effect": 0.082638
+    },
+    {
+     "tag": "gear:3",
+     "effect": 0.024758
+    }
+   ]
+  },
+  {
+   "id": "row-24",
+   "t": 2,
+   "m": 1,
+   "kind": "burst",
+   "label": "Dano da Tempestade de Gelo",
+   "avg": 71197,
+   "rows": [
+    {
+     "tag": "char:2",
+     "effect": 0.220475
+    },
+    {
+     "tag": "char:3",
+     "effect": 0.327269
+    },
+    {
+     "tag": "gear:1",
+     "effect": 0.141773
+    },
+    {
+     "tag": "gear:3",
+     "effect": 0.028743
+    }
+   ]
+  },
+  {
+   "id": "row-25",
+   "t": 2.6,
+   "m": 1,
+   "kind": "burst",
+   "label": "Dano do Crânio do Receptáculo Espiritual",
+   "avg": 13475,
+   "rows": [
+    {
+     "tag": "char:2",
+     "effect": 0.249866
+    },
+    {
+     "tag": "char:3",
+     "effect": 0.370897
+    },
+    {
+     "tag": "gear:3",
+     "effect": 0.032575
+    }
+   ]
+  },
+  {
+   "id": "row-26",
+   "t": 3.4,
+   "m": 2,
+   "kind": "skill",
+   "label": "Dano de Habilidade",
+   "avg": 12522,
+   "rows": []
+  },
+  {
+   "id": "row-27",
+   "t": 4.6,
+   "m": 2,
+   "kind": "burst",
+   "label": "Dano de Habilidade",
+   "avg": 18818,
+   "rows": []
+  },
+  {
+   "id": "row-28",
+   "t": 5.8,
+   "m": 3,
+   "kind": "burst",
+   "label": "Dano de Habilidade",
+   "avg": 45918,
+   "rows": [
+    {
+     "tag": "char:2",
+     "effect": 0.218905
+    },
+    {
+     "tag": "char:3",
+     "effect": 0.324939
+    },
+    {
+     "tag": "gear:3",
+     "effect": 0.046754
+    },
+    {
+     "tag": "label:Scroll",
+     "effect": 0.193611
+    }
+   ]
+  },
+  {
+   "id": "row-5",
+   "t": 6.9,
+   "m": 0,
+   "kind": "skill",
+   "label": "Dano de Loop de Ataque Carregado da Ignimoto",
+   "avg": 151684,
+   "rows": [
+    {
+     "tag": "char:2",
+     "effect": 0.139866
+    },
+    {
+     "tag": "char:3",
+     "effect": 0.207615
+    },
+    {
+     "tag": "gear:1",
+     "effect": 0.091279
+    },
+    {
+     "tag": "gear:3",
+     "effect": 0.037988
+    },
+    {
+     "tag": "label:Scroll",
+     "effect": 0.165563
+    },
+    {
+     "tag": "label:TTDS",
+     "effect": 0.091172
+    }
+   ]
+  },
+  {
+   "id": "row-6",
+   "t": 7.4,
+   "m": 0,
+   "kind": "burst",
+   "label": "Dano de Habilidade",
+   "avg": 1239638,
+   "rows": [
+    {
+     "tag": "char:2",
+     "effect": 0.139866
+    },
+    {
+     "tag": "char:3",
+     "effect": 0.207615
+    },
+    {
+     "tag": "gear:1",
+     "effect": 0.091279
+    },
+    {
+     "tag": "gear:3",
+     "effect": 0.037988
+    },
+    {
+     "tag": "label:Scroll",
+     "effect": 0.142653
+    },
+    {
+     "tag": "label:TTDS",
+     "effect": 0.091172
+    }
+   ]
+  },
+  {
+   "id": "row-7",
+   "t": 8.2,
+   "m": 0,
+   "kind": "skill",
+   "label": "Dano de Loop de Ataque Carregado da Ignimoto",
+   "avg": 109107,
+   "rows": [
+    {
+     "tag": "char:2",
+     "effect": 0.139866
+    },
+    {
+     "tag": "char:3",
+     "effect": 0.207615
+    },
+    {
+     "tag": "gear:3",
+     "effect": 0.037988
+    },
+    {
+     "tag": "label:Scroll",
+     "effect": 0.142857
+    },
+    {
+     "tag": "label:TTDS",
+     "effect": 0.091172
+    }
+   ]
+  },
+  {
+   "id": "row-8",
+   "t": 8.9,
+   "m": 0,
+   "kind": "skill",
+   "label": "Dano de investida da Ignimoto",
+   "avg": 43440,
+   "rows": [
+    {
+     "tag": "char:2",
+     "effect": 0.139866
+    },
+    {
+     "tag": "char:3",
+     "effect": 0.207615
+    },
+    {
+     "tag": "gear:3",
+     "effect": 0.037988
+    },
+    {
+     "tag": "label:Scroll",
+     "effect": 0.143524
+    },
+    {
+     "tag": "label:TTDS",
+     "effect": 0.091172
+    }
+   ]
+  },
+  {
+   "id": "row-9",
+   "t": 9.5,
+   "m": 0,
+   "kind": "skill",
+   "label": "Dano de Loop de Ataque Carregado da Ignimoto",
+   "avg": 355893,
+   "rows": [
+    {
+     "tag": "char:2",
+     "effect": 0.139866
+    },
+    {
+     "tag": "char:3",
+     "effect": 0.207615
+    },
+    {
+     "tag": "gear:1",
+     "effect": 0.091279
+    },
+    {
+     "tag": "gear:3",
+     "effect": 0.037988
+    },
+    {
+     "tag": "label:Scroll",
+     "effect": 0.144196
+    },
+    {
+     "tag": "label:TTDS",
+     "effect": 0.091172
+    }
+   ]
+  },
+  {
+   "id": "row-10",
+   "t": 10.2,
+   "m": 0,
+   "kind": "skill",
+   "label": "Dano de Loop de Ataque Carregado da Ignimoto",
+   "avg": 107587,
+   "rows": [
+    {
+     "tag": "char:2",
+     "effect": 0.139866
+    },
+    {
+     "tag": "char:3",
+     "effect": 0.207615
+    },
+    {
+     "tag": "gear:3",
+     "effect": 0.037988
+    },
+    {
+     "tag": "label:Scroll",
+     "effect": 0.144875
+    },
+    {
+     "tag": "label:TTDS",
+     "effect": 0.091172
+    }
+   ]
+  },
+  {
+   "id": "row-11",
+   "t": 10.8,
+   "m": 0,
+   "kind": "skill",
+   "label": "Dano de Loop de Ataque Carregado da Ignimoto",
+   "avg": 107041,
+   "rows": [
+    {
+     "tag": "char:2",
+     "effect": 0.139866
+    },
+    {
+     "tag": "char:3",
+     "effect": 0.207615
+    },
+    {
+     "tag": "gear:3",
+     "effect": 0.037988
+    },
+    {
+     "tag": "label:Scroll",
+     "effect": 0.145613
+    },
+    {
+     "tag": "label:TTDS",
+     "effect": 0.091172
+    }
+   ]
+  },
+  {
+   "id": "row-12",
+   "t": 11.5,
+   "m": 0,
+   "kind": "skill",
+   "label": "Dano Final de Ataque Carregado da Ignimoto",
+   "avg": 417929,
+   "rows": [
+    {
+     "tag": "char:2",
+     "effect": 0.139866
+    },
+    {
+     "tag": "char:3",
+     "effect": 0.207615
+    },
+    {
+     "tag": "gear:1",
+     "effect": 0.091279
+    },
+    {
+     "tag": "gear:3",
+     "effect": 0.037988
+    },
+    {
+     "tag": "label:Scroll",
+     "effect": 0.146306
+    },
+    {
+     "tag": "label:TTDS",
+     "effect": 0.091172
+    }
+   ]
+  },
+  {
+   "id": "row-13",
+   "t": 12.1,
+   "m": 0,
+   "kind": "skill",
+   "label": "Dano de investida da Ignimoto",
+   "avg": 42411,
+   "rows": [
+    {
+     "tag": "char:2",
+     "effect": 0.139866
+    },
+    {
+     "tag": "char:3",
+     "effect": 0.207615
+    },
+    {
+     "tag": "gear:3",
+     "effect": 0.037988
+    },
+    {
+     "tag": "label:Scroll",
+     "effect": 0.147005
+    },
+    {
+     "tag": "label:TTDS",
+     "effect": 0.091172
+    }
+   ]
+  },
+  {
+   "id": "row-14",
+   "t": 12.8,
+   "m": 0,
+   "kind": "skill",
+   "label": "Dano de Loop de Ataque Carregado da Ignimoto",
+   "avg": 105522,
+   "rows": [
+    {
+     "tag": "char:2",
+     "effect": 0.139866
+    },
+    {
+     "tag": "char:3",
+     "effect": 0.207615
+    },
+    {
+     "tag": "gear:3",
+     "effect": 0.037988
+    },
+    {
+     "tag": "label:Scroll",
+     "effect": 0.14771
+    },
+    {
+     "tag": "label:TTDS",
+     "effect": 0.091172
+    }
+   ]
+  },
+  {
+   "id": "row-15",
+   "t": 13.5,
+   "m": 0,
+   "kind": "skill",
+   "label": "Dano Final de Ataque Carregado da Ignimoto",
+   "avg": 411967,
+   "rows": [
+    {
+     "tag": "char:2",
+     "effect": 0.139866
+    },
+    {
+     "tag": "char:3",
+     "effect": 0.207615
+    },
+    {
+     "tag": "gear:1",
+     "effect": 0.091279
+    },
+    {
+     "tag": "gear:3",
+     "effect": 0.037988
+    },
+    {
+     "tag": "label:Scroll",
+     "effect": 0.148423
+    },
+    {
+     "tag": "label:TTDS",
+     "effect": 0.091172
+    }
+   ]
+  },
+  {
+   "id": "row-16",
+   "t": 14.1,
+   "m": 0,
+   "kind": "skill",
+   "label": "Dano de investida da Ignimoto",
+   "avg": 41803,
+   "rows": [
+    {
+     "tag": "char:2",
+     "effect": 0.139866
+    },
+    {
+     "tag": "char:3",
+     "effect": 0.207615
+    },
+    {
+     "tag": "gear:3",
+     "effect": 0.037988
+    },
+    {
+     "tag": "label:Scroll",
+     "effect": 0.149142
+    },
+    {
+     "tag": "label:TTDS",
+     "effect": 0.091172
+    }
+   ]
+  },
+  {
+   "id": "row-17",
+   "t": 14.8,
+   "m": 0,
+   "kind": "skill",
+   "label": "Dano de Loop de Ataque Carregado da Ignimoto",
+   "avg": 43776,
+   "rows": [
+    {
+     "tag": "char:3",
+     "effect": 0.241375
+    },
+    {
+     "tag": "gear:3",
+     "effect": 0.044166
+    },
+    {
+     "tag": "label:Scroll",
+     "effect": 0.149869
+    },
+    {
+     "tag": "label:TTDS",
+     "effect": 0.105997
+    }
+   ]
+  },
+  {
+   "id": "row-18",
+   "t": 15.4,
+   "m": 0,
+   "kind": "skill",
+   "label": "Dano Final de Ataque Carregado da Ignimoto",
+   "avg": 199479,
+   "rows": [
+    {
+     "tag": "char:3",
+     "effect": 0.241375
+    },
+    {
+     "tag": "gear:1",
+     "effect": 0.091279
+    },
+    {
+     "tag": "gear:3",
+     "effect": 0.044166
+    },
+    {
+     "tag": "label:Scroll",
+     "effect": 0.150659
+    },
+    {
+     "tag": "label:TTDS",
+     "effect": 0.105997
+    }
+   ]
+  },
+  {
+   "id": "row-19",
+   "t": 16.1,
+   "m": 0,
+   "kind": "skill",
+   "label": "Dano de investida da Ignimoto",
+   "avg": 30101,
+   "rows": [
+    {
+     "tag": "char:3",
+     "effect": 0.284025
+    },
+    {
+     "tag": "label:Scroll",
+     "effect": 0.1514
+    }
+   ]
+  },
+  {
+   "id": "row-20",
+   "t": 16.7,
+   "m": 0,
+   "kind": "skill",
+   "label": "Dano de Loop de Ataque Carregado da Ignimoto",
+   "avg": 36645,
+   "rows": [
+    {
+     "tag": "char:3",
+     "effect": 0.284025
+    },
+    {
+     "tag": "label:Scroll",
+     "effect": 0.152149
+    }
+   ]
+  },
+  {
+   "id": "row-21",
+   "t": 17.4,
+   "m": 0,
+   "kind": "skill",
+   "label": "Dano Final de Ataque Carregado da Ignimoto",
+   "avg": 167034,
+   "rows": [
+    {
+     "tag": "char:3",
+     "effect": 0.284025
+    },
+    {
+     "tag": "gear:1",
+     "effect": 0.091279
+    },
+    {
+     "tag": "label:Scroll",
+     "effect": 0.152905
+    }
+   ]
+  }
+ ],
+ "windows": [
+  {
+   "tag": "char:2",
+   "giver": 2,
+   "name": "ATK fixo Iansan",
+   "value": "ATK fixo +810",
+   "start": 0.4,
+   "end": 2.7
+  },
+  {
+   "tag": "char:2",
+   "giver": 2,
+   "name": "ATK fixo Iansan",
+   "value": "ATK fixo +810",
+   "start": 5.8,
+   "end": 14.2
+  },
+  {
+   "tag": "char:3",
+   "giver": 3,
+   "name": "ATK fixo Bennett",
+   "value": "ATK fixo +1.202",
+   "start": 0.4,
+   "end": 2.7
+  },
+  {
+   "tag": "char:3",
+   "giver": 3,
+   "name": "ATK fixo Bennett",
+   "value": "ATK fixo +1.202",
+   "start": 5.8,
+   "end": 17.5
+  },
+  {
+   "tag": "gear:1",
+   "giver": 1,
+   "name": "Set de Citlali",
+   "value": "+120 EM",
+   "start": 0.4,
+   "end": 2.7
+  },
+  {
+   "tag": "gear:1",
+   "giver": 1,
+   "name": "Set de Citlali",
+   "value": "+120 EM",
+   "start": 5.8,
+   "end": 17.5
+  },
+  {
+   "tag": "gear:3",
+   "giver": 3,
+   "name": "Set de Bennett",
+   "value": "+20% ATK",
+   "start": 0.4,
+   "end": 2.7
+  },
+  {
+   "tag": "gear:3",
+   "giver": 3,
+   "name": "Set de Bennett",
+   "value": "+20% ATK",
+   "start": 5.8,
+   "end": 15.5
+  },
+  {
+   "tag": "label:Scroll",
+   "giver": 2,
+   "name": "Scroll",
+   "value": "+40% DMG",
+   "start": 0.4,
+   "end": 2.7
+  },
+  {
+   "tag": "label:Scroll",
+   "giver": 2,
+   "name": "Scroll",
+   "value": "+40% DMG",
+   "start": 5.8,
+   "end": 17.5
+  },
+  {
+   "tag": "label:TTDS",
+   "giver": 1,
+   "name": "TTDS",
+   "value": "+48% ATK",
+   "start": 0.4,
+   "end": 2.7
+  },
+  {
+   "tag": "label:TTDS",
+   "giver": 1,
+   "name": "TTDS",
+   "value": "+48% ATK",
+   "start": 5.8,
+   "end": 15.5
+  }
+ ]
+}

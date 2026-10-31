@@ -10,7 +10,6 @@
 @media (prefers-reduced-motion: reduce) { .in-sky i { animation: none; } }
 
 .in-copy { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: var(--sp-4); }
-.in-eyebrow { display: inline-flex; align-items: center; gap: var(--sp-2); font: 700 var(--fs-4) var(--font-display); letter-spacing: .3em; text-transform: uppercase; color: var(--gold); }
 .in-copy h1 { margin: 0; font: 700 clamp(48px, 7vw, 96px) var(--font-display); line-height: .95; letter-spacing: .01em; }
 .in-copy p { margin: 0; max-width: 460px; font-size: var(--fs-5); line-height: 1.45; color: var(--text-2); }
 .in-cta { display: flex; flex-wrap: wrap; gap: var(--sp-3); margin-top: var(--sp-2); }
@@ -23,6 +22,6 @@
 .in-demo { color: var(--muted); font-size: var(--fs-3); text-decoration: none; }
 .in-demo:hover { color: var(--gold-hi); }
 
-/* A rotação ao fundo: baixa opacidade, some atrás do texto. */
-.in-rot { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: .9; -webkit-mask-image: linear-gradient(90deg, transparent 28%, #000 62%); mask-image: linear-gradient(90deg, transparent 28%, #000 62%); }
-@media (max-width: 960px) { .in-rot { opacity: .3; -webkit-mask-image: none; mask-image: none; } }
+/* Telas largas: a frase à esquerda e a demonstração à direita. */
+@media (min-width: 1100px) { .in-hero { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 56px; } }
+@media (max-width: 1099px) { .in-hero { align-items: start; padding-top: var(--sp-5); } .in-copy h1 { font-size: clamp(44px, 12vw, 72px); } }

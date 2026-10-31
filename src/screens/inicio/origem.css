@@ -1,0 +1,65 @@
+/* Demonstração da página inicial ("Fio de origem"). Só tokens de src/design/tokens.css. */
+.or-demo { position: relative; display: flex; flex-direction: column; gap: var(--sp-4); min-width: 0; padding: var(--sp-4); border: 1px solid var(--line-1); border-radius: var(--r-panel); background: color-mix(in srgb, var(--panel-bg) 92%, transparent); }
+.or-head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--sp-3); }
+.or-head h2 { margin: 0; font: 700 var(--fs-5) var(--font-display); letter-spacing: .02em; }
+.or-head p { margin: 2px 0 0; font-size: var(--fs-2); color: var(--muted); }
+.or-open { flex: none; font-size: var(--fs-2); color: var(--gold); text-decoration: none; padding: var(--sp-2) 0; }
+.or-open:hover { color: var(--gold-hi); text-decoration: underline; }
+
+.or-line { min-width: 0; border-radius: var(--r-inner); outline-offset: 4px; }
+.or-line:focus-visible { outline: 2px solid var(--gold); }
+.or-line svg { display: block; max-width: 100%; overflow: visible; }
+.or-grid { stroke: var(--line-1); stroke-dasharray: 2 6; }
+.or-sec { fill: var(--faint); font: 500 11px var(--font-body); }
+.or-lane { stroke: var(--line-2); stroke-dasharray: 1 7; }
+.or-name { fill: var(--text-mid); font: 600 13px var(--font-display); letter-spacing: .04em; }
+.or-win { opacity: .22; transition: opacity .2s; }
+.or-win.on { opacity: .85; }
+.or-win.gone { opacity: .15; }
+
+/* O fio: desenha-se ao escolher o golpe (a resposta ao toque), e fica tracejado quando o buff é tirado. */
+.or-thread { fill: none; stroke-width: 1.6; stroke-linecap: round; opacity: .95; stroke-dasharray: 1; stroke-dashoffset: 0; animation: or-draw .55s ease-out; }
+.or-thread.gone { stroke-dasharray: .02 .03; opacity: .45; animation: none; }
+@keyframes or-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+
+.or-hit { cursor: pointer; }
+.or-hit:focus-visible circle:last-child { stroke: var(--gold-hi); }
+.or-hit:not(.sel):hover circle:nth-child(2) { stroke-width: 2.6; }
+
+.or-hit-panel { display: flex; flex-direction: column; gap: var(--sp-3); padding-top: var(--sp-3); border-top: 1px solid var(--line-1); }
+.or-hit-top { display: grid; grid-template-columns: var(--ctl-md) minmax(0, 1fr) var(--ctl-md); gap: var(--sp-3); align-items: center; }
+.or-step { height: var(--ctl-md); border: 1px solid var(--border-ctl); border-radius: var(--r-ctl); background: var(--ctl-bg); color: var(--text); font: 600 22px/1 var(--font-body); cursor: pointer; }
+.or-step:hover { border-color: var(--gold); }
+.or-hit-name { display: grid; gap: 1px; min-width: 0; text-align: center; }
+.or-hit-name b { font: 700 var(--fs-4) var(--font-display); letter-spacing: .04em; }
+.or-hit-name span { font-size: var(--fs-3); color: var(--text-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.or-hit-name small { font-size: var(--fs-1); color: var(--faint); }
+
+.or-figure { display: flex; align-items: baseline; justify-content: center; flex-wrap: wrap; gap: var(--sp-2) var(--sp-4); }
+.or-figure strong { font: 700 clamp(44px, 6vw, 64px)/1 var(--font-display); letter-spacing: .01em; color: var(--gold); font-variant-numeric: tabular-nums; transition: color .2s; }
+.or-figure strong.cut { color: var(--text-soft); }
+.or-delta { font-size: var(--fs-2); color: var(--muted); }
+.or-figure strong.cut + .or-delta { color: var(--warn); }
+
+.or-rows { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.or-rows button { width: 100%; display: grid; grid-template-columns: 10px minmax(0, 1.4fr) auto minmax(48px, 1fr) auto; align-items: center; gap: var(--sp-3); min-height: var(--ctl-md); padding: 0 var(--sp-3); border: 1px solid var(--line-1); border-radius: var(--r-ctl); background: var(--bg-deep); color: var(--text); font: 400 var(--fs-3) var(--font-body); text-align: left; cursor: pointer; }
+.or-rows button:hover { border-color: var(--border-ctl-hi); }
+.or-rows button.off { border-style: dashed; color: var(--muted); }
+.or-rows button.off .or-who, .or-rows button.off .or-val { text-decoration: line-through; }
+.or-rows i { width: 10px; height: 10px; border-radius: 50%; }
+.or-who { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.or-who b { font: 600 var(--fs-3) var(--font-display); letter-spacing: .03em; margin-right: 4px; }
+.or-val { color: var(--text-soft); font-variant-numeric: tabular-nums; }
+.or-bar { height: 4px; border-radius: 2px; background: var(--line-1); overflow: hidden; }
+.or-bar u { display: block; height: 100%; border-radius: 2px; text-decoration: none; opacity: .85; }
+.or-pct { font-size: var(--fs-2); color: var(--text-2); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.or-none, .or-hint { margin: 0; font-size: var(--fs-2); color: var(--muted); text-align: center; }
+
+@media (max-width: 560px) {
+  .or-demo { padding: var(--sp-3); }
+  .or-rows button { grid-template-columns: 10px minmax(0, 1fr) auto; row-gap: 2px; padding-block: var(--sp-2); }
+  .or-rows .or-bar { grid-column: 2 / 3; }
+  .or-rows .or-pct { grid-column: 3; }
+  .or-rows .or-val { grid-column: 3; grid-row: 1; }
+}
+@media (prefers-reduced-motion: reduce) { .or-thread { animation: none; } .or-win, .or-figure strong { transition: none; } }

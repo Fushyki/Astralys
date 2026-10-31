@@ -4100,21 +4100,6 @@
     "appliesToSelf": false,
     "buffs": [
       {
-        "id": "c2",
-        "label": "Nilou C2",
-        "minConstellation": 2,
-        "scope": "self",
-        "timed": false,
-        "resShred": {
-          "value": 0.35,
-          "elements": [
-            "Hydro"
-          ]
-        },
-        "flat": [],
-        "note": "Assume a redução de RES Hydro (10 s) sempre ativa. A de Dendro (após Floração) NÃO entra."
-      },
-      {
         "id": "c6cr",
         "label": "Nilou C6 (Taxa Crítica)",
         "minConstellation": 6,
@@ -4225,6 +4210,36 @@
         },
         "flat": [],
         "note": "+50% de DMG do Supremo por 8 s: ligue na janela."
+      },
+      {
+        "id": "c2",
+        "label": "Nilou C2",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": true,
+        "resShred": {
+          "value": 0.35,
+          "elements": [
+            "Hydro"
+          ]
+        },
+        "flat": [],
+        "note": "RES Hydro do inimigo -35% por 10 s depois que quem tem o Golden Chalice's Bounty (A1: time só Dendro/Hydro) causa dano Hydro: ligue a janela (antes estava sempre ligado)."
+      },
+      {
+        "id": "c2d",
+        "label": "Nilou C2 (RES Dendro)",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": true,
+        "resShred": {
+          "value": 0.35,
+          "elements": [
+            "Dendro"
+          ]
+        },
+        "flat": [],
+        "note": "RES Dendro do inimigo -35% por 10 s depois de dano de Florescer ou Lunar-Florescer (precisa do A1): ligue a janela."
       }
     ],
     "notes": [
@@ -4237,9 +4252,21 @@
         "src": "const1",
         "kind": "partial",
         "note": "Os +65% de dano do Luminous Illusion (um golpe da habilidade) não entram."
+      },
+      {
+        "src": "const2",
+        "kind": "partial",
+        "note": "Entram as RES Hydro e Dendro -35% (janelas). Precisa do A1 (time só Dendro e Hydro)."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "const4",
+        "kind": "energia",
+        "label": "Energia que ela recupera",
+        "text": "15 de Energia depois do 3º passo da dança"
+      }
+    ],
     "procs": [],
     "factions": [],
     "specialMoves": [],
@@ -4256,11 +4283,57 @@
     "appliesToSelf": false,
     "buffs": [
       {
+        "id": "a1",
+        "label": "Neuvillette A1",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {
+            "charged": 0.6
+          },
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "stacks": {
+          "max": 3,
+          "unit": "stacks de Past Draconic Glories",
+          "table": [
+            0,
+            0.166667,
+            0.416667,
+            1
+          ]
+        },
+        "note": "O Equitable Judgment causa 110%/125%/160% do dano ORIGINAL (multiplica o dano base, não soma no DMG%), por stack escolhido de 0 a 3 (30 s). O formato não separa por golpe: vale para todo Carregado na janela, então desligue nos Carregados que não são o Equitable Judgment."
+      },
+      {
         "id": "a4",
         "label": "Neuvillette A4",
         "minConstellation": 0,
         "scope": "self",
         "timed": false,
+        "forElements": [
+          "Hydro"
+        ],
         "stats": {
           "atkPct": 0,
           "dmgPct": 0.3,
@@ -4284,50 +4357,12 @@
           "reactionBonus": {}
         },
         "flat": [],
-        "note": "Assume HP alto: o teto de +30% de DMG Hydro, sempre."
-      },
-      {
-        "id": "a1",
-        "label": "Neuvillette A1",
-        "minConstellation": 0,
-        "scope": "self",
-        "timed": true,
-        "stats": {
-          "atkPct": 0,
-          "dmgPct": 0,
-          "critRate": 0,
-          "critDmg": 0,
-          "em": 0,
-          "er": 0,
-          "hpPct": 0,
-          "defPct": 0,
-          "dmgPctByType": {
-            "charged": 0.6
-          },
-          "critRateByType": {},
-          "critDmgByType": {},
-          "baseMultByType": {},
-          "defIgnore": 0,
-          "atkFlat": 0,
-          "atkBaseFlat": 0,
-          "hpFlat": 0,
-          "defFlat": 0,
-          "physDmgPct": 0,
-          "physCritDmg": 0,
-          "reactionBonus": {}
-        },
-        "flat": [],
         "stacks": {
-          "max": 3,
-          "unit": "stacks de Past Draconic Glories",
-          "table": [
-            0,
-            0.166667,
-            0.416667,
-            1
-          ]
+          "max": 50,
+          "unit": "% de HP atual acima de 30% do máximo",
+          "default": 50
         },
-        "note": "Assume 3 stacks de Past Draconic Glories (+60% de DMG do Carregado): ligue na janela."
+        "note": "+0,6% de DMG Hydro por 1% do HP atual acima de 30% do HP máximo, teto de +30% (50 pontos, ou seja, HP a 80% ou mais). Escolha de 0 a 50; o padrão é o teto."
       },
       {
         "id": "c2",
@@ -4361,21 +4396,28 @@
         },
         "flat": [],
         "stacks": {
-          "max": 3
+          "max": 3,
+          "unit": "stacks de Past Draconic Glories",
+          "of": "a1"
         },
-        "note": "Assume 3 stacks (+42% de Dano Crítico do Carregado): ligue na janela."
+        "note": "+14% de Dano Crítico do Equitable Judgment por stack (até 42%); usa os stacks escolhidos no A1. O formato dá o bônus a todo Carregado na janela: desligue nos que não são o Equitable Judgment."
       }
     ],
     "notes": [
       {
         "src": "const1",
         "kind": "utility",
-        "note": "Só resistência a interrupção."
+        "note": "Dá 1 stack de Past Draconic Glories ao entrar em campo: escolha os stacks no buff Neuvillette A1. O resto é só resistência a interrupção."
       },
       {
         "src": "const4",
         "kind": "utility",
         "note": "Só gotas de água."
+      },
+      {
+        "src": "p2",
+        "kind": "partial",
+        "note": "Entra o DMG Hydro por HP atual (escolha de 0 a 50 pontos acima de 30% do HP)."
       }
     ],
     "infos": [],
@@ -9478,39 +9520,6 @@
     "appliesToSelf": false,
     "buffs": [
       {
-        "id": "c1",
-        "label": "Ayato C1",
-        "minConstellation": 1,
-        "scope": "self",
-        "timed": true,
-        "stats": {
-          "atkPct": 0,
-          "dmgPct": 0,
-          "critRate": 0,
-          "critDmg": 0,
-          "em": 0,
-          "er": 0,
-          "hpPct": 0,
-          "defPct": 0,
-          "dmgPctByType": {
-            "skill": 0.4
-          },
-          "critRateByType": {},
-          "critDmgByType": {},
-          "baseMultByType": {},
-          "defIgnore": 0,
-          "atkFlat": 0,
-          "atkBaseFlat": 0,
-          "hpFlat": 0,
-          "defFlat": 0,
-          "physDmgPct": 0,
-          "physCritDmg": 0,
-          "reactionBonus": {}
-        },
-        "flat": [],
-        "note": "+40% de DMG da habilidade contra inimigos com 50% de HP ou menos: ligue nas janelas."
-      },
-      {
         "id": "burst",
         "label": "Ayato: Jardim de Pureza",
         "minConstellation": 0,
@@ -9564,6 +9573,70 @@
         "note": "DMG de Ataque Normal de quem está no jardim, pelo nível do Supremo: ligue nas janelas."
       },
       {
+        "id": "c2",
+        "label": "Ayato C2",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0.5,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "note": "+50% de HP máximo com 3 ou mais stacks de Namisen: ligue na janela do estado da habilidade."
+      },
+      {
+        "id": "c1",
+        "label": "Ayato C1",
+        "minConstellation": 1,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {
+            "normal": 0.4
+          },
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "note": "+40% de DMG dos Shunsuiken contra inimigos com 50% de HP ou menos: ligue a janela. Antes estava em \"habilidade\", mas os Shunsuiken são golpes Normais. O formato não tem bônus por golpe: vale para todo Normal na janela (desligue nos Normais fora do estado da habilidade)."
+      },
+      {
         "id": "namisen",
         "label": "Ayato: Namisen",
         "minConstellation": 0,
@@ -9596,17 +9669,27 @@
             "perPoint": 4,
             "hitTypes": [
               "normal"
+            ],
+            "labels": [
+              "Shunsuiken 1-Hit DMG",
+              "Shunsuiken 2-Hit DMG",
+              "Shunsuiken 3-Hit DMG"
             ]
           }
         ],
-        "note": "Soma (% do HP máximo por stack do nível da habilidade) × 4 stacks ao dano base dos Normais (Shunsuiken) dentro do estado da habilidade. Assume os 4 stacks cheios (no jogo eles sobem a cada golpe)."
+        "stacks": {
+          "max": 4,
+          "unit": "stacks de Namisen"
+        },
+        "note": "Soma (% do HP máximo por stack do nível da habilidade) x stacks ao dano base de cada Shunsuiken. Stacks de 0 a 4, escolha do usuário (cheios depois que a ilusão explode; o A1 dá 2 ao usar a habilidade). Só os Shunsuiken recebem; o golpe extra do C6 não."
       },
       {
         "id": "namisen-c2",
-        "label": "Ayato C2: 5º stack",
+        "label": "Ayato C2: Namisen com 5 stacks",
         "minConstellation": 2,
         "scope": "self",
         "timed": false,
+        "replaces": "namisen",
         "level": {
           "talent": "skill",
           "table": [
@@ -9629,53 +9712,31 @@
         },
         "flat": [
           {
-            "name": "Namisen (5º stack)",
+            "name": "Namisen por HP (C2)",
             "sourceStat": "HP",
-            "perPoint": 1,
+            "perPoint": 5,
             "hitTypes": [
               "normal"
+            ],
+            "labels": [
+              "Shunsuiken 1-Hit DMG",
+              "Shunsuiken 2-Hit DMG",
+              "Shunsuiken 3-Hit DMG"
             ]
           }
         ],
-        "note": "O 5º stack do Namisen (C2)."
-      },
-      {
-        "id": "c2",
-        "label": "Ayato C2",
-        "minConstellation": 2,
-        "scope": "self",
-        "timed": true,
-        "stats": {
-          "atkPct": 0,
-          "dmgPct": 0,
-          "critRate": 0,
-          "critDmg": 0,
-          "em": 0,
-          "er": 0,
-          "hpPct": 0.5,
-          "defPct": 0,
-          "dmgPctByType": {},
-          "critRateByType": {},
-          "critDmgByType": {},
-          "baseMultByType": {},
-          "defIgnore": 0,
-          "atkFlat": 0,
-          "atkBaseFlat": 0,
-          "hpFlat": 0,
-          "defFlat": 0,
-          "physDmgPct": 0,
-          "physCritDmg": 0,
-          "reactionBonus": {}
+        "stacks": {
+          "max": 5,
+          "unit": "stacks de Namisen"
         },
-        "flat": [],
-        "note": "+50% de HP máximo com 3 ou mais stacks de Namisen: ligue na janela do estado da habilidade."
+        "note": "Com a C2 o limite sobe para 5 stacks: este buff SUBSTITUI o Namisen de 4. Stacks de 0 a 5, escolha do usuário."
       }
     ],
     "notes": [
       {
         "src": "p1",
         "kind": "utility",
-        "note": "Já considerado no Namisen (stacks máximos)."
+        "note": "Dá 2 stacks de Namisen ao usar a habilidade e o máximo quando a ilusão explode: escolha os stacks no buff Ayato: Namisen."
       },
       {
         "src": "p2",
@@ -9686,6 +9747,11 @@
         "src": "const4",
         "kind": "utility",
         "note": "Só velocidade de ataque."
+      },
+      {
+        "src": "const2",
+        "kind": "partial",
+        "note": "Entram o limite de 5 stacks (Namisen da C2) e o +50% de HP com 3 stacks ou mais (janela)."
       }
     ],
     "infos": [],
@@ -11966,21 +12032,6 @@
         "note": "+8% de DMG Hydro por 18 s depois da habilidade: ligue nas janelas. O dano fixo por Convalescência não entra."
       },
       {
-        "id": "c2",
-        "label": "Sigewinne C2",
-        "minConstellation": 2,
-        "scope": "self",
-        "timed": false,
-        "resShred": {
-          "value": 0.35,
-          "elements": [
-            "Hydro"
-          ]
-        },
-        "flat": [],
-        "note": "Assume a redução de RES Hydro do inimigo (35%, 8 s) sempre ativa."
-      },
-      {
         "id": "c6",
         "label": "Sigewinne C6",
         "minConstellation": 6,
@@ -12017,6 +12068,21 @@
         },
         "flat": [],
         "note": "+2,2% de Dano Crítico por 1.000 de HP máximo (até 110%) por 15 s: ligue na janela da habilidade."
+      },
+      {
+        "id": "c2",
+        "label": "Sigewinne C2",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": true,
+        "resShred": {
+          "value": 0.35,
+          "elements": [
+            "Hydro"
+          ]
+        },
+        "flat": [],
+        "note": "RES Hydro do inimigo -35% por 8 s depois que o Bolstering Bubblebalm ou o Super Saturated Syringing acerta: ligue a janela (antes estava sempre ligado). O escudo é informativo."
       }
     ],
     "notes": [
@@ -12034,9 +12100,26 @@
         "src": "const4",
         "kind": "utility",
         "note": "Só duração."
+      },
+      {
+        "src": "const2",
+        "kind": "partial",
+        "note": "Entra a RES Hydro -35% por 8 s (janela). O escudo é informativo."
+      },
+      {
+        "src": "p1",
+        "kind": "partial",
+        "note": "Entra o +8% de DMG Hydro (janela). Pendente: o dano fixo de Convalescence (80 por 1.000 de HP acima de 30.000, teto de 2.800, nas habilidades dos aliados fora de campo) precisa de um limiar de 30.000 que o dano fixo do formato não tem."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "const2",
+        "kind": "escudo",
+        "label": "Bubbly Shield",
+        "text": "Escudo de 30% do HP máximo dela, absorve Hydro com 250% de eficiência"
+      }
+    ],
     "procs": [],
     "factions": [],
     "specialMoves": [],
@@ -20136,6 +20219,27 @@
         "note": "Assume o máximo de 300 pontos de Fanfarra (DMG da equipe = 300 × a razão do nível do Supremo): ligue nas janelas. A Fanfarra real depende das variações de HP do time."
       },
       {
+        "id": "c6",
+        "label": "Furina C6",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": false,
+        "flat": [
+          {
+            "name": "Center of Attention por HP",
+            "sourceStat": "HP",
+            "perPoint": 0.18,
+            "hitTypes": [
+              "normal",
+              "charged",
+              "plunge"
+            ],
+            "stacks": 6
+          }
+        ],
+        "note": "Soma 18% do HP máximo aos 6 primeiros Normais, Carregados e Imersivos dela na rotação (uma ativação do Center of Attention acaba depois de 6 efeitos, texto do Lunaris; confirmado pelo Davi). A conversão para Hydro já é o padrão; o extra de 25% do HP em Pneuma, a cura e a perda de HP não entram."
+      },
+      {
         "id": "a4",
         "label": "Furina A4",
         "minConstellation": 0,
@@ -20152,7 +20256,7 @@
           ]
         },
         "flat": [],
-        "note": "+0,7% de DMG da habilidade (Salon Members) por 1.000 de HP máximo, até 28%."
+        "note": "+0,7% de DMG dos Salon Members por 1.000 de HP máximo, teto de 28%. Vale para todo dano de habilidade (inclui o Ousia Bubble, que não é Salon Member): desligue o buff nesse golpe. A redução do intervalo da Singer é só cura."
       },
       {
         "id": "c2",
@@ -20183,28 +20287,67 @@
           "reactionBonus": {}
         },
         "flat": [],
-        "note": "Assume o aumento máximo de HP (+140%, com Fanfare muito acima do limite): ligue na janela do Supremo."
+        "stacks": {
+          "max": 400,
+          "unit": "pontos de Fanfare acima do limite"
+        },
+        "note": "+0,35% de HP máximo por ponto de Fanfare acima do limite (300; 400 na C1), até +140% (400 pontos acima). Escolha de 0 a 400 durante o Supremo. O +250% de ganho de Fanfare só muda quanto a Fanfare acumula."
       },
       {
-        "id": "c6",
-        "label": "Furina C6",
-        "minConstellation": 6,
-        "scope": "self",
-        "timed": false,
-        "flat": [
-          {
-            "name": "Center of Attention por HP",
-            "sourceStat": "HP",
-            "perPoint": 0.18,
-            "hitTypes": [
-              "normal",
-              "charged",
-              "plunge"
-            ],
-            "stacks": 6
-          }
-        ],
-        "note": "Soma 18% do HP máximo aos 6 primeiros Normais, Carregados e Imersivos dela na rotação (uma ativação do Center of Attention acaba depois de 6 efeitos, texto do Lunaris; confirmado pelo Davi). A conversão para Hydro já é o padrão; o extra de 25% do HP em Pneuma, a cura e a perda de HP não entram."
+        "id": "burst-c1",
+        "label": "Furina C1: Fanfare até 400",
+        "minConstellation": 1,
+        "scope": "team",
+        "timed": true,
+        "replaces": "burst",
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 400,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "level": {
+          "talent": "burst",
+          "table": [
+            0.0007,
+            0.0009,
+            0.0011,
+            0.0013,
+            0.0015,
+            0.0017,
+            0.0019,
+            0.0021,
+            0.0023,
+            0.0025,
+            0.0027,
+            0.0029,
+            0.0031,
+            0.0033,
+            0.0035
+          ]
+        },
+        "flat": [],
+        "stacks": {
+          "max": 400,
+          "unit": "pontos de Fanfare"
+        },
+        "note": "Com a C1 o limite de Fanfare é 400 (+100) e ela começa o Supremo com 150: este buff SUBSTITUI o de 300. DMG da equipe = pontos de Fanfare x a razão do nível do Supremo. Fanfare de 0 a 400 por escolha do usuário; ligue nas janelas."
       }
     ],
     "notes": [
@@ -20216,15 +20359,33 @@
       {
         "src": "const1",
         "kind": "partial",
-        "note": "Com a C1 o limite de Fanfare sobe para 400 (+100): o buff da equipe usa 300 e não acompanha."
+        "note": "Entra o limite de Fanfare 400 (buff que substitui o de 300). Os 150 de Fanfare iniciais são escolha do usuário nos stacks."
       },
       {
         "src": "const4",
         "kind": "utility",
         "note": "Só energia."
+      },
+      {
+        "src": "const2",
+        "kind": "partial",
+        "note": "Entra o aumento de HP por Fanfare acima do limite (0 a 400 pontos). O ganho de Fanfare +250% só muda quanto ela acumula."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "p1",
+        "kind": "cura",
+        "label": "Cura do Endless Waltz",
+        "text": "Cura 2% do HP máximo dos aliados próximos a cada 2 s por 4 s, quando a cura no personagem em campo transborda"
+      },
+      {
+        "src": "const4",
+        "kind": "energia",
+        "label": "Energia que ela recupera",
+        "text": "4 de Energia a cada acerto dos Salon Members ou cura da Singer; no máximo uma vez a cada 5 s"
+      }
+    ],
     "procs": [],
     "factions": [],
     "specialMoves": [],

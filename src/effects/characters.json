@@ -5449,44 +5449,6 @@
     "appliesToSelf": false,
     "buffs": [
       {
-        "id": "c2",
-        "label": "Kinich C2",
-        "minConstellation": 2,
-        "scope": "self",
-        "timed": false,
-        "resShred": {
-          "value": 0.3,
-          "elements": [
-            "Dendro"
-          ]
-        },
-        "flat": [],
-        "note": "Assume a redução de RES Dendro (6 s) sempre ativa."
-      },
-      {
-        "id": "a4",
-        "label": "Kinich A4",
-        "minConstellation": 0,
-        "scope": "self",
-        "timed": false,
-        "flat": [
-          {
-            "name": "Scalespiker Cannon por ATK",
-            "sourceStat": "ATK",
-            "perPoint": 6.4,
-            "hitTypes": [
-              "skill"
-            ],
-            "stacks": 1
-          }
-        ],
-        "stacks": {
-          "max": 2,
-          "unit": "stacks de Hunter's Experience"
-        },
-        "note": "Soma 640% do ATK (2 stacks de 320%) ao primeiro golpe da habilidade (o Scalespiker Cannon)."
-      },
-      {
         "id": "c1",
         "label": "Kinich C1",
         "minConstellation": 1,
@@ -5551,6 +5513,47 @@
         },
         "flat": [],
         "note": "+70% de DMG do Supremo (Hail to the Almighty Dragonlord)."
+      },
+      {
+        "id": "a4",
+        "label": "Kinich A4",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "flat": [
+          {
+            "name": "Scalespiker Cannon por ATK",
+            "sourceStat": "ATK",
+            "perPoint": 6.4,
+            "hitTypes": [
+              "skill"
+            ],
+            "labels": [
+              "Scalespiker Cannon DMG"
+            ],
+            "stacks": 1
+          }
+        ],
+        "stacks": {
+          "max": 2,
+          "unit": "stacks de Hunter's Experience"
+        },
+        "note": "Soma 320% do ATK por stack de Hunter's Experience consumido (até 2 = 640%) ao dano base do primeiro Scalespiker Cannon da rotação (o Loop Shot não recebe). Escolha os stacks de 0 a 2."
+      },
+      {
+        "id": "c2",
+        "label": "Kinich C2",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": true,
+        "resShred": {
+          "value": 0.3,
+          "elements": [
+            "Dendro"
+          ]
+        },
+        "flat": [],
+        "note": "RES Dendro do inimigo -30% por 6 s depois que a habilidade acerta: janela de tempo (antes estava sempre ligado). O +100% do primeiro canhão está no golpe extra \"Kinich C2: 1º canhão\"."
       }
     ],
     "notes": [
@@ -5558,20 +5561,51 @@
         "src": "p1",
         "kind": "utility",
         "note": "Só pontos de Nightsoul (a mecânica de estado não muda o dano calculado)."
+      },
+      {
+        "src": "const1",
+        "kind": "partial",
+        "note": "Entra o +100% de Dano Crítico do Scalespiker Cannon (aproximação: vale para os golpes de habilidade dele, porque o formato só separa por tipo). A Velocidade de Movimento não muda o dano."
+      },
+      {
+        "src": "const2",
+        "kind": "partial",
+        "note": "Entram a RES Dendro -30% por 6 s (janela) e o +100% do primeiro canhão (golpe extra)."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "const4",
+        "kind": "energia",
+        "label": "Energia que ele recupera",
+        "text": "5 de Energia depois do Loop Shot ou do Scalespiker Cannon; no máximo uma vez a cada 2.8 s"
+      }
+    ],
     "procs": [
+      {
+        "id": "c2p",
+        "label": "Kinich C2: 1º canhão",
+        "scale": {},
+        "hitType": "skill",
+        "minConstellation": 2,
+        "src": "const2",
+        "of": {
+          "talent": "skill",
+          "label": "Scalespiker Cannon DMG",
+          "variant": 0,
+          "fraction": 1
+        },
+        "note": "+100% do dano do primeiro Scalespiker Cannon depois de entrar em Nightsoul's Blessing, somado como golpe extra de 100% desse golpe (conta como habilidade, igual ao canhão). O AoE maior não muda o dano."
+      },
       {
         "id": "c6",
         "label": "Kinich C6: ricochete",
         "scale": {
           "atk": 7
         },
-        "hitType": "skill",
         "minConstellation": 6,
         "src": "const6",
-        "note": "700% do ATK por Scalespiker Cannon (conta como habilidade, Genshin Optimizer). Os buffs da A1 e da C2 sobre o canhão não entram neste golpe."
+        "note": "700% do ATK por Scalespiker Cannon, dano Dendro. Pendente: o texto não diz o tipo do golpe, então não recebe bônus de habilidade. Os buffs do A4 e do C2 sobre o canhão (o ricochete os herda) não entram aqui."
       }
     ],
     "factions": [],
@@ -11164,37 +11198,6 @@
     "appliesToSelf": false,
     "buffs": [
       {
-        "id": "a1",
-        "label": "Baizhu A1",
-        "minConstellation": 0,
-        "scope": "self",
-        "timed": false,
-        "stats": {
-          "atkPct": 0,
-          "dmgPct": 0.25,
-          "critRate": 0,
-          "critDmg": 0,
-          "em": 0,
-          "er": 0,
-          "hpPct": 0,
-          "defPct": 0,
-          "dmgPctByType": {},
-          "critRateByType": {},
-          "critDmgByType": {},
-          "baseMultByType": {},
-          "defIgnore": 0,
-          "atkFlat": 0,
-          "atkBaseFlat": 0,
-          "hpFlat": 0,
-          "defFlat": 0,
-          "physDmgPct": 0,
-          "physCritDmg": 0,
-          "reactionBonus": {}
-        },
-        "flat": [],
-        "note": "+25% de DMG Dendro com o personagem em campo acima de 50% de HP (assumido sempre)."
-      },
-      {
         "id": "c4",
         "label": "Baizhu C4",
         "minConstellation": 4,
@@ -11224,24 +11227,6 @@
         },
         "flat": [],
         "note": "+80 de Maestria da equipe por 15 s depois do Supremo: ligue nas janelas."
-      },
-      {
-        "id": "c6",
-        "label": "Baizhu C6",
-        "minConstellation": 6,
-        "scope": "self",
-        "timed": false,
-        "flat": [
-          {
-            "name": "Spiritveins por HP",
-            "sourceStat": "HP",
-            "perPoint": 0.08,
-            "hitTypes": [
-              "burst"
-            ]
-          }
-        ],
-        "note": "Soma 8% do HP máximo a cada Spiritvein (o dano do Supremo dele). Os escudos extras não mudam o dano."
       },
       {
         "id": "a4",
@@ -11303,6 +11288,58 @@
         },
         "flat": [],
         "note": "Idem, +0,8% no bônus de Propagar e Intensificar por 1.000 de HP."
+      },
+      {
+        "id": "a1",
+        "label": "Baizhu A1",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.25,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "note": "+25% de DMG Dendro com o personagem em campo com 50% de HP ou mais: ligue a janela (antes estava sempre ligado). Abaixo de 50% o efeito é +20% de Bônus de Cura (informativo)."
+      },
+      {
+        "id": "c6",
+        "label": "Baizhu C6",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": false,
+        "flat": [
+          {
+            "name": "Spiritveins por HP",
+            "sourceStat": "HP",
+            "perPoint": 0.08,
+            "hitTypes": [
+              "burst"
+            ],
+            "labels": [
+              "Spiritvein DMG"
+            ]
+          }
+        ],
+        "note": "Soma 8% do HP máximo ao dano base de cada Spiritvein (o dano do Supremo dele). Os escudos extras não mudam o dano."
       }
     ],
     "notes": [
@@ -11310,9 +11347,32 @@
         "src": "const1",
         "kind": "utility",
         "note": "Só cargas."
+      },
+      {
+        "src": "p1",
+        "kind": "partial",
+        "note": "Entra o +25% de DMG Dendro (janela, com o personagem em campo a 50% de HP ou mais). Os +20% de Bônus de Cura abaixo de 50% são só informativos."
+      },
+      {
+        "src": "p3",
+        "kind": "utility",
+        "note": "Só cura na exploração."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "p1",
+        "kind": "cura",
+        "label": "Bônus de cura",
+        "text": "+20% de Bônus de Cura dele com o personagem em campo abaixo de 50% de HP"
+      },
+      {
+        "src": "const2",
+        "kind": "cura",
+        "label": "Cura do Gossamer Sprite: Splice",
+        "text": "Cura 20% da cura normal do Gossamer Sprite; no máximo uma vez a cada 5 s"
+      }
+    ],
     "procs": [
       {
         "id": "c2",
@@ -12680,40 +12740,6 @@
         "note": "+20% de DMG da habilidade, sempre. O Cleardew Cologne da A1 não entra."
       },
       {
-        "id": "c2",
-        "label": "Emilie C2",
-        "minConstellation": 2,
-        "scope": "self",
-        "timed": false,
-        "resShred": {
-          "value": 0.3,
-          "elements": [
-            "Dendro"
-          ]
-        },
-        "flat": [],
-        "note": "Assume a redução de RES Dendro (10 s) sempre ativa."
-      },
-      {
-        "id": "a4",
-        "label": "Emilie A4",
-        "minConstellation": 0,
-        "scope": "self",
-        "timed": false,
-        "convert": {
-          "from": "atk",
-          "source": "self",
-          "perPoint": 0.00015,
-          "threshold": 0,
-          "cap": 0.36,
-          "to": [
-            "dmgPct"
-          ]
-        },
-        "flat": [],
-        "note": "+15% de DMG por 1.000 de ATK, até 36%, contra inimigo em Queimadura (assumido)."
-      },
-      {
         "id": "c6",
         "label": "Emilie C6",
         "minConstellation": 6,
@@ -12732,6 +12758,40 @@
           }
         ],
         "note": "Soma 300% do ATK aos 4 primeiros Normais/Carregados da rotação (o efeito acaba depois de 4 Aromas). A conversão para Dendro já é o padrão."
+      },
+      {
+        "id": "a4",
+        "label": "Emilie A4",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "convert": {
+          "from": "atk",
+          "source": "self",
+          "perPoint": 0.00015,
+          "threshold": 0,
+          "cap": 0.36,
+          "to": [
+            "dmgPct"
+          ]
+        },
+        "flat": [],
+        "note": "+15% de DMG por 1.000 de ATK, até 36%, só contra inimigo em Queimadura: ligue a janela (antes estava sempre ligado)."
+      },
+      {
+        "id": "c2",
+        "label": "Emilie C2",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": true,
+        "resShred": {
+          "value": 0.3,
+          "elements": [
+            "Dendro"
+          ]
+        },
+        "flat": [],
+        "note": "RES Dendro do inimigo -30% por 10 s depois que a habilidade, o Supremo ou o Cleardew Cologne acertam: janela de tempo (antes estava sempre ligado)."
       }
     ],
     "notes": [
@@ -12739,6 +12799,16 @@
         "src": "const4",
         "kind": "utility",
         "note": "Só duração."
+      },
+      {
+        "src": "p3",
+        "kind": "utility",
+        "note": "Só RES Pyro contra o dano de Queimadura (defesa)."
+      },
+      {
+        "src": "const1",
+        "kind": "partial",
+        "note": "Entram o +20% da Fragrance Extraction (buff) e do Cleardew Cologne (golpe extra). O Scent extra a cada 2,9 s só gera pontos do Lumidouce Case."
       }
     ],
     "infos": [],
@@ -12752,6 +12822,16 @@
         "minConstellation": 0,
         "src": "p1",
         "note": "600% do ATK a cada 2 Aromas coletados (não conta como habilidade)."
+      },
+      {
+        "id": "c1",
+        "label": "Emilie C1: Cleardew Cologne +20%",
+        "scale": {
+          "atk": 1.2
+        },
+        "minConstellation": 1,
+        "src": "const1",
+        "note": "O C1 soma 20% ao dano do Cleardew Cologne (600% do ATK no A1): golpe extra de 20% x 600% = 120% do ATK, Dendro, que não conta como habilidade. Adicione junto de cada \"Emilie A1: Cleardew Cologne\". O +20% da Fragrance Extraction está no buff \"Emilie C1\"."
       }
     ],
     "factions": [],
@@ -14949,64 +15029,6 @@
     "appliesToSelf": false,
     "buffs": [
       {
-        "id": "a1",
-        "label": "Nefer A1",
-        "minConstellation": 0,
-        "scope": "self",
-        "timed": true,
-        "stats": {
-          "atkPct": 0,
-          "dmgPct": 0,
-          "critRate": 0,
-          "critDmg": 0,
-          "em": 100,
-          "er": 0,
-          "hpPct": 0,
-          "defPct": 0,
-          "dmgPctByType": {},
-          "critRateByType": {},
-          "critDmgByType": {},
-          "baseMultByType": {},
-          "defIgnore": 0,
-          "atkFlat": 0,
-          "atkBaseFlat": 0,
-          "hpFlat": 0,
-          "defFlat": 0,
-          "physDmgPct": 0,
-          "physCritDmg": 0,
-          "reactionBonus": {}
-        },
-        "flat": [],
-        "stacks": {
-          "max": 5,
-          "unit": "stacks de Véu da Falsidade",
-          "table": [
-            0,
-            0,
-            0,
-            1,
-            1,
-            1
-          ]
-        },
-        "note": "+100 de Maestria por 8 s com 3 stacks de Véu da Falsidade (Ascendant Gleam): ligue nas janelas."
-      },
-      {
-        "id": "c4",
-        "label": "Nefer C4",
-        "minConstellation": 4,
-        "scope": "self",
-        "timed": false,
-        "resShred": {
-          "value": 0.2,
-          "elements": [
-            "Dendro"
-          ]
-        },
-        "flat": [],
-        "note": "Assume a redução de RES Dendro durante o Shadow Dance sempre ativa."
-      },
-      {
         "id": "a0",
         "label": "Nefer: base do Lunar-Florescer",
         "minConstellation": 0,
@@ -15106,6 +15128,67 @@
         },
         "flat": [],
         "note": "Com Moonsign: Ascendant Gleam, dano Lunar-Florescer da Nefer elevado em 15%."
+      },
+      {
+        "id": "a1",
+        "label": "Nefer A1",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 100,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "team": {
+          "moonsign": 2
+        },
+        "flat": [],
+        "stacks": {
+          "max": 5,
+          "unit": "stacks de Véu da Falsidade",
+          "table": [
+            0,
+            0,
+            0,
+            1,
+            1,
+            1
+          ]
+        },
+        "note": "+100 de Maestria por 8 s com 3 stacks de Véu da Falsidade, só com Moonsign: Ascendant Gleam: ligue nas janelas e escolha os stacks (3 a 5 valem 100; abaixo de 3 não dá nada). Com a C2 e 5 stacks a Maestria vira 200: veja \"Nefer C2\"."
+      },
+      {
+        "id": "c4",
+        "label": "Nefer C4",
+        "minConstellation": 4,
+        "scope": "self",
+        "timed": true,
+        "resShred": {
+          "value": 0.2,
+          "elements": [
+            "Dendro"
+          ]
+        },
+        "flat": [],
+        "note": "RES Dendro do inimigo -20% enquanto ela está no Shadow Dance (9 s) e mais 4,5 s depois: janela de tempo (antes estava sempre ligado)."
       }
     ],
     "notes": [
@@ -15123,6 +15206,11 @@
         "src": "const2",
         "kind": "partial",
         "note": "A Maestria extra (200 no lugar de 100) entra; o Phantasm Performance com até 140% do dano original não entra (depende dos stacks de Veil of Falsehood)."
+      },
+      {
+        "src": "p1",
+        "kind": "partial",
+        "note": "Entra a Maestria +100 com 3 stacks de Véu da Falsidade (Moonsign: Ascendant Gleam). Pendente: o +40% de DMG do Supremo por stack (linha \"DMG Bonus\" do Supremo) não entra: os dois golpes do Supremo estão cadastrados como Normal em moves.json e o bônus não distingue golpe específico."
       }
     ],
     "infos": [],
@@ -17158,7 +17246,65 @@
           "max": 10,
           "unit": "níveis de Luz de Lótus"
         },
-        "note": "Assume 10 níveis de Luz de Lótus (+60 de Maestria) dentro da área da Lâmpada: ligue nas janelas."
+        "note": "+6 de Maestria por nível de Luz de Lótus (1 nível por segundo, até 10 = +60) para o personagem ativo dentro da área da Lâmpada: ligue nas janelas e escolha os níveis de 0 a 10."
+      },
+      {
+        "id": "a4s",
+        "label": "Viajante A4 (habilidade)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "convert": {
+          "from": "em",
+          "source": "self",
+          "perPoint": 0.0015,
+          "threshold": 0,
+          "to": [
+            "skill"
+          ]
+        },
+        "flat": [],
+        "note": "+0,15% de DMG da habilidade (Razorgrass Blade) por ponto de Maestria, sem teto no texto."
+      },
+      {
+        "id": "a4b",
+        "label": "Viajante A4 (Supremo)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "convert": {
+          "from": "em",
+          "source": "self",
+          "perPoint": 0.001,
+          "threshold": 0,
+          "to": [
+            "burst"
+          ]
+        },
+        "flat": [],
+        "note": "+0,1% de DMG do Supremo (Surgent Manifestation: ataque da Lâmpada e explosão Pyro) por ponto de Maestria, sem teto no texto."
+      },
+      {
+        "id": "a4verdessence",
+        "label": "Viajante A4 (Carregado: Verdessence)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "flat": [
+          {
+            "name": "Charged Attack: Verdessence por ATK",
+            "sourceStat": "ATK",
+            "perPoint": 0.8,
+            "hitTypes": [
+              "charged"
+            ],
+            "labels": [
+              "Charged Attack DMG"
+            ],
+            "stacks": 2
+          }
+        ],
+        "note": "Soma 80% do ATK ao dano base de CADA um dos 2 acertos do Carregado, uma vez a cada 15 s (precisa de 3 stacks de Blade of Verdant Viridis). Entra nos 2 primeiros acertos de Carregado da rotação (1 Verdessence); para mais, aumente os stacks do efeito. Os Vinecores estão no golpe extra \"Viajante A4: Vinecore\"."
       },
       {
         "id": "c6",
@@ -17192,43 +17338,109 @@
           "reactionBonus": {}
         },
         "flat": [],
-        "note": "+12% de DMG Dendro do personagem sob a Luz de Lótus: ligue nas janelas. O bônus extra do elemento transfigurado não entra."
+        "note": "+12% de DMG Dendro do personagem sob a Luz de Lótus da Lâmpada: ligue nas janelas. Só personagens Dendro recebem."
       },
       {
-        "id": "a4s",
-        "label": "Viajante A4 (habilidade)",
-        "minConstellation": 0,
-        "scope": "self",
-        "timed": false,
-        "convert": {
-          "from": "em",
-          "source": "self",
-          "perPoint": 0.0015,
-          "threshold": 0,
-          "to": [
-            "skill"
-          ]
+        "id": "c6h",
+        "label": "Viajante C6 (Lâmpada Hydro)",
+        "minConstellation": 6,
+        "scope": "team",
+        "timed": true,
+        "forElements": [
+          "Hydro"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.12,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
-        "note": "+0,15% de DMG da habilidade (Razorgrass Blade) por ponto de Maestria."
+        "note": "+12% de DMG Hydro (além do Dendro) do personagem sob a Luz de Lótus, se a Lâmpada já passou por Lotuslight Transfiguration com Hydro: ligue só se foi Hydro. Só personagens Hydro recebem."
       },
       {
-        "id": "a4b",
-        "label": "Viajante A4 (Supremo)",
-        "minConstellation": 0,
-        "scope": "self",
-        "timed": false,
-        "convert": {
-          "from": "em",
-          "source": "self",
-          "perPoint": 0.001,
-          "threshold": 0,
-          "to": [
-            "burst"
-          ]
+        "id": "c6e",
+        "label": "Viajante C6 (Lâmpada Electro)",
+        "minConstellation": 6,
+        "scope": "team",
+        "timed": true,
+        "forElements": [
+          "Electro"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.12,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
-        "note": "+0,1% de DMG do Supremo (Surgent Manifestation) por ponto de Maestria."
+        "note": "+12% de DMG Electro (além do Dendro) do personagem sob a Luz de Lótus, se a Lâmpada já passou por Lotuslight Transfiguration com Electro: ligue só se foi Electro. Só personagens Electro recebem."
+      },
+      {
+        "id": "c6p",
+        "label": "Viajante C6 (Lâmpada Pyro)",
+        "minConstellation": 6,
+        "scope": "team",
+        "timed": true,
+        "forElements": [
+          "Pyro"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.12,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "note": "+12% de DMG Pyro (além do Dendro) do personagem sob a Luz de Lótus, se a Lâmpada já passou por Lotuslight Transfiguration com Pyro: ligue só se foi Pyro. Só personagens Pyro recebem."
       }
     ],
     "notes": [
@@ -17246,10 +17458,39 @@
         "src": "const4",
         "kind": "utility",
         "note": "Só stacks de Overflowing Lotuslight."
+      },
+      {
+        "src": "p3",
+        "kind": "partial",
+        "note": "Entram o Carregado: Verdessence (+80% do ATK por acerto, 1 vez a cada 15 s) e os Vinecores (golpe extra). Pendente: os buffs \"para cada elemento ressonado\" não entram: o texto só os cita por link, sem números nem quais ressonâncias contam."
+      },
+      {
+        "src": "const6",
+        "kind": "partial",
+        "note": "Entram +12% de DMG Dendro e, se a Lâmpada foi transfigurada, +12% do elemento correspondente (janelas separadas por elemento)."
       }
     ],
-    "infos": [],
-    "procs": [],
+    "infos": [
+      {
+        "src": "const1",
+        "kind": "energia",
+        "label": "Energia da Razorgrass Blade",
+        "text": "3.5 de Energia quando a Razorgrass Blade acerta um inimigo"
+      }
+    ],
+    "procs": [
+      {
+        "id": "a4vine",
+        "label": "Viajante A4: Vinecore",
+        "scale": {
+          "atk": 1.2
+        },
+        "hitType": "charged",
+        "minConstellation": 0,
+        "src": "p3",
+        "note": "120% do ATK por Vinecore, dano Dendro que conta como Carregado. Cada Charged Attack: Verdessence cria 2 Vinecores (explodem em 4 e 8 s): adicione 2 execuções por Verdessence."
+      }
+    ],
     "factions": [],
     "specialMoves": [],
     "pointMoves": [],
@@ -17799,7 +18040,65 @@
           "max": 10,
           "unit": "níveis de Luz de Lótus"
         },
-        "note": "Assume 10 níveis de Luz de Lótus (+60 de Maestria) dentro da área da Lâmpada: ligue nas janelas."
+        "note": "+6 de Maestria por nível de Luz de Lótus (1 nível por segundo, até 10 = +60) para o personagem ativo dentro da área da Lâmpada: ligue nas janelas e escolha os níveis de 0 a 10."
+      },
+      {
+        "id": "a4s",
+        "label": "Viajante A4 (habilidade)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "convert": {
+          "from": "em",
+          "source": "self",
+          "perPoint": 0.0015,
+          "threshold": 0,
+          "to": [
+            "skill"
+          ]
+        },
+        "flat": [],
+        "note": "+0,15% de DMG da habilidade (Razorgrass Blade) por ponto de Maestria, sem teto no texto."
+      },
+      {
+        "id": "a4b",
+        "label": "Viajante A4 (Supremo)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "convert": {
+          "from": "em",
+          "source": "self",
+          "perPoint": 0.001,
+          "threshold": 0,
+          "to": [
+            "burst"
+          ]
+        },
+        "flat": [],
+        "note": "+0,1% de DMG do Supremo (Surgent Manifestation: ataque da Lâmpada e explosão Pyro) por ponto de Maestria, sem teto no texto."
+      },
+      {
+        "id": "a4verdessence",
+        "label": "Viajante A4 (Carregado: Verdessence)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "flat": [
+          {
+            "name": "Charged Attack: Verdessence por ATK",
+            "sourceStat": "ATK",
+            "perPoint": 0.8,
+            "hitTypes": [
+              "charged"
+            ],
+            "labels": [
+              "Charged Attack DMG"
+            ],
+            "stacks": 2
+          }
+        ],
+        "note": "Soma 80% do ATK ao dano base de CADA um dos 2 acertos do Carregado, uma vez a cada 15 s (precisa de 3 stacks de Blade of Verdant Viridis). Entra nos 2 primeiros acertos de Carregado da rotação (1 Verdessence); para mais, aumente os stacks do efeito. Os Vinecores estão no golpe extra \"Viajante A4: Vinecore\"."
       },
       {
         "id": "c6",
@@ -17833,43 +18132,109 @@
           "reactionBonus": {}
         },
         "flat": [],
-        "note": "+12% de DMG Dendro do personagem sob a Luz de Lótus: ligue nas janelas. O bônus extra do elemento transfigurado não entra."
+        "note": "+12% de DMG Dendro do personagem sob a Luz de Lótus da Lâmpada: ligue nas janelas. Só personagens Dendro recebem."
       },
       {
-        "id": "a4s",
-        "label": "Viajante A4 (habilidade)",
-        "minConstellation": 0,
-        "scope": "self",
-        "timed": false,
-        "convert": {
-          "from": "em",
-          "source": "self",
-          "perPoint": 0.0015,
-          "threshold": 0,
-          "to": [
-            "skill"
-          ]
+        "id": "c6h",
+        "label": "Viajante C6 (Lâmpada Hydro)",
+        "minConstellation": 6,
+        "scope": "team",
+        "timed": true,
+        "forElements": [
+          "Hydro"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.12,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
-        "note": "+0,15% de DMG da habilidade (Razorgrass Blade) por ponto de Maestria."
+        "note": "+12% de DMG Hydro (além do Dendro) do personagem sob a Luz de Lótus, se a Lâmpada já passou por Lotuslight Transfiguration com Hydro: ligue só se foi Hydro. Só personagens Hydro recebem."
       },
       {
-        "id": "a4b",
-        "label": "Viajante A4 (Supremo)",
-        "minConstellation": 0,
-        "scope": "self",
-        "timed": false,
-        "convert": {
-          "from": "em",
-          "source": "self",
-          "perPoint": 0.001,
-          "threshold": 0,
-          "to": [
-            "burst"
-          ]
+        "id": "c6e",
+        "label": "Viajante C6 (Lâmpada Electro)",
+        "minConstellation": 6,
+        "scope": "team",
+        "timed": true,
+        "forElements": [
+          "Electro"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.12,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
-        "note": "+0,1% de DMG do Supremo (Surgent Manifestation) por ponto de Maestria."
+        "note": "+12% de DMG Electro (além do Dendro) do personagem sob a Luz de Lótus, se a Lâmpada já passou por Lotuslight Transfiguration com Electro: ligue só se foi Electro. Só personagens Electro recebem."
+      },
+      {
+        "id": "c6p",
+        "label": "Viajante C6 (Lâmpada Pyro)",
+        "minConstellation": 6,
+        "scope": "team",
+        "timed": true,
+        "forElements": [
+          "Pyro"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.12,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "note": "+12% de DMG Pyro (além do Dendro) do personagem sob a Luz de Lótus, se a Lâmpada já passou por Lotuslight Transfiguration com Pyro: ligue só se foi Pyro. Só personagens Pyro recebem."
       }
     ],
     "notes": [
@@ -17887,10 +18252,39 @@
         "src": "const4",
         "kind": "utility",
         "note": "Só stacks de Overflowing Lotuslight."
+      },
+      {
+        "src": "p3",
+        "kind": "partial",
+        "note": "Entram o Carregado: Verdessence (+80% do ATK por acerto, 1 vez a cada 15 s) e os Vinecores (golpe extra). Pendente: os buffs \"para cada elemento ressonado\" não entram: o texto só os cita por link, sem números nem quais ressonâncias contam."
+      },
+      {
+        "src": "const6",
+        "kind": "partial",
+        "note": "Entram +12% de DMG Dendro e, se a Lâmpada foi transfigurada, +12% do elemento correspondente (janelas separadas por elemento)."
       }
     ],
-    "infos": [],
-    "procs": [],
+    "infos": [
+      {
+        "src": "const1",
+        "kind": "energia",
+        "label": "Energia da Razorgrass Blade",
+        "text": "3.5 de Energia quando a Razorgrass Blade acerta um inimigo"
+      }
+    ],
+    "procs": [
+      {
+        "id": "a4vine",
+        "label": "Viajante A4: Vinecore",
+        "scale": {
+          "atk": 1.2
+        },
+        "hitType": "charged",
+        "minConstellation": 0,
+        "src": "p3",
+        "note": "120% do ATK por Vinecore, dano Dendro que conta como Carregado. Cada Charged Attack: Verdessence cria 2 Vinecores (explodem em 4 e 8 s): adicione 2 execuções por Verdessence."
+      }
+    ],
     "factions": [],
     "specialMoves": [],
     "pointMoves": [],
@@ -21867,6 +22261,120 @@
         },
         "flat": [],
         "note": "Com Moonsign: Ascendant Gleam, dano Lunar-Florescer da equipe elevado em 25%."
+      },
+      {
+        "id": "pale",
+        "label": "Lauma: Pale Hymn (Florescer, Hiperflorescer, Brotar)",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "convert": {
+          "from": "em",
+          "source": "self",
+          "perPoint": 1,
+          "threshold": 0,
+          "to": [
+            "bloomFlat",
+            "hyperbloomFlat",
+            "burgeonFlat"
+          ]
+        },
+        "level": {
+          "talent": "burst",
+          "table": [
+            2.7776,
+            2.9859,
+            3.1942,
+            3.472,
+            3.6803,
+            3.8886,
+            4.1664,
+            4.4442,
+            4.7219,
+            4.9997,
+            5.2774,
+            5.5552,
+            5.9024,
+            6.2496,
+            6.5968
+          ]
+        },
+        "flat": [],
+        "note": "Pale Hymn: o dano de Florescer, Hiperflorescer e Brotar da equipe sobe uma % (pelo nível do Supremo) da Maestria dela, por 15 s. Ligue nas janelas do Supremo; o motor não conta os stacks (18 do Supremo, 1 gasto por golpe). O reforço do C2 está em \"Lauma C2\" (soma a este)."
+      },
+      {
+        "id": "palelb",
+        "label": "Lauma: Pale Hymn (Lunar-Florescer)",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "convert": {
+          "from": "em",
+          "source": "self",
+          "perPoint": 1,
+          "threshold": 0,
+          "to": [
+            "lunarbloomFlat"
+          ]
+        },
+        "level": {
+          "talent": "burst",
+          "table": [
+            2.2224,
+            2.3891,
+            2.5558,
+            2.778,
+            2.9447,
+            3.1114,
+            3.3336,
+            3.5558,
+            3.7781,
+            4.0003,
+            4.2226,
+            4.4448,
+            4.7226,
+            5.0004,
+            5.2782
+          ]
+        },
+        "flat": [],
+        "note": "Pale Hymn: o dano de Lunar-Florescer da equipe sobe uma % (pelo nível do Supremo) da Maestria dela, por 15 s. Ligue nas janelas do Supremo; o motor não conta os stacks."
+      },
+      {
+        "id": "skill-res",
+        "label": "Lauma: Runo (RES Dendro e Hydro)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "level": {
+          "talent": "skill",
+          "table": [
+            0.025,
+            0.05,
+            0.075,
+            0.1,
+            0.125,
+            0.15,
+            0.175,
+            0.2,
+            0.225,
+            0.25,
+            0.28,
+            0.31,
+            0.34,
+            0.37,
+            0.4
+          ]
+        },
+        "resShred": {
+          "value": 1,
+          "elements": [
+            "Dendro",
+            "Hydro"
+          ]
+        },
+        "flat": [],
+        "note": "RES Dendro e Hydro do inimigo -25% a -40% (pelo nível da habilidade) por 10 s depois que a habilidade ou o Frostgrove Sanctuary acertam: janela de tempo."
       }
     ],
     "notes": [
@@ -21879,9 +22387,32 @@
         "src": "const4",
         "kind": "utility",
         "note": "Só energia."
+      },
+      {
+        "src": "p2",
+        "kind": "partial",
+        "note": "Entra o +0,04% de DMG da habilidade por ponto de Maestria (teto 32%); o 1-Hit/2-Hit Hold estão cadastrados como Normal em moves.json e não recebem. A redução da recarga do Spirit Envoy Metamorphosis não muda o dano."
+      },
+      {
+        "src": "p4",
+        "kind": "utility",
+        "note": "Só mini-mapa."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "const1",
+        "kind": "cura",
+        "label": "Threads of Life",
+        "text": "Os ativos próximos recuperam HP igual a 500% da Maestria dela a cada Lunar-Florescer; no máximo uma vez a cada 1.9 s"
+      },
+      {
+        "src": "const4",
+        "kind": "energia",
+        "label": "Energia que ela recupera",
+        "text": "4 de Energia quando o Frostgrove Sanctuary acerta; no máximo uma vez a cada 5 s"
+      }
+    ],
     "procs": [
       {
         "id": "c6a",

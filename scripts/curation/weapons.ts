@@ -148,7 +148,7 @@ export const WEAPONS: Record<string, WeaponCuration> = {
     expect: 'Scorching Summer',
     note: 'Assume 4 stacks de Scorching Summer (+48% de Ataque Normal no R1) ativos.',
   },
-  "Starcaller's Watch": { team: { dmgPct: { p: 0 } }, expect: 'Mirror of Night', note: 'O +DMG vale para o personagem ativo, só nas janelas de buff. Os +100 de Maestria NÃO entram.' },
+  "Starcaller's Watch": { em: { re: 'Elemental Mastery by (\\d+)', x: 100 }, team: { dmgPct: { p: 0 } }, expect: 'Mirror of Night', note: 'Maestria fixa (100 no R1 a 200 no R5) sempre ativa. O +DMG vale para o personagem ativo, só nas janelas de buff.' },
   'Reliquary of Truth': { critRate: { p: 5 }, em: { p: 0 }, expect: 'Secret of Lies', note: 'Assume a Maestria depois da habilidade sempre ativa. O CRIT DMG de Lunar-Floração NÃO entra.' },
   "Angelos' Heptades": { atkPct: { p: 0 }, expect: 'ATK is increased by', note: 'Só o ATK. O DMG do personagem ativo por ATK NÃO entra.' },
   'Mappa Mare': { dmgPct: { p: 0, x: 2 }, expect: 'Elemental DMG Bonus for', note: 'Assume 2 stacks de DMG elemental ativos.' },

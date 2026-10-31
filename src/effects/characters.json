@@ -4036,7 +4036,14 @@
         "note": "Só velocidade de ataque."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "const1",
+        "kind": "recarga",
+        "label": "Recarga do Opening Flourish",
+        "text": "a recarga cai 18%"
+      }
+    ],
     "procs": [],
     "factions": [],
     "specialMoves": [],
@@ -5241,21 +5248,6 @@
     "appliesToSelf": false,
     "buffs": [
       {
-        "id": "c4",
-        "label": "Navia C4",
-        "minConstellation": 4,
-        "scope": "self",
-        "timed": false,
-        "resShred": {
-          "value": 0.2,
-          "elements": [
-            "Geo"
-          ]
-        },
-        "flat": [],
-        "note": "Assume a redução de RES Geo (8 s) sempre ativa."
-      },
-      {
         "id": "a1",
         "label": "Navia A1",
         "minConstellation": 0,
@@ -5408,6 +5400,21 @@
           "unit": "stacks acima de 3"
         },
         "note": "Assume 6 stacks de Crystal Shrapnel (3 acima de 3): +135% de Dano Crítico no Ceremonial Crystalshot: ligue na janela do golpe."
+      },
+      {
+        "id": "c4",
+        "label": "Navia C4",
+        "minConstellation": 4,
+        "scope": "self",
+        "timed": true,
+        "resShred": {
+          "value": 0.2,
+          "elements": [
+            "Geo"
+          ]
+        },
+        "flat": [],
+        "note": "RES Geo do inimigo -20% por 8 s depois do Singing Salute acertar: janela de tempo, o usuário liga e decide a duração (antes estava sempre ligado)."
       }
     ],
     "notes": [
@@ -5415,9 +5422,21 @@
         "src": "const1",
         "kind": "utility",
         "note": "Só energia e recarga."
+      },
+      {
+        "src": "p1",
+        "kind": "partial",
+        "note": "Entra o +40% de DMG de Normal, Carregado e Imersivo (janela de 4 s). A conversão para Geo (infusão) não entra: escolha o elemento do golpe à mão."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "const1",
+        "kind": "energia",
+        "label": "Energia por Crystal Shrapnel",
+        "text": "cada acúmulo gasto devolve 3 de Energia (até 9) e reduz a recarga do Singing Salute em 1 s (até 3 s)"
+      }
+    ],
     "procs": [
       {
         "id": "c2",
@@ -5677,9 +5696,21 @@
         "src": "const1",
         "kind": "partial",
         "note": "O Tamoto extra não entra."
+      },
+      {
+        "src": "p1",
+        "kind": "partial",
+        "note": "Entra o ataque coordenado do Tamoto (100% do golpe para cima, conta como habilidade). A infusão Geo do efeito Tailoring (5 s) não entra: escolha o elemento do golpe à mão."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "const6",
+        "kind": "recarga",
+        "label": "Recarga do Fluttering Hasode",
+        "text": "cai 12 s depois de um efeito do Tailor-Made"
+      }
+    ],
     "procs": [
       {
         "id": "a1",
@@ -12883,28 +12914,10 @@
         "note": "+20% de DMG Geo por 12 s depois de um Nightsoul Burst: ligue nas janelas."
       },
       {
-        "id": "a4",
-        "label": "Kachina A4",
-        "minConstellation": 0,
-        "scope": "self",
-        "timed": false,
-        "flat": [
-          {
-            "name": "Turbo Twirly por DEF",
-            "sourceStat": "DEF",
-            "perPoint": 0.2,
-            "hitTypes": [
-              "skill"
-            ]
-          }
-        ],
-        "note": "Soma 20% da DEF ao dano base da habilidade (Turbo Twirly)."
-      },
-      {
         "id": "c4",
         "label": "Kachina C4",
         "minConstellation": 4,
-        "scope": "self",
+        "scope": "team",
         "timed": true,
         "stats": {
           "atkPct": 0,
@@ -12941,7 +12954,29 @@
           ],
           "default": 1
         },
-        "note": "Assume 1 inimigo (+8% de DEF): ligue na janela. Com 4 ou mais inimigos é 20%."
+        "note": "DEF do personagem ATIVO dentro do Turbo Drill Field: 8/12/16/20% com 1/2/3/4+ inimigos (escolha os inimigos; padrão 1). Vale para quem estiver em campo na janela, não só para a Kachina. Ligue na janela do Supremo."
+      },
+      {
+        "id": "a4",
+        "label": "Kachina A4",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "flat": [
+          {
+            "name": "Turbo Twirly por DEF",
+            "sourceStat": "DEF",
+            "perPoint": 0.2,
+            "hitTypes": [
+              "skill"
+            ],
+            "labels": [
+              "Turbo Twirly Mounted DMG",
+              "Turbo Twirly Independent DMG"
+            ]
+          }
+        ],
+        "note": "Soma 20% da DEF ao dano base do Turbo Twirly (montado e independente). O Supremo e os Normais não recebem."
       }
     ],
     "notes": [
@@ -12956,7 +12991,14 @@
         "note": "Só pontos de Nightsoul (a mecânica de estado não muda o dano calculado)."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "const1",
+        "kind": "energia",
+        "label": "Energia que ela recupera",
+        "text": "3 de Energia quando um aliado pega um Estilhaço ou causa Lunar-Cristalizar; no máximo uma vez a cada 5 s"
+      }
+    ],
     "procs": [
       {
         "id": "c6",
@@ -13300,25 +13342,6 @@
         "note": "+20% de DEF por 15 s depois do Nightsoul Burst de um aliado: ligue na janela."
       },
       {
-        "id": "c6",
-        "label": "Xilonen C6",
-        "minConstellation": 6,
-        "scope": "self",
-        "timed": false,
-        "flat": [
-          {
-            "name": "Normal e Imersivo por DEF",
-            "sourceStat": "DEF",
-            "perPoint": 3,
-            "hitTypes": [
-              "normal",
-              "plunge"
-            ]
-          }
-        ],
-        "note": "Soma 300% da DEF ao dano base dos Normais e Imersivos (assume o Imperishable Night sempre ativo)."
-      },
-      {
         "id": "c4",
         "label": "Xilonen C4 (Blooming Blessing)",
         "minConstellation": 4,
@@ -13339,6 +13362,25 @@
           }
         ],
         "note": "65% da DEF dela somados aos 6 primeiros Normais, Carregados e Imersivos da equipe na rotação (no jogo cada membro tem 6 cargas)."
+      },
+      {
+        "id": "c6",
+        "label": "Xilonen C6",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": false,
+        "flat": [
+          {
+            "name": "Normal e Imersivo por DEF",
+            "sourceStat": "DEF",
+            "perPoint": 3,
+            "hitTypes": [
+              "normal",
+              "plunge"
+            ]
+          }
+        ],
+        "note": "Soma 300% da DEF ao dano base dos Normais e Imersivos dela (assume o Nightsoul's Blessing ativo; o dano fixo não tem liga/desliga). O bônus de DMG do Imperishable Night (5 s) não tem número no texto e não entra."
       }
     ],
     "notes": [
@@ -13353,7 +13395,20 @@
         "note": "Só consumo de Nightsoul."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "const2",
+        "kind": "energia",
+        "label": "Energia e recarga (aliados Electro)",
+        "text": "aliados Electro recuperam 25 de Energia e o Supremo deles cai 6 s"
+      },
+      {
+        "src": "const6",
+        "kind": "cura",
+        "label": "Cura do Imperishable Night",
+        "text": "cura os aliados próximos em 120% da DEF dela a cada 1,5 s"
+      }
+    ],
     "procs": [],
     "factions": [],
     "specialMoves": [],
@@ -13624,13 +13679,13 @@
     "notes": [
       {
         "src": "p1",
-        "kind": "utility",
-        "note": "Só escudo."
+        "kind": "partial",
+        "note": "Entra o anel extra de 50% (golpe extra \"Lan Yan A1\"). O escudo que absorve 250% não entra no dano."
       },
       {
         "src": "const1",
-        "kind": "utility",
-        "note": "Só anel extra."
+        "kind": "partial",
+        "note": "Pendente: o texto diz só \"mais um Feathermoon Ring\" sem dizer se o dano é igual ao primeiro; insira outro Feathermoon Ring na rotação se quiser."
       },
       {
         "src": "const2",
@@ -13644,7 +13699,23 @@
       }
     ],
     "infos": [],
-    "procs": [],
+    "procs": [
+      {
+        "id": "a1",
+        "label": "Lan Yan A1: anel elemental extra",
+        "scale": {},
+        "hitType": "skill",
+        "minConstellation": 0,
+        "src": "p1",
+        "of": {
+          "talent": "skill",
+          "label": "Feathermoon Ring DMG",
+          "variant": 0,
+          "fraction": 0.5
+        },
+        "note": "50% do dano do Feathermoon Ring no elemento absorvido (conta como Skill). Escolha o elemento absorvido no campo \"Elemento do dano\" do golpe (o padrão é Anemo)."
+      }
+    ],
     "factions": [],
     "specialMoves": [],
     "pointMoves": [],
@@ -13689,25 +13760,6 @@
         },
         "flat": [],
         "note": "+100 de Maestria por 4 s quando aliados acertam com outro elemento: ligue nas janelas."
-      },
-      {
-        "id": "c2",
-        "label": "Mizuki C2",
-        "minConstellation": 2,
-        "scope": "self",
-        "timed": false,
-        "resShred": {
-          "value": 0.2,
-          "elements": [
-            "Pyro",
-            "Hydro",
-            "Cryo",
-            "Electro",
-            "Anemo"
-          ]
-        },
-        "flat": [],
-        "note": "Assume a redução de RES (Pyro, Hydro, Cryo, Electro e Anemo) durante o Dreamdrifter sempre ativa. O bônus de DMG por Maestria não entra."
       },
       {
         "id": "c1",
@@ -13818,6 +13870,143 @@
         },
         "flat": [],
         "note": "+0,16% de Dano Crítico por ponto de Maestria acima de 500, até 80%."
+      },
+      {
+        "id": "c2",
+        "label": "Mizuki C2 (RES)",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": true,
+        "resShred": {
+          "value": 0.2,
+          "elements": [
+            "Pyro",
+            "Hydro",
+            "Cryo",
+            "Electro",
+            "Anemo"
+          ]
+        },
+        "flat": [],
+        "note": "RES Pyro, Hydro, Cryo, Electro e Anemo do inimigo -20% enquanto ela está no Dreamdrifter (5 s no nível base, +2,5 s por Redemoinho do A1): janela de tempo (antes estava sempre ligado)."
+      },
+      {
+        "id": "c2d",
+        "label": "Mizuki C2 (DMG por Maestria)",
+        "minConstellation": 2,
+        "scope": "team",
+        "timed": true,
+        "forElements": [
+          "Pyro",
+          "Hydro",
+          "Cryo",
+          "Electro"
+        ],
+        "convert": {
+          "from": "em",
+          "source": "self",
+          "perPoint": 0.0004,
+          "threshold": 0,
+          "to": [
+            "dmgPct"
+          ]
+        },
+        "flat": [],
+        "note": "+0,04% de DMG Pyro, Hydro, Cryo e Electro por ponto de Maestria dela, para a equipe, enquanto durar o Dreamdrifter: ligue a janela. Só personagens desses quatro elementos recebem."
+      },
+      {
+        "id": "skill-swirl",
+        "label": "Mizuki: Dreamdrifter (Redemoinho)",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "convert": {
+          "from": "em",
+          "source": "self",
+          "perPoint": 0.01,
+          "threshold": 0,
+          "to": [
+            "swirl"
+          ]
+        },
+        "level": {
+          "talent": "skill",
+          "table": [
+            0.18,
+            0.21,
+            0.24,
+            0.27,
+            0.3,
+            0.33,
+            0.36,
+            0.39,
+            0.42,
+            0.45,
+            0.48,
+            0.51,
+            0.54,
+            0.57,
+            0.6
+          ]
+        },
+        "flat": [],
+        "note": "+18% (nível 1) a +60% (nível 15) de DMG de Redemoinho por 100 de Maestria dela, para a equipe, durante o Dreamdrifter: ligue a janela."
+      },
+      {
+        "id": "skill-stellar",
+        "label": "Mizuki: Dreamdrifter (Redemoinho Estelar)",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "convert": {
+          "from": "em",
+          "source": "self",
+          "perPoint": 0.01,
+          "threshold": 0,
+          "to": [
+            "stellarswirl"
+          ]
+        },
+        "level": {
+          "talent": "skill",
+          "table": [
+            0.018,
+            0.021,
+            0.024,
+            0.027,
+            0.03,
+            0.033,
+            0.036,
+            0.039,
+            0.042,
+            0.045,
+            0.048,
+            0.051,
+            0.054,
+            0.057,
+            0.06
+          ]
+        },
+        "flat": [],
+        "note": "+1,8% (nível 1) a +6% (nível 15) de DMG de Redemoinho Estelar por 100 de Maestria dela, para a equipe, durante o Dreamdrifter: ligue a janela."
+      },
+      {
+        "id": "p4em",
+        "label": "Mizuki A4 (Maestria do time)",
+        "minConstellation": 0,
+        "scope": "others",
+        "timed": true,
+        "convert": {
+          "from": "em",
+          "source": "self",
+          "perPoint": 0.1,
+          "threshold": 0,
+          "to": [
+            "em"
+          ]
+        },
+        "flat": [],
+        "note": "+10% da Maestria dela para os demais enquanto durar o Dreamdrifter: ligue a janela. Hipótese: os demais, sem ela (o texto diz \"personagens próximos do grupo\" sem dizer se ela entra)."
       }
     ],
     "notes": [
@@ -13830,9 +14019,27 @@
         "src": "const4",
         "kind": "utility",
         "note": "Só cura e energia."
+      },
+      {
+        "src": "p4",
+        "kind": "partial",
+        "note": "Entram a Maestria do time, o dano periódico reforçado e o Redemoinho Estelar extra (golpes extras). Pendente: quantas vezes o reforço dispara depende dos Redemoinhos (1 por 2,5 s), por isso você coloca um golpe por gatilho."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "const4",
+        "kind": "cura",
+        "label": "Cura do Yumemi Style Special Snack",
+        "text": "Cura um aliado com menos HP em 266% da Maestria dela"
+      },
+      {
+        "src": "const4",
+        "kind": "energia",
+        "label": "Energia que ela recupera",
+        "text": "5 de Energia, até 4 vezes por uso do Supremo"
+      }
+    ],
     "procs": [
       {
         "id": "c1",
@@ -13856,6 +14063,30 @@
           "reaction": "stellarswirl"
         },
         "note": "Com Radiance: Stellar Swirl, vira 400% da Maestria como Redemoinho Estelar (use no lugar do golpe acima)."
+      },
+      {
+        "id": "p4a",
+        "label": "Mizuki A4: dano periódico reforçado",
+        "scale": {
+          "em": 10
+        },
+        "hitType": "skill",
+        "minConstellation": 0,
+        "src": "p4",
+        "note": "1.000% da Maestria somados ao próximo dano periódico Anemo do Dreamdrifter, uma vez por Redemoinho (a cada 2,5 s): coloque um por gatilho. Entra como golpe à parte (mesmo resultado que somar à base)."
+      },
+      {
+        "id": "p4s",
+        "label": "Mizuki A4: Redemoinho Estelar extra",
+        "scale": {
+          "em": 10
+        },
+        "minConstellation": 0,
+        "src": "p4",
+        "special": {
+          "reaction": "stellarswirl"
+        },
+        "note": "Com Radiance: Stellar Swirl, mais uma instância de 1.000% da Maestria como Redemoinho Estelar junto do golpe acima."
       }
     ],
     "factions": [],
@@ -14285,7 +14516,20 @@
         "note": "Só energia."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "const1",
+        "kind": "energia",
+        "label": "Energia que ele recupera",
+        "text": "6 de Energia quando o Supporting Fire acerta; uma vez a cada 8 s"
+      },
+      {
+        "src": "p4",
+        "kind": "cura",
+        "label": "Cura de emergência",
+        "text": "Restaura 40% do HP de quem está abaixo de 40% de HP, gastando Phlogiston"
+      }
+    ],
     "procs": [
       {
         "id": "c6",
@@ -15643,12 +15887,12 @@
       {
         "src": "p1",
         "kind": "partial",
-        "note": "O Burst melhorado conforme os elementos do time não entra."
+        "note": "Pendente: o Supremo reforçado depende de qual elemento domina o time (Pyro 130% do dano; Hydro cura; Electro mais um robô; Cryo menos intervalo), com regra de desempate que o formato não expressa."
       },
       {
         "src": "const1",
         "kind": "partial",
-        "note": "A segunda bola (50% de chance) não entra."
+        "note": "Pendente: 50% de chance de ricochete, sem valor de dano no texto além do próprio Meowball."
       },
       {
         "src": "const2",
@@ -15661,7 +15905,14 @@
         "note": "Só energia."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "const4",
+        "kind": "energia",
+        "label": "Energia que ela recupera",
+        "text": "4 de Energia quando um robô faz a conversão elemental"
+      }
+    ],
     "procs": [],
     "factions": [
       "moonsign"
@@ -16520,43 +16771,6 @@
     "appliesToSelf": false,
     "buffs": [
       {
-        "id": "a4",
-        "label": "Varka A4",
-        "minConstellation": 0,
-        "scope": "self",
-        "timed": true,
-        "stats": {
-          "atkPct": 0,
-          "dmgPct": 0,
-          "critRate": 0,
-          "critDmg": 0,
-          "em": 0,
-          "er": 0,
-          "hpPct": 0,
-          "defPct": 0,
-          "dmgPctByType": {
-            "normal": 0.3,
-            "charged": 0.3
-          },
-          "critRateByType": {},
-          "critDmgByType": {},
-          "baseMultByType": {},
-          "defIgnore": 0,
-          "atkFlat": 0,
-          "atkBaseFlat": 0,
-          "hpFlat": 0,
-          "defFlat": 0,
-          "physDmgPct": 0,
-          "physCritDmg": 0,
-          "reactionBonus": {}
-        },
-        "flat": [],
-        "stacks": {
-          "max": 4
-        },
-        "note": "Assume 4 stacks (+30% de DMG de Normal/Carregado): ligue nas janelas."
-      },
-      {
         "id": "c4",
         "label": "Varka C4",
         "minConstellation": 4,
@@ -16591,6 +16805,130 @@
         "note": "+20% de DMG Anemo por 10 s depois de um Espalhar: ligue nas janelas. O bônus do elemento absorvido não entra."
       },
       {
+        "id": "a1",
+        "label": "Varka A1",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "convert": {
+          "from": "atk",
+          "source": "self",
+          "perPoint": 0.0001,
+          "threshold": 0,
+          "cap": 0.25,
+          "to": [
+            "dmgPct"
+          ]
+        },
+        "flat": [],
+        "note": "+10% de DMG por 1.000 de ATK, até 25% (vale para o dano do elemento dele; o elemento extra do time não é somado)."
+      },
+      {
+        "id": "a1m",
+        "label": "Varka A1 (1,4x)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {
+            "normal": 0.4,
+            "charged": 0.4
+          },
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "note": "Sturm und Drang com 2+ Anemo OU 2+ do mesmo elemento entre Pyro/Hydro/Electro/Cryo: Normal e Carregado causam 140% do dano original (+40% no dano base). Ligue a janela do modo; com as duas condições use \"Varka A1 (2,2x)\" no lugar. Pendente: Azure Devour e Four Winds' Ascension são golpes de habilidade e o formato multiplica por tipo, não por rótulo."
+      },
+      {
+        "id": "a1m2",
+        "label": "Varka A1 (2,2x)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {
+            "normal": 0.8,
+            "charged": 0.8
+          },
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "note": "Com 2+ Anemo E 2+ de outro elemento igual: Normal e Carregado causam 220% do dano original (+120% no dano base): soma +80% ao \"Varka A1 (1,4x)\" (40% + 80% = 120%), então ligue as duas janelas. Mesma pendência dos golpes de habilidade."
+      },
+      {
+        "id": "a4",
+        "label": "Varka A4",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {
+            "normal": 0.3,
+            "charged": 0.3
+          },
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "stacks": {
+          "max": 4
+        },
+        "note": "+7,5% de DMG de Normal e Carregado por stack de Azure Fang's Oath (até 4, 8 s): ligue a janela e escolha os stacks. Pendente: o bônus vale também para Azure Devour e Four Winds' Ascension (habilidade), que o formato não separa do Skill DMG."
+      },
+      {
         "id": "c6",
         "label": "Varka C6",
         "minConstellation": 6,
@@ -16620,35 +16958,164 @@
         },
         "flat": [],
         "stacks": {
-          "max": 4
+          "max": 4,
+          "unit": "Azure Fang's Oath",
+          "of": "a4"
         },
-        "note": "Assume 4 stacks de Azure Fang's Oath (+80% de Dano Crítico): ligue nas janelas."
+        "note": "+20% de Dano Crítico por stack de Azure Fang's Oath (até 4 = 80%): usa os mesmos stacks escolhidos no A4. O golpe extra do Azure Devour adicional não entra."
       },
       {
-        "id": "a1",
-        "label": "Varka A1",
-        "minConstellation": 0,
-        "scope": "self",
-        "timed": false,
-        "convert": {
-          "from": "atk",
-          "source": "self",
-          "perPoint": 0.0001,
-          "threshold": 0,
-          "cap": 0.25,
-          "to": [
-            "dmgPct"
-          ]
+        "id": "c4-pyro",
+        "label": "Varka C4 (Pyro)",
+        "minConstellation": 4,
+        "scope": "team",
+        "timed": true,
+        "forElements": [
+          "Pyro"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.2,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
         },
         "flat": [],
-        "note": "+10% de DMG por 1.000 de ATK, até 25% (vale para o dano do elemento dele; o elemento extra do time não é somado)."
+        "note": "+20% de DMG Pyro por 10 s depois de um Redemoinho do elemento Pyro: ligue a janela só se o Redemoinho foi desse elemento. O bônus de Anemo está em \"Varka C4\"."
+      },
+      {
+        "id": "c4-hydro",
+        "label": "Varka C4 (Hydro)",
+        "minConstellation": 4,
+        "scope": "team",
+        "timed": true,
+        "forElements": [
+          "Hydro"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.2,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "note": "+20% de DMG Hydro por 10 s depois de um Redemoinho do elemento Hydro: ligue a janela só se o Redemoinho foi desse elemento. O bônus de Anemo está em \"Varka C4\"."
+      },
+      {
+        "id": "c4-cryo",
+        "label": "Varka C4 (Cryo)",
+        "minConstellation": 4,
+        "scope": "team",
+        "timed": true,
+        "forElements": [
+          "Cryo"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.2,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "note": "+20% de DMG Cryo por 10 s depois de um Redemoinho do elemento Cryo: ligue a janela só se o Redemoinho foi desse elemento. O bônus de Anemo está em \"Varka C4\"."
+      },
+      {
+        "id": "c4-electro",
+        "label": "Varka C4 (Electro)",
+        "minConstellation": 4,
+        "scope": "team",
+        "timed": true,
+        "forElements": [
+          "Electro"
+        ],
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.2,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "note": "+20% de DMG Electro por 10 s depois de um Redemoinho do elemento Electro: ligue a janela só se o Redemoinho foi desse elemento. O bônus de Anemo está em \"Varka C4\"."
       }
     ],
     "notes": [
       {
         "src": "const1",
         "kind": "partial",
-        "note": "O uso extra da habilidade especial e o bônus do Lyrical Libation não entram."
+        "note": "Pendente: o uso extra da habilidade especial e o Lyrical Libation (200% do dano original) dependem de multiplicar o dano de um golpe só."
+      },
+      {
+        "src": "p1",
+        "kind": "partial",
+        "note": "Entram o DMG por ATK e os multiplicadores 1,4x e 2,2x (Normal e Carregado). Pendente: o elemento extra do time e os golpes de habilidade (Azure Devour, Four Winds' Ascension)."
+      },
+      {
+        "src": "p2",
+        "kind": "partial",
+        "note": "Entra o bônus de Normal e Carregado. Pendente: Azure Devour e Four Winds' Ascension (habilidade)."
       }
     ],
     "infos": [],
@@ -18728,6 +19195,25 @@
     "appliesToSelf": false,
     "buffs": [
       {
+        "id": "a4",
+        "label": "Prune A4",
+        "minConstellation": 0,
+        "scope": "others",
+        "timed": true,
+        "convert": {
+          "from": "atk",
+          "source": "self",
+          "perPoint": 0.00025,
+          "threshold": 2000,
+          "cap": 0.5,
+          "to": [
+            "dmgPct"
+          ]
+        },
+        "flat": [],
+        "note": "+0,025% de DMG por ponto de ATK dela acima de 2.000, até 50%, para os aliados por 5 s: ligue na janela."
+      },
+      {
         "id": "c2",
         "label": "Prune C2",
         "minConstellation": 2,
@@ -18756,32 +19242,28 @@
           "reactionBonus": {}
         },
         "flat": [],
-        "note": "Assume o teto de +40% de ATK durante o Supremo: ligue nas janelas."
-      },
-      {
-        "id": "a4",
-        "label": "Prune A4",
-        "minConstellation": 0,
-        "scope": "others",
-        "timed": true,
-        "convert": {
-          "from": "atk",
-          "source": "self",
-          "perPoint": 0.00025,
-          "threshold": 2000,
-          "cap": 0.5,
-          "to": [
-            "dmgPct"
-          ]
+        "stacks": {
+          "max": 7,
+          "unit": "estágio (1 = 10%; +5% por acerto, teto 40%)",
+          "table": [
+            0,
+            0.25,
+            0.375,
+            0.5,
+            0.625,
+            0.75,
+            0.875,
+            1
+          ],
+          "default": 7
         },
-        "flat": [],
-        "note": "+0,025% de DMG por ponto de ATK dela acima de 2.000, até 50%, para os aliados por 5 s: ligue na janela."
+        "note": "ATK +10% no Hunter-Seeker e +5% por acerto do sino/martelo convertido, teto 40% (estágios 1 a 7, escolha o que vale no momento; padrão 7 = 40%): ligue a janela do Supremo. Os valores intermediários (15% a 35%) somam 5% do texto."
       },
       {
         "id": "c6",
         "label": "Prune C6",
         "minConstellation": 6,
-        "scope": "others",
+        "scope": "team",
         "timed": true,
         "stats": {
           "atkPct": 0,
@@ -18806,7 +19288,78 @@
           "reactionBonus": {}
         },
         "flat": [],
-        "note": "+350 de ATK dos aliados depois de uma reação: ligue na janela."
+        "note": "+350 de ATK por 5 s para ela e para os outros personagens com Tolling Rally depois de uma reação: ligue na janela (antes valia só para os outros)."
+      },
+      {
+        "id": "hex-self",
+        "label": "Prune: Secret Rite (ela)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0.6,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "team": {
+          "hexerei": 2
+        },
+        "flat": [],
+        "note": "Hexerei (2+ membros Hexerei): +60% de ATK dela por 5 s depois que um Hexerei com Tolling Rally causa uma reação: ligue a janela."
+      },
+      {
+        "id": "hex-trig",
+        "label": "Prune: Secret Rite (Redemoinho)",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "forFactions": [
+          "hexerei"
+        ],
+        "stats": {
+          "atkPct": 0.3,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "team": {
+          "hexerei": 2
+        },
+        "flat": [],
+        "note": "Hexerei: +30% de ATK de quem causou o Redemoinho ou Redemoinho Estelar, por 5 s: ligue a janela só no personagem que o causou."
       }
     ],
     "notes": [
@@ -18814,9 +19367,21 @@
         "src": "const1",
         "kind": "utility",
         "note": "Só energia."
+      },
+      {
+        "src": "p1",
+        "kind": "partial",
+        "note": "Entra o martelo (golpe extra \"Prune A1\"). O elemento é o da conversão: escolha no golpe."
       }
     ],
-    "infos": [],
+    "infos": [
+      {
+        "src": "const1",
+        "kind": "energia",
+        "label": "Energia que ela recupera",
+        "text": "2 de Energia quando o martelo convertido acerta; uma vez a cada 1,8 s"
+      }
+    ],
     "procs": [
       {
         "id": "a1",
@@ -19949,18 +20514,51 @@
         },
         "flat": [],
         "note": "Dano de Redemoinho Estelar da Vesna elevado em 20%."
+      },
+      {
+        "id": "c1",
+        "label": "Vesna C1",
+        "minConstellation": 1,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {
+            "stellarswirl": 0.2
+          }
+        },
+        "flat": [],
+        "note": "+20% de DMG de Redemoinho Estelar dela no modo Armed for Action: ligue a janela do modo."
       }
     ],
     "notes": [
       {
         "src": "p1",
         "kind": "partial",
-        "note": "O dano extra dos Spirit Blades por stack não entra."
+        "note": "Pendente: os Spirit Blades causam 100% + 10% por stack do dano original (até 6 stacks); o formato não multiplica o dano de golpes específicos."
       },
       {
         "src": "const1",
-        "kind": "utility",
-        "note": "Só uso extra da habilidade (e dano Estelar, que não entra)."
+        "kind": "partial",
+        "note": "Entra o +20% de DMG de Redemoinho Estelar. O uso extra do Windborne Sword não muda o dano por golpe."
       }
     ],
     "infos": [],
@@ -22634,24 +23232,24 @@
           "max": 30,
           "unit": "pontos acima de 70"
         },
-        "note": "Assume 100 pontos de Phase Shift Radiance (30 acima de 70): dano Lunar-Cristalizar dela elevado em 48% por 3 s: ligue na janela."
+        "note": "+1,6% por ponto consumido acima de 70, por 3 s, no Spirit Steed's Stride e no Lunar-Cristalizar dela (não acumula): ligue na janela. HIPÓTESE: o teto de 100 pontos (30 acima de 70, 48%) não está no texto do C6; escolha de 0 a 30 pontos."
       }
     ],
     "notes": [
       {
         "src": "p1",
         "kind": "partial",
-        "note": "O dano extra do 2º golpe do Spirit Steed's Stride (60% da DEF) não entra: o motor não tem bônus Lunar só de um golpe."
+        "note": "Pendente: o +60% da DEF no 2º golpe do Spirit Steed's Stride não entra. É dano fixo de um golpe Lunar e o dano fixo só vale para golpes diretos."
       },
       {
         "src": "const1",
         "kind": "partial",
-        "note": "Os +220% de DMG Lunar-Cristalizar só no 1º Spirit Steed's Stride não entram (bônus de um golpe só)."
+        "note": "Pendente: o +220% de DMG Lunar-Cristalizar só no 1º Spirit Steed's Stride de cada modo não entra (bônus de um golpe só). O uso extra e os 100 pontos de Radiance são mecânica."
       },
       {
         "src": "const2",
         "kind": "partial",
-        "note": "O +30% da equipe entra (faixa); os +550% da DEF no 2º golpe do Spirit Steed's Stride não entram (bônus de um golpe só)."
+        "note": "Entra o +30% de DMG Lunar-Cristalizar da equipe (janela). Pendente: os +550% da DEF no 2º golpe do Spirit Steed's Stride (Moonsign: Ascendant Gleam) não entram, pelo mesmo motivo do A1."
       }
     ],
     "infos": [],

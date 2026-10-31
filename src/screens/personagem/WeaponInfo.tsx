@@ -56,11 +56,15 @@ export function WeaponInfoDialog({ index, onClose }: { index: number; onClose: (
           <h2 className="h2">{ref.weapon}</h2>
           <button type="button" className="dz-btn sm" onClick={onClose}>Fechar</button>
         </header>
+        <div className="wi-body">
         <div className="wi-top" data-rarity={weapon?.rarity ?? 5}>
           <span className="art">{weapon?.icon ? <img src={weaponIconUrl(weapon.icon)} alt="" crossOrigin="anonymous" /> : <b aria-hidden="true" />}</span>
           <span className="t">
-            <small>{weapon ? TYPE_LABEL[weapon.type] ?? weapon.type : ''} · Nv 90/90 · R{refine}</small>
-            <span className="num">{weapon ? `ATK base ${formatInt(weapon.baseAtk)}` : ''}{substat ? ` · ${substat}` : ''}</span>
+            <small>{weapon ? TYPE_LABEL[weapon.type] ?? weapon.type : ''} · {'★'.repeat(weapon?.rarity ?? 5)} · Nv 90/90 · R{refine}</small>
+            <span className="wi-stats">
+              {weapon && <span className="wi-stat"><small>ATK base</small><b className="num">{formatInt(weapon.baseAtk)}</b></span>}
+              {substat && <span className="wi-stat"><small>Substat</small><b className="num">{substat}</b></span>}
+            </span>
           </span>
         </div>
         <section className="wi-sec">
@@ -86,6 +90,7 @@ export function WeaponInfoDialog({ index, onClose }: { index: number; onClose: (
           })}
           {effect?.note && <p className="muted small">{effect.note}</p>}
         </section>
+        </div>
       </div>
     </div>
   );

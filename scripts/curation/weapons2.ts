@@ -210,8 +210,9 @@ export const WEAPONS_2: Record<string, GearCur> = {
     atkPct: { p: 0 },
     buffs: [
       { id: 'offfield', label: 'ATK fora de campo', timed: true, stats: { atkPct: { p: 1 } } },
-      { id: 'echoes', label: 'Sweet Echoes (ATK de quem cura)', scope: 'self', timed: true, stats: { atkPct: { p: 2 } } },
-      { id: 'echoes-healed', label: 'Sweet Echoes (ATK de quem foi curado)', scope: 'others', timed: true, stats: { atkPct: { p: 2 } } },
+      // O rótulo antigo fica no buff do curado: projetos salvos têm janelas com essa etiqueta.
+      { id: 'echoes', label: 'Sweet Echoes (ATK de quem cura e de quem foi curado)', scope: 'others', timed: true, stats: { atkPct: { p: 2 } } },
+      { id: 'echoes-self', label: 'Sweet Echoes do portador (ATK de quem cura)', scope: 'self', timed: true, stats: { atkPct: { p: 2 } } },
     ],
     expect: 'Sweet Echoes',
     note: 'ATK base sempre (12% no R1). Fora de campo soma outros 12%: faixa na linha do tempo, ligue enquanto o portador está fora de campo. Sweet Echoes: +32% (R1) de ATK por 3 s para o portador e para quem ele curou depois de curar (vale fora de campo); são dois buffs separados (portador e curado). O motor não sabe quem foi curado: o do curado vale para todos os outros membros nas janelas que você ligar.',

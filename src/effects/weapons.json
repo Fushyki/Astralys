@@ -30831,9 +30831,9 @@
       },
       {
         "id": "echoes",
-        "label": "Sweet Echoes (ATK de quem cura)",
+        "label": "Sweet Echoes (ATK de quem cura e de quem foi curado)",
         "minConstellation": 0,
-        "scope": "self",
+        "scope": "others",
         "timed": true,
         "stats": {
           "atkPct": 0.32,
@@ -30860,10 +30860,10 @@
         "flat": []
       },
       {
-        "id": "echoes-healed",
-        "label": "Sweet Echoes (ATK de quem foi curado)",
+        "id": "echoes-self",
+        "label": "Sweet Echoes do portador (ATK de quem cura)",
         "minConstellation": 0,
-        "scope": "others",
+        "scope": "self",
         "timed": true,
         "stats": {
           "atkPct": 0.32,
@@ -30937,9 +30937,9 @@
           },
           {
             "id": "echoes",
-            "label": "Sweet Echoes (ATK de quem cura)",
+            "label": "Sweet Echoes (ATK de quem cura e de quem foi curado)",
             "minConstellation": 0,
-            "scope": "self",
+            "scope": "others",
             "timed": true,
             "stats": {
               "atkPct": 0.32,
@@ -30966,10 +30966,10 @@
             "flat": []
           },
           {
-            "id": "echoes-healed",
-            "label": "Sweet Echoes (ATK de quem foi curado)",
+            "id": "echoes-self",
+            "label": "Sweet Echoes do portador (ATK de quem cura)",
             "minConstellation": 0,
-            "scope": "others",
+            "scope": "self",
             "timed": true,
             "stats": {
               "atkPct": 0.32,
@@ -31042,9 +31042,9 @@
           },
           {
             "id": "echoes",
-            "label": "Sweet Echoes (ATK de quem cura)",
+            "label": "Sweet Echoes (ATK de quem cura e de quem foi curado)",
             "minConstellation": 0,
-            "scope": "self",
+            "scope": "others",
             "timed": true,
             "stats": {
               "atkPct": 0.4,
@@ -31071,10 +31071,10 @@
             "flat": []
           },
           {
-            "id": "echoes-healed",
-            "label": "Sweet Echoes (ATK de quem foi curado)",
+            "id": "echoes-self",
+            "label": "Sweet Echoes do portador (ATK de quem cura)",
             "minConstellation": 0,
-            "scope": "others",
+            "scope": "self",
             "timed": true,
             "stats": {
               "atkPct": 0.4,
@@ -31147,9 +31147,9 @@
           },
           {
             "id": "echoes",
-            "label": "Sweet Echoes (ATK de quem cura)",
+            "label": "Sweet Echoes (ATK de quem cura e de quem foi curado)",
             "minConstellation": 0,
-            "scope": "self",
+            "scope": "others",
             "timed": true,
             "stats": {
               "atkPct": 0.48,
@@ -31176,10 +31176,10 @@
             "flat": []
           },
           {
-            "id": "echoes-healed",
-            "label": "Sweet Echoes (ATK de quem foi curado)",
+            "id": "echoes-self",
+            "label": "Sweet Echoes do portador (ATK de quem cura)",
             "minConstellation": 0,
-            "scope": "others",
+            "scope": "self",
             "timed": true,
             "stats": {
               "atkPct": 0.48,
@@ -31252,9 +31252,9 @@
           },
           {
             "id": "echoes",
-            "label": "Sweet Echoes (ATK de quem cura)",
+            "label": "Sweet Echoes (ATK de quem cura e de quem foi curado)",
             "minConstellation": 0,
-            "scope": "self",
+            "scope": "others",
             "timed": true,
             "stats": {
               "atkPct": 0.56,
@@ -31281,10 +31281,10 @@
             "flat": []
           },
           {
-            "id": "echoes-healed",
-            "label": "Sweet Echoes (ATK de quem foi curado)",
+            "id": "echoes-self",
+            "label": "Sweet Echoes do portador (ATK de quem cura)",
             "minConstellation": 0,
-            "scope": "others",
+            "scope": "self",
             "timed": true,
             "stats": {
               "atkPct": 0.56,
@@ -31357,9 +31357,9 @@
           },
           {
             "id": "echoes",
-            "label": "Sweet Echoes (ATK de quem cura)",
+            "label": "Sweet Echoes (ATK de quem cura e de quem foi curado)",
             "minConstellation": 0,
-            "scope": "self",
+            "scope": "others",
             "timed": true,
             "stats": {
               "atkPct": 0.64,
@@ -31386,10 +31386,10 @@
             "flat": []
           },
           {
-            "id": "echoes-healed",
-            "label": "Sweet Echoes (ATK de quem foi curado)",
+            "id": "echoes-self",
+            "label": "Sweet Echoes do portador (ATK de quem cura)",
             "minConstellation": 0,
-            "scope": "others",
+            "scope": "self",
             "timed": true,
             "stats": {
               "atkPct": 0.64,

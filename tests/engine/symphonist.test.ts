@@ -19,7 +19,7 @@ describe('Symphonist of Scents (arma assinatura da Escoffier) na Iansan', () => 
   const ATK_FROM_IANSAN = (tags: string[]) => activeTeamDelta(asm.buffs, 'Mavuika', new Set(tags), (b) => (b.description ?? '').startsWith('Iansan')).atkPct;
 
   it('Sweet Echoes do curado dá +32% de ATK (R1) aos outros membros e a C2 soma +30%: Iansan dá 62% ao Mavuika', () => {
-    expect(ATK_FROM_IANSAN(['label:Symphonist of Scents: Sweet Echoes (ATK de quem foi curado)', 'label:Iansan C2'])).toBeCloseTo(0.62, 9);
+    expect(ATK_FROM_IANSAN(['label:Symphonist of Scents: Sweet Echoes (ATK de quem cura e de quem foi curado)', 'label:Iansan C2'])).toBeCloseTo(0.62, 9);
   });
 
   it('o ATK base (12%) e o de fora de campo (+12%) são só do portador', () => {
@@ -30,7 +30,7 @@ describe('Symphonist of Scents (arma assinatura da Escoffier) na Iansan', () => 
 
   it('o Sweet Echoes de quem cura (+32%) é só do portador; o do curado vai aos outros', () => {
     const by = (needle: string) => asm.buffs.filter((b) => (b.description ?? '').includes(needle)).map((b) => b.targets);
-    expect(by('de quem cura')).toEqual([['Iansan']]);
-    expect(by('de quem foi curado')[0]).not.toContain('Iansan');
+    expect(by('do portador')).toEqual([['Iansan']]);
+    expect(by('quem foi curado')[0]).not.toContain('Iansan');
   });
 });

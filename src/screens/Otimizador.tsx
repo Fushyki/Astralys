@@ -13,7 +13,7 @@ import { artifactSig, norm, type Good, type GoodArtifact } from '../features/goo
 import { loadGood } from '../features/good/goodStore';
 import { startOptimizerJob, type OptimizerJob, type OptimizerProgress } from '../features/optimizer/client';
 import type { Constraints, Objective } from '../features/optimizer/evaluator';
-import { RESULT_CACHE } from '../features/optimizer/resultCache';
+import { RESULT_CACHE, resultKey } from '../features/optimizer/resultCache';
 import { DEFAULT_CONFIG, countCandidates, evaluateEquipped, type OptimizedBuild, type OptimizerConfig, type OptimizerResult } from '../features/optimizer/run';
 import { REACTION_LABEL, displayName, reactionOptions } from '../features/character/characterModel';
 import { useRotationStore } from '../features/rotation/store';
@@ -93,8 +93,7 @@ const initial: UiState = {
 };
 
 /** Cada personagem de cada projeto guarda a própria configuração do otimizador (alvo, mínimos, filtros e sets). */
-const STORAGE = 'astralys.otimizador';
-const storageKey = (projectId: string, character: string) => `${STORAGE}:${projectId}:${character}`;
+const storageKey = resultKey;
 
 /**
  * Padrão de um personagem que ainda não tem configuração salva: suporte com buff que cresce com os stats dele

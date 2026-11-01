@@ -94,6 +94,7 @@ const bindings = (): Record<string, string> => (read(BIND_KEY) as Record<string,
  * Os times de cada base aparecem só quando ela está em uso, como no Genshin Optimizer.
  */
 export function databaseOfProject(projectId: string): string | null {
+  if (projectId === 'exemplo') return activeDatabaseId(); // aparece em todas as bases: segue a que está em uso
   const { list } = readIndex();
   const id = bindings()[projectId];
   return id && list.some((d) => d.id === id) ? id : (list[0]?.id ?? null);

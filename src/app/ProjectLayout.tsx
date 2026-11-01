@@ -7,7 +7,7 @@ import { Link, Outlet, useLocation, useNavigate, useParams } from 'react-router-
 import '../design/design.css';
 import { memberColors } from '../design/elements';
 import { StateCard } from '../design/primitives';
-import { loadGood } from '../features/good/goodStore';
+import { databaseOfProject, loadGood } from '../features/good/goodStore';
 import { withInventoryPieces } from '../features/good/inventoryPieces';
 import { useGameData } from '../features/rotation/data';
 import { SAMPLE_ID, loadProject, saveProject } from '../features/rotation/persistence';
@@ -19,6 +19,9 @@ import { ProjectSteps } from './ProjectSteps';
 import { ProjectProvider } from './ProjectContext';
 
 const SAVE_DELAY_MS = 400;
+
+/** Projeto e base com que o store foi aberto pela última vez (sobrevive ao layout; trocar de base reabre o time). */
+let openedBase: { id?: string; base: string | null } = { base: null };
 
 export default function ProjectLayout() {
   const { id = SAMPLE_ID } = useParams();
@@ -32,16 +35,18 @@ export default function ProjectLayout() {
   const markSaved = useRotationStore((s) => s.markSaved);
   const setFavorite = useRotationStore((s) => s.setFavorite);
 
+  const base = databaseOfProject(id);
   // Abre o projeto da rota (só quando o id muda; trocar de aba não reabre).
   useEffect(() => {
-    if (useRotationStore.getState().project?.id === id) return;
+    if (useRotationStore.getState().project?.id === id && openedBase.id === id && openedBase.base === base) return;
+    openedBase = { id, base };
     const loaded = loadProject(id);
     if (!loaded) return;
     // Com inventário importado, o projeto abre com as PEÇAS do usuário (e não com o build teórico).
     const p = withInventoryPieces(loaded, loadGood(id));
     if (p !== loaded) saveProject(p);
     open(p);
-  }, [id, open]);
+  }, [id, base, open]);
 
   // Salva sozinho, pouco depois da última alteração.
   useEffect(() => {

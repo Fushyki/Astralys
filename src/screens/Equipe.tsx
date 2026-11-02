@@ -230,12 +230,6 @@ export default function Equipe() {
                   </div>
                 </div>
 
-                <div className="acts">
-                  <Link className="dz-btn gold" to={`/projeto/${v.id}/personagem/${encodeURIComponent(ref.character)}`}>Ajustar build</Link>
-                </div>
-
-                <MemberBuffs v={v} index={i} />
-
                 {(() => {
                   // Set que depende dos elementos com que o dono reage: Scroll (bônus de DMG) e Viridescent (redução de RES).
                   const fp = ref.fourPiece !== false && !ref.secondarySet ? data.effects.sets.find((e) => e.set === ref.primarySet)?.fourPiece : undefined;
@@ -252,6 +246,12 @@ export default function Equipe() {
                     </div>
                   );
                 })()}
+
+                <MemberBuffs v={v} index={i} />
+
+                <div className="acts">
+                  <Link className="dz-btn gold" to={`/projeto/${v.id}/personagem/${encodeURIComponent(ref.character)}`}>Ajustar build</Link>
+                </div>
               </div>
             </article>
           );

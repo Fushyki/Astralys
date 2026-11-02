@@ -247,10 +247,11 @@ export default function Equipe() {
                   );
                 })()}
 
-                <MemberBuffs v={v} index={i} />
-
-                <div className="acts">
-                  <Link className="dz-btn gold" to={`/projeto/${v.id}/personagem/${encodeURIComponent(ref.character)}`}>Ajustar build</Link>
+                <div className="foot">
+                  <MemberBuffs v={v} index={i} />
+                  <div className="acts">
+                    <Link className="dz-btn gold" to={`/projeto/${v.id}/personagem/${encodeURIComponent(ref.character)}`}>Ajustar build</Link>
+                  </div>
                 </div>
               </div>
             </article>

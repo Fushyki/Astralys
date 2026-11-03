@@ -31,7 +31,6 @@
 .eq-card .dmg .strong { font-weight: 600; }
 .eq-card .gives { display: flex; flex-direction: column; gap: 8px; }
 .eq-card .chips { display: flex; flex-wrap: wrap; gap: 6px; }
-.eq-card .foot { margin-top: auto; display: flex; flex-direction: column; gap: 16px; }
 .eq-card .acts { display: flex; flex-direction: column; gap: 8px; }
 .eq-card .small-acts { display: flex; gap: 16px; justify-content: center; font-size: 13px; }
 .eq-add { min-height: 220px; border: 1px dashed var(--border-ctl-hi); border-radius: var(--radius-panel); background: none; color: var(--gold); font-family: var(--font-display); font-weight: 600; font-size: 18px; letter-spacing: .06em; text-transform: uppercase; cursor: pointer; }

@@ -20,7 +20,7 @@ import { downloadProject } from '../features/rotation/importFile';
 import { cloneProject, saveProject } from '../features/rotation/persistence';
 import { useRotationStore } from '../features/rotation/store';
 import { nakedMember } from '../features/rotation/teamOps';
-import { configChips, givenBuffs, keyStats, mainReaction, mainsText, receivedBuffCount, roleOf, setPiecesText } from '../features/team/teamModel';
+import { configChips, keyStats, mainReaction, mainsText, roleOf, setPiecesText } from '../features/team/teamModel';
 import { norm } from '../features/good/goodImport';
 import { formatDecimal, formatInt, formatPercent } from '../ui/format';
 import './equipe.css';
@@ -104,8 +104,6 @@ export default function Equipe() {
   const { project, data, bundle, summary, colors } = v;
   const characters = data.game.characters;
   const reaction = mainReaction(bundle);
-  const gives = givenBuffs(v.resolved);
-  const received = receivedBuffCount(v.resolved);
   const elements = project.members.map((m) => characters.find((c) => c.name === m.character)?.element);
   const chips = configChips(project, elements);
   const names = project.members.map((m) => m.character).join(' · ');
@@ -221,14 +219,11 @@ export default function Equipe() {
                   <span className="num muted small">{formatPercent(share, share < 0.1 ? 2 : 1)} do time</span>
                 </div>
 
-                <div className="gives">
-                  <span className="lbl">Buffs que dá ao time</span>
-                  <div className="chips">
-                    {(gives[i] ?? []).length === 0 && role === 'DPS principal' ? <Chip>Recebe {received[i]} buffs do time</Chip> : null}
-                    {(gives[i] ?? []).length === 0 && role !== 'DPS principal' ? <span className="muted small">Nenhum buff com número cadastrado</span> : null}
-                    {(gives[i] ?? []).map((g) => <Chip key={g}>{g}</Chip>)}
-                  </div>
+                <div className="acts">
+                  <Link className="dz-btn gold" to={`/projeto/${v.id}/personagem/${encodeURIComponent(ref.character)}`}>Ajustar build</Link>
                 </div>
+
+                <MemberBuffs v={v} index={i} />
 
                 {(() => {
                   // Set que depende dos elementos com que o dono reage: Scroll (bônus de DMG) e Viridescent (redução de RES).
@@ -246,13 +241,6 @@ export default function Equipe() {
                     </div>
                   );
                 })()}
-
-                <div className="foot">
-                  <MemberBuffs v={v} index={i} />
-                  <div className="acts">
-                    <Link className="dz-btn gold" to={`/projeto/${v.id}/personagem/${encodeURIComponent(ref.character)}`}>Ajustar build</Link>
-                  </div>
-                </div>
               </div>
             </article>
           );

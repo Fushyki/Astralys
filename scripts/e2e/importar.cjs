@@ -88,11 +88,11 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
 
   // Comparar
   await page.goto(`${BASE}/comparar?a=exemplo`, { waitUntil: 'networkidle' });
-  check('Comparar sem B pede o segundo time', /Escolha dois times/.test(await page.textContent('.dz-page')));
+  check('Comparar sem B pede os dois times', /Escolha o time A e o time B/.test(await page.textContent('.dz-page')));
   const options = await page.$$eval('select[aria-label="Time B"] option', (o) => o.map((x) => x.value).filter(Boolean));
   await page.selectOption('select[aria-label="Time B"]', options.find((v) => v !== 'exemplo')); await settle();
-  await page.waitForSelector('.cp-verdict', { timeout: 30000 });
-  check('Comparar mostra o veredito e as duas tabelas', (await page.locator('.dz-table').count()) === 2, await page.textContent('.cp-verdict'));
+  await page.waitForSelector('.pc-cmp', { timeout: 30000 });
+  check('Comparar mostra o card 16:9 com os dois times', (await page.locator('.pc-cmp .cc-side').count()) === 2 && (await page.locator('.cc-bar').count()) > 0, await page.textContent('.cc-verdict'));
   await page.screenshot({ path: path.join(OUT, 'r-comparar.png'), fullPage: true });
 
   await page.setViewportSize({ width: 390, height: 900 }); await page.waitForTimeout(400);

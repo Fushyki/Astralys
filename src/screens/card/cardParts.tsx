@@ -21,13 +21,23 @@ export function Face({ name, icon, color }: { name: string; icon?: string; color
 
 const GACHA = 'https://api.lunaris.moe/data/assets/gachaicon';
 /** Arte alta do personagem (a mesma dos cards). */
-export const splashUrl = (icon: string) => `${GACHA}/${icon.replace('UI_AvatarIcon_', 'UI_Gacha_AvatarIcon_')}.webp`;
+/** O Viajante não tem a faixa alta no Lunaris (404): usa a arte inteira do Enka.Network, que libera CORS. */
+export const splashUrl = (icon: string) => {
+  const traveler = /Player(Boy|Girl)$/.exec(icon);
+  return traveler ? `https://enka.network/ui/UI_Gacha_AvatarImg_Player${traveler[1]}.png` : `${GACHA}/${icon.replace('UI_AvatarIcon_', 'UI_Gacha_AvatarIcon_')}.webp`;
+};
+
+/** Corte da arte inteira do Viajante: do rosto até a cintura, como a faixa alta dos outros (inset: topo direita base esquerda). */
+export const splashCrop = (icon: string): CSSProperties | undefined => {
+  const t = /Player(Boy|Girl)$/.exec(icon);
+  return t ? ({ objectViewBox: t[1] === 'Boy' ? 'inset(0 38% 40% 35%)' : 'inset(0 45% 42% 29%)' } as CSSProperties) : undefined;
+};
 
 /** Retrato alto do personagem (faixa de gacha do Lunaris); sem imagem mostra a inicial na cor dele. */
 export function Strip({ name, icon, color }: { name: string; icon?: string; color: string }) {
   const [failed, setFailed] = useState(false);
-  const src = icon ? `${GACHA}/${icon.replace('UI_AvatarIcon_', 'UI_Gacha_AvatarIcon_')}.webp` : '';
-  return src && !failed ? <img className="pw-img" src={src} alt="" crossOrigin="anonymous" onError={() => setFailed(true)} /> : <b className="pw-init" style={css({ '--c': color })}>{name.charAt(0)}</b>;
+  const src = icon ? splashUrl(icon) : '';
+  return src && !failed ? <img className="pw-img" style={splashCrop(icon!)} src={src} alt="" crossOrigin="anonymous" onError={() => setFailed(true)} /> : <b className="pw-init" style={css({ '--c': color })}>{name.charAt(0)}</b>;
 }
 
 /** Rosca de participação no dano: um arco por personagem, começando no maior. */

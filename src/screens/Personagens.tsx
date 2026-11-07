@@ -5,7 +5,7 @@ import { AppHeader } from '../app/AppHeader';
 import '../design/design.css';
 import { elementColor } from '../design/elements';
 import { Segmented } from '../design/primitives';
-import { splashUrl } from './card/cardParts';
+import { splashCrop, splashUrl } from './card/cardParts';
 import { norm } from '../features/good/goodImport';
 import { loadGood } from '../features/good/goodStore';
 import { useGameData } from '../features/rotation/data';
@@ -77,7 +77,7 @@ export default function Personagens() {
               const pieces = good?.artifacts.filter((a) => norm(a.location) === norm(c.name)).length ?? 0;
               return (
                 <article className="pe-card" key={c.id} style={{ ['--c' as string]: elementColor(c.element) }} data-rarity={c.rarity} data-mine={mine ? '' : undefined}>
-                  <img className="splash" src={splashUrl(c.icon ?? '')} alt="" loading="lazy" crossOrigin="anonymous" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+                  <img className="splash" style={splashCrop(c.icon ?? '')} src={splashUrl(c.icon ?? '')} alt="" loading="lazy" crossOrigin="anonymous" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
                   <div className="info">
                     <span className="el">{c.element} · {c.weapon}</span>
                     <b className="nm">{c.name}</b>

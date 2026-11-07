@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useProjectView } from '../app/ProjectContext';
 import { CharacterPickerDialog } from '../design/CharacterPickerDialog';
 import { Chip, StackedBar } from '../design/primitives';
-import { splashUrl } from './card/cardParts';
+import { splashCrop, splashUrl } from './card/cardParts';
 import { bindProject, databaseOfProject } from '../features/good/goodStore';
 import { pieceIconUrl, weaponIconUrl } from '../design/images';
 import { MAX_TEAM_SIZE, effectiveDuration, effectiveTalents, type MemberRef } from '../engine';
@@ -30,7 +30,7 @@ const PIECE_NAME = { flower: 'Flor', plume: 'Pluma', sands: 'Areia', goblet: 'CÃ
 
 function Splash({ icon, name }: { icon?: string; name: string }) {
   const [failed, setFailed] = useState(false);
-  return icon && !failed ? <img className="splash" src={splashUrl(icon)} alt="" loading="lazy" crossOrigin="anonymous" onError={() => setFailed(true)} /> : <b className="splash init" aria-hidden="true">{name.charAt(0)}</b>;
+  return icon && !failed ? <img className="splash" style={splashCrop(icon)} src={splashUrl(icon)} alt="" loading="lazy" crossOrigin="anonymous" onError={() => setFailed(true)} /> : <b className="splash init" aria-hidden="true">{name.charAt(0)}</b>;
 }
 
 function GearImg({ src, fallback }: { src?: string; fallback: string }) {

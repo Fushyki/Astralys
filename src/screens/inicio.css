@@ -10,6 +10,7 @@
 @media (prefers-reduced-motion: reduce) { .in-sky i { animation: none; } }
 
 .in-copy { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: var(--sp-4); }
+.in-eyebrow { display: inline-flex; align-items: center; gap: var(--sp-2); font: 700 var(--fs-4) var(--font-display); letter-spacing: .3em; text-transform: uppercase; color: var(--gold); }
 .in-copy h1 { margin: 0; font: 700 clamp(48px, 7vw, 96px) var(--font-display); line-height: .95; letter-spacing: .01em; }
 .in-copy p { margin: 0; max-width: 460px; font-size: var(--fs-5); line-height: 1.45; color: var(--text-2); }
 .in-cta { display: flex; flex-wrap: wrap; gap: var(--sp-3); margin-top: var(--sp-2); }
@@ -22,6 +23,41 @@
 .in-demo { color: var(--muted); font-size: var(--fs-3); text-decoration: none; }
 .in-demo:hover { color: var(--gold-hi); }
 
-/* Telas largas: a frase à esquerda e a demonstração à direita. */
-@media (min-width: 1100px) { .in-hero { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 56px; } }
-@media (max-width: 1099px) { .in-hero { align-items: start; padding-top: var(--sp-5); } .in-copy h1 { font-size: clamp(44px, 12vw, 72px); } }
+/* A rotação ao fundo: baixa opacidade, some atrás do texto. */
+.in-rot { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: .9; -webkit-mask-image: linear-gradient(90deg, transparent 28%, #000 62%); mask-image: linear-gradient(90deg, transparent 28%, #000 62%); }
+@media (max-width: 960px) { .in-rot { opacity: .3; -webkit-mask-image: none; mask-image: none; } }
+
+/* Tema astral: nebulosa, órbitas em volta da estrela do Supremo e estrelas cadentes. */
+.in-nebula { position: absolute; inset: 0; pointer-events: none; background:
+  radial-gradient(ellipse 55% 60% at 88% 62%, rgba(241, 201, 107, .10), transparent 70%),
+  radial-gradient(ellipse 50% 55% at 70% 20%, rgba(70, 90, 200, .14), transparent 70%),
+  radial-gradient(ellipse 40% 50% at 8% 90%, rgba(110, 70, 190, .10), transparent 70%); }
+.in-orbits { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.in-spin { animation: in-orbit linear infinite; transform-origin: 0 0; }
+@keyframes in-orbit { to { transform: rotate(360deg); } }
+.in-shoot { position: absolute; width: 120px; height: 1px; pointer-events: none; opacity: 0; transform: rotate(28deg);
+  background: linear-gradient(90deg, transparent, var(--gold-hi)); animation: in-shoot 14s ease-in infinite; }
+@keyframes in-shoot { 0%, 92% { opacity: 0; transform: translate(0, 0) rotate(28deg); } 94% { opacity: .9; } 100% { opacity: 0; transform: translate(220px, 120px) rotate(28deg); } }
+@media (prefers-reduced-motion: reduce) { .in-spin, .in-shoot { animation: none; } }
+@media (max-width: 960px) { .in-orbits { opacity: .4; } }
+
+/* Tema astral: nebulosa, órbitas em volta da estrela do Supremo e estrelas cadentes. */
+.in-nebula { position: absolute; inset: 0; pointer-events: none; background:
+  radial-gradient(ellipse 55% 60% at 88% 62%, rgba(241, 201, 107, .10), transparent 70%),
+  radial-gradient(ellipse 50% 55% at 70% 20%, rgba(70, 90, 200, .14), transparent 70%),
+  radial-gradient(ellipse 40% 50% at 8% 90%, rgba(110, 70, 190, .10), transparent 70%); }
+.in-orbits { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.in-spin { animation: in-orbit linear infinite; transform-origin: 0 0; }
+@keyframes in-orbit { to { transform: rotate(360deg); } }
+.in-shoot { position: absolute; width: 120px; height: 1px; pointer-events: none; opacity: 0; transform: rotate(28deg);
+  background: linear-gradient(90deg, transparent, var(--gold-hi)); animation: in-shoot 14s ease-in infinite; }
+@keyframes in-shoot { 0%, 92% { opacity: 0; transform: translate(0, 0) rotate(28deg); } 94% { opacity: .9; } 100% { opacity: 0; transform: translate(220px, 120px) rotate(28deg); } }
+@media (prefers-reduced-motion: reduce) { .in-spin, .in-shoot { animation: none; } }
+@media (max-width: 960px) { .in-orbits { opacity: .4; } }
+.in-const { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.in-nebula { background:
+  radial-gradient(ellipse 45% 55% at 18% 52%, rgba(90, 110, 220, .16), transparent 70%),
+  radial-gradient(ellipse 30% 40% at 30% 85%, rgba(130, 80, 200, .12), transparent 70%),
+  radial-gradient(ellipse 55% 60% at 88% 62%, rgba(241, 201, 107, .10), transparent 70%),
+  radial-gradient(ellipse 50% 55% at 70% 20%, rgba(70, 90, 200, .14), transparent 70%); }
+@media (max-width: 960px) { .in-const { opacity: .5; } }

@@ -1,19 +1,20 @@
 /**
- * Comparar times (`/comparar?a=ID&b=ID`): dois projetos lado a lado, com a variação de DPS e DPR e,
- * personagem a personagem, de dano e de build. Serve para decidir entre duas equipes ou duas builds.
+ * Comparar times (`/comparar?a=ID&b=ID`): um card 16:9 de comparação para printar e mostrar a um amigo.
+ * Cada time é calculado com a própria equipe, build e rotação; a tela personaliza o que aparece no card.
  */
-import { useMemo } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { AppHeader } from '../app/AppHeader';
 import '../design/design.css';
-import { Panel } from '../design/primitives';
 import { analyzeProject, resolveProject } from '../engine';
-import { compact, formatDecimal, formatInt, formatPercent } from '../ui/format';
 import { buildCardModel, hitTypeLookup, type CardModel } from '../features/card/cardModel';
+import { compareModels } from '../features/compare/compareModel';
 import { useGameData, type LoadedData } from '../features/rotation/data';
 import { listProjects, loadProject } from '../features/rotation/persistence';
-import { compareModels } from '../features/compare/compareModel';
-
+import { COMPARE_METRICS, CompareCard, type CompareMetric } from './card/CompareCard';
+import { copyCardImage, saveCardImage } from './card/copyCard';
+import { ScaledPoster } from './card/PosterCard';
+import './cardpage.css';
 import './comparar.css';
 
 function modelOf(id: string | null, data: LoadedData): CardModel | { error: string } | null {
@@ -30,9 +31,17 @@ function modelOf(id: string | null, data: LoadedData): CardModel | { error: stri
 }
 
 const isModel = (m: CardModel | { error: string } | null): m is CardModel => !!m && !('error' in m);
+const COLORS = ['#e9c46a', '#f08a5d', '#8fd3e8', '#c49cf2'];
 
-const signed = (f: number | null, digits = 1) => (f === null ? '—' : `${f > 0 ? '+' : ''}${formatDecimal(f * 100, digits)}%`);
-const tone = (f: number | null) => (f === null || Math.abs(f) < 1e-4 ? '' : f > 0 ? 'up' : 'down');
+function Swatches({ label, value, onChange }: { label: string; value: string; onChange: (c: string) => void }) {
+  return (
+    <div className="cd-accents" role="group" aria-label={label}>
+      {COLORS.map((c) => (
+        <button key={c} type="button" className="cd-swatch" style={{ background: c }} aria-pressed={value === c} aria-label={`${label} ${c}`} onClick={() => onChange(c)} />
+      ))}
+    </div>
+  );
+}
 
 export default function Comparar() {
   const [params, setParams] = useSearchParams();
@@ -44,18 +53,53 @@ export default function Comparar() {
   const b = useMemo(() => (data ? modelOf(bId, data) : null), [data, bId]);
   const cmp = isModel(a) && isModel(b) ? compareModels(a, b) : null;
 
+  const [titleA, setTitleA] = useState('');
+  const [titleB, setTitleB] = useState('');
+  const [accentA, setAccentA] = useState(COLORS[0]);
+  const [accentB, setAccentB] = useState(COLORS[2]);
+  const [metrics, setMetrics] = useState<CompareMetric[]>(['dps', 'dpr', 'duration', 'er']);
+  const [showGear, setShowGear] = useState(false);
+  const [showBars, setShowBars] = useState(true);
+  const [note, setNote] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
+  const viewRef = useRef<HTMLDivElement>(null);
+
   const set = (key: 'a' | 'b', value: string) => {
     const next = new URLSearchParams(params);
     if (value) next.set(key, value);
     else next.delete(key);
     setParams(next, { replace: true });
   };
-  const swap = () => setParams(new URLSearchParams({ ...(bId ? { a: bId } : {}), ...(aId ? { b: aId } : {}) }), { replace: true });
+  const swap = () => {
+    setParams(new URLSearchParams({ ...(bId ? { a: bId } : {}), ...(aId ? { b: aId } : {}) }), { replace: true });
+    setTitleA(titleB);
+    setTitleB(titleA);
+    setAccentA(accentB);
+    setAccentB(accentA);
+  };
+  const toggle = (m: CompareMetric) => setMetrics((cur) => (cur.includes(m) ? cur.filter((x) => x !== m) : COMPARE_METRICS.map((x) => x.value).filter((x) => x === m || cur.includes(x))));
 
-  const picker = (key: 'a' | 'b', value: string | null, label: string) => (
+  const act = async (kind: 'copy' | 'save') => {
+    const el = viewRef.current?.querySelector<HTMLElement>('.pc');
+    if (!el) return;
+    setBusy(true);
+    setMsg(null);
+    try {
+      if (kind === 'copy') await copyCardImage(el, 'wide');
+      else await saveCardImage(el, 'wide', 'astralys-comparacao');
+      setMsg({ ok: true, text: kind === 'copy' ? 'Imagem copiada.' : 'Imagem salva.' });
+    } catch (e) {
+      setMsg({ ok: false, text: `Não foi possível gerar a imagem: ${e instanceof Error ? e.message : String(e)}` });
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const picker = (key: 'a' | 'b', value: string | null) => (
     <label className="dz-field">
-      <span>{label}</span>
-      <select value={value ?? ''} onChange={(e) => set(key, e.target.value)} aria-label={`Time ${label}`}>
+      <span>Time {key.toUpperCase()}</span>
+      <select value={value ?? ''} onChange={(e) => set(key, e.target.value)} aria-label={`Time ${key.toUpperCase()}`}>
         <option value="">Escolha um time</option>
         {projects.map((p) => (<option key={p.id} value={p.id}>{p.name}</option>))}
       </select>
@@ -69,62 +113,68 @@ export default function Comparar() {
         <section className="dz-pagehead">
           <div className="titles">
             <h1 className="h1">Comparar times</h1>
-            <span className="muted">Cada time é calculado com a própria equipe, build e rotação.</span>
+            <span className="muted">Escolha dois times, personalize e copie a imagem para mostrar.</span>
           </div>
           <div className="actions"><Link className="dz-btn" to="/vault">Times</Link></div>
         </section>
 
-        <section className="dz-panel cp-pick">
-          {picker('a', aId, 'A')}
-          <button type="button" className="dz-btn" onClick={swap} disabled={!aId && !bId} title="Troca A e B de lugar">Trocar</button>
-          {picker('b', bId, 'B')}
-        </section>
-
-        {[a, b].map((m, i) => (m && !isModel(m) ? <p key={i} className="dz-error" role="alert">{i === 0 ? 'A' : 'B'}: {m.error}</p> : null))}
-        {!cmp && <p className="muted">Escolha dois times para comparar.</p>}
-
-        {cmp && isModel(a) && isModel(b) && (
-          <>
-            <p className="cp-verdict" role="status">
-              {cmp.winner === 'tie'
-                ? 'Os dois rendem o mesmo dano por rotação.'
-                : `${cmp.winner === 'b' ? 'B' : 'A'} rende ${signed(Math.abs(cmp.dprChange ?? 0), 1).replace('+', '')} a mais de dano por rotação que ${cmp.winner === 'b' ? 'A' : 'B'}.`}
-            </p>
-
-            <Panel title="Resultado">
-              <div className="cp-scroll">
-                <table className="dz-table">
-                  <thead><tr><th>Indicador</th><th>A · {a.title}</th><th>B · {b.title}</th><th>B contra A</th></tr></thead>
-                  <tbody>
-                    <tr><td>DPS</td><td>{compact(a.dps)}</td><td>{compact(b.dps)}</td><td className={`chg ${tone(cmp.dpsChange)}`}>{signed(cmp.dpsChange, 2)}</td></tr>
-                    <tr><td>DPR (dano por rotação)</td><td>{compact(a.dpr)}</td><td>{compact(b.dpr)}</td><td className={`chg ${tone(cmp.dprChange)}`}>{signed(cmp.dprChange, 2)}</td></tr>
-                    <tr><td>Duração</td><td>{formatDecimal(a.duration, 1)} s</td><td>{formatDecimal(b.duration, 1)} s</td><td>{cmp.durationChange === 0 ? 'igual' : `${cmp.durationChange > 0 ? '+' : ''}${formatDecimal(cmp.durationChange, 1)} s`}</td></tr>
-                  </tbody>
-                </table>
+        <div className="cd-layout cp-layout">
+          <aside className="dz-panel cp-bar" aria-label="Personalizar a comparação">
+            <div className="cp-cols">
+              <div className="cp-grp cp-a">
+                {picker('a', aId)}
+                <label className="dz-field">
+                  <span>Nome de A no card</span>
+                  <input value={titleA} maxLength={40} placeholder={isModel(a) ? a.title : 'Time A'} onChange={(e) => setTitleA(e.target.value)} />
+                </label>
+                <Swatches label="Cor de A" value={accentA} onChange={setAccentA} />
               </div>
-            </Panel>
-
-            <Panel title="Personagem por personagem">
-              <div className="cp-scroll">
-                <table className="dz-table cp-members">
-                  <thead><tr><th>Personagem</th><th>Dano em A</th><th>Dano em B</th><th>B contra A</th><th>Build em A</th><th>Build em B</th></tr></thead>
-                  <tbody>
-                    {cmp.members.map((m) => (
-                      <tr key={m.name}>
-                        <td>{m.name}</td>
-                        <td>{m.a ? `${formatInt(m.a.avg)} (${formatPercent(m.a.share, 0)})` : 'fora da equipe'}</td>
-                        <td>{m.b ? `${formatInt(m.b.avg)} (${formatPercent(m.b.share, 0)})` : 'fora da equipe'}</td>
-                        <td className={`chg ${tone(m.avgChange)}`}>{signed(m.avgChange)}</td>
-                        <td className="build">{m.a ? `${m.a.weapon} · ${m.a.mains} · ${formatDecimal(m.a.er * 100, 0)}% ER` : '—'}</td>
-                        <td className="build">{m.b ? `${m.b.weapon} · ${m.b.mains} · ${formatDecimal(m.b.er * 100, 0)}% ER` : '—'}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+              <div className="cp-grp cp-mid">
+                <button type="button" className="dz-btn" onClick={swap} disabled={!aId && !bId}>Trocar A e B</button>
+                <fieldset className="cp-opts">
+                  <legend>No meio do card</legend>
+                  {COMPARE_METRICS.map((m) => (
+                    <label key={m.value}><input type="checkbox" checked={metrics.includes(m.value)} onChange={() => toggle(m.value)} />{m.label}</label>
+                  ))}
+                </fieldset>
               </div>
-            </Panel>
-          </>
-        )}
+              <div className="cp-grp cp-b">
+                {picker('b', bId)}
+                <label className="dz-field">
+                  <span>Nome de B no card</span>
+                  <input value={titleB} maxLength={40} placeholder={isModel(b) ? b.title : 'Time B'} onChange={(e) => setTitleB(e.target.value)} />
+                </label>
+                <Swatches label="Cor de B" value={accentB} onChange={setAccentB} />
+              </div>
+            </div>
+            <div className="cp-row">
+              <label><input type="checkbox" checked={showBars} onChange={(e) => setShowBars(e.target.checked)} />Dano por personagem</label>
+              <label><input type="checkbox" checked={showGear} onChange={(e) => setShowGear(e.target.checked)} />Artefatos nos retratos</label>
+              <label className="dz-field cp-note">
+                <span>Legenda (canto do card)</span>
+                <input value={note} maxLength={50} placeholder="Ex.: Abismo 12 · por Davi" onChange={(e) => setNote(e.target.value)} />
+              </label>
+              <div className="cd-acts">
+                <button type="button" className="dz-btn gold" disabled={!cmp || busy} onClick={() => void act('copy')}>Copiar imagem</button>
+                <button type="button" className="dz-btn" disabled={!cmp || busy} onClick={() => void act('save')}>Salvar PNG</button>
+              </div>
+            </div>
+            {msg && <p className={msg.ok ? 'note' : 'dz-error'} role={msg.ok ? 'status' : 'alert'}>{msg.text}</p>}
+          </aside>
+
+          <div className="cd-view" ref={viewRef}>
+            {[a, b].map((m, i) => (m && !isModel(m) ? <p key={i} className="dz-error" role="alert">{i === 0 ? 'A' : 'B'}: {m.error}</p> : null))}
+            {cmp && isModel(a) && isModel(b) ? (
+              <div className="cp-stage">
+                <ScaledPoster format="wide">
+                  <CompareCard a={a} b={b} cmp={cmp} opts={{ titleA: titleA.trim() || a.title, titleB: titleB.trim() || b.title, accentA, accentB, metrics, showGear, showBars, note: note.trim() }} />
+                </ScaledPoster>
+              </div>
+            ) : (
+              <p className="muted cp-empty">Escolha o time A e o time B para montar o card.</p>
+            )}
+          </div>
+        </div>
       </main>
     </div>
   );

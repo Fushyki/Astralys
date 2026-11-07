@@ -1,7 +1,7 @@
 /** Cartões da calculadora de recarga (um por slot), usados na aba do projeto e na calculadora avulsa. */
 import { useMemo } from 'react';
 import { Chip } from '../../design/primitives';
-import { splashUrl } from '../card/cardParts';
+import { splashCrop, splashUrl } from '../card/cardParts';
 import { elementColor } from '../../design/elements';
 import { NumberInput, SelectField } from '../../design/fields';
 import { RAIDEN_TEAM_ENERGY, SAFETY_MARGIN, type RotationProject } from '../../engine';
@@ -130,7 +130,7 @@ export function EnergyView({
           const funOpts = funnelOptions(m.name, names);
           return (
             <section className="dz-panel rc-card" key={m.name} style={{ ['--c' as string]: color }} aria-label={`Recarga de ${m.name}`}>
-              <img className="splash" src={splashUrl(character?.icon ?? '')} alt="" loading="lazy" crossOrigin="anonymous" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+              <img className="splash" style={splashCrop(character?.icon ?? '')} src={splashUrl(character?.icon ?? '')} alt="" loading="lazy" crossOrigin="anonymous" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
               <div className="rc-head">
                 <span className="rc-slot">Slot {i + 1}</span>
                 <span className="rc-pills">
@@ -212,6 +212,7 @@ export function EnergyView({
                 <NumberInput label="Tempo em campo" value={Math.round(s.fieldTime * 100)} min={0} max={100} step={5} suffix="%" onCommit={(v) => setSlot(m.name, { fieldTime: Math.min(100, Math.max(0, v)) / 100 })} />
               </div>
 
+              <div className="rc-foot">
               <dl className="rc-break" aria-label="Fontes de energia">
                 <div><dt>De habilidades do time</dt><dd className="num">{formatDecimal(r.baseFromSkills, 1)}</dd></div>
                 <div><dt>De armas Favonius</dt><dd className="num">{formatDecimal(r.baseFromFavonius, 1)}</dd></div>
@@ -221,6 +222,7 @@ export function EnergyView({
                 <div className="total"><dt>Total de energia base</dt><dd className="num">{formatDecimal(r.totalBase, 1)}</dd></div>
               </dl>
               {info.note && info.tableParticles !== undefined && <p className="note">Partículas: {info.note}</p>}
+              </div>
             </section>
           );
         })}

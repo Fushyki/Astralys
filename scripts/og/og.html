@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<!-- Fonte da imagem de pré-visualização do link (public/og.jpg, 1200×630). Gere de novo com: node scripts/og/make-og.cjs -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500&display=swap">
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  body { width: 1200px; height: 630px; overflow: hidden; background: #0a0e1c; color: #e7eaf6; font-family: 'IBM Plex Sans', sans-serif; position: relative; }
+  .neb { position: absolute; inset: 0; background:
+    radial-gradient(ellipse 45% 70% at 76% 52%, rgba(241,201,107,.14), transparent 70%),
+    radial-gradient(ellipse 40% 60% at 22% 45%, rgba(90,110,220,.16), transparent 70%),
+    radial-gradient(ellipse 35% 45% at 40% 100%, rgba(130,80,200,.12), transparent 70%); }
+  svg { position: absolute; inset: 0; }
+  .copy { position: absolute; left: 80px; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; gap: 22px; }
+  .brand { display: flex; align-items: center; gap: 14px; font: 700 26px 'Saira Condensed'; letter-spacing: .34em; color: #e9c46a; }
+  h1 { font: 700 118px/.94 'Saira Condensed'; letter-spacing: .01em; }
+  p { font-size: 28px; line-height: 1.4; color: #aeb6d8; max-width: 520px; }
+  .url { position: absolute; left: 80px; bottom: 44px; font: 600 22px 'Saira Condensed'; letter-spacing: .24em; text-transform: uppercase; color: #6f7aa8; }
+</style></head><body>
+<div class="neb"></div>
+<svg width="1200" height="630" viewBox="0 0 1200 630" id="sky"></svg>
+<div class="copy">
+  <div class="brand"><svg width="30" height="30" viewBox="0 0 24 24" style="position:static" fill="none" stroke="#e9c46a" stroke-width="1.6"><path d="M12 2l2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2z"/></svg>ASTRALYS</div>
+  <h1>Cada número<br>tem origem.</h1>
+  <p>Monte o time, arraste a rotação e veja de onde vem cada buff.</p>
+</div>
+<div class="url">astralys.vercel.app</div>
+<script>
+  // Posições fixas: a imagem sai igual a cada geração.
+  const NS = 'http://www.w3.org/2000/svg', sky = document.getElementById('sky');
+  const el = (n, a) => { const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, a[k]); sky.appendChild(e); return e; };
+  let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  for (let i = 0; i < 70; i++) el('circle', { cx: rnd() * 1200, cy: rnd() * 630, r: 0.6 + rnd() * 1.4, fill: i % 4 ? '#e7eaf6' : '#e9c46a', 'fill-opacity': 0.2 + rnd() * 0.5 });
+  // constelação do canto do título
+  const C = [[70, 70], [170, 40], [270, 92], [340, 48], [420, 112], [380, 190]];
+  el('polyline', { points: C.map(c => c.join(',')).join(' '), fill: 'none', stroke: '#2a3670', 'stroke-dasharray': '2 6' });
+  C.forEach(([x, y], i) => el('circle', { cx: x, cy: y, r: i % 3 ? 2 : 3.4, fill: '#e9c46a', 'fill-opacity': i % 3 ? 0.45 : 0.85 }));
+  // órbitas em volta da estrela do Supremo
+  const cx = 930, cy = 330;
+  const g = el('circle', { cx, cy, r: 230, fill: 'url(#glow)' });
+  const defs = document.createElementNS(NS, 'defs'); defs.innerHTML = '<radialGradient id="glow"><stop offset="0" stop-color="#f1c96b" stop-opacity=".6"/><stop offset=".35" stop-color="#f1c96b" stop-opacity=".13"/><stop offset="1" stop-color="#f1c96b" stop-opacity="0"/></radialGradient>'; sky.prepend(defs);
+  [[62, '', 1], [112, '2 7', 2], [170, '', 1], [240, '1 9', 3], [320, '', 2]].forEach(([r, d, n], i) => {
+    el('circle', { cx, cy, r, fill: 'none', stroke: '#2a3670', 'stroke-opacity': 0.95 - i * 0.14, 'stroke-dasharray': d });
+    for (let k = 0; k < n; k++) { const a = (k / n) * Math.PI * 2 + i * 1.3; el('circle', { cx: cx + Math.cos(a) * r, cy: cy + Math.sin(a) * r, r: k ? 2.2 : 3.6, fill: '#f1c96b', 'fill-opacity': k ? 0.55 : 0.95 }); }
+  });
+  for (let k = 0; k < 72; k++) { const a = (k / 72) * Math.PI * 2, l = k % 6 ? 5 : 11; el('line', { x1: cx + Math.cos(a) * 360, y1: cy + Math.sin(a) * 360, x2: cx + Math.cos(a) * (360 + l), y2: cy + Math.sin(a) * (360 + l), stroke: '#2a3670' }); }
+  // golpes ligados por uma linha dourada que termina na estrela (a rotação)
+  const H = [[640, 470, 4], [716, 420, 3], [780, 480, 5], [850, 400, 3], [905, 440, 4]];
+  H.forEach((h, i) => { if (i) { const [x1, y1] = H[i - 1], [x2, y2] = h, mx = (x1 + x2) / 2; el('path', { d: `M${x1} ${y1} C ${mx} ${y1}, ${mx} ${y2}, ${x2} ${y2}`, fill: 'none', stroke: '#f1c96b', 'stroke-opacity': 0.15 + i * 0.1 }); } });
+  el('path', { d: `M905 440 C 918 440, 920 ${cy}, ${cx} ${cy}`, fill: 'none', stroke: '#f1c96b', 'stroke-opacity': 0.5 });
+  H.forEach(([x, y, r]) => el('circle', { cx: x, cy: y, r, fill: '#0a0e1c', stroke: '#f1c96b', 'stroke-opacity': 0.6, 'stroke-width': 1.3 }));
+  el('path', { d: 'M0 -40 L9 -9 L40 0 L9 9 L0 40 L-9 9 L-40 0 L-9 -9 Z', transform: `translate(${cx} ${cy})`, fill: '#f1c96b', 'fill-opacity': 0.92 });
+</script></body></html>

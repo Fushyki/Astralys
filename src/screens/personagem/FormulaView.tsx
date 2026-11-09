@@ -1,4 +1,5 @@
 /** "Cálculo do dano" de um golpe da tabela do Avançado: a fórmula com os números e de onde vem cada fator (como clicar no número no GO). */
+import { toast } from '../../app/toast';
 import { useMemo, useState } from 'react';
 import type { ProjectView } from '../../app/ProjectContext';
 import { Button } from '../../design/Button';
@@ -22,9 +23,11 @@ export function FormulaView({ v, index, line, assembly }: { v: ProjectView; inde
     try {
       await navigator.clipboard.writeText(formulaText(line.name, f));
       setCopied(true);
+      toast('Fórmula copiada.');
       setTimeout(() => setCopied(false), 1500);
     } catch {
       setCopied(false);
+      toast('Não foi possível copiar a fórmula.', 'error');
     }
   };
   return (

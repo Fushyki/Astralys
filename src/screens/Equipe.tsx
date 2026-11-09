@@ -151,7 +151,7 @@ export default function Equipe() {
       <section className="eq-hero" aria-label="Indicadores do time">
         <div className="dps">
           <span className="k">DPS do time</span>
-          <span className="big num">{formatInt(summary.dps)}</span>
+          <span className="big num" data-testid="team-dps">{formatInt(summary.dps)}</span>
         </div>
         <div className="kpis">
           <div><span className="v num">{formatInt(summary.avg)}</span><span className="l">dano da rotação · {summary.actionCount} golpes, média com crítico</span></div>

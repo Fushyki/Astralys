@@ -1,6 +1,7 @@
 import React, { Suspense, lazy } from 'react';
 import ReactDOM from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Toaster } from './app/Toaster';
 import { BrowserRouter, Navigate, Route, Routes, useParams } from 'react-router-dom';
 import './index.css';
 import { installDeployRecovery } from './app/reloadOnce';
@@ -80,6 +81,7 @@ ReactDOM.createRoot(rootElement).render(
           <Route path="/" element={<Suspense fallback={null}><Inicio /></Suspense>} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
+        <Toaster />
       </BrowserRouter>
     </QueryClientProvider>
   </React.StrictMode>

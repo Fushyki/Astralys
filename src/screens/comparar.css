@@ -23,5 +23,20 @@
 .cp-layout .cd-view { justify-content: flex-start; }
 @media (max-width: 1000px) { .cp-cols { grid-template-columns: minmax(0, 1fr); } .cp-bar { padding-inline: var(--sp-4, 16px); } }
 
-/* Telas grandes: o card tem no máximo 1600 px; a barra e a moldura acompanham essa largura para continuarem alinhadas com as metades A e B. */
-.cp-layout .cp-bar, .cp-layout .cd-view .pc-box { width: 100%; max-width: 1600px; margin-inline: auto; }
+/* Barra e moldura do card com a mesma largura (--cp-w, calculada em Comparar.tsx para o card caber na janela). */
+.cp-layout .cd-view .pc-box { width: var(--cp-w, 100%); max-width: 1600px; margin-inline: auto; }
+/* A barra nunca fica mais estreita que 1240 px (senão os campos ficam cortados), mesmo com o card menor. */
+.cp-layout .cp-bar { width: max(var(--cp-w, 100%), min(1240px, 100%)); max-width: 1600px; margin-inline: auto; }
+/* Barra compacta: nome e time lado a lado, cores pequenas, cabeçalho enxuto. */
+.dz-page:has(.cp-layout) { gap: 14px; padding-top: 18px; padding-bottom: 12px; }
+.cp-head .h1 { font-size: 30px; }
+.cp-head .muted { display: none; }
+@media (min-width: 1001px) {
+  .cp-bar { padding-block: 14px; gap: 10px; }
+  .cp-cols { gap: 24px; grid-template-columns: minmax(0, 1fr) 280px minmax(0, 1fr); }
+  .cp-grp:not(.cp-mid) { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 8px 12px; align-content: start; }
+  .cp-grp:not(.cp-mid) .cd-accents { grid-column: 1 / -1; gap: 8px; }
+  .cp-bar .cd-swatch { width: 28px; height: 28px; border-width: 2px; }
+  .cp-row { padding-top: 10px; gap: 8px 20px; }
+  .cp-row > label:not(.dz-field) { min-height: 36px; }
+}

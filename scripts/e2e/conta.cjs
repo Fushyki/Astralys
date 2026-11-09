@@ -28,7 +28,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   const cards = () => page.locator('.vt-card');
   // "Novo time" abre o passo a passo: escolhe a Citlali, mantém o build padrão e a rotação básica.
   const createTeam = async (name) => {
-    await page.click('button:has-text("Novo time")');
+    await page.click('button[aria-label="Adicionar time"]'); await page.click('.vt-opt:has-text("Novo time")');
     await page.waitForURL('**/novo');
     await page.click('button[aria-label="Escolher o personagem 1"]');
     await page.waitForSelector('.dz-dialog');

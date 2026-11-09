@@ -3,6 +3,7 @@
  * (rotação, cenário, buffs de teste e, só se quiser, a equipe com as builds) e quem recebe aplica no próprio time. Os golpes
  * apontam para os membros pelo NOME do personagem, então a rotação encaixa em qualquer time que tenha esses personagens.
  */
+import { toast } from '../../app/toast';
 import { parseProject, type MemberRef, type RotationProject } from '../../engine';
 import { newProjectId } from './persistence';
 
@@ -65,6 +66,7 @@ export function downloadShare(file: ShareFile): void {
   a.download = `${file.name.replace(/[^\w-]+/g, '_') || 'rotacao'}.astralys-rotacao.json`;
   a.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
+  toast(`Rotação exportada: ${a.download}`);
 }
 
 /** Troca o índice do membro dentro de um id (etiqueta de buff, fonte desligada...). null = era de um membro que não existe aqui. */

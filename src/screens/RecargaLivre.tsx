@@ -2,6 +2,7 @@
  * Calculadora de recarga avulsa (/recarga): 4 slots com troca de personagem, times salvos no navegador e backup em arquivo,
  * como a calculadora HTML do Davi. Não depende de um projeto nem de uma rotação.
  */
+import { toast } from '../app/toast';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AppHeader } from '../app/AppHeader';
 import '../design/design.css';
@@ -126,6 +127,7 @@ export default function RecargaLivre() {
     a.download = 'astralys_times_recarga.json';
     a.click();
     URL.revokeObjectURL(url);
+    toast('Backup dos times exportado.');
   };
   const importBackup = async (file: File | undefined) => {
     if (!file) return;

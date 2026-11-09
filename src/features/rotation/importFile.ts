@@ -4,6 +4,7 @@
  */
 import { importPlanilha, parseProject, projectFromPlanilha, type RotationProject } from '../../engine';
 import type { LoadedData } from './data';
+import { toast } from '../../app/toast';
 import { newProjectId, sampleProject } from './persistence';
 import { dropDuplicateExtras } from './extraDedupe';
 import { parseShare, projectFromShare } from './share';
@@ -61,4 +62,5 @@ export function downloadProject(project: RotationProject): void {
   a.download = `${project.name.replace(/[^\w\-]+/g, '_') || 'projeto'}.astralys.json`;
   a.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
+  toast(`Projeto exportado: ${a.download}`);
 }

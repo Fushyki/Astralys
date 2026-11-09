@@ -9,7 +9,9 @@ import { Chip, Segmented } from '../design/primitives';
 import { enkaToGood, mergeGood } from '../features/enka/enkaImport';
 import { norm, parseGood, type Good, type GoodArtifact } from '../features/good/goodImport';
 import { activeDatabaseId, listDatabases, loadGood, saveGood } from '../features/good/goodStore';
-import { DatabaseList, ImportPreview } from './inventario/Bases';
+import { procRange, type SubKey } from '../features/good/artifactProcs';
+import { AddArtifact } from './inventario/AddArtifact';
+import { BaseBar, ImportPreview } from './inventario/Bases';
 import { useGameData } from '../features/rotation/data';
 import { ONLINE_ENABLED } from '../online/config';
 import { fetchEnka } from '../online/enka';
@@ -30,6 +32,7 @@ export default function Inventario() {
   const { data } = useGameData();
   const [good, setGood] = useState<Good | null>(() => loadGood());
   const [activeId, setActiveId] = useState<string | null>(() => activeDatabaseId());
+  const [adding, setAdding] = useState(false);
   const [pending, setPending] = useState<{ good: Good; name: string } | null>(null);
   const refresh = () => { setGood(loadGood()); setActiveId(activeDatabaseId()); setShown(PAGE); };
   const activeName = listDatabases().find((d) => d.id === activeId)?.name;
@@ -138,16 +141,21 @@ export default function Inventario() {
           )}
         </section>
 
-        <DatabaseList activeId={activeId} onChange={refresh} />
+        <BaseBar activeId={activeId} onChange={refresh} />
 
         <section className="inv-imp" aria-label={good ? 'Inventário importado' : 'Importar'}>
-          <h2 className="inv-h">{good ? 'Importar para uma base' : 'Importar'}</h2>
+          <h2 className="inv-h">{good ? 'Importar para a base' : 'Importar'}</h2>
           <div className="inv-import">
             <div className="opt">
               <b>Arquivo do Genshin Optimizer</b>
               <span className="muted small">No Genshin Optimizer: Configurações › Baixar dados. Escolha o arquivo .json aqui.</span>
               <input ref={file} type="file" accept=".json,application/json" hidden onChange={(e) => { const f = e.target.files?.[0]; if (f) void onFile(f); e.target.value = ''; }} />
               <button type="button" className="dz-btn gold" onClick={() => file.current?.click()}>Escolher arquivo</button>
+            </div>
+            <div className="opt">
+              <b>Adicionar um artefato</b>
+              <span className="muted small">Por print (leitura automática) ou preenchendo à mão, com os procs de cada substat.</span>
+              <button type="button" className="dz-btn gold" disabled={!data} onClick={() => setAdding(true)}>Adicionar artefato</button>
             </div>
             {ONLINE_ENABLED && (
               <div className="opt">
@@ -171,6 +179,8 @@ export default function Inventario() {
           {error && <p className="dz-error" role="alert">{error}</p>}
           {notes.map((n) => <p key={n} className="note">{n}</p>)}
         </section>
+
+        {adding && data && <AddArtifact sets={data.game.artifacts} onClose={() => setAdding(false)} onSaved={refresh} />}
 
         {pending && (
           <ImportPreview
@@ -237,6 +247,8 @@ export default function Inventario() {
   );
 }
 
+const procOf = (s: { key: string; value: number }, rarity: number) => procRange(s.key as SubKey, s.value, rarity === 4 ? 4 : 5)?.min;
+
 function ArtifactTile({ a, setInfo, characters }: { a: GoodArtifact; setInfo?: { name: string; id: number }; characters?: readonly { name: string }[] }) {
   const [failed, setFailed] = useState(false);
   const level = pieceLevel(a);
@@ -259,7 +271,7 @@ function ArtifactTile({ a, setInfo, characters }: { a: GoodArtifact; setInfo?: {
       </div>
       <ul className="subs">
         {a.substats.map((s) => (
-          <li key={s.key} data-crit={s.key === 'critRate_' || s.key === 'critDMG_'}><span>{SUB_LABEL[s.key] ?? s.key}</span><b className="num">{formatSub(s.key, s.value)}</b></li>
+          <li key={s.key} data-crit={s.key === 'critRate_' || s.key === 'critDMG_'}><span>{SUB_LABEL[s.key] ?? s.key}</span><b className="num">{formatSub(s.key, s.value)}</b>{procOf(s, a.rarity) && <i className="proc num" title="Procs: quantos rolls esse valor tem">×{procOf(s, a.rarity)}</i>}</li>
         ))}
       </ul>
       <footer>

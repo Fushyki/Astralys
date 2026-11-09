@@ -34,7 +34,7 @@
 .vt-poster .pc-nick { margin-right: 170px; }
 
 /* Card vazio no fim da lista: criar ou importar sem precisar de um time antes. */
-.vt-new { border-style: dashed; border-top-width: 1px; background: transparent; }
+.vt-new { display: flex; flex-direction: column; min-width: 0; overflow: hidden; border: 1px dashed var(--border); border-radius: 16px; background: transparent; }
 .vt-new-body { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 16px; }
 .vt-plus { position: relative; width: 96px; height: 96px; padding: 0; border-radius: 50%; border: 1px solid color-mix(in srgb, var(--gold) 55%, transparent); background: radial-gradient(circle, color-mix(in srgb, var(--gold) 14%, transparent), transparent 70%); cursor: pointer; font-size: 0; box-shadow: 0 0 0 10px color-mix(in srgb, var(--gold) 5%, transparent), 0 0 28px color-mix(in srgb, var(--gold) 18%, transparent); transition: transform .2s, box-shadow .2s, border-color .2s; }
 .vt-plus::before, .vt-plus::after { content: ''; position: absolute; inset: 50% auto auto 50%; background: var(--gold); border-radius: 2px; transform: translate(-50%, -50%); }

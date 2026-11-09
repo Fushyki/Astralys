@@ -97,7 +97,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
 
   // Vault: "Novo time" leva ao passo a passo
   await page.goto(`${BASE}/vault`, { waitUntil: 'networkidle' });
-  await page.click('button:has-text("Novo time")');
+  await page.click('button[aria-label="Adicionar time"]'); await page.click('.vt-opt:has-text("Novo time")');
   await page.waitForURL('**/novo');
   check('"Novo time" do Vault abre o passo a passo', (await page.locator('.nt-steps').count()) === 1);
 

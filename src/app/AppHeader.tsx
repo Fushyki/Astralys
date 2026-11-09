@@ -89,7 +89,7 @@ export function AppHeader({ projectId, memberName, projectName, favorite, onTogg
   const { pathname } = useLocation();
   const base = projectId ? `/projeto/${projectId}` : '';
   const nav: { to: string; label: string; on: boolean }[] = [
-    { to: '/vault', label: 'Times', on: pathname.startsWith('/vault') || pathname.startsWith('/novo') || (pathname.startsWith('/projeto') && !pathname.startsWith(`${base}/armas`) && !pathname.startsWith(`${base}/recarga`)) },
+    { to: '/vault', label: 'Times', on: pathname.startsWith('/vault') || pathname.startsWith('/novo') || pathname.startsWith('/card') || (pathname.startsWith('/projeto') && !pathname.startsWith(`${base}/armas`) && !pathname.startsWith(`${base}/recarga`)) },
     { to: '/personagens', label: 'Personagens', on: pathname.startsWith('/personagens') },
     { to: '/inventario', label: 'Inventário', on: pathname.startsWith('/inventario') },
     { to: projectId ? `${base}/recarga` : '/recarga', label: 'Recarga', on: pathname.endsWith('/recarga') },

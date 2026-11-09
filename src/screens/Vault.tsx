@@ -13,6 +13,7 @@ import { SAMPLE_ID, cloneProject, deleteStoredProject, listProjects, loadProject
 import { useProjectCards } from '../features/rotation/useProjectCards';
 import { Menu } from '../design/Menu';
 import { useSettings } from '../app/settings';
+import { toast } from '../app/toast';
 import { copyCardImage } from './card/copyCard';
 import { POSTER_SIZE, PosterCard, ScaledPoster } from './card/PosterCard';
 import { deleteRemote } from '../online/api';
@@ -66,18 +67,16 @@ export default function Vault() {
   };
   const toggleFavorite = (id: string) => edit(id, (p) => ({ ...p, meta: { ...p.meta, favorite: !p.meta.favorite, updatedAt: new Date().toISOString() } }));
   const cardFormat = useSettings((s) => s.cardFormat);
-  const [notice, setNotice] = useState<string | null>(null);
   /** Copia a imagem do card do time (no formato escolhido) para a área de transferência. */
   const copyCard = async (id: string, name: string) => {
     const el = document.querySelector<HTMLElement>(`.vt-card[data-id="${id}"] .pc`);
     try {
       if (!el) throw new Error('o card ainda está sendo calculado');
       await copyCardImage(el, cardFormat);
-      setNotice(`Card de “${name}” copiado.`);
+      toast(`Card de “${name}” copiado.`);
     } catch (e) {
-      setNotice(`Não foi possível copiar o card: ${e instanceof Error ? e.message : String(e)}`);
+      toast(`Não foi possível copiar o card: ${e instanceof Error ? e.message : String(e)}`, 'error');
     }
-    setTimeout(() => setNotice(null), 3500);
   };
   const duplicate = (id: string) => edit(id, (p) => cloneProject(p));
   const rename = (id: string, name: string) => {
@@ -94,7 +93,7 @@ export default function Vault() {
     setNotes([]);
     try {
       const r = await syncNow(token);
-      setNotes([summaryText(r)]);
+      toast(summaryText(r));
       refresh();
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Não foi possível sincronizar.');
@@ -122,6 +121,7 @@ export default function Vault() {
           /* sem permissão da área de transferência: o link aparece na tela */
         }
         setShareMsg(`${copied ? 'Link copiado' : 'Link do time'}: ${link}`);
+        if (copied) toast('Link público copiado.');
       } else {
         setShareMsg('Compartilhamento desligado: o link deixou de funcionar.');
       }
@@ -144,6 +144,7 @@ export default function Vault() {
     try {
       const r = await fn();
       if (!saveProject(r.project)) throw new Error('Não foi possível salvar: o armazenamento do navegador está cheio ou bloqueado.');
+      toast(`Time “${r.project.name}” importado.`);
       if (r.warnings.length === 0) navigate(`/projeto/${r.project.id}`);
       else {
         refresh();
@@ -179,11 +180,10 @@ export default function Vault() {
     if (!full) return;
     try {
       await navigator.clipboard.writeText(await projectLink(full, window.location.origin));
-      setNotice('Link do time copiado. Abra-o em outro computador para importar.');
+      toast('Link do time copiado. Abra-o em outro computador para importar.');
     } catch {
-      setNotice('Não foi possível copiar o link.');
+      toast('Não foi possível copiar o link.', 'error');
     }
-    setTimeout(() => setNotice(null), 3500);
   };
 
   const filtered = filters.query || filters.character || filters.element || filters.favoritesOnly;
@@ -207,7 +207,6 @@ export default function Vault() {
         {shareMsg && <p className="dz-error vt-share" role="status">{shareMsg}</p>}
         {notes.length > 0 && <div className="dz-error vt-notes" role="status">{notes.map((n, i) => <p key={i}>{n}</p>)}</div>}
 
-        {notice && <p className="note vt-notice" role="status">{notice}</p>}
         <section className="vt-summary" aria-label="Resumo dos times">
           <div className="vt-stat"><b className="num">{filtered ? `${visible.length} de ${items.length}` : items.length}</b><span>{items.length === 1 ? 'time' : 'times'}</span></div>
           <div className="vt-stat gold"><b className="num">{summary.best ? formatInt(summary.best.dps) : '—'}</b><span>melhor DPS{summary.best ? ` · ${summary.best.name}` : ''}</span></div>
@@ -306,7 +305,7 @@ export default function Vault() {
               );
             })}
             {!filtered && (
-              <li className="vt-card vt-new" aria-label="Novo time">
+              <li className="vt-new" aria-label="Novo time">
                 <div className="vt-new-body" style={{ aspectRatio: `${POSTER_SIZE[cardFormat].w} / ${POSTER_SIZE[cardFormat].h}` }}>
                   {newOpen ? (
                     <div className="vt-opts">

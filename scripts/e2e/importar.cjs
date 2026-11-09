@@ -51,16 +51,21 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.waitForSelector('.vt-card');
   await page.waitForTimeout(1500);
 
-  // Planilha
-  await page.setInputFiles('input[aria-label="Escolher planilha"]', XLSX_FILE);
+  // Importa um time exportado (a planilha .xlsx saiu da tela de Times)
+  const [dl0] = await Promise.all([page.waitForEvent('download'), pickCard(page.locator('.vt-card[data-id="exemplo"]'), 'Exportar')]);
+  const file0 = path.join(OUT, 'exemplo.json');
+  await dl0.saveAs(file0);
+  await page.setInputFiles('input[aria-label="Escolher projeto"]', file0);
   await page.waitForURL(/\/projeto\/(?!exemplo)[^/]+$/, { timeout: 30000 });
-  await page.waitForSelector('.dz-kpi .v.gold', { timeout: 30000 });
-  check('importar a planilha abre o projeto com DPS 216.600', (await page.textContent('.dz-kpi .v.gold')) === '216.600');
-  check('o projeto leva o nome do arquivo', /Mavuika_Iansan_Combo2/i.test(await page.textContent('.dz-pagehead .lbl')));
+  await page.waitForSelector('[data-testid="team-dps"]', { timeout: 30000 });
+  check('importar o time exportado abre o projeto com DPS 216.600', (await page.textContent('[data-testid="team-dps"]')) === '216.600');
   const importedUrl = page.url();
 
   await page.click('.dz-nav a:has-text("Times")'); await page.waitForSelector('.vt-card');
   check('o projeto importado aparece no Vault', (await names()).length === 2, (await names()).join(' | '));
+  await pickCard(page.locator('.vt-card:not([data-id="exemplo"])'), 'Renomear');
+  await page.fill('input[aria-label="Novo nome do time"]', 'Mavuika_Iansan_Combo2');
+  await page.keyboard.press('Enter'); await settle();
 
   // Renomear + exportar + reimportar
   await pickCard(page.locator('.vt-card[data-name="Mavuika_Iansan_Combo2"]'), 'Renomear');
@@ -73,8 +78,8 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   check('exportar baixa um .astralys.json', /\.astralys\.json$/.test(download.suggestedFilename()), download.suggestedFilename());
   await page.setInputFiles('input[aria-label="Escolher projeto"]', file);
   await page.waitForURL(/\/projeto\/(?!exemplo)[^/]+$/, { timeout: 30000 });
-  await page.waitForSelector('.dz-kpi .v.gold', { timeout: 30000 });
-  check('reimportar o JSON reproduz o mesmo DPS', (await page.textContent('.dz-kpi .v.gold')) === '216.600');
+  await page.waitForSelector('[data-testid="team-dps"]', { timeout: 30000 });
+  check('reimportar o JSON reproduz o mesmo DPS', (await page.textContent('[data-testid="team-dps"]')) === '216.600');
 
   // Inválido
   await page.goto(`${BASE}/vault`, { waitUntil: 'networkidle' }); await page.waitForSelector('.vt-card');
@@ -84,7 +89,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   check('arquivo inválido mostra um erro claro', /JSON válido/.test(await page.$eval('[role="alert"]', (e) => e.textContent).catch(() => '')));
 
   await page.goto(importedUrl, { waitUntil: 'networkidle' });
-  check('o projeto importado reabre pelo endereço', (await page.textContent('.dz-kpi .v.gold')) === '216.600');
+  check('o projeto importado reabre pelo endereço', (await page.textContent('[data-testid="team-dps"]')) === '216.600');
 
   // Comparar
   await page.goto(`${BASE}/comparar?a=exemplo`, { waitUntil: 'networkidle' });

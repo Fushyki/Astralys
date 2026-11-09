@@ -26,13 +26,16 @@ const file = (name, good) => ({ name, mimeType: 'application/json', buffer: Buff
   await page.evaluate(() => localStorage.clear());
   await page.reload({ waitUntil: 'networkidle' });
   const n = FIXTURE.artifacts.length;
+  const openBases = () => page.click('.inv-basebtn');
+  const baseCount = async () => { await openBases(); const c = await page.locator('.inv-baseitem').count(); await page.keyboard.press('Escape'); return c; };
+  const useOther = async () => { await openBases(); await page.locator('.inv-baseitem:not([aria-current="true"])').click(); };
 
   // 1) primeiro arquivo: base nova
   await page.setInputFiles('input[type=file]', file('amigo.json', FIXTURE));
   check('sem bases, a prévia oferece uma base nova', (await page.inputValue('select[aria-label="Base de destino"]')) === 'new');
   await page.click('.inv-preview .dz-btn.gold');
-  await page.waitForSelector('.inv-dbs li');
-  check('a base criada aparece "em uso" com a contagem', /em uso/i.test(await page.textContent('.inv-dbs li')) && (await page.textContent('.inv-dbs li')).includes(`${n} artefatos`));
+  await page.waitForSelector('.inv-basebar');
+  check('a base criada aparece "em uso" com a contagem', /em uso/i.test(await page.textContent('.inv-basebar')) && (await page.textContent('.inv-basebar')).includes(`${n} artefatos`));
 
   // 2) segundo arquivo na mesma base: 3 peças a menos, 1 evoluída, 1 nova
   const next = JSON.parse(JSON.stringify(FIXTURE));
@@ -51,18 +54,18 @@ const file = (name, good) => ({ name, mimeType: 'application/json', buffer: Buff
   // 3) apagar o que não veio no arquivo
   await page.check('text=Apagar armas e artefatos da base');
   await page.click('.inv-preview .dz-btn.gold');
-  await page.waitForSelector('.inv-dbs li');
-  check('apagar o que está fora do arquivo deixa só o que veio', (await page.textContent('.inv-dbs li')).includes(`${n - 3 + 1} artefatos`), (await page.textContent('.inv-dbs li')).slice(0, 80));
+  await page.waitForSelector('.inv-basebar');
+  check('apagar o que está fora do arquivo deixa só o que veio', (await page.textContent('.inv-basebar')).includes(`${n - 3 + 1} artefatos`), (await page.textContent('.inv-basebar')).slice(0, 80));
 
   // 4) outra base: separada da primeira
   await page.setInputFiles('input[type=file]', file('outro.json', { ...FIXTURE, artifacts: FIXTURE.artifacts.slice(0, 5) }));
   await page.selectOption('select[aria-label="Base de destino"]', 'new');
   await page.fill('input[aria-label="Nome da nova base"]', 'Amigo');
   await page.click('.inv-preview .dz-btn.gold');
-  await page.waitForFunction(() => document.querySelectorAll('.inv-dbs li').length === 2);
-  check('a nova base fica em uso e a primeira não mudou', (await page.textContent('.inv-dbs li[data-active]')).includes('5 artefatos') && (await page.locator('.inv-dbs li').first().textContent()).includes(`${n - 3 + 1} artefatos`));
+  await page.waitForSelector('.inv-basebar .sub:has-text("5 artefatos")');
+  check('a nova base fica em uso e a primeira não mudou', (await baseCount()) === 2 && (await page.textContent('.inv-basebar')).includes('5 artefatos') && (await (async () => { await openBases(); const t = await page.locator('.inv-baseitem:not([aria-current="true"])').textContent(); await page.keyboard.press('Escape'); return t; })()).includes(`${n - 3 + 1} artefatos`));
   check('a grade mostra só as peças da base em uso', (await page.locator('.inv-grid .inv-art').count()) === 5);
-  await page.click('.inv-dbs li:not([data-active]) >> text=Usar esta');
+  await useOther();
   await page.waitForFunction((k) => document.querySelectorAll('.inv-grid .inv-art').length === k, n - 3 + 1);
   check('trocar de base troca a grade', true);
 
@@ -75,21 +78,22 @@ const file = (name, good) => ({ name, mimeType: 'application/json', buffer: Buff
   await page.goto(`${BASE}/vault`, { waitUntil: 'networkidle' });
   check('o time novo aparece nos Times da base em uso', (await page.locator('text=(cópia)').count()) > 0);
   await page.goto(`${BASE}/inventario`, { waitUntil: 'networkidle' });
-  await page.click('.inv-dbs li:not([data-active]) >> text=Usar esta');
+  await useOther();
   await page.goto(`${BASE}/vault`, { waitUntil: 'networkidle' });
   check('em outra base, esse time não aparece', (await page.locator('text=(cópia)').count()) === 0);
   await page.goto(`${BASE}/inventario`, { waitUntil: 'networkidle' });
-  await page.click('.inv-dbs li:not([data-active]) >> text=Usar esta');
+  await useOther();
   await page.goto(`${BASE}/vault`, { waitUntil: 'networkidle' });
   check('voltando à base, o time volta', (await page.locator('text=(cópia)').count()) > 0);
 
   // 6) excluir a base leva os times dela, e só deles
   await page.goto(`${BASE}/inventario`, { waitUntil: 'networkidle' });
   page.once('dialog', (d) => d.accept());
-  await page.locator('.inv-dbs li[data-active]').locator('text=Excluir').click();
-  await page.waitForFunction(() => document.querySelectorAll('.inv-dbs li').length === 1);
+  await page.click('button[aria-label="Opções da base"]');
+  await page.getByRole('menuitem', { name: 'Excluir', exact: true }).click();
+  await page.waitForFunction(() => document.querySelectorAll('.inv-basebar').length === 1 && document.querySelector('.inv-basebar .sub')?.textContent?.includes('5 artefatos'));
   check('excluir a base apaga os times dela', (await page.evaluate((id) => localStorage.getItem('astralys:projeto:' + id), copyId)) === null);
-  check('a outra base continua', (await page.locator('.inv-dbs li').count()) === 1);
+  check('a outra base continua', (await baseCount()) === 1);
 
   await browser.close();
   console.log('\nProblemas de consola:', problems.length ? '\n' + problems.join('\n') : 'nenhum');

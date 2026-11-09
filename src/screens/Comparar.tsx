@@ -2,7 +2,7 @@
  * Comparar times (`/comparar?a=ID&b=ID`): um card 16:9 de comparação para printar e mostrar a um amigo.
  * Cada time é calculado com a própria equipe, build e rotação; a tela personaliza o que aparece no card.
  */
-import { useMemo, useRef, useState } from 'react';
+import { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { AppHeader } from '../app/AppHeader';
 import '../design/design.css';
@@ -12,6 +12,7 @@ import { compareModels } from '../features/compare/compareModel';
 import { useGameData, type LoadedData } from '../features/rotation/data';
 import { listProjects, loadProject } from '../features/rotation/persistence';
 import { COMPARE_METRICS, CompareCard, type CompareMetric } from './card/CompareCard';
+import { toast } from '../app/toast';
 import { copyCardImage, saveCardImage } from './card/copyCard';
 import { ScaledPoster } from './card/PosterCard';
 import './cardpage.css';
@@ -64,6 +65,23 @@ export default function Comparar() {
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const viewRef = useRef<HTMLDivElement>(null);
+  // Cabe na janela: o card escala para a altura que sobra abaixo da barra (mín. 900 px de largura; o que passar rola).
+  // A barra de configuração e o card usam a mesma largura, para as colunas A e B continuarem sob as metades do card.
+  const [cardW, setCardW] = useState<number | null>(null);
+  useLayoutEffect(() => {
+    const measure = () => {
+      const el = viewRef.current;
+      if (!el || window.innerWidth <= 1000) return setCardW(null);
+      const top = el.getBoundingClientRect().top + window.scrollY;
+      const avail = window.innerHeight - top - 12;
+      setCardW(Math.round(Math.min(1600, Math.max(900, (avail * 16) / 9), window.innerWidth - 48)));
+    };
+    measure();
+    window.addEventListener('resize', measure);
+    const ro = new ResizeObserver(measure);
+    ro.observe(document.body);
+    return () => { window.removeEventListener('resize', measure); ro.disconnect(); };
+  }, []);
 
   const set = (key: 'a' | 'b', value: string) => {
     const next = new URLSearchParams(params);
@@ -88,9 +106,9 @@ export default function Comparar() {
     try {
       if (kind === 'copy') await copyCardImage(el, 'wide');
       else await saveCardImage(el, 'wide', 'astralys-comparacao');
-      setMsg({ ok: true, text: kind === 'copy' ? 'Imagem copiada.' : 'Imagem salva.' });
+      toast(kind === 'copy' ? 'Imagem copiada.' : 'Imagem salva.');
     } catch (e) {
-      setMsg({ ok: false, text: `Não foi possível gerar a imagem: ${e instanceof Error ? e.message : String(e)}` });
+      toast(`Não foi possível gerar a imagem: ${e instanceof Error ? e.message : String(e)}`, 'error');
     } finally {
       setBusy(false);
     }
@@ -110,7 +128,7 @@ export default function Comparar() {
     <div className="dz">
       <AppHeader />
       <main className="dz-page">
-        <section className="dz-pagehead">
+        <section className="dz-pagehead cp-head">
           <div className="titles">
             <h1 className="h1">Comparar times</h1>
             <span className="muted">Escolha dois times, personalize e copie a imagem para mostrar.</span>
@@ -118,7 +136,7 @@ export default function Comparar() {
           <div className="actions"><Link className="dz-btn" to="/vault">Times</Link></div>
         </section>
 
-        <div className="cd-layout cp-layout">
+        <div className="cd-layout cp-layout" style={cardW ? { ['--cp-w' as string]: `${cardW}px` } : undefined}>
           <aside className="dz-panel cp-bar" aria-label="Personalizar a comparação">
             <div className="cp-cols">
               <div className="cp-grp cp-a">
@@ -166,7 +184,7 @@ export default function Comparar() {
             {[a, b].map((m, i) => (m && !isModel(m) ? <p key={i} className="dz-error" role="alert">{i === 0 ? 'A' : 'B'}: {m.error}</p> : null))}
             {cmp && isModel(a) && isModel(b) ? (
               <div className="cp-stage">
-                <ScaledPoster format="wide">
+                <ScaledPoster format="wide" maxHeight={cardW ? Math.round((cardW * 9) / 16) : undefined}>
                   <CompareCard a={a} b={b} cmp={cmp} opts={{ titleA: titleA.trim() || a.title, titleB: titleB.trim() || b.title, accentA, accentB, metrics, showGear, showBars, note: note.trim() }} />
                 </ScaledPoster>
               </div>

@@ -25,7 +25,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   const cards = () => page.locator('.vt-card');
   // "Novo time" abre o passo a passo: escolhe a Citlali, mantém o build padrão e a rotação básica.
   const createTeam = async (name) => {
-    await page.click('button:has-text("Novo time")');
+    await page.click('button[aria-label="Adicionar time"]'); await page.click('.vt-opt:has-text("Novo time")');
     await page.waitForURL('**/novo');
     await page.click('button[aria-label="Escolher o personagem 1"]');
     await page.waitForSelector('.dz-dialog');
@@ -40,7 +40,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   // O Vault só mostra os cards: as ações ficam nos menus (⋯ de cada card e "Importar e sincronizar" no topo).
   const openCardMenu = (card) => card.locator('button[aria-haspopup="menu"]').click();
   const pickCard = async (card, item) => { await openCardMenu(card); await card.getByRole('menuitem', { name: item, exact: true }).click(); };
-  const openHeaderMenu = () => page.click('.dz-pagehead button[aria-haspopup="menu"]');
+  const openHeaderMenu = () => page.click('button[aria-label="Configurações"]');
   const pickHeader = async (item) => { await openHeaderMenu(); await page.getByRole('menuitem', { name: item, exact: true }).click(); };
 
   await page.goto(`${BASE}/vault`, { waitUntil: 'networkidle' });
@@ -57,17 +57,17 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   // Copiar o card pelo menu ⋯
   await openCardMenu(cards().first());
   await cards().first().getByRole('menuitem', { name: 'Copiar card', exact: true }).click();
-  await page.waitForSelector('.vt-notice:has-text("copiado")', { timeout: 60000 });
+  await page.waitForSelector('.dz-toast:has-text("copiado")', { timeout: 60000 });
   check('o menu ⋯ copia o card do time (aviso "copiado")', true);
   // Escolher o card que a tela Times mostra: vale para TODOS os times de uma vez
   const all = async (cls) => (await page.locator('.vt-card').count()) === (await page.locator(`.vt-card .pc.${cls}`).count());
-  await page.click('.vt-cardpick button:has-text("16:9")'); await page.waitForTimeout(900);
+  await page.click('button[aria-label="Configurações"]'); await page.click('.dz-settings button:has-text("16:9")'); await page.keyboard.press('Escape'); await page.waitForTimeout(900);
   check('o seletor da tela Times troca o card de todos os times para 16:9', (await all('pc-wide')) && (await page.locator('.vt-card .pc.pc-portrait').count()) === 0);
   await page.reload({ waitUntil: 'networkidle' }); await page.waitForSelector('.vt-card .pc');
   check('a escolha do card sobrevive ao recarregar', await all('pc-wide'));
-  await page.click('.vt-cardpick button:has-text("9:16")'); await page.waitForTimeout(900);
+  await page.click('button[aria-label="Configurações"]'); await page.click('.dz-settings button:has-text("9:16")'); await page.keyboard.press('Escape'); await page.waitForTimeout(900);
   check('também aceita o 9:16', await all('pc-tall'));
-  await page.click('.vt-cardpick button:has-text("4:5")'); await page.waitForTimeout(900);
+  await page.click('button[aria-label="Configurações"]'); await page.click('.dz-settings button:has-text("4:5")'); await page.keyboard.press('Escape'); await page.waitForTimeout(900);
   check('e volta ao 4:5', await all('pc-portrait'));
   check('o card cabe na largura do cartão (miniatura escalada)', await page.evaluate(() => { const c = document.querySelector('.vt-card'); const p = document.querySelector('.vt-card .pc-box'); return !!c && !!p && p.getBoundingClientRect().width <= c.getBoundingClientRect().width + 1; }));
 
@@ -98,9 +98,9 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   check('o cartão não tem botões soltos, só o card, o favorito e o menu', (await cards().first().locator('button').count()) === 2 && (await cards().first().locator('a').count()) === 1);
   check('o título aparece uma vez só (dentro do card)', (await cards().first().locator('h1').count()) === 1);
   await openHeaderMenu();
-  check('o menu do topo reúne importar e sincronizar', (await page.getByRole('menuitem').count()) >= 2);
+  check('o menu de configurações do cabeçalho abre', (await page.locator('.dz-settings').count()) === 1);
   await page.keyboard.press('Escape');
-  check('Esc fecha o menu', (await page.getByRole('menuitem').count()) === 0);
+  check('Esc fecha o menu', (await page.locator('.dz-settings').count()) === 0);
 
   // Duplicar, renomear, apagar
   await pickCard(cards().first(), 'Duplicar'); await settle();

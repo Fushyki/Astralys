@@ -1,59 +1,75 @@
 /** Bases de dados do inventário (como no Genshin Optimizer) e a prévia da importação: novos, atualizados, iguais e fora do arquivo. */
+import { toast } from '../../app/toast';
 import { useMemo, useState } from 'react';
 import { DEFAULT_IMPORT, applyImport, diffGood, summarize, type ImportOptions } from '../../features/good/goodDiff';
 import type { Good } from '../../features/good/goodImport';
 import { deleteStoredProject, projectIdsOfDatabase } from '../../features/rotation/persistence';
 import { createDatabase, deleteDatabase, listDatabases, loadDatabase, renameDatabase, saveGood, setActiveDatabase, type DatabaseInfo } from '../../features/good/goodStore';
+import { Menu } from '../../design/Menu';
 import { formatInt } from '../../ui/format';
 
 const when = (iso: string) => new Date(iso).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'medium' });
 
-export function DatabaseList({ activeId, onChange }: { activeId: string | null; onChange: () => void }) {
+export const EMPTY_GOOD: Good = { format: 'GOOD', source: 'Astralys', characters: [], weapons: [], artifacts: [] };
+
+/** Barra da base em uso: mostra só a base atual e troca de base por um menu (renomear, exportar, excluir e nova base ficam nele). */
+export function BaseBar({ activeId, onChange }: { activeId: string | null; onChange: () => void }) {
   const list = listDatabases();
-  const [editing, setEditing] = useState<string | null>(null);
+  const [editing, setEditing] = useState(false);
   const [name, setName] = useState('');
   if (list.length === 0) return null;
-  const download = (d: DatabaseInfo) => {
-    const g = loadDatabase(d.id);
+  const active = list.find((d) => d.id === activeId) ?? list[0];
+  const exportActive = () => {
+    const g = loadDatabase(active.id);
     if (!g) return;
     const a = document.createElement('a');
     a.href = URL.createObjectURL(new Blob([JSON.stringify(g)], { type: 'application/json' }));
-    a.download = `${d.name.replace(/[^\w.-]+/g, '_')}.GOOD.json`;
+    a.download = `${active.name.replace(/[^\w.-]+/g, '_')}.GOOD.json`;
     a.click();
     URL.revokeObjectURL(a.href);
+    toast(`Base exportada: ${a.download}`);
+  };
+  const remove = () => {
+    const teams = projectIdsOfDatabase(active.id);
+    if (!window.confirm(`Excluir a base "${active.name}" e ${teams.length === 1 ? 'o time' : `os ${teams.length} times`} dela? As outras bases não mudam.`)) return;
+    teams.forEach(deleteStoredProject);
+    deleteDatabase(active.id);
+    toast(`Base "${active.name}" excluída.`);
+    onChange();
   };
   return (
-    <section className="inv-dbs" aria-label="Bases de dados">
-      <h2 className="inv-h">Bases de dados</h2>
-      <ul>
-        {list.map((d) => (
-          <li key={d.id} data-active={d.id === activeId ? '' : undefined}>
-            <div className="who">
-              {editing === d.id ? (
-                <input
-                  className="dz-input"
-                  autoFocus
-                  value={name}
-                  maxLength={40}
-                  aria-label="Nome da base"
-                  onChange={(e) => setName(e.target.value)}
-                  onBlur={() => { renameDatabase(d.id, name); setEditing(null); onChange(); }}
-                  onKeyDown={(e) => e.key === 'Enter' && e.currentTarget.blur()}
-                />
-              ) : (
-                <b className="nm">{d.name}{d.id === activeId && <i className="on">em uso</i>}</b>
-              )}
-              <span className="num sub">{formatInt(d.characters)} personagens · {formatInt(d.artifacts)} artefatos · {formatInt(d.weapons)} armas · {when(d.updatedAt)}</span>
-            </div>
-            <div className="acts">
-              {d.id !== activeId && <button type="button" className="dz-btn" onClick={() => { setActiveDatabase(d.id); onChange(); }}>Usar esta</button>}
-              <button type="button" className="dz-btn" onClick={() => { setName(d.name); setEditing(d.id); }}>Renomear</button>
-              <button type="button" className="dz-btn" onClick={() => download(d)} title="Baixa a base como arquivo GOOD (.json)">Exportar</button>
-              <button type="button" className="dz-btn" onClick={() => { const teams = projectIdsOfDatabase(d.id); if (window.confirm(`Excluir a base "${d.name}" e ${teams.length === 1 ? 'o time' : `os ${teams.length} times`} dela? As outras bases não mudam.`)) { teams.forEach(deleteStoredProject); deleteDatabase(d.id); onChange(); } }}>Excluir</button>
-            </div>
-          </li>
-        ))}
-      </ul>
+    <section className="inv-basebar" aria-label="Base de dados em uso">
+      <span className="k">Base em uso</span>
+      {editing ? (
+        <input className="dz-input" autoFocus value={name} maxLength={40} aria-label="Nome da base" onChange={(e) => setName(e.target.value)}
+          onBlur={() => { renameDatabase(active.id, name); setEditing(false); onChange(); }} onKeyDown={(e) => { if (e.key === 'Enter') e.currentTarget.blur(); if (e.key === 'Escape') setEditing(false); }} />
+      ) : (
+        <Menu label={<><b className="nm">{active.name}</b><i aria-hidden="true">▾</i></>} ariaLabel="Trocar de base" className="inv-basebtn" align="left">
+          {(close) => (
+            <>
+              {list.map((d) => (
+                <button key={d.id} type="button" role="menuitem" className="dz-menu-item inv-baseitem" aria-current={d.id === active.id ? 'true' : undefined}
+                  onClick={() => { close(); if (d.id !== active.id) { setActiveDatabase(d.id); toast(`Base "${d.name}" em uso.`); onChange(); } }}>
+                  <b>{d.name}</b>
+                  <small className="num">{formatInt(d.artifacts)} artefatos · {formatInt(d.weapons)} armas · {formatInt(d.characters)} personagens</small>
+                </button>
+              ))}
+              <hr className="inv-sep" />
+              <button type="button" role="menuitem" className="dz-menu-item" onClick={() => { close(); const id = createDatabase(`Base ${list.length + 1}`, EMPTY_GOOD); if (id) { setActiveDatabase(id); toast('Base nova criada e em uso.'); onChange(); } }}>＋ Nova base vazia</button>
+            </>
+          )}
+        </Menu>
+      )}
+      <span className="num sub">{formatInt(active.characters)} personagens · {formatInt(active.artifacts)} artefatos · {formatInt(active.weapons)} armas · {when(active.updatedAt)}</span>
+      <Menu label="⋯" ariaLabel="Opções da base" className="dz-iconbtn">
+        {(close) => (
+          <>
+            <button type="button" role="menuitem" className="dz-menu-item" onClick={() => { close(); setName(active.name); setEditing(true); }}>Renomear</button>
+            <button type="button" role="menuitem" className="dz-menu-item" onClick={() => { close(); exportActive(); }} title="Baixa a base como arquivo GOOD (.json)">Exportar</button>
+            <button type="button" role="menuitem" className="dz-menu-item danger" onClick={() => { close(); remove(); }}>Excluir</button>
+          </>
+        )}
+      </Menu>
     </section>
   );
 }

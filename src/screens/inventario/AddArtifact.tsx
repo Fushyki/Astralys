@@ -12,6 +12,7 @@ import type { Good, GoodArtifact } from '../../features/good/goodImport';
 import { activeDatabaseId, listDatabases, loadGood, saveGood } from '../../features/good/goodStore';
 import { MAIN_LABEL, SUB_LABEL } from '../../features/good/labels';
 import { EMPTY_GOOD } from './Bases';
+import '../inventario.css';
 
 const SLOTS: { value: SlotKey; label: string }[] = [
   { value: 'flower', label: 'Flor' }, { value: 'plume', label: 'Pluma' }, { value: 'sands', label: 'Areia' }, { value: 'goblet', label: 'Cálice' }, { value: 'circlet', label: 'Tiara' },

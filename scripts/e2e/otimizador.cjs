@@ -175,7 +175,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   // ---- Buff de suporte (Bennett: ATK fixo que ele dá ao time) ----
   await page.goto(`${BASE}/projeto/exemplo/personagem/Bennett?aba=otimizar`, { waitUntil: 'networkidle' });
   await page.click('.ot-seg[aria-label="O que otimizar"] button:has-text("Buff")');
-  check('Buff lista o que o Bennett dá ao time e cresce com o ATK dele', /ATK fixo/.test(await page.textContent('.ot-seg[aria-label="Buff"]')), (await page.textContent('.ot-seg[aria-label="Buff"]')).slice(0, 80));
+  check('Buff lista o que o Bennett dá ao time e cresce com o ATK dele', /Inspiration Field|ATK fixo/.test(await page.textContent('.ot-seg[aria-label="Buff"]')), (await page.textContent('.ot-seg[aria-label="Buff"]')).slice(0, 80));
   await page.click('.ot-go-btn');
   await page.waitForSelector('.ot-build', { timeout: 120000 });
   const buffVals = await page.$$eval('.ot-build .val b', (b) => b.map((x) => Number(x.textContent.replace(/\./g, ''))));

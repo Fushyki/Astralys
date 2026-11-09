@@ -76,6 +76,8 @@ export interface RotationState {
   setSourceEnabled: (id: string, enabled: boolean) => void;
   setElementMode: (mode: RotationProject['elementMode']) => void;
   setBuff: (toggle: ops.BuffToggle, enabled: boolean) => void;
+  /** Liga ou desliga a habilidade de quem dá o buff, para todos que o recebem. */
+  setGivenBuff: (baseId: string, gear: boolean, enabled: boolean) => void;
   /** Grava a configuração da calculadora de recarga (`meta.energy`), sem entrar no desfazer. */
   setEnergy: (next: RotationProject) => void;
 
@@ -238,6 +240,7 @@ export const useRotationStore = create<RotationState>((set, get) => {
     updateConfig: (patch) => commit(get().project && ops.updateConfig(get().project!, patch)),
     setSourceEnabled: (id, enabled) => commit(get().project && ops.setSourceEnabled(get().project!, id, enabled)),
     setBuff: (toggle, enabled) => commit(get().project && ops.setBuffEnabled(get().project!, toggle, enabled)),
+    setGivenBuff: (baseId, gear, enabled) => commit(get().project && ops.setGivenBuffEnabled(get().project!, baseId, gear, enabled)),
     setElementMode: (mode) => commit(get().project && ops.setElementMode(get().project!, mode)),
 
     updateMember: (index, patch) => commit(get().project && team.updateMember(get().project!, index, patch)),

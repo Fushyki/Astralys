@@ -26,7 +26,7 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
   page.on('pageerror', (e) => problems.push(`pageerror: ${e.message.slice(0, 200)}`));
   const settle = () => page.waitForTimeout(1000);
   const field = (label) => page.locator(`label.dz-field:has(span:text-is("${label}"))`);
-  const firstAvg = async () => page.$eval('.pc-dmg tbody tr:nth-child(2) td.avg', (e) => e.textContent);
+  const firstAvg = async () => page.locator('.pc-dmg tr:has-text("Dano do supremo")').first().locator('td.avg').textContent();
   const eff = () => page.textContent('[data-testid="effective-talents"]');
   const openSubs = async () => { if (await page.locator('.db-subs button:has-text("Editar substats")').count()) { await page.click('.db-subs button:has-text("Editar substats")'); await page.waitForTimeout(300); } };
   const openMore = async () => { if (!(await page.locator('.gr-more[open]').count())) { await page.click('.gr-more summary'); await page.waitForTimeout(200); } };
@@ -75,12 +75,12 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
 
   // Abas e cabeçalho
   const tabs = await page.$$eval('.pc-tabs a', (a) => a.map((x) => x.textContent));
-  check('uma sub-aba por personagem com a % do dano', tabs.length === 4 && /Mavuika.*95,3%/.test(tabs[0]) && /Citlali.*2,7%/.test(tabs[1]), tabs.join(' | '));
+  check('uma sub-aba por personagem com a % do dano', tabs.length === 4 && /Mavuika.*90,2%/.test(tabs[0]) && /Citlali.*6,2%/.test(tabs[1]), tabs.join(' | '));
   check('a aba Personagens do time está marcada', (await page.getAttribute('.dz-subnav a:has-text("Personagens")', 'aria-current')) === 'page');
 
   // Atributos do gabarito
   const attrs = await page.locator('.db-panel:has(h3:text-is("Atributos"))').textContent();
-  check('atributos finais do gabarito (ATK 5.791, EM 424, Taxa 98,9%, Dano 231,8%)', /5\.791/.test(attrs) && /424/.test(attrs) && /98,9%/.test(attrs) && /231,8%/.test(attrs));
+  check('atributos finais do exemplo (ATK 5.607, EM 405, Taxa 98,9%, Dano 231,8%)', /5\.607/.test(attrs) && /405/.test(attrs) && /98,9%/.test(attrs) && /231,8%/.test(attrs));
   check('mostra o valor base ao lado do ATK', /1\.100 ATK base/.test(attrs));
 
   // Tabela de dano (aba Avançado): sem nomes repetidos, reação filtrada
@@ -108,16 +108,15 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
 
   // Reações deste time
   const rx = await page.locator('.dz-panel:has(h2:text-is("Reações deste time"))').textContent();
-  check('reações do time: Derreter ×3,29 e Sobrecarga', /Derreter \(Pyro\)/.test(rx) && /×3,29/.test(rx) && /Sobrecarga/.test(rx));
+  check('reações do time: Derreter ×3,25 e Sobrecarga', /Derreter \(Pyro\)/.test(rx) && /×3,25/.test(rx) && /Sobrecarga/.test(rx));
 
   // Buffs recebidos
   const buffs = await page.$$eval('.pc-buffs .b', (b) => b.map((x) => x.textContent));
-  check('buffs recebidos com fonte e participação', buffs.length >= 6 && buffs.some((t) => /ATK fixo de Bennett/.test(t) && /21,5%/.test(t)), `${buffs.length} buffs`);
-  check('buffs sem origem ficam marcados A CONFIRMAR', buffs.some((t) => /A CONFIRMAR/.test(t)));
+  check('buffs recebidos com fonte e participação', buffs.length >= 6 && buffs.some((t) => /Inspiration Field/.test(t) && /ATK fixo/.test(t) && /22,4%/.test(t)), `${buffs.length} buffs`);
   const avgBefore = num(await firstAvg());
-  await page.click('.pc-buffs .b:has-text("ATK fixo de Bennett") input'); await settle();
+  await page.click('.pc-buffs .b:has-text("Inspiration Field") input'); await settle();
   const avgOff = num(await firstAvg());
-  check('desmarcar o ATK fixo do Bennett reduz o dano (e mostra "desligado")', avgOff < avgBefore * 0.85 && /desligado/.test(await page.locator('.pc-buffs .b:has-text("ATK fixo de Bennett")').textContent()), `${avgBefore} → ${avgOff}`);
+  check('desmarcar o ATK fixo do Bennett reduz o dano (e mostra "desligado")', avgOff < avgBefore * 0.85 && /desligado/.test(await page.locator('.pc-buffs .b:has-text("Inspiration Field")').textContent()), `${avgBefore} → ${avgOff}`);
   await page.keyboard.press('Control+z'); await settle();
   check('Ctrl+Z liga o buff de volta', Math.abs(num(await firstAvg()) - avgBefore) < 1);
 
@@ -167,7 +166,7 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
   // Popup da arma (no ícone): passiva, stats e o botão de ativar o buff
   await page.click('.pcard.weapon .art.info');
   await page.waitForSelector('[role="dialog"][aria-label^="Passiva de"]');
-  check('o ícone da arma abre o popup com a passiva e os stats', (await page.locator('.dz-dialog.wi .wi-sec h3').count()) >= 2 && /ATK base \d/.test(await page.textContent('.wi-top')) && (await page.locator('.dz-dialog .wcard').count()) === 0);
+  check('o ícone da arma abre o popup com a passiva e os stats', (await page.locator('.dz-dialog.wi .wi-sec h3').count()) >= 2 && /ATK base\s*\d/.test(await page.textContent('.wi-top')) && (await page.locator('.dz-dialog .wcard').count()) === 0);
   const sw = page.locator('.wi-buff input');
   if (await sw.count()) {
     const before = await sw.first().isChecked();

@@ -210,7 +210,7 @@ export interface ReceivedBuff {
 const NEEDS_CONFIRMATION = /origem não identificada|confirme/i;
 
 function giverOf(b: TeamBuff): number | null {
-  const m = /^(?:gear|flat-atk|cbuff)-(\d+)/.exec(b.id);
+  const m = /^(?:gear|flat-atk|cbuff)-(?:shred-)?(\d+)/.exec(b.id);
   return m ? Number(m[1]) : null;
 }
 
@@ -420,7 +420,7 @@ export function memberBuffCards(project: RotationProject, resolved: ResolvedProj
   const seen = new Set(cards.map((c) => c.id));
   for (const b of receivedBuffs(project, resolved, bundle, member)) {
     if (seen.has(b.id)) continue;
-    const idMatch = /^cbuff-(\d+)-(.+)$/.exec(b.id);
+    const idMatch = /^cbuff-(?:shred-)?(\d+)-(.+)$/.exec(b.id);
     const tag = b.id.startsWith('gear-') ? 'Arma/set' : b.id.startsWith('flat-atk-') ? 'Passiva' : idMatch ? characterBuffTag(resolved, Number(idMatch[1]), idMatch[2]) : 'Extra';
     cards.push({
       id: b.id, toggleId: b.toggleId, name: b.name, tag, giver: b.giver, giverName: b.giverName, window: b.window, chips: b.value === '—' ? [] : b.value.split(', '),
@@ -428,4 +428,65 @@ export function memberBuffCards(project: RotationProject, resolved: ResolvedProj
     });
   }
   return cards;
+}
+
+// ---------- Habilidades que o personagem DÁ (Equipe) ----------
+
+export interface GivenCard extends BuffCard {
+  /** Id do buff no motor (sem o `@Nome`): é o que o interruptor grava. */
+  baseId: string;
+  /** Quem recebe: o alcance da habilidade. */
+  scope: 'self' | 'team' | 'others' | 'some';
+  scopeLabel: string;
+  receiverNames: string[];
+}
+
+/** Alcance de um buff a partir de quem o recebe (nomes do time, `giver` = quem dá). */
+export function scopeOf(receivers: string[], all: string[], giver: string): Pick<GivenCard, 'scope' | 'scopeLabel'> {
+  const set = new Set(receivers);
+  if (set.size === 1 && set.has(giver)) return { scope: 'self', scopeLabel: 'Ele mesmo' };
+  if (all.every((n) => set.has(n))) return { scope: 'team', scopeLabel: 'Time todo' };
+  const others = all.filter((n) => n !== giver);
+  if (others.length > 0 && others.every((n) => set.has(n)) && !set.has(giver)) return { scope: 'others', scopeLabel: 'Aliados' };
+  return { scope: 'some', scopeLabel: `Para ${[...set].join(', ')}` };
+}
+
+/**
+ * Tudo que `giver` passa: o que o equipamento e as passivas dele dão a ele mesmo, aos aliados ou ao time todo. Cada habilidade vira UM
+ * cartão, qualquer que seja o número de receptores; o interruptor liga e desliga para todos.
+ */
+export function memberGivenCards(project: RotationProject, resolved: ResolvedProject, bundle: AnalysisBundle, giver: number): GivenCard[] {
+  const names = resolved.team.members.map((m) => m.character.name);
+  const byId = new Map<string, GivenCard>();
+  names.forEach((receiver, j) => {
+    for (const c of memberBuffCards(project, resolved, bundle, j)) {
+      if (c.giver !== giver) continue;
+      const baseId = c.toggleId.split('@')[0];
+      const cur = byId.get(baseId);
+      if (cur) {
+        cur.receiverNames = [...new Set([...cur.receiverNames, ...c.receivers])];
+        cur.active = cur.active || c.active;
+        continue;
+      }
+      byId.set(baseId, { ...c, baseId, toggleId: baseId, lockedOff: false, receiverNames: [...new Set(c.receivers.length ? c.receivers : [receiver])], scope: 'some', scopeLabel: '', share: null });
+    }
+  });
+  return [...byId.values()].map((c) => {
+    const baseActive = !project.disabled.includes(c.baseId) && !(c.gear && !project.enabled.includes(c.baseId));
+    return { ...c, active: baseActive && c.receiverNames.some((r) => !project.disabled.includes(`${c.baseId}@${r}`)), ...scopeOf(c.receiverNames, names, names[giver]) };
+  });
+}
+
+/** Resonância e buffs extras do projeto: não são de nenhum personagem. */
+export function teamLevelCards(project: RotationProject, resolved: ResolvedProject, bundle: AnalysisBundle): BuffCard[] {
+  const seen = new Set<string>();
+  const out: BuffCard[] = [];
+  resolved.team.members.forEach((_, j) => {
+    for (const c of memberBuffCards(project, resolved, bundle, j)) {
+      if (c.giver !== null || seen.has(c.toggleId)) continue;
+      seen.add(c.toggleId);
+      out.push(c);
+    }
+  });
+  return out;
 }

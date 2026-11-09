@@ -12,7 +12,7 @@ import type { LoadedData } from '../features/rotation/data';
 import { effectStatus } from '../features/rotation/teamInfo';
 import { weaponsFor } from '../features/rotation/teamOps';
 import { SetPickerDialog } from './personagem/SetPicker';
-import { MemberBuffs } from './equipe/MemberBuffs';
+import { GivenBuffs, TeamBuffs } from './equipe/MemberBuffs';
 import { ReactedChips } from './equipe/ReactedChips';
 import type { Element } from '../data/schema';
 import { WeaponPickerDialog } from './personagem/WeaponPicker';
@@ -209,7 +209,7 @@ export default function Equipe() {
                   <Link className="dz-btn gold" to={`/projeto/${v.id}/personagem/${encodeURIComponent(ref.character)}`}>Ajustar build</Link>
                 </div>
 
-                <MemberBuffs v={v} index={i} />
+                <GivenBuffs v={v} index={i} />
 
                 {(() => {
                   // Set que depende dos elementos com que o dono reage: Scroll (bônus de DMG) e Viridescent (redução de RES).
@@ -238,6 +238,8 @@ export default function Equipe() {
           </button>
         ))}
       </section>
+
+      <TeamBuffs v={v} />
 
       <p className="muted small" style={{ margin: 0 }}>
         Rotação de {formatDecimal(effectiveDuration(project), 1)} s com {summary.actionCount} golpes. Os papéis, os buffs e os stats vêm do cálculo do projeto.

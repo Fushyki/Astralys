@@ -106,3 +106,6 @@
 .bc-react button { min-height: var(--ctl-sm); padding: 0 var(--sp-2); border-radius: var(--r-ctl); border: 1px solid var(--border-ctl); background: var(--bg-header); color: var(--muted); font: inherit; cursor: pointer; }
 .bc-react button[aria-pressed='true'] { border-color: var(--c); color: var(--c); }
 .eq-card .react { display: flex; flex-direction: column; gap: var(--sp-2); }
+
+.eq-teambuffs { display: flex; flex-direction: column; gap: var(--sp-3, 12px); }
+.eq-teambuffs .list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--sp-3, 12px); }

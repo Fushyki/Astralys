@@ -596,3 +596,20 @@ export function pushFrom(project: RotationProject, at: number, delta: number): R
   });
   return touch({ ...project, actions, buffWindows: followAnchors(shifted, actions, moved) });
 }
+
+/**
+ * Liga ou desliga uma habilidade de quem DÁ o buff, para todos que o recebem (Equipe): limpa as escolhas por receptor
+ * (`<buff>@<Nome>`) e, no caso de arma/set (que começa desligado), liga ou tira de `enabled`.
+ */
+export function setGivenBuffEnabled(project: RotationProject, baseId: string, gear: boolean, enabled: boolean): RotationProject {
+  let disabled = project.disabled.filter((x) => x !== baseId && !x.startsWith(`${baseId}@`));
+  let on = project.enabled;
+  if (enabled) {
+    if (gear && !on.includes(baseId)) on = [...on, baseId];
+  } else {
+    disabled = [...disabled, baseId];
+    if (gear) on = on.filter((x) => x !== baseId);
+  }
+  const same = disabled.length === project.disabled.length && disabled.every((x, i) => x === project.disabled[i]) && on === project.enabled;
+  return same ? project : touch({ ...project, disabled, enabled: on });
+}

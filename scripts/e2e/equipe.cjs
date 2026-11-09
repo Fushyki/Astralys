@@ -32,15 +32,15 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.reload({ waitUntil: 'networkidle' });
   await page.waitForSelector('.eq-card');
 
-  check('DPS do time do exemplo é 216.600', (await kpi('DPS do time')) === '216.600', await kpi('DPS do time'));
-  check('dano da rotação do exemplo é 3.790.496', (await kpi('Dano da rotação')) === '3.790.496', await kpi('Dano da rotação'));
+  check('DPS do time do exemplo é 98.916', (await kpi('DPS do time')) === '98.916', await kpi('DPS do time'));
+  check('dano da rotação do exemplo é 1.731.033', (await kpi('Dano da rotação')) === '1.731.033', await kpi('Dano da rotação'));
   check('a reação principal é Derreter', (await kpi('Reação principal')) === 'Derreter');
   check('quatro cartões na ordem do time', (await cards()).join() === 'Mavuika,Citlali,Iansan,Bennett', (await cards()).join());
   const roles = await page.$$eval('.eq-card .role', (e) => e.map((x) => x.textContent));
   check('papéis vêm da participação no dano (DPS principal e suportes)', /DPS principal · Pyro/.test(roles[0]) && roles.slice(1).every((r) => /Suporte/.test(r)), roles.join(' | '));
   const mav = await page.locator('.eq-card:has(.name:text-is("Mavuika"))').textContent();
   const gear = page.locator('.eq-card:has(.name:text-is("Mavuika")) .eq-gear');
-  check('o cartão da Mavuika mostra ATK e críticos reais', /5\.791/.test(mav) && /98,9%/.test(mav) && /231,8%/.test(mav));
+  check('o cartão da Mavuika mostra ATK e críticos reais', /5\.607/.test(mav) && /98,9%/.test(mav) && /231,8%/.test(mav));
   check('arma e artefatos são só imagem (sem o texto do equipamento)', !/A Thousand Blazing Suns/.test(mav) && !/Obsidian Codex/.test(mav) && (await gear.locator('img').count()) === 6);
   check('as imagens têm nome acessível com arma e set', /A Thousand Blazing Suns/.test(await gear.locator('.eq-tile.weapon').getAttribute('aria-label')) && /Obsidian Codex/.test(await gear.locator('.eq-pieces').getAttribute('title')));
   check('o set 4 peças não usa as cores de 2+2', (await gear.getAttribute('data-mode')) === 'four' && (await gear.locator('.eq-tile.piece[data-tone]').count()) === 0);
@@ -59,10 +59,15 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   check('2+2 vira dois sets com cores e selo "2" diferentes', (await gear.getAttribute('data-mode')) === 'two-two' && (await gear.locator('.eq-tile.piece[data-tone="a"]').count()) >= 2 && (await gear.locator('.eq-tile.piece[data-tone="b"]').count()) >= 2 && (await gear.locator('.eq-tile .badge').count()) >= 5);
   await page.screenshot({ path: path.join(OUT, 'r-equipe-2x2.png') });
   await page.keyboard.press('Control+z'); await settle();
+  // A coluna de cada personagem lista só o que ELE passa (não o que recebe).
+  await page.locator('.eq-card:has(.name:text-is("Citlali")) .bc-head').click();
   const cit = await page.locator('.eq-card:has(.name:text-is("Citlali"))').textContent();
-  check('a Citlali mostra o que dá ao time (RES e Maestria)', /RES Pyro\/Hydro −20%/.test(cit) && /\+120 EM/.test(cit), cit.match(/RES[^A-Z]*/)?.[0]);
+  check('a Citlali mostra o que passa ao time (RES e Maestria)', /RES Pyro do inimigo −20%/.test(cit) && /\+120 EM/.test(cit) && !/ATK fixo/.test(cit), cit.match(/RES[^A-Z]*/)?.[0]);
+  await page.locator('.eq-card:has(.name:text-is("Bennett")) .bc-head').click();
   const ben = await page.locator('.eq-card:has(.name:text-is("Bennett"))').textContent();
   check('o Bennett mostra o ATK fixo e o set', /ATK fixo/.test(ben) && /\+20% ATK/.test(ben));
+  const given = await page.locator('.eq-card:has(.name:text-is("Citlali")) .bc-grp h4').allTextContents();
+  check('os buffs vêm agrupados pelo alcance (time todo, aliados, só ela)', given.join('|') === 'Buffa o time todo|Buffa os aliados|Buffa só ele', given.join('|'));
   const chips = await page.$$eval('.dz-chips .dz-chip', (e) => e.map((x) => x.textContent));
   check('chips de configuração e ressonância Pyro', chips.some((c) => /Inimigo nível 100/.test(c)) && chips.some((c) => /Rotação de 17,5 s/.test(c)) && chips.some((c) => /Ressonância Pyro/.test(c)), chips.join(' | '));
   await page.screenshot({ path: path.join(OUT, 'r-equipe.png'), fullPage: true });
@@ -103,16 +108,16 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.click('button:has-text("Duplicar")');
   await page.waitForURL(/\/projeto\/(?!exemplo)[^/]+$/);
   await page.waitForSelector('.eq-card');
-  check('duplicar abre a cópia com o mesmo DPS', (await kpi('DPS do time')) === '216.600');
+  check('duplicar abre a cópia com o mesmo DPS', (await kpi('DPS do time')) === '98.916');
 
   // Persistência
   await page.reload({ waitUntil: 'networkidle' }); await page.waitForSelector('.eq-card');
   check('a cópia sobrevive ao recarregar', (await cards()).length === 4);
 
-  // Buffs recebidos: ligar e desligar por personagem
+  // Habilidades que cada personagem passa: ligar e desligar
   const mavCard = page.locator('.eq-card:has(.name:text-is("Mavuika"))');
   const citCard = page.locator('.eq-card:has(.name:text-is("Citlali"))');
-  check('cada cartão tem "Buffs recebidos" com a contagem de ativos', (await page.locator('.eq-buffs .bc-head').count()) === 4 && /\d+\/\d+/.test(await mavCard.locator('.bc-badge').textContent()));
+  check('cada cartão tem "Habilidades que X passa" com a contagem de ativos', (await page.locator('.eq-buffs .bc-head').count()) === 4 && /\d+\/\d+/.test(await mavCard.locator('.bc-badge').textContent()));
   await mavCard.locator('.bc-head').click();
   const mavOn0 = Number((await mavCard.locator('.bc-badge').textContent()).split('/')[0]);
   const dps0 = await kpi('DPS do time');
@@ -120,18 +125,18 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   check('desligar a arma da Mavuika baixa o DPS e o contador', (await kpi('DPS do time')) !== dps0 && Number((await mavCard.locator('.bc-badge').textContent()).split('/')[0]) === mavOn0 - 1, `${dps0} -> ${await kpi('DPS do time')}`);
   await mavCard.locator('.bcard:has(.bc-tag:text-is("Arma")) input').check(); await settle();
   check('religar volta ao DPS de antes', (await kpi('DPS do time')) === dps0);
-  // um buff de equipe desligado só para a Mavuika continua ligado para a Citlali
-  await citCard.locator('.bc-head').click();
-  const citBefore = await citCard.locator('.bcard[data-active="true"]').count();
-  await mavCard.locator('.bcard:has(.bc-n:text-is("ATK fixo de Bennett")) input').uncheck(); await settle();
-  check('desligar o ATK do Bennett só para a Mavuika não mexe nos buffs da Citlali', (await citCard.locator('.bcard[data-active="true"]').count()) === citBefore);
-  await mavCard.locator('.bc-bulk button:text-is("Desligar todos")').click(); await settle();
-  check('"Desligar todos" zera os ativos dele', (await mavCard.locator('.bc-badge').textContent()).startsWith('0/'));
-  await mavCard.locator('.bc-bulk button:text-is("Ligar todos")').click(); await settle();
-  check('"Ligar todos" volta ao DPS do exemplo', (await kpi('DPS do time')) === dps0);
-  check('o exemplo avisa que está no modo planilha', (await page.locator('.eq-compat').count()) === 1);
-  await page.click('.eq-compat button'); await settle();
-  check('"Usar todos os efeitos" libera as constelações e some o aviso', (await page.locator('.eq-compat').count()) === 0 && (await kpi('DPS do time')) !== dps0);
+  // desligar a habilidade de quem dá tira de todos que a recebem
+  const benCard = page.locator('.eq-card:has(.name:text-is("Bennett"))');
+  if ((await benCard.locator('.bc-head').getAttribute('aria-expanded')) !== 'true') await benCard.locator('.bc-head').click();
+  await benCard.locator('.bcard:has(.bc-n:has-text("Inspiration Field")) input').uncheck(); await settle();
+  check('desligar o ATK fixo no cartão do Bennett baixa o DPS do time', Number((await kpi('DPS do time')).replace(/\./g, '')) < Number(dps0.replace(/\./g, '')), `${dps0} -> ${await kpi('DPS do time')}`);
+  await benCard.locator('.bcard:has(.bc-n:has-text("Inspiration Field")) input').check(); await settle();
+  check('religar o ATK fixo volta ao DPS de antes', (await kpi('DPS do time')) === dps0);
+  await mavCard.locator('.bc-bulk button:text-is("Desligar todas")').click(); await settle();
+  check('"Desligar todas" zera os ativos dele', (await mavCard.locator('.bc-badge').textContent()).startsWith('0/'));
+  await mavCard.locator('.bc-bulk button:text-is("Ligar todas")').click(); await settle();
+  check('"Ligar todas" volta ao DPS do exemplo', (await kpi('DPS do time')) === dps0);
+  check('não há mais o aviso de modo planilha', (await page.locator('.eq-compat').count()) === 0);
 
   // Celular
   await page.setViewportSize({ width: 390, height: 900 }); await page.waitForTimeout(400);

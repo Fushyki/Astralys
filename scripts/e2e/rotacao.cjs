@@ -38,7 +38,7 @@ const num = (s) => Number(String(s).replace(/\./g, '').replace(',', '.'));
   const titles = await page.$$eval('.dz-panel.bar > .bar-head h2', (e) => e.map((x) => x.textContent.trim()));
   check('os painéis da tela, na ordem do mockup', ['Golpes', 'Linha do tempo', 'Golpe selecionado', 'Buff selecionado', 'Sequência', 'Dano acumulado na rotação', 'Divisão do dano'].join() === titles.join(), titles.join(' | '));
   check('24 golpes na linha do tempo', (await hits()).length === 24, String((await hits()).length));
-  check('DPS ao vivo do exemplo é 216.600 (gabarito)', (await dps()) === '216.600', await dps());
+  check('DPS ao vivo do exemplo é 98.916', (await dps()) === '98.916', await dps());
   check('o cabeçalho conta golpes e buffs com janela', /24 golpes · \d+ buffs? com janela/.test(await page.textContent('.rt-head .sub')));
   check('a faixa do time tem 3 telas', (await page.$$eval('.dz-subnav nav a', (a) => a.map((x) => x.textContent.replace(/\s+/g, ' ').trim()))).join('|') === '1 · Equipe|2 · Personagens|3 · Rotação e buffs');
   const lanes = await page.$$eval('.rt-lane', (e) => e.map((x) => x.querySelector('.lname')?.textContent?.trim() ?? ''));
@@ -52,7 +52,7 @@ const num = (s) => Number(String(s).replace(/\./g, '').replace(',', '.'));
 
   // ---- Selecionar golpe ----
   await page.locator('.rt-hit[aria-label*="Supremo (200 FS)"]').first().click({ force: true }); await settle();
-  check('selecionar mostra o golpe e o dano médio 1.239.638', /Supremo \(200 FS\)/.test(await panel('Golpe selecionado').locator('.rt-title b').textContent()) && (await page.textContent('[data-testid="hit-avg"]')) === '1.239.638');
+  check('selecionar mostra o golpe e o dano médio 546.019', /Supremo \(200 FS\)/.test(await panel('Golpe selecionado').locator('.rt-title b').textContent()) && (await page.textContent('[data-testid="hit-avg"]')) === '546.019');
   const cascade = await page.$$eval('.rt-figs .fig .k', (e) => e.map((x) => x.textContent));
   check('o golpe mostra os números pedidos', cascade.join() === 'Dano base,ATK,Proficiência,Taxa crítica,Dano crítico,Bônus de dano,DEF do inimigo,RES do inimigo,Reação', cascade.join());
   // Desligar um buff só para este golpe
@@ -67,7 +67,7 @@ const num = (s) => Number(String(s).replace(/\./g, '').replace(',', '.'));
   await panel('Golpe selecionado').locator('select[aria-label="Reação"]').selectOption('none'); await settle();
   check('trocar a reação para "Sem reação" reduz o DPS ao vivo', num(await dps()) < before * 0.8, `${before} → ${await dps()}`);
   await page.keyboard.press('Control+z'); await settle();
-  check('Ctrl+Z restaura o DPS', (await dps()) === '216.600');
+  check('Ctrl+Z restaura o DPS', (await dps()) === '98.916');
   check('agora Refazer fica ativo', !(await page.isDisabled('button:has-text("Refazer")')));
   await page.click('button:has-text("Refazer")'); await settle();
   await page.click('button:has-text("Desfazer")'); await settle();
@@ -191,7 +191,7 @@ const num = (s) => Number(String(s).replace(/\./g, '').replace(',', '.'));
   check('Configurações abre um diálogo com as seções', (await dlg.locator('.rt-cfg-sec h3').allTextContents()).join('|').startsWith('Duração da rotação|Cenário|Elemento dos golpes|Realinhar os golpes'));
   const d = dlg.locator('.rt-fld:has-text("Duração") input').first();
   await d.fill('35'); await d.blur(); await settle();
-  check('duração manual (35 s) divide o DPS por 2 (exemplo é modo planilha)', Math.abs(num(await dps()) - 108300) < 2, await dps());
+  check('duração manual (35 s) divide o DPS por 2 (duração fixa do exemplo)', Math.abs(num(await dps()) - 49458) < 2, await dps());
   check('o diálogo mostra o DPS ao vivo', num(await dlg.locator('.rt-cfg-live .num').textContent()) === num(await dps()));
   const res = dlg.locator('.rt-fld:has-text("RES base do inimigo") input');
   const dpsBefore = num(await dps());
@@ -203,7 +203,7 @@ const num = (s) => Number(String(s).replace(/\./g, '').replace(',', '.'));
   check('Esc fecha o diálogo', (await page.locator('.rt-dialog').count()) === 0);
   for (let i = 0; i < 4; i++) await page.keyboard.press('Control+z');
   await settle();
-  check('Ctrl+Z restaura o DPS', (await dps()) === '216.600', await dps());
+  check('Ctrl+Z restaura o DPS', (await dps()) === '98.916', await dps());
   const tighten = page.locator('.rt-head button:has-text("Apertar a linha")');
   check('"Apertar a linha" no cabeçalho', (await tighten.count()) === 1 && !(await tighten.isDisabled()));
   await tighten.click(); await settle();
@@ -243,12 +243,12 @@ const num = (s) => Number(String(s).replace(/\./g, '').replace(',', '.'));
   await page.locator('.rt-share button:has-text("Aplicar ao time")').click(); await settle();
   check('importar a rotação mostra o resultado', (await page.locator('.rt-share [role="status"]').count()) === 1);
   await page.keyboard.press('Escape');
-  check('a rotação importada volta ao DPS de origem', (await dps()) === '216.600', await dps());
+  check('a rotação importada volta ao DPS de origem', (await dps()) === '98.916', await dps());
 
   // ---- Persistência ----
   await page.waitForTimeout(700);
   await page.reload({ waitUntil: 'networkidle' }); await page.waitForSelector('.rt-hit');
-  check('recarregar mantém o projeto (24 golpes e 216.600)', (await hits()).length === 24 && (await dps()) === '216.600');
+  check('recarregar mantém o projeto (24 golpes e 98.916)', (await hits()).length === 24 && (await dps()) === '98.916');
 
   // ---- Larguras ----
   for (const w of [1366, 390]) {

@@ -135,15 +135,8 @@ export function ManualBuild({ member, rolls, element, sets, onChange }: {
 
         {pieces.length === 0 ? (
           <div className="ot-mnote">
-            <h3 className="ot-mh">O que o KQM calcula</h3>
-            <p className="small">Um build ideal e genérico, sem artefatos reais. Em vez de peças, o motor tem um orçamento de procs: {ROLLS_PER_PIECE[0]} por peça × 5 = {ROLLS_PER_PIECE[0] * 5} (5★ no +20). Cada substat aceita no máximo {MAX_ROLLS_PER_SUBSTAT[0]} procs por peça.</p>
-            <ul className="small ot-mlist">
-              <li><b>Recarga primeiro:</b> se você definiu uma Recarga mínima, os procs necessários vão para ela antes de tudo.</li>
-              <li><b>Depois, o dano do time:</b> os procs que sobram vão para os substats que mais aumentam o dano da rotação (crítico, ATK%, Maestria…), um a um, sempre no que rende mais.</li>
-              <li><b>Valor de cada proc:</b> a média do KQM (85% do máximo do substat), igual para todo mundo.</li>
-              <li><b>Set e stats principais</b> vêm da aba Resumo e build; a tabela ao lado é só o que sobra para os substats.</li>
-            </ul>
-            <p className="muted small">Por quê: é o padrão da comunidade (KQM Standards) para comparar personagens e times sem depender do inventário de cada jogador. O total pode ficar abaixo de {ROLLS_PER_PIECE[0] * 5} quando o motor não acha mais proveito em gastar procs.</p>
+            <h3 className="ot-mh">Por que está travado</h3>
+            <p className="small">No KQM não há artefatos reais: o motor reparte {ROLLS_PER_PIECE[0] * 5} procs (9 por peça) nos substats que mais aumentam o dano do time, depois de garantir a Recarga mínima. Cada proc vale 85% do máximo, igual para todos, para comparar sem depender do inventário. Para escolher os procs, use Manual.</p>
             {!member.primarySet && <p className="note">Escolha o set em Resumo e build para montar as peças à mão.</p>}
           </div>
         ) : (

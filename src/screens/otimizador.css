@@ -338,7 +338,7 @@ button.ot-ch[aria-pressed='true'] b { color: var(--gold-hi); }
 .crit-excess { margin-left: var(--sp-2); font-style: normal; white-space: nowrap; }
 
 /* Alvo Manual: tabela de substats (Status, Procs, Valor) e as 5 peças feitas à mão */
-.ot-manualwrap { grid-column: 1 / -1; display: flex; }
+.ot-manualwrap { grid-column: span 2; display: flex; }
 .ot-manualwrap > * { flex: 1; min-width: 0; }
 @media (max-width: 1100px) { .ot-manualwrap { grid-column: auto; } }
 .ot-mb { display: grid; grid-template-columns: minmax(250px, 340px) minmax(0, 1fr); gap: var(--sp-4, 16px); align-items: start; }

@@ -4,14 +4,17 @@ import { Link, useNavigate } from 'react-router-dom';
 import { AppHeader } from '../app/AppHeader';
 import '../design/design.css';
 import { elementColor } from '../design/elements';
-import { CharacterAvatar, Segmented } from '../design/primitives';
+import { CharacterAvatar } from '../design/primitives';
+import { formatInt } from '../ui/format';
 import { useGameData } from '../features/rotation/data';
-import { downloadProject, importJson, importXlsx, type ImportResult } from '../features/rotation/importFile';
-import { SAMPLE_ID, cloneProject, deleteStoredProject, listProjects, loadProject, loadVaultCardFormat, saveProject, saveVaultCardFormat, sampleForApp } from '../features/rotation/persistence';
+import { downloadProject, importJson, withoutDuplicates, type ImportResult } from '../features/rotation/importFile';
+import { projectFromLink, projectLink } from '../features/rotation/projectLink';
+import { SAMPLE_ID, cloneProject, deleteStoredProject, listProjects, loadProject, saveProject, sampleForApp } from '../features/rotation/persistence';
 import { useProjectCards } from '../features/rotation/useProjectCards';
 import { Menu } from '../design/Menu';
+import { useSettings } from '../app/settings';
 import { copyCardImage } from './card/copyCard';
-import { POSTER_LABEL, POSTER_SIZE, PosterCard, ScaledPoster, type PosterFormat } from './card/PosterCard';
+import { POSTER_SIZE, PosterCard, ScaledPoster } from './card/PosterCard';
 import { deleteRemote } from '../online/api';
 import { ONLINE_ENABLED } from '../online/config';
 import { useSession } from '../online/session';
@@ -32,7 +35,6 @@ export default function Vault() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [notes, setNotes] = useState<string[]>([]);
-  const xlsxInput = useRef<HTMLInputElement>(null);
   const jsonInput = useRef<HTMLInputElement>(null);
 
   const refresh = () => setItems(listProjects());
@@ -43,6 +45,17 @@ export default function Vault() {
 
   const visible = useMemo(() => filterProjects(items, filters, elementOf), [items, filters, characters]);
   const allCharacters = useMemo(() => [...new Set(items.flatMap((p) => p.members))].sort(), [items]);
+  const summary = useMemo(() => {
+    let best: { name: string; dps: number } | null = null;
+    for (const p of visible) {
+      const m = cards[p.id];
+      if (m && m !== 'error' && (!best || m.dps > best.dps)) best = { name: p.name, dps: m.dps };
+    }
+    const uses = new Map<string, number>();
+    for (const p of visible) for (const n of p.members) uses.set(n, (uses.get(n) ?? 0) + 1);
+    const top = [...uses].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).slice(0, 8);
+    return { best, top, favorites: visible.filter((p) => p.favorite).length };
+  }, [visible, cards]);
   const set = (patch: Partial<VaultFilters>) => setFilters((f) => ({ ...f, ...patch }));
 
   const edit = (id: string, fn: (p: NonNullable<ReturnType<typeof loadProject>>) => ReturnType<typeof loadProject>) => {
@@ -52,16 +65,8 @@ export default function Vault() {
     refresh();
   };
   const toggleFavorite = (id: string) => edit(id, (p) => ({ ...p, meta: { ...p.meta, favorite: !p.meta.favorite, updatedAt: new Date().toISOString() } }));
-  const [cardFormat, setCardFormatState] = useState<PosterFormat>(loadVaultCardFormat);
-  const setCardFormat = (f: PosterFormat) => { setCardFormatState(f); saveVaultCardFormat(f); };
+  const cardFormat = useSettings((s) => s.cardFormat);
   const [notice, setNotice] = useState<string | null>(null);
-  /** Altura da janela: o card 9:16 não pode passar dela (senão a primeira linha fica cortada no fim da tela). */
-  const [viewH, setViewH] = useState(() => window.innerHeight);
-  useEffect(() => {
-    const on = () => setViewH(window.innerHeight);
-    window.addEventListener('resize', on);
-    return () => window.removeEventListener('resize', on);
-  }, []);
   /** Copia a imagem do card do time (no formato escolhido) para a área de transferência. */
   const copyCard = async (id: string, name: string) => {
     const el = document.querySelector<HTMLElement>(`.vt-card[data-id="${id}"] .pc`);
@@ -153,44 +158,71 @@ export default function Vault() {
 
   const createNew = () => navigate('/novo');
 
+  const [linkText, setLinkText] = useState('');
+  const [newOpen, setNewOpen] = useState(false);
+  const importLink = (text: string) =>
+    void run(async () => {
+      const project = await projectFromLink(text);
+      if (!project) throw new Error('Cole um link de time do Astralys (ele tem "#time=").');
+      return withoutDuplicates(project, [], data);
+    });
+  // Abrir um link de time (/vault#time=…) importa o time direto.
+  useEffect(() => {
+    if (window.location.hash.includes('time=')) {
+      importLink(window.location.hash);
+      history.replaceState(null, '', window.location.pathname);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const copyLink = async (id: string) => {
+    const full = loadProject(id);
+    if (!full) return;
+    try {
+      await navigator.clipboard.writeText(await projectLink(full, window.location.origin));
+      setNotice('Link do time copiado. Abra-o em outro computador para importar.');
+    } catch {
+      setNotice('Não foi possível copiar o link.');
+    }
+    setTimeout(() => setNotice(null), 3500);
+  };
+
   const filtered = filters.query || filters.character || filters.element || filters.favoritesOnly;
 
   return (
     <div className="dz">
       <AppHeader />
       <main className="dz-page">
-        <section className="dz-pagehead">
-          <div className="titles">
-            <h1 className="h1">Times</h1>
-            <span className="muted">{items.length} {items.length === 1 ? 'time salvo' : 'times salvos'} neste navegador. {token ? 'Use "Sincronizar com a conta" para guardá-los também online.' : 'Nada sai do seu navegador.'}</span>
-          </div>
-          <div className="actions">
-            <span className="vt-cardpick">
-              <span className="muted small">Card dos times</span>
-              <Segmented<PosterFormat> label="Card dos times" value={cardFormat} onChange={setCardFormat} options={(Object.keys(POSTER_LABEL) as PosterFormat[]).map((f) => ({ value: f, label: POSTER_LABEL[f] }))} />
-            </span>
-            <Menu label="Importar e sincronizar ▾" ariaLabel="Importar e sincronizar">
-              {(close) => (
-                <>
-                  <button type="button" role="menuitem" className="dz-menu-item" disabled={busy || !data} onClick={() => { close(); xlsxInput.current?.click(); }} title="Importa a planilha de theorycraft (abas Time e Rotação)">Importar planilha .xlsx</button>
-                  <button type="button" role="menuitem" className="dz-menu-item" disabled={busy} onClick={() => { close(); jsonInput.current?.click(); }} title="Abre um projeto exportado pelo Astralys">Importar projeto .json</button>
-                  {ONLINE_ENABLED && (token
-                    ? <button type="button" role="menuitem" className="dz-menu-item" disabled={syncing} onClick={() => { close(); void sync(); }} title="Envia os times mais novos para a conta e baixa os que só existem nela">{syncing ? 'Sincronizando…' : 'Sincronizar com a conta'}</button>
-                    : <Link to="/entrar" role="menuitem" className="dz-menu-item" onClick={close} title="Guarde seus times fora deste navegador">Entrar para sincronizar</Link>)}
-                </>
-              )}
-            </Menu>
-            <button type="button" className="dz-btn gold" onClick={createNew}>Novo time</button>
-            <input ref={xlsxInput} type="file" accept=".xlsx,.xlsm" hidden aria-label="Escolher planilha" onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ''; if (f && data) void run(() => importXlsx(f, data)); }} />
-            <input ref={jsonInput} type="file" accept=".json,application/json" hidden aria-label="Escolher projeto" onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ''; if (f) void run(() => importJson(f, data)); }} />
-          </div>
-        </section>
+        <input ref={jsonInput} type="file" accept=".json,application/json" hidden aria-label="Escolher projeto" onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ''; if (f) void run(() => importJson(f, data)); }} />
+        {ONLINE_ENABLED && (
+          <section className="dz-pagehead">
+            <div className="actions">
+              {ONLINE_ENABLED && (token
+                ? <button type="button" className="dz-btn" disabled={syncing} onClick={() => void sync()} title="Envia os times mais novos para a conta e baixa os que só existem nela">{syncing ? 'Sincronizando…' : 'Sincronizar com a conta'}</button>
+                : <Link to="/entrar" className="dz-btn" title="Guarde seus times fora deste navegador">Entrar para sincronizar</Link>)}
+            </div>
+          </section>
+        )}
 
         {error && <p className="dz-error" role="alert">{error}</p>}
         {shareMsg && <p className="dz-error vt-share" role="status">{shareMsg}</p>}
         {notes.length > 0 && <div className="dz-error vt-notes" role="status">{notes.map((n, i) => <p key={i}>{n}</p>)}</div>}
 
         {notice && <p className="note vt-notice" role="status">{notice}</p>}
+        <section className="vt-summary" aria-label="Resumo dos times">
+          <div className="vt-stat"><b className="num">{filtered ? `${visible.length} de ${items.length}` : items.length}</b><span>{items.length === 1 ? 'time' : 'times'}</span></div>
+          <div className="vt-stat gold"><b className="num">{summary.best ? formatInt(summary.best.dps) : '—'}</b><span>melhor DPS{summary.best ? ` · ${summary.best.name}` : ''}</span></div>
+          <button type="button" className="vt-stat vt-statbtn" aria-pressed={filters.favoritesOnly} onClick={() => set({ favoritesOnly: !filters.favoritesOnly })} title="Mostrar só os favoritos"><b className="num">{summary.favorites} <i aria-hidden="true">★</i></b><span>favoritos</span></button>
+          {summary.top.length > 0 && (
+            <div className="vt-top" role="group" aria-label="Personagens mais usados">
+              {summary.top.map(([n, k]) => (
+                <button key={n} type="button" className="vt-face" aria-pressed={filters.character === n} title={`${n}: em ${k} ${k === 1 ? 'time' : 'times'}`} aria-label={`Filtrar por ${n}`} onClick={() => set({ character: filters.character === n ? '' : n })}>
+                  <CharacterAvatar name={n} icon={characterOf(n)?.icon} color={elementColor(elementOf(n))} size={44} />
+                  <em className="num">{k}</em>
+                </button>
+              ))}
+            </div>
+          )}
+        </section>
         <section className="vt-filters" aria-label="Filtros">
           <input className="dz-input" type="search" placeholder="Buscar por nome ou personagem" aria-label="Buscar times" value={filters.query} onChange={(e) => set({ query: e.target.value })} />
           <select className="dz-input" aria-label="Personagem" value={filters.character} onChange={(e) => set({ character: e.target.value })}>
@@ -205,12 +237,13 @@ export default function Vault() {
           {filtered && <Button variant="ghost" size="sm" onClick={() => setFilters(NO_FILTERS)}>Limpar filtros</Button>}
         </section>
 
-        {visible.length === 0 ? (
+        {visible.length === 0 && (
           <div className="dz-panel vt-empty">
             <h2 className="h2">Nenhum time encontrado</h2>
-            <p className="muted">{filtered ? 'Nenhum time bate com esses filtros.' : 'Crie um time ou importe uma planilha para começar.'}</p>
+            <p className="muted">{filtered ? 'Nenhum time bate com esses filtros.' : 'Crie um time ou importe um por link ou arquivo para começar.'}</p>
           </div>
-        ) : (
+        )}
+        {(
           <ul className={`dz-grid c3 vt-list${cardFormat === 'wide' ? ' vt-two' : ''}`}>
             {visible.map((p) => {
               const model = cards[p.id];
@@ -219,7 +252,7 @@ export default function Vault() {
                 <li key={p.id} className="vt-card" data-id={p.id} data-name={p.name} style={{ ['--c' as string]: lead }}>
                   <Link className="vt-poster" to={`/projeto/${p.id}`} aria-label={`Abrir ${p.name}`}>
                     {model && model !== 'error' ? (
-                      <ScaledPoster format={cardFormat} maxHeight={cardFormat === 'tall' ? Math.max(420, viewH - 290) : undefined}><PosterCard model={model} format={cardFormat} /></ScaledPoster>
+                      <ScaledPoster format={cardFormat}><PosterCard model={model} format={cardFormat} /></ScaledPoster>
                     ) : (
                       <div className="vt-wait" style={{ aspectRatio: `${POSTER_SIZE[cardFormat].w} / ${POSTER_SIZE[cardFormat].h}` }}>
                         <div className="vt-faces" aria-hidden="true">
@@ -249,6 +282,7 @@ export default function Vault() {
                             {token && !p.isSample && <button type="button" role="menuitem" className="dz-menu-item" onClick={() => { close(); void toggleShare(p.id); }}>{p.shared ? 'Parar de compartilhar' : 'Compartilhar'}</button>}
                             <button type="button" role="menuitem" className="dz-menu-item" onClick={() => { close(); duplicate(p.id); }}>Duplicar</button>
                             <button type="button" role="menuitem" className="dz-menu-item" onClick={() => { close(); setRenaming(p.id); }}>Renomear</button>
+                            <button type="button" role="menuitem" className="dz-menu-item" onClick={() => { close(); void copyLink(p.id); }}>Copiar link</button>
                             <button type="button" role="menuitem" className="dz-menu-item" onClick={() => { close(); const full = loadProject(p.id); if (full) downloadProject(full); }}>Exportar</button>
                             <button type="button" role="menuitem" className="dz-menu-item danger" onClick={() => setConfirmDelete(p.id)}>{p.id === SAMPLE_ID ? 'Restaurar' : 'Apagar'}</button>
                           </>
@@ -271,6 +305,32 @@ export default function Vault() {
                 </li>
               );
             })}
+            {!filtered && (
+              <li className="vt-card vt-new" aria-label="Novo time">
+                <div className="vt-new-body" style={{ aspectRatio: `${POSTER_SIZE[cardFormat].w} / ${POSTER_SIZE[cardFormat].h}` }}>
+                  {newOpen ? (
+                    <div className="vt-opts">
+                      <button type="button" className="vt-opt gold" onClick={createNew}>
+                        <i aria-hidden="true">✦</i><span><b>Novo time</b><small>Monte do zero, passo a passo</small></span>
+                      </button>
+                      <button type="button" className="vt-opt" disabled={busy} onClick={() => jsonInput.current?.click()}>
+                        <i aria-hidden="true">⤓</i><span><b>Importar arquivo</b><small>Projeto .json exportado</small></span>
+                      </button>
+                      <label className="vt-opt vt-optlink">
+                        <i aria-hidden="true">∞</i>
+                        <span><b>Importar por link</b>
+                          <input value={linkText} placeholder="Cole o link do time aqui" aria-label="Link do time" disabled={busy}
+                            onChange={(e) => { setLinkText(e.target.value); if (e.target.value.includes('time=')) { importLink(e.target.value); setLinkText(''); } }} />
+                        </span>
+                      </label>
+                      <button type="button" className="vt-close" onClick={() => setNewOpen(false)}>Fechar</button>
+                    </div>
+                  ) : (
+                    <button type="button" className="vt-plus" aria-label="Adicionar time" onClick={() => setNewOpen(true)}>+</button>
+                  )}
+                </div>
+              </li>
+            )}
           </ul>
         )}
       </main>

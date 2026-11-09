@@ -32,3 +32,47 @@
 .dz-grid.c3.vt-two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 @media (max-width: 560px) { .dz-grid.c3.vt-two { grid-template-columns: minmax(0, 1fr); } }
 .vt-poster .pc-nick { margin-right: 170px; }
+
+/* Card vazio no fim da lista: criar ou importar sem precisar de um time antes. */
+.vt-new { border-style: dashed; border-top-width: 1px; background: transparent; }
+.vt-new-body { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 16px; }
+.vt-plus { position: relative; width: 96px; height: 96px; padding: 0; border-radius: 50%; border: 1px solid color-mix(in srgb, var(--gold) 55%, transparent); background: radial-gradient(circle, color-mix(in srgb, var(--gold) 14%, transparent), transparent 70%); cursor: pointer; font-size: 0; box-shadow: 0 0 0 10px color-mix(in srgb, var(--gold) 5%, transparent), 0 0 28px color-mix(in srgb, var(--gold) 18%, transparent); transition: transform .2s, box-shadow .2s, border-color .2s; }
+.vt-plus::before, .vt-plus::after { content: ''; position: absolute; inset: 50% auto auto 50%; background: var(--gold); border-radius: 2px; transform: translate(-50%, -50%); }
+.vt-plus::before { width: 34px; height: 2px; }
+.vt-plus::after { width: 2px; height: 34px; }
+.vt-plus:hover, .vt-plus:focus-visible { transform: scale(1.06); border-color: var(--gold); box-shadow: 0 0 0 14px color-mix(in srgb, var(--gold) 8%, transparent), 0 0 40px color-mix(in srgb, var(--gold) 32%, transparent); }
+.vt-opts { display: flex; flex-direction: column; gap: 10px; width: min(100%, 380px); }
+.vt-opt { display: flex; align-items: center; gap: 14px; width: 100%; min-height: 64px; padding: 10px 16px; text-align: left; color: var(--text); background: color-mix(in srgb, var(--surface-2, #1a2145) 70%, transparent); border: 1px solid var(--border); border-radius: 14px; cursor: pointer; font: inherit; transition: border-color .15s, background .15s, transform .15s; }
+.vt-opt:hover:not(:disabled), .vt-opt:focus-within { border-color: color-mix(in srgb, var(--gold) 70%, transparent); background: color-mix(in srgb, var(--gold) 8%, transparent); }
+.vt-opt:disabled { opacity: .5; cursor: default; }
+.vt-opt i { flex: none; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; font-style: normal; font-size: 20px; color: var(--gold); border: 1px solid color-mix(in srgb, var(--gold) 45%, transparent); background: radial-gradient(circle, color-mix(in srgb, var(--gold) 16%, transparent), transparent 75%); }
+.vt-opt span { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
+.vt-opt b { font-weight: 600; font-size: 15px; }
+.vt-opt small { color: var(--muted); font-size: 12.5px; }
+.vt-opt.gold { border-color: color-mix(in srgb, var(--gold) 60%, transparent); background: color-mix(in srgb, var(--gold) 10%, transparent); }
+.vt-optlink input { width: 100%; min-width: 0; padding: 4px 0; font: inherit; font-size: 13px; color: var(--text); background: transparent; border: 0; border-bottom: 1px solid var(--border); outline: 0; }
+.vt-optlink input:focus { border-bottom-color: var(--gold); }
+.vt-close { align-self: center; padding: 4px 12px; font: inherit; font-size: 13px; color: var(--muted); background: transparent; border: 0; cursor: pointer; }
+.vt-close:hover { color: var(--text); }
+.vt-count { margin-left: auto; font-size: 14px; white-space: nowrap; }
+
+/* Faixa de resumo no topo (no lugar do título): contagem, melhor DPS, favoritos e os personagens mais usados. */
+.vt-summary { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 36px; padding: 6px 0 16px; border-bottom: 1px solid var(--border); }
+.vt-stat { display: flex; flex-direction: column; gap: 4px; padding: 0; border: 0; background: none; color: var(--text); text-align: left; font: inherit; }
+.vt-stat b { font: 700 44px/.9 var(--font-display); letter-spacing: .01em; }
+.vt-stat b i { font-style: normal; font-size: 28px; color: var(--gold); vertical-align: 4px; }
+.vt-stat span { font-size: 13px; color: var(--muted); letter-spacing: .04em; text-transform: uppercase; }
+.vt-stat.gold b { color: var(--gold); }
+.vt-statbtn { cursor: pointer; }
+.vt-statbtn:hover span, .vt-statbtn[aria-pressed="true"] span { color: var(--gold); }
+.vt-top { display: flex; flex-wrap: wrap; gap: 10px; margin-left: auto; }
+.vt-face { position: relative; padding: 0; border: 0; background: none; cursor: pointer; border-radius: 50%; }
+.vt-face em { position: absolute; right: -4px; bottom: -4px; min-width: 18px; padding: 0 4px; border-radius: 9px; background: var(--bg-header); border: 1px solid var(--border-strong, var(--border)); font: 600 11px/16px var(--font-display); font-style: normal; text-align: center; color: var(--text); }
+.vt-face[aria-pressed="true"] { outline: 2px solid var(--gold); outline-offset: 3px; }
+.vt-face:hover { transform: translateY(-2px); }
+.vt-face { transition: transform .15s; }
+.vt-stat span { max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Telas muito grandes: mais cards por linha (o 16:9 continua em 2, 3 e 4 colunas, por ser largo). */
+@media (min-width: 1900px) { .dz-grid.c3:not(.vt-two) { grid-template-columns: repeat(5, minmax(0, 1fr)); } .dz-grid.c3.vt-two { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (min-width: 2400px) { .dz-grid.c3:not(.vt-two) { grid-template-columns: repeat(6, minmax(0, 1fr)); } .dz-grid.c3.vt-two { grid-template-columns: repeat(4, minmax(0, 1fr)); } }

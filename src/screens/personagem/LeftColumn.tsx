@@ -31,7 +31,7 @@ export function CharacterCard({ character, memberRef, index, color, level, share
   const c = memberRef.constellation ?? 0;
   return (
     <Panel>
-      <div className="pc-portrait" style={{ ['--c' as string]: color }}>
+      <div className="pp-portrait" style={{ ['--c' as string]: color }}>
         {character.splash ? <img src={`${SPLASH}/${character.splash}.webp`} alt="" crossOrigin="anonymous" loading="lazy" /> : <CharacterAvatar name={character.name} icon={character.icon} color={color} size={120} />}
         <span className="num lvl">Nv {level}/90</span>
       </div>

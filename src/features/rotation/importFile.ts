@@ -29,7 +29,7 @@ export async function importXlsx(file: File, data: LoadedData): Promise<ImportRe
 }
 
 /** Descarta os buffs extras que repetem um buff já calculado (só com os dados do jogo carregados). */
-function withoutDuplicates(project: RotationProject, warnings: string[], data?: LoadedData): ImportResult {
+export function withoutDuplicates(project: RotationProject, warnings: string[], data?: LoadedData): ImportResult {
   if (!data) return { project, warnings };
   const r = dropDuplicateExtras(project, data.game, data.effects);
   return { project: r.project, warnings: [...warnings, ...r.warnings] };

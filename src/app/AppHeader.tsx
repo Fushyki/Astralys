@@ -8,6 +8,10 @@ import '../design/design.css';
 import { ONLINE_ENABLED } from '../online/config';
 import { useSession } from '../online/session';
 import { ButtonLink } from '../design/Button';
+import { Menu } from '../design/Menu';
+import { Segmented } from '../design/primitives';
+import { POSTER_LABEL, type PosterFormat } from '../screens/card/PosterCard';
+import { useSettings, type CardBg } from './settings';
 
 /** Marca do Astralys: três fios (os buffs) que convergem num ponto (o golpe). Ver `public/favicon.svg`. */
 export function StarMark({ size = 26 }: { size?: number }) {
@@ -50,6 +54,37 @@ function Account() {
   );
 }
 
+function GearIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
+      <circle cx="12" cy="12" r="3" />
+    </svg>
+  );
+}
+
+/** Engrenagem no cabeçalho: reúne as escolhas de visual para não ocupar espaço nas telas. */
+function SettingsMenu() {
+  const { cardBg, setCardBg, cardFormat, setCardFormat } = useSettings();
+  return (
+    <Menu label={<GearIcon />} ariaLabel="Configurações" className="dz-cfgbtn" align="right">
+      {() => (
+        <div className="dz-settings">
+          <h2 className="dz-settings-title">Configurações</h2>
+          <div className="dz-settings-group">
+            <span>Fundo dos cards</span>
+            <Segmented<CardBg> label="Fundo dos cards" value={cardBg} onChange={setCardBg} options={[{ value: 'color', label: 'Cor do personagem' }, { value: 'plain', label: 'Neutro' }]} />
+          </div>
+          <div className="dz-settings-group">
+            <span>Card dos times</span>
+            <Segmented<PosterFormat> label="Card dos times" value={cardFormat} onChange={setCardFormat} options={(Object.keys(POSTER_LABEL) as PosterFormat[]).map((f) => ({ value: f, label: POSTER_LABEL[f] }))} />
+          </div>
+        </div>
+      )}
+    </Menu>
+  );
+}
+
 export function AppHeader({ projectId, memberName, projectName, favorite, onToggleFavorite }: AppHeaderProps) {
   const { pathname } = useLocation();
   const base = projectId ? `/projeto/${projectId}` : '';
@@ -87,6 +122,7 @@ export function AppHeader({ projectId, memberName, projectName, favorite, onTogg
           ))}
         </nav>
         <Account />
+        <SettingsMenu />
       </header>
       {projectId && (
         <div className="dz-subnav" aria-label="Telas do time">

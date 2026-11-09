@@ -22,3 +22,6 @@
 .cp-layout .cd-view .pc-box { max-width: none; width: 100%; }
 .cp-layout .cd-view { justify-content: flex-start; }
 @media (max-width: 1000px) { .cp-cols { grid-template-columns: minmax(0, 1fr); } .cp-bar { padding-inline: var(--sp-4, 16px); } }
+
+/* Telas grandes: o card tem no máximo 1600 px; a barra e a moldura acompanham essa largura para continuarem alinhadas com as metades A e B. */
+.cp-layout .cp-bar, .cp-layout .cd-view .pc-box { width: 100%; max-width: 1600px; margin-inline: auto; }

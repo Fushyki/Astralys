@@ -9,3 +9,7 @@
 .cd-view { min-width: 0; display: flex; justify-content: center; }
 .cd-view .pc-box { max-width: 720px; }
 @media (max-width: 1000px) { .cd-layout { grid-template-columns: minmax(0, 1fr); } }
+
+/* Telas grandes: o card 16:9 cresce até o tamanho real (1600 px); os verticais ficam ao lado do formulário, não soltos no meio. */
+.cd-view:has(.pc-wide) .pc-box { max-width: 1600px; }
+@media (min-width: 1001px) { .cd-view { justify-content: flex-start; } }

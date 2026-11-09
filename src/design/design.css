@@ -213,7 +213,7 @@ body { font-family: var(--font-body); font-size: 15px; line-height: 1.5; -webkit
 .dz-header .dz-nav { flex: 0 1 auto; }
 .dz-header .dz-account { margin-left: auto; }
 .dz-header > .dz-menu { flex: none; }
-@media (max-width: 900px) { .dz-header .dz-nav { flex: 1 1 100%; } .dz-header > .dz-menu { order: 4; } }
+@media (max-width: 900px) { .dz-header .dz-nav { flex: 1 1 100%; } .dz-header > .dz-menu { order: 2; margin-left: auto; } }
 
 /* Escolher o set: 4 por linha, ícone grande no topo do cartão */
 .dz-dialog .grid.sets { grid-template-columns: repeat(4, minmax(0, 1fr)); }
@@ -270,3 +270,21 @@ body { font-family: var(--font-body); font-size: 15px; line-height: 1.5; -webkit
 @media (max-width: 640px) { .dz-stepbar .lbl { white-space: nowrap; } .dz-stepbar .lbl .ttl, .dz-stepbar .dz-btn .pre { display: none; } }
 /* Celular: alvos de toque de pelo menos 40 px (o dedo é mais largo que o cursor). */
 @media (max-width: 900px) { .dz-btn.sm, .dz-btn.ghost, .dz-btn.secondary.sm { min-height: 40px; } }
+
+/* Menu de configurações (engrenagem do cabeçalho, no canto direito) */
+.dz-cfgbtn { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; padding: 0; border-radius: 4px; border: 1px solid var(--border-strong, var(--border-ctl-hi)); background: transparent; color: var(--muted); cursor: pointer; transition: color .15s, border-color .15s, transform .3s; }
+.dz-cfgbtn:hover, .dz-cfgbtn[aria-expanded="true"] { color: var(--gold); border-color: var(--gold); }
+.dz-cfgbtn[aria-expanded="true"] svg { transform: rotate(60deg); }
+.dz-cfgbtn svg { transition: transform .3s; }
+.dz-header > .dz-menu:last-child { margin-left: auto; }
+.dz-header .dz-account + .dz-menu { margin-left: 0; }
+.dz-settings { display: flex; flex-direction: column; gap: 16px; padding: 12px 14px 14px; min-width: 300px; }
+.dz-settings-title { margin: 0; font: 600 14px var(--font-display); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.dz-settings-group { display: flex; flex-direction: column; gap: 8px; font-size: 14px; }
+.dz-settings .dz-seg { flex-wrap: wrap; }
+
+/* Fundo dos cards (config): Neutro tira a cor do personagem. */
+:root[data-card-bg='plain'] .pe-card,
+:root[data-card-bg='plain'] .dz-panel.rc-card { background: var(--surface); }
+/* Times: a faixa colorida do topo fica sempre; a config só troca o fundo do card (com a cor do personagem principal ou o fundo escuro liso). */
+:root[data-card-bg='color'] .vt-poster .pc { background: radial-gradient(circle at 50% 30%, color-mix(in srgb, var(--c) 28%, var(--bg-header)), var(--bg-header)); }

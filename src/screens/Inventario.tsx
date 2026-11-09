@@ -1,6 +1,5 @@
 /** Inventário (/inventario): artefatos e armas importados do Genshin Optimizer (arquivo GOOD) ou da vitrine do jogo (UID). */
 import { useMemo, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { AppHeader } from '../app/AppHeader';
 import '../design/design.css';
 import { pieceIconUrl, weaponIconUrl } from '../design/images';
@@ -170,9 +169,6 @@ export default function Inventario() {
             {good && (
               <div className="opt now">
                 <b>{formatInt(good.artifacts.length)} artefatos · {formatInt(good.weapons.length)} armas · {formatInt(good.characters.length)} personagens</b>
-                <div className="row">
-                  <Link className="dz-btn gold" to="/otimizador">Otimizar um time</Link>
-                </div>
               </div>
             )}
           </div>

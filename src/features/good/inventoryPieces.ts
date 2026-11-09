@@ -1,5 +1,6 @@
 /** As 5 peças que um personagem tem equipadas no inventário GOOD importado (null se não tem as 5) e a abertura do projeto com elas. */
 import { PIECE_SLOTS, type RotationProject } from '../../engine';
+import { MANUAL_LOCATION } from './kqmPieces';
 import { artifactSig, type Good, type GoodArtifact } from './goodImport';
 
 const norm = (s: string | undefined) => (s ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -22,6 +23,8 @@ export function withInventoryPieces(project: RotationProject, good: Good | null 
   const sigs = new Set(good.artifacts.map(artifactSig));
   const members = project.members.map((m) => {
     if (m.piecesChoice === 'generic') return m;
+    // Build manual (peças feitas à mão, só deste time): não é do inventário, então fica.
+    if (m.pieces?.length && m.pieces.every((p) => p.location === MANUAL_LOCATION)) return m;
     // Peças que não existem nesta base (vieram de outra) saem: a base em uso manda.
     if (m.pieces?.length && m.pieces.every((p) => sigs.has(artifactSig(p as GoodArtifact)))) return m;
     const pieces = inventoryPiecesOf(good, m.character);

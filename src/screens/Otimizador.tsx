@@ -32,6 +32,7 @@ import { FamilyBadge, damageColor } from '../design/damageFamily';
 import { pointMoveOf, specialOfMove } from '../engine/project';
 import { MovePickerDialog, KindBadge, kindOf } from './otimizador/MovePicker';
 import { elementColor } from '../design/elements';
+import { ManualBuild } from './otimizar/ManualBuild';
 
 /** Número grande em português: 4,3 mil, 3,3 bi. */
 function bigNumber(n: number): string {
@@ -49,7 +50,7 @@ const SLOTS = [
   { key: 'circlet', label: 'Tiara' },
 ] as const;
 
-type Goal = 'dano' | 'buff' | 'stat';
+type Goal = 'dano' | 'buff' | 'stat' | 'manual';
 type Scope = 'team' | 'member' | 'move';
 type Crit = 'avg' | 'crit' | 'noCrit';
 type StatKey = 'hp' | 'atk' | 'def' | 'em' | 'er';
@@ -422,15 +423,40 @@ export function OtimizadorPanel({ index }: { index: number }) {
     return Number.isFinite(d) ? { text: `${d >= 0 ? '+' : '−'}${formatDecimal(Math.abs(d), 2)}% contra o #1`, tone: d >= 0 ? 'good' : 'bad' } : undefined;
   };
 
+  const goalField = (
+    <div className="ot-field">
+      <span className="lbl">Otimizar</span>
+      <div className="ot-seg" role="group" aria-label="O que otimizar">
+        {([['dano', 'Dano', 'Dano do time, dele ou de um golpe'], ['buff', 'Buff', 'O maior valor de um buff que ele dá ao time (foco de suportes)'], ['stat', 'Stat', 'O maior valor final de HP, ATK, Maestria… (use os mínimos para não perder o resto)'], ['manual', 'Manual', 'Monta o build à mão ou pelo KQM automático, sem usar o inventário']] as [Goal, string, string][]).map(([k, label, tip]) => (
+          <button key={k} type="button" aria-pressed={ui.goal === k} title={tip} onClick={() => setUi({ ...ui, goal: k })}>{label}</button>
+        ))}
+      </div>
+    </div>
+  );
+  const manualBox = character ? (
+    <ManualBuild member={ref} rolls={v.bundle.optimization.rolls[index]} element={character.element} sets={data.game.artifacts} onChange={(patch) => update(index, patch)} />
+  ) : null;
+
   return (
     <div className="ot">
       {!good ? (
-        <Panel title="Inventário">
-          <div className="ot-empty">
-            <p>Importe o inventário (arquivo do Genshin Optimizer ou UID) para otimizar.</p>
-            <ButtonLink variant="primary" to="/inventario">Importar o inventário</ButtonLink>
+        <>
+          <Panel title="Inventário">
+            <div className="ot-empty">
+              <p>Importe o inventário (arquivo do Genshin Optimizer ou UID) para otimizar. Sem inventário você ainda pode montar o build à mão:</p>
+              <ButtonLink variant="primary" to="/inventario">Importar o inventário</ButtonLink>
+            </div>
+          </Panel>
+          {manualBox}
+        </>
+      ) : ui.goal === 'manual' ? (
+        <>
+          <div className="ot-top">
+            <CurrentBuild build={current} field={fieldMode} onField={() => setFieldMode(!fieldMode)} sets={data.game.artifacts} />
+            {manualBox}
           </div>
-        </Panel>
+          <section className="ot-bar" aria-label="Foco da otimização"><div className="ot-bar-line">{goalField}</div></section>
+        </>
       ) : (
         <>
           <div className="ot-top">
@@ -506,14 +532,7 @@ export function OtimizadorPanel({ index }: { index: number }) {
             <div className="ot-bar-grid">
               <div className="ot-bar-cfg">
                 <div className="ot-bar-line">
-                  <div className="ot-field">
-                    <span className="lbl">Otimizar</span>
-                    <div className="ot-seg" role="group" aria-label="O que otimizar">
-                      {([['dano', 'Dano', 'Dano do time, dele ou de um golpe'], ['buff', 'Buff', 'O maior valor de um buff que ele dá ao time (foco de suportes)'], ['stat', 'Stat', 'O maior valor final de HP, ATK, Maestria… (use os mínimos para não perder o resto)']] as [Goal, string, string][]).map(([k, label, tip]) => (
-                        <button key={k} type="button" aria-pressed={ui.goal === k} title={tip} onClick={() => setUi({ ...ui, goal: k })}>{label}</button>
-                      ))}
-                    </div>
-                  </div>
+                  {goalField}
                   {ui.goal === 'dano' && (
                     <div className="ot-field">
                       <span className="lbl">Alvo</span>

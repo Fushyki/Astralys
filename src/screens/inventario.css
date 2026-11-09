@@ -111,6 +111,14 @@
 .aa-drop img { max-width: 100%; max-height: 420px; border-radius: 8px; object-fit: contain; }
 .aa-status { margin: 0; color: var(--gold); font-size: 14px; }
 .aa-note { margin: 0; padding: 8px 12px; border-radius: 8px; font-size: 13px; background: color-mix(in srgb, var(--gold) 10%, var(--bg-header)); border: 1px solid color-mix(in srgb, var(--gold) 35%, var(--border)); }
+.aa-setsel { position: relative; }
+.aa-setbtn { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; cursor: pointer; }
+.aa-seticon { width: 36px; height: 36px; object-fit: contain; flex: none; border-radius: 8px; background: rgba(255,255,255,.04); }
+.aa-setlist { position: absolute; z-index: 5; inset-inline: 0; top: calc(100% + 4px); display: flex; flex-direction: column; gap: 8px; padding: 10px; background: var(--surface, #111733); border: 1px solid rgba(255,255,255,.14); border-radius: 12px; box-shadow: 0 12px 32px rgba(0,0,0,.5); }
+.aa-setlist ul { list-style: none; margin: 0; padding: 0; max-height: 280px; overflow-y: auto; display: flex; flex-direction: column; gap: 2px; }
+.aa-setlist li button { display: flex; align-items: center; gap: 10px; width: 100%; padding: 6px 8px; background: none; border: 0; border-radius: 8px; color: inherit; text-align: left; cursor: pointer; font: inherit; }
+.aa-setlist li button:hover, .aa-setlist li[aria-selected='true'] button { background: rgba(233,196,106,.12); }
+.aa-setlist small { display: block; opacity: .65; }
 .aa-row { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: flex-end; }
 .aa-row > * { min-width: 0; }
 .aa-subs { display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 12px 0 0; border: 0; border-top: 1px solid var(--border); }

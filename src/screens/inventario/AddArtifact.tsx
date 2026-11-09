@@ -4,6 +4,7 @@
  */
 import { useEffect, useRef, useState } from 'react';
 import { toast } from '../../app/toast';
+import { pieceIconUrl } from '../../design/images';
 import { Segmented } from '../../design/primitives';
 import { SUB_KEYS, artifactProcs, maxProcs, procRange, type SubKey } from '../../features/good/artifactProcs';
 import { readArtifactImage, setKeyOf, type ParsedArtifact, type SlotKey } from '../../features/good/artifactOcr';
@@ -35,8 +36,60 @@ function fromParsed(p: ParsedArtifact, prev: Draft): Draft {
   return { setKey: p.setKey ?? prev.setKey, slotKey, rarity: p.rarity, level: p.level ?? prev.level, mainStatKey: main, subs };
 }
 
-export function AddArtifact({ sets, onClose, onSaved }: { sets: readonly { name: string; namePt?: string; rarity?: number }[]; onClose: () => void; onSaved: () => void }) {
-  const [d, setD] = useState<Draft>(blank);
+type SetInfo = { id?: number; name: string; namePt?: string; rarity?: number };
+
+function SetIcon({ set, slot }: { set: SetInfo; slot: SlotKey }) {
+  const [failed, setFailed] = useState(false);
+  return set.id == null || failed ? <b className="aa-seticon ph" aria-hidden="true" /> : <img className="aa-seticon" src={pieceIconUrl(set.id, slot)} alt="" loading="lazy" crossOrigin="anonymous" onError={() => setFailed(true)} />;
+}
+
+/** Escolha do set com a imagem da peça (um select nativo não mostra imagens). */
+function SetSelect({ sets, value, slot, onChange }: { sets: readonly SetInfo[]; value: string; slot: SlotKey; onChange: (key: string) => void }) {
+  const [open, setOpen] = useState(false);
+  const [q, setQ] = useState('');
+  const box = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    const away = (e: MouseEvent) => !box.current?.contains(e.target as Node) && setOpen(false);
+    document.addEventListener('mousedown', away);
+    return () => document.removeEventListener('mousedown', away);
+  }, [open]);
+  const cur = sets.find((s) => setKeyOf(s.name) === value);
+  const term = q.trim().toLowerCase();
+  const list = [...sets].filter((s) => !term || s.name.toLowerCase().includes(term) || (s.namePt ?? '').toLowerCase().includes(term)).sort((a, b) => a.name.localeCompare(b.name));
+  return (
+    <div className="aa-setsel" ref={box} onKeyDown={(e) => { if (e.key === 'Escape' && open) { e.stopPropagation(); setOpen(false); } }}>
+      <button type="button" className="dz-input aa-setbtn" aria-label="Set" aria-haspopup="listbox" aria-expanded={open} onClick={() => setOpen(!open)}>
+        {cur ? <><SetIcon set={cur} slot={slot} /><span>{cur.namePt && cur.namePt !== cur.name ? `${cur.name} · ${cur.namePt}` : cur.name}</span></> : <span className="muted">Escolha o set…</span>}
+      </button>
+      {open && (
+        <div className="aa-setlist">
+          <input className="dz-input" type="search" autoFocus placeholder="Buscar set" aria-label="Buscar set" value={q} onChange={(e) => setQ(e.target.value)} />
+          <ul role="listbox" aria-label="Sets">
+            {list.length === 0 && <li className="muted small">Nenhum set encontrado.</li>}
+            {list.map((s) => (
+              <li key={s.name} role="option" aria-selected={setKeyOf(s.name) === value}>
+                <button type="button" onClick={() => { onChange(setKeyOf(s.name)); setOpen(false); setQ(''); }}>
+                  <SetIcon set={s} slot={slot} />
+                  <span>{s.name}{s.namePt && s.namePt !== s.name ? <small>{s.namePt}</small> : null}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+}
+
+const fromGood = (a: GoodArtifact): Draft => ({
+  setKey: a.setKey, slotKey: a.slotKey as SlotKey, rarity: a.rarity === 4 ? 4 : 5, level: a.level ?? 20, mainStatKey: a.mainStatKey,
+  subs: [0, 1, 2, 3].map((i) => (a.substats[i] ? { key: a.substats[i].key as SubKey, value: String(a.substats[i].value) } : { key: '' as const, value: '' })),
+});
+
+/** Sem `onSubmit` salva no inventário; com `onSubmit` entrega o artefato a quem chamou (build manual: não vai para o inventário). */
+export function AddArtifact({ sets, onClose, onSaved, initial, onSubmit }: { sets: readonly SetInfo[]; onClose: () => void; onSaved?: () => void; initial?: GoodArtifact; onSubmit?: (a: GoodArtifact) => void }) {
+  const [d, setD] = useState<Draft>(() => (initial ? fromGood(initial) : blank()));
   const [reading, setReading] = useState<string | null>(null);
   const [notes, setNotes] = useState<string[]>([]);
   const [preview, setPreview] = useState<string | null>(null);
@@ -89,10 +142,11 @@ export function AddArtifact({ sets, onClose, onSaved }: { sets: readonly { name:
 
   const save = (again: boolean) => {
     const art: GoodArtifact = { setKey: d.setKey, slotKey: d.slotKey, rarity: d.rarity, mainStatKey: d.mainStatKey, level: d.level, location: '', substats: filled };
+    if (onSubmit) { onSubmit(art); return onClose(); }
     const good: Good = loadGood() ?? EMPTY_GOOD;
     if (!saveGood({ ...good, artifacts: [...good.artifacts, art] })) return toast('Não foi possível guardar: o armazenamento do navegador está cheio ou bloqueado.', 'error');
     toast(`Artefato salvo${baseName ? ` em "${baseName}"` : ''}.`);
-    onSaved();
+    onSaved?.();
     if (again) { setD((p) => ({ ...blank(), setKey: p.setKey })); setPreview(null); setNotes([]); } else onClose();
   };
 
@@ -101,7 +155,7 @@ export function AddArtifact({ sets, onClose, onSaved }: { sets: readonly { name:
     <div className="dz-modal" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
       <div className="dz-dialog wide aa" role="dialog" aria-modal="true" aria-label="Adicionar artefato">
         <header>
-          <h2 className="h2">Adicionar artefato</h2>
+          <h2 className="h2">{onSubmit ? 'Artefato do build manual' : 'Adicionar artefato'}</h2>
           <button type="button" className="dz-btn sm" onClick={onClose}>Fechar</button>
         </header>
         <div className="aa-body">
@@ -117,13 +171,10 @@ export function AddArtifact({ sets, onClose, onSaved }: { sets: readonly { name:
           </section>
 
           <section className="aa-form" aria-label="Dados do artefato">
-            <label className="dz-field">
+            <div className="dz-field">
               <span>Set</span>
-              <select value={d.setKey} onChange={(e) => setD({ ...d, setKey: e.target.value })} aria-label="Set">
-                <option value="">Escolha o set…</option>
-                {[...sets].sort((a, b) => a.name.localeCompare(b.name)).map((s) => <option key={s.name} value={setKeyOf(s.name)}>{s.namePt && s.namePt !== s.name ? `${s.name} · ${s.namePt}` : s.name}</option>)}
-              </select>
-            </label>
+              <SetSelect sets={sets} value={d.setKey} slot={d.slotKey} onChange={(setKey) => setD((p) => ({ ...p, setKey }))} />
+            </div>
             <div className="aa-row">
               <div className="dz-field"><span>Posição</span><Segmented<SlotKey> label="Posição" value={d.slotKey} options={SLOTS} onChange={setSlot} /></div>
               <div className="dz-field"><span>Raridade</span><Segmented<'4' | '5'> label="Raridade" value={String(d.rarity) as '4' | '5'} options={[{ value: '4', label: '4★' }, { value: '5', label: '5★' }]} onChange={(v) => setD({ ...d, rarity: Number(v) as 4 | 5 })} /></div>
@@ -160,9 +211,9 @@ export function AddArtifact({ sets, onClose, onSaved }: { sets: readonly { name:
           </section>
         </div>
         <footer className="aa-foot">
-          <span className="muted small">Salva em {baseName ? `"${baseName}"` : 'uma base nova'}.</span>
-          <button type="button" className="dz-btn" disabled={problems.length > 0} onClick={() => save(true)}>Salvar e adicionar outro</button>
-          <button type="button" className="dz-btn gold" disabled={problems.length > 0} onClick={() => save(false)}>Salvar</button>
+          <span className="muted small">{onSubmit ? 'Fica só neste time, não vai para o inventário.' : `Salva em ${baseName ? `"${baseName}"` : 'uma base nova'}.`}</span>
+          {!onSubmit && <button type="button" className="dz-btn" disabled={problems.length > 0} onClick={() => save(true)}>Salvar e adicionar outro</button>}
+          <button type="button" className="dz-btn gold" disabled={problems.length > 0} onClick={() => save(false)}>{onSubmit ? 'Usar' : 'Salvar'}</button>
         </footer>
       </div>
     </div>

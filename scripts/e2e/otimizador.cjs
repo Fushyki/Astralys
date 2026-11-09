@@ -56,7 +56,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   check('abre o otimizador do Mavuika dentro da página dele', /aba=otimizar/.test(page.url()) && /Mavuika/.test(await page.textContent('.pc-tabs [aria-selected="true"]')));
   check('a faixa do time tem 3 telas: Equipe, Personagens, Rotação e buffs', (await page.$$eval('.dz-subnav nav a', (a) => a.map((x) => x.textContent.replace(/^\d · /, '').trim()))).join('|') === 'Equipe|Personagens|Rotação e buffs');
   check('"O que otimizar" tem 3 escolhas: Dano, Buff e Stat', (await page.locator('.ot-seg[aria-label="O que otimizar"] button').count()) === 3 && (await page.getAttribute('.ot-seg[aria-label="O que otimizar"] button:has-text("Dano")', 'aria-pressed')) === 'true');
-  check('em Dano há 3 alvos: rotação do time, só dele e um golpe do kit', (await page.$$eval('.ot-seg[aria-label="Dano de"] button', (b) => b.map((x) => x.textContent.trim()))).join('|') === 'Rotação do time|Só Mavuika|Um golpe');
+  check('em Dano há 3 alvos: manual, só dele e um golpe do kit', (await page.$$eval('.ot-seg[aria-label="Dano de"] button', (b) => b.map((x) => x.textContent.trim()))).join('|') === 'Manual|Só Mavuika|Um golpe');
 
   const addMin = async (key, value) => {
     await page.selectOption('select[aria-label="Stat do mínimo"]', key);

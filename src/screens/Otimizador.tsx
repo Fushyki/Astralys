@@ -50,8 +50,9 @@ const SLOTS = [
   { key: 'circlet', label: 'Tiara' },
 ] as const;
 
-type Goal = 'dano' | 'buff' | 'stat' | 'manual';
-type Scope = 'team' | 'member' | 'move';
+type Goal = 'dano' | 'buff' | 'stat';
+/** Dano de: build manual/KQM (sem buscar no inventário), só do personagem ou um golpe do kit. */
+type Scope = 'manual' | 'member' | 'move';
 type Crit = 'avg' | 'crit' | 'noCrit';
 type StatKey = 'hp' | 'atk' | 'def' | 'em' | 'er';
 const STAT_LABEL: Record<StatKey, string> = { hp: 'HP máximo', atk: 'ATK', def: 'DEF', em: 'Maestria', er: 'Recarga' };
@@ -89,7 +90,7 @@ interface UiState {
 }
 
 const initial: UiState = {
-  goal: 'dano', scope: 'team', moveId: '', reaction: 'none', crit: 'avg', points: 200, buffId: '', stat: 'hp', mins: { er: '', cr: '', cd: '', em: '', hp: '', atk: '', def: '' },
+  goal: 'dano', scope: 'member', moveId: '', reaction: 'none', crit: 'avg', points: 200, buffId: '', stat: 'hp', mins: { er: '', cr: '', cd: '', em: '', hp: '', atk: '', def: '' },
   levelMin: 0, levelMax: 20, topN: 5, borrow: false, offMains: { sands: [], goblet: [], circlet: [] }, offSets: [], fillerSets: true, blocked: [],
 };
 
@@ -111,7 +112,10 @@ function roleDefaults(v: ProjectView, index: number, erNeeded: number | null): U
 const readUi = (key: string, fallback: () => UiState): UiState => {
   try {
     const raw = localStorage.getItem(key);
-    return raw ? { ...initial, ...(JSON.parse(raw) as Partial<UiState>) } : fallback();
+    if (!raw) return fallback();
+    const saved = JSON.parse(raw) as Partial<UiState> & { scope?: string };
+    // "Rotação do time" saiu do Otimizar (otimizar é de um personagem só): quem a tinha escolhida volta para "Só o personagem".
+    return { ...initial, ...saved, scope: saved.scope === 'manual' || saved.scope === 'move' ? saved.scope : 'member' };
   } catch {
     return fallback();
   }
@@ -277,8 +281,7 @@ export function OtimizadorPanel({ index }: { index: number }) {
       ui.goal === 'stat' ? { kind: 'stat', stat: ui.stat }
       : ui.goal === 'buff' ? { kind: 'buff', buffId: buffChosen?.id ?? '' }
       : ui.scope === 'move' && moveChosen ? { kind: 'move', moveId: moveChosen.id, reaction, crit: critPick, points: ui.points }
-      : ui.scope === 'member' ? { kind: 'member' }
-      : { kind: 'team' };
+      : { kind: 'member' };
     const mainStats: OptimizerConfig['mainStats'] = {};
     for (const slot of ['sands', 'goblet', 'circlet'] as const) {
       const on = mainsOf(slot).map(([k]) => k).filter((k) => !ui.offMains[slot].includes(k));
@@ -365,7 +368,7 @@ export function OtimizadorPanel({ index }: { index: number }) {
     ui.goal === 'stat' ? (ui.stat === 'er' ? `${formatDecimal(r.value * 100, 0)}%` : formatInt(r.value))
     : ui.goal === 'buff' ? (Math.abs(r.value) < 10 ? `${formatDecimal(r.value * 100, 1)}%` : formatInt(r.value))
     : formatInt(r.value);
-  const goalCaption = ui.goal === 'stat' ? STAT_LABEL[ui.stat] : ui.goal === 'buff' ? (buffChosen?.label ?? 'buff') : ui.scope === 'move' ? `${moveChosen?.labelPt ?? moveChosen?.label ?? 'golpe'} · ${REACTION_LABEL[reaction] ?? reaction}` : ui.scope === 'member' ? `dano de ${ref.character}` : 'dano da rotação do time';
+  const goalCaption = ui.goal === 'stat' ? STAT_LABEL[ui.stat] : ui.goal === 'buff' ? (buffChosen?.label ?? 'buff') : ui.scope === 'move' ? `${moveChosen?.labelPt ?? moveChosen?.label ?? 'golpe'} · ${REACTION_LABEL[reaction] ?? reaction}` : `dano de ${ref.character}`;
   /** Recarga que a calculadora de recarga do projeto pede para este personagem (null se ele não usa o Supremo). */
   const erNeeded = (() => {
     const r = energyResults(project, energyMembers(project, data.game.characters, data.particles))[index];
@@ -427,12 +430,22 @@ export function OtimizadorPanel({ index }: { index: number }) {
     <div className="ot-field">
       <span className="lbl">Otimizar</span>
       <div className="ot-seg" role="group" aria-label="O que otimizar">
-        {([['dano', 'Dano', 'Dano do time, dele ou de um golpe'], ['buff', 'Buff', 'O maior valor de um buff que ele dá ao time (foco de suportes)'], ['stat', 'Stat', 'O maior valor final de HP, ATK, Maestria… (use os mínimos para não perder o resto)'], ['manual', 'Manual', 'Monta o build à mão ou pelo KQM automático, sem usar o inventário']] as [Goal, string, string][]).map(([k, label, tip]) => (
+        {([['dano', 'Dano', 'Dano do time, dele ou de um golpe'], ['buff', 'Buff', 'O maior valor de um buff que ele dá ao time (foco de suportes)'], ['stat', 'Stat', 'O maior valor final de HP, ATK, Maestria… (use os mínimos para não perder o resto)']] as [Goal, string, string][]).map(([k, label, tip]) => (
           <button key={k} type="button" aria-pressed={ui.goal === k} title={tip} onClick={() => setUi({ ...ui, goal: k })}>{label}</button>
         ))}
       </div>
     </div>
   );
+  const alvoField = ui.goal === 'dano' ? (
+    <div className="ot-field">
+      <span className="lbl">Alvo</span>
+      <div className="ot-seg" role="group" aria-label="Dano de" title="Manual: monta o build à mão ou pelo KQM, sem buscar no inventário. Só o personagem: dano dele na rotação. Um golpe: avaliado sozinho com todos os buffs ligados.">
+        {([['manual', 'Manual'], ['member', `Só ${ref.character}`], ['move', 'Um golpe']] as [Scope, string][]).map(([k, label]) => (
+          <button key={k} type="button" aria-pressed={ui.scope === k} onClick={() => setUi({ ...ui, scope: k })}>{label}</button>
+        ))}
+      </div>
+    </div>
+  ) : null;
   const manualBox = character ? (
     <ManualBuild member={ref} rolls={v.bundle.optimization.rolls[index]} element={character.element} sets={data.game.artifacts} onChange={(patch) => update(index, patch)} />
   ) : null;
@@ -449,13 +462,13 @@ export function OtimizadorPanel({ index }: { index: number }) {
           </Panel>
           {manualBox}
         </>
-      ) : ui.goal === 'manual' ? (
+      ) : ui.goal === 'dano' && ui.scope === 'manual' ? (
         <>
           <div className="ot-top">
             <CurrentBuild build={current} field={fieldMode} onField={() => setFieldMode(!fieldMode)} sets={data.game.artifacts} />
             {manualBox}
           </div>
-          <section className="ot-bar" aria-label="Foco da otimização"><div className="ot-bar-line">{goalField}</div></section>
+          <section className="ot-bar" aria-label="Foco da otimização"><div className="ot-bar-line">{goalField}{alvoField}</div></section>
         </>
       ) : (
         <>
@@ -533,16 +546,7 @@ export function OtimizadorPanel({ index }: { index: number }) {
               <div className="ot-bar-cfg">
                 <div className="ot-bar-line">
                   {goalField}
-                  {ui.goal === 'dano' && (
-                    <div className="ot-field">
-                      <span className="lbl">Alvo</span>
-                      <div className="ot-seg" role="group" aria-label="Dano de" title="Rotação do time: soma o dano de todos, com os buffs que ele dá nas janelas. Um golpe: avaliado sozinho com todos os buffs ligados.">
-                        {([['team', 'Rotação do time'], ['member', `Só ${ref.character}`], ['move', 'Um golpe']] as [Scope, string][]).map(([k, label]) => (
-                          <button key={k} type="button" aria-pressed={ui.scope === k} onClick={() => setUi({ ...ui, scope: k })}>{label}</button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+                  {alvoField}
                   {ui.goal === 'buff' && (
                     <div className="ot-field grow">
                       <span className="lbl">Buff</span>

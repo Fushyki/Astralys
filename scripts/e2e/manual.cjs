@@ -29,7 +29,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   const n0 = await page.locator('.inv-grid .inv-art').count();
   await page.goto(`${BASE}/projeto/exemplo/personagem/Mavuika?aba=otimizar`, { waitUntil: 'networkidle' });
   await page.waitForSelector('.ot-top');
-  await page.click('.ot-seg[aria-label="O que otimizar"] button:has-text("Manual")');
+  await page.click('.ot-seg[aria-label="Dano de"] button:has-text("Manual")');
   await page.waitForSelector('.ot-seg[aria-label="Como montar o build"]');
   check('Manual começa em KQM automático', (await page.locator('.ot-seg[aria-label="Como montar o build"] [aria-pressed=true]').textContent()).includes('KQM'));
   await page.click('.ot-seg[aria-label="Como montar o build"] button:has-text("Manual")');

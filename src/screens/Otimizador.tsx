@@ -466,7 +466,7 @@ export function OtimizadorPanel({ index }: { index: number }) {
         <>
           <div className="ot-top">
             <CurrentBuild build={current} field={fieldMode} onField={() => setFieldMode(!fieldMode)} sets={data.game.artifacts} />
-            {manualBox}
+            <div className="ot-manualwrap">{manualBox}</div>
           </div>
           <section className="ot-bar" aria-label="Foco da otimização"><div className="ot-bar-line">{goalField}{alvoField}</div></section>
         </>

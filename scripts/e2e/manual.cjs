@@ -32,6 +32,8 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.click('.ot-seg[aria-label="Dano de"] button:has-text("Manual")');
   await page.waitForSelector('.ot-seg[aria-label="Como montar o build"]');
   check('Manual começa em KQM automático', (await page.locator('.ot-seg[aria-label="Como montar o build"] [aria-pressed=true]').textContent()).includes('KQM'));
+  check('KQM mostra a tabela Status, Procs e Valor', (await page.locator('.ot-mtable thead th').allTextContents()).join('|') === 'Status|Procs|Valor' && (await page.locator('.ot-mtable tbody tr').count()) >= 3);
+  await page.screenshot({ path: path.join(OUT, 'manual-kqm.png') });
   await page.click('.ot-seg[aria-label="Como montar o build"] button:has-text("Manual")');
   await page.waitForSelector('.ot-manual li');
   check('geram-se 5 peças', (await page.locator('.ot-manual li .ot-art').count()) === 5 || (await page.locator('.ot-manual li').count()) === 5);

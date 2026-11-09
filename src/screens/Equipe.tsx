@@ -97,7 +97,6 @@ export default function Equipe() {
   const updateMember = useRotationStore((s) => s.updateMember);
   const addMember = useRotationStore((s) => s.addMember);
   const removeMember = useRotationStore((s) => s.removeMember);
-  const setCompat = useRotationStore((s) => s.setCompat);
   const [picker, setPicker] = useState<{ mode: 'replace'; index: number } | { mode: 'add' } | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -171,19 +170,6 @@ export default function Equipe() {
 
       {error && <p className="dz-error" role="alert">{error}</p>}
 
-      {project.compat === 'planilha' && (
-        <section className="dz-panel eq-compat" role="note" aria-label="Modo planilha">
-          <div>
-            <b>Modo planilha</b>
-            <p>
-              Este time reproduz a planilha original: Mavuika, Citlali, Iansan e Bennett usam só os efeitos dela, sem constelações e passivas curadas. Por isso mudar a constelação
-              não muda os buffs. Desligar o modo libera todos os efeitos, mas o DPS deixa de bater com a planilha.
-            </p>
-          </div>
-          <button type="button" className="dz-btn gold" onClick={() => setCompat('none')}>Usar todos os efeitos</button>
-        </section>
-      )}
-
       <section className="dz-grid c4" aria-label="Personagens do time">
         {project.members.map((ref, i) => {
           const character = characters.find((c) => c.name === ref.character);
@@ -236,7 +222,6 @@ export default function Equipe() {
                       <ReactedChips own={character.element} choices={resShred?.elements.filter((e): e is Element => e !== 'Physical')} els={ref.reacted ?? []} onChange={(next) => updateMember(i, { reacted: next })} />
                       <span className="muted small">
                         {resShred ? 'Só estes elementos perdem RES. Sem escolha, valem os do time.' : `Buffa ${character.element} e os elementos marcados (pode marcar mais de um).`}
-                        {project.compat === 'planilha' && !resShred ? ' No modo planilha o Scroll é o buff fixo de 40%; "Usar todos os efeitos" faz a escolha valer.' : ''}
                       </span>
                     </div>
                   );

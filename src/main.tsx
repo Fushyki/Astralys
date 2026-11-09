@@ -2,6 +2,7 @@ import React, { Suspense, lazy } from 'react';
 import ReactDOM from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from './app/Toaster';
+import { PlanilhaGate } from './app/PlanilhaGate';
 import { BrowserRouter, Navigate, Route, Routes, useParams } from 'react-router-dom';
 import './index.css';
 import { installDeployRecovery } from './app/reloadOnce';
@@ -46,6 +47,7 @@ ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
+        <PlanilhaGate>
         <Routes>
           <Route path="/rotacao" element={<Navigate to="/vault" replace />} />
           <Route path="/rotacao/:id" element={<To to={(id) => `/projeto/${id}/rotacao`} />} />
@@ -81,6 +83,7 @@ ReactDOM.createRoot(rootElement).render(
           <Route path="/" element={<Suspense fallback={null}><Inicio /></Suspense>} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
+        </PlanilhaGate>
         <Toaster />
       </BrowserRouter>
     </QueryClientProvider>

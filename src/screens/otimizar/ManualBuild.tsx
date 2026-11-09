@@ -1,22 +1,49 @@
 /**
- * Alvo "Manual" da aba Otimizar: o build do personagem é feito à mão ou pelo KQM automático.
+ * Alvo "Manual" da aba Otimizar: o build do personagem é feito à mão ou pelo KQM automático. Nos dois modos a tabela mostra,
+ * por substat, os procs e o valor total.
  *  - KQM (otimizado): sem peças; o motor distribui os rolls nos substats úteis (o build genérico).
  *  - Manual: 5 artefatos feitos aqui (ou gerados do KQM para ajustar). Ficam só neste personagem deste time e NÃO vão para o inventário.
  * O dano aparece em Resumo e build e em Avançado, como em qualquer build equipado.
  */
 import { useState } from 'react';
 import { Panel } from '../../design/primitives';
-import { SUBSTATS, type Rolls } from '../../engine/artifacts';
+import { SUBSTATS, SUBSTAT_ROLL_VALUES, type Rolls, type Substat } from '../../engine/artifacts';
 import type { MemberRef } from '../../engine/project';
-import { artifactProcs } from '../../features/good/artifactProcs';
+import { artifactProcs, maxProcs, type SubKey } from '../../features/good/artifactProcs';
 import { setKeyOf } from '../../features/good/artifactOcr';
 import type { GoodArtifact } from '../../features/good/goodImport';
-import { MANUAL_LOCATION, kqmPieces } from '../../features/good/kqmPieces';
-import { MAIN_LABEL, SUB_LABEL } from '../../features/good/labels';
+import { MANUAL_LOCATION, SUB_KEY, kqmPieces } from '../../features/good/kqmPieces';
+import { MAIN_LABEL, SUB_LABEL, formatSub } from '../../features/good/labels';
+import { formatDecimal } from '../../ui/format';
 import { AddArtifact, MAIN_BY_SLOT } from '../inventario/AddArtifact';
 import { PieceArt, SLOTS } from './shared';
 
 interface SetData { id: number; name: string; namePt?: string; rarity?: number }
+interface Row { key: SubKey; procs: number; value: number }
+
+const SUB_NAME: Record<SubKey, string> = {
+  critRate_: 'Taxa Crítica', critDMG_: 'Dano Crítico', atk_: 'ATK%', atk: 'ATK', eleMas: 'Maestria', enerRech_: 'Recarga', hp_: 'HP%', hp: 'HP', def_: 'DEF%', def: 'DEF',
+};
+
+/** Linhas da tabela: procs e valor somados de cada substat, do que tem mais procs para o que tem menos. */
+function tableRows(manual: boolean, pieces: GoodArtifact[], rolls: Rolls): Row[] {
+  const sum = new Map<SubKey, Row>();
+  const add = (key: SubKey, procs: number, value: number) => {
+    const cur = sum.get(key) ?? { key, procs: 0, value: 0 };
+    sum.set(key, { key, procs: cur.procs + procs, value: cur.value + value });
+  };
+  if (manual) {
+    for (const p of pieces) for (const s of p.substats) add(s.key as SubKey, artifactProcs([s], p.rarity === 4 ? 4 : 5).total, s.value);
+  } else {
+    for (const s of SUBSTATS as readonly Substat[]) {
+      const key = SUB_KEY[s];
+      // Valor médio por roll do KQM (frações viram pontos percentuais, como nos artefatos).
+      const per = SUBSTAT_ROLL_VALUES[s][0] * (key.endsWith('_') ? 100 : 1);
+      if (rolls[s] > 0) add(key, rolls[s], rolls[s] * per);
+    }
+  }
+  return [...sum.values()].filter((r) => r.procs > 0).sort((a, b) => b.procs - a.procs);
+}
 
 export function ManualBuild({ member, rolls, element, sets, onChange }: {
   member: MemberRef;
@@ -48,7 +75,11 @@ export function ManualBuild({ member, rolls, element, sets, onChange }: {
     setKey: pieces[0]?.setKey ?? (member.primarySet ? setKeyOf(member.primarySet) : ''), slotKey: slot as GoodArtifact['slotKey'], rarity: 5, level: 20,
     mainStatKey: MAIN_BY_SLOT[slot as keyof typeof MAIN_BY_SLOT][0], substats: [], location: '',
   });
-  const used = SUBSTATS.filter((s) => rolls[s] >= 0.5).map((s) => `${s} ${Math.round(rolls[s])}`);
+
+  const rows = tableRows(pieces.length > 0, pieces, rolls);
+  const totalProcs = rows.reduce((t, r) => t + r.procs, 0);
+  const cap = pieces.length > 0 ? pieces.reduce((t, p) => t + maxProcs(p.rarity === 4 ? 4 : 5, p.level ?? 20), 0) : 45;
+  const fmtProcs = (n: number) => formatDecimal(n, Number.isInteger(n) ? 0 : 1);
 
   return (
     <Panel bar title="Build do personagem" badge={<span className="dz-badge num">{manual ? 'Manual' : fromInventory ? 'Inventário' : 'KQM'}</span>}>
@@ -56,16 +87,34 @@ export function ManualBuild({ member, rolls, element, sets, onChange }: {
         <button type="button" aria-pressed={pieces.length === 0} onClick={toKqm} title="O motor distribui os procs nos substats úteis (padrão KQM)">KQM (otimizado)</button>
         <button type="button" aria-pressed={manual} disabled={!manual && !fromInventory && !member.primarySet} onClick={manual ? undefined : toManual} title={member.primarySet ? 'Cria 5 artefatos a partir do KQM para você ajustar' : 'Escolha o set em Resumo e build'}>Manual</button>
       </div>
-      {pieces.length === 0 ? (
-        <>
-          <p className="muted small">O motor distribui os rolls nos substats úteis para o dano do time, com Recarga mínima primeiro. Set e stats principais: aba Resumo e build.</p>
-          {used.length > 0 && <p className="num small">Rolls: {used.join(' · ')}</p>}
-          {!member.primarySet && <p className="note">Escolha o set em Resumo e build para montar peças à mão.</p>}
-        </>
-      ) : (
-        <>
-          <p className="muted small">{fromInventory ? 'Peças do inventário equipadas. Ao editar uma, as 5 viram cópias manuais (o inventário não muda). ' : ''}Estes artefatos valem só para este personagem neste time e não entram no inventário. O dano aparece em Resumo e build e em Avançado.</p>
-          <ul className="ot-manual">
+
+      <div className="ot-mb">
+        <table className="ot-mtable" aria-label="Substats do build">
+          <thead>
+            <tr><th scope="col">Status</th><th scope="col" className="r">Procs</th><th scope="col" className="r">Valor</th></tr>
+          </thead>
+          <tbody>
+            {rows.length === 0 && <tr><td colSpan={3} className="muted">Sem substats ainda.</td></tr>}
+            {rows.map((r) => (
+              <tr key={r.key}>
+                <th scope="row">{SUB_NAME[r.key]}</th>
+                <td className="r num">{fmtProcs(r.procs)}</td>
+                <td className="r num">{formatSub(r.key, r.value)}</td>
+              </tr>
+            ))}
+          </tbody>
+          <tfoot>
+            <tr><th scope="row">Total</th><td className="r num">{fmtProcs(totalProcs)} <span className="muted">/ {cap}</span></td><td /></tr>
+          </tfoot>
+        </table>
+
+        {pieces.length === 0 ? (
+          <div className="ot-mnote">
+            <p className="muted small">O motor distribui os rolls nos substats úteis para o dano do time, com Recarga mínima primeiro. Set e stats principais ficam na aba Resumo e build.</p>
+            {!member.primarySet && <p className="note">Escolha o set em Resumo e build para montar as peças à mão.</p>}
+          </div>
+        ) : (
+          <ul className="ot-manual" aria-label="Peças do build">
             {SLOTS.map((sl) => {
               const p = pieces.find((x) => x.slotKey === sl.key);
               const set = p ? setOf(p.setKey) : undefined;
@@ -83,8 +132,10 @@ export function ManualBuild({ member, rolls, element, sets, onChange }: {
               );
             })}
           </ul>
-        </>
-      )}
+        )}
+      </div>
+      {fromInventory && <p className="muted small">Peças do inventário equipadas. Ao editar uma, as 5 viram cópias manuais (o inventário não muda).</p>}
+      {pieces.length > 0 && <p className="muted small">Estas peças valem só para este personagem neste time e não entram no inventário. O dano aparece em Resumo e build e em Avançado.</p>}
       {editing && <AddArtifact sets={sets} initial={editing.piece ?? initialFor(editing.slot)} onSubmit={submit} onClose={() => setEditing(null)} />}
     </Panel>
   );

@@ -10,7 +10,7 @@ import type { GoodArtifact } from './goodImport';
 const SLOTS = ['flower', 'plume', 'sands', 'goblet', 'circlet'] as const;
 type Slot = (typeof SLOTS)[number];
 
-const SUB_KEY: Record<Substat, SubKey> = { CR: 'critRate_', CD: 'critDMG_', 'ATK%': 'atk_', EM: 'eleMas', ER: 'enerRech_', ATK: 'atk', 'HP%': 'hp_', HP: 'hp', 'DEF%': 'def_', DEF: 'def' };
+export const SUB_KEY: Record<Substat, SubKey> = { CR: 'critRate_', CD: 'critDMG_', 'ATK%': 'atk_', EM: 'eleMas', ER: 'enerRech_', ATK: 'atk', 'HP%': 'hp_', HP: 'hp', 'DEF%': 'def_', DEF: 'def' };
 const MAIN_KEY: Record<string, string> = { 'ATK%': 'atk_', 'HP%': 'hp_', 'DEF%': 'def_', EM: 'eleMas', ER: 'enerRech_', CR: 'critRate_', CD: 'critDMG_', Healing: 'heal_' };
 
 /** `location` das peças feitas à mão: não vêm do inventário e não podem ser trocadas ao abrir o projeto. */

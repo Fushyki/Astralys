@@ -337,7 +337,19 @@ button.ot-ch[aria-pressed='true'] b { color: var(--gold-hi); }
 /* selo de excesso de Taxa Crítica */
 .crit-excess { margin-left: var(--sp-2); font-style: normal; white-space: nowrap; }
 
-/* Alvo Manual: lista das 5 peças feitas à mão */
+/* Alvo Manual: tabela de substats (Status, Procs, Valor) e as 5 peças feitas à mão */
+.ot-manualwrap { grid-column: span 2; display: flex; }
+.ot-manualwrap > * { flex: 1; min-width: 0; }
+@media (max-width: 1100px) { .ot-manualwrap { grid-column: auto; } }
+.ot-mb { display: grid; grid-template-columns: minmax(250px, 340px) minmax(0, 1fr); gap: var(--sp-4, 16px); align-items: start; }
+@media (max-width: 760px) { .ot-mb { grid-template-columns: minmax(0, 1fr); } }
+.ot-mtable { width: 100%; border-collapse: collapse; font-size: var(--fs-2, 14px); }
+.ot-mtable th, .ot-mtable td { padding: 7px 8px; text-align: left; font-weight: 500; border-bottom: 1px solid var(--border, rgba(255,255,255,.1)); }
+.ot-mtable thead th { font: 600 var(--fs-1, 12px) var(--font-display); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.ot-mtable .r { text-align: right; }
+.ot-mtable tbody th { color: var(--text, inherit); }
+.ot-mtable tfoot th, .ot-mtable tfoot td { border-bottom: 0; border-top: 1px solid var(--gold); color: var(--gold); font-weight: 700; }
+.ot-mnote { display: flex; flex-direction: column; gap: 8px; }
 .ot-manual { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
 .ot-manual li { display: flex; align-items: center; gap: 10px; }
 .ot-manual .t { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }

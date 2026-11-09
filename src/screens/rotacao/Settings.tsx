@@ -30,8 +30,7 @@ export function SettingsDialog({ project, dps, onClose }: { project: RotationPro
   const cfg = project.config;
   const last = lastActionTime(project);
   const duration = effectiveDuration(project);
-  const planilha = project.compat === 'planilha';
-  const manual = cfg.durationManual === true || planilha;
+  const manual = cfg.durationManual === true;
   const hasManual = project.actions.some((a) => a.tagSource === 'manual');
   const canTighten = project.actions.length > 0;
 
@@ -63,7 +62,6 @@ export function SettingsDialog({ project, dps, onClose }: { project: RotationPro
             />
             <div className="rt-cfg-row">
               <Num label="Duração" value={duration} unit="s" min={0.5} onCommit={(v) => updateConfig({ rotationDuration: v, durationManual: true })} />
-              {planilha && <p className="rt-note">Projeto no modo planilha: a duração é a da planilha, por isso é manual.</p>}
             </div>
           </Section>
 
@@ -80,13 +78,13 @@ export function SettingsDialog({ project, dps, onClose }: { project: RotationPro
           <Section title="Elemento dos golpes" hint="O que vale para um golpe sem elemento escolhido.">
             <Sel<'kit' | 'personagem'>
               ariaLabel="Elemento dos golpes sem elemento escolhido"
-              value={planilha ? 'personagem' : project.elementMode}
+              value={project.elementMode}
               onChange={setElementMode}
               options={[{ value: 'kit', label: 'Pelo kit do jogo (ataque normal de arma é Físico)' }, { value: 'personagem', label: 'Sempre o do personagem (modo antigo)' }]}
             />
             <p className="rt-note">
               No jogo, o ataque normal, carregado e de queda de quem usa espada, montante, lança ou arco é Físico; só a habilidade, o supremo e os golpes elementais do kit têm elemento.
-              Infusões (Hu Tao, Xiao, Yoimiya…) se escolhem na aba Talentos do personagem ou em cada golpe. {planilha ? 'O modo planilha usa sempre o elemento do personagem.' : ''}
+              Infusões (Hu Tao, Xiao, Yoimiya…) se escolhem na aba Talentos do personagem ou em cada golpe.
             </p>
           </Section>
 
@@ -98,7 +96,7 @@ export function SettingsDialog({ project, dps, onClose }: { project: RotationPro
           </Section>
 
           {hasManual && (
-            <Section title="Perfis fixos de buff" hint="Alguns golpes usam perfis fixos, como na planilha: mudar o tempo deles ou as barras não altera os buffs que valem para eles. Converta em janelas para editar os buffs no tempo; o dano continua o mesmo.">
+            <Section title="Perfis fixos de buff" hint="Alguns golpes usam perfis fixos de buff: mudar o tempo deles ou as barras não altera os buffs que valem para eles. Converta em janelas para editar os buffs no tempo; o dano continua o mesmo.">
               <div><Button variant="secondary" size="md" onClick={convert}>Converter perfis em janelas</Button></div>
             </Section>
           )}

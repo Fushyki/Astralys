@@ -2,7 +2,8 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { analyzeProject, resolveProject, type EffectsData, type GameData } from '../../src/engine';
-import { sampleForApp } from '../../src/features/rotation/persistence';
+import { sampleProject } from '../../src/features/rotation/persistence';
+import { windowsFromProfiles } from '../../src/features/rotation/projectOps';
 import { coveringBuffs, hitCascade, hitFigures, laneInfos, resFromMultiplier } from '../../src/features/rotation/rotationModel';
 
 const root = path.resolve(__dirname, '../..');
@@ -20,12 +21,13 @@ const effects: EffectsData = {
   flatDamage: json('src/effects/flatDamage.json'),
 };
 
-const project = sampleForApp();
+// O gabarito da planilha, com os buffs em janelas (o exemplo que o site abre já não está no modo planilha).
+const project = windowsFromProfiles(sampleProject());
 const resolved = resolveProject(project, game, effects);
 const bundle = analyzeProject({ team: resolved.team, actions: resolved.actions, flatEffects: resolved.flatEffects, ampCoefficient: resolved.ampCoefficient });
 const burst = bundle.optimization.result.actions.find((a) => /Supremo \(200 FS\)/.test(a.action.move.displayName))!;
 
-describe('o exemplo do site abre com os buffs em janelas e o mesmo dano da planilha', () => {
+describe('o exemplo da planilha em janelas mantém o dano da planilha', () => {
   it('DPR 3.790.496 e DPS 216.600', () => {
     expect(bundle.optimization.result.totals.avg).toBeCloseTo(3790496.07, 1);
     expect(bundle.optimization.result.totals.dps).toBeCloseTo(216599.78, 1);

@@ -323,11 +323,6 @@ export function setSourceEnabled(project: RotationProject, id: string, enabled: 
   return touch({ ...project, disabled: enabled ? project.disabled.filter((x) => x !== id) : [...project.disabled, id] });
 }
 
-/** Liga ou desliga o modo planilha (os 4 personagens da planilha só com os efeitos dela, para o gabarito bater). */
-export function setCompat(project: RotationProject, compat: RotationProject['compat']): RotationProject {
-  return project.compat === compat ? project : touch({ ...project, compat });
-}
-
 /** Qual interruptor de buff o usuário mexeu. */
 export interface BuffToggle {
   /** Id gravado em `disabled`: o da fonte (estática) ou `<buff>@<Nome>` (buff de time só para quem recebe). */

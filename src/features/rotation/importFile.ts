@@ -1,12 +1,10 @@
-/**
- * Importação de arquivos no navegador: a planilha .xlsx do theorycraft (modelo "Time/Rotação") e o JSON de um
- * projeto exportado. A biblioteca xlsx é pesada, então só é baixada quando um .xlsx é escolhido.
- */
-import { importPlanilha, parseProject, projectFromPlanilha, type RotationProject } from '../../engine';
+/** Importação de arquivos no navegador: o JSON de um projeto exportado ou de uma rotação compartilhada. */
+import { parseProject, type RotationProject } from '../../engine';
 import type { LoadedData } from './data';
 import { toast } from '../../app/toast';
-import { newProjectId, sampleProject } from './persistence';
+import { newProjectId, sampleForApp } from './persistence';
 import { dropDuplicateExtras } from './extraDedupe';
+import { leavePlanilha } from './leavePlanilha';
 import { parseShare, projectFromShare } from './share';
 
 export interface ImportResult {
@@ -14,26 +12,13 @@ export interface ImportResult {
   warnings: string[];
 }
 
-const baseName = (file: File) => file.name.replace(/\.[^.]+$/, '');
 
-export async function importXlsx(file: File, data: LoadedData): Promise<ImportResult> {
-  const XLSX = await import('xlsx');
-  const wb = XLSX.read(await file.arrayBuffer());
-  const imported = importPlanilha(wb, data.game, data.effects);
-  if (imported.actions.length === 0) throw new Error('A aba "Rotação" não tem nenhum golpe.');
-  const project = projectFromPlanilha(imported, {
-    id: newProjectId(),
-    name: baseName(file) || 'Planilha importada',
-    gameVersion: data.meta.gameVersion,
-  });
-  return { project, warnings: imported.warnings };
-}
-
-/** Descarta os buffs extras que repetem um buff já calculado (só com os dados do jogo carregados). */
+/** Tira o modo planilha de arquivos antigos e descarta os buffs extras que repetem um buff já calculado (só com os dados do jogo carregados). */
 export function withoutDuplicates(project: RotationProject, warnings: string[], data?: LoadedData): ImportResult {
   if (!data) return { project, warnings };
-  const r = dropDuplicateExtras(project, data.game, data.effects);
-  return { project: r.project, warnings: [...warnings, ...r.warnings] };
+  const left = leavePlanilha(project, data);
+  const r = dropDuplicateExtras(left.project, data.game, data.effects);
+  return { project: r.project, warnings: [...warnings, ...left.warnings, ...r.warnings] };
 }
 
 export async function importJson(file: File, data?: LoadedData): Promise<ImportResult> {
@@ -46,7 +31,7 @@ export async function importJson(file: File, data?: LoadedData): Promise<ImportR
   // Arquivo de "Compartilhar rotação" com a equipe dentro vira um time novo.
   const share = parseShare(raw);
   if (share) {
-    const r = projectFromShare(share, { ...sampleProject(), gameVersion: share.gameVersion });
+    const r = projectFromShare(share, { ...sampleForApp(), gameVersion: share.gameVersion });
     return withoutDuplicates(r.project, r.warnings, data);
   }
   const parsed = parseProject(raw);

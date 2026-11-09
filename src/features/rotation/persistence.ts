@@ -5,8 +5,8 @@
  */
 import { parseProject, type RotationProject } from '../../engine';
 import { bindNewProject, databaseOfProject, projectInActiveDatabase, unbindProject } from '../good/goodStore';
-import { windowsFromProfiles } from './projectOps';
 import sample from './sample/mavuika-iansan.json';
+import appSample from './sample/mavuika-iansan.app.json';
 
 export const SAMPLE_ID = 'exemplo';
 const KEY = (id: string) => `astralys:projeto:${id}`;
@@ -14,8 +14,8 @@ const KEY = (id: string) => `astralys:projeto:${id}`;
 /** O exemplo como está no JSON: etiquetas de buff manuais, como na planilha (usado pelos testes de gabarito). */
 export const sampleProject = (): RotationProject => parseProject(sample);
 
-/** O exemplo que o site abre: os buffs já em janelas na linha do tempo, com o mesmo dano da planilha. */
-export const sampleForApp = (): RotationProject => windowsFromProfiles(sampleProject());
+/** O exemplo que o site abre: buffs em janelas, sem o modo planilha (gerado por `scripts/make-app-sample.ts`). */
+export const sampleForApp = (): RotationProject => parseProject(appSample);
 
 export function saveProject(project: RotationProject): boolean {
   try {

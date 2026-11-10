@@ -1,7 +1,7 @@
 /** Mede, em vários tamanhos de tela, rolagem horizontal e elementos que passam da largura. Uso: node scripts/e2e/responsivo.cjs [url-base] */
 const { chromium } = require('playwright-core');
 const BASE = process.argv[2] || 'http://localhost:5173';
-const SIZES = [[360, 740], [414, 860], [600, 900], [768, 1024], [1024, 768], [1366, 768], [1920, 1080], [2560, 1300]];
+const SIZES = [[320, 640], [360, 740], [414, 860], [600, 900], [768, 1024], [1024, 768], [1280, 720], [1366, 768], [1536, 864], [1920, 1080], [2560, 1300], [3440, 1440]];
 const ROUTES = ['/', '/vault', '/novo', '/personagens', '/inventario', '/recarga', '/comparar?a=exemplo&b=exemplo', '/projeto/exemplo', '/projeto/exemplo/personagem/Mavuika', '/projeto/exemplo/personagem/Mavuika?aba=otimizar', '/projeto/exemplo/rotacao', '/projeto/exemplo/armas', '/projeto/exemplo/recarga', '/card/exemplo', '/entrar'];
 (async () => {
   const browser = await chromium.launch({ channel: process.env.E2E_BROWSER || 'msedge', headless: true });

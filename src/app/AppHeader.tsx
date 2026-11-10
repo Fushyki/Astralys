@@ -2,7 +2,7 @@
  * Barra superior fixa, igual em todas as telas: Times · Personagens · Inventário · Recarga · Comparar (e, dentro de um time, Armas e Card).
  * Dentro de um time aparece uma faixa com as 3 telas dele: Equipe, Personagens e Rotação e buffs.
  */
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import '../design/design.css';
 import { ONLINE_ENABLED } from '../online/config';
@@ -87,6 +87,8 @@ function SettingsMenu() {
 
 export function AppHeader({ projectId, memberName, projectName, favorite, onToggleFavorite }: AppHeaderProps) {
   const { pathname } = useLocation();
+  const [open, setOpen] = useState(false);
+  useEffect(() => setOpen(false), [pathname]);
   const base = projectId ? `/projeto/${projectId}` : '';
   const nav: { to: string; label: string; on: boolean }[] = [
     { to: '/vault', label: 'Times', on: pathname.startsWith('/vault') || pathname.startsWith('/novo') || pathname.startsWith('/card') || (pathname.startsWith('/projeto') && !pathname.startsWith(`${base}/armas`) && !pathname.startsWith(`${base}/recarga`)) },
@@ -116,7 +118,8 @@ export function AppHeader({ projectId, memberName, projectName, favorite, onTogg
           <StarMark />
           <span>ASTRALYS</span>
         </Link>
-        <nav className="dz-nav" aria-label="Navegação principal">
+        <button type="button" className="dz-burger" aria-label="Menu" aria-expanded={open} aria-controls="dz-mainnav" onClick={() => setOpen(!open)}><span aria-hidden="true">{open ? '✕' : '☰'}</span></button>
+        <nav id="dz-mainnav" className="dz-nav" data-open={open} aria-label="Navegação principal">
           {nav.map((t) => (
             <Link key={t.label} to={t.to} aria-current={t.on ? 'page' : undefined}>{t.label}</Link>
           ))}

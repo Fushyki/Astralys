@@ -8,7 +8,7 @@
 .cd-view { flex-direction: column; gap: 12px; }
 
 /* Barra de configuração acima do card: A na metade esquerda, B na direita e o meio no centro, como o card. */
-.cp-layout { grid-template-columns: minmax(0, 1fr); }
+.cd-layout.cp-layout { grid-template-columns: minmax(0, 1fr); }
 .cp-bar { display: flex; flex-direction: column; gap: 14px; padding-inline: 4%; }
 .cp-cols { display: grid; grid-template-columns: minmax(0, 1fr) 300px minmax(0, 1fr); gap: 28px; align-items: start; }
 .cp-grp { display: flex; flex-direction: column; gap: 10px; min-width: 0; }

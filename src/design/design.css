@@ -250,8 +250,10 @@ body { font-family: var(--font-body); font-size: 15px; line-height: 1.5; -webkit
 /* Celular: a moldura (cabeçalho, faixa do time e barra de passos) cabe em pouco espaço e deixa a tela para o conteúdo. */
 @media (max-width: 640px) {
   .dz-header { position: static; padding-top: 8px; row-gap: 0; }
-  .dz-nav { gap: 22px; -webkit-mask-image: linear-gradient(90deg, #000 90%, transparent); mask-image: linear-gradient(90deg, #000 90%, transparent); padding-right: 24px; }
-  .dz-nav a { padding: 12px 0 10px; }
+  .dz-header .dz-burger { display: inline-grid; }
+  .dz-header .dz-nav { display: none; flex-direction: column; gap: 0; padding-bottom: 6px; }
+  .dz-header .dz-nav[data-open="true"] { display: flex; }
+  .dz-nav a { display: flex; align-items: center; min-height: 44px; padding: 0; }
   .dz-subnav { flex-wrap: wrap; gap: 8px 12px; padding: 8px var(--gutter); }
   .dz-subnav .name { flex: 1; min-width: 0; font-size: 18px; max-width: none; }
   .dz-subnav nav { order: 3; flex: 1 1 100%; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
@@ -301,3 +303,10 @@ body { font-family: var(--font-body); font-size: 15px; line-height: 1.5; -webkit
 @keyframes dz-toast-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .dz-toast { animation: none; } }
 @media (max-width: 560px) { .dz-toasts { right: 16px; left: 16px; align-items: stretch; } .dz-toast { max-width: none; } }
+
+/* Telas de toque: alvos de pelo menos 44 px nos botões e cabeçalhos recolhíveis (a linha do tempo mantém os marcadores compactos). */
+@media (pointer: coarse) {
+  .dz-btn, .bc-head, .dz-seg button, .ot-seg button { min-height: 44px; }
+}
+
+.dz-burger { display: none; place-items: center; width: 44px; height: 44px; margin-left: auto; border: 1px solid var(--border-ctl-hi); border-radius: var(--r-ctl); background: transparent; color: var(--text); font-size: 20px; cursor: pointer; }

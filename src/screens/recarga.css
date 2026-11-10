@@ -14,7 +14,7 @@
 .rc-scenario .note { flex: 1; min-width: 240px; margin: 0; font-size: 13px; color: var(--muted); }
 .rc-team { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; }
 .rc-head .x { border: 0; background: none; color: #e06c75; font-size: 20px; line-height: 1; cursor: pointer; padding: 0 4px; }
-.rc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); gap: 14px 16px; }
+.rc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(310px, 100%), 1fr)); gap: 14px 16px; }
 /* Subgrid: cabeçalho, nome, necessidade, parâmetros e fontes ficam na mesma altura em todos os cartões da linha, tenham ou não medidor ou "Usa o Supremo". */
 .dz-panel.rc-card { position: relative; overflow: hidden; display: grid; grid-row: span 5; grid-template-rows: subgrid; gap: 14px; align-content: start; min-width: 0; border: 0; border-bottom: 3px solid var(--c); border-radius: 0; box-shadow: none; background: linear-gradient(100deg, var(--surface) 35%, color-mix(in srgb, var(--c) 13%, var(--bg)) 100%); }
 .rc-card .splash { position: absolute; top: 0; right: 0; width: 150px; height: 250px; object-fit: cover; object-position: center 12%; opacity: .6; pointer-events: none; -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 45%), linear-gradient(180deg, #000 55%, transparent 100%); -webkit-mask-composite: source-in; mask-image: linear-gradient(90deg, transparent 0, #000 45%), linear-gradient(180deg, #000 55%, transparent 100%); mask-composite: intersect; }

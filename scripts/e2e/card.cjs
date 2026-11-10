@@ -42,7 +42,9 @@ const pngSize = (file) => { const b = fs.readFileSync(file); return { w: b.readU
   check('apelido aparece como "por Davi"', (await page.textContent('.pc-nick')) === 'por Davi');
   await page.fill('.cd-form input[placeholder="Ex.: Meta 7.1"]', 'Meta 5.8');
   check('a etiqueta entra no subtítulo', (await page.textContent('.pc-sub')).includes('Meta 5.8'));
-  await page.click('.cd-swatch[aria-label="Cor #8fd3e8"]');
+  check('a cor padrão é a do primeiro personagem (Mavuika, Pyro)', (await page.locator('.pc').evaluate((e) => getComputedStyle(e).getPropertyValue('--accent').trim())) === '#f08a5d' && (await page.locator('.cd-swatch[aria-label="Cor Pyro"][aria-pressed="true"]').count()) === 1);
+  check('as cores de destaque são o dourado e os 7 elementos', (await page.locator('.cd-swatch').count()) === 8);
+  await page.click('.cd-swatch[aria-label="Cor Cryo"]');
   check('a cor de destaque muda o card', (await page.locator('.pc').evaluate((e) => getComputedStyle(e).getPropertyValue('--accent').trim())) === '#8fd3e8');
 
   for (const [label, size, cls] of [['16:9', '1600x900', 'pc-wide'], ['9:16', '1080x1920', 'pc-tall'], ['4:5', '1080x1350', 'pc-portrait']]) {

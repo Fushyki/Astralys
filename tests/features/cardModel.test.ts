@@ -103,7 +103,8 @@ describe('modelo do card para compartilhar', () => {
   it('reação principal, cor de destaque padrão e cores por membro (o 2º Pyro é mais escuro)', () => {
     expect(m.reaction?.name).toBe('Derreter');
     expect(m.reaction?.fraction).toBeCloseTo(0.553, 2);
-    expect(m.accent).toBe('#e9c46a');
+    expect(m.accent).toBe(m.members[0].color); // sem cor escolhida: a do personagem principal
+    expect(m.accent).toBe('#f08a5d');
     expect(m.nick).toBe('');
     expect(m.members[0].color).toBe('#f08a5d');
     expect(m.members[3].color).not.toBe(m.members[0].color);

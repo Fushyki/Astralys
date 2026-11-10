@@ -5,7 +5,7 @@
 import type { ArtifactSet, Character } from '../../data/schema';
 import { effectiveDuration, type AnalysisBundle, type MemberRef, type ResolvedProject, type RotationProject } from '../../engine';
 import { norm } from '../good/goodImport';
-import { memberColors } from '../../design/elements';
+import { ELEMENT_COLORS, memberColors } from '../../design/elements';
 import { mainReaction } from '../team/teamModel';
 
 /** Um set de artefatos que o personagem usa: o nome, o id (para a imagem) e quantas peças valem (2 ou 4). */
@@ -83,7 +83,11 @@ export interface CardModel {
 
 export const DEFAULT_BADGE = 'Theorycraft';
 export const DEFAULT_ACCENT = '#e9c46a';
-export const ACCENTS = ['#e9c46a', '#f08a5d', '#8fd3e8', '#c49cf2'];
+/** Cores de destaque à escolha: dourado e a cor de cada elemento do jogo (as mesmas do resto do site). */
+export const ACCENTS: { name: string; color: string }[] = [
+  { name: 'Dourado', color: DEFAULT_ACCENT },
+  ...(['Pyro', 'Hydro', 'Electro', 'Cryo', 'Anemo', 'Geo', 'Dendro'] as const).map((name) => ({ name, color: ELEMENT_COLORS[name] })),
+];
 
 const MAIN_ABBR: Record<string, string> = {
   'ATK%': 'ATK', 'HP%': 'HP', 'DEF%': 'DEF', 'DMG%': 'DMG', Healing: 'HB', EM: 'EM', ER: 'ER', CR: 'CR', CD: 'CD',
@@ -210,7 +214,8 @@ export function buildCardModel(
     sequence: sequenceOf(hits, project.members.map((m) => m.character)),
     enemyLevel: project.config.enemyLevel,
     nick: card.nick?.trim() ?? '',
-    accent: card.accent ?? DEFAULT_ACCENT,
+    // Sem cor escolhida, vale a do personagem principal (o primeiro do time).
+    accent: card.accent ?? members[0]?.color ?? DEFAULT_ACCENT,
     characterLevel: project.config.characterLevel,
     reaction: mainReaction(bundle),
     lanes,

@@ -67,7 +67,7 @@ export default function Card() {
   }
 
   const card = project.meta.card ?? {};
-  const accent = card.accent ?? DEFAULT_ACCENT;
+  const accent = model?.accent ?? card.accent ?? DEFAULT_ACCENT;
   return (
     <div className="dz">
       <AppHeader />
@@ -105,7 +105,7 @@ export default function Card() {
               <span>Cor de destaque</span>
               <div className="cd-accents" role="group" aria-label="Cor de destaque">
                 {ACCENTS.map((c) => (
-                  <button key={c} type="button" className="cd-swatch" style={{ background: c }} aria-pressed={accent === c} aria-label={`Cor ${c}`} onClick={() => setCard({ accent: c })} />
+                  <button key={c.color} type="button" className="cd-swatch" style={{ background: c.color }} title={c.name} aria-pressed={accent === c.color} aria-label={`Cor ${c.name}`} onClick={() => setCard({ accent: c.color })} />
                 ))}
               </div>
             </div>

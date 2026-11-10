@@ -7,7 +7,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { AppHeader } from '../app/AppHeader';
 import '../design/design.css';
 import { analyzeProject, resolveProject } from '../engine';
-import { buildCardModel, hitTypeLookup, type CardModel } from '../features/card/cardModel';
+import { ACCENTS, buildCardModel, hitTypeLookup, type CardModel } from '../features/card/cardModel';
 import { compareModels } from '../features/compare/compareModel';
 import { useGameData, type LoadedData } from '../features/rotation/data';
 import { listProjects, loadProject } from '../features/rotation/persistence';
@@ -32,13 +32,12 @@ function modelOf(id: string | null, data: LoadedData): CardModel | { error: stri
 }
 
 const isModel = (m: CardModel | { error: string } | null): m is CardModel => !!m && !('error' in m);
-const COLORS = ['#e9c46a', '#f08a5d', '#8fd3e8', '#c49cf2'];
 
 function Swatches({ label, value, onChange }: { label: string; value: string; onChange: (c: string) => void }) {
   return (
     <div className="cd-accents" role="group" aria-label={label}>
-      {COLORS.map((c) => (
-        <button key={c} type="button" className="cd-swatch" style={{ background: c }} aria-pressed={value === c} aria-label={`${label} ${c}`} onClick={() => onChange(c)} />
+      {ACCENTS.map((c) => (
+        <button key={c.color} type="button" className="cd-swatch" style={{ background: c.color }} title={c.name} aria-pressed={value === c.color} aria-label={`${label} ${c.name}`} onClick={() => onChange(c.color)} />
       ))}
     </div>
   );
@@ -56,8 +55,11 @@ export default function Comparar() {
 
   const [titleA, setTitleA] = useState('');
   const [titleB, setTitleB] = useState('');
-  const [accentA, setAccentA] = useState(COLORS[0]);
-  const [accentB, setAccentB] = useState(COLORS[2]);
+  // Sem escolha, cada lado usa a cor do personagem principal do time dele.
+  const [pickA, setAccentA] = useState<string | null>(null);
+  const [pickB, setAccentB] = useState<string | null>(null);
+  const accentA = pickA ?? (isModel(a) ? a.members[0]?.color : undefined) ?? ACCENTS[0].color;
+  const accentB = pickB ?? (isModel(b) ? b.members[0]?.color : undefined) ?? ACCENTS[3].color;
   const [metrics, setMetrics] = useState<CompareMetric[]>(['dps', 'dpr', 'duration', 'er']);
   const [showGear, setShowGear] = useState(false);
   const [showBars, setShowBars] = useState(true);

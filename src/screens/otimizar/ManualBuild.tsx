@@ -27,6 +27,8 @@ const SUB_NAME: Record<SubKey, string> = {
 };
 const SUBSTAT_OF = Object.fromEntries((SUBSTATS as readonly Substat[]).map((s) => [SUB_KEY[s], s])) as Record<SubKey, Substat>;
 const ALL_KEYS = (SUBSTATS as readonly Substat[]).map((s) => SUB_KEY[s]);
+/** Set provisório das peças manuais quando o personagem ainda não tem set: não casa com nenhum set, então não dá bônus. */
+const NO_SET = 'SemSet';
 const rar = (p: GoodArtifact): 4 | 5 => (p.rarity === 4 ? 4 : 5);
 
 /** Linhas da tabela: procs e valor somados de cada substat. No manual aparecem todos (dá para digitar); no KQM só os que têm procs. */
@@ -69,8 +71,7 @@ export function ManualBuild({ member, rolls, element, sets, onChange }: {
   const toKqm = () => { setLeftover(0); onChange({ pieces: undefined, piecesChoice: 'generic', noArtifacts: undefined }); };
   const toManual = () => {
     if (fromInventory) return onChange({ pieces: mark(pieces) }); // copia as peças do inventário para editar sem mexer nele
-    if (!member.primarySet) return;
-    const first = setKeyOf(member.primarySet);
+    const first = member.primarySet ? setKeyOf(member.primarySet) : NO_SET;
     const second = member.secondarySet && member.fourPiece !== true ? setKeyOf(member.secondarySet) : first;
     const { pieces: gen } = kqmPieces(rolls, member.artifacts, first, element);
     // 2 + 2: flor e pluma do primeiro set, areia e cálice do segundo, tiara do primeiro.
@@ -78,7 +79,7 @@ export function ManualBuild({ member, rolls, element, sets, onChange }: {
   };
   const submit = (a: GoodArtifact) => onChange({ pieces: mark([...pieces.filter((p) => p.slotKey !== a.slotKey && p !== editing?.piece), a]), piecesChoice: undefined });
   const initialFor = (slot: string): GoodArtifact => ({
-    setKey: pieces[0]?.setKey ?? (member.primarySet ? setKeyOf(member.primarySet) : ''), slotKey: slot as GoodArtifact['slotKey'], rarity: 5, level: 20,
+    setKey: pieces[0]?.setKey && pieces[0].setKey !== NO_SET ? pieces[0].setKey : member.primarySet ? setKeyOf(member.primarySet) : '', slotKey: slot as GoodArtifact['slotKey'], rarity: 5, level: 20,
     mainStatKey: MAIN_BY_SLOT[slot as keyof typeof MAIN_BY_SLOT][0], substats: [], location: '',
   });
 
@@ -105,7 +106,7 @@ export function ManualBuild({ member, rolls, element, sets, onChange }: {
     <Panel bar title="Build do personagem" badge={<span className="dz-badge num">{manual ? 'Manual' : fromInventory ? 'Inventário' : 'KQM'}</span>}>
       <div className="ot-seg" role="group" aria-label="Como montar o build">
         <button type="button" aria-pressed={pieces.length === 0} onClick={toKqm} title="O motor distribui os procs nos substats úteis (padrão KQM)">KQM (otimizado)</button>
-        <button type="button" aria-pressed={manual} disabled={!manual && !fromInventory && !member.primarySet} onClick={manual ? undefined : toManual} title={member.primarySet ? 'Cria 5 artefatos a partir do KQM para você ajustar' : 'Escolha o set em Resumo e build'}>Manual</button>
+        <button type="button" aria-pressed={manual} onClick={manual ? undefined : toManual} title={member.primarySet ? 'Cria 5 artefatos a partir do KQM para você ajustar' : 'Cria 5 artefatos sem set (sem bônus de set); escolha o set em cada peça, em Editar'}>Manual</button>
       </div>
 
       <div className="ot-mb" data-manual={pieces.length > 0}>
@@ -144,7 +145,7 @@ export function ManualBuild({ member, rolls, element, sets, onChange }: {
           <div className="ot-mnote">
             <h3 className="ot-mh">Por que está travado</h3>
             <p className="small">No KQM não há artefatos reais: o motor reparte {ROLLS_PER_PIECE[0] * 5} procs (9 por peça) nos substats que mais aumentam o dano do time, depois de garantir a Recarga mínima. Cada proc vale 85% do máximo, igual para todos, para comparar sem depender do inventário. Para escolher os procs, use Manual.</p>
-            {!member.primarySet && <p className="note">Escolha o set em Resumo e build para montar as peças à mão.</p>}
+            {!member.primarySet && <p className="note">Sem set escolhido: o Manual cria peças sem bônus de set. Escolha o set em Resumo e build ou em Editar, em cada peça.</p>}
           </div>
         ) : (
           <div className="ot-mnote">
@@ -169,7 +170,7 @@ export function ManualBuild({ member, rolls, element, sets, onChange }: {
                     {p ? <PieceArt piece={p} setId={set?.id} setName={set?.name} /> : <span className="ot-art"><b className="ph" aria-hidden="true" /></span>}
                     <span className="t">
                       <b>{sl.label}</b>
-                      <small>{p ? (set?.namePt ?? set?.name ?? p.setKey) : 'vazia'}</small>
+                      <small>{p ? (p.setKey === NO_SET ? 'sem set' : (set?.namePt ?? set?.name ?? p.setKey)) : 'vazia'}</small>
                     </span>
                   </div>
                   <div className="ot-pc-main">{p ? (MAIN_LABEL[p.slotKey === 'flower' ? 'hp' : p.slotKey === 'plume' ? 'atk' : p.mainStatKey] ?? p.mainStatKey) : '—'}</div>

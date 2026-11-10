@@ -45,13 +45,15 @@ export function CurrentBuild({ build, field, onField, sets }: { build: Optimized
                   </span>
                   {a && <b className="v num">{formatMain(key, mainStatValue(key, a.rarity, a.level))}</b>}
                 </div>
-                {a && (
-                  <div className="subs">
-                    {a.substats.slice(0, 4).map((x) => (
-                      <span key={x.key} data-crit={x.key === 'critRate_' || x.key === 'critDMG_'}><span>{SUB_LABEL[x.key] ?? x.key}</span><b className="num">{formatSub(x.key, x.value)}</b></span>
-                    ))}
-                  </div>
-                )}
+                {/* Sempre 4 posições de substat: com menos procs sobram espaços vazios e todos os cartões mantêm a mesma altura. */}
+                <div className="subs">
+                  {[0, 1, 2, 3].map((i) => {
+                    const x = a?.substats[i];
+                    return x
+                      ? <span key={i} data-crit={x.key === 'critRate_' || x.key === 'critDMG_'}><span>{SUB_LABEL[x.key] ?? x.key}</span><b className="num">{formatSub(x.key, x.value)}</b></span>
+                      : <span key={i} className="empty" aria-hidden="true"><span>—</span></span>;
+                  })}
+                </div>
               </div>
             </li>
           );

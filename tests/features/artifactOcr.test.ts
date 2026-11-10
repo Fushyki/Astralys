@@ -63,3 +63,28 @@ describe('texto lido do print', () => {
     expect(p.substats.some((s) => s.key === 'enerRech_')).toBe(false);
   });
 });
+
+describe('principal x primeiro substat (texto fora de ordem)', () => {
+  it('substats lidos antes do principal não viram o principal', () => {
+    const p = parseArtifactText(['Sands of Eon', 'CRIT Rate+3.9%', 'HP+299', 'ATK%', '46.6%', '+20', 'CRIT DMG+14.0%', 'Elemental Mastery+23'].join('\n'), SETS);
+    expect(p.slotKey).toBe('sands');
+    expect(p.mainStatKey).toBe('atk_');
+    expect(p.substats.map((s) => s.key)).toEqual(['critRate_', 'hp', 'critDMG_', 'eleMas']);
+  });
+  it('flor e pluma têm o principal fixo, mesmo sem ler essa linha', () => {
+    const p = parseArtifactText(['Flor da Vida', '+20', 'Taxa CRIT+6,2%', 'Dano CRIT+7,8%', 'ATQ+5,3%', 'Recarga de Energia+5,2%'].join('\n'), SETS);
+    expect(p.mainStatKey).toBe('hp');
+    expect(p.substats.map((s) => s.key)).toEqual(['critRate_', 'critDMG_', 'atk_', 'enerRech_']);
+  });
+  it('nível junto das estrelas e vírgula perdida no valor', () => {
+    const p = parseArtifactText(['Circlet of Logos', 'CRIT DMG', '62.2%', '★★★★★ +20', 'CRIT Rate+39%', 'ATK+19', 'HP+239', 'DEF+23'].join('\n'), SETS);
+    expect(p.level).toBe(20);
+    expect(p.mainStatKey).toBe('critDMG_');
+    expect(p.substats[0]).toEqual({ key: 'critRate_', value: 3.9 });
+  });
+  it('o substat com o mesmo nome do principal é descartado', () => {
+    const p = parseArtifactText(['Goblet of Eonothem', 'Pyro DMG Bonus', '46.6%', '+20', 'Pyro DMG Bonus 46.6%', 'CRIT Rate+3.9%', 'ATK+19', 'DEF+23'].join('\n'), SETS);
+    expect(p.mainStatKey).toBe('pyro_dmg_');
+    expect(p.substats.map((s) => s.key)).toEqual(['critRate_', 'atk', 'def']);
+  });
+});

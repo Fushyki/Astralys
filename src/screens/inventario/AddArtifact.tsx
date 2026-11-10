@@ -57,7 +57,7 @@ function SetSelect({ sets, value, slot, onChange }: { sets: readonly SetInfo[]; 
   }, [open]);
   const cur = sets.find((s) => setKeyOf(s.name) === value);
   const term = q.trim().toLowerCase();
-  const list = [...sets].filter((s) => !term || s.name.toLowerCase().includes(term) || (s.namePt ?? '').toLowerCase().includes(term)).sort((a, b) => a.name.localeCompare(b.name));
+  const list = [...sets].filter((s) => s.name !== '???' && (!term || s.name.toLowerCase().includes(term) || (s.namePt ?? '').toLowerCase().includes(term))).sort((a, b) => a.name.localeCompare(b.name));
   return (
     <div className="aa-setsel" ref={box} onKeyDown={(e) => { if (e.key === 'Escape' && open) { e.stopPropagation(); setOpen(false); } }}>
       <button type="button" className="dz-input aa-setbtn" aria-label="Set" aria-haspopup="listbox" aria-expanded={open} onClick={() => setOpen(!open)}>

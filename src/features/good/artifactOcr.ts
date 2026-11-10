@@ -4,7 +4,8 @@
  * `parseArtifactText` é puro e testado: entende os nomes dos stats em português e em inglês.
  */
 import type { SubKey } from './artifactProcs';
-import { SUB_KEYS } from './artifactProcs';
+import { SUB_KEYS, procRange } from './artifactProcs';
+import { mainStatValue } from '../../engine/pieces';
 
 export type SlotKey = 'flower' | 'plume' | 'sands' | 'goblet' | 'circlet';
 export interface ParsedArtifact {
@@ -46,6 +47,27 @@ const SLOT_WORDS: [SlotKey, RegExp][] = [
   ['goblet', /calice|goblet|eonot/],
   ['circlet', /diadema|tiara|circlet|logos/],
 ];
+
+/** Stats principais possíveis em cada posição. */
+const DMG_KEY = /_dmg_$/;
+const MAIN_OK: Record<SlotKey, (k: string) => boolean> = {
+  flower: (k) => k === 'hp',
+  plume: (k) => k === 'atk',
+  sands: (k) => ['hp_', 'atk_', 'def_', 'eleMas', 'enerRech_'].includes(k),
+  goblet: (k) => ['hp_', 'atk_', 'def_', 'eleMas'].includes(k) || DMG_KEY.test(k),
+  circlet: (k) => ['hp_', 'atk_', 'def_', 'eleMas', 'critRate_', 'critDMG_', 'heal_'].includes(k),
+};
+
+/** O valor lido é o stat principal de um artefato de 4★ ou 5★ em algum nível (ou no nível lido)? Devolve o nível. */
+function mainTable(key: string, value: number, percent: boolean, level: number | null): { level: number } | null {
+  for (const r of [5, 4]) {
+    for (let l = level ?? 0; l <= (level ?? 20); l++) {
+      const v = mainStatValue(key, r, l) * (percent ? 100 : 1);
+      if (v > 0 && Math.abs(v - value) <= (percent ? 0.06 : 0.6)) return { level: l };
+    }
+  }
+  return null;
+}
 
 function inferSlot(mainKey: string | null): SlotKey | null {
   if (!mainKey) return null;
@@ -100,9 +122,11 @@ export function parseArtifactText(text: string, sets: readonly SetName[]): Parse
 
   let level: number | null = null;
   const stats: { key: string; value: number; percent: boolean }[] = [];
+  /** Quantas linhas de stat vieram antes do "+N" do nível: no jogo o stat principal fica acima do nível e os substats abaixo. */
+  let aboveLevel: number | null = null;
   for (const l of body) {
-    const lv = /^\+\s*(\d{1,2})$/.exec(l);
-    if (lv && level === null && Number(lv[1]) <= 20) { level = Number(lv[1]); continue; }
+    const lv = /^\+\s*(\d{1,2})$/.exec(l.replace(/[★☆✦⭐*]/g, '').trim());
+    if (lv && level === null && Number(lv[1]) <= 20) { level = Number(lv[1]); aboveLevel = stats.length; continue; }
     const m = /^(.*?[A-Za-zÀ-ÿ%.'’]{2,}.*?)\s*[+:]?\s*(\d[\d.,]*)\s*(%)?\s*$/.exec(l);
     if (!m) continue;
     const percent = m[3] === '%';
@@ -110,24 +134,49 @@ export function parseArtifactText(text: string, sets: readonly SetName[]): Parse
     if (key) stats.push({ key, value: toNumber(m[2], percent), percent });
   }
 
-  const main = stats[0] ?? null;
-  const subs = stats.slice(1).filter((s): s is { key: SubKey; value: number; percent: boolean } => (SUB_KEYS as string[]).includes(s.key)).slice(0, 4);
-  if (!main) notes.push('Não achei o stat principal.');
-  if (subs.length < 3) notes.push(`Li só ${subs.length} substat(s): confira e complete.`);
-
   let slotKey: SlotKey | null = null;
   const t = plain(body.join(' '));
   for (const [k, re] of SLOT_WORDS) if (re.test(t)) { slotKey = k; break; }
-  slotKey ??= inferSlot(main?.key ?? null);
+
+  // Stat principal: o que mais combina com (1) a tabela de valores do jogo, (2) a posição escolhida e (3) estar acima do nível.
+  // Pegar só "a primeira linha" confundia o 1º substat com o principal quando o texto saía fora de ordem.
+  const score = (st: (typeof stats)[number], i: number): number => {
+    const table = mainTable(st.key, st.value, st.percent, level);
+    return (table ? 4 : 0) + (slotKey && MAIN_OK[slotKey](st.key) ? 2 : 0) + (aboveLevel !== null && i < aboveLevel ? 1 : 0);
+  };
+  let mainIdx = -1;
+  stats.forEach((st, i) => {
+    if (slotKey && !MAIN_OK[slotKey](st.key)) return;
+    if (mainIdx < 0 || score(st, i) > score(stats[mainIdx], mainIdx)) mainIdx = i;
+  });
+  // Flor e pluma têm o principal fixo (HP e ATK): vale mesmo se o OCR não leu essa linha.
+  const fixedMain = slotKey === 'flower' ? 'hp' : slotKey === 'plume' ? 'atk' : null;
+  const main = mainIdx >= 0 ? stats[mainIdx] : null;
+  const mainKey = fixedMain ?? main?.key ?? null;
+  const seen = new Set<string>();
+  const subs: { key: SubKey; value: number }[] = [];
+  stats.forEach((st, i) => {
+    if (i === mainIdx || st.key === mainKey || !(SUB_KEYS as string[]).includes(st.key) || seen.has(st.key) || subs.length >= 4) return;
+    const key = st.key as SubKey;
+    const rar = set?.rarity === 4 ? 4 : 5;
+    // O OCR às vezes perde a vírgula ("39" em vez de 3,9): tenta o valor dividido por 10 quando o lido não é um valor possível.
+    const value = procRange(key, st.value, rar) || !st.percent || st.value < 10 || !procRange(key, st.value / 10, rar) ? st.value : st.value / 10;
+    seen.add(key);
+    subs.push({ key, value });
+  });
+  if (!mainKey) notes.push('Não achei o stat principal.');
+  if (subs.length < 3) notes.push(`Li só ${subs.length} substat(s): confira e complete.`);
+  slotKey ??= inferSlot(mainKey);
   if (!slotKey) notes.push('Não reconheci a posição (flor, pluma, areia, cálice ou tiara).');
+  if (level === null && main) level = mainTable(main.key, main.value, main.percent, null)?.level ?? null;
 
   return {
     setKey: set ? setKeyOf(set.name) : null,
     slotKey,
     rarity: (set?.rarity ?? 5) >= 5 ? 5 : 4,
     level,
-    mainStatKey: main?.key ?? null,
-    substats: subs.map(({ key, value }) => ({ key, value })),
+    mainStatKey: mainKey,
+    substats: subs,
     notes,
   };
 }

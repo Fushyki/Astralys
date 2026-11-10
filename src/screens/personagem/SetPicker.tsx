@@ -46,7 +46,7 @@ export function SetPickerDialog({
   const list = useMemo(() => {
     const q = query.trim().toLowerCase();
     return sets
-      .filter((s) => s.rarity >= 4 && (!q || s.name.toLowerCase().includes(q) || s.namePt.toLowerCase().includes(q)))
+      .filter((s) => s.rarity >= 4 && s.name !== '???' && (!q || s.name.toLowerCase().includes(q) || s.namePt.toLowerCase().includes(q)))
       .sort((a, b) => b.rarity - a.rarity || b.id - a.id);
   }, [sets, query]);
 

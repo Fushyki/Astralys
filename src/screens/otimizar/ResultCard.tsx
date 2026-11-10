@@ -47,8 +47,8 @@ export function ResultCard({ rank, build, now, field, compare, currentSig, sets,
   onBlock: (a: GoodArtifact) => void;
 }) {
   const r = build.report;
-  const s = field ? r.fieldStats : r.stats;
-  const p = now ? (field ? now.report.fieldStats : now.report.stats) : undefined;
+  const s = field ? r.fieldStats : r.bareStats;
+  const p = now ? (field ? now.report.fieldStats : now.report.bareStats) : undefined;
   const setOf = (key: string) => sets.find((x) => norm(x.name) === norm(key));
   const bySlot = new Map(build.pieces.map((a) => [a.slotKey, a]));
   const counts = new Map<string, number>();

@@ -11,7 +11,7 @@ import { formatDecimal } from '../../ui/format';
 interface SetInfo { name: string; id: number }
 
 export function currentStats(build: OptimizedBuild, field: boolean): { k: string; v: string; gold?: boolean; rate?: number }[] {
-  const s = field ? build.report.fieldStats : build.report.stats;
+  const s = field ? build.report.fieldStats : build.report.bareStats;
   return [
     { k: 'ATK', v: fmtInt(s.atk) }, { k: 'HP', v: fmtInt(s.hp) }, { k: 'DEF', v: fmtInt(s.def) }, { k: 'Maestria', v: fmtInt(s.em) },
     { k: 'Taxa crít.', v: fmtPct(s.critRate), gold: true, rate: s.critRate }, { k: 'Dano crít.', v: fmtPct(s.critDmg), gold: true },
@@ -64,12 +64,13 @@ export function CurrentBuild({ build, field, onField, sets }: { build: Optimized
           ))}
         </div>
       )}
+      {build && <p className="muted small ot-cur-cap">{field ? 'Com todos os buffs ativos' : 'Personagem sem buffs'}</p>}
       {build && (
         <dl className="ot-cur-stats num">
           {currentStats(build, field).map((x) => <div key={x.k}><dt>{x.k}</dt><dd data-gold={x.gold}>{x.v}{x.rate !== undefined && <CritExcess rate={x.rate} />}</dd></div>)}
         </dl>
       )}
-      <button type="button" className="ot-field-btn" aria-pressed={field} onClick={onField}><StarIcon size={12} />Status em campo</button>
+      <button type="button" className="ot-field-btn" aria-pressed={field} onClick={onField} title="Mostra os status com todos os buffs ativos (arma, set, passivas e time)"><StarIcon size={12} />Status em campo</button>
     </Panel>
   );
 }

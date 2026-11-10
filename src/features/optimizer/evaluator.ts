@@ -25,6 +25,8 @@ import {
   pointExtra,
   withSpecial,
   zeroRolls,
+  zeroBlock,
+  type StatSourceKind,
   type EffectsData,
   type FinalStats,
   type GameData,
@@ -96,6 +98,8 @@ export interface BuildReport {
   /** Stats da ficha do build (só o que vale o tempo todo). */
   stats: FinalStats;
   /** Stats com todos os buffs de time ligados ao mesmo tempo ("em campo"): o mesmo critério do golpe avaliado sozinho. */
+  /** Personagem sem nenhum buff: base, ascensão, arma (substat), set de 2 peças e artefatos. */
+  bareStats: FinalStats;
   fieldStats: FinalStats;
   /** Restrições cumpridas. */
   feasible: boolean;
@@ -253,12 +257,16 @@ export function createEvaluator(input: EvaluatorInput): Evaluator {
         memberAvg: result.members[member].avg,
         dps: result.totals.dps,
         stats: r.stats,
+        bareStats: finalStats(r.members[member], addDelta(foldSources(r.assembly.sources[member].filter((x) => BARE_KINDS.has(x.kind))), mineDependsOnPieces ? {} : vecToDelta(vec)), zeroRolls(), zeroBlock(), 0),
         fieldStats: finalStats(r.members[member], r.assembly.statics[member], zeroRolls(), activeTeamDelta(r.assembly.buffs, name, new Set(r.assembly.buffs.map((b) => b.tag))), r.assembly.resonanceAtkPct),
         feasible,
       };
     },
   };
 }
+
+/** Fontes que contam no personagem "sem buff" (a ficha do jogo): o resto (passivas, arma, set de 4 peças, ressonância, extras) é buff. */
+const BARE_KINDS: ReadonlySet<StatSourceKind> = new Set<StatSourceKind>(['ascension', 'weapon-substat', 'set-2p', 'main-stat']);
 
 /** Elemento do personagem (para o bônus de DMG% do cálice). */
 export const elementOf = (resolved: Pick<ResolvedProject, 'team'>, member: number): Element => resolved.team.members[member].character.element;

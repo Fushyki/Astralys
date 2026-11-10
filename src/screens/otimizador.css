@@ -371,3 +371,9 @@ button.ot-ch[aria-pressed='true'] b { color: var(--gold-hi); }
 .ot-pc-foot { margin-top: auto; display: flex; align-items: center; justify-content: space-between; gap: 6px; flex-wrap: wrap; }
 .ot-pc-btns { display: flex; gap: 4px; }
 .ot-seg[aria-label="Como montar o build"] { align-self: flex-start; }
+
+/* Taxa crítica acima de 100%: o aviso de excesso ocupa a linha toda, alinhado à direita, em vez de espremer a coluna. */
+.ot-cur-stats > div:has(.crit-excess) { grid-column: 1 / -1; }
+.ot-cur-stats dd { display: inline-flex; align-items: center; justify-content: flex-end; gap: 6px; }
+.ot-cur-stats .crit-excess { margin-left: 0; }
+.ot-cur-cap { margin: 0; }

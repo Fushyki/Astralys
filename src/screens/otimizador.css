@@ -267,8 +267,9 @@ button.ot-ch[aria-pressed='true'] b { color: var(--gold-hi); }
 .ot-cur li .subs > span[data-crit='true'] b { color: var(--gold); }
 
 /* Sets: opções no topo e a grade ocupa a altura que sobra, só com linhas inteiras */
-.ot-sets-wrap { flex: 1 1 0; min-height: 0; overflow: hidden; }
-.ot-sets-wrap[data-all='true'] { flex: none; overflow: visible; }
+/* A lista rola dentro do painel e não aumenta a altura dele: o espaço vem do que sobra ao lado (mín. 120 px). */
+.ot-sets-wrap { position: relative; flex: 1 1 0; min-height: 120px; }
+.ot-sets-wrap > .ot-sets { position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; padding: 2px; scrollbar-width: thin; }
 .ot-sets { align-content: start; }
 .ot-more-sets { align-self: stretch; min-height: 36px; border-radius: var(--r-ctl); border: 1px solid var(--border-ctl-hi); background: var(--surface-2); color: var(--text); font: 600 var(--fs-2) var(--font-display); letter-spacing: .08em; text-transform: uppercase; cursor: pointer; }
 

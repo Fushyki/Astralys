@@ -167,7 +167,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
 
   check('sem erros no console', problems.length === 0, problems.slice(0, 3).join(' | '));
 
-  // ---- Sets: só linhas inteiras e "Mostrar todos · mais N sets" só com sets escondidos ----
+  // ---- Sets: todos visíveis, com rolagem dentro do painel ----
   await page.setViewportSize({ width: 1600, height: 1000 });
   const data = JSON.parse(fs.readFileSync(path.join(__dirname, '..', '..', 'src', 'data', 'generated', 'artifacts.json'), 'utf8'));
   const keys = data.filter((a) => a.rarity >= 4).slice(0, 40).map((a) => a.name.replace(/[^A-Za-z0-9 ]/g, ' ').split(/\s+/).filter(Boolean).map((w) => w[0].toUpperCase() + w.slice(1)).join(''));
@@ -183,15 +183,8 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.waitForSelector('.ot-sets-wrap');
   await page.waitForTimeout(500);
   const total = await page.$$eval('.ot-set', (c) => c.length);
-  const more = await page.locator('.ot-more-sets').count();
-  const cut = await page.evaluate(() => {
-    const wrap = document.querySelector('.ot-sets-wrap').getBoundingClientRect();
-    const cells = [...document.querySelectorAll('.ot-set')].map((c) => c.getBoundingClientRect());
-    return cells.every((c) => c.bottom <= wrap.bottom + 1);
-  });
-  check('Sets: com sets sobrando aparece "Mostrar todos · mais N sets" e nenhuma linha fica cortada', more === 1 && cut && /^Mostrar todos · mais \d+ sets$/.test((await page.textContent('.ot-more-sets')).trim()), `${total} visíveis`);
-  await page.click('.ot-more-sets');
-  check('Mostrar todos revela os outros sets', (await page.$$eval('.ot-set', (c) => c.length)) > total);
+  const area = await page.evaluate(() => { const w = document.querySelector('.ot-sets-wrap > .ot-sets'); return { auto: getComputedStyle(w).overflowY === 'auto' }; });
+  check('Sets: todos os sets aparecem (a área rola se não couberem), sem botão "Mostrar todos"', total === 40 && (await page.locator('.ot-more-sets').count()) === 0&& area.auto, `${total} sets`);
 
   await browser.close();
   const ok = results.filter(Boolean).length;

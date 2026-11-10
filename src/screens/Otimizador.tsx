@@ -163,11 +163,7 @@ export function OtimizadorPanel({ index }: { index: number }) {
   const [showMore, setShowMore] = useState(false);
   const [minKey, setMinKey] = useState<MinKey>('er');
   const [minVal, setMinVal] = useState('');
-  const [showAllSets, setShowAllSets] = useState(false);
   const [pickingMove, setPickingMove] = useState(false);
-  const setsWrap = useRef<HTMLDivElement>(null);
-  /** Quantos sets cabem em linhas inteiras na altura que sobra no painel (medido). */
-  const [setLimit, setSetLimit] = useState(6);
   const job = useRef<OptimizerJob | null>(null);
 
   useEffect(() => {
@@ -189,7 +185,6 @@ export function OtimizadorPanel({ index }: { index: number }) {
     setResult(RESULT_CACHE.get(key)?.result ?? null);
     setError(null);
     setEquippedKey(null);
-    setShowAllSets(false);
     setShowMore(false);
   }, [key]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
@@ -197,24 +192,6 @@ export function OtimizadorPanel({ index }: { index: number }) {
     window.addEventListener('focus', refresh);
     return () => window.removeEventListener('focus', refresh);
   }, []);
-
-  useEffect(() => {
-    const el = setsWrap.current;
-    if (!el) return;
-    const gap = 8;
-    const measure = () => {
-      const w = el.clientWidth;
-      const h = el.clientHeight;
-      const cols = Math.max(1, Math.floor((w + gap) / (56 + gap)));
-      const cell = (w - (cols - 1) * gap) / cols;
-      const rows = Math.max(1, Math.floor((h + gap) / (cell + gap)));
-      setSetLimit(cols * rows);
-    };
-    measure();
-    const ro = new ResizeObserver(measure);
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, [good, showAllSets]);
 
   const characterKey = useMemo(() => good?.characters.find((c) => norm(c.key) === norm(ref?.character ?? ''))?.key ?? ref?.character ?? '', [good, ref]);
   const setInfo = useMemo(() => {
@@ -247,8 +224,6 @@ export function OtimizadorPanel({ index }: { index: number }) {
   const othersCount = allArt.filter((a) => a.location && norm(a.location) !== mineKey).length;
   const setsOn = setInfo.filter((s) => !ui.offSets.includes(s.key)).length;
   const pickedSets = ui.offSets.length ? setInfo.filter((s) => !ui.offSets.includes(s.key)) : [];
-  const overflow = setInfo.length > setLimit;
-  const visibleSets = showAllSets || !overflow ? setInfo : setInfo.slice(0, setLimit);
 
   const memberNow = v.resolved.team.members[index];
   const moves = [...data.game.moves.filter((m) => m.character === ref.character), ...(memberNow ? kitProcMoves(memberNow, data.game.moves).map((p) => p.move) : [])];
@@ -513,7 +488,7 @@ export function OtimizadorPanel({ index }: { index: number }) {
               bar
               title="Sets"
               badge={<span className={`dz-badge num${ui.offSets.length ? ' gold' : ''}`}>{setsOn}/{setInfo.length}</span>}
-              aside={<button type="button" className="ot-ghost" onClick={() => setUi({ ...ui, offSets: ui.offSets.length ? [] : setInfo.map((x) => x.key) })}>Nenhum</button>}
+              aside={<button type="button" className="ot-ghost" onClick={() => setUi({ ...ui, offSets: ui.offSets.length ? [] : setInfo.map((x) => x.key) })}>{ui.offSets.length ? 'Todos' : 'Nenhum'}</button>}
             >
               <div className="ot-switches">
                 <button type="button" className="ot-switch" aria-pressed={ui.fillerSets} onClick={() => setUi({ ...ui, fillerSets: !ui.fillerSets })}>
@@ -525,9 +500,9 @@ export function OtimizadorPanel({ index }: { index: number }) {
                 </button>
               </div>
               <span className="ot-hint">Marque só os sets que podem dar bônus de 2 ou 4 peças.</span>
-              <div className="ot-sets-wrap" data-all={showAllSets} ref={setsWrap}>
+              <div className="ot-sets-wrap">
                 <div className="ot-sets">
-                  {visibleSets.map((x) => (
+                  {setInfo.map((x) => (
                     <button key={x.key} type="button" className="ot-set" aria-pressed={!ui.offSets.includes(x.key)} onClick={() => setUi({ ...ui, offSets: toggle(ui.offSets, x.key) })} title={`${x.name}: ${x.count} peças`} aria-label={`${x.name}: ${x.count} peças`}>
                       <Img src={x.id ? pieceIconUrl(x.id, 'flower') : undefined} fallback="" />
                       <small className="num">{x.count}</small>
@@ -535,9 +510,6 @@ export function OtimizadorPanel({ index }: { index: number }) {
                   ))}
                 </div>
               </div>
-              {overflow && (
-                <button type="button" className="ot-more-sets" onClick={() => setShowAllSets(!showAllSets)}>{showAllSets ? 'Mostrar menos' : `Mostrar todos · mais ${setInfo.length - visibleSets.length} sets`}</button>
-              )}
             </Panel>
           </div>
 

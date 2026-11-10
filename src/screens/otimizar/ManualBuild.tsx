@@ -108,30 +108,37 @@ export function ManualBuild({ member, rolls, element, sets, onChange }: {
         <button type="button" aria-pressed={manual} disabled={!manual && !fromInventory && !member.primarySet} onClick={manual ? undefined : toManual} title={member.primarySet ? 'Cria 5 artefatos a partir do KQM para você ajustar' : 'Escolha o set em Resumo e build'}>Manual</button>
       </div>
 
-      <div className="ot-mb">
-        <table className="ot-mtable" aria-label="Substats do build">
-          <thead>
-            <tr><th scope="col">Status</th><th scope="col" className="r">Procs</th><th scope="col" className="r">Valor</th></tr>
-          </thead>
-          <tbody>
-            {rows.length === 0 && <tr><td colSpan={3} className="muted">Sem substats ainda.</td></tr>}
-            {rows.map((r) => (
-              <tr key={r.key}>
-                <th scope="row">{SUB_NAME[r.key]}</th>
-                <td className="r num">
-                  {pieces.length > 0
-                    ? <input className="dz-input ot-procin" type="number" min={0} max={30} step={1} value={fmtProcs(r.procs)} aria-label={`Procs de ${SUB_NAME[r.key]}`}
-                        onChange={(e) => setProcs(r.key, Number(e.target.value))} />
-                    : fmtProcs(r.procs)}
-                </td>
-                <td className="r num">{formatSub(r.key, r.value)}</td>
-              </tr>
-            ))}
-          </tbody>
-          <tfoot>
-            <tr><th scope="row">Total</th><td className="r num">{fmtProcs(totalProcs)} <span className="muted">/ {cap}</span></td><td /></tr>
-          </tfoot>
-        </table>
+      <div className="ot-mb" data-manual={pieces.length > 0}>
+        {/* No manual são 10 substats: duas tabelas lado a lado (5 + 5) deixam o box baixo o bastante para caber na tela. */}
+        <div className="ot-mtables" data-split={pieces.length > 0}>
+          {(pieces.length > 0 ? [rows.slice(0, 5), rows.slice(5)] : [rows]).map((part, ti, all) => (
+            <table className="ot-mtable" key={ti} aria-label="Substats do build">
+              <thead>
+                <tr><th scope="col">Status</th><th scope="col" className="r">Procs</th><th scope="col" className="r">Valor</th></tr>
+              </thead>
+              <tbody>
+                {part.length === 0 && <tr><td colSpan={3} className="muted">Sem substats ainda.</td></tr>}
+                {part.map((r) => (
+                  <tr key={r.key}>
+                    <th scope="row">{SUB_NAME[r.key]}</th>
+                    <td className="r num">
+                      {pieces.length > 0
+                        ? <input className="dz-input ot-procin" type="number" min={0} max={30} step={1} value={fmtProcs(r.procs)} aria-label={`Procs de ${SUB_NAME[r.key]}`}
+                            onChange={(e) => setProcs(r.key, Number(e.target.value))} />
+                        : fmtProcs(r.procs)}
+                    </td>
+                    <td className="r num">{formatSub(r.key, r.value)}</td>
+                  </tr>
+                ))}
+              </tbody>
+              {ti === all.length - 1 && (
+                <tfoot>
+                  <tr><th scope="row">Total</th><td className="r num">{fmtProcs(totalProcs)} <span className="muted">/ {cap}</span></td><td /></tr>
+                </tfoot>
+              )}
+            </table>
+          ))}
+        </div>
 
         {pieces.length === 0 ? (
           <div className="ot-mnote">

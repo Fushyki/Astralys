@@ -5,7 +5,7 @@ import { norm } from '../../features/good/goodImport';
 import { MAIN_LABEL, SUB_LABEL, formatMain, formatSub } from '../../features/good/labels';
 import type { OptimizedBuild } from '../../features/optimizer/run';
 import { mainStatValue } from '../../engine/pieces';
-import { CritExcess, PieceArt, SLOTS, critValue, fmtInt, fmtPct, setColor } from './shared';
+import { PieceArt, SLOTS, critValue, fmtInt, fmtPct, setColor } from './shared';
 import { formatDecimal } from '../../ui/format';
 
 interface SetInfo { name: string; id: number }
@@ -67,7 +67,7 @@ export function CurrentBuild({ build, field, onField, sets }: { build: Optimized
       {build && <p className="muted small ot-cur-cap">{field ? 'Com todos os buffs ativos' : 'Personagem sem buffs'}</p>}
       {build && (
         <dl className="ot-cur-stats num">
-          {currentStats(build, field).map((x) => <div key={x.k}><dt>{x.k}</dt><dd data-gold={x.gold}>{x.v}{x.rate !== undefined && <CritExcess rate={x.rate} />}</dd></div>)}
+          {currentStats(build, field).map((x) => <div key={x.k}><dt>{x.k}</dt><dd data-gold={x.gold}>{x.v}</dd></div>)}
         </dl>
       )}
       <button type="button" className="ot-field-btn" aria-pressed={field} onClick={onField} title="Mostra os status com todos os buffs ativos (arma, set, passivas e time)"><StarIcon size={12} />Status em campo</button>

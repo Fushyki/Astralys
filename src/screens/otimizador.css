@@ -335,7 +335,6 @@ button.ot-ch[aria-pressed='true'] b { color: var(--gold-hi); }
 .pcard.weapon .mv b { color: var(--text); }
 
 /* selo de excesso de Taxa Crítica */
-.crit-excess { margin-left: var(--sp-2); font-style: normal; white-space: nowrap; }
 
 /* Alvo Manual: tabela de substats (Status, Procs, Valor) e as 5 peças feitas à mão */
 .ot-manualwrap { grid-column: span 2; display: flex; }
@@ -372,8 +371,17 @@ button.ot-ch[aria-pressed='true'] b { color: var(--gold-hi); }
 .ot-pc-btns { display: flex; gap: 4px; }
 .ot-seg[aria-label="Como montar o build"] { align-self: flex-start; }
 
-/* Taxa crítica acima de 100%: o aviso de excesso ocupa a linha toda, alinhado à direita, em vez de espremer a coluna. */
-.ot-cur-stats > div:has(.crit-excess) { grid-column: 1 / -1; }
-.ot-cur-stats dd { display: inline-flex; align-items: center; justify-content: flex-end; gap: 6px; }
-.ot-cur-stats .crit-excess { margin-left: 0; }
 .ot-cur-cap { margin: 0; }
+.crit-excess { margin-left: var(--sp-2); font-style: normal; white-space: nowrap; }
+
+/* Manual compacto: tabelas lado a lado, linhas baixas e o texto embaixo, para o box caber na altura da tela. */
+.ot-mtables { display: grid; gap: var(--sp-4, 16px); align-content: start; }
+.ot-mtables[data-split='true'] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (max-width: 760px) { .ot-mtables[data-split='true'] { grid-template-columns: minmax(0, 1fr); } }
+.ot-mb[data-manual='true'] { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+.ot-mb[data-manual='true'] .ot-mtable th, .ot-mb[data-manual='true'] .ot-mtable td { padding: 3px 8px; }
+.ot-mb[data-manual='true'] .ot-procin { min-height: 28px; height: 28px; width: 56px; }
+.ot-mb[data-manual='true'] .ot-mnote { gap: 4px; }
+.ot-mb[data-manual='true'] .ot-mh { display: none; }
+.ot-pieces { margin-top: 8px; }
+.ot-mtables .ot-mtable { align-self: start; }

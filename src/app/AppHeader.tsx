@@ -13,14 +13,13 @@ import { Segmented } from '../design/primitives';
 import { POSTER_LABEL, type PosterFormat } from '../screens/card/PosterCard';
 import { useSettings, type CardBg } from './settings';
 
-/** Marca do Astralys: três fios (os buffs) que convergem num ponto (o golpe). Ver `public/favicon.svg`. */
+/** Marca do Astralys: um A de traço simples com uma estrela de quatro pontas no topo. Ver `public/favicon.svg`. */
 export function StarMark({ size = 26 }: { size?: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="#E9C46A" strokeWidth="1.9" strokeLinecap="round" aria-hidden="true">
-      <path d="M2 4.5C9 4.5 9 12 15 12" opacity=".6" />
-      <path d="M2 12H15" />
-      <path d="M2 19.5C9 19.5 9 12 15 12" opacity=".6" />
-      <circle cx="18" cy="12" r="3.8" fill="#E9C46A" stroke="none" />
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="#E9C46A" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M4.5 21.5L12 7l7.5 14.5" />
+      <path d="M8.2 16h7.6" />
+      <path d="M12 .8l1.1 3.1 3.1 1.1-3.1 1.1L12 9.2 10.9 6.1 7.8 5l3.1-1.1z" fill="#E9C46A" stroke="none" />
     </svg>
   );
 }

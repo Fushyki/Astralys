@@ -8,7 +8,7 @@ import { formatInt, formatPercent } from '../../ui/format';
 import { dec } from './ui';
 
 const W = 1000;
-const H = 240;
+const H = 320;
 
 const short = (n: number) => (n >= 1e6 ? `${dec(n / 1e6, 2)} mi` : `${dec(n / 1000, 1)} mil`);
 
@@ -54,14 +54,15 @@ export function Charts({ v }: { v: ProjectView }) {
 
   return (
     <section className="rt-final">
-      <Panel bar title="Dano acumulado na rotação" aside={<span className="num" style={{ fontSize: 'var(--fs-1)', color: '#a7b0d6' }}>{formatInt(total)} em {dec(duration, 1)} s</span>}>
+      <Panel bar title="Dano acumulado na rotação">
+        <div className="rt-total"><span className="lbl">Dano total do time</span><b className="num" data-testid="total-dmg">{formatInt(total)}</b><span className="sub num">em {dec(duration, 1)} s · {formatInt(total / duration)} de DPS</span></div>
         <div className="rt-chart">
           <div className="yax">{[...axis.ticks].reverse().map((t) => <span key={t}>{axisLabel(t)}</span>)}</div>
           <div className="plot">
             <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" role="img" aria-label={`Dano acumulado: ${formatInt(total)} em ${dec(duration, 1)} segundos`}>
               {[1, 2, 3].map((i) => <line key={i} x1="0" x2={W} y1={(H / 4) * i} y2={(H / 4) * i} stroke="#18204a" vectorEffect="non-scaling-stroke" />)}
               <path d={`${path} L${W},${H} Z`} fill="#f1c96b" fillOpacity=".1" />
-              <path d={path} fill="none" stroke="#f1c96b" strokeWidth="2.5" vectorEffect="non-scaling-stroke" />
+              <path d={path} fill="none" stroke="#f1c96b" strokeWidth="3.5" vectorEffect="non-scaling-stroke" />
             </svg>
             {top.map((m) => (
               <span key={m.n} className="rt-mark" style={{ left: `${(m.p.t / duration) * 100}%`, top: `${(Y(m.p.total) / H) * 100}%`, background: v.colors[m.p.member] }}>{m.n}</span>

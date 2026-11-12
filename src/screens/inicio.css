@@ -24,12 +24,12 @@
 .in-demo:hover { color: var(--gold-hi); }
 
 /* A rotação ao fundo: baixa opacidade, some atrás do texto. */
-.in-rot { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: .9; -webkit-mask-image: linear-gradient(90deg, transparent 28%, #000 62%); mask-image: linear-gradient(90deg, transparent 28%, #000 62%); }
+.in-rot { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: .9; -webkit-mask-image: linear-gradient(90deg, transparent 24%, #000 42%); mask-image: linear-gradient(90deg, transparent 24%, #000 42%); }
 @media (max-width: 960px) { .in-rot { opacity: .3; -webkit-mask-image: none; mask-image: none; } }
 
 /* Tema astral: nebulosa, órbitas em volta da estrela do Supremo e estrelas cadentes. */
 .in-nebula { position: absolute; inset: 0; pointer-events: none; background:
-  radial-gradient(ellipse 55% 60% at 88% 62%, rgba(241, 201, 107, .10), transparent 70%),
+  radial-gradient(ellipse 55% 60% at 72% 54%, rgba(241, 201, 107, .13), transparent 70%),
   radial-gradient(ellipse 50% 55% at 70% 20%, rgba(70, 90, 200, .14), transparent 70%),
   radial-gradient(ellipse 40% 50% at 8% 90%, rgba(110, 70, 190, .10), transparent 70%); }
 .in-orbits { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
@@ -43,7 +43,7 @@
 
 /* Tema astral: nebulosa, órbitas em volta da estrela do Supremo e estrelas cadentes. */
 .in-nebula { position: absolute; inset: 0; pointer-events: none; background:
-  radial-gradient(ellipse 55% 60% at 88% 62%, rgba(241, 201, 107, .10), transparent 70%),
+  radial-gradient(ellipse 55% 60% at 72% 54%, rgba(241, 201, 107, .13), transparent 70%),
   radial-gradient(ellipse 50% 55% at 70% 20%, rgba(70, 90, 200, .14), transparent 70%),
   radial-gradient(ellipse 40% 50% at 8% 90%, rgba(110, 70, 190, .10), transparent 70%); }
 .in-orbits { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
@@ -58,6 +58,6 @@
 .in-nebula { background:
   radial-gradient(ellipse 45% 55% at 18% 52%, rgba(90, 110, 220, .16), transparent 70%),
   radial-gradient(ellipse 30% 40% at 30% 85%, rgba(130, 80, 200, .12), transparent 70%),
-  radial-gradient(ellipse 55% 60% at 88% 62%, rgba(241, 201, 107, .10), transparent 70%),
+  radial-gradient(ellipse 55% 60% at 72% 54%, rgba(241, 201, 107, .13), transparent 70%),
   radial-gradient(ellipse 50% 55% at 70% 20%, rgba(70, 90, 200, .14), transparent 70%); }
 @media (max-width: 960px) { .in-const { opacity: .5; } }

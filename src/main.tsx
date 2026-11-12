@@ -28,6 +28,7 @@ const NovoTime = lazy(() => import('./screens/NovoTime'));
 const Publico = lazy(() => import('./screens/Publico'));
 const Otimizador = lazy(() => import('./screens/Otimizador'));
 const Inventario = lazy(() => import('./screens/Inventario'));
+const Scanner = lazy(() => import('./screens/Scanner'));
 const Personagens = lazy(() => import('./screens/Personagens'));
 
 /** Rotas da versão anterior: mandam para as telas novas. */
@@ -77,6 +78,7 @@ ReactDOM.createRoot(rootElement).render(
           <Route path="/vault" element={<Suspense fallback={null}><Vault /></Suspense>} />
           <Route path="/times" element={<Navigate to="/vault" replace />} />
           <Route path="/inventario" element={<Suspense fallback={null}><Inventario /></Suspense>} />
+          <Route path="/scanner" element={<Suspense fallback={null}><Scanner /></Suspense>} />
           <Route path="/personagens" element={<Suspense fallback={null}><Personagens /></Suspense>} />
           <Route path="/otimizador" element={<Navigate to="/personagens" replace />} />
           <Route path="/recarga" element={<Suspense fallback={null}><RecargaLivre /></Suspense>} />

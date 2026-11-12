@@ -93,6 +93,7 @@ export function AppHeader({ projectId, memberName, projectName, favorite, onTogg
     { to: '/vault', label: 'Times', on: pathname.startsWith('/vault') || pathname.startsWith('/novo') || pathname.startsWith('/card') || (pathname.startsWith('/projeto') && !pathname.startsWith(`${base}/armas`) && !pathname.startsWith(`${base}/recarga`)) },
     { to: '/personagens', label: 'Personagens', on: pathname.startsWith('/personagens') },
     { to: '/inventario', label: 'Inventário', on: pathname.startsWith('/inventario') },
+    { to: '/scanner', label: 'Scanner', on: pathname.startsWith('/scanner') },
     { to: projectId ? `${base}/recarga` : '/recarga', label: 'Recarga', on: pathname.endsWith('/recarga') },
     { to: projectId ? `/comparar?a=${projectId}` : '/comparar', label: 'Comparar', on: pathname.startsWith('/comparar') },
     ...(projectId

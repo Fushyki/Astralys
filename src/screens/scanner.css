@@ -1,0 +1,5 @@
+/* Aba Scanner. */
+.sc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; align-items: stretch; }
+.sc-list { margin: 12px 0 0; padding-left: 22px; display: flex; flex-direction: column; gap: 10px; line-height: 1.5; }
+.sc-warn { border-color: var(--gold); }
+.sc-erros { grid-column: 1 / -1; }

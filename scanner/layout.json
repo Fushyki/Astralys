@@ -1,0 +1,10 @@
+{
+  "_aviso": "Calibrado com um print 1600x900 do inventario (valores como fracao da janela). Rolagem ainda nao testada no jogo.",
+  "cols": 8, "rows": 4,
+  "gridX0": 0.0931, "gridY0": 0.2356, "dx": 0.07625, "dy": 0.1619,
+  "detail": { "x": 0.681, "y": 0.111, "w": 0.256, "h": 0.778 },
+  "top": { "x": 0.681, "y": 0.111, "w": 0.256, "h": 0.261 },
+  "level": { "x": 0.685, "y": 0.385, "w": 0.06, "h": 0.05 },
+  "low": { "x": 0.681, "y": 0.445, "w": 0.256, "h": 0.444 },
+  "scrollNotches": 2
+}

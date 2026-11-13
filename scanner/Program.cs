@@ -60,18 +60,36 @@ static class Program
         var tess = Path.Combine(Path.GetTempPath(), "astralys-tessdata");
         Directory.CreateDirectory(tess);
         using (var s = Assembly.GetExecutingAssembly().GetManifestResourceStream("eng.traineddata")!) using (var f = File.Create(Path.Combine(tess, "eng.traineddata"))) s.CopyTo(f);
-        using var engine = new TesseractEngine(tess, "eng", EngineMode.LstmOnly);
+        // 3 motores de OCR: a leitura de um artefato roda em segundo plano enquanto o scanner ja clica no proximo.
+        var engines = Enumerable.Range(0, 3).Select(_ => new TesseractEngine(tess, "eng", EngineMode.LstmOnly)).ToList();
+        var free = new System.Collections.Concurrent.BlockingCollection<TesseractEngine>(); foreach (var e in engines) free.Add(e);
 
-        Log($"Janela do jogo: {w}x{h}. Filtros: nível mínimo {minLevel}, raridade mínima {minRarity}. Para parar: tecla Esc.");
+        Log($"Janela do jogo: {w}x{h}. Filtros: nível mínimo {minLevel}, raridade mínima {minRarity}. Para parar a qualquer momento: aperte a tecla Esc.");
         Log("Não mexa no mouse nem no teclado até terminar.");
         Thread.Sleep(1500);
 
         var found = new List<Artifact>(); var uncertain = 0;
         int Px(double f, int total) => (int)Math.Round(f * total);
         byte[] DetailHash() { using var b = Native.Capture(game); return Hash(Crop(b, layout.Detail)); }
-        string ReadDetail() { using var b = Native.Capture(game); return ReadPanel(b, engine, layout); }
 
-        bool stop = false; int idle = 0; string? lastSig = null; int pageNo = 0;
+        bool stop = false, done = false; int idle = 0; string? lastSig = null; byte[]? prev = null;
+        var pending = new Queue<Task<Artifact>>();
+        // Trata os resultados na ordem dos cliques (repetidos, nivel minimo, filtros).
+        void Drain(bool all)
+        {
+            while (pending.Count > 0 && (all || pending.Peek().IsCompleted))
+            {
+                var a = pending.Dequeue().Result; if (done) continue;
+                var sig = $"{a.SetKey}|{a.SlotKey}|{a.MainStatKey}|{a.Level}|{string.Join(',', a.Substats.Select(x => x.Key + x.Value))}";
+                if (sig == lastSig) continue;
+                lastSig = sig;
+                if (sortedByLevel && a.Level is int lv && lv < minLevel) { Log("Chegou abaixo do nível mínimo: terminando."); stop = done = true; continue; }
+                if ((a.Level ?? 99) < minLevel || a.Rarity < minRarity) continue;
+                if (a.Notes.Count > 0) uncertain++;
+                found.Add(a);
+                Log($"{found.Count}: {a.SetKey} {a.SlotKey} +{a.Level} {a.MainStatKey}{(a.Notes.Count > 0 ? "  (conferir: " + string.Join(' ', a.Notes) + ")" : "")}");
+            }
+        }
         var firstRow = 0;
         while (!stop)
         {
@@ -80,21 +98,18 @@ static class Program
                 {
                     if (Native.EscPressed || Cancel) { Log("Parado pela tecla Esc."); stop = true; break; }
                     if (!Native.InFront(game)) { Log("O jogo saiu da frente: parei. Volte ao início da lista e inicie de novo."); stop = true; break; }
-                    var before = DetailHash();
+                    var before = prev ??= DetailHash();
                     Native.Click(game, Px(layout.GridX0 + c * layout.Dx, w), Px(layout.GridY0 + r * layout.Dy, h));
-                    var changed = false;
-                    for (int t = 0; t < 30 && !changed; t++) { Thread.Sleep(30); changed = !DetailHash().SequenceEqual(before); }
+                    var changed = false; var cur = before;
+                    for (int t = 0; t < 60 && !changed; t++) { Thread.Sleep(15); cur = DetailHash(); changed = !cur.SequenceEqual(before); }
+                    prev = cur;
                     if (!changed) { if (++idle >= 3) { stop = true; break; } continue; }
                     idle = 0;
-                    var a = Parser.Parse(ReadDetail(), sets);
-                    var sig = $"{a.SetKey}|{a.SlotKey}|{a.MainStatKey}|{a.Level}|{string.Join(',', a.Substats.Select(x => x.Key + x.Value))}";
-                    if (sig == lastSig) continue;
-                    lastSig = sig;
-                    if (sortedByLevel && a.Level is int lv && lv < minLevel) { Log("Chegou abaixo do nível mínimo: terminando."); stop = true; break; }
-                    if ((a.Level ?? 99) < minLevel || a.Rarity < minRarity) continue;
-                    if (a.Notes.Count > 0) uncertain++;
-                    found.Add(a);
-                    Log($"{found.Count}: {a.SetKey} {a.SlotKey} +{a.Level} {a.MainStatKey}{(a.Notes.Count > 0 ? "  (conferir: " + string.Join(' ', a.Notes) + ")" : "")}");
+                    var frame = Native.Capture(game);
+                    pending.Enqueue(Task.Run(() => { var e = free.Take(); try { return Parser.Parse(ReadPanel(frame, e, layout), sets); } finally { free.Add(e); frame.Dispose(); } }));
+                    if (pending.Count >= 4) pending.Peek().Wait();
+                    Drain(false);
+                    if (stop) break;
                 }
             if (stop) break;
             // Fim da página: rola e mede quantas linhas a lista andou comparando faixas da imagem (não depende de saber quanto cada giro rola).
@@ -117,6 +132,7 @@ static class Program
             firstRow = layout.Rows - shift;
         }
 
+        Drain(true); foreach (var e in engines) e.Dispose();
         var outPath = Arg(args, "--out") ?? Path.Combine(Dir, "astralys-artefatos.json");
         var good = new { format = "GOOD", version = 2, source = "AstralysScanner " + Version, artifacts = found.Select(a => new { setKey = a.SetKey, slotKey = a.SlotKey, level = a.Level ?? 0, rarity = a.Rarity, mainStatKey = a.MainStatKey, location = "", lock_ = false, substats = a.Substats.Select(s => new { key = s.Key, value = s.Value }), astralysNotes = a.Notes.Count > 0 ? a.Notes : null }) };
         File.WriteAllText(outPath, JsonSerializer.Serialize(good, Json).Replace("\"lock_\"", "\"lock\""));
@@ -157,10 +173,24 @@ static class Program
     /// nivel (caixa escura com "+20") e a parte de baixo (substatus e set; texto escuro em fundo claro). A ordem do texto e topo, nivel, baixo.
     static string ReadPanel(Bitmap frame, TesseractEngine engine, Layout l)
     {
-        using var top = PrepareWhite(Crop(frame, l.Top), 190); using var lvl = PrepareWhite(Crop(frame, l.Level), 238); using var low = Prepare(Crop(frame, l.Low));
-        return Ocr(engine, top, PageSegMode.Auto) + "\n" + Ocr(engine, lvl, PageSegMode.SingleLine) + "\n" + Ocr(engine, low, PageSegMode.Auto);
+        using var top = PrepareWhite(Crop(frame, l.Top), 190); using var lvl = PrepareWhite(PillOf(Crop(frame, l.Level)), 200); using var low = Prepare(Crop(frame, l.Low));
+        var topText = Ocr(engine, top, PageSegMode.Auto);
+        // So "+" e digitos: sem isso a caixa escura do nivel vira lixo ("4200"). Devolve "+NN" para o parser.
+        engine.SetVariable("tessedit_char_whitelist", "+0123456789");
+        var lvText = Ocr(engine, lvl, PageSegMode.SingleLine);
+        engine.SetVariable("tessedit_char_whitelist", "");
+        var lm = System.Text.RegularExpressions.Regex.Match(lvText, @"\d{1,2}");
+        if (lm.Success && int.Parse(lm.Value) <= 20) lvText = "+" + lm.Value;
+        return topText + "\n" + lvText + "\n" + Ocr(engine, low, PageSegMode.Auto);
     }
 
+    /// Recorta a caixa escura do nivel ("+20") dentro do recorte; se nao achar, devolve o recorte todo.
+    static Bitmap PillOf(Bitmap b)
+    {
+        int x0 = b.Width, y0 = b.Height, x1 = -1, y1 = -1;
+        for (int y = 0; y < b.Height; y++) for (int x = 0; x < b.Width; x++) { var c = b.GetPixel(x, y); if (Math.Max(c.R, Math.Max(c.G, c.B)) < 120) { x0 = Math.Min(x0, x); x1 = Math.Max(x1, x); y0 = Math.Min(y0, y); y1 = Math.Max(y1, y); } }
+        return x1 - x0 >= b.Width / 5 && y1 - y0 >= b.Height / 5 ? b.Clone(new Rectangle(x0, y0, x1 - x0 + 1, y1 - y0 + 1), b.PixelFormat) : b;
+    }
     static bool Close(byte[] a, byte[] b) { long d = 0; for (int i = 0; i < a.Length; i++) d += Math.Abs(a[i] - b[i]); return d / a.Length < 8; }
     static byte[] Hash(Bitmap b) { using var s = new Bitmap(b, 32, 32); var d = new byte[32 * 32]; for (int y = 0; y < 32; y++) for (int x = 0; x < 32; x++) d[y * 32 + x] = (byte)(s.GetPixel(x, y).GetBrightness() * 255); return d; }
     static bool IsBlack(Bitmap b) { for (int y = 0; y < b.Height; y += b.Height / 12) for (int x = 0; x < b.Width; x += b.Width / 12) if (b.GetPixel(x, y).GetBrightness() > 0.03) return false; return true; }
@@ -206,6 +236,11 @@ static class Program
         var b = Parser.Parse(page.GetText(), sets);
         var ok2 = b.SetKey == "GladiatorsFinale" && b.MainStatKey == "enerRech_" && b.Level == 20 && b.Substats.Count >= 3;
         Console.WriteLine(ok2 ? "ocr OK" : "ocr FALHOU: " + page.GetText().Replace("\n", " | "));
-        return ok && ok2 ? 0 : 1;
+        // 3 motores lendo a mesma imagem ao mesmo tempo precisam dar o mesmo texto (o scanner le em paralelo).
+        var png = ms.ToArray(); var single = page.GetText();
+        var par = Enumerable.Range(0, 3).Select(_ => Task.Run(() => { using var e = new TesseractEngine(tess, "eng", EngineMode.LstmOnly); using var px = Pix.LoadFromMemory(png); using var pg = e.Process(px); return pg.GetText(); })).Select(t => t.Result).ToList();
+        var ok3 = par.All(t => t == single);
+        Console.WriteLine(ok3 ? "ocr paralelo OK" : "ocr paralelo FALHOU");
+        return ok && ok2 && ok3 ? 0 : 1;
     }
 }

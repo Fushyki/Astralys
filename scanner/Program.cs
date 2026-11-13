@@ -95,19 +95,24 @@ static class Program
         var gridBox = new Box(layout.GridX0 - layout.Dx / 2, layout.GridY0 - layout.Dy / 2, layout.Dx * layout.Cols, layout.Dy * layout.Rows);
         byte[][] Grid() { using var b = Native.Capture(game); using var c = Crop(b, gridBox); return Gray(c); }
         byte[][] SettleGrid() { Thread.Sleep(150); var g = Grid(); for (int i = 0; i < 20; i++) { Thread.Sleep(60); var g2 = Grid(); if (GridSame(g, g2, 1.0)) return g2; g = g2; } return g; }
-        // Rola a lista: arrasta para cima (quantidade certa) e mede quanto andou. 0 = fim da lista, -1 = nao consegui medir.
+        // Rola a lista e mede quanto andou. 0 = fim da lista, -1 = nao consegui medir.
+        // Principal: roda do mouse. O 1o giro mede quanto cada giro anda; depois ajusta os giros para chegar perto de D. Reserva: arrastar.
+        double perNotch = 0; int notches = 1;
         double ScrollList()
         {
-            var before = Grid(); double D = (layout.Rows - 1.25) * dyPx; // sobra margem se o jogo arrastar um pouco além
-            int sx = Px(layout.GridX0 + layout.Dx * 3, w), yFrom = (int)Math.Round(y0 + (layout.Rows - 1) * dyPx);
-            for (int attempt = 0; attempt < 2; attempt++)
+            var before = Grid(); double D = (layout.Rows - 1.25) * dyPx; // sobra margem se o jogo rolar um pouco além
+            int sx = Px(layout.GridX0 + layout.Dx * 3, w), sy = (int)Math.Round(y0 + dyPx * 1.5), yFrom = (int)Math.Round(y0 + (layout.Rows - 1) * dyPx);
+            Native.Scroll(game, sx, sy, notches);
+            var after = SettleGrid();
+            if (!GridSame(before, after, 3))
             {
-                if (attempt == 0) Native.Drag(game, sx, yFrom, (int)Math.Round(yFrom - D)); else Native.Scroll(game, sx, (int)Math.Round(y0 + dyPx * 1.5), 3); // reserva: roda do mouse
-                var after = SettleGrid();
-                if (GridSame(before, after, 3)) continue;
-                return Shift(before, after, D) is int s ? s : -1;
+                if (Shift(before, after, perNotch > 0 ? perNotch * notches : D) is not int s) { Log("A lista se mexeu, mas não consegui medir o quanto."); return -1; }
+                perNotch = (double)s / notches; notches = Math.Clamp((int)Math.Round(D / perNotch), 1, 15);
+                return s;
             }
-            return 0;
+            Native.Drag(game, sx, yFrom, (int)Math.Round(yFrom - D)); after = SettleGrid();
+            if (GridSame(before, after, 3)) return 0;
+            return Shift(before, after, D) is int s2 ? s2 : -1;
         }
         int dumps = 0; var dbg = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "astralys-scanner-debug");
         void Dump(Bitmap b, string name) { try { Directory.CreateDirectory(dbg); b.Save(Path.Combine(dbg, name), System.Drawing.Imaging.ImageFormat.Png); } catch { } }
@@ -202,7 +207,7 @@ static class Program
     /// nivel (caixa escura com "+20") e a parte de baixo (substatus e set; texto escuro em fundo claro). A ordem do texto e topo, nivel, baixo.
     static string ReadPanel(Bitmap frame, TesseractEngine engine, Layout l)
     {
-        using var top = PrepareWhite(Crop(frame, l.Top), 190); using var lvl = PrepareWhite(PillOf(Crop(frame, l.Level)), 200); using var low = Prepare(Crop(frame, l.Low));
+        using var top = PrepareWhite(Crop(frame, l.Top), 140); using var lvl = PrepareWhite(PillOf(Crop(frame, l.Level)), 200); using var low = Prepare(Crop(frame, l.Low));
         var topText = Ocr(engine, top, PageSegMode.Auto);
         // So "+" e digitos: sem isso a caixa escura do nivel vira lixo ("4200"). Devolve "+NN" para o parser.
         engine.SetVariable("tessedit_char_whitelist", "+0123456789");

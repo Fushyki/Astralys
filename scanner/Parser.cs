@@ -50,11 +50,22 @@ static class Parser
         _ => null,
     };
 
-    static double ToNumber(string raw, bool percent)
+    static double? ToNumber(string raw, bool percent)
     {
+        raw = Regex.Replace(raw.Trim('.', ','), @"[.,]{2,}", "."); // OCR as vezes duplica o ponto ("14..8")
         if (!percent && Regex.IsMatch(raw, @"^\d{1,3}([.,]\d{3})+$")) return double.Parse(Regex.Replace(raw, "[.,]", ""), CultureInfo.InvariantCulture);
-        var n = double.Parse(raw.Replace(',', '.'), CultureInfo.InvariantCulture);
+        if (!double.TryParse(raw.Replace(',', '.'), NumberStyles.Float, CultureInfo.InvariantCulture, out var n)) return null;
         return percent ? n : Math.Round(n);
+    }
+
+    /// Palavras iguais a menos de uma letra trocada, sobrando ou faltando.
+    static bool Edit1(string a, string b)
+    {
+        if (a == b) return true;
+        if (a.Length == b.Length) return a.Zip(b).Count(t => t.First != t.Second) == 1;
+        var (s, l) = a.Length < b.Length ? (a, b) : (b, a);
+        int i = 0; while (i < s.Length && s[i] == l[i]) i++;
+        return s[i..] == l[(i + 1)..];
     }
 
     static SetName? MatchSet(string text, IReadOnlyList<SetName> sets)
@@ -65,7 +76,7 @@ static class Parser
         {
             var parts = Regex.Replace(Plain(s.Name), "[^a-z0-9 ]", " ").Split(' ', StringSplitOptions.RemoveEmptyEntries).Where(w => w.Length > 1).ToArray();
             if (parts.Length == 0) continue;
-            var score = (double)parts.Count(words.Contains) / parts.Length;
+            var score = (double)parts.Count(p => words.Contains(p) || (p.Length >= 5 && words.Any(w => Math.Abs(w.Length - p.Length) <= 1 && Edit1(w, p)))) / parts.Length;
             if (score >= 0.75 && (best == null || score > bestScore || (score == bestScore && parts.Length > bestLen))) { best = s; bestScore = score; bestLen = parts.Length; }
         }
         return best;
@@ -76,12 +87,12 @@ static class Parser
     public static Artifact Parse(string text, IReadOnlyList<SetName> sets)
     {
         var notes = new List<string>();
-        var lines = Regex.Split(text, "\r?\n").Select(l => Regex.Replace(Regex.Replace(l, "[·•*●◆▪]", " "), @"\s+", " ").Trim()).Where(l => l.Length > 0).ToList();
+        var lines = Regex.Split(text, "\r?\n").Select(l => Regex.Replace(Regex.Replace(l, "[·•*●◆▪]", " "), @"\s+", " ").Trim()).Select(l => Regex.Replace(l, @"^(.*\d\s*%?)\s*[^\d%]*$", "$1")).Where(l => l.Length > 0).ToList(); // tira o lixo do OCR depois do ultimo numero ("ATK+37 =")
         var merged = new List<string>();
         for (int i = 0; i < lines.Count; i++)
         {
             var l = lines[i];
-            if (!Regex.IsMatch(l, @"\d") && StatKey(l, false) != null && i + 1 < lines.Count && Regex.IsMatch(lines[i + 1], @"^\+?[\d.,]+\s*%?$")) merged.Add(l + " " + lines[++i]);
+            if (!Regex.IsMatch(l, @"\d") && StatKey(l, false) != null && i + 1 < lines.Count && Regex.IsMatch(lines[i + 1], @"^\+?[\d.,]+\s*%?$") && !Regex.IsMatch(lines[i + 1], @"^\+\s*\d{1,2}$")) merged.Add(l + " " + lines[++i]);
             else merged.Add(l);
         }
         var cut = merged.FindIndex(l => Regex.IsMatch(Plain(l), @"\b[24]\s*-?\s*pieces?\b|\bset\b"));
@@ -100,7 +111,7 @@ static class Parser
             if (!m.Success) continue;
             var pct = m.Groups[3].Success;
             var key = StatKey(m.Groups[1].Value, pct);
-            if (key != null) stats.Add((key, ToNumber(m.Groups[2].Value, pct), pct));
+            if (key != null && ToNumber(m.Groups[2].Value, pct) is double num) stats.Add((key, num, pct));
         }
 
         string? slot = null; var t = Plain(string.Join(' ', body));
@@ -123,7 +134,9 @@ static class Parser
             seen.Add(st.Key); subs.Add(new Sub(st.Key, st.Value));
         }
         if (mainKey == null) notes.Add("Nao achei o stat principal.");
-        if (subs.Count < 3) notes.Add($"Li so {subs.Count} substat(s).");
+        // 5★ ganha o 4o substatus em +4 (4★ em +16): menos que isso, algo ficou sem ler.
+        var five = (set?.Rarity ?? 5) >= 5; var want = (level ?? 20) >= (five ? 4 : 16) ? 4 : five ? 3 : 2;
+        if (subs.Count < want) notes.Add($"Li so {subs.Count} substat(s).");
         slot ??= InferSlot(mainKey);
         if (slot == null) notes.Add("Nao reconheci a posicao.");
         if (level == null) notes.Add("Nao li o nivel.");

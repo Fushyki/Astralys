@@ -147,7 +147,9 @@ static class Program
                         var e = free.Take();
                         try
                         {
-                            var art = Parser.Parse(ReadPanel(frame, e, layout), sets);
+                            Artifact art;
+                            try { art = Parser.Parse(ReadPanel(frame, e, layout), sets); }
+                            catch (Exception ex) { art = new Artifact(null, null, 5, null, null, new List<Sub>(), new List<string> { "Erro ao ler este artefato: " + ex.Message }); }
                             if (art.Level == null && Interlocked.Increment(ref dumps) <= 4) Dump(frame, $"nivel-nao-lido-{dumps}.png"); // para ver o que o scanner enxergou
                             return art;
                         }
@@ -207,23 +209,58 @@ static class Program
     /// nivel (caixa escura com "+20") e a parte de baixo (substatus e set; texto escuro em fundo claro). A ordem do texto e topo, nivel, baixo.
     static string ReadPanel(Bitmap frame, TesseractEngine engine, Layout l)
     {
-        using var top = PrepareWhite(Crop(frame, l.Top), 140); using var lvl = PrepareWhite(PillOf(Crop(frame, l.Level)), 200); using var low = Prepare(Crop(frame, l.Low));
+        using var levelCrop = Crop(frame, l.Level); using var pill = PillOf(levelCrop, out var pillRect);
+        using var top = PrepareWhite(Crop(frame, l.Top), 140); using var lvl = PrepareWhite(pill, 200); using var low = Prepare(Crop(frame, l.Low));
         var topText = Ocr(engine, top, PageSegMode.Auto);
+        // Substatus: uma linha por vez, ancorada na caixa do nivel (1a linha ~43 px abaixo do centro dela, passo de 32 px a 900 de altura).
+        // Ler a coluna inteira de uma vez as vezes devolve lixo nas ultimas linhas.
+        var subText = "";
+        if (pillRect.Width > 0)
+        {
+            double k = frame.Height / 900.0; int cy0 = (int)(l.Level.Y * frame.Height) + pillRect.Y + pillRect.Height / 2;
+            for (int i = 0; i < 4; i++)
+            {
+                int cy = cy0 + (int)Math.Round((43 + 32 * i) * k), x = (int)(0.69 * frame.Width), hh = (int)Math.Round(30 * k);
+                var r = Rectangle.Intersect(new Rectangle(x, cy - hh / 2, (int)(0.30 * frame.Width), hh), new Rectangle(0, 0, frame.Width, frame.Height));
+                if (r.Width < 20 || r.Height < 8) continue;
+                using var lc = frame.Clone(r, frame.PixelFormat); using var lp = Prepare(lc);
+                subText += Ocr(engine, lp, PageSegMode.SingleLine).Trim() + "\n";
+            }
+        }
         // So "+" e digitos: sem isso a caixa escura do nivel vira lixo ("4200"). Devolve "+NN" para o parser.
         engine.SetVariable("tessedit_char_whitelist", "+0123456789");
         var lvText = Ocr(engine, lvl, PageSegMode.SingleLine);
         engine.SetVariable("tessedit_char_whitelist", "");
         var lm = System.Text.RegularExpressions.Regex.Match(lvText, @"\d{1,2}");
         if (lm.Success && int.Parse(lm.Value) <= 20) lvText = "+" + lm.Value;
-        return topText + "\n" + lvText + "\n" + Ocr(engine, low, PageSegMode.Auto);
+        return topText + "\n" + lvText + "\n" + subText + Ocr(engine, low, PageSegMode.Auto);
     }
 
-    /// Recorta a caixa escura do nivel ("+20") dentro do recorte; se nao achar, devolve o recorte todo.
-    static Bitmap PillOf(Bitmap b)
+    /// Recorta a caixa escura do nivel ("+20"): e o maior bloco escuro conectado do recorte (o texto escuro do painel
+    /// quebra em pedacos pequenos), por isso serve com a caixa em alturas diferentes (com ou sem a faixa roxa do Elixir).
+    static Bitmap PillOf(Bitmap b, out Rectangle rect)
     {
-        int x0 = b.Width, y0 = b.Height, x1 = -1, y1 = -1;
-        for (int y = 0; y < b.Height; y++) for (int x = 0; x < b.Width; x++) { var c = b.GetPixel(x, y); if (Math.Max(c.R, Math.Max(c.G, c.B)) < 120) { x0 = Math.Min(x0, x); x1 = Math.Max(x1, x); y0 = Math.Min(y0, y); y1 = Math.Max(y1, y); } }
-        return x1 - x0 >= b.Width / 5 && y1 - y0 >= b.Height / 5 ? b.Clone(new Rectangle(x0, y0, x1 - x0 + 1, y1 - y0 + 1), b.PixelFormat) : b;
+        rect = Rectangle.Empty;
+        int W = b.Width, H = b.Height; var dark = new bool[W * H];
+        for (int y = 0; y < H; y++) for (int x = 0; x < W; x++) { var c = b.GetPixel(x, y); dark[y * W + x] = Math.Max(c.R, Math.Max(c.G, c.B)) < 120; }
+        var seen = new bool[W * H]; var stack = new Stack<int>(); int bestArea = 0; Rectangle best = default;
+        for (int s = 0; s < W * H; s++)
+        {
+            if (!dark[s] || seen[s]) continue;
+            int area = 0, x0 = W, x1 = -1, y0 = H, y1 = -1; seen[s] = true; stack.Push(s);
+            while (stack.Count > 0)
+            {
+                int q = stack.Pop(), qx = q % W, qy = q / W; area++; x0 = Math.Min(x0, qx); x1 = Math.Max(x1, qx); y0 = Math.Min(y0, qy); y1 = Math.Max(y1, qy);
+                for (int dy = -1; dy <= 1; dy++) for (int dx = -1; dx <= 1; dx++)
+                {
+                    int nx = qx + dx, ny = qy + dy; if (nx < 0 || ny < 0 || nx >= W || ny >= H) continue;
+                    int n = ny * W + nx; if (dark[n] && !seen[n]) { seen[n] = true; stack.Push(n); }
+                }
+            }
+            if (area > bestArea) { bestArea = area; best = new Rectangle(x0, y0, x1 - x0 + 1, y1 - y0 + 1); }
+        }
+        if (bestArea >= 200 && best.Width >= 20 && best.Height >= 10) { rect = best; return b.Clone(best, b.PixelFormat); }
+        return (Bitmap)b.Clone();
     }
     static bool Close(byte[] a, byte[] b, int tol = 8) { long d = 0; for (int i = 0; i < a.Length; i++) d += Math.Abs(a[i] - b[i]); return d / a.Length < tol; }
     /// Cinza do recorte em resolucao total (uma linha de bytes por linha da imagem).

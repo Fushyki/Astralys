@@ -37,7 +37,7 @@ class Gui : Form
         Task.Run(() =>
         {
             try { Program.Scan(args.ToArray(), Program.Sets()); }
-            catch (Exception e) { Add("ERRO inesperado: " + e.Message); }
+            catch (Exception e) { Add("ERRO inesperado: " + (e.InnerException ?? e)); }
             if (!IsDisposed) BeginInvoke(() => { start.Enabled = true; stop.Enabled = false; });
         });
     }

@@ -16,18 +16,29 @@ static class Program
     static readonly string Dir = AppContext.BaseDirectory;
     static readonly string LogPath = Path.Combine(Dir, "astralys-scanner.log");
 
-    static void Log(string s) { Console.WriteLine(s); try { File.AppendAllText(LogPath, $"{DateTime.Now:HH:mm:ss} {s}\n"); } catch { } }
+    public static Action<string>? Sink; // janela: recebe as mensagens no lugar do console
+    public static volatile bool Cancel;
+    [System.Runtime.InteropServices.DllImport("kernel32.dll")] static extern bool AttachConsole(int pid);
+    static void Log(string s) { if (Sink != null) Sink(s); else Console.WriteLine(s); try { File.AppendAllText(LogPath, $"{DateTime.Now:HH:mm:ss} {s}\n"); } catch { } }
+    public static List<SetName> Sets() => JsonSerializer.Deserialize<List<SetName>>(Res("sets.json"), Json)!;
     static string Res(string name) { using var s = Assembly.GetExecutingAssembly().GetManifestResourceStream(name)!; using var r = new StreamReader(s); return r.ReadToEnd(); }
     static int Fail(string erro, string solucao) { Log($"\nERRO: {erro}\n  O que fazer: {solucao}"); Pause(); return 1; }
-    static void Pause() { try { Console.WriteLine("\nPressione Enter para fechar."); Console.ReadLine(); } catch { } }
+    static void Pause() { if (Sink != null) return; try { Console.WriteLine("\nPressione Enter para fechar."); Console.ReadLine(); } catch { } }
     static string? Arg(string[] a, string k) { var i = Array.IndexOf(a, k); return i >= 0 && i + 1 < a.Length ? a[i + 1] : null; }
 
+    [STAThread]
     static int Main(string[] args)
     {
+        if (args.Length == 0) { Application.EnableVisualStyles(); Application.Run(new Gui()); return 0; } // dois cliques: abre a janela
+        AttachConsole(-1); // WinExe: usa o console de quem chamou
         Console.OutputEncoding = System.Text.Encoding.UTF8;
         var sets = JsonSerializer.Deserialize<List<SetName>>(Res("sets.json"), Json)!;
         if (args.Contains("--selftest")) return SelfTest(sets);
+        return Scan(args, sets);
+    }
 
+    public static int Scan(string[] args, List<SetName> sets)
+    {
         Log($"Astralys Scanner {Version}. Leitura de artefatos pela imagem da tela. Nada é enviado pela internet.");
         int minLevel = int.Parse(Arg(args, "--min-level") ?? "0"), minRarity = int.Parse(Arg(args, "--min-rarity") ?? "1");
         bool sortedByLevel = args.Contains("--sorted-by-level"), keep = args.Contains("--keep");
@@ -67,7 +78,7 @@ static class Program
             for (int r = firstRow; r < layout.Rows && !stop; r++)
                 for (int c = 0; c < layout.Cols; c++)
                 {
-                    if (Native.EscPressed) { Log("Parado pela tecla Esc."); stop = true; break; }
+                    if (Native.EscPressed || Cancel) { Log("Parado pela tecla Esc."); stop = true; break; }
                     if (!Native.InFront(game)) { Log("O jogo saiu da frente: parei. Volte ao início da lista e inicie de novo."); stop = true; break; }
                     var before = DetailHash();
                     Native.Click(game, Px(layout.GridX0 + c * layout.Dx, w), Px(layout.GridY0 + r * layout.Dy, h));
@@ -111,7 +122,7 @@ static class Program
         File.WriteAllText(outPath, JsonSerializer.Serialize(good, Json).Replace("\"lock_\"", "\"lock\""));
         Log($"\nPronto: {found.Count} artefatos ({uncertain} para conferir). Arquivo: {outPath}");
         Log("Importe esse arquivo na aba Inventário do Astralys.");
-        if (!keep) SelfDelete();
+        if (!keep && Sink == null) SelfDelete();
         Pause();
         return 0;
     }

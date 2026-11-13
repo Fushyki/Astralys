@@ -29,6 +29,7 @@ static class Program
     [STAThread]
     static int Main(string[] args)
     {
+        Environment.SetEnvironmentVariable("OMP_THREAD_LIMIT", "1"); // antes de carregar o Tesseract
         if (args.Length == 0) { Application.EnableVisualStyles(); Application.Run(new Gui()); return 0; } // dois cliques: abre a janela
         AttachConsole(-1); // WinExe: usa o console de quem chamou
         Console.OutputEncoding = System.Text.Encoding.UTF8;
@@ -61,14 +62,15 @@ static class Program
         Directory.CreateDirectory(tess);
         using (var s = Assembly.GetExecutingAssembly().GetManifestResourceStream("eng.traineddata")!) using (var f = File.Create(Path.Combine(tess, "eng.traineddata"))) s.CopyTo(f);
         // 3 motores de OCR: a leitura de um artefato roda em segundo plano enquanto o scanner ja clica no proximo.
-        var engines = Enumerable.Range(0, 3).Select(_ => new TesseractEngine(tess, "eng", EngineMode.LstmOnly)).ToList();
+        var engines = Enumerable.Range(0, Math.Clamp(Environment.ProcessorCount - 1, 2, 6)).Select(_ => new TesseractEngine(tess, "eng", EngineMode.LstmOnly)).ToList();
         var free = new System.Collections.Concurrent.BlockingCollection<TesseractEngine>(); foreach (var e in engines) free.Add(e);
 
         Log($"Janela do jogo: {w}x{h}. Filtros: nível mínimo {minLevel}, raridade mínima {minRarity}. Para parar a qualquer momento: aperte a tecla Esc.");
         Log("Não mexa no mouse nem no teclado até terminar.");
         Thread.Sleep(1500);
 
-        var found = new List<Artifact>(); var uncertain = 0;
+        var found = new List<Artifact>(); var uncertain = 0; int dupes = 0; bool userStop = false;
+        int? total; using (var f0 = Native.Capture(game)) total = ReadTotal(f0, engines[0]); // contador "Artifacts 2470/2700" do inventario, para conferir no fim
         int Px(double f, int total) => (int)Math.Round(f * total);
         byte[] DetailHash() { using var b = Native.Capture(game); using var c = Crop(b, layout.Detail); return Hash(c); }
 
@@ -81,7 +83,7 @@ static class Program
             {
                 var a = pending.Dequeue().Result; if (done) continue;
                 var sig = $"{a.SetKey}|{a.SlotKey}|{a.MainStatKey}|{a.Level}|{string.Join(',', a.Substats.Select(x => x.Key + x.Value))}";
-                if (sig == lastSig) continue;
+                if (sig == lastSig) { dupes++; continue; }
                 lastSig = sig;
                 if (sortedByLevel && a.Level is int lv && lv < minLevel) { Log("Chegou abaixo do nível mínimo: terminando."); stop = done = true; continue; }
                 if ((a.Level ?? 99) < minLevel || a.Rarity < minRarity) continue;
@@ -92,7 +94,8 @@ static class Program
         }
         // Posicao das linhas em pixels: a linha global "a" fica em y0 + a*dy - off (off = quanto a lista ja rolou).
         double dyPx = layout.Dy * h, y0 = layout.GridY0 * h, yMax = y0 + (layout.Rows - 1) * dyPx + 0.12 * dyPx;
-        var gridBox = new Box(layout.GridX0 - layout.Dx / 2, layout.GridY0 - layout.Dy / 2, layout.Dx * layout.Cols, layout.Dy * layout.Rows);
+        const double viewTop = 0.153, viewBottom = 0.885; // a lista visivel (alem das 4 linhas inteiras, ha uma parte da 5a): da mais sobreposicao para medir
+        var gridBox = new Box(layout.GridX0 - layout.Dx / 2, viewTop, layout.Dx * layout.Cols, viewBottom - viewTop);
         byte[][] Grid() { using var b = Native.Capture(game); using var c = Crop(b, gridBox); return Gray(c); }
         byte[][] SettleGrid() { Thread.Sleep(150); var g = Grid(); for (int i = 0; i < 20; i++) { Thread.Sleep(60); var g2 = Grid(); if (GridSame(g, g2, 1.0)) return g2; g = g2; } return g; }
         // Rola a lista e mede quanto andou. 0 = fim da lista, -1 = nao consegui medir.
@@ -107,7 +110,7 @@ static class Program
             if (!GridSame(before, after, 3))
             {
                 if (Shift(before, after, perNotch > 0 ? perNotch * notches : D) is not int s) { Log("A lista se mexeu, mas não consegui medir o quanto."); Dump(frameBefore, "rolagem-antes.png"); using var fa = Native.Capture(game); Dump(fa, "rolagem-depois.png"); return -1; }
-                perNotch = (double)s / notches; notches = Math.Clamp((int)Math.Round(D / perNotch), 1, 15);
+                perNotch = (double)s / notches; notches = Math.Clamp((int)Math.Floor(((viewBottom - viewTop) * h - 0.07 * h) / perNotch), 1, 15); // o maximo que ainda deixa ~60 px para conferir
                 return s;
             }
             Native.Drag(game, sx, yFrom, (int)Math.Round(yFrom - D)); after = SettleGrid();
@@ -125,7 +128,7 @@ static class Program
                 int cy = (int)Math.Round(y0 + a * dyPx - off);
                 for (int c = 0; c < layout.Cols; c++)
                 {
-                    if (Native.EscPressed || Cancel) { Log("Parado pela tecla Esc."); stop = true; break; }
+                    if (Native.EscPressed || Cancel) { Log("Parado pela tecla Esc."); stop = userStop = true; break; }
                     if (!Native.InFront(game)) { Log("O jogo saiu da frente: parei. Volte ao início da lista e inicie de novo."); stop = true; break; }
                     var before = prev ??= DetailHash();
                     Native.Click(game, Px(layout.GridX0 + c * layout.Dx, w), cy);
@@ -173,6 +176,11 @@ static class Program
         var good = new { format = "GOOD", version = 2, source = "AstralysScanner " + Version, artifacts = found.Select(a => new { setKey = a.SetKey, slotKey = a.SlotKey, level = a.Level ?? 0, rarity = a.Rarity, mainStatKey = a.MainStatKey, location = "", lock_ = false, substats = a.Substats.Select(s => new { key = s.Key, value = s.Value }), astralysNotes = a.Notes.Count > 0 ? a.Notes : null }) };
         File.WriteAllText(outPath, JsonSerializer.Serialize(good, Json).Replace("\"lock_\"", "\"lock\""));
         Log($"\nPronto: {found.Count} artefatos ({uncertain} para conferir). Arquivo: {outPath}");
+        // Conferencia: sem filtros e sem parar no meio, o total lido tem que bater com o contador do inventario (senao alguma linha foi pulada).
+        if (total is int tot && !userStop && !done)
+            Log(minLevel == 0 && minRarity <= 1
+                ? $"Conferência: o inventário mostra {tot} artefatos; o scanner leu {found.Count + dupes} ({dupes} repetidos descartados)." + (found.Count + dupes == tot ? " Bateu." : $" Faltam {tot - found.Count - dupes}: confira se alguma linha foi pulada.")
+                : $"O inventário mostra {tot} artefatos; com filtros (nível/raridade) não dá para comparar com os {found.Count} lidos.");
         Log("Importe esse arquivo na aba Inventário do Astralys.");
         if (!keep && Sink == null) SelfDelete();
         Pause();
@@ -205,35 +213,47 @@ static class Program
         using var pix = Pix.LoadFromMemory(ms.ToArray()); using var page = engine.Process(pix, mode); return page.GetText();
     }
 
-    /// Le o painel do artefato em 3 recortes (cada um precisa de um preparo diferente): topo (titulo, posicao, atributo principal; texto branco),
-    /// nivel (caixa escura com "+20") e a parte de baixo (substatus e set; texto escuro em fundo claro). A ordem do texto e topo, nivel, baixo.
+    /// Le o contador "Artifacts 2470/2700" do canto superior direito do inventario (devolve 2470).
+    static int? ReadTotal(Bitmap frame, TesseractEngine engine)
+    {
+        try
+        {
+            using var c = Crop(frame, new Box(0.80, 0.02, 0.145, 0.05)); using var w = PrepareWhite(c, 110);
+            var t = Ocr(engine, w, PageSegMode.SingleLine);
+            var m = System.Text.RegularExpressions.Regex.Match(t, @"(\d{1,5})\s*/\s*(\d{1,5})");
+            return m.Success && int.Parse(m.Groups[1].Value) <= int.Parse(m.Groups[2].Value) ? int.Parse(m.Groups[1].Value) : null;
+        }
+        catch { return null; }
+    }
+
+    /// Le o painel do artefato em recortes pequenos (OCR rapido): topo (posicao e atributo principal; texto claro), caixa do nivel
+    /// ("+20") e 5 linhas abaixo dela ancoradas na posicao da caixa (4 substatus; a linha do set vem logo depois do ultimo).
     static string ReadPanel(Bitmap frame, TesseractEngine engine, Layout l)
     {
         using var levelCrop = Crop(frame, l.Level); using var pill = PillOf(levelCrop, out var pillRect);
-        using var top = PrepareWhite(Crop(frame, l.Top), 140); using var lvl = PrepareWhite(pill, 200); using var low = Prepare(Crop(frame, l.Low));
+        using var top = PrepareWhite(Crop(frame, l.Top), 140); using var lvl = PrepareWhite(pill, 200);
         var topText = Ocr(engine, top, PageSegMode.Auto);
-        // Substatus: uma linha por vez, ancorada na caixa do nivel (1a linha ~43 px abaixo do centro dela, passo de 32 px a 900 de altura).
-        // Ler a coluna inteira de uma vez as vezes devolve lixo nas ultimas linhas.
-        var subText = "";
-        if (pillRect.Width > 0)
-        {
-            double k = frame.Height / 900.0; int cy0 = (int)(l.Level.Y * frame.Height) + pillRect.Y + pillRect.Height / 2;
-            for (int i = 0; i < 4; i++)
-            {
-                int cy = cy0 + (int)Math.Round((43 + 32 * i) * k), x = (int)(0.69 * frame.Width), hh = (int)Math.Round(30 * k);
-                var r = Rectangle.Intersect(new Rectangle(x, cy - hh / 2, (int)(0.30 * frame.Width), hh), new Rectangle(0, 0, frame.Width, frame.Height));
-                if (r.Width < 20 || r.Height < 8) continue;
-                using var lc = frame.Clone(r, frame.PixelFormat); using var lp = Prepare(lc);
-                subText += Ocr(engine, lp, PageSegMode.SingleLine).Trim() + "\n";
-            }
-        }
         // So "+" e digitos: sem isso a caixa escura do nivel vira lixo ("4200"). Devolve "+NN" para o parser.
         engine.SetVariable("tessedit_char_whitelist", "+0123456789");
         var lvText = Ocr(engine, lvl, PageSegMode.SingleLine);
         engine.SetVariable("tessedit_char_whitelist", "");
         var lm = System.Text.RegularExpressions.Regex.Match(lvText, @"\d{1,2}");
         if (lm.Success && int.Parse(lm.Value) <= 20) lvText = "+" + lm.Value;
-        return topText + "\n" + lvText + "\n" + subText + Ocr(engine, low, PageSegMode.Auto);
+        // 1a linha ~43 px abaixo do centro da caixa, passo de 32 px (a 900 de altura). Ler a coluna inteira de uma vez devolvia lixo nas ultimas linhas.
+        var lines = "";
+        if (pillRect.Width > 0)
+        {
+            double k = frame.Height / 900.0; int cy0 = (int)(l.Level.Y * frame.Height) + pillRect.Y + pillRect.Height / 2;
+            for (int i = 0; i < 5; i++)
+            {
+                int cy = cy0 + (int)Math.Round((43 + 32 * i) * k), x = (int)(0.69 * frame.Width), hh = (int)Math.Round(30 * k);
+                var r = Rectangle.Intersect(new Rectangle(x, cy - hh / 2, (int)(0.33 * frame.Width), hh), new Rectangle(0, 0, frame.Width, frame.Height));
+                if (r.Width < 20 || r.Height < 8) continue;
+                using var lc = frame.Clone(r, frame.PixelFormat); using var lp = Prepare(lc);
+                lines += Ocr(engine, lp, PageSegMode.SingleLine).Trim() + "\n";
+            }
+        }
+        return topText + "\n" + lvText + "\n" + lines;
     }
 
     /// Recorta a caixa escura do nivel ("+20"): e o maior bloco escuro conectado do recorte (o texto escuro do painel
@@ -297,7 +317,7 @@ static class Program
     /// Quantas linhas de pixel (na escala 1/4) o conteudo subiu entre as duas imagens. Procura ate 1,3x o esperado; empate (linhas iguais) fica com o mais perto do esperado.
     public static int? FindShift(byte[][] a, byte[][] b, double expect)
     {
-        int maxS = Math.Min((int)(expect * 1.3), (int)(a.Length * 0.75)); if (maxS < 1) return null;
+        int maxS = Math.Min((int)(expect * 1.3), a.Length - 15); if (maxS < 1) return null;
         var sc = new double[maxS + 1]; for (int s = 1; s <= maxS; s++) sc[s] = RobustDiff(a, b, s);
         var min = sc.Skip(1).Min(); if (min > 12) return null;
         return Enumerable.Range(1, maxS).Where(s => sc[s] <= min * 1.1 + 0.5).OrderBy(s => Math.Abs(s - expect)).First();
@@ -318,6 +338,7 @@ static class Program
         using (var rs = Assembly.GetExecutingAssembly().GetManifestResourceStream("eng.traineddata")!) using (var f = File.Create(Path.Combine(tess, "eng.traineddata"))) rs.CopyTo(f);
         using var bmp = new Bitmap(path);
         using var engine = new TesseractEngine(tess, "eng", EngineMode.LstmOnly);
+        Console.WriteLine("Contador do inventario: " + (ReadTotal(bmp, engine)?.ToString() ?? "nao li"));
         var text = ReadPanel(bmp, engine, layout);
         Console.WriteLine("--- texto lido ---" + Environment.NewLine + text + "--- artefato ---");
         Console.WriteLine(JsonSerializer.Serialize(Parser.Parse(text, sets), Json));

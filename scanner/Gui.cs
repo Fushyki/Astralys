@@ -15,7 +15,7 @@ class Gui : Form
         Text = "Astralys Scanner 0.1.0 (beta)"; ClientSize = new Size(560, 420); StartPosition = FormStartPosition.CenterScreen;
         rarity.Items.AddRange(new object[] { "Todas", "3★ ou mais", "4★ ou mais", "5★" }); rarity.SelectedIndex = 0;
         var top = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, Padding = new Padding(8), WrapContents = true };
-        top.Controls.Add(new Label { Text = "Abra o Genshin em janela (1600x900), na lista de artefatos do inventário, e clique em Iniciar. Não mexa no mouse até terminar. Para PARAR a qualquer momento, aperte a tecla ESC (ou clique em Parar).", Width = 540, Height = 48, Font = new Font(Font, FontStyle.Bold) });
+        top.Controls.Add(new Label { Text = "Abra o Genshin em janela (1600x900), na lista de artefatos do inventário, e clique em Iniciar. Não mexa no mouse até terminar. Para PARAR a qualquer momento, aperte a tecla ESC (ou clique em Parar). Esta janela minimiza durante a leitura e volta ao terminar.", Width = 540, Height = 48, Font = new Font(Font, FontStyle.Bold) });
         top.Controls.Add(new Label { Text = "Nível mínimo:", AutoSize = true, Margin = new Padding(3, 8, 0, 0) }); top.Controls.Add(level);
         top.Controls.Add(new Label { Text = "Raridade:", AutoSize = true, Margin = new Padding(12, 8, 0, 0) }); top.Controls.Add(rarity);
         top.Controls.Add(sorted); top.SetFlowBreak(rarity, true);
@@ -34,11 +34,12 @@ class Gui : Form
         args.Add("--keep"); // a janela não apaga o exe; ele some só se o usuário apagar
         args.Add("--out"); args.Add(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "astralys-artefatos.json"));
         Program.Cancel = false; Program.Sink = Add; log.Clear(); start.Enabled = false; stop.Enabled = true;
+        WindowState = FormWindowState.Minimized; // fora da frente: a captura de tela e os cliques so podem ver o jogo
         Task.Run(() =>
         {
             try { Program.Scan(args.ToArray(), Program.Sets()); }
             catch (Exception e) { Add("ERRO inesperado: " + (e.InnerException ?? e)); }
-            if (!IsDisposed) BeginInvoke(() => { start.Enabled = true; stop.Enabled = false; });
+            if (!IsDisposed) BeginInvoke(() => { start.Enabled = true; stop.Enabled = false; WindowState = FormWindowState.Normal; Activate(); });
         });
     }
 }

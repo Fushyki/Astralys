@@ -43,6 +43,15 @@ static class Native
         for (int i = 0; i < Math.Abs(notches); i++) { mouse_event(0x0800, 0, 0, notches > 0 ? -120 : 120, UIntPtr.Zero); Thread.Sleep(25); } // notches > 0 = para baixo
     }
 
+    /// Arrasta com o botao esquerdo de (x, y1) ate (x, y2): puxa a lista (y2 < y1 = para cima).
+    public static void Drag(IntPtr h, int x, int y1, int y2)
+    {
+        var p = new POINT { X = x, Y = y1 }; ClientToScreen(h, ref p); SetCursorPos(p.X, p.Y); Thread.Sleep(40);
+        mouse_event(0x0002, 0, 0, 0, UIntPtr.Zero); Thread.Sleep(40);
+        const int steps = 14; for (int i = 1; i <= steps; i++) { SetCursorPos(p.X, p.Y + (y2 - y1) * i / steps); Thread.Sleep(18); }
+        Thread.Sleep(80); mouse_event(0x0004, 0, 0, 0, UIntPtr.Zero);
+    }
+
     /// Imagem atual da area util da janela do jogo (o jogo precisa estar na frente).
     public static Bitmap Capture(IntPtr h)
     {

@@ -70,7 +70,7 @@ static class Program
 
         var found = new List<Artifact>(); var uncertain = 0;
         int Px(double f, int total) => (int)Math.Round(f * total);
-        byte[] DetailHash() { using var b = Native.Capture(game); return Hash(Crop(b, layout.Detail)); }
+        byte[] DetailHash() { using var b = Native.Capture(game); using var c = Crop(b, layout.Detail); return Hash(c); }
 
         bool stop = false, done = false; int idle = 0; string? lastSig = null; byte[]? prev = null;
         var pending = new Queue<Task<Artifact>>();
@@ -90,46 +90,75 @@ static class Program
                 Log($"{found.Count}: {a.SetKey} {a.SlotKey} +{a.Level} {a.MainStatKey}{(a.Notes.Count > 0 ? "  (conferir: " + string.Join(' ', a.Notes) + ")" : "")}");
             }
         }
-        var firstRow = 0;
+        // Posicao das linhas em pixels: a linha global "a" fica em y0 + a*dy - off (off = quanto a lista ja rolou).
+        double dyPx = layout.Dy * h, y0 = layout.GridY0 * h, yMax = y0 + (layout.Rows - 1) * dyPx + 0.12 * dyPx;
+        var gridBox = new Box(layout.GridX0 - layout.Dx / 2, layout.GridY0 - layout.Dy / 2, layout.Dx * layout.Cols, layout.Dy * layout.Rows);
+        byte[][] Grid() { using var b = Native.Capture(game); using var c = Crop(b, gridBox); return Gray(c); }
+        byte[][] SettleGrid() { Thread.Sleep(150); var g = Grid(); for (int i = 0; i < 20; i++) { Thread.Sleep(60); var g2 = Grid(); if (GridSame(g, g2, 1.0)) return g2; g = g2; } return g; }
+        // Rola a lista: arrasta para cima (quantidade certa) e mede quanto andou. 0 = fim da lista, -1 = nao consegui medir.
+        double ScrollList()
+        {
+            var before = Grid(); double D = (layout.Rows - 1.25) * dyPx; // sobra margem se o jogo arrastar um pouco além
+            int sx = Px(layout.GridX0 + layout.Dx * 3, w), yFrom = (int)Math.Round(y0 + (layout.Rows - 1) * dyPx);
+            for (int attempt = 0; attempt < 2; attempt++)
+            {
+                if (attempt == 0) Native.Drag(game, sx, yFrom, (int)Math.Round(yFrom - D)); else Native.Scroll(game, sx, (int)Math.Round(y0 + dyPx * 1.5), 3); // reserva: roda do mouse
+                var after = SettleGrid();
+                if (GridSame(before, after, 3)) continue;
+                return Shift(before, after, D) is int s ? s : -1;
+            }
+            return 0;
+        }
+        int dumps = 0; var dbg = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "astralys-scanner-debug");
+        void Dump(Bitmap b, string name) { try { Directory.CreateDirectory(dbg); b.Save(Path.Combine(dbg, name), System.Drawing.Imaging.ImageFormat.Png); } catch { } }
+
+        int nextRow = 0; double off = 0;
         while (!stop)
         {
-            for (int r = firstRow; r < layout.Rows && !stop; r++)
+            for (int a = nextRow; y0 + a * dyPx - off <= yMax && !stop; a++)
+            {
+                int cy = (int)Math.Round(y0 + a * dyPx - off);
                 for (int c = 0; c < layout.Cols; c++)
                 {
                     if (Native.EscPressed || Cancel) { Log("Parado pela tecla Esc."); stop = true; break; }
                     if (!Native.InFront(game)) { Log("O jogo saiu da frente: parei. Volte ao início da lista e inicie de novo."); stop = true; break; }
                     var before = prev ??= DetailHash();
-                    Native.Click(game, Px(layout.GridX0 + c * layout.Dx, w), Px(layout.GridY0 + r * layout.Dy, h));
+                    Native.Click(game, Px(layout.GridX0 + c * layout.Dx, w), cy);
                     var changed = false; var cur = before;
                     for (int t = 0; t < 60 && !changed; t++) { Thread.Sleep(15); cur = DetailHash(); changed = !cur.SequenceEqual(before); }
                     prev = cur;
                     if (!changed) { if (++idle >= 3) { stop = true; break; } continue; }
                     idle = 0;
-                    var frame = Native.Capture(game);
-                    pending.Enqueue(Task.Run(() => { var e = free.Take(); try { return Parser.Parse(ReadPanel(frame, e, layout), sets); } finally { free.Add(e); frame.Dispose(); } }));
+                    // O painel anima ao trocar de artefato: espera parar de mudar (duas capturas iguais) antes de ler.
+                    var frame = Native.Capture(game); byte[] hp; using (var c0 = Crop(frame, layout.Detail)) hp = Hash(c0);
+                    for (int t = 0; t < 24; t++)
+                    {
+                        Thread.Sleep(25); var f2 = Native.Capture(game); byte[] hn; using (var c1 = Crop(f2, layout.Detail)) hn = Hash(c1);
+                        frame.Dispose(); frame = f2; if (Close(hp, hn, 2)) break; hp = hn;
+                    }
+                    prev = hp;
+                    pending.Enqueue(Task.Run(() =>
+                    {
+                        var e = free.Take();
+                        try
+                        {
+                            var art = Parser.Parse(ReadPanel(frame, e, layout), sets);
+                            if (art.Level == null && Interlocked.Increment(ref dumps) <= 4) Dump(frame, $"nivel-nao-lido-{dumps}.png"); // para ver o que o scanner enxergou
+                            return art;
+                        }
+                        finally { free.Add(e); frame.Dispose(); }
+                    }));
                     if (pending.Count >= 4) pending.Peek().Wait();
                     Drain(false);
                     if (stop) break;
                 }
-            if (stop) break;
-            // Fim da página: rola e mede quantas linhas a lista andou comparando faixas da imagem (não depende de saber quanto cada giro rola).
-            // Andou 0 = fim da lista. Sem correspondência (andou demais) = volta e tenta com menos giros.
-            Box Row(int r) => new(layout.GridX0 - layout.Dx / 2, layout.GridY0 + r * layout.Dy - layout.Dy / 2, layout.Dx * layout.Cols, layout.Dy);
-            byte[][] Strips() { using var b = Native.Capture(game); return Enumerable.Range(0, layout.Rows).Select(r => Hash(Crop(b, Row(r)))).ToArray(); }
-            var strips0 = Strips(); int notches = layout.ScrollNotches, shift = -1;
-            int sx = Px(layout.GridX0 + layout.Dx * 3, w), sy = Px(layout.GridY0 + layout.Dy * 1.5, h);
-            while (notches >= 1 && shift < 0)
-            {
-                Native.Scroll(game, sx, sy, notches); Thread.Sleep(450);
-                var s1 = Strips();
-                if (Enumerable.Range(0, layout.Rows).All(i => Close(s1[i], strips0[i]))) { shift = 0; break; }
-                for (int k = 1; k < layout.Rows && shift < 0; k++)
-                    if (Enumerable.Range(0, layout.Rows - k).All(i => Close(s1[i], strips0[i + k]))) shift = k;
-                if (shift < 0) { Native.Scroll(game, sx, sy, -notches); Thread.Sleep(450); notches /= 2; }
+                nextRow = a + 1;
             }
-            if (shift == 0) break;
-            if (shift < 0) { Log("Não consegui acompanhar a rolagem da lista: parei. Confira se a lista está visível e sem nada por cima."); break; }
-            firstRow = layout.Rows - shift;
+            if (stop) break;
+            var s = ScrollList();
+            if (s == 0) break; // fim da lista
+            if (s < 0) { Log("Não consegui medir a rolagem da lista: parei. Confira se a lista está visível e sem nada por cima."); using var fb = Native.Capture(game); Dump(fb, "rolagem-falhou.png"); break; }
+            off += s;
         }
 
         Drain(true); foreach (var e in engines) e.Dispose();
@@ -191,7 +220,34 @@ static class Program
         for (int y = 0; y < b.Height; y++) for (int x = 0; x < b.Width; x++) { var c = b.GetPixel(x, y); if (Math.Max(c.R, Math.Max(c.G, c.B)) < 120) { x0 = Math.Min(x0, x); x1 = Math.Max(x1, x); y0 = Math.Min(y0, y); y1 = Math.Max(y1, y); } }
         return x1 - x0 >= b.Width / 5 && y1 - y0 >= b.Height / 5 ? b.Clone(new Rectangle(x0, y0, x1 - x0 + 1, y1 - y0 + 1), b.PixelFormat) : b;
     }
-    static bool Close(byte[] a, byte[] b) { long d = 0; for (int i = 0; i < a.Length; i++) d += Math.Abs(a[i] - b[i]); return d / a.Length < 8; }
+    static bool Close(byte[] a, byte[] b, int tol = 8) { long d = 0; for (int i = 0; i < a.Length; i++) d += Math.Abs(a[i] - b[i]); return d / a.Length < tol; }
+    /// Cinza do recorte em resolucao total (uma linha de bytes por linha da imagem).
+    public static byte[][] Gray(Bitmap c)
+    {
+        var bd = c.LockBits(new Rectangle(0, 0, c.Width, c.Height), ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
+        var buf = new byte[bd.Stride * c.Height]; System.Runtime.InteropServices.Marshal.Copy(bd.Scan0, buf, 0, buf.Length); c.UnlockBits(bd);
+        var g = new byte[c.Height][];
+        for (int y = 0; y < c.Height; y++) { g[y] = new byte[c.Width]; for (int x = 0; x < c.Width; x++) { int o = y * bd.Stride + x * 3; g[y][x] = (byte)((buf[o] + buf[o + 1] + buf[o + 2]) / 3); } }
+        return g;
+    }
+    /// 1/4 do tamanho (media de blocos 4x4): busca grossa rapida.
+    public static byte[][] Down(byte[][] g) => Enumerable.Range(0, g.Length / 4).Select(y => Enumerable.Range(0, g[0].Length / 4).Select(x => { int s = 0; for (int dy = 0; dy < 4; dy++) for (int dx = 0; dx < 4; dx++) s += g[y * 4 + dy][x * 4 + dx]; return (byte)(s / 16); }).ToArray()).ToArray();
+    /// Deslocamento em pixels reais (resolucao total), com erro de ~1 px: busca grossa em 1/4 e refina em volta.
+    public static int? Shift(byte[][] a, byte[][] b, double expectPx)
+    {
+        if (FindShift(Down(a), Down(b), expectPx / 4) is not int s4) return null;
+        return Enumerable.Range(Math.Max(1, s4 * 4 - 5), 11).Where(s => s < a.Length).OrderBy(s => GridDiff(a, b, s)).First();
+    }
+    static double GridDiff(byte[][] a, byte[][] b, int shift) { long d = 0; int H = a.Length, W = a[0].Length; for (int y = 0; y < H - shift; y++) for (int x = 0; x < W; x++) d += Math.Abs(a[y + shift][x] - b[y][x]); return d / (double)((H - shift) * W); }
+    static bool GridSame(byte[][] a, byte[][] b, double tol) => GridDiff(a, b, 0) < tol;
+    /// Quantas linhas de pixel (na escala 1/4) o conteudo subiu entre as duas imagens. Procura ate 1,3x o esperado; empate (linhas iguais) fica com o mais perto do esperado.
+    public static int? FindShift(byte[][] a, byte[][] b, double expect)
+    {
+        int maxS = Math.Min((int)(expect * 1.3), (int)(a.Length * 0.75)); if (maxS < 1) return null;
+        var sc = new double[maxS + 1]; for (int s = 1; s <= maxS; s++) sc[s] = GridDiff(a, b, s);
+        var min = sc.Skip(1).Min(); if (min > 12) return null;
+        return Enumerable.Range(1, maxS).Where(s => sc[s] <= min * 1.1 + 0.5).OrderBy(s => Math.Abs(s - expect)).First();
+    }
     static byte[] Hash(Bitmap b) { using var s = new Bitmap(b, 32, 32); var d = new byte[32 * 32]; for (int y = 0; y < 32; y++) for (int x = 0; x < 32; x++) d[y * 32 + x] = (byte)(s.GetPixel(x, y).GetBrightness() * 255); return d; }
     static bool IsBlack(Bitmap b) { for (int y = 0; y < b.Height; y += b.Height / 12) for (int x = 0; x < b.Width; x += b.Width / 12) if (b.GetPixel(x, y).GetBrightness() > 0.03) return false; return true; }
 

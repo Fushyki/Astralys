@@ -100,13 +100,13 @@ static class Program
         double perNotch = 0; int notches = 1;
         double ScrollList()
         {
-            var before = Grid(); double D = (layout.Rows - 1.25) * dyPx; // sobra margem se o jogo rolar um pouco além
+            using var frameBefore = Native.Capture(game); var before = Gray(Crop(frameBefore, gridBox)); double D = (layout.Rows - 1.25) * dyPx; // sobra margem se o jogo rolar um pouco além
             int sx = Px(layout.GridX0 + layout.Dx * 3, w), sy = (int)Math.Round(y0 + dyPx * 1.5), yFrom = (int)Math.Round(y0 + (layout.Rows - 1) * dyPx);
             Native.Scroll(game, sx, sy, notches);
             var after = SettleGrid();
             if (!GridSame(before, after, 3))
             {
-                if (Shift(before, after, perNotch > 0 ? perNotch * notches : D) is not int s) { Log("A lista se mexeu, mas não consegui medir o quanto."); return -1; }
+                if (Shift(before, after, perNotch > 0 ? perNotch * notches : D) is not int s) { Log("A lista se mexeu, mas não consegui medir o quanto."); Dump(frameBefore, "rolagem-antes.png"); using var fa = Native.Capture(game); Dump(fa, "rolagem-depois.png"); return -1; }
                 perNotch = (double)s / notches; notches = Math.Clamp((int)Math.Round(D / perNotch), 1, 15);
                 return s;
             }
@@ -241,15 +241,27 @@ static class Program
     public static int? Shift(byte[][] a, byte[][] b, double expectPx)
     {
         if (FindShift(Down(a), Down(b), expectPx / 4) is not int s4) return null;
-        return Enumerable.Range(Math.Max(1, s4 * 4 - 5), 11).Where(s => s < a.Length).OrderBy(s => GridDiff(a, b, s)).First();
+        return Enumerable.Range(Math.Max(1, s4 * 4 - 5), 11).Where(s => s < a.Length).OrderBy(s => RobustDiff(a, b, s)).First();
     }
     static double GridDiff(byte[][] a, byte[][] b, int shift) { long d = 0; int H = a.Length, W = a[0].Length; for (int y = 0; y < H - shift; y++) for (int x = 0; x < W; x++) d += Math.Abs(a[y + shift][x] - b[y][x]); return d / (double)((H - shift) * W); }
+    /// Como GridDiff, mas descontando mudanca geral de brilho (mediana) e ignorando os 15% de pixels que mais diferem.
+    static double RobustDiff(byte[][] a, byte[][] b, int shift)
+    {
+        var hist = new int[511]; long n = 0; int H = a.Length, W = a[0].Length;
+        for (int y = 0; y < H - shift; y++) { var ra = a[y + shift]; var rb = b[y]; for (int x = 0; x < W; x++) hist[ra[x] - rb[x] + 255]++; }
+        for (int i = 0; i < 511; i++) n += hist[i];
+        long acc = 0; int med = 255; for (int i = 0; i < 511; i++) { acc += hist[i]; if (acc * 2 >= n) { med = i; break; } }
+        var dev = new long[256]; for (int i = 0; i < 511; i++) dev[Math.Min(255, Math.Abs(i - med))] += hist[i];
+        long keep = (long)(n * 0.85), taken = 0; double sum = 0;
+        for (int d = 0; d < 256 && taken < keep; d++) { long t = Math.Min(dev[d], keep - taken); sum += t * (double)d; taken += t; }
+        return sum / Math.Max(1, keep);
+    }
     static bool GridSame(byte[][] a, byte[][] b, double tol) => GridDiff(a, b, 0) < tol;
     /// Quantas linhas de pixel (na escala 1/4) o conteudo subiu entre as duas imagens. Procura ate 1,3x o esperado; empate (linhas iguais) fica com o mais perto do esperado.
     public static int? FindShift(byte[][] a, byte[][] b, double expect)
     {
         int maxS = Math.Min((int)(expect * 1.3), (int)(a.Length * 0.75)); if (maxS < 1) return null;
-        var sc = new double[maxS + 1]; for (int s = 1; s <= maxS; s++) sc[s] = GridDiff(a, b, s);
+        var sc = new double[maxS + 1]; for (int s = 1; s <= maxS; s++) sc[s] = RobustDiff(a, b, s);
         var min = sc.Skip(1).Min(); if (min > 12) return null;
         return Enumerable.Range(1, maxS).Where(s => sc[s] <= min * 1.1 + 0.5).OrderBy(s => Math.Abs(s - expect)).First();
     }

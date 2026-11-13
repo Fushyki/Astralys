@@ -98,24 +98,31 @@ static class Program
         var gridBox = new Box(layout.GridX0 - layout.Dx / 2, viewTop, layout.Dx * layout.Cols, viewBottom - viewTop);
         byte[][] Grid() { using var b = Native.Capture(game); using var c = Crop(b, gridBox); return Gray(c); }
         byte[][] SettleGrid() { Thread.Sleep(150); var g = Grid(); for (int i = 0; i < 20; i++) { Thread.Sleep(60); var g2 = Grid(); if (GridSame(g, g2, 1.0)) return g2; g = g2; } return g; }
-        // Rola a lista e mede quanto andou. 0 = fim da lista, -1 = nao consegui medir.
-        // Principal: roda do mouse. O 1o giro mede quanto cada giro anda; depois ajusta os giros para chegar perto de D. Reserva: arrastar.
-        double perNotch = 0; int notches = 1;
+        // Rola quase uma pagina (ate ~4 linhas) e devolve quanto andou. 0 = fim da lista, -1 = nao consegui medir.
+        // O jogo NAO rola proporcional ao numero de giros (varios giros rapidos andam menos que a soma), entao rola em passos,
+        // mede cada um e repete ate somar o bastante. Ate ~4,4 linhas a proxima linha ainda cabe na tela (sem pular nenhuma).
+        double perNotchMax = 0; // maior deslocamento por giro ja visto: conservador para nao passar do ponto
         double ScrollList()
         {
-            using var frameBefore = Native.Capture(game); var before = Gray(Crop(frameBefore, gridBox)); double D = (layout.Rows - 1.25) * dyPx; // sobra margem se o jogo rolar um pouco além
-            int sx = Px(layout.GridX0 + layout.Dx * 3, w), sy = (int)Math.Round(y0 + dyPx * 1.5), yFrom = (int)Math.Round(y0 + (layout.Rows - 1) * dyPx);
-            Native.Scroll(game, sx, sy, notches);
-            var after = SettleGrid();
-            if (!GridSame(before, after, 3))
+            double total = 0, aim = 3.9 * dyPx, enough = 3.6 * dyPx; int sx = Px(layout.GridX0 + layout.Dx * 3, w), sy = (int)Math.Round(y0 + dyPx * 1.5), yFrom = (int)Math.Round(y0 + (layout.Rows - 1) * dyPx);
+            for (int it = 0; it < 8 && total < enough && (perNotchMax == 0 || total + perNotchMax <= 4.4 * dyPx); it++)
             {
-                if (Shift(before, after, perNotch > 0 ? perNotch * notches : D) is not int s) { Log("A lista se mexeu, mas não consegui medir o quanto."); Dump(frameBefore, "rolagem-antes.png"); using var fa = Native.Capture(game); Dump(fa, "rolagem-depois.png"); return -1; }
-                perNotch = (double)s / notches; notches = Math.Clamp((int)Math.Floor(((viewBottom - viewTop) * h - 0.07 * h) / perNotch), 1, 15); // o maximo que ainda deixa ~60 px para conferir
-                return s;
+                using var fb = Native.Capture(game); var before = Gray(Crop(fb, gridBox));
+                int n = perNotchMax > 0 ? Math.Clamp((int)Math.Floor((aim - total) / perNotchMax), 1, 8) : 1;
+                Native.Scroll(game, sx, sy, n);
+                var after = SettleGrid();
+                double expect = perNotchMax > 0 ? perNotchMax * n : 3.2 * dyPx; // so limita a busca (1,3x) e desempata
+                if (GridSame(before, after, 3))
+                {
+                    if (total > 0) return total; // parou de andar: fim da lista
+                    Native.Drag(game, sx, yFrom, (int)Math.Round(yFrom - 2.75 * dyPx)); after = SettleGrid(); // reserva: arrastar
+                    if (GridSame(before, after, 3)) return 0;
+                    if (Shift(before, after, expect) is int sd) { total += sd; continue; }
+                }
+                else if (Shift(before, after, expect) is int s) { total += s; perNotchMax = Math.Max(perNotchMax, (double)s / n); continue; }
+                Log("A lista se mexeu, mas não consegui medir o quanto."); Dump(fb, "rolagem-antes.png"); using var fa = Native.Capture(game); Dump(fa, "rolagem-depois.png"); return -1;
             }
-            Native.Drag(game, sx, yFrom, (int)Math.Round(yFrom - D)); after = SettleGrid();
-            if (GridSame(before, after, 3)) return 0;
-            return Shift(before, after, D) is int s2 ? s2 : -1;
+            return total;
         }
         int dumps = 0; var dbg = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "astralys-scanner-debug");
         void Dump(Bitmap b, string name) { try { Directory.CreateDirectory(dbg); b.Save(Path.Combine(dbg, name), System.Drawing.Imaging.ImageFormat.Png); } catch { } }

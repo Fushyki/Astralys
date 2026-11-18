@@ -1,31 +1,5 @@
-/** Cliente da API de identidade e projetos (FastAPI). Mensagens de erro já em português. */
-import type { RotationProject } from '../engine';
+/** Cliente da API (FastAPI): galeria de times e Enka. Mensagens de erro já em português. */
 import { API_URL } from './config';
-
-export interface Usuario {
-  id: string;
-  email: string;
-  nome: string;
-  avatar_url?: string | null;
-}
-
-export interface TokenResponse {
-  access_token: string;
-  token_type: string;
-  usuario: Usuario;
-}
-
-/** Projeto como o servidor guarda: o JSON do Astralys vai inteiro em `dados`. */
-export interface RemoteProject {
-  id: string;
-  nome: string;
-  character_name: string;
-  role: string;
-  version: string;
-  is_public: boolean;
-  dados: unknown;
-  atualizado_em: string;
-}
 
 /** O que o link público devolve (sem login). */
 export interface PublicProject {
@@ -46,10 +20,9 @@ export class ApiError extends Error {
 }
 
 const STATUS_TEXT: Record<number, string> = {
-  401: 'Sessão expirada ou dados incorretos. Entre de novo.',
   403: 'Você não tem permissão para isso.',
   404: 'Não encontrado.',
-  413: 'O projeto é grande demais para a conta.',
+  413: 'O time é grande demais para publicar.',
   429: 'Muitas tentativas. Espere um pouco e tente de novo.',
   503: 'O servidor está indisponível no momento.',
 };
@@ -65,13 +38,13 @@ export function messageOf(status: number, body: unknown): string {
   return STATUS_TEXT[status] ?? `Erro ${status} ao falar com o servidor.`;
 }
 
-async function call<T>(path: string, init: RequestInit & { token?: string | null } = {}): Promise<T> {
-  const { token, headers, ...rest } = init;
+async function call<T>(path: string, init: RequestInit = {}): Promise<T> {
+  const { headers, ...rest } = init;
   let res: Response;
   try {
     res = await fetch(`${API_URL}${path}`, {
       ...rest,
-      headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}), ...headers },
+      headers: { 'Content-Type': 'application/json', ...headers },
     });
   } catch {
     throw new ApiError('Não consegui falar com o servidor. Verifique a conexão.', 0);
@@ -86,36 +59,33 @@ async function call<T>(path: string, init: RequestInit & { token?: string | null
   return body as T;
 }
 
-export const register = (nome: string, email: string, senha: string) =>
-  call<Usuario>('/auth/register', { method: 'POST', body: JSON.stringify({ nome, email, senha }) });
-
-export const login = (email: string, senha: string) =>
-  call<TokenResponse>('/auth/login', { method: 'POST', body: JSON.stringify({ email, senha }) });
-
-export const logout = (token: string) => call<{ mensagem: string }>('/auth/logout', { method: 'POST', token });
-
-export const me = (token: string) => call<Usuario>('/usuarios/me', { token });
-
-export const getPublic = (id: string) => call<PublicProject>(`/astralys/publicos/${encodeURIComponent(id)}`);
-
-export const listRemote = (token: string) => call<RemoteProject[]>('/astralys/projetos', { token });
-
-export const deleteRemote = (token: string, id: string) =>
-  call<{ mensagem: string }>(`/astralys/projetos/${encodeURIComponent(id)}`, { method: 'DELETE', token });
-
-/** Converte o projeto local no formato do servidor. */
-export function toRemote(p: RotationProject) {
-  return {
-    id: p.id,
-    nome: p.name.slice(0, 255),
-    character_name: (p.members[0]?.character ?? 'Time').slice(0, 100),
-    role: 'Time',
-    version: (p.gameVersion || '1.0').slice(0, 20),
-    dados: p as unknown as Record<string, unknown>,
-    is_public: !!p.meta.shared,
-  };
+/** Time da galeria (sem conta). `resumo` é o `TeamSummary` calculado por quem publicou. */
+export interface CommunityTeam {
+  id: string;
+  nome: string;
+  author: string;
+  version: string;
+  members: string[];
+  resumo: import('../features/community/teamSummary').TeamSummary;
+  criado_em: string;
 }
 
-/** Envia vários projetos de uma vez; o servidor devolve a lista completa da conta. */
-export const syncRemote = (token: string, projects: RotationProject[]) =>
-  call<RemoteProject[]>('/astralys/projetos/sync', { method: 'POST', token, body: JSON.stringify({ projetos: projects.map(toRemote) }) });
+export const getPublic = async (id: string): Promise<PublicProject> => {
+  const t = await call<CommunityTeam & { dados: unknown }>(`/times/${encodeURIComponent(id)}`);
+  return { id: t.id, nome: t.nome, character_name: t.members[0] ?? '', author: t.author, dados: t.dados, atualizado_em: t.criado_em };
+};
+
+export const publishTeam = (body: { nome: string; author: string; version: string; members: string[]; resumo: unknown; dados: unknown }) =>
+  call<{ id: string; edit_token: string }>('/times', { method: 'POST', body: JSON.stringify(body) });
+
+export const unpublishTeam = (id: string, editToken: string) =>
+  call<{ mensagem: string }>(`/times/${encodeURIComponent(id)}`, { method: 'DELETE', headers: { 'X-Edit-Token': editToken } });
+
+export const listTeams = (f: { q: string; personagem: string; versao: string; offset: number; limit: number }) => {
+  const qs = new URLSearchParams({ limit: String(f.limit), offset: String(f.offset) });
+  if (f.q.trim()) qs.set('q', f.q.trim());
+  if (f.personagem) qs.set('personagem', f.personagem);
+  if (f.versao) qs.set('versao', f.versao);
+  return call<CommunityTeam[]>(`/times?${qs}`);
+};
+

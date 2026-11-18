@@ -1,0 +1,14 @@
+/* Galeria da comunidade (/comunidade). */
+.cm-ver { max-width: 160px; }
+.cm-empty p { margin: 0; }
+.cm-card { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.cm-head { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.cm-name { font-family: var(--font-display); font-size: 20px; overflow-wrap: anywhere; }
+.cm-faces { display: flex; gap: 8px; flex-wrap: wrap; }
+.cm-kp { display: flex; gap: 16px; flex-wrap: wrap; color: var(--text-2); }
+.cm-kp b { color: var(--gold-soft); font-size: 20px; }
+.cm-seq { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px; max-height: 96px; overflow: hidden; }
+.cm-seq li { font-size: 12px; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--c, var(--line)); color: var(--text-2); white-space: nowrap; }
+.cm-seq .cm-more { border-style: dashed; }
+.cm-foot { margin-top: auto; display: flex; gap: 8px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+.cm-loadmore { align-self: center; margin: 16px 0; }

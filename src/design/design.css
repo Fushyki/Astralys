@@ -139,9 +139,6 @@ body { font-family: var(--font-body); font-size: 15px; line-height: 1.5; -webkit
 .dz-dialog .pick .n { font-family: var(--font-display); font-weight: 600; font-size: 17px; letter-spacing: .03em; }
 .dz-dialog .pick .m { color: var(--muted); font-size: 12px; }
 
-.dz-account { display: flex; align-items: center; gap: 10px; }
-.dz-account-name { max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text-2); font-size: 14px; }
-@media (max-width: 900px) { .dz-account-name { max-width: 100px; } }
 
 .dz-iconbtn { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; border-radius: 50%; border: 1px solid var(--border-strong, var(--border-ctl-hi)); background: var(--surface); color: var(--text); font-size: 20px; line-height: 1; cursor: pointer; }
 .dz-iconbtn:hover { border-color: var(--gold); color: var(--gold); }
@@ -211,7 +208,6 @@ body { font-family: var(--font-body); font-size: 15px; line-height: 1.5; -webkit
 .dz-subnav .step-n { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: rgba(0, 0, 0, .25); font-size: 13px; }
 .dz-subnav nav a[aria-current='page'] .step-n { background: rgba(0, 0, 0, .18); }
 .dz-header .dz-nav { flex: 0 1 auto; }
-.dz-header .dz-account { margin-left: auto; }
 .dz-header > .dz-menu { flex: none; }
 @media (max-width: 900px) { .dz-header .dz-nav { flex: 1 1 100%; } .dz-header > .dz-menu { order: 2; margin-left: auto; } }
 
@@ -279,7 +275,6 @@ body { font-family: var(--font-body); font-size: 15px; line-height: 1.5; -webkit
 .dz-cfgbtn[aria-expanded="true"] svg { transform: rotate(60deg); }
 .dz-cfgbtn svg { transition: transform .3s; }
 .dz-header > .dz-menu:last-child { margin-left: auto; }
-.dz-header .dz-account + .dz-menu { margin-left: 0; }
 .dz-settings { display: flex; flex-direction: column; gap: 16px; padding: 12px 14px 14px; min-width: 300px; }
 .dz-settings-title { margin: 0; font: 600 14px var(--font-display); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
 .dz-settings-group { display: flex; flex-direction: column; gap: 8px; font-size: 14px; }

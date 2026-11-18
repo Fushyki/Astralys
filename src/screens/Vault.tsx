@@ -16,10 +16,9 @@ import { useSettings } from '../app/settings';
 import { toast } from '../app/toast';
 import { copyCardImage } from './card/copyCard';
 import { POSTER_SIZE, PosterCard, ScaledPoster } from './card/PosterCard';
-import { deleteRemote } from '../online/api';
+import { saveAuthor, savedAuthor } from '../features/community/published';
+import { publishProject, unpublishProject } from '../features/community/publish';
 import { ONLINE_ENABLED } from '../online/config';
-import { useSession } from '../online/session';
-import { summaryText, syncNow } from '../online/syncNow';
 import { NO_FILTERS, filterProjects, type VaultFilters } from '../features/vault/vaultModel';
 import './vault.css';
 import { Button } from '../design/Button';
@@ -84,55 +83,40 @@ export default function Vault() {
     const trimmed = name.trim();
     if (trimmed) edit(id, (p) => (trimmed === p.name ? null : { ...p, name: trimmed, meta: { ...p.meta, ...(p.meta.card?.title ? { card: { ...p.meta.card, title: trimmed } } : {}), updatedAt: new Date().toISOString() } }));
   };
-  const token = useSession((st) => st.token);
-  const [syncing, setSyncing] = useState(false);
-  const sync = async () => {
-    if (!token) return;
-    setSyncing(true);
-    setError(null);
-    setNotes([]);
-    try {
-      const r = await syncNow(token);
-      toast(summaryText(r));
-      refresh();
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'Não foi possível sincronizar.');
-    } finally {
-      setSyncing(false);
-    }
-  };
   const [shareMsg, setShareMsg] = useState<string | null>(null);
   const toggleShare = async (id: string) => {
     const current = loadProject(id);
-    if (!current || !token) return;
-    const next = !current.meta.shared;
-    edit(id, (p) => ({ ...p, meta: { ...p.meta, shared: next, updatedAt: new Date().toISOString() } }));
+    if (!current || !data) return;
     setError(null);
     setShareMsg(null);
     try {
-      await syncNow(token);
-      if (next) {
-        const link = `${window.location.origin}/p/${id}`;
-        let copied = false;
-        try {
-          await navigator.clipboard.writeText(link);
-          copied = true;
-        } catch {
-          /* sem permissão da área de transferência: o link aparece na tela */
-        }
-        setShareMsg(`${copied ? 'Link copiado' : 'Link do time'}: ${link}`);
-        if (copied) toast('Link público copiado.');
-      } else {
-        setShareMsg('Compartilhamento desligado: o link deixou de funcionar.');
+      if (current.meta.shared) {
+        await unpublishProject(id);
+        edit(id, (p) => ({ ...p, meta: { ...p.meta, shared: false } }));
+        setShareMsg('Time removido da galeria: o link deixou de funcionar.');
+        return;
       }
+      const typed = window.prompt('Seu nome na galeria (opcional, aparece para todos):', savedAuthor());
+      if (typed === null) return;
+      saveAuthor(typed.trim());
+      const pubId = await publishProject(current, data, typed.trim());
+      edit(id, (p) => ({ ...p, meta: { ...p.meta, shared: true } }));
+      const link = `${window.location.origin}/p/${pubId}`;
+      let copied = false;
+      try {
+        await navigator.clipboard.writeText(link);
+        copied = true;
+      } catch {
+        /* sem permissão da área de transferência: o link aparece na tela */
+      }
+      setShareMsg(`${copied ? 'Link copiado' : 'Link do time'}: ${link}`);
+      if (copied) toast('Link público copiado.');
     } catch (e) {
-      edit(id, (p) => ({ ...p, meta: { ...p.meta, shared: !next } }));
       setError(e instanceof Error ? e.message : 'Não foi possível atualizar o compartilhamento.');
     }
   };
   const remove = (id: string) => {
     deleteStoredProject(id);
-    if (token) void deleteRemote(token, id).catch(() => undefined);
     setConfirmDelete(null);
     refresh();
   };
@@ -193,16 +177,6 @@ export default function Vault() {
       <AppHeader />
       <main className="dz-page">
         <input ref={jsonInput} type="file" accept=".json,application/json" hidden aria-label="Escolher projeto" onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ''; if (f) void run(() => importJson(f, data)); }} />
-        {ONLINE_ENABLED && (
-          <section className="dz-pagehead">
-            <div className="actions">
-              {ONLINE_ENABLED && (token
-                ? <button type="button" className="dz-btn" disabled={syncing} onClick={() => void sync()} title="Envia os times mais novos para a conta e baixa os que só existem nela">{syncing ? 'Sincronizando…' : 'Sincronizar com a conta'}</button>
-                : <Link to="/entrar" className="dz-btn" title="Guarde seus times fora deste navegador">Entrar para sincronizar</Link>)}
-            </div>
-          </section>
-        )}
-
         {error && <p className="dz-error" role="alert">{error}</p>}
         {shareMsg && <p className="dz-error vt-share" role="status">{shareMsg}</p>}
         {notes.length > 0 && <div className="dz-error vt-notes" role="status">{notes.map((n, i) => <p key={i}>{n}</p>)}</div>}
@@ -278,7 +252,7 @@ export default function Vault() {
                             <button type="button" role="menuitem" className="dz-menu-item" onClick={() => { close(); void copyCard(p.id, p.name); }}>Copiar card</button>
                             <Link role="menuitem" className="dz-menu-item" to={`/card/${p.id}`} onClick={close}>Editar o card</Link>
                             <Link role="menuitem" className="dz-menu-item" to={`/comparar?a=${p.id}`} onClick={close}>Comparar</Link>
-                            {token && !p.isSample && <button type="button" role="menuitem" className="dz-menu-item" onClick={() => { close(); void toggleShare(p.id); }}>{p.shared ? 'Parar de compartilhar' : 'Compartilhar'}</button>}
+                            {ONLINE_ENABLED && !p.isSample && <button type="button" role="menuitem" className="dz-menu-item" onClick={() => { close(); void toggleShare(p.id); }}>{p.shared ? 'Parar de compartilhar' : 'Compartilhar'}</button>}
                             <button type="button" role="menuitem" className="dz-menu-item" onClick={() => { close(); duplicate(p.id); }}>Duplicar</button>
                             <button type="button" role="menuitem" className="dz-menu-item" onClick={() => { close(); setRenaming(p.id); }}>Renomear</button>
                             <button type="button" role="menuitem" className="dz-menu-item" onClick={() => { close(); void copyLink(p.id); }}>Copiar link</button>

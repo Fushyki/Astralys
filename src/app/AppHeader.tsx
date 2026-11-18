@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import '../design/design.css';
 import { ONLINE_ENABLED } from '../online/config';
-import { useSession } from '../online/session';
 import { ButtonLink } from '../design/Button';
 import { Menu } from '../design/Menu';
 import { Segmented } from '../design/primitives';
@@ -33,24 +32,6 @@ export interface AppHeaderProps {
   projectName?: string;
   favorite?: boolean;
   onToggleFavorite?: () => void;
-}
-
-/** Entrar / nome da conta e Sair; só aparece quando o site tem API configurada. */
-function Account() {
-  const usuario = useSession((s) => s.usuario);
-  const signOut = useSession((s) => s.signOut);
-  const restore = useSession((s) => s.restore);
-  useEffect(() => {
-    void restore();
-  }, [restore]);
-  if (!ONLINE_ENABLED) return null;
-  if (!usuario) return <Link to="/entrar" className="dz-btn">Entrar</Link>;
-  return (
-    <span className="dz-account">
-      <span className="dz-account-name" title={usuario.email}>{usuario.nome}</span>
-      <button type="button" className="dz-btn" onClick={() => void signOut()}>Sair</button>
-    </span>
-  );
 }
 
 function GearIcon() {
@@ -91,6 +72,7 @@ export function AppHeader({ projectId, memberName, projectName, favorite, onTogg
   const base = projectId ? `/projeto/${projectId}` : '';
   const nav: { to: string; label: string; on: boolean }[] = [
     { to: '/vault', label: 'Times', on: pathname.startsWith('/vault') || pathname.startsWith('/novo') || pathname.startsWith('/card') || (pathname.startsWith('/projeto') && !pathname.startsWith(`${base}/armas`) && !pathname.startsWith(`${base}/recarga`)) },
+    { to: '/comunidade', label: 'Comunidade', on: pathname.startsWith('/comunidade') || pathname.startsWith('/p/') },
     { to: '/personagens', label: 'Personagens', on: pathname.startsWith('/personagens') },
     { to: '/inventario', label: 'Inventário', on: pathname.startsWith('/inventario') },
     { to: '/scanner', label: 'Scanner', on: pathname.startsWith('/scanner') },
@@ -124,7 +106,6 @@ export function AppHeader({ projectId, memberName, projectName, favorite, onTogg
             <Link key={t.label} to={t.to} aria-current={t.on ? 'page' : undefined}>{t.label}</Link>
           ))}
         </nav>
-        <Account />
         <SettingsMenu />
       </header>
       {projectId && (

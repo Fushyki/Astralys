@@ -23,12 +23,12 @@ const Vault = lazy(() => import('./screens/Vault'));
 const Comparar = lazy(() => import('./screens/Comparar'));
 const Inicio = lazy(() => import('./screens/Inicio'));
 const Card = lazy(() => import('./screens/Card'));
-const Entrar = lazy(() => import('./screens/Entrar'));
 const NovoTime = lazy(() => import('./screens/NovoTime'));
 const Publico = lazy(() => import('./screens/Publico'));
 const Otimizador = lazy(() => import('./screens/Otimizador'));
 const Inventario = lazy(() => import('./screens/Inventario'));
 const Scanner = lazy(() => import('./screens/Scanner'));
+const Comunidade = lazy(() => import('./screens/Comunidade'));
 const Personagens = lazy(() => import('./screens/Personagens'));
 
 /** Rotas da versão anterior: mandam para as telas novas. */
@@ -74,10 +74,10 @@ ReactDOM.createRoot(rootElement).render(
           <Route path="/card/:id" element={<Suspense fallback={null}><Card /></Suspense>} />
           <Route path="/p/:id" element={<Suspense fallback={null}><Publico /></Suspense>} />
           <Route path="/novo" element={<Suspense fallback={null}><NovoTime /></Suspense>} />
-          <Route path="/entrar" element={<Suspense fallback={null}><Entrar /></Suspense>} />
           <Route path="/vault" element={<Suspense fallback={null}><Vault /></Suspense>} />
           <Route path="/times" element={<Navigate to="/vault" replace />} />
           <Route path="/inventario" element={<Suspense fallback={null}><Inventario /></Suspense>} />
+          <Route path="/comunidade" element={<Suspense fallback={null}><Comunidade /></Suspense>} />
           <Route path="/scanner" element={<Suspense fallback={null}><Scanner /></Suspense>} />
           <Route path="/personagens" element={<Suspense fallback={null}><Personagens /></Suspense>} />
           <Route path="/otimizador" element={<Navigate to="/personagens" replace />} />

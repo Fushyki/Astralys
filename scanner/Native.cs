@@ -37,10 +37,10 @@ static class Native
         mouse_event(0x0002, 0, 0, 0, UIntPtr.Zero); Thread.Sleep(15); mouse_event(0x0004, 0, 0, 0, UIntPtr.Zero);
     }
 
-    public static void Scroll(IntPtr h, int x, int y, int notches)
+    public static void Scroll(IntPtr h, int x, int y, int notches, int gapMs = 25)
     {
         var p = new POINT { X = x, Y = y }; ClientToScreen(h, ref p); SetCursorPos(p.X, p.Y);
-        for (int i = 0; i < Math.Abs(notches); i++) { mouse_event(0x0800, 0, 0, notches > 0 ? -120 : 120, UIntPtr.Zero); Thread.Sleep(25); } // notches > 0 = para baixo
+        for (int i = 0; i < Math.Abs(notches); i++) { mouse_event(0x0800, 0, 0, notches > 0 ? -120 : 120, UIntPtr.Zero); Thread.Sleep(gapMs); } // notches > 0 = para baixo
     }
 
     /// Arrasta com o botao esquerdo de (x, y1) ate (x, y2): puxa a lista (y2 < y1 = para cima).

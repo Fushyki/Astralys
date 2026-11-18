@@ -98,31 +98,18 @@ static class Program
         var gridBox = new Box(layout.GridX0 - layout.Dx / 2, viewTop, layout.Dx * layout.Cols, viewBottom - viewTop);
         byte[][] Grid() { using var b = Native.Capture(game); using var c = Crop(b, gridBox); return Gray(c); }
         byte[][] SettleGrid() { Thread.Sleep(150); var g = Grid(); for (int i = 0; i < 20; i++) { Thread.Sleep(60); var g2 = Grid(); if (GridSame(g, g2, 1.0)) return g2; g = g2; } return g; }
-        // Rola quase uma pagina (ate ~4 linhas) e devolve quanto andou. 0 = fim da lista, -1 = nao consegui medir.
-        // O jogo NAO rola proporcional ao numero de giros (varios giros rapidos andam menos que a soma), entao rola em passos,
-        // mede cada um e repete ate somar o bastante. Ate ~4,4 linhas a proxima linha ainda cabe na tela (sem pular nenhuma).
-        double perNotchMax = 0; // maior deslocamento por giro ja visto: conservador para nao passar do ponto
+        // Rolagem do Inventory Kamera (MIT, github.com/Andrewthe13th/Inventory_Kamera): uma rajada de 10 giros por linha, giros com ~1 ms
+        // de intervalo, menos 1 giro (39 giros = ~3,9 linhas). Giros espacados andam menos no jogo. Depois mede quanto a lista andou.
+        // Devolve 0 = fim da lista, -1 = nao consegui medir.
         double ScrollList()
         {
-            double total = 0, aim = 3.9 * dyPx, enough = 3.6 * dyPx; int sx = Px(layout.GridX0 + layout.Dx * 3, w), sy = (int)Math.Round(y0 + dyPx * 1.5), yFrom = (int)Math.Round(y0 + (layout.Rows - 1) * dyPx);
-            for (int it = 0; it < 8 && total < enough && (perNotchMax == 0 || total + perNotchMax <= 4.4 * dyPx); it++)
-            {
-                using var fb = Native.Capture(game); var before = Gray(Crop(fb, gridBox));
-                int n = perNotchMax > 0 ? Math.Clamp((int)Math.Floor((aim - total) / perNotchMax), 1, 8) : 1;
-                Native.Scroll(game, sx, sy, n);
-                var after = SettleGrid();
-                double expect = perNotchMax > 0 ? perNotchMax * n : 3.2 * dyPx; // so limita a busca (1,3x) e desempata
-                if (GridSame(before, after, 3))
-                {
-                    if (total > 0) return total; // parou de andar: fim da lista
-                    Native.Drag(game, sx, yFrom, (int)Math.Round(yFrom - 2.75 * dyPx)); after = SettleGrid(); // reserva: arrastar
-                    if (GridSame(before, after, 3)) return 0;
-                    if (Shift(before, after, expect) is int sd) { total += sd; continue; }
-                }
-                else if (Shift(before, after, expect) is int s) { total += s; perNotchMax = Math.Max(perNotchMax, (double)s / n); continue; }
-                Log("A lista se mexeu, mas não consegui medir o quanto."); Dump(fb, "rolagem-antes.png"); using var fa = Native.Capture(game); Dump(fa, "rolagem-depois.png"); return -1;
-            }
-            return total;
+            int sx = Px(layout.GridX0 + layout.Dx * 3, w), sy = (int)Math.Round(y0 + dyPx * 1.5);
+            using var fb = Native.Capture(game); var before = Gray(Crop(fb, gridBox));
+            Native.Scroll(game, sx, sy, 10 * layout.Rows - 1, 1);
+            var after = SettleGrid();
+            if (GridSame(before, after, 3)) return 0;
+            if (Shift(before, after, 3.9 * dyPx) is int s) return s;
+            Log("A lista se mexeu, mas não consegui medir o quanto."); Dump(fb, "rolagem-antes.png"); using var fa = Native.Capture(game); Dump(fa, "rolagem-depois.png"); return -1;
         }
         int dumps = 0; var dbg = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "astralys-scanner-debug");
         void Dump(Bitmap b, string name) { try { Directory.CreateDirectory(dbg); b.Save(Path.Combine(dbg, name), System.Drawing.Imaging.ImageFormat.Png); } catch { } }

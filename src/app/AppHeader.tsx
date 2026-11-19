@@ -61,7 +61,7 @@ function SettingsMenu() {
           </div>
           <div className="dz-settings-group">
             <label htmlFor="cfg-codigo">Código</label>
-            <input id="cfg-codigo" className="dz-input" type="password" autoComplete="off" placeholder="Só para o administrador" value={adminCode} onChange={(e) => setAdminCode(e.target.value)} />
+            <input id="cfg-codigo" className="dz-input" type="password" autoComplete="off" value={adminCode} onChange={(e) => setAdminCode(e.target.value)} />
           </div>
         </div>
       )}

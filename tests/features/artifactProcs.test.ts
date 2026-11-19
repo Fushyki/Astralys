@@ -27,3 +27,10 @@ describe('procs do substat', () => {
     expect(maxProcs(4, 16)).toBe(7);
   });
 });
+
+import { looseProcs } from '../../src/features/good/artifactProcs';
+it('looseProcs: valor possível dá os rolls exatos; qualquer outro número vira estimativa (build manual)', () => {
+  expect(looseProcs('critRate_', 3.9, 5)).toBe(1);
+  expect(looseProcs('critRate_', 50, 5)).toBeGreaterThan(6); // fora de qualquer soma de rolls: só estimativa
+  expect(looseProcs('atk_', 0, 5)).toBe(0);
+});

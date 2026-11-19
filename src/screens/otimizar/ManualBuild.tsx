@@ -10,7 +10,7 @@ import { useState, type ReactNode } from 'react';
 import { Panel } from '../../design/primitives';
 import { MAIN_STAT_VALUES, MAX_ROLLS_PER_SUBSTAT, ROLLS_PER_PIECE, SUBSTATS, SUBSTAT_ROLL_VALUES, type Rolls, type Substat } from '../../engine/artifacts';
 import type { MemberRef } from '../../engine/project';
-import { artifactProcs, maxProcs, type SubKey } from '../../features/good/artifactProcs';
+import { looseProcs, maxProcs, type SubKey } from '../../features/good/artifactProcs';
 import { setKeyOf } from '../../features/good/artifactOcr';
 import type { GoodArtifact } from '../../features/good/goodImport';
 import { MANUAL_LOCATION, SUB_KEY, kqmPieces, type KqmConfig } from '../../features/good/kqmPieces';
@@ -41,7 +41,7 @@ function tableRows(manual: boolean, pieces: GoodArtifact[], rolls: Rolls): Row[]
   };
   if (manual) {
     for (const k of ALL_KEYS) add(k, 0, 0);
-    for (const p of pieces) for (const s of p.substats) add(s.key as SubKey, artifactProcs([s], rar(p)).total, s.value);
+    for (const p of pieces) for (const s of p.substats) add(s.key as SubKey, looseProcs(s.key as SubKey, s.value, rar(p)), s.value);
     return ALL_KEYS.map((k) => sum.get(k)!).sort((a, b) => b.procs - a.procs);
   }
   for (const s of SUBSTATS as readonly Substat[]) {
@@ -85,7 +85,7 @@ export function ManualBuild({ member, rolls, element, sets, onChange, focus, red
     : kqmPieces(rolls, member.artifacts, first, element).pieces.map((p) => (p.slotKey === 'sands' || p.slotKey === 'goblet' ? { ...p, setKey: second } : p));
   const by = (slot: string) => pieces.find((p) => p.slotKey === slot);
   const save = (list: GoodArtifact[]) => onChange({ pieces: mark(list), piecesChoice: undefined });
-  const submit = (a: GoodArtifact) => save([...pieces.filter((p) => p.slotKey !== a.slotKey && p !== editing?.piece), a]);
+  const submit = (a: GoodArtifact) => save([...pieces.filter((p) => p.slotKey !== a.slotKey && p !== editing?.piece), { ...a, setKey: a.setKey || NO_SET }]);
   const initialFor = (slot: string): GoodArtifact => ({
     setKey: pieces[0]?.setKey && pieces[0].setKey !== NO_SET ? pieces[0].setKey : member.primarySet ? setKeyOf(member.primarySet) : '', slotKey: slot as GoodArtifact['slotKey'], rarity: 5, level: 20,
     mainStatKey: MAIN_BY_SLOT[slot as keyof typeof MAIN_BY_SLOT][0], substats: [], location: '',
@@ -175,7 +175,7 @@ export function ManualBuild({ member, rolls, element, sets, onChange, focus, red
         {SLOTS.map((sl) => {
           const p = by(sl.key);
           const set = p ? setOf(p.setKey) : undefined;
-          const procs = p ? artifactProcs(p.substats, rar(p)).total : 0;
+          const procs = p ? p.substats.reduce((t, x) => t + looseProcs(x.key as SubKey, x.value, rar(p)), 0) : 0;
           return (
             <li key={sl.key} className="ot-pc">
               <div className="ot-pc-head">
@@ -190,7 +190,7 @@ export function ManualBuild({ member, rolls, element, sets, onChange, focus, red
                 {[0, 1, 2, 3].map((i) => {
                   const s = p?.substats[i];
                   return s
-                    ? <li key={i}><span>{SUB_LABEL[s.key] ?? s.key}</span><span className="num">{artifactProcs([s], rar(p!)).total}</span></li>
+                    ? <li key={i}><span>{SUB_LABEL[s.key] ?? s.key}</span><span className="num">{looseProcs(s.key as SubKey, s.value, rar(p!))}</span></li>
                     : <li key={i} className="muted"><span>—</span><span /></li>;
                 })}
               </ul>

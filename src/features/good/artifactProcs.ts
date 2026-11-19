@@ -49,6 +49,16 @@ export function artifactProcs(subs: readonly { key: string; value: number }[], r
   return { perSub, total: perSub.reduce<number>((a, n) => a + (n ?? 0), 0), ok: perSub.every((n) => n !== null) };
 }
 
+/**
+ * Procs de um valor qualquer (build manual, sem exigir que bata com rolls do jogo): os rolls exatos quando o valor é possível e,
+ * senão, uma estimativa pelo roll médio (85% do máximo). Zero ou negativo = 0 procs.
+ */
+export function looseProcs(key: SubKey, value: number, rarity: 4 | 5 = 5): number {
+  if (!(value > 0)) return 0;
+  const exact = procRange(key, value, rarity);
+  return exact ? exact.min : Math.max(1, Math.round(value / (SUB_MAX[rarity][key] * 0.85)));
+}
+
 /** Quantos rolls um artefato pode ter no total: um por substat inicial (3 ou 4) mais um a cada 4 níveis. */
 export function maxProcs(rarity: 4 | 5, level: number): number {
   return Math.min(4, rarity === 5 ? 4 : 3) + Math.floor(level / 4);

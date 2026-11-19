@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 import { toast } from '../../app/toast';
 import { pieceIconUrl } from '../../design/images';
 import { Segmented } from '../../design/primitives';
-import { SUB_KEYS, artifactProcs, maxProcs, procRange, type SubKey } from '../../features/good/artifactProcs';
+import { SUB_KEYS, artifactProcs, looseProcs, maxProcs, procRange, type SubKey } from '../../features/good/artifactProcs';
 import { readArtifactImage, setKeyOf, type ParsedArtifact, type SlotKey } from '../../features/good/artifactOcr';
 import type { Good, GoodArtifact } from '../../features/good/goodImport';
 import { activeDatabaseId, listDatabases, loadGood, saveGood } from '../../features/good/goodStore';
@@ -135,11 +135,15 @@ export function AddArtifact({ sets, onClose, onSaved, initial, onSubmit }: { set
   const procs = artifactProcs(filled, d.rarity);
   const cap = maxProcs(d.rarity, d.level);
   const minSubs = d.rarity === 5 ? 3 : 2;
+  // No build manual (`onSubmit`) vale qualquer número: os procs são só mostrados (estimados quando o valor não bate com rolls do jogo).
+  const manualProcs = filled.reduce((t, x) => t + looseProcs(x.key, x.value, d.rarity), 0);
   const problems: string[] = [];
-  if (!d.setKey) problems.push('escolha o set');
-  if (filled.length < minSubs) problems.push(`preencha pelo menos ${minSubs} substats`);
-  if (!procs.ok) problems.push('algum valor de substat não bate com rolls do jogo');
-  if (procs.total > cap) problems.push(`são ${procs.total} procs e um +${d.level} de ${d.rarity}★ tem no máximo ${cap}`);
+  if (!onSubmit) {
+    if (!d.setKey) problems.push('escolha o set');
+    if (filled.length < minSubs) problems.push(`preencha pelo menos ${minSubs} substats`);
+    if (!procs.ok) problems.push('algum valor de substat não bate com rolls do jogo');
+    if (procs.total > cap) problems.push(`são ${procs.total} procs e um +${d.level} de ${d.rarity}★ tem no máximo ${cap}`);
+  }
 
   const save = (again: boolean) => {
     const art: GoodArtifact = { setKey: d.setKey, slotKey: d.slotKey, rarity: d.rarity, mainStatKey: d.mainStatKey, level: d.level, location: '', substats: filled };
@@ -194,7 +198,8 @@ export function AddArtifact({ sets, onClose, onSaved, initial, onSubmit }: { set
               <legend>Substats</legend>
               {d.subs.map((s, i) => {
                 const n = s.key && s.value !== '' ? procRange(s.key, Number(s.value.replace(',', '.')), d.rarity) : null;
-                const bad = s.key && s.value !== '' && !n;
+                const bad = s.key && s.value !== '' && !n && !onSubmit;
+                const guess = onSubmit && s.key && s.value !== '' && !n ? looseProcs(s.key, Number(s.value.replace(',', '.')), d.rarity) : 0;
                 return (
                   <div className="aa-sub" key={i}>
                     <select className="dz-input" value={s.key} onChange={(e) => setSub(i, { key: e.target.value as SubKey | "" })} aria-label={`Substat ${i + 1}`}>
@@ -202,12 +207,12 @@ export function AddArtifact({ sets, onClose, onSaved, initial, onSubmit }: { set
                       {SUB_KEYS.filter((k) => k !== d.mainStatKey && (!usedKeys.has(k) || k === s.key)).map((k) => <option key={k} value={k}>{SUB_LABEL[k]}</option>)}
                     </select>
                     <input className="dz-input" inputMode="decimal" value={s.value} placeholder="valor" aria-label={`Valor do substat ${i + 1}`} onChange={(e) => setSub(i, { value: e.target.value })} />
-                    <span className="aa-proc num" data-bad={bad ? '' : undefined} title="Procs = quantos rolls o valor tem">{bad ? 'valor inválido' : n ? `${n.min === n.max ? n.min : `${n.min}–${n.max}`} ${n.max === 1 && n.min === 1 ? 'proc' : 'procs'}` : ''}</span>
+                    <span className="aa-proc num" data-bad={bad ? '' : undefined} title="Procs = quantos rolls o valor tem">{bad ? 'valor inválido' : n ? `${n.min === n.max ? n.min : `${n.min}–${n.max}`} ${n.max === 1 && n.min === 1 ? 'proc' : 'procs'}` : guess ? `≈ ${guess} ${guess === 1 ? 'proc' : 'procs'}` : ''}</span>
                   </div>
                 );
               })}
             </fieldset>
-            <p className="aa-total num" data-bad={procs.total > cap ? '' : undefined}>Procs: {procs.total} de {cap} possíveis no +{d.level}</p>
+            <p className="aa-total num" data-bad={!onSubmit && procs.total > cap ? '' : undefined}>{onSubmit ? `Procs: ${manualProcs} (referência: ${cap} possíveis no +${d.level})` : `Procs: ${procs.total} de ${cap} possíveis no +${d.level}`}</p>
             {problems.length > 0 && <p className="aa-note">Falta: {problems.join('; ')}.</p>}
           </section>
         </div>

@@ -70,6 +70,8 @@ export interface BuffCuration {
     cap?: Val;
     /** Teto em múltiplos do ATK base da fonte (Hu Tao: 4). */
     capBaseAtk?: number;
+    /** O stat da fonte conta só o que é dela (sem buffs de outros personagens). */
+    ownOnly?: boolean;
     /** Teto por nível do talento, lido da linha `key` do kit (`kit.capKey`). */
     to: ConvertTarget[];
   };

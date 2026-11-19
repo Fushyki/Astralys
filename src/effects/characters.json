@@ -790,6 +790,7 @@
           "source": "self",
           "perPoint": 0.27,
           "threshold": 0,
+          "ownOnly": true,
           "capByLevel": {
             "talent": "burst",
             "table": [

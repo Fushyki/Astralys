@@ -213,6 +213,8 @@ export interface MemberInput {
   factions?: ('moonsign' | 'hexerei')[];
   /** ER mínimo desejado (1 = 100%). */
   minER?: number;
+  /** ATK próprio mínimo, sem buffs de outros personagens (Iansan precisa de ~3000 para o teto do ATK que ela dá): o otimizador põe ATK% até lá antes de repartir o dano. */
+  minOwnAtk?: number;
   /** Infusão dos ataques normais, carregados e de queda (Hu Tao, Xiao, Yoimiya…): elemento no lugar do Físico. */
   normalInfusion?: ElementOrPhysical;
   /** Rolls totais de substat (padrão: 9 por peça 5★ + 7 por peça 4★). */

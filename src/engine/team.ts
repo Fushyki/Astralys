@@ -20,6 +20,7 @@ import {
   staticSources,
   activeTeamDelta,
   minimumRolls,
+  zeroBlock,
   type MemberInput,
 
   type StatBlock,
@@ -266,7 +267,8 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
       const s = derivedStats[srcIndex];
       const srcBase = members[srcIndex].character.baseAtk + members[srcIndex].weapon.baseAtk;
       const partyEnergy = members.reduce((sum, x) => sum + (x.character.burst.energyCost ?? 0), 0);
-      const stat = { atk: s.atk, baseAtk: srcBase, hp: s.hp, def: s.def, em: s.em, er: s.er, partyEnergy }[c.from];
+      const own = c.ownOnly && c.source !== 'highestEm' ? finalStats(members[srcIndex], statics[srcIndex], options.rolls?.[srcIndex] ?? minRolls, zeroBlock(), 0) : s;
+      const stat = { atk: own.atk, baseAtk: srcBase, hp: s.hp, def: s.def, em: s.em, er: s.er, partyEnergy }[c.from];
       const raw = (c.perPoint ?? 0) * Math.max(0, stat - (c.threshold ?? 0));
       const caps = [c.cap, c.capBaseAtk !== undefined ? c.capBaseAtk * srcBase : undefined].filter((x): x is number => x !== undefined);
       const value = caps.length ? Math.min(raw, ...caps) : raw;

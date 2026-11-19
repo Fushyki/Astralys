@@ -113,6 +113,7 @@ export function optimizeMember(ctx: OptimizerContext, memberIndex: number, flatB
   const minER = m.minER ?? 0;
   const erRolls = minER <= er0 ? 0 : Math.min(maxFree('ER'), free, ceilTol((minER - er0) / rv.ER));
   const damageRolls = Math.min(MAX_DAMAGE_ROLLS, free - erRolls);
+  // ATK próprio mínimo: preenchido depois que a escala principal é conhecida (precisa de maxScale)
   const erFinal = er0 + erRolls * rv.ER;
   const erAtk = weaponErAtkPct(m, erFinal);
 
@@ -227,6 +228,13 @@ export function optimizeMember(ctx: OptimizerContext, memberIndex: number, flatB
     return acc;
   };
 
+  // ATK próprio (sem buffs de outros nem ressonância) mínimo: rolls de ATK% que a busca não pode tirar da escala.
+  let sMin = 0;
+  if (m.minOwnAtk && mainScale === 'atk') {
+    const atkNoScale = atkBase * (1 + statics.atkPct + minR * rv['ATK%'] + erAtk) + plume + statics.atkFlat + minR * rv.ATK;
+    sMin = Math.min(damageRolls, maxScale, Math.max(0, ceilTol((m.minOwnAtk - atkNoScale) / (atkBase * rv['ATK%']))));
+  }
+
   const cr0 = 0.05 + statics.critRate + minR * rv.CR;
   const cd0 = 0.5 + statics.critDmg + minR * rv.CD;
 
@@ -242,7 +250,7 @@ export function optimizeMember(ctx: OptimizerContext, memberIndex: number, flatB
   const scaleBest = (mm: number) => {
     let best = 0;
     let bestS = 0;
-    for (let s = Math.max(0, mm - maxEM); s <= Math.min(mm, maxScale); s++) {
+    for (let s = Math.max(sMin, mm - maxEM); s <= Math.min(mm, maxScale); s++) {
       const v = damagePart(s, mm - s);
       if (v > best) { best = v; bestS = s; }
     }
@@ -260,7 +268,9 @@ export function optimizeMember(ctx: OptimizerContext, memberIndex: number, flatB
   } else {
     const forced = m.forcedCritRolls;
     const kForced = forced === undefined ? undefined : Math.max(0, Math.min(damageRolls, forced - 2 * minR));
-    const range = kForced === undefined ? Array.from({ length: damageRolls + 1 }, (_, i) => i) : [kForced];
+    // o mínimo de ATK% fica reservado: crítico só usa o que sobra
+    const kMax = damageRolls - sMin;
+    const range = kForced === undefined ? Array.from({ length: kMax + 1 }, (_, i) => i) : [Math.min(kForced, kMax)];
     let bestTotal = -1;
     for (const kk of range) {
       const total = critBest(kk).value * scaleBest(damageRolls - kk).value;

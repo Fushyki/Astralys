@@ -166,6 +166,7 @@ export function OtimizadorPanel({ index }: { index: number }) {
   const [minKey, setMinKey] = useState<MinKey>('er');
   const [minVal, setMinVal] = useState('');
   const [pickingMove, setPickingMove] = useState(false);
+  const [pickingFocus, setPickingFocus] = useState(false);
   const job = useRef<OptimizerJob | null>(null);
 
   useEffect(() => {
@@ -431,7 +432,22 @@ export function OtimizadorPanel({ index }: { index: number }) {
       </div>
     </div>
   ) : null;
-  const focusOptions = [...new Map(v.resolved.actions.filter((a) => a.member === index).map((a) => [a.move.id, a.move.displayName ?? a.move.label ?? a.move.id])).entries()].map(([id, label]) => ({ id, label }));
+  const focusMove = moves.find((m) => m.id === ref.kqmFocus);
+  const focusInRotation = !focusMove || v.resolved.actions.some((x) => x.member === index && x.move.id === focusMove.id);
+  /** Foco do KQM: o mesmo seletor de golpes da otimização; sem golpe vale a rotação inteira. */
+  const focusNode = (
+    <div className="ot-field">
+      <span className="lbl">Foco do dano</span>
+      <button type="button" className="ot-movebtn" aria-haspopup="dialog" aria-label="Escolher o golpe de foco do KQM" onClick={() => setPickingFocus(true)}>
+        {focusMove && <KindBadge kind={kindOf(focusMove)} />}
+        <span className="n" style={{ color: focusMove ? damageColor(character ? (kitMode ? kitElement(character, focusMove, infusion) : (character.element as ElementOrPhysical)) : undefined, specialOfMove(focusMove, 0, effect)) : undefined }}>{focusMove ? displayName(focusMove) : 'Rotação inteira'}</span>
+        {focusMove && <FamilyBadge special={specialOfMove(focusMove, 0, effect)} />}
+        <span className="chev" aria-hidden="true">▾</span>
+      </button>
+      {focusMove && <button type="button" className="dz-btn sm" onClick={() => update(index, { kqmFocus: undefined })}>Usar a rotação inteira</button>}
+      {!focusInRotation && <p className="note small">Este golpe não está na rotação: o KQM usa a rotação inteira.</p>}
+    </div>
+  );
   /** KQM sobre as peças dadas: roda o motor com um personagem sem peças, mas com os stats principais e o set delas. */
   const redistribute = (pieces: GoodArtifact[]) => {
     const lo = loadoutFromPieces(pieces, data.game);
@@ -440,11 +456,23 @@ export function OtimizadorPanel({ index }: { index: number }) {
     return analyzeProject({ team: r.team, actions: r.actions, flatEffects: r.flatEffects, ampCoefficient: r.ampCoefficient }).optimization.rolls[index];
   };
   const manualBox = character ? (
-    <ManualBuild member={ref} focusOptions={focusOptions} redistribute={redistribute} rolls={v.bundle.optimization.rolls[index]} element={character.element} sets={data.game.artifacts} onChange={(patch) => update(index, patch)} />
+    <ManualBuild member={ref} focus={focusNode} redistribute={redistribute} rolls={v.bundle.optimization.rolls[index]} element={character.element} sets={data.game.artifacts} onChange={(patch) => update(index, patch)} />
   ) : null;
 
   return (
     <div className="ot">
+      {pickingFocus && character && (
+        <MovePickerDialog
+          moves={moves}
+          current={focusMove?.id}
+          character={character}
+          elementMode={kitMode ? 'kit' : 'character'}
+          infusion={infusion}
+          effect={effect}
+          onPick={(id) => { update(index, { kqmFocus: id }); setPickingFocus(false); }}
+          onClose={() => setPickingFocus(false)}
+        />
+      )}
       {!good ? (
         <>
           <Panel title="Inventário">

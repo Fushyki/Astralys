@@ -6,7 +6,7 @@
  *    editar uma peça no formulário do inventário. Ficam só neste personagem deste time e NÃO vão para o inventário.
  * O dano aparece em Resumo e build e em Avançado, como em qualquer build equipado.
  */
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { Panel } from '../../design/primitives';
 import { MAIN_STAT_VALUES, MAX_ROLLS_PER_SUBSTAT, ROLLS_PER_PIECE, SUBSTATS, SUBSTAT_ROLL_VALUES, type Rolls, type Substat } from '../../engine/artifacts';
 import type { MemberRef } from '../../engine/project';
@@ -57,9 +57,9 @@ const GOOD_OF: Record<string, string> = { 'ATK%': 'atk_', 'HP%': 'hp_', 'DEF%': 
 /** Stat principal da peça no nome do motor (o cálice com DMG% de qualquer elemento vira "DMG%"). */
 const engineMain = (p: GoodArtifact): string => (p.slotKey === 'goblet' && p.mainStatKey.endsWith('_dmg_') ? 'DMG%' : (Object.entries(GOOD_OF).find(([, g]) => g === p.mainStatKey)?.[0] ?? p.mainStatKey));
 
-export function ManualBuild({ member, rolls, element, sets, onChange, focusOptions = [], redistribute }: {
-  /** Golpes do personagem na rotação: o KQM otimiza só o dano de um deles. */
-  focusOptions?: { id: string; label: string }[];
+export function ManualBuild({ member, rolls, element, sets, onChange, focus, redistribute }: {
+  /** Escolha do golpe de foco do KQM (o mesmo seletor de golpes da otimização). */
+  focus?: ReactNode;
   member: MemberRef;
   /** Rolls que o KQM distribui para o build genérico deste personagem (mostrados enquanto não há peças próprias). */
   rolls: Rolls;
@@ -162,15 +162,7 @@ export function ManualBuild({ member, rolls, element, sets, onChange, focusOptio
               </label>
             ))}
           </div>
-          {focusOptions.length > 0 && (
-            <label className="ot-field">
-              <span className="lbl">Foco do dano</span>
-              <select className="dz-input" value={member.kqmFocus ?? ''} aria-label="Foco do dano do KQM" onChange={(e) => onChange({ kqmFocus: e.target.value || undefined })}>
-                <option value="">Rotação inteira</option>
-                {focusOptions.map((o) => <option key={o.id} value={o.id}>{o.label}</option>)}
-              </select>
-            </label>
-          )}
+          {focus}
           <button type="button" className="dz-btn gold" onClick={kqm} title="Redistribui os procs pelos substats úteis, considerando os stats principais, o set e os buffs ativos">Otimizado (KQM)</button>
           <p className="small">O KQM redistribui até 36 procs úteis (Taxa e Dano Crítico, ATK%/HP%/DEF%, Maestria e Recarga) para o dano do foco, considerando os stats principais, o set e os buffs ativos. A Recarga mínima sai primeiro; o que sobra vai para HP, DEF e ATK fixo. Cada proc vale 85% do máximo. Você pode ajustar os procs na tabela ou editar uma peça.</p>
           {!member.primarySet && real.length === 0 && <p className="note">Sem set escolhido: as peças ficam sem bônus de set. Escolha o set em Resumo e build ou em Editar, em cada peça.</p>}

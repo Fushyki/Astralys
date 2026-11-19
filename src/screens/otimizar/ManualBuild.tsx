@@ -53,81 +53,89 @@ function tableRows(manual: boolean, pieces: GoodArtifact[], rolls: Rolls): Row[]
   return [...sum.values()].filter((r) => r.procs > 0).sort((a, b) => b.procs - a.procs);
 }
 
-export function ManualBuild({ member, rolls, element, sets, onChange }: {
+const GOOD_OF: Record<string, string> = { 'ATK%': 'atk_', 'HP%': 'hp_', 'DEF%': 'def_', EM: 'eleMas', ER: 'enerRech_', CR: 'critRate_', CD: 'critDMG_', Healing: 'heal_' };
+/** Stat principal da peça no nome do motor (o cálice com DMG% de qualquer elemento vira "DMG%"). */
+const engineMain = (p: GoodArtifact): string => (p.slotKey === 'goblet' && p.mainStatKey.endsWith('_dmg_') ? 'DMG%' : (Object.entries(GOOD_OF).find(([, g]) => g === p.mainStatKey)?.[0] ?? p.mainStatKey));
+
+export function ManualBuild({ member, rolls, element, sets, onChange, focusOptions = [], redistribute }: {
+  /** Golpes do personagem na rotação: o KQM otimiza só o dano de um deles. */
+  focusOptions?: { id: string; label: string }[];
   member: MemberRef;
-  /** Rolls que o KQM distribui para este personagem (build genérico). */
+  /** Rolls que o KQM distribui para o build genérico deste personagem (mostrados enquanto não há peças próprias). */
   rolls: Rolls;
   element: string;
   sets: readonly SetData[];
   onChange: (patch: Partial<MemberRef>) => void;
+  /** Roda o KQM para estas 5 peças (stats principais e sets delas) e devolve os procs distribuídos. */
+  redistribute: (pieces: GoodArtifact[]) => Rolls;
 }) {
-  const pieces = (member.pieces ?? []) as GoodArtifact[];
-  const manual = pieces.length > 0 && pieces.every((p) => p.location === MANUAL_LOCATION);
-  const fromInventory = pieces.length > 0 && !manual;
+  const real = (member.pieces ?? []) as GoodArtifact[];
+  const fromInventory = real.length > 0 && !real.every((p) => p.location === MANUAL_LOCATION);
   const mark = (list: GoodArtifact[]) => list.map((p) => ({ ...p, location: MANUAL_LOCATION }));
   const [editing, setEditing] = useState<{ slot: string; piece?: GoodArtifact } | null>(null);
   const [leftover, setLeftover] = useState(0);
   const setOf = (key: string) => sets.find((s) => setKeyOf(s.name) === key);
 
-  const toKqm = () => { setLeftover(0); onChange({ pieces: undefined, piecesChoice: 'generic', noArtifacts: undefined }); };
-  const toManual = () => {
-    if (fromInventory) return onChange({ pieces: mark(pieces) }); // copia as peças do inventário para editar sem mexer nele
-    const first = member.primarySet ? setKeyOf(member.primarySet) : NO_SET;
-    const second = member.secondarySet && member.fourPiece !== true ? setKeyOf(member.secondarySet) : first;
-    const { pieces: gen } = kqmPieces(rolls, member.artifacts, first, element);
-    // 2 + 2: flor e pluma do primeiro set, areia e cálice do segundo, tiara do primeiro.
-    onChange({ pieces: gen.map((p) => (p.slotKey === 'sands' || p.slotKey === 'goblet' ? { ...p, setKey: second } : p)), piecesChoice: undefined });
-  };
-  const submit = (a: GoodArtifact) => onChange({ pieces: mark([...pieces.filter((p) => p.slotKey !== a.slotKey && p !== editing?.piece), a]), piecesChoice: undefined });
+  const first = member.primarySet ? setKeyOf(member.primarySet) : NO_SET;
+  const second = member.secondarySet && member.fourPiece !== true ? setKeyOf(member.secondarySet) : first;
+  // Sem peças próprias a tabela mostra o build genérico do KQM como 5 peças; a primeira edição as grava no personagem.
+  // 2 + 2: flor e pluma do primeiro set, areia e cálice do segundo, tiara do primeiro.
+  const pieces: GoodArtifact[] = real.length > 0
+    ? real
+    : kqmPieces(rolls, member.artifacts, first, element).pieces.map((p) => (p.slotKey === 'sands' || p.slotKey === 'goblet' ? { ...p, setKey: second } : p));
+  const by = (slot: string) => pieces.find((p) => p.slotKey === slot);
+  const save = (list: GoodArtifact[]) => onChange({ pieces: mark(list), piecesChoice: undefined });
+  const submit = (a: GoodArtifact) => save([...pieces.filter((p) => p.slotKey !== a.slotKey && p !== editing?.piece), a]);
   const initialFor = (slot: string): GoodArtifact => ({
     setKey: pieces[0]?.setKey && pieces[0].setKey !== NO_SET ? pieces[0].setKey : member.primarySet ? setKeyOf(member.primarySet) : '', slotKey: slot as GoodArtifact['slotKey'], rarity: 5, level: 20,
     mainStatKey: MAIN_BY_SLOT[slot as keyof typeof MAIN_BY_SLOT][0], substats: [], location: '',
   });
 
-  const rows = tableRows(pieces.length > 0, pieces, rolls);
+  const rows = tableRows(true, pieces, rolls);
   const totalProcs = rows.reduce((t, r) => t + r.procs, 0);
-  const cap = pieces.length > 0 ? pieces.reduce((t, p) => t + maxProcs(rar(p), p.level ?? 20), 0) : ROLLS_PER_PIECE[0] * 5;
+  const cap = pieces.reduce((t, p) => t + maxProcs(rar(p), p.level ?? 20), 0);
   const fmtProcs = (n: number) => formatDecimal(n, Number.isInteger(n) ? 0 : 1);
 
-  /** Digitar os procs de um substat refaz os substats das 5 peças (set, raridade e stats principais de cada peça continuam). */
-  const setProcs = (key: SubKey, n: number) => {
-    const next = Object.fromEntries(rows.map((r) => [SUBSTAT_OF[r.key], Math.round(r.procs)])) as Rolls;
-    next[SUBSTAT_OF[key]] = Math.max(0, Math.min(30, Math.round(n) || 0));
-    const by = (slot: string) => pieces.find((p) => p.slotKey === slot);
+  /** Refaz os substats das 5 peças a partir dos procs (set, raridade, nível e stat principal de cada peça continuam). */
+  const rebuild = (next: Rolls) => {
     const cfg: KqmConfig = {
       rarity: { flower: by('flower') ? rar(by('flower')!) : 5, plume: by('plume') ? rar(by('plume')!) : 5, sands: by('sands') ? rar(by('sands')!) : 5, goblet: by('goblet') ? rar(by('goblet')!) : 5, circlet: by('circlet') ? rar(by('circlet')!) : 5 },
       sands: by('sands')?.mainStatKey ?? MAIN_BY_SLOT.sands[0], goblet: by('goblet')?.mainStatKey ?? MAIN_BY_SLOT.goblet[0], circlet: by('circlet')?.mainStatKey ?? MAIN_BY_SLOT.circlet[0],
     };
-    const { pieces: gen, leftover: left } = kqmPieces(next, cfg, pieces[0]?.setKey ?? '', element);
+    const { pieces: gen, leftover: left } = kqmPieces(next, cfg, pieces[0]?.setKey ?? first, element);
     setLeftover(left);
-    onChange({ pieces: gen.map((p) => ({ ...p, setKey: by(p.slotKey)?.setKey ?? p.setKey, level: by(p.slotKey)?.level ?? p.level })) });
+    onChange({ pieces: gen.map((p) => ({ ...p, setKey: by(p.slotKey)?.setKey ?? p.setKey, level: by(p.slotKey)?.level ?? p.level })), piecesChoice: undefined });
+  };
+  /** Digitar os procs de um substat refaz os substats das 5 peças. */
+  const setProcs = (key: SubKey, n: number) => {
+    const next = Object.fromEntries(rows.map((r) => [SUBSTAT_OF[r.key], Math.round(r.procs)])) as Rolls;
+    next[SUBSTAT_OF[key]] = Math.max(0, Math.min(30, Math.round(n) || 0));
+    rebuild(next);
+  };
+  /** KQM: redistribui os procs considerando as peças que estão aí (stats principais, sets) e o foco escolhido. */
+  const kqm = () => rebuild(redistribute(pieces));
+  const setMain = (slot: 'sands' | 'goblet' | 'circlet', key: string) => {
+    const good = key === 'DMG%' ? `${element.toLowerCase()}_dmg_` : (GOOD_OF[key] ?? key);
+    save(pieces.map((p) => (p.slotKey === slot ? { ...p, mainStatKey: good, substats: p.substats.filter((x) => x.key !== good) } : p)));
   };
 
   return (
-    <Panel bar title="Build do personagem" badge={<span className="dz-badge num">{pieces.length > 0 ? 'Manual' : 'KQM'}</span>}>
-      <div className="ot-seg" role="group" aria-label="Como montar o build">
-        <button type="button" aria-pressed={pieces.length === 0} onClick={toKqm} title="O motor distribui os procs nos substats úteis (padrão KQM)">Otimizado (KQM)</button>
-        <button type="button" aria-pressed={pieces.length > 0} onClick={manual ? undefined : toManual} title={member.primarySet ? 'Cria 5 artefatos a partir do KQM para você ajustar' : 'Cria 5 artefatos sem set (sem bônus de set); escolha o set em cada peça, em Editar'}>Manual</button>
-      </div>
-
-      <div className="ot-mb" data-manual={pieces.length > 0}>
-        {/* No manual são 10 substats: duas tabelas lado a lado (5 + 5) deixam o box baixo o bastante para caber na tela. */}
-        <div className="ot-mtables" data-split={pieces.length > 0}>
-          {(pieces.length > 0 ? [rows.slice(0, 5), rows.slice(5)] : [rows]).map((part, ti, all) => (
+    <Panel bar title="Build do personagem" badge={<span className="dz-badge num">{fromInventory ? 'Inventário' : 'Manual'}</span>}>
+      <div className="ot-mb" data-manual="true">
+        {/* São 10 substats: duas tabelas lado a lado (5 + 5) deixam o box baixo o bastante para caber na tela. */}
+        <div className="ot-mtables" data-split="true">
+          {[rows.slice(0, 5), rows.slice(5)].map((part, ti, all) => (
             <table className="ot-mtable" key={ti} aria-label="Substats do build">
               <thead>
                 <tr><th scope="col">Status</th><th scope="col" className="r">Procs</th><th scope="col" className="r">Valor</th></tr>
               </thead>
               <tbody>
-                {part.length === 0 && <tr><td colSpan={3} className="muted">Sem substats ainda.</td></tr>}
                 {part.map((r) => (
                   <tr key={r.key}>
                     <th scope="row">{SUB_NAME[r.key]}</th>
                     <td className="r num">
-                      {pieces.length > 0
-                        ? <input className="dz-input ot-procin" type="number" min={0} max={30} step={1} value={fmtProcs(r.procs)} aria-label={`Procs de ${SUB_NAME[r.key]}`}
-                            onChange={(e) => setProcs(r.key, Number(e.target.value))} />
-                        : fmtProcs(r.procs)}
+                      <input className="dz-input ot-procin" type="number" min={0} max={30} step={1} value={fmtProcs(r.procs)} aria-label={`Procs de ${SUB_NAME[r.key]}`}
+                        onChange={(e) => setProcs(r.key, Number(e.target.value))} />
                     </td>
                     <td className="r num">{formatSub(r.key, r.value)}</td>
                   </tr>
@@ -142,73 +150,70 @@ export function ManualBuild({ member, rolls, element, sets, onChange }: {
           ))}
         </div>
 
-        {pieces.length === 0 ? (
-          <div className="ot-mnote">
-            <h3 className="ot-mh">Por que está travado</h3>
-            <p className="small">No KQM não há artefatos reais: o motor reparte {ROLLS_PER_PIECE[0] * 5} procs (9 por peça) nos substats que mais aumentam o dano do time, depois de garantir a Recarga mínima. Cada proc vale 85% do máximo, igual para todos, para comparar sem depender do inventário. Para escolher os procs, use Manual.</p>
-            {!member.primarySet && <p className="note">Sem set escolhido: o Manual cria peças sem bônus de set. Escolha o set em Resumo e build ou em Editar, em cada peça.</p>}
-            <h3 className="ot-mh">Stats principais</h3>
-            <div className="ot-mains">
-              {(['sands', 'goblet', 'circlet'] as const).map((slot) => (
-                <label key={slot} className="ot-field">
-                  <span className="lbl">{SLOTS.find((s) => s.key === slot)?.label}</span>
-                  <select className="dz-input" value={member.artifacts[slot]} aria-label={`Stat principal: ${slot}`}
-                    onChange={(e) => onChange({ artifacts: { ...member.artifacts, [slot]: e.target.value } })}>
-                    {Object.keys(MAIN_STAT_VALUES[slot]).map((k) => <option key={k} value={k}>{MAIN_NAME[k] ?? k}</option>)}
-                  </select>
-                </label>
-              ))}
-            </div>
+        <div className="ot-mnote">
+          <h3 className="ot-mh">Stats principais</h3>
+          <div className="ot-mains">
+            {(['sands', 'goblet', 'circlet'] as const).map((slot) => (
+              <label key={slot} className="ot-field">
+                <span className="lbl">{SLOTS.find((x) => x.key === slot)?.label}</span>
+                <select className="dz-input" value={by(slot) ? engineMain(by(slot)!) : ''} aria-label={`Stat principal: ${slot}`} onChange={(e) => setMain(slot, e.target.value)}>
+                  {Object.keys(MAIN_STAT_VALUES[slot]).map((k) => <option key={k} value={k}>{MAIN_NAME[k] ?? k}</option>)}
+                </select>
+              </label>
+            ))}
           </div>
-        ) : (
-          <div className="ot-mnote">
-            <h3 className="ot-mh">Build manual</h3>
-            <p className="small">Digite os procs de cada substat na tabela: as 5 peças são refeitas a partir deles (até 4 substats e {ROLLS_PER_PIECE[0]} procs por peça). Para acertar uma peça específica, use Editar nela.</p>
-            {leftover > 0 && <p className="note">{leftover} {leftover === 1 ? 'proc não coube' : 'procs não couberam'} nas peças (limite de 4 substats e de {ROLLS_PER_PIECE[0]} procs por peça).</p>}
-            {fromInventory && <p className="muted small">Peças do inventário equipadas. Ao editar uma, as 5 viram cópias manuais (o inventário não muda).</p>}
-          </div>
-        )}
+          {focusOptions.length > 0 && (
+            <label className="ot-field">
+              <span className="lbl">Foco do dano</span>
+              <select className="dz-input" value={member.kqmFocus ?? ''} aria-label="Foco do dano do KQM" onChange={(e) => onChange({ kqmFocus: e.target.value || undefined })}>
+                <option value="">Rotação inteira</option>
+                {focusOptions.map((o) => <option key={o.id} value={o.id}>{o.label}</option>)}
+              </select>
+            </label>
+          )}
+          <button type="button" className="dz-btn gold" onClick={kqm} title="Redistribui os procs pelos substats úteis, considerando os stats principais, o set e os buffs ativos">Otimizado (KQM)</button>
+          <p className="small">O KQM redistribui até 36 procs úteis (Taxa e Dano Crítico, ATK%/HP%/DEF%, Maestria e Recarga) para o dano do foco, considerando os stats principais, o set e os buffs ativos. A Recarga mínima sai primeiro; o que sobra vai para HP, DEF e ATK fixo. Cada proc vale 85% do máximo. Você pode ajustar os procs na tabela ou editar uma peça.</p>
+          {!member.primarySet && real.length === 0 && <p className="note">Sem set escolhido: as peças ficam sem bônus de set. Escolha o set em Resumo e build ou em Editar, em cada peça.</p>}
+          {leftover > 0 && <p className="note">{leftover} {leftover === 1 ? 'proc não coube' : 'procs não couberam'} nas peças (limite de 4 substats e de {ROLLS_PER_PIECE[0]} procs por peça).</p>}
+          {fromInventory && <p className="muted small">Peças do inventário equipadas. Ao editar uma ou usar o KQM, as 5 viram cópias manuais (o inventário não muda).</p>}
+        </div>
       </div>
 
-      {pieces.length > 0 && (
-        <>
-          <ul className="ot-pieces" aria-label="Peças do build">
-            {SLOTS.map((sl) => {
-              const p = pieces.find((x) => x.slotKey === sl.key);
-              const set = p ? setOf(p.setKey) : undefined;
-              const procs = p ? artifactProcs(p.substats, rar(p)).total : 0;
-              return (
-                <li key={sl.key} className="ot-pc">
-                  <div className="ot-pc-head">
-                    {p ? <PieceArt piece={p} setId={set?.id} setName={set?.name} /> : <span className="ot-art"><b className="ph" aria-hidden="true" /></span>}
-                    <span className="t">
-                      <b>{sl.label}</b>
-                      <small>{p ? (p.setKey === NO_SET ? 'sem set' : (set?.namePt ?? set?.name ?? p.setKey)) : 'vazia'}</small>
-                    </span>
-                  </div>
-                  <div className="ot-pc-main">{p ? (MAIN_LABEL[p.slotKey === 'flower' ? 'hp' : p.slotKey === 'plume' ? 'atk' : p.mainStatKey] ?? p.mainStatKey) : '—'}</div>
-                  <ul className="ot-pc-subs">
-                    {[0, 1, 2, 3].map((i) => {
-                      const s = p?.substats[i];
-                      return s
-                        ? <li key={i}><span>{SUB_LABEL[s.key] ?? s.key}</span><span className="num">{artifactProcs([s], rar(p!)).total}</span></li>
-                        : <li key={i} className="muted"><span>—</span><span /></li>;
-                    })}
-                  </ul>
-                  <div className="ot-pc-foot">
-                    <span className="num muted small">{p ? `${procs} procs` : ''}</span>
-                    <span className="ot-pc-btns">
-                      <button type="button" className="dz-btn sm" onClick={() => setEditing({ slot: sl.key, piece: p })}>{p ? 'Editar' : 'Adicionar'}</button>
-                      {p && <button type="button" className="dz-btn sm" aria-label={`Remover ${sl.label}`} onClick={() => { const rest = pieces.filter((x) => x !== p); onChange(rest.length ? { pieces: mark(rest) } : { pieces: undefined, piecesChoice: 'generic' }); }}>×</button>}
-                    </span>
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
-          <p className="muted small">Estas peças valem só para este personagem neste time e não entram no inventário. O dano aparece em Resumo e build e em Avançado.</p>
-        </>
-      )}
+      <ul className="ot-pieces" aria-label="Peças do build">
+        {SLOTS.map((sl) => {
+          const p = by(sl.key);
+          const set = p ? setOf(p.setKey) : undefined;
+          const procs = p ? artifactProcs(p.substats, rar(p)).total : 0;
+          return (
+            <li key={sl.key} className="ot-pc">
+              <div className="ot-pc-head">
+                {p ? <PieceArt piece={p} setId={set?.id} setName={set?.name} /> : <span className="ot-art"><b className="ph" aria-hidden="true" /></span>}
+                <span className="t">
+                  <b>{sl.label}</b>
+                  <small>{p ? (p.setKey === NO_SET ? 'sem set' : (set?.namePt ?? set?.name ?? p.setKey)) : 'vazia'}</small>
+                </span>
+              </div>
+              <div className="ot-pc-main">{p ? (MAIN_LABEL[p.slotKey === 'flower' ? 'hp' : p.slotKey === 'plume' ? 'atk' : p.mainStatKey] ?? p.mainStatKey) : '—'}</div>
+              <ul className="ot-pc-subs">
+                {[0, 1, 2, 3].map((i) => {
+                  const s = p?.substats[i];
+                  return s
+                    ? <li key={i}><span>{SUB_LABEL[s.key] ?? s.key}</span><span className="num">{artifactProcs([s], rar(p!)).total}</span></li>
+                    : <li key={i} className="muted"><span>—</span><span /></li>;
+                })}
+              </ul>
+              <div className="ot-pc-foot">
+                <span className="num muted small">{p ? `${procs} procs` : ''}</span>
+                <span className="ot-pc-btns">
+                  <button type="button" className="dz-btn sm" onClick={() => setEditing({ slot: sl.key, piece: p })}>{p ? 'Editar' : 'Adicionar'}</button>
+                  {p && <button type="button" className="dz-btn sm" aria-label={`Remover ${sl.label}`} onClick={() => { const rest = pieces.filter((x) => x !== p); if (rest.length) save(rest); else onChange({ pieces: undefined, piecesChoice: 'generic' }); }}>×</button>}
+                </span>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+      <p className="muted small">Estas peças valem só para este personagem neste time e não entram no inventário. O dano aparece em Resumo e build e em Avançado.</p>
       {editing && <AddArtifact sets={sets} initial={editing.piece ?? initialFor(editing.slot)} onSubmit={submit} onClose={() => setEditing(null)} />}
     </Panel>
   );

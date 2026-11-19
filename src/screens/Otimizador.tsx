@@ -9,7 +9,7 @@ import { useProjectView, type ProjectView } from '../app/ProjectContext';
 import { Panel, StarIcon } from '../design/primitives';
 import { DualRange, STAT_TAG } from '../design/filtros';
 import { pieceIconUrl } from '../design/images';
-import { artifactSig, norm, type Good, type GoodArtifact } from '../features/good/goodImport';
+import { artifactSig, loadoutFromPieces, norm, type Good, type GoodArtifact } from '../features/good/goodImport';
 import { loadGood } from '../features/good/goodStore';
 import { startOptimizerJob, type OptimizerJob, type OptimizerProgress } from '../features/optimizer/client';
 import type { Constraints, Objective } from '../features/optimizer/evaluator';
@@ -18,7 +18,7 @@ import { DEFAULT_CONFIG, countCandidates, evaluateEquipped, type OptimizedBuild,
 import { REACTION_LABEL, displayName, reactionOptions } from '../features/character/characterModel';
 import { useRotationStore } from '../features/rotation/store';
 import { energyMembers, energyResults } from '../features/energy/energyModel';
-import { kitElement, kitProcMoves, type ElementOrPhysical, type ReactionChoice } from '../engine';
+import { analyzeProject, kitElement, kitProcMoves, resolveProject, type ElementOrPhysical, type ReactionChoice } from '../engine';
 import { mainStatValue } from '../engine/pieces';
 import { MAIN_LABEL, SUB_LABEL, characterDisplayName, formatMain, formatSub } from '../features/good/labels';
 import { formatDecimal, formatInt } from '../ui/format';
@@ -431,8 +431,16 @@ export function OtimizadorPanel({ index }: { index: number }) {
       </div>
     </div>
   ) : null;
+  const focusOptions = [...new Map(v.resolved.actions.filter((a) => a.member === index).map((a) => [a.move.id, a.move.displayName ?? a.move.label ?? a.move.id])).entries()].map(([id, label]) => ({ id, label }));
+  /** KQM sobre as peças dadas: roda o motor com um personagem sem peças, mas com os stats principais e o set delas. */
+  const redistribute = (pieces: GoodArtifact[]) => {
+    const lo = loadoutFromPieces(pieces, data.game);
+    const probe = { ...ref, pieces: undefined, piecesChoice: 'generic' as const, noArtifacts: undefined, manualRolls: undefined, artifacts: lo.artifacts, primarySet: lo.primarySet, secondarySet: lo.secondarySet, fourPiece: lo.fourPiece };
+    const r = resolveProject({ ...project, members: project.members.map((m, i) => (i === index ? probe : m)) }, data.game, data.effects);
+    return analyzeProject({ team: r.team, actions: r.actions, flatEffects: r.flatEffects, ampCoefficient: r.ampCoefficient }).optimization.rolls[index];
+  };
   const manualBox = character ? (
-    <ManualBuild member={ref} rolls={v.bundle.optimization.rolls[index]} element={character.element} sets={data.game.artifacts} onChange={(patch) => update(index, patch)} />
+    <ManualBuild member={ref} focusOptions={focusOptions} redistribute={redistribute} rolls={v.bundle.optimization.rolls[index]} element={character.element} sets={data.game.artifacts} onChange={(patch) => update(index, patch)} />
   ) : null;
 
   return (

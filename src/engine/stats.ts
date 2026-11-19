@@ -215,6 +215,10 @@ export interface MemberInput {
   minER?: number;
   /** ATK próprio mínimo, sem buffs de outros personagens (Iansan precisa de ~3000 para o teto do ATK que ela dá): o otimizador põe ATK% até lá antes de repartir o dano. */
   minOwnAtk?: number;
+  /** Regra KQM: procs ÚTEIS (CR, CD, escala, EM e ER dividem este orçamento); o que sobra do total vai para HP, DEF e ATK fixo, sem mínimo por substat. Ausente = regra da planilha (mínimo por substat). */
+  usefulRolls?: number;
+  /** Foco do KQM: id do golpe cujo dano o otimizador de substats maximiza. Ausente = a rotação inteira do membro. */
+  kqmFocus?: string;
   /** Infusão dos ataques normais, carregados e de queda (Hu Tao, Xiao, Yoimiya…): elemento no lugar do Físico. */
   normalInfusion?: ElementOrPhysical;
   /** Rolls totais de substat (padrão: 9 por peça 5★ + 7 por peça 4★). */

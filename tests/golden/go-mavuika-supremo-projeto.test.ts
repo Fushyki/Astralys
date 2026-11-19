@@ -59,6 +59,8 @@ describe('GO: Supremo da Mavuika de ponta a ponta (1.516.981)', () => {
     const i = r.actions.findIndex((a) => a.id === 'a8');
     const hit = b.optimization.result.actions[i];
     expect(project.actions.find((a) => a.id === 'a8')!.points).toBe(200);
-    expect(Math.abs(hit.avg / 1_516_981 - 1)).toBeLessThan(0.005);
+    // ±2%: o GO conta o ATK da Iansan com os buffs do time (Bennett, ressonância), mas a conversão dela usa só o ATK próprio (decisão do Davi,
+    // regra do jogo), o que deixa o Supremo da Mavuika ~1,8% abaixo do GO. Antes dessa regra a diferença era menor que 0,5%.
+    expect(Math.abs(hit.avg / 1_516_981 - 1)).toBeLessThan(0.02);
   });
 });

@@ -678,7 +678,12 @@ export function applyTeamRules(members: MemberInput[]): MemberInput[] {
         ...(b.flat?.length ? { flat: b.flat.map((f) => ({ ...f, perPoint: f.perPoint * k, ...(f.capPerHit !== undefined ? { capPerHit: f.capPerHit * k } : {}) })) } : {}),
       }];
     });
-    return { ...m, characterEffect: { ...m.characterEffect!, buffs: next } };
+    // Conversão do ATK da própria fonte com teto (Iansan): o ATK que enche o teto vira o mínimo do otimizador.
+    const need = next.reduce((best, b) => {
+      const c = b.convert;
+      return c && c.ownOnly && c.from === 'atk' && c.source === 'self' && c.cap && c.perPoint > 0 ? Math.max(best, c.cap / c.perPoint + (c.threshold ?? 0)) : best;
+    }, 0);
+    return { ...m, ...(need > 0 && m.minOwnAtk === undefined ? { minOwnAtk: need } : {}), characterEffect: { ...m.characterEffect!, buffs: next } };
   });
 }
 
@@ -756,7 +761,7 @@ function withoutPlanilhaSeed(m: MemberInput): MemberInput {
 export function finalizeMembers(members: MemberInput[], planilha: boolean): MemberInput[] {
   return applyTeamRules(members).map((m) =>
     planilha
-      ? { ...(m.characterEffect && !m.characterEffect.fonte_info.includes('scripts/curation/') ? { ...m, characterEffect: planilhaEffect(m.characterEffect) } : m), weaponEffect: planilhaWeapon(m.weaponEffect) }
+      ? { ...(m.characterEffect && !m.characterEffect.fonte_info.includes('scripts/curation/') ? { ...m, characterEffect: planilhaEffect(m.characterEffect) } : m), weaponEffect: planilhaWeapon(m.weaponEffect), minOwnAtk: undefined } // a planilha não tem o ATK próprio mínimo (o gabarito não muda)
       : withoutPlanilhaSeed(m),
   );
 }

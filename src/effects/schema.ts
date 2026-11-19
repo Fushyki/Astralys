@@ -165,6 +165,8 @@ export const BuffConvertSchema = z.object({
   /** Teto em múltiplos do ATK base da fonte (ex.: Hu Tao, 4 = 400%). */
   capBaseAtk: z.number().optional(),
   /** Teto que muda com o nível do talento (15 valores; ex.: Iansan, 330 a 890 de ATK). Troca `cap` ao montar o projeto. */
+  /** O stat da fonte conta SÓ o que é dela (build, arma, set, buffs próprios): buffs de outros personagens e ressonância não entram (Iansan). */
+  ownOnly: z.boolean().optional(),
   capByLevel: z.object({ talent: z.enum(['normal', 'skill', 'burst']), table: z.array(z.number()).length(15) }).optional(),
   to: z.array(ConvertTargetSchema).min(1),
 });

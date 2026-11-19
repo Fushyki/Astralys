@@ -16,7 +16,7 @@ export const PILOTO_BUFFS: Record<string, BuffCuration[]> = {
       // Substitui o ATK fixo semeado da planilha (37% fixo, nível 13): lê o Lunaris por nível e por pontos de Espírito da Noite.
       id: 'escala', label: 'Iansan: Escala de Energia Cinética (ATK)', src: 'kit', scope: 'others', timed: true, replaces: 'teamFlatAtk', onCharTag: true,
       kit: { talent: 'burst', capKey: 'Max ATK Bonus' },
-      convert: { from: 'atk', perPoint: { p: 1 }, to: ['atkFlat'] },
+      convert: { from: 'atk', perPoint: { p: 1 }, ownOnly: true, to: ['atkFlat'] },
       stacks: { max: 42, unit: 'pontos de Espírito da Noite', default: 42, levels: [...Array.from({ length: 41 }, (_, i) => ({ p: 2, x: i + 1 })), { p: 1 }] },
       expect: 'Ardent Support',
       note: 'ATK fixo para quem está em campo (não a própria Iansan): com 42 pontos ou mais, 27% do ATK dela; com menos, 0,5% do ATK por ponto. Teto por nível do Supremo (330 no nível 1 a 890 no 15). Escolha os pontos de 0 a 42.',

@@ -545,6 +545,7 @@ function buildCharacters(): CharacterEffect[] {
                 threshold: v(b.convert.threshold),
                 ...(b.convert.cap !== undefined ? { cap: v(b.convert.cap) } : {}),
                 ...(b.convert.capBaseAtk !== undefined ? { capBaseAtk: b.convert.capBaseAtk } : {}),
+                ...(b.convert.ownOnly ? { ownOnly: true } : {}),
                 ...(capTable ? { capByLevel: { talent: b.kit!.talent, table: capTable } } : {}),
                 to: b.convert.to,
               },

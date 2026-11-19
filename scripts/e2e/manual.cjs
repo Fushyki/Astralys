@@ -30,11 +30,11 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.goto(`${BASE}/projeto/exemplo/personagem/Mavuika?aba=otimizar`, { waitUntil: 'networkidle' });
   await page.waitForSelector('.ot-top');
   await page.click('.ot-seg[aria-label="Dano de"] button:has-text("Manual")');
-  await page.waitForSelector('.ot-seg[aria-label="Como montar o build"]');
-  check('Manual começa em KQM automático', (await page.locator('.ot-seg[aria-label="Como montar o build"] [aria-pressed=true]').textContent()).includes('KQM'));
+  await page.waitForSelector('.ot-pieces > li');
+  check('o build já mostra as 5 peças e o botão Otimizado (KQM)', (await page.locator('.ot-pieces > li').count()) === 5 && (await page.locator('button:has-text("Otimizado (KQM)")').count()) === 1);
   check('KQM mostra a tabela Status, Procs e Valor', (await page.locator('.ot-mtable thead th').allTextContents()).join('|') === 'Status|Procs|Valor' && (await page.locator('.ot-mtable tbody tr').count()) >= 3);
   await page.screenshot({ path: path.join(OUT, 'manual-kqm.png'), fullPage: true });
-  await page.click('.ot-seg[aria-label="Como montar o build"] button:has-text("Manual")');
+  await page.click('button:has-text("Otimizado (KQM)")');
   await page.waitForSelector('.ot-pieces > li');
   check('geram-se 5 peças', (await page.locator('.ot-pieces > li .ot-art').count()) === 5 || (await page.locator('.ot-pieces > li').count()) === 5);
   await page.waitForTimeout(900); // salvamento automático (400 ms)
@@ -54,9 +54,8 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.goto(`${BASE}/projeto/exemplo/personagem/Mavuika?aba=otimizar`, { waitUntil: 'networkidle' });
   await page.waitForSelector('.ot-pieces > li');
   await page.screenshot({ path: path.join(OUT, 'manual.png'), fullPage: true });
-  await page.click('.ot-seg[aria-label="Como montar o build"] button:has-text("KQM")');
-  await page.waitForSelector('.ot-seg[aria-label="Como montar o build"] button:has-text("KQM")[aria-pressed=true]');
-  check('volta ao KQM sem peças', (await page.locator('.ot-pieces').count()) === 0);
+  await page.click('button:has-text("Otimizado (KQM)")');
+  check('o KQM redistribui os procs e mantém as 5 peças', (await page.locator('.ot-pieces > li').count()) === 5);
   check('sem erros de página', problems.length === 0, problems.join(' | '));
   await browser.close();
   process.exit(results.every(Boolean) ? 0 : 1);

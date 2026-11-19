@@ -8,7 +8,7 @@
  */
 import { useState } from 'react';
 import { Panel } from '../../design/primitives';
-import { MAX_ROLLS_PER_SUBSTAT, ROLLS_PER_PIECE, SUBSTATS, SUBSTAT_ROLL_VALUES, type Rolls, type Substat } from '../../engine/artifacts';
+import { MAIN_STAT_VALUES, MAX_ROLLS_PER_SUBSTAT, ROLLS_PER_PIECE, SUBSTATS, SUBSTAT_ROLL_VALUES, type Rolls, type Substat } from '../../engine/artifacts';
 import type { MemberRef } from '../../engine/project';
 import { artifactProcs, maxProcs, type SubKey } from '../../features/good/artifactProcs';
 import { setKeyOf } from '../../features/good/artifactOcr';
@@ -25,7 +25,8 @@ interface Row { key: SubKey; procs: number; value: number }
 const SUB_NAME: Record<SubKey, string> = {
   critRate_: 'Taxa Crítica', critDMG_: 'Dano Crítico', atk_: 'ATK%', atk: 'ATK', eleMas: 'Maestria', enerRech_: 'Recarga', hp_: 'HP%', hp: 'HP', def_: 'DEF%', def: 'DEF',
 };
-const SUBSTAT_OF = Object.fromEntries((SUBSTATS as readonly Substat[]).map((s) => [SUB_KEY[s], s])) as Record<SubKey, Substat>;
+const MAIN_NAME: Record<string, string> = { 'ATK%': 'ATK%', 'HP%': 'HP%', 'DEF%': 'DEF%', EM: 'Maestria', ER: 'Recarga', CR: 'Taxa Crítica', CD: 'Dano Crítico', 'DMG%': 'Bônus de dano', Healing: 'Cura' };
+const SUBSTAT_OF =Object.fromEntries((SUBSTATS as readonly Substat[]).map((s) => [SUB_KEY[s], s])) as Record<SubKey, Substat>;
 const ALL_KEYS = (SUBSTATS as readonly Substat[]).map((s) => SUB_KEY[s]);
 /** Set provisório das peças manuais quando o personagem ainda não tem set: não casa com nenhum set, então não dá bônus. */
 const NO_SET = 'SemSet';
@@ -146,6 +147,18 @@ export function ManualBuild({ member, rolls, element, sets, onChange }: {
             <h3 className="ot-mh">Por que está travado</h3>
             <p className="small">No KQM não há artefatos reais: o motor reparte {ROLLS_PER_PIECE[0] * 5} procs (9 por peça) nos substats que mais aumentam o dano do time, depois de garantir a Recarga mínima. Cada proc vale 85% do máximo, igual para todos, para comparar sem depender do inventário. Para escolher os procs, use Manual.</p>
             {!member.primarySet && <p className="note">Sem set escolhido: o Manual cria peças sem bônus de set. Escolha o set em Resumo e build ou em Editar, em cada peça.</p>}
+            <h3 className="ot-mh">Stats principais</h3>
+            <div className="ot-mains">
+              {(['sands', 'goblet', 'circlet'] as const).map((slot) => (
+                <label key={slot} className="ot-field">
+                  <span className="lbl">{SLOTS.find((s) => s.key === slot)?.label}</span>
+                  <select className="dz-input" value={member.artifacts[slot]} aria-label={`Stat principal: ${slot}`}
+                    onChange={(e) => onChange({ artifacts: { ...member.artifacts, [slot]: e.target.value } })}>
+                    {Object.keys(MAIN_STAT_VALUES[slot]).map((k) => <option key={k} value={k}>{MAIN_NAME[k] ?? k}</option>)}
+                  </select>
+                </label>
+              ))}
+            </div>
           </div>
         ) : (
           <div className="ot-mnote">

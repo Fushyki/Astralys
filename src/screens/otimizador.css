@@ -388,3 +388,5 @@ button.ot-ch[aria-pressed='true'] b { color: var(--gold-hi); }
 .ot-mtables .ot-mtable { align-self: start; }
 .ot-cur li .subs > span { min-height: 16px; }
 .ot-cur li .subs > span.empty { opacity: .35; }
+.ot-mains { display: flex; gap: 8px; flex-wrap: wrap; }
+.ot-mains .ot-field { flex: 1 1 110px; min-width: 0; }

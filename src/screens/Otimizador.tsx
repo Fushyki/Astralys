@@ -431,8 +431,9 @@ export function OtimizadorPanel({ index }: { index: number }) {
       </div>
     </div>
   ) : null;
+  const focusOptions = [...new Map(v.resolved.actions.filter((a) => a.member === index).map((a) => [a.move.id, a.move.displayName ?? a.move.label ?? a.move.id])).entries()].map(([id, label]) => ({ id, label }));
   const manualBox = character ? (
-    <ManualBuild member={ref} rolls={v.bundle.optimization.rolls[index]} element={character.element} sets={data.game.artifacts} onChange={(patch) => update(index, patch)} />
+    <ManualBuild member={ref} focusOptions={focusOptions} rolls={v.bundle.optimization.rolls[index]} element={character.element} sets={data.game.artifacts} onChange={(patch) => update(index, patch)} />
   ) : null;
 
   return (

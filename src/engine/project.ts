@@ -91,6 +91,8 @@ export const MemberRefSchema = z.object({
   /** Infusão dos ataques normais, carregados e de queda (Hu Tao no Paramita, Xiao no Supremo…). Ausente = sem infusão (Físico em quem usa arma física). */
   normalInfusion: z.enum(['Pyro', 'Hydro', 'Anemo', 'Electro', 'Dendro', 'Cryo', 'Geo']).optional(),
   minER: z.number().min(0).optional(),
+  /** Foco do KQM: id do golpe que o otimizador de substats maximiza (ausente = a rotação inteira). */
+  kqmFocus: z.string().min(1).optional(),
   totalRolls: z.number().int().min(0).optional(),
   forcedCritRolls: z.number().int().min(0).optional(),
   /** Rolls totais por substat definidos à mão (os que faltam valem o mínimo). Ausente = otimizar. */
@@ -597,6 +599,7 @@ export function resolveMember(ref: MemberRef, data: GameData, effects: EffectsDa
     constellation: ref.constellation,
     factions: factionsOf(ref.factions, own?.factions),
     minER: ref.minER,
+    kqmFocus: ref.kqmFocus,
     normalInfusion: ref.normalInfusion,
     totalRolls: ref.totalRolls,
     forcedCritRolls: ref.forcedCritRolls,
@@ -758,11 +761,14 @@ function withoutPlanilhaSeed(m: MemberInput): MemberInput {
  * Aplica as regras de composição do time aos membros já resolvidos. No modo planilha, os personagens que vêm da planilha
  * ficam só com os efeitos dela: sem as passivas e constelações curadas depois; fora dele, sem os números semeados que a curadoria repete.
  */
+/** Regra KQM: de 45 procs, 36 são úteis (CR, CD, escala, EM, ER) e o resto vai para HP, DEF e ATK fixo. */
+const KQM_USEFUL_ROLLS = 36;
+
 export function finalizeMembers(members: MemberInput[], planilha: boolean): MemberInput[] {
   return applyTeamRules(members).map((m) =>
     planilha
-      ? { ...(m.characterEffect && !m.characterEffect.fonte_info.includes('scripts/curation/') ? { ...m, characterEffect: planilhaEffect(m.characterEffect) } : m), weaponEffect: planilhaWeapon(m.weaponEffect), minOwnAtk: undefined } // a planilha não tem o ATK próprio mínimo (o gabarito não muda)
-      : withoutPlanilhaSeed(m),
+      ? { ...(m.characterEffect && !m.characterEffect.fonte_info.includes('scripts/curation/') ? { ...m, characterEffect: planilhaEffect(m.characterEffect) } : m), weaponEffect: planilhaWeapon(m.weaponEffect), minOwnAtk: undefined, usefulRolls: undefined } // a planilha não tem o ATK próprio mínimo nem a regra dos procs úteis (o gabarito não muda)
+      : { ...withoutPlanilhaSeed(m), usefulRolls: m.usefulRolls ?? KQM_USEFUL_ROLLS },
   );
 }
 

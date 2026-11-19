@@ -105,11 +105,16 @@ export function optimizeMember(ctx: OptimizerContext, memberIndex: number, flatB
   const minR = config.minRollsPerSubstat;
 
   // ---- 1) Orçamento ----
+  // Regra KQM (`usefulRolls`): só os procs úteis (CR, CD, escala, EM, ER) saem do orçamento e não há mínimo por substat; o que sobra
+  // do total cai em HP, DEF e ATK fixo. Sem ela vale a regra da planilha (mínimo por substat, o resto é livre).
+  const kqm = m.usefulRolls !== undefined;
   const total = m.totalRolls ?? defaultTotalRolls(m.artifacts);
-  const free = Math.max(0, total - SUBSTATS.length * minR);
-  const maxFree = (s: Substat) => Math.max(0, maxRollsFor(m.artifacts, s) - minR);
+  const useful = kqm ? Math.min(m.usefulRolls!, total) : 0;
+  const free = kqm ? useful : Math.max(0, total - SUBSTATS.length * minR);
+  const floor = kqm ? 0 : minR; // mínimo de cada substat útil
+  const maxFree = (s: Substat) => Math.max(0, maxRollsFor(m.artifacts, s) - floor);
 
-  const er0 = 1 + statics.er + minR * rv.ER;
+  const er0 = 1 + statics.er + floor * rv.ER;
   const minER = m.minER ?? 0;
   const erRolls = minER <= er0 ? 0 : Math.min(maxFree('ER'), free, ceilTol((minER - er0) / rv.ER));
   const damageRolls = Math.min(MAX_DAMAGE_ROLLS, free - erRolls);
@@ -131,10 +136,13 @@ export function optimizeMember(ctx: OptimizerContext, memberIndex: number, flatB
 
   const groups = new Map<string, Group>();
   const minStats = (tags: readonly string[]) =>
-    finalStats(m, statics, minimumRolls(minR), profileOf(tags).team, assembly.resonanceAtkPct);
+    finalStats(m, statics, minimumRolls(floor), profileOf(tags).team, assembly.resonanceAtkPct);
 
+  // Foco do KQM: só o golpe escolhido pesa na busca (se ele não está na rotação, vale a rotação inteira).
+  const focus = m.kqmFocus && ctx.actions.some((a) => a.member === memberIndex && a.move.id === m.kqmFocus) ? m.kqmFocus : undefined;
   ctx.actions.forEach((a, idx) => {
     if (a.member !== memberIndex) return;
+    if (focus && a.move.id !== focus) return;
     // Reação posta na rotação: só depende da Maestria e dos bônus de reação; a busca de substats não a enxerga.
     if (a.move.reactionHit || a.move.talent === 'reaction') return;
     const { key, team } = profileOf(a.activeTags);
@@ -165,7 +173,7 @@ export function optimizeMember(ctx: OptimizerContext, memberIndex: number, flatB
   // ---- 3) Escala principal ----
   // Peso de cada stat = Σ(W × escala) × valor do stat com rolls mínimos e SEM o bônus de ATK% por ER da arma.
   const allTeam = activeTeamDelta(assembly.buffs, names[memberIndex], 'all');
-  const full = finalStats(m, statics, minimumRolls(minR), allTeam, assembly.resonanceAtkPct);
+  const full = finalStats(m, statics, minimumRolls(floor), allTeam, assembly.resonanceAtkPct);
   const atkBase = m.character.baseAtk + m.weapon.baseAtk + (statics.atkBaseFlat ?? 0) + (allTeam.atkBaseFlat ?? 0);
   const statWeight = {
     atk: full.atk - atkBase * full.weaponErAtkPct,
@@ -190,6 +198,16 @@ export function optimizeMember(ctx: OptimizerContext, memberIndex: number, flatB
     ? supportStat!
     : weight.atk >= weight.hp && weight.atk >= weight.def ? 'atk' : weight.hp >= weight.def ? 'hp' : 'def';
   const scaleSubstat: Substat = ({ atk: 'ATK%', hp: 'HP%', def: 'DEF%' } as const)[mainScale];
+  // Rolls fixos de cada substat antes da busca: o mínimo (planilha) ou, na regra KQM, a sobra nos substats sem uso.
+  const base = minimumRolls(floor);
+  if (kqm) {
+    const junk = (['HP%', 'HP', 'DEF%', 'DEF', 'ATK'] as Substat[]).filter((x) => x !== scaleSubstat);
+    let left = total - useful;
+    for (let progress = true; left > 0 && progress;) {
+      progress = false;
+      for (const x of junk) if (left > 0 && base[x] < maxRollsFor(m.artifacts, x)) { base[x]++; left--; progress = true; }
+    }
+  }
   const maxScale = maxFree(scaleSubstat);
   const maxEM = maxFree('EM');
   const maxCR = maxFree('CR');
@@ -198,20 +216,23 @@ export function optimizeMember(ctx: OptimizerContext, memberIndex: number, flatB
   // ---- 4) Funções de avaliação ----
   const plume = pick(PLUME_ATK, m.artifacts.rarity.plume);
   const flower = pick(FLOWER_HP, m.artifacts.rarity.flower);
-  const damagePart = (s: number, e: number): number => {
+  const cr0 = 0.05 + statics.critRate + base.CR * rv.CR;
+  const cd0 = 0.5 + statics.critDmg + base.CD * rv.CD;
+  /** `crit`: rolls em CR e CD; com ele o crítico de cada grupo inclui os buffs de time ativos nas ações dele (regra KQM). */
+  const damagePart = (s: number, e: number, crit?: { c: number; d: number }): number => {
     let acc = 0;
     for (const g of gs) {
       const t = g.profile;
       const atk =
-        atkBase * (1 + statics.atkPct + t.atkPct + assembly.resonanceAtkPct + minR * rv['ATK%'] + (mainScale === 'atk' ? s * rv['ATK%'] : 0) + erAtk) +
-        plume + statics.atkFlat + t.atkFlat + minR * rv.ATK;
+        atkBase * (1 + statics.atkPct + t.atkPct + assembly.resonanceAtkPct + base['ATK%'] * rv['ATK%'] + (mainScale === 'atk' ? s * rv['ATK%'] : 0) + erAtk) +
+        plume + statics.atkFlat + t.atkFlat + base.ATK * rv.ATK;
       const hp =
-        m.character.baseHp * (1 + statics.hpPct + t.hpPct + minR * rv['HP%'] + (mainScale === 'hp' ? s * rv['HP%'] : 0)) +
-        flower + statics.hpFlat + t.hpFlat + minR * rv.HP;
+        m.character.baseHp * (1 + statics.hpPct + t.hpPct + base['HP%'] * rv['HP%'] + (mainScale === 'hp' ? s * rv['HP%'] : 0)) +
+        flower + statics.hpFlat + t.hpFlat + base.HP * rv.HP;
       const def =
-        m.character.baseDef * (1 + statics.defPct + t.defPct + minR * rv['DEF%'] + (mainScale === 'def' ? s * rv['DEF%'] : 0)) +
-        statics.defFlat + t.defFlat + minR * rv.DEF;
-      const em = statics.em + t.em + minR * rv.EM + e * rv.EM;
+        m.character.baseDef * (1 + statics.defPct + t.defPct + base['DEF%'] * rv['DEF%'] + (mainScale === 'def' ? s * rv['DEF%'] : 0)) +
+        statics.defFlat + t.defFlat + base.DEF * rv.DEF;
+      const em = statics.em + t.em + base.EM * rv.EM + e * rv.EM;
 
       let part = atk * g.sA + em * g.sE + hp * g.sH + def * g.sD + g.sC;
       let amp = 1;
@@ -223,7 +244,8 @@ export function optimizeMember(ctx: OptimizerContext, memberIndex: number, flatB
         const bonus = (statics.reactionBonus?.[g.reaction] ?? 0) + (t.reactionBonus?.[g.reaction] ?? 0);
         if (g.element === info.element) part += g.sW * additiveTerm(g.reaction, g.element as never, config.characterLevel, em, bonus);
       }
-      acc += amp * part;
+      const cf = crit ? 1 + Math.min(cr0 + t.critRate + crit.c * rv.CR, 1) * (cd0 + t.critDmg + crit.d * rv.CD) : 1;
+      acc += amp * part * cf;
     }
     return acc;
   };
@@ -231,12 +253,9 @@ export function optimizeMember(ctx: OptimizerContext, memberIndex: number, flatB
   // ATK próprio (sem buffs de outros nem ressonância) mínimo: rolls de ATK% que a busca não pode tirar da escala.
   let sMin = 0;
   if (m.minOwnAtk && mainScale === 'atk') {
-    const atkNoScale = atkBase * (1 + statics.atkPct + minR * rv['ATK%'] + erAtk) + plume + statics.atkFlat + minR * rv.ATK;
+    const atkNoScale = atkBase * (1 + statics.atkPct + base['ATK%'] * rv['ATK%'] + erAtk) + plume + statics.atkFlat + base.ATK * rv.ATK;
     sMin = Math.min(damageRolls, maxScale, Math.max(0, ceilTol((m.minOwnAtk - atkNoScale) / (atkBase * rv['ATK%']))));
   }
-
-  const cr0 = 0.05 + statics.critRate + minR * rv.CR;
-  const cd0 = 0.5 + statics.critDmg + minR * rv.CD;
 
   const critBest = (k: number) => {
     let best = 0;
@@ -267,21 +286,35 @@ export function optimizeMember(ctx: OptimizerContext, memberIndex: number, flatB
     k = c; // o resto vai para crítico (CR), como na planilha
   } else {
     const forced = m.forcedCritRolls;
-    const kForced = forced === undefined ? undefined : Math.max(0, Math.min(damageRolls, forced - 2 * minR));
+    const kForced = forced === undefined ? undefined : Math.max(0, Math.min(damageRolls, forced - base.CR - base.CD));
     // o mínimo de ATK% fica reservado: crítico só usa o que sobra
     const kMax = damageRolls - sMin;
     const range = kForced === undefined ? Array.from({ length: kMax + 1 }, (_, i) => i) : [Math.min(kForced, kMax)];
-    let bestTotal = -1;
-    for (const kk of range) {
-      const total = critBest(kk).value * scaleBest(damageRolls - kk).value;
-      if (total > bestTotal) { bestTotal = total; k = kk; }
+    if (kqm) {
+      // Regra KQM: busca conjunta em CR, CD, escala e EM, com o crítico de cada grupo (inclui buffs de time de CR e CD).
+      let best = -1;
+      for (const kk of range) {
+        const rem = damageRolls - kk;
+        for (let cc = Math.max(0, kk - maxCD); cc <= Math.min(kk, maxCR); cc++) {
+          for (let ss = Math.max(sMin, rem - maxEM); ss <= Math.min(rem, maxScale); ss++) {
+            const v = damagePart(ss, rem - ss, { c: cc, d: kk - cc });
+            if (v > best) { best = v; k = kk; c = cc; s = ss; }
+          }
+        }
+      }
+    } else {
+      let bestTotal = -1;
+      for (const kk of range) {
+        const total = critBest(kk).value * scaleBest(damageRolls - kk).value;
+        if (total > bestTotal) { bestTotal = total; k = kk; }
+      }
+      c = critBest(k).c;
+      s = scaleBest(damageRolls - k).s;
     }
-    c = critBest(k).c;
-    s = scaleBest(damageRolls - k).s;
   }
   const em = damageRolls - k - s;
 
-  const rolls: Rolls = minimumRolls(minR);
+  const rolls: Rolls = { ...base };
   rolls.CR += c;
   rolls.CD += support ? 0 : k - c;
   rolls[scaleSubstat] += s;

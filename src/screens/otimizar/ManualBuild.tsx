@@ -53,7 +53,9 @@ function tableRows(manual: boolean, pieces: GoodArtifact[], rolls: Rolls): Row[]
   return [...sum.values()].filter((r) => r.procs > 0).sort((a, b) => b.procs - a.procs);
 }
 
-export function ManualBuild({ member, rolls, element, sets, onChange }: {
+export function ManualBuild({ member, rolls, element, sets, onChange, focusOptions = [] }: {
+  /** Golpes do personagem na rotação: o KQM pode otimizar só o dano de um deles. */
+  focusOptions?: { id: string; label: string }[];
   member: MemberRef;
   /** Rolls que o KQM distribui para este personagem (build genérico). */
   rolls: Rolls;
@@ -145,8 +147,17 @@ export function ManualBuild({ member, rolls, element, sets, onChange }: {
         {pieces.length === 0 ? (
           <div className="ot-mnote">
             <h3 className="ot-mh">Por que está travado</h3>
-            <p className="small">No KQM não há artefatos reais: o motor reparte {ROLLS_PER_PIECE[0] * 5} procs (9 por peça) nos substats que mais aumentam o dano do time, depois de garantir a Recarga mínima. Cada proc vale 85% do máximo, igual para todos, para comparar sem depender do inventário. Para escolher os procs, use Manual.</p>
+            <p className="small">No KQM não há artefatos reais: o motor reparte até 36 procs úteis (Taxa e Dano Crítico, ATK%/HP%/DEF%, Maestria e Recarga dividem os 36) olhando o dano do foco escolhido, com os stats principais, o set e os buffs ativos. A Recarga mínima sai primeiro; o que sobra do total (9 por peça) vai para HP, DEF e ATK fixo. Cada proc vale 85% do máximo, igual para todos. Para escolher os procs, use Manual.</p>
             {!member.primarySet && <p className="note">Sem set escolhido: o Manual cria peças sem bônus de set. Escolha o set em Resumo e build ou em Editar, em cada peça.</p>}
+            {focusOptions.length > 0 && (
+              <label className="ot-field">
+                <span className="lbl">Foco do dano</span>
+                <select className="dz-input" value={member.kqmFocus ?? ''} aria-label="Foco do dano do KQM" onChange={(e) => onChange({ kqmFocus: e.target.value || undefined })}>
+                  <option value="">Rotação inteira</option>
+                  {focusOptions.map((o) => <option key={o.id} value={o.id}>{o.label}</option>)}
+                </select>
+              </label>
+            )}
             <h3 className="ot-mh">Stats principais</h3>
             <div className="ot-mains">
               {(['sands', 'goblet', 'circlet'] as const).map((slot) => (

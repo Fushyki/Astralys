@@ -49,10 +49,13 @@ export interface MovePickerProps {
   infusion?: ElementOrPhysical;
   effect?: Pick<CharacterEffect, 'specialMoves'>;
   onPick: (id: string) => void;
+  /** Opção "Rotação completa" no começo da lista (sem golpe: vale o dano da rotação inteira). `allCurrent` marca como escolhida. */
+  onPickAll?: () => void;
+  allCurrent?: boolean;
   onClose: () => void;
 }
 
-export function MovePickerDialog({ moves, current, character, elementMode, infusion, effect, onPick, onClose }: MovePickerProps) {
+export function MovePickerDialog({ moves, current, character, elementMode, infusion, effect, onPick, onPickAll, allCurrent, onClose }: MovePickerProps) {
   const [query, setQuery] = useState('');
   const [off, setOff] = useState<Set<DamageKind>>(new Set());
   const search = useRef<HTMLInputElement>(null);
@@ -101,6 +104,13 @@ export function MovePickerDialog({ moves, current, character, elementMode, infus
           <span className="muted small">Mostrando {shown.length} de {items.length} golpes · nome na cor do elemento, branco = Físico, ☾ Lunar e ✦ Estelar têm cor própria</span>
         </div>
         <div className="mp-grid">
+          {onPickAll && (
+            <button type="button" className="mp-card" data-current={!!allCurrent} onClick={onPickAll}>
+              <span className="n">Rotação completa</span>
+              <span className="meta"><span className="muted small">todos os golpes da rotação</span></span>
+              {allCurrent && <span className="cur">escolhido</span>}
+            </button>
+          )}
           {shown.length === 0 && <p className="note">Nenhum golpe encontrado.</p>}
           {shown.map(({ m, kind, name, element, special }) => {
             const st = KIND_STYLE[kind];

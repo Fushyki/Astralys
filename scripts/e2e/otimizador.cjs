@@ -56,7 +56,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   check('abre o otimizador do Mavuika dentro da página dele', /aba=otimizar/.test(page.url()) && /Mavuika/.test(await page.textContent('.pc-tabs [aria-selected="true"]')));
   check('a faixa do time tem 3 telas: Equipe, Personagens, Rotação e buffs', (await page.$$eval('.dz-subnav nav a', (a) => a.map((x) => x.textContent.replace(/^\d · /, '').trim()))).join('|') === 'Equipe|Personagens|Rotação e buffs');
   check('"O que otimizar" tem 3 escolhas: Dano, Buff e Stat', (await page.locator('.ot-seg[aria-label="O que otimizar"] button').count()) === 3 && (await page.getAttribute('.ot-seg[aria-label="O que otimizar"] button:has-text("Dano")', 'aria-pressed')) === 'true');
-  check('em Dano há 3 alvos: manual, só dele e um golpe do kit', (await page.$$eval('.ot-seg[aria-label="Dano de"] button', (b) => b.map((x) => x.textContent.trim()))).join('|') === 'Manual|Só Mavuika|Um golpe');
+  check('em Dano há 2 alvos: Manual e Golpe', (await page.$$eval('.ot-seg[aria-label="Dano de"] button', (b) => b.map((x) => x.textContent.trim()))).join('|') === 'Manual|Golpe');
 
   const addMin = async (key, value) => {
     await page.selectOption('select[aria-label="Stat do mínimo"]', key);
@@ -141,7 +141,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
 
   // ---- Um golpe do kit, com e sem reação ----
   await page.click('.ot-seg[aria-label="O que otimizar"] button:has-text("Dano")');
-  await page.click('.ot-seg[aria-label="Dano de"] button:has-text("Um golpe")');
+  await page.click('.ot-seg[aria-label="Dano de"] button:has-text("Golpe")');
   await page.click('.ot-movebtn'); await page.waitForSelector('.mp-dialog');
   const moves = await page.locator('.mp-card').count();
   check('o popup do golpe lista todos os golpes do personagem', moves >= 10, String(moves));
@@ -154,7 +154,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.click('.mp-kinds button:has-text("Supremo")');
   await page.fill('.mp-dialog input[type="search"]', 'habilidade'); await page.waitForTimeout(200);
   const before = await page.textContent('.ot-movebtn');
-  await page.click('.mp-card >> nth=0'); await page.waitForTimeout(300);
+  await page.click('.mp-card >> nth=1'); await page.waitForTimeout(300);
   check('escolher um golpe no popup fecha e troca o botão', (await page.locator('.mp-dialog').count()) === 0 && (await page.textContent('.ot-movebtn')) !== before || (await page.locator('.mp-dialog').count()) === 0);
   const reacts = await page.$$eval('.ot-seg button[aria-pressed]', (b) => b.map((x) => x.textContent.trim()).filter((t) => /Sem reação|Derreter|Vaporizar/.test(t)));
   check('a reação é escolhida: sem reação e Derreter (time com Cryo)', reacts.includes('Sem reação') && reacts.includes('Derreter'), reacts.join(','));

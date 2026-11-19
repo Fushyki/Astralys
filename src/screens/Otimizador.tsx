@@ -370,6 +370,8 @@ export function OtimizadorPanel({ index }: { index: number }) {
   };
   /** O Golpe, a Reação e o Crítico só valem com Alvo = "Um golpe" (os outros ficam desativados, sem sumir). */
   const moveOn = ui.goal === 'dano' && ui.scope === 'move';
+  /** Golpe ou rotação completa (o seletor de golpes fica ativo nos dois). */
+  const golpeOn = ui.goal === 'dano' && ui.scope !== 'manual';
   /** O mínimo de Recarga é o que a calculadora de recarga pede. */
   const erInUse = erNeeded !== null && ui.mins.er.trim() !== '' && Math.abs(Number(ui.mins.er.replace(',', '.')) - erNeeded) < 1e-6;
   /** O mínimo que o build equipado não atinge (null se atinge todos, ou se não há equipado). */
@@ -425,9 +427,9 @@ export function OtimizadorPanel({ index }: { index: number }) {
   const alvoField = ui.goal === 'dano' ? (
     <div className="ot-field">
       <span className="lbl">Alvo</span>
-      <div className="ot-seg" role="group" aria-label="Dano de" title="Manual: monta o build à mão ou pelo KQM, sem buscar no inventário. Só o personagem: dano dele na rotação. Um golpe: avaliado sozinho com todos os buffs ligados.">
-        {([['manual', 'Manual'], ['member', `Só ${ref.character}`], ['move', 'Um golpe']] as [Scope, string][]).map(([k, label]) => (
-          <button key={k} type="button" aria-pressed={ui.scope === k} onClick={() => setUi({ ...ui, scope: k })}>{label}</button>
+      <div className="ot-seg" role="group" aria-label="Dano de" title="Manual: monta o build à mão ou pelo KQM, sem buscar no inventário. Golpe: escolha um golpe (avaliado sozinho com todos os buffs ligados) ou a rotação completa (dano do personagem na rotação).">
+        {([['manual', 'Manual'], ['move', 'Golpe']] as [Scope, string][]).map(([k, label]) => (
+          <button key={k} type="button" aria-pressed={k === 'manual' ? ui.scope === 'manual' : ui.scope !== 'manual'} onClick={() => setUi({ ...ui, scope: k === 'manual' ? 'manual' : ui.scope === 'manual' ? 'member' : ui.scope })}>{label}</button>
         ))}
       </div>
     </div>
@@ -440,12 +442,11 @@ export function OtimizadorPanel({ index }: { index: number }) {
       <span className="lbl">Foco do dano</span>
       <button type="button" className="ot-movebtn" aria-haspopup="dialog" aria-label="Escolher o golpe de foco do KQM" onClick={() => setPickingFocus(true)}>
         {focusMove && <KindBadge kind={kindOf(focusMove)} />}
-        <span className="n" style={{ color: focusMove ? damageColor(character ? (kitMode ? kitElement(character, focusMove, infusion) : (character.element as ElementOrPhysical)) : undefined, specialOfMove(focusMove, 0, effect)) : undefined }}>{focusMove ? displayName(focusMove) : 'Rotação inteira'}</span>
+        <span className="n" style={{ color: focusMove ? damageColor(character ? (kitMode ? kitElement(character, focusMove, infusion) : (character.element as ElementOrPhysical)) : undefined, specialOfMove(focusMove, 0, effect)) : undefined }}>{focusMove ? displayName(focusMove) : 'Rotação completa'}</span>
         {focusMove && <FamilyBadge special={specialOfMove(focusMove, 0, effect)} />}
         <span className="chev" aria-hidden="true">▾</span>
       </button>
-      {focusMove && <button type="button" className="dz-btn sm" onClick={() => update(index, { kqmFocus: undefined })}>Usar a rotação inteira</button>}
-      {!focusInRotation && <p className="note small">Este golpe não está na rotação: o KQM usa a rotação inteira.</p>}
+      {!focusInRotation && <p className="note small">Este golpe não está na rotação: o KQM usa a rotação completa.</p>}
     </div>
   );
   /** KQM sobre as peças dadas: roda o motor com um personagem sem peças, mas com os stats principais e o set delas. */
@@ -470,6 +471,8 @@ export function OtimizadorPanel({ index }: { index: number }) {
           infusion={infusion}
           effect={effect}
           onPick={(id) => { update(index, { kqmFocus: id }); setPickingFocus(false); }}
+        onPickAll={() => { update(index, { kqmFocus: undefined }); setPickingFocus(false); }}
+        allCurrent={!focusMove}
           onClose={() => setPickingFocus(false)}
         />
       )}
@@ -599,10 +602,10 @@ export function OtimizadorPanel({ index }: { index: number }) {
                 <div className="ot-bar-line">
                   <div className="ot-field grow">
                     <span className="lbl">Golpe</span>
-                    <button type="button" className="ot-movebtn" disabled={!moveOn} aria-haspopup="dialog" aria-label="Escolher o golpe a otimizar" title="Um golpe usa os status do talento e os buffs que você ligou na Equipe e em Talentos (arma e set só se ligados); não usa a rotação." onClick={() => setPickingMove(true)}>
-                      {moveChosen && <KindBadge kind={kindOf(moveChosen)} />}
-                      <span className="n" style={{ color: damageColor(moveElement, moveChosen ? specialOfMove(moveChosen, 0, effect) : undefined) }}>{moveChosen ? displayName(moveChosen) : 'Escolher o golpe'}</span>
-                      {moveChosen && <FamilyBadge special={specialOfMove(moveChosen, 0, effect)} />}
+                    <button type="button" className="ot-movebtn" disabled={!golpeOn} aria-haspopup="dialog" aria-label="Escolher o golpe a otimizar" title="Um golpe usa os status do talento e os buffs que você ligou na Equipe e em Talentos (arma e set só se ligados); não usa a rotação. Rotação completa: o dano do personagem em toda a rotação." onClick={() => setPickingMove(true)}>
+                      {moveOn && moveChosen && <KindBadge kind={kindOf(moveChosen)} />}
+                      <span className="n" style={{ color: moveOn ? damageColor(moveElement, moveChosen ? specialOfMove(moveChosen, 0, effect) : undefined) : undefined }}>{!moveOn ? 'Rotação completa' : moveChosen ? displayName(moveChosen) : 'Escolher o golpe'}</span>
+                      {moveOn && moveChosen && <FamilyBadge special={specialOfMove(moveChosen, 0, effect)} />}
                       <span className="chev" aria-hidden="true">▾</span>
                     </button>
                   </div>
@@ -669,12 +672,14 @@ export function OtimizadorPanel({ index }: { index: number }) {
             {pickingMove && character && (
               <MovePickerDialog
                 moves={moves}
-                current={moveChosen?.id}
+                current={moveOn ? moveChosen?.id : undefined}
                 character={character}
                 elementMode={kitMode ? 'kit' : 'character'}
                 infusion={infusion}
                 effect={effect}
-                onPick={(id) => { setUi({ ...ui, moveId: id }); setPickingMove(false); }}
+                onPick={(id) => { setUi({ ...ui, scope: 'move', moveId: id }); setPickingMove(false); }}
+                onPickAll={() => { setUi({ ...ui, scope: 'member' }); setPickingMove(false); }}
+                allCurrent={!moveOn}
                 onClose={() => setPickingMove(false)}
               />
             )}

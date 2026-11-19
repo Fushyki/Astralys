@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import * as ops from '../../src/features/rotation/projectOps';
-import { SAMPLE_ID, deleteStoredProject, loadProject, loadStoredProject, sampleProject, saveProject } from '../../src/features/rotation/persistence';
+import { SAMPLE_ID, deleteStoredProject, listProjects, loadProject, loadStoredProject, sampleProject, saveProject } from '../../src/features/rotation/persistence';
 import { useRotationStore } from '../../src/features/rotation/store';
 
 const fresh = () => sampleProject();
@@ -185,6 +185,14 @@ describe('persistência local', () => {
     const edited = ops.renameProject(fresh(), 'Exemplo editado');
     saveProject(edited);
     expect(loadProject(SAMPLE_ID)?.name).toBe('Exemplo editado');
+  });
+
+  it('apagar o exemplo tira ele da lista, e salvar uma edição dele o traz de volta', () => {
+    expect(listProjects().some((p) => p.id === SAMPLE_ID)).toBe(true);
+    deleteStoredProject(SAMPLE_ID);
+    expect(listProjects().some((p) => p.id === SAMPLE_ID)).toBe(false);
+    saveProject(ops.renameProject(fresh(), 'Exemplo editado'));
+    expect(listProjects().some((p) => p.id === SAMPLE_ID)).toBe(true);
   });
 
   it('armazenamento indisponível não lança erro', () => {

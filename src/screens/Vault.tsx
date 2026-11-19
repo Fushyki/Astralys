@@ -9,7 +9,7 @@ import { formatInt } from '../ui/format';
 import { useGameData } from '../features/rotation/data';
 import { downloadProject, importJson, withoutDuplicates, type ImportResult } from '../features/rotation/importFile';
 import { projectFromLink, projectLink } from '../features/rotation/projectLink';
-import { SAMPLE_ID, cloneProject, deleteStoredProject, listProjects, loadProject, saveProject, sampleForApp } from '../features/rotation/persistence';
+import { cloneProject, deleteStoredProject, listProjects, loadProject, saveProject, sampleForApp } from '../features/rotation/persistence';
 import { useProjectCards } from '../features/rotation/useProjectCards';
 import { Menu } from '../design/Menu';
 import { useSettings } from '../app/settings';
@@ -253,16 +253,14 @@ export default function Vault() {
                       {(close) =>
                         confirmDelete === p.id ? (
                           <>
-                            <span className="dz-menu-note">{p.id === SAMPLE_ID ? 'Voltar ao exemplo original?' : 'Apagar de vez?'}</span>
+                            <span className="dz-menu-note">Apagar de vez?</span>
                             <button type="button" role="menuitem" className="dz-menu-item danger" onClick={() => { close(); remove(p.id); }}>Sim</button>
                             <button type="button" role="menuitem" className="dz-menu-item" onClick={() => setConfirmDelete(null)}>Não</button>
                           </>
                         ) : (
                           <>
-                            <Link role="menuitem" className="dz-menu-item" to={`/projeto/${p.id}`} onClick={close}>Abrir</Link>
                             <button type="button" role="menuitem" className="dz-menu-item" onClick={() => { close(); void copyCard(p.id, p.name); }}>Copiar card</button>
                             <Link role="menuitem" className="dz-menu-item" to={`/card/${p.id}`} onClick={close}>Editar o card</Link>
-                            <Link role="menuitem" className="dz-menu-item" to={`/comparar?a=${p.id}`} onClick={close}>Comparar</Link>
                             {ONLINE_ENABLED && !p.isSample && (p.shared ? (
                               <>
                                 <button type="button" role="menuitem" className="dz-menu-item" onClick={() => { close(); void copyPublicLink(p.id); }}>Copiar link público</button>
@@ -273,7 +271,7 @@ export default function Vault() {
                             <button type="button" role="menuitem" className="dz-menu-item" onClick={() => { close(); setRenaming(p.id); }}>Renomear</button>
                             <button type="button" role="menuitem" className="dz-menu-item" onClick={() => { close(); void copyLink(p.id); }}>Copiar link</button>
                             <button type="button" role="menuitem" className="dz-menu-item" onClick={() => { close(); const full = loadProject(p.id); if (full) downloadProject(full); }}>Exportar</button>
-                            <button type="button" role="menuitem" className="dz-menu-item danger" onClick={() => setConfirmDelete(p.id)}>{p.id === SAMPLE_ID ? 'Restaurar' : 'Apagar'}</button>
+                            <button type="button" role="menuitem" className="dz-menu-item danger" onClick={() => setConfirmDelete(p.id)}>Apagar</button>
                           </>
                         )
                       }

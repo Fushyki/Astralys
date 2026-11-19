@@ -9,6 +9,15 @@ import sample from './sample/mavuika-iansan.json';
 import appSample from './sample/mavuika-iansan.app.json';
 
 export const SAMPLE_ID = 'exemplo';
+/** O usuário apagou o time de exemplo: ele não volta à lista (salvar uma edição dele tira a marca). */
+const SAMPLE_HIDDEN = 'astralys:exemplo:oculto';
+const sampleHidden = (): boolean => {
+  try {
+    return localStorage.getItem(SAMPLE_HIDDEN) === '1';
+  } catch {
+    return false;
+  }
+};
 const KEY = (id: string) => `astralys:projeto:${id}`;
 
 /** O exemplo como está no JSON: etiquetas de buff manuais, como na planilha (usado pelos testes de gabarito). */
@@ -20,6 +29,7 @@ export const sampleForApp = (): RotationProject => parseProject(appSample);
 export function saveProject(project: RotationProject): boolean {
   try {
     const isNew = localStorage.getItem(KEY(project.id)) === null;
+    if (project.id === SAMPLE_ID) localStorage.removeItem(SAMPLE_HIDDEN);
     localStorage.setItem(KEY(project.id), JSON.stringify(project));
     if (isNew) bindNewProject(project.id);
     return true;
@@ -40,6 +50,7 @@ export function loadStoredProject(id: string): RotationProject | null {
 export function deleteStoredProject(id: string): void {
   try {
     localStorage.removeItem(KEY(id));
+    if (id === SAMPLE_ID) localStorage.setItem(SAMPLE_HIDDEN, '1');
     unbindProject(id);
   } catch {
     /* sem armazenamento: nada a apagar */
@@ -115,7 +126,7 @@ export function listProjects(): ProjectSummary[] {
   } catch {
     /* sem armazenamento: só o exemplo */
   }
-  if (!out.some((p) => p.id === SAMPLE_ID)) out.push(summarize(sampleForApp()));
+  if (!sampleHidden() && !out.some((p) => p.id === SAMPLE_ID)) out.push(summarize(sampleForApp()));
   return out.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
 }
 

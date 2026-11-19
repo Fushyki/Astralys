@@ -22,7 +22,7 @@ export async function publishProject(p: RotationProject, data: LoadedData, autho
 export async function unpublishPublic(publicId: string): Promise<void> {
   const own = ownedPublic(publicId);
   if (!own) throw new Error('Só quem publicou este time (neste navegador) pode removê-lo.');
-  await unpublishTeam(publicId, own.token);
+  await unpublishTeam(publicId, { editToken: own.token });
   forgetPublished(own.projectId);
   const local = loadStoredProject(own.projectId);
   if (local) saveProject({ ...local, meta: { ...local.meta, shared: false } });
@@ -41,3 +41,24 @@ export async function useTeam(publicId: string): Promise<string> {
   saveProject({ ...copy, meta: { ...copy.meta, shared: false, favorite: false } });
   return copy.id;
 }
+
+const ADMIN = 'astralys.admin';
+/** Token do dono do site, guardado só no navegador dele (o servidor confere com `ADMIN_TOKEN`). */
+export const adminToken = (): string => {
+  try {
+    return localStorage.getItem(ADMIN) ?? '';
+  } catch {
+    return '';
+  }
+};
+export function setAdminToken(t: string): void {
+  try {
+    if (t) localStorage.setItem(ADMIN, t);
+    else localStorage.removeItem(ADMIN);
+  } catch {
+    /* sem armazenamento: o modo admin não persiste */
+  }
+}
+
+/** Moderação: o dono do site remove qualquer time da galeria. */
+export const removeAsAdmin = (publicId: string): Promise<unknown> => unpublishTeam(publicId, { adminToken: adminToken() });

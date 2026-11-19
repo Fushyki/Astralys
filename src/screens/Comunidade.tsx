@@ -6,7 +6,7 @@ import '../design/design.css';
 import { elementColor } from '../design/elements';
 import { CharacterAvatar, Chip } from '../design/primitives';
 import { toast } from '../app/toast';
-import { unpublishPublic, useTeam } from '../features/community/publish';
+import { adminToken, removeAsAdmin, setAdminToken, unpublishPublic, useTeam } from '../features/community/publish';
 import { ownedPublic } from '../features/community/published';
 import { useGameData } from '../features/rotation/data';
 import { listTeams, type CommunityTeam } from '../online/api';
@@ -26,9 +26,28 @@ export default function Comunidade() {
   const [state, setState] = useState<'loading' | 'ok' | 'error'>('loading');
   const [error, setError] = useState('');
   const [offset, setOffset] = useState(0);
+  const [, bump] = useState(0);
 
   const navigate = useNavigate();
-  const [, bump] = useState(0);
+  // /comunidade#admin pede o token do dono do site e liga o modo de moderação (sair: /comunidade#sair)
+  useEffect(() => {
+    if (window.location.hash === '#admin') {
+      const t = window.prompt('Token de administrador:');
+      if (t) setAdminToken(t.trim());
+    } else if (window.location.hash === '#sair') setAdminToken('');
+    if (window.location.hash) window.history.replaceState(null, '', window.location.pathname);
+    bump((n) => n + 1);
+  }, []);
+  const isAdmin = !!adminToken();
+  const removerAdmin = (id: string) => {
+    if (!window.confirm('Remover este time da galeria para todos?')) return;
+    removeAsAdmin(id)
+      .then(() => {
+        setItems((l) => l.filter((t) => t.id !== id));
+        toast('Time removido (admin).');
+      })
+      .catch((e: Error) => toast(e.message, 'error'));
+  };
   const utilizar = (id: string) =>
     useTeam(id).then((copyId) => navigate(`/projeto/${copyId}`)).catch((e: Error) => toast(e.message, 'error'));
   const copiarLink = async (id: string) => {
@@ -152,6 +171,7 @@ export default function Comunidade() {
                   <span className="cm-actions">
                     <button type="button" className="dz-btn gold" onClick={() => void utilizar(t.id)}>Utilizar</button>
                     <button type="button" className="dz-btn" onClick={() => void copiarLink(t.id)}>Copiar link</button>
+                    {isAdmin && !ownedPublic(t.id) && <button type="button" className="dz-btn" onClick={() => removerAdmin(t.id)}>Remover (admin)</button>}
                     {ownedPublic(t.id) && <button type="button" className="dz-btn" onClick={() => void parar(t.id)}>Parar de compartilhar</button>}
                   </span>
                 </footer>

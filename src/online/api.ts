@@ -78,8 +78,11 @@ export const getPublic = async (id: string): Promise<PublicProject> => {
 export const publishTeam = (body: { nome: string; author: string; version: string; members: string[]; resumo: unknown; dados: unknown }) =>
   call<{ id: string; edit_token: string }>('/times', { method: 'POST', body: JSON.stringify(body) });
 
-export const unpublishTeam = (id: string, editToken: string) =>
-  call<{ mensagem: string }>(`/times/${encodeURIComponent(id)}`, { method: 'DELETE', headers: { 'X-Edit-Token': editToken } });
+export const unpublishTeam = (id: string, auth: { editToken?: string; adminToken?: string }) =>
+  call<{ mensagem: string }>(`/times/${encodeURIComponent(id)}`, {
+    method: 'DELETE',
+    headers: { 'X-Edit-Token': auth.editToken ?? '', 'X-Admin-Token': auth.adminToken ?? '' },
+  });
 
 export const listTeams = (f: { q: string; personagem: string; versao: string; offset: number; limit: number }) => {
   const qs = new URLSearchParams({ limit: String(f.limit), offset: String(f.offset) });

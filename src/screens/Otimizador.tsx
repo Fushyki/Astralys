@@ -25,6 +25,8 @@ import { formatDecimal, formatInt } from '../ui/format';
 import './otimizador.css';
 import { Button, ButtonLink } from '../design/Button';
 import { CurrentBuild } from './otimizar/CurrentBuild';
+import { setKeyOf } from '../features/good/artifactOcr';
+import { kqmPieces } from '../features/good/kqmPieces';
 import { BlockedDialog } from './otimizar/BlockedDialog';
 import { ResultCard, pieceSig, type CardCompare, type Owner } from './otimizar/ResultCard';
 import { MIN_DEFS, activeMins, firstUnmet, formatMin, type MinKey } from './otimizar/minimos';
@@ -288,6 +290,14 @@ export function OtimizadorPanel({ index }: { index: number }) {
   const teamForRun = hitOnly ? v.resolved.team : optimizerTeam;
 
   /** Build atual: as peças do projeto ou as do inventário com o nome dele, avaliadas como os resultados (mesma fonte dos stats e das diferenças). */
+  // No alvo Manual sem peças reais o build é o KQM: mostra as 5 peças genéricas (mesmos rolls do motor), não as do inventário.
+  const kqmCurrent = (() => {
+    if (ui.goal !== 'dano' || ui.scope !== 'manual' || ref.pieces?.length || !character) return undefined;
+    const first = ref.primarySet ? setKeyOf(ref.primarySet) : 'SemSet';
+    const second = ref.secondarySet && ref.fourPiece !== true ? setKeyOf(ref.secondarySet) : first;
+    return kqmPieces(v.bundle.optimization.rolls[index], ref.artifacts, first, character.element).pieces
+      .map((p) => (p.slotKey === 'sands' || p.slotKey === 'goblet' ? { ...p, setKey: second } : p));
+  })();
   const current = (() => {
     if (!good) return null;
     try {
@@ -295,7 +305,7 @@ export function OtimizadorPanel({ index }: { index: number }) {
         good, characterKey, config: { ...config(), constraints: {} }, member: index, rolls: v.bundle.optimization.rolls, ref,
         resolved: { team: teamForRun, actions: v.resolved.actions, flatEffects: v.resolved.flatEffects, ampCoefficient: v.resolved.ampCoefficient },
         planilha: project.compat === 'planilha', game: data.game, effects: data.effects,
-      }, ref.pieces?.length ? (ref.pieces as GoodArtifact[]) : undefined);
+      }, ref.pieces?.length ? (ref.pieces as GoodArtifact[]) : kqmCurrent);
     } catch {
       return null;
     }
@@ -440,7 +450,7 @@ export function OtimizadorPanel({ index }: { index: number }) {
       ) : ui.goal === 'dano' && ui.scope === 'manual' ? (
         <>
           <div className="ot-top">
-            <CurrentBuild build={current} field={fieldMode} onField={() => setFieldMode(!fieldMode)} sets={data.game.artifacts} />
+            <CurrentBuild build={current} field={fieldMode} onField={() => setFieldMode(!fieldMode)} sets={data.game.artifacts} kqm={!!kqmCurrent} />
             <div className="ot-manualwrap">{manualBox}</div>
           </div>
           <section className="ot-bar" aria-label="Foco da otimização"><div className="ot-bar-cfg"><div className="ot-bar-line">{goalField}{alvoField}</div></div></section>

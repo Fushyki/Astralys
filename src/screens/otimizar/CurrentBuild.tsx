@@ -19,7 +19,7 @@ export function currentStats(build: OptimizedBuild, field: boolean): { k: string
   ];
 }
 
-export function CurrentBuild({ build, field, onField, sets }: { build: OptimizedBuild | null; field: boolean; onField: () => void; sets: SetInfo[] }) {
+export function CurrentBuild({ build, field, onField, sets, kqm }: { build: OptimizedBuild | null; field: boolean; onField: () => void; sets: SetInfo[]; kqm?: boolean }) {
   const setOf = (key: string) => sets.find((x) => norm(x.name) === norm(key));
   const bySlot = new Map((build?.pieces ?? []).map((p) => [p.slotKey, p]));
   const counts = new Map<string, number>();
@@ -27,7 +27,7 @@ export function CurrentBuild({ build, field, onField, sets }: { build: Optimized
   const chips = [...counts.entries()].sort((a, b) => b[1] - a[1]);
 
   return (
-    <Panel bar title="Build atual" badge={<span className="dz-badge num">{bySlot.size}/5 peças</span>}>
+    <Panel bar title={kqm ? 'Build atual (KQM)' : 'Build atual'} badge={<span className="dz-badge num">{bySlot.size}/5 peças</span>}>
       <ul className="ot-cur">
         {SLOTS.map((sl) => {
           const a = bySlot.get(sl.key);

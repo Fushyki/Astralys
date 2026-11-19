@@ -5,8 +5,9 @@ import { AppHeader } from '../app/AppHeader';
 import '../design/design.css';
 import { elementColor } from '../design/elements';
 import { CharacterAvatar, Chip } from '../design/primitives';
+import { useSettings } from '../app/settings';
 import { toast } from '../app/toast';
-import { adminToken, removeAsAdmin, setAdminToken, unpublishPublic, useTeam } from '../features/community/publish';
+import { removeAsAdmin, unpublishPublic, useTeam } from '../features/community/publish';
 import { ownedPublic } from '../features/community/published';
 import { useGameData } from '../features/rotation/data';
 import { listTeams, type CommunityTeam } from '../online/api';
@@ -26,19 +27,9 @@ export default function Comunidade() {
   const [state, setState] = useState<'loading' | 'ok' | 'error'>('loading');
   const [error, setError] = useState('');
   const [offset, setOffset] = useState(0);
-  const [, bump] = useState(0);
 
   const navigate = useNavigate();
-  // /comunidade#admin pede o token do dono do site e liga o modo de moderação (sair: /comunidade#sair)
-  useEffect(() => {
-    if (window.location.hash === '#admin') {
-      const t = window.prompt('Token de administrador:');
-      if (t) setAdminToken(t.trim());
-    } else if (window.location.hash === '#sair') setAdminToken('');
-    if (window.location.hash) window.history.replaceState(null, '', window.location.pathname);
-    bump((n) => n + 1);
-  }, []);
-  const isAdmin = !!adminToken();
+  const isAdmin = useSettings((st) => !!st.adminCode);
   const removerAdmin = (id: string) => {
     if (!window.confirm('Remover este time da galeria para todos?')) return;
     removeAsAdmin(id)
@@ -63,7 +54,6 @@ export default function Comunidade() {
       .then(() => {
         setItems((l) => l.filter((t) => t.id !== id));
         toast('Time removido da galeria.');
-        bump((n) => n + 1);
       })
       .catch((e: Error) => toast(e.message, 'error'));
 

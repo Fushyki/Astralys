@@ -45,7 +45,7 @@ function GearIcon() {
 
 /** Engrenagem no cabeçalho: reúne as escolhas de visual para não ocupar espaço nas telas. */
 function SettingsMenu() {
-  const { cardBg, setCardBg, cardFormat, setCardFormat } = useSettings();
+  const { cardBg, setCardBg, cardFormat, setCardFormat, adminCode, setAdminCode } = useSettings();
   return (
     <Menu label={<GearIcon />} ariaLabel="Configurações" className="dz-cfgbtn" align="right">
       {() => (
@@ -58,6 +58,10 @@ function SettingsMenu() {
           <div className="dz-settings-group">
             <span>Card dos times</span>
             <Segmented<PosterFormat> label="Card dos times" value={cardFormat} onChange={setCardFormat} options={(Object.keys(POSTER_LABEL) as PosterFormat[]).map((f) => ({ value: f, label: POSTER_LABEL[f] }))} />
+          </div>
+          <div className="dz-settings-group">
+            <label htmlFor="cfg-codigo">Código</label>
+            <input id="cfg-codigo" className="dz-input" type="password" autoComplete="off" placeholder="Só para o administrador" value={adminCode} onChange={(e) => setAdminCode(e.target.value)} />
           </div>
         </div>
       )}

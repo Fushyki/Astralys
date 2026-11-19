@@ -3,7 +3,7 @@ import { analyzeProject, effectiveDuration, parseProject, resolveProject, type R
 import { getPublic, publishTeam, unpublishTeam } from '../../online/api';
 import { cloneProject, loadStoredProject, saveProject } from '../rotation/persistence';
 import type { LoadedData } from '../rotation/data';
-import { forgetPublished, ownedPublic, publishedOf, rememberPublished } from './published';
+import { adminToken, forgetPublished, ownedPublic, publishedOf, rememberPublished } from './published';
 import { buildSummary } from './teamSummary';
 
 /** Calcula o time, publica e devolve o id público (o link é `/p/<id>`). */
@@ -40,24 +40,6 @@ export async function useTeam(publicId: string): Promise<string> {
   const copy = cloneProject(parseProject(meta.dados), meta.nome);
   saveProject({ ...copy, meta: { ...copy.meta, shared: false, favorite: false } });
   return copy.id;
-}
-
-const ADMIN = 'astralys.admin';
-/** Token do dono do site, guardado só no navegador dele (o servidor confere com `ADMIN_TOKEN`). */
-export const adminToken = (): string => {
-  try {
-    return localStorage.getItem(ADMIN) ?? '';
-  } catch {
-    return '';
-  }
-};
-export function setAdminToken(t: string): void {
-  try {
-    if (t) localStorage.setItem(ADMIN, t);
-    else localStorage.removeItem(ADMIN);
-  } catch {
-    /* sem armazenamento: o modo admin não persiste */
-  }
 }
 
 /** Moderação: o dono do site remove qualquer time da galeria. */

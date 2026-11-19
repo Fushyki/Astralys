@@ -51,3 +51,22 @@ export const saveAuthor = (name: string): void => {
     /* ignora */
   }
 };
+
+const ADMIN = 'astralys.admin';
+/** Código do dono do site (campo "Código" das Configurações), guardado só no navegador dele; o servidor confere com `ADMIN_TOKEN`. */
+export const adminToken = (): string => {
+  try {
+    return localStorage.getItem(ADMIN) ?? '';
+  } catch {
+    return '';
+  }
+};
+export function setAdminToken(t: string): void {
+  try {
+    if (t) localStorage.setItem(ADMIN, t);
+    else localStorage.removeItem(ADMIN);
+  } catch {
+    /* sem armazenamento: o modo admin não persiste */
+  }
+}
+

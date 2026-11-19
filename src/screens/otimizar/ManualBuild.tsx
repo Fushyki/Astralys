@@ -106,7 +106,7 @@ export function ManualBuild({ member, rolls, element, sets, onChange }: {
   return (
     <Panel bar title="Build do personagem" badge={<span className="dz-badge num">{pieces.length > 0 ? 'Manual' : 'KQM'}</span>}>
       <div className="ot-seg" role="group" aria-label="Como montar o build">
-        <button type="button" aria-pressed={pieces.length === 0} onClick={toKqm} title="O motor distribui os procs nos substats úteis (padrão KQM)">KQM (otimizado)</button>
+        <button type="button" aria-pressed={pieces.length === 0} onClick={toKqm} title="O motor distribui os procs nos substats úteis (padrão KQM)">Otimizado (KQM)</button>
         <button type="button" aria-pressed={pieces.length > 0} onClick={manual ? undefined : toManual} title={member.primarySet ? 'Cria 5 artefatos a partir do KQM para você ajustar' : 'Cria 5 artefatos sem set (sem bônus de set); escolha o set em cada peça, em Editar'}>Manual</button>
       </div>
 

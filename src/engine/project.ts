@@ -761,14 +761,14 @@ function withoutPlanilhaSeed(m: MemberInput): MemberInput {
  * Aplica as regras de composição do time aos membros já resolvidos. No modo planilha, os personagens que vêm da planilha
  * ficam só com os efeitos dela: sem as passivas e constelações curadas depois; fora dele, sem os números semeados que a curadoria repete.
  */
-/** Regra KQM: de 45 procs, 36 são úteis (CR, CD, escala, EM, ER) e o resto vai para HP, DEF e ATK fixo. */
-const KQM_USEFUL_ROLLS = 36;
+/** KQMS: 40 procs = 20 fixos (2 de cada substat) + 20 livres. */
+const KQM_LIQUID_ROLLS = 20;
 
 export function finalizeMembers(members: MemberInput[], planilha: boolean): MemberInput[] {
   return applyTeamRules(members).map((m) =>
     planilha
-      ? { ...(m.characterEffect && !m.characterEffect.fonte_info.includes('scripts/curation/') ? { ...m, characterEffect: planilhaEffect(m.characterEffect) } : m), weaponEffect: planilhaWeapon(m.weaponEffect), minOwnAtk: undefined, usefulRolls: undefined } // a planilha não tem o ATK próprio mínimo nem a regra dos procs úteis (o gabarito não muda)
-      : { ...withoutPlanilhaSeed(m), usefulRolls: m.usefulRolls ?? KQM_USEFUL_ROLLS },
+      ? { ...(m.characterEffect && !m.characterEffect.fonte_info.includes('scripts/curation/') ? { ...m, characterEffect: planilhaEffect(m.characterEffect) } : m), weaponEffect: planilhaWeapon(m.weaponEffect), minOwnAtk: undefined, liquidRolls: undefined } // a planilha não tem o ATK próprio mínimo nem o padrão KQMS (o gabarito não muda)
+      : { ...withoutPlanilhaSeed(m), liquidRolls: m.liquidRolls ?? KQM_LIQUID_ROLLS - 2 * Object.values(m.artifacts.rarity).filter((r) => r === 4).length },
   );
 }
 

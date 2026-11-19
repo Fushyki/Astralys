@@ -24,9 +24,10 @@ function redistribute(setKey: string, circlet: string): number[] {
   return [rolls.CR, rolls.CD, rolls['ATK%'], rolls.EM, rolls.ER];
 }
 
-it('KQM redistribui os procs conforme o set e o stat principal das peças', () => {
+it('KQM redistribui os procs conforme o set e o stat principal das peças, respeitando o teto do KQMS', () => {
   const codex = redistribute('ObsidianCodex', 'critDMG_');
   const gladiator = redistribute('GladiatorsFinale', 'critDMG_');
-  expect(codex[0]).toBeLessThan(gladiator[0]); // +40% de Taxa do set: menos procs de CR
-  expect(redistribute('ObsidianCodex', 'critRate_')[0]).toBeLessThan(codex[0]); // tiara com Taxa: menos procs de CR
+  expect(codex[0]).toBeLessThanOrEqual(gladiator[0]); // +40% de Taxa do set: nunca mais procs de CR
+  expect(Math.max(codex[0], gladiator[0])).toBeLessThanOrEqual(12); // 2 fixos + até 10 livres (2 por peça)
+  expect(redistribute('ObsidianCodex', 'critRate_')[0]).toBeLessThanOrEqual(10); // tiara de Taxa: a peça não recebe CR livre (4 peças x 2 = 8, + 2 fixos)
 });

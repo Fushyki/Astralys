@@ -105,19 +105,19 @@ export function optimizeMember(ctx: OptimizerContext, memberIndex: number, flatB
   const minR = config.minRollsPerSubstat;
 
   // ---- 1) Orçamento ----
-  // Regra KQM (`usefulRolls`): só os procs úteis (CR, CD, escala, EM, ER) saem do orçamento e não há mínimo por substat; o que sobra
-  // do total cai em HP, DEF e ATK fixo. Sem ela vale a regra da planilha (mínimo por substat, o resto é livre).
-  const kqm = m.usefulRolls !== undefined;
+  // Padrão KQM (`liquidRolls`, KQMS 3.0): 20 procs fixos (2 de cada substat) + 20 livres; cada substat recebe no máximo 2 procs livres por
+  // peça e nenhum numa peça cujo stat principal é ele. Sem `liquidRolls` vale a regra da planilha (mínimo por substat, o resto é livre).
+  const kqm = m.liquidRolls !== undefined;
   const total = m.totalRolls ?? defaultTotalRolls(m.artifacts);
-  const useful = kqm ? Math.min(m.usefulRolls!, total) : 0;
-  const free = kqm ? useful : Math.max(0, total - SUBSTATS.length * minR);
-  const floor = kqm ? 0 : minR; // mínimo de cada substat útil
-  const maxFree = (s: Substat) => Math.max(0, maxRollsFor(m.artifacts, s) - floor);
+  const free = kqm ? Math.max(0, m.liquidRolls!) : Math.max(0, total - SUBSTATS.length * minR);
+  const floor = minR; // procs fixos de cada substat
+  const slotMains = ['HP', 'ATK', m.artifacts.sands, m.artifacts.goblet, m.artifacts.circlet];
+  const maxFree = (s: Substat) => (kqm ? 2 * slotMains.filter((mn) => mn !== s).length : Math.max(0, maxRollsFor(m.artifacts, s) - floor));
 
   const er0 = 1 + statics.er + floor * rv.ER;
   const minER = m.minER ?? 0;
   const erRolls = minER <= er0 ? 0 : Math.min(maxFree('ER'), free, ceilTol((minER - er0) / rv.ER));
-  const damageRolls = Math.min(MAX_DAMAGE_ROLLS, free - erRolls);
+  let damageRolls = Math.min(MAX_DAMAGE_ROLLS, free - erRolls);
   // ATK próprio mínimo: preenchido depois que a escala principal é conhecida (precisa de maxScale)
   const erFinal = er0 + erRolls * rv.ER;
   const erAtk = weaponErAtkPct(m, erFinal);
@@ -198,20 +198,13 @@ export function optimizeMember(ctx: OptimizerContext, memberIndex: number, flatB
     ? supportStat!
     : weight.atk >= weight.hp && weight.atk >= weight.def ? 'atk' : weight.hp >= weight.def ? 'hp' : 'def';
   const scaleSubstat: Substat = ({ atk: 'ATK%', hp: 'HP%', def: 'DEF%' } as const)[mainScale];
-  // Rolls fixos de cada substat antes da busca: o mínimo (planilha) ou, na regra KQM, a sobra nos substats sem uso.
   const base = minimumRolls(floor);
-  if (kqm) {
-    const junk = (['HP%', 'HP', 'DEF%', 'DEF', 'ATK'] as Substat[]).filter((x) => x !== scaleSubstat);
-    let left = total - useful;
-    for (let progress = true; left > 0 && progress;) {
-      progress = false;
-      for (const x of junk) if (left > 0 && base[x] < maxRollsFor(m.artifacts, x)) { base[x]++; left--; progress = true; }
-    }
-  }
   const maxScale = maxFree(scaleSubstat);
   const maxEM = maxFree('EM');
   const maxCR = maxFree('CR');
   const maxCD = maxFree('CD');
+  // Os tetos por substat limitam o que cabe: procs além deles não têm onde entrar.
+  if (kqm) damageRolls = Math.min(damageRolls, maxScale + maxEM + maxCR + maxCD);
 
   // ---- 4) Funções de avaliação ----
   const plume = pick(PLUME_ATK, m.artifacts.rarity.plume);
@@ -282,7 +275,7 @@ export function optimizeMember(ctx: OptimizerContext, memberIndex: number, flatB
   let s = 0;
   if (support) {
     s = Math.min(damageRolls, maxScale);
-    c = damageRolls - s;
+    c = kqm ? Math.min(damageRolls - s, maxCR) : damageRolls - s;
     k = c; // o resto vai para crítico (CR), como na planilha
   } else {
     const forced = m.forcedCritRolls;

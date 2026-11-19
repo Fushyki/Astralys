@@ -12,16 +12,24 @@ const effects: EffectsData = { characters: json('src/effects/characters.json'), 
 const run = (members: (typeof resolved)['team']['members']) =>
   analyzeProject({ team: { ...resolved.team, members }, actions: resolved.actions, flatEffects: resolved.flatEffects, ampCoefficient: resolved.ampCoefficient }).optimization;
 const resolved = resolveProject(sampleForApp(), game, effects);
-const sum = (r: Record<string, number>, keys: string[]) => keys.reduce((t, k) => t + r[k], 0);
 
-it('KQM: 36 procs úteis (CR, CD, escala, EM, ER) e o resto do total em HP, DEF e ATK fixo, sem mínimo por substat', () => {
+/** KQMS 3.0: 40 procs = 20 fixos (2 de cada) + 20 livres; no máximo 2 livres por substat em cada peça e nenhum no stat principal da peça. */
+it('KQM: 2 procs fixos em cada substat e no máximo 20 livres, com teto de 2 por peça (e nenhum no stat principal)', () => {
   const o = run(resolved.team.members);
   resolved.team.members.forEach((m, i) => {
-    expect(m.usefulRolls).toBe(36);
+    const pecas4 = Object.values(m.artifacts.rarity).filter((x) => x === 4).length;
+    expect(m.liquidRolls).toBe(20 - 2 * pecas4); // peça 4★: -2 procs livres
     const r = o.rolls[i];
-    expect(sum(r, ['CR', 'CD', 'ATK%', 'EM', 'ER']) + (o.members[i].mainScale === 'atk' ? 0 : r['HP%'] + r['DEF%'])).toBeLessThanOrEqual(36);
-    expect(o.members[i].budget.free).toBe(36);
-    expect(Object.values(r).reduce((t, x) => t + x, 0)).toBe(m.totalRolls ?? 45);
+    const mains = ['HP', 'ATK', m.artifacts.sands, m.artifacts.goblet, m.artifacts.circlet];
+    let livres = 0;
+    for (const [sub, n] of Object.entries(r)) {
+      const cap = 2 * mains.filter((x) => x !== sub).length;
+      expect(n - 2).toBeGreaterThanOrEqual(0);
+      expect(n - 2).toBeLessThanOrEqual(cap);
+      livres += n - 2;
+    }
+    expect(livres).toBeLessThanOrEqual(m.liquidRolls!);
+    expect(o.members[i].budget.free).toBe(m.liquidRolls);
   });
 });
 

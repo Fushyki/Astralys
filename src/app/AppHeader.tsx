@@ -46,7 +46,10 @@ function GearIcon() {
 /** Engrenagem no cabeçalho: reúne as escolhas de visual para não ocupar espaço nas telas. */
 function SettingsMenu() {
   const { cardBg, setCardBg, cardFormat, setCardFormat, adminCode, setAdminCode } = useSettings();
+  const adminOk = useSettings((s) => s.adminOk);
   return (
+    <>
+    {adminOk && <span className="dz-adm" title="Modo administrador ativo" role="status">ADM</span>}
     <Menu label={<GearIcon />} ariaLabel="Configurações" className="dz-cfgbtn" align="right">
       {() => (
         <div className="dz-settings">
@@ -66,6 +69,7 @@ function SettingsMenu() {
         </div>
       )}
     </Menu>
+    </>
   );
 }
 

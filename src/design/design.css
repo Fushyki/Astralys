@@ -305,3 +305,9 @@ body { font-family: var(--font-body); font-size: 15px; line-height: 1.5; -webkit
 }
 
 .dz-burger { display: none; place-items: center; width: 44px; height: 44px; margin-left: auto; border: 1px solid var(--border-ctl-hi); border-radius: var(--r-ctl); background: transparent; color: var(--text); font-size: 20px; cursor: pointer; }
+
+/* Selo do administrador, ao lado da engrenagem */
+.dz-adm { display: inline-flex; align-items: center; height: 28px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--gold); background: linear-gradient(135deg, rgba(233, 196, 106, .22), rgba(233, 196, 106, .06)); color: var(--gold-soft, var(--gold)); font-family: var(--font-display); font-weight: 700; font-size: 14px; letter-spacing: .14em; box-shadow: 0 0 12px rgba(233, 196, 106, .25); }
+.dz-header > .dz-adm { margin-left: auto; }
+.dz-header > .dz-adm + .dz-menu { margin-left: 10px; }
+@media (max-width: 900px) { .dz-header > .dz-adm { order: 2; } }

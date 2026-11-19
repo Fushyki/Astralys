@@ -92,3 +92,7 @@ export const listTeams = (f: { q: string; personagem: string; versao: string; of
   return call<CommunityTeam[]>(`/times?${qs}`);
 };
 
+
+/** O código é o do dono do site? Resolve com true/false (erro de rede conta como false). */
+export const verifyAdmin = (code: string): Promise<boolean> =>
+  code ? call<{ admin: boolean }>('/admin/verificar', { headers: { 'X-Admin-Token': code } }).then((r) => r.admin, () => false) : Promise.resolve(false);

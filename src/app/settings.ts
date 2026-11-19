@@ -1,6 +1,9 @@
 /** Preferências visuais do site (menu de configurações do cabeçalho). Ficam só neste navegador. */
 import { create } from 'zustand';
 import { adminToken, setAdminToken } from '../features/community/published';
+import { verifyAdmin } from '../online/api';
+import { ONLINE_ENABLED } from '../online/config';
+import { toast } from './toast';
 import { loadVaultCardFormat, saveVaultCardFormat } from '../features/rotation/persistence';
 import type { PosterFormat } from '../screens/card/PosterCard';
 
@@ -23,18 +26,34 @@ interface Settings {
   cardFormat: PosterFormat;
   /** Código de administrador (dono do site): libera a moderação da Comunidade. Vazio para os demais. */
   adminCode: string;
+  /** O servidor confirmou o código (selo ADM e botões de moderação só aparecem com isto). */
+  adminOk: boolean;
   setAdminCode: (v: string) => void;
   setCardBg: (v: CardBg) => void;
   setCardFormat: (f: PosterFormat) => void;
 }
 
+let adminTimer: ReturnType<typeof setTimeout> | undefined;
+
 export const useSettings = create<Settings>((set) => ({
   cardBg: loadBg(),
   cardFormat: loadVaultCardFormat(),
   adminCode: adminToken(),
+  adminOk: false,
   setAdminCode: (v) => {
-    setAdminToken(v.trim());
-    set({ adminCode: v.trim() });
+    const code = v.trim();
+    setAdminToken(code);
+    set({ adminCode: code, adminOk: false });
+    if (adminTimer) clearTimeout(adminTimer);
+    if (!code || !ONLINE_ENABLED) return;
+    // espera parar de digitar e pergunta ao servidor; só avisa quando acerta (quem não é admin não vê nada)
+    adminTimer = setTimeout(() => {
+      void verifyAdmin(code).then((ok) => {
+        if (useSettings.getState().adminCode !== code) return;
+        set({ adminOk: ok });
+        if (ok) toast('Modo administrador ativado.');
+      });
+    }, 600);
   },
   setCardBg: (v) => {
     applyBg(v);
@@ -48,3 +67,11 @@ export const useSettings = create<Settings>((set) => ({
 }));
 
 applyBg(useSettings.getState().cardBg);
+
+// código guardado de uma visita anterior: confirma de novo no servidor
+if (useSettings.getState().adminCode && ONLINE_ENABLED) {
+  const code = useSettings.getState().adminCode;
+  void verifyAdmin(code).then((ok) => {
+    if (useSettings.getState().adminCode === code) useSettings.setState({ adminOk: ok });
+  });
+}

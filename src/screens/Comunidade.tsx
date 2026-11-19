@@ -29,7 +29,7 @@ export default function Comunidade() {
   const [offset, setOffset] = useState(0);
 
   const navigate = useNavigate();
-  const isAdmin = useSettings((st) => !!st.adminCode);
+  const isAdmin = useSettings((st) => st.adminOk);
   const removerAdmin = (id: string) => {
     if (!window.confirm('Remover este time da galeria para todos?')) return;
     removeAsAdmin(id)

@@ -1,10 +1,13 @@
 /** Galeria da comunidade (/comunidade): times publicados sem conta, com busca por personagem e a rotação de cada um. */
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { AppHeader } from '../app/AppHeader';
 import '../design/design.css';
 import { elementColor } from '../design/elements';
 import { CharacterAvatar, Chip } from '../design/primitives';
+import { toast } from '../app/toast';
+import { unpublishPublic, useTeam } from '../features/community/publish';
+import { ownedPublic } from '../features/community/published';
 import { useGameData } from '../features/rotation/data';
 import { listTeams, type CommunityTeam } from '../online/api';
 import { ONLINE_ENABLED } from '../online/config';
@@ -23,6 +26,27 @@ export default function Comunidade() {
   const [state, setState] = useState<'loading' | 'ok' | 'error'>('loading');
   const [error, setError] = useState('');
   const [offset, setOffset] = useState(0);
+
+  const navigate = useNavigate();
+  const [, bump] = useState(0);
+  const utilizar = (id: string) =>
+    useTeam(id).then((copyId) => navigate(`/projeto/${copyId}`)).catch((e: Error) => toast(e.message, 'error'));
+  const copiarLink = async (id: string) => {
+    try {
+      await navigator.clipboard.writeText(`${window.location.origin}/p/${id}`);
+      toast('Link copiado.');
+    } catch {
+      toast(`${window.location.origin}/p/${id}`);
+    }
+  };
+  const parar = (id: string) =>
+    unpublishPublic(id)
+      .then(() => {
+        setItems((l) => l.filter((t) => t.id !== id));
+        toast('Time removido da galeria.');
+        bump((n) => n + 1);
+      })
+      .catch((e: Error) => toast(e.message, 'error'));
 
   const characters = data?.game.characters ?? [];
   const characterOf = (name: string) => characters.find((c) => c.name === name);
@@ -125,7 +149,11 @@ export default function Comunidade() {
                 )}
                 <footer className="cm-foot">
                   <Chip>{r?.actionCount ?? 0} golpes</Chip>
-                  <Link className="dz-btn gold" to={`/p/${t.id}`}>Ver time e rotação</Link>
+                  <span className="cm-actions">
+                    <button type="button" className="dz-btn gold" onClick={() => void utilizar(t.id)}>Utilizar</button>
+                    <button type="button" className="dz-btn" onClick={() => void copiarLink(t.id)}>Copiar link</button>
+                    {ownedPublic(t.id) && <button type="button" className="dz-btn" onClick={() => void parar(t.id)}>Parar de compartilhar</button>}
+                  </span>
                 </footer>
               </li>
             );

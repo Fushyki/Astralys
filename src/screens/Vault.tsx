@@ -16,7 +16,7 @@ import { useSettings } from '../app/settings';
 import { toast } from '../app/toast';
 import { copyCardImage } from './card/copyCard';
 import { POSTER_SIZE, PosterCard, ScaledPoster } from './card/PosterCard';
-import { saveAuthor, savedAuthor } from '../features/community/published';
+import { publishedOf, saveAuthor, savedAuthor } from '../features/community/published';
 import { publishProject, unpublishProject } from '../features/community/publish';
 import { ONLINE_ENABLED } from '../online/config';
 import { NO_FILTERS, filterProjects, type VaultFilters } from '../features/vault/vaultModel';
@@ -113,6 +113,17 @@ export default function Vault() {
       if (copied) toast('Link público copiado.');
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Não foi possível atualizar o compartilhamento.');
+    }
+  };
+  const copyPublicLink = async (id: string) => {
+    const rec = publishedOf(id);
+    if (!rec) return setError('Este time foi publicado em outro navegador; o link está lá.');
+    const link = `${window.location.origin}/p/${rec.id}`;
+    try {
+      await navigator.clipboard.writeText(link);
+      toast('Link público copiado.');
+    } catch {
+      setShareMsg(`Link do time: ${link}`);
     }
   };
   const remove = (id: string) => {
@@ -252,7 +263,12 @@ export default function Vault() {
                             <button type="button" role="menuitem" className="dz-menu-item" onClick={() => { close(); void copyCard(p.id, p.name); }}>Copiar card</button>
                             <Link role="menuitem" className="dz-menu-item" to={`/card/${p.id}`} onClick={close}>Editar o card</Link>
                             <Link role="menuitem" className="dz-menu-item" to={`/comparar?a=${p.id}`} onClick={close}>Comparar</Link>
-                            {ONLINE_ENABLED && !p.isSample && <button type="button" role="menuitem" className="dz-menu-item" onClick={() => { close(); void toggleShare(p.id); }}>{p.shared ? 'Parar de compartilhar' : 'Compartilhar'}</button>}
+                            {ONLINE_ENABLED && !p.isSample && (p.shared ? (
+                              <>
+                                <button type="button" role="menuitem" className="dz-menu-item" onClick={() => { close(); void copyPublicLink(p.id); }}>Copiar link público</button>
+                                <button type="button" role="menuitem" className="dz-menu-item" onClick={() => { close(); void toggleShare(p.id); }}>Parar de compartilhar</button>
+                              </>
+                            ) : <button type="button" role="menuitem" className="dz-menu-item" onClick={() => { close(); void toggleShare(p.id); }}>Compartilhar</button>)}
                             <button type="button" role="menuitem" className="dz-menu-item" onClick={() => { close(); duplicate(p.id); }}>Duplicar</button>
                             <button type="button" role="menuitem" className="dz-menu-item" onClick={() => { close(); setRenaming(p.id); }}>Renomear</button>
                             <button type="button" role="menuitem" className="dz-menu-item" onClick={() => { close(); void copyLink(p.id); }}>Copiar link</button>

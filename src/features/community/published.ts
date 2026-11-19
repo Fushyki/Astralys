@@ -12,6 +12,12 @@ function read(): Map {
   }
 }
 
+/** Id público -> id do projeto local, só dos times que ESTE navegador publicou. */
+export const ownedPublic = (publicId: string): { projectId: string; token: string } | null => {
+  const hit = Object.entries(read()).find(([, v]) => v.id === publicId);
+  return hit ? { projectId: hit[0], token: hit[1].token } : null;
+};
+
 export const publishedOf = (projectId: string) => read()[projectId] ?? null;
 
 export function rememberPublished(projectId: string, id: string, token: string): void {

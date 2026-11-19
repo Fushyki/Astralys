@@ -1,8 +1,9 @@
 /** Publicar/despublicar um time na galeria da comunidade (sem conta). */
-import { analyzeProject, effectiveDuration, resolveProject, type RotationProject } from '../../engine';
-import { publishTeam, unpublishTeam } from '../../online/api';
+import { analyzeProject, effectiveDuration, parseProject, resolveProject, type RotationProject } from '../../engine';
+import { getPublic, publishTeam, unpublishTeam } from '../../online/api';
+import { cloneProject, loadStoredProject, saveProject } from '../rotation/persistence';
 import type { LoadedData } from '../rotation/data';
-import { forgetPublished, publishedOf, rememberPublished } from './published';
+import { forgetPublished, ownedPublic, publishedOf, rememberPublished } from './published';
 import { buildSummary } from './teamSummary';
 
 /** Calcula o time, publica e devolve o id público (o link é `/p/<id>`). */
@@ -17,10 +18,26 @@ export async function publishProject(p: RotationProject, data: LoadedData, autho
   return id;
 }
 
-/** Tira o time da galeria (precisa do token guardado neste navegador). */
-export async function unpublishProject(projectId: string): Promise<void> {
+/** Tira o time da galeria. Só funciona neste navegador, onde está o token de quem publicou (o servidor recusa qualquer outro). */
+export async function unpublishPublic(publicId: string): Promise<void> {
+  const own = ownedPublic(publicId);
+  if (!own) throw new Error('Só quem publicou este time (neste navegador) pode removê-lo.');
+  await unpublishTeam(publicId, own.token);
+  forgetPublished(own.projectId);
+  const local = loadStoredProject(own.projectId);
+  if (local) saveProject({ ...local, meta: { ...local.meta, shared: false } });
+}
+
+export const unpublishProject = (projectId: string): Promise<void> => {
   const rec = publishedOf(projectId);
   if (!rec) throw new Error('Este time foi publicado em outro navegador; só lá dá para removê-lo.');
-  await unpublishTeam(rec.id, rec.token);
-  forgetPublished(projectId);
+  return unpublishPublic(rec.id);
+};
+
+/** "Utilizar": baixa o time da galeria e salva uma cópia nos seus Times. Devolve o id da cópia. */
+export async function useTeam(publicId: string): Promise<string> {
+  const meta = await getPublic(publicId);
+  const copy = cloneProject(parseProject(meta.dados), meta.nome);
+  saveProject({ ...copy, meta: { ...copy.meta, shared: false, favorite: false } });
+  return copy.id;
 }

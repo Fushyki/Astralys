@@ -12,3 +12,4 @@
 .cm-seq .cm-more { border-style: dashed; }
 .cm-foot { margin-top: auto; display: flex; gap: 8px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
 .cm-loadmore { align-self: center; margin: 16px 0; }
+.cm-actions { display: flex; gap: 8px; flex-wrap: wrap; }

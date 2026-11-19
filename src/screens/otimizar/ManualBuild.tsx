@@ -164,7 +164,7 @@ export function ManualBuild({ member, rolls, element, sets, onChange, focus, red
           </div>
           {focus}
           <button type="button" className="dz-btn gold" onClick={kqm} title="Redistribui os procs pelos substats úteis, considerando os stats principais, o set e os buffs ativos">Otimizado (KQM)</button>
-          <p className="small">O KQM redistribui até 36 procs úteis (Taxa e Dano Crítico, ATK%/HP%/DEF%, Maestria e Recarga) para o dano do foco, considerando os stats principais, o set e os buffs ativos. A Recarga mínima sai primeiro; o que sobra vai para HP, DEF e ATK fixo. Cada proc vale 85% do máximo. Você pode ajustar os procs na tabela ou editar uma peça.</p>
+          <p className="small">Padrão KQM (KQMS): 40 procs = 20 fixos (2 de cada substat) + 20 livres. Cada substat recebe no máximo 2 procs livres por peça, e nenhum numa peça cujo stat principal é ele (peça 4★: −2 livres). A Recarga mínima sai primeiro; o resto vai para o dano do foco, considerando os stats principais, o set e os buffs ativos. Cada proc vale 85% do máximo. Você pode ajustar os procs na tabela ou editar uma peça.</p>
           {!member.primarySet && real.length === 0 && <p className="note">Sem set escolhido: as peças ficam sem bônus de set. Escolha o set em Resumo e build ou em Editar, em cada peça.</p>}
           {leftover > 0 && <p className="note">{leftover} {leftover === 1 ? 'proc não coube' : 'procs não couberam'} nas peças (limite de 4 substats e de {ROLLS_PER_PIECE[0]} procs por peça).</p>}
           {fromInventory && <p className="muted small">Peças do inventário equipadas. Ao editar uma ou usar o KQM, as 5 viram cópias manuais (o inventário não muda).</p>}

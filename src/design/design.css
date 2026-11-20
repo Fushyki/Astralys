@@ -311,3 +311,8 @@ body { font-family: var(--font-body); font-size: 15px; line-height: 1.5; -webkit
 .dz-header > .dz-adm { margin-left: auto; }
 .dz-header > .dz-adm + .dz-menu { margin-left: 10px; }
 @media (max-width: 900px) { .dz-header > .dz-adm { order: 2; } }
+
+/* Diálogo curto que pede um texto (NameDialog): altura do conteúdo, não dos seletores. */
+.dz-ask { width: min(440px, 100%); height: auto; }
+.dz-ask-body { display: flex; flex-direction: column; gap: 10px; padding: 20px; }
+.dz-ask-foot { display: flex; justify-content: flex-end; gap: 8px; padding: 14px 20px; border-top: 1px solid var(--border); }

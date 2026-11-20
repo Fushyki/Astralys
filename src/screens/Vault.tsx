@@ -22,6 +22,7 @@ import { ONLINE_ENABLED } from '../online/config';
 import { NO_FILTERS, filterProjects, type VaultFilters } from '../features/vault/vaultModel';
 import './vault.css';
 import { Button } from '../design/Button';
+import { NameDialog } from '../design/NameDialog';
 
 const ELEMENTS = ['Pyro', 'Hydro', 'Anemo', 'Electro', 'Dendro', 'Cryo', 'Geo'];
 
@@ -84,6 +85,7 @@ export default function Vault() {
     if (trimmed) edit(id, (p) => (trimmed === p.name ? null : { ...p, name: trimmed, meta: { ...p.meta, ...(p.meta.card?.title ? { card: { ...p.meta.card, title: trimmed } } : {}), updatedAt: new Date().toISOString() } }));
   };
   const [shareMsg, setShareMsg] = useState<string | null>(null);
+  const [sharing, setSharing] = useState<string | null>(null);
   const toggleShare = async (id: string) => {
     const current = loadProject(id);
     if (!current || !data) return;
@@ -96,10 +98,20 @@ export default function Vault() {
         setShareMsg('Time removido da galeria: o link deixou de funcionar.');
         return;
       }
-      const typed = window.prompt('Seu nome na galeria (opcional, aparece para todos):', savedAuthor());
-      if (typed === null) return;
-      saveAuthor(typed.trim());
-      const pubId = await publishProject(current, data, typed.trim());
+      setSharing(id); // pergunta o nome no diálogo do Astralys; a publicação segue em `publish`
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Não foi possível atualizar o compartilhamento.');
+    }
+  };
+  const publish = async (id: string, name: string) => {
+    setSharing(null);
+    const current = loadProject(id);
+    if (!current || !data) return;
+    setError(null);
+    setShareMsg(null);
+    try {
+      saveAuthor(name);
+      const pubId = await publishProject(current, data, name);
       edit(id, (p) => ({ ...p, meta: { ...p.meta, shared: true } }));
       const link = `${window.location.origin}/p/${pubId}`;
       let copied = false;
@@ -321,6 +333,17 @@ export default function Vault() {
           </ul>
         )}
       </main>
+      {sharing && (
+        <NameDialog
+          title="Compartilhar na Comunidade"
+          label="Seu nome (opcional)"
+          hint="O time e a rotação ficam públicos na aba Comunidade, com este nome. Deixe em branco para publicar sem nome."
+          initial={savedAuthor()}
+          confirm="Compartilhar"
+          onSubmit={(name) => void publish(sharing, name)}
+          onClose={() => setSharing(null)}
+        />
+      )}
     </div>
   );
 }

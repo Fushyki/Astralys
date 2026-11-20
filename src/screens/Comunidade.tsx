@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { AppHeader } from '../app/AppHeader';
 import '../design/design.css';
 import { elementColor } from '../design/elements';
-import { CharacterAvatar, Chip } from '../design/primitives';
+import { CharacterAvatar } from '../design/primitives';
 import { useSettings } from '../app/settings';
 import { toast } from '../app/toast';
 import { removeAsAdmin, unpublishPublic, useTeam } from '../features/community/publish';
@@ -12,7 +12,7 @@ import { ownedPublic } from '../features/community/published';
 import { useGameData } from '../features/rotation/data';
 import { listTeams, type CommunityTeam } from '../online/api';
 import { ONLINE_ENABLED } from '../online/config';
-import { compact, formatDecimal } from '../ui/format';
+import { formatDecimal } from '../ui/format';
 import './comunidade.css';
 
 const PAGE = 24;
@@ -123,9 +123,10 @@ export default function Comunidade() {
           </div>
         )}
 
-        <ul className="dz-grid c3 cm-list">
+        <ul className="cm-list">
           {items.map((t) => {
             const r = t.resumo;
+            const duration = Math.max(r?.duration ?? 0, 0.1);
             return (
               <li key={t.id} className="dz-panel cm-card">
                 <header className="cm-head">
@@ -135,35 +136,41 @@ export default function Comunidade() {
                 <div className="cm-faces">
                   {t.members.map((n) => (
                     <span key={n} className="cm-face" title={n}>
-                      <CharacterAvatar name={n} icon={characterOf(n)?.icon} color={elementColor(characterOf(n)?.element)} size={44} />
+                      <CharacterAvatar name={n} icon={characterOf(n)?.icon} color={elementColor(characterOf(n)?.element)} size={52} />
                     </span>
                   ))}
                 </div>
                 {r && (
                   <>
-                    <div className="cm-kp">
-                      <span><b className="num">{compact(r.dps)}</b> DPS</span>
-                      <span><b className="num">{compact(r.dpr)}</b> DPR</span>
-                      <span className="num">{formatDecimal(r.duration, 1)} s</span>
+                    <div className="cm-tl" role="img" aria-label={`Linha do tempo da rotação: ${r.actionCount} golpes em ${formatDecimal(r.duration, 1)} segundos`}>
+                      {r.members.map((m, mi) => {
+                        const color = elementColor(characterOf(m.character)?.element);
+                        const mine = r.sequence.filter((x) => x.member === mi);
+                        return (
+                          <div key={mi} className="cm-lane" style={{ ['--c' as string]: color }}>
+                            <span className="cm-lane-n">{m.character}</span>
+                            <span className="cm-track">
+                              {mine.map((x, i) => (
+                                <i key={i} title={`${x.label}${x.times > 1 ? ` ×${x.times}` : ''}${x.time !== undefined ? ` · ${formatDecimal(x.time, 1)} s` : ''}`}
+                                  style={{ left: `${Math.min(97, ((x.time ?? (r.sequence.indexOf(x) / Math.max(1, r.sequence.length)) * duration) / duration) * 100)}%` }} />
+                              ))}
+                            </span>
+                          </div>
+                        );
+                      })}
+                      <div className="cm-axis num"><span>0 s</span><span>{formatDecimal(r.duration, 1)} s</span></div>
                     </div>
-                    <ol className="cm-seq" aria-label="Rotação">
-                      {r.sequence.map((s, i) => (
-                        <li key={i} style={{ ['--c' as string]: elementColor(characterOf(r.members[s.member]?.character ?? '')?.element) }} title={r.members[s.member]?.character}>
-                          {s.label}{s.times > 1 ? ` ×${s.times}` : ''}
-                        </li>
-                      ))}
-                      {r.actionCount > r.sequence.length && <li className="cm-more">…</li>}
-                    </ol>
+                    <div className="cm-kp">
+                      <span><b className="num">{formatDecimal(r.duration, 1)}</b> s</span>
+                      <span><b className="num">{r.actionCount}</b> golpes</span>
+                    </div>
                   </>
                 )}
                 <footer className="cm-foot">
-                  <Chip>{r?.actionCount ?? 0} golpes</Chip>
-                  <span className="cm-actions">
-                    <button type="button" className="dz-btn gold" onClick={() => void utilizar(t.id)}>Utilizar</button>
-                    <button type="button" className="dz-btn" onClick={() => void copiarLink(t.id)}>Copiar link</button>
-                    {isAdmin && !ownedPublic(t.id) && <button type="button" className="dz-btn" onClick={() => removerAdmin(t.id)}>Remover (admin)</button>}
-                    {ownedPublic(t.id) && <button type="button" className="dz-btn" onClick={() => void parar(t.id)}>Parar de compartilhar</button>}
-                  </span>
+                  <button type="button" className="dz-btn gold" onClick={() => void utilizar(t.id)}>Utilizar</button>
+                  <button type="button" className="dz-btn" onClick={() => void copiarLink(t.id)}>Copiar link</button>
+                  {isAdmin && !ownedPublic(t.id) && <button type="button" className="dz-btn" onClick={() => removerAdmin(t.id)}>Remover (admin)</button>}
+                  {ownedPublic(t.id) && <button type="button" className="dz-btn" onClick={() => void parar(t.id)}>Parar de compartilhar</button>}
                 </footer>
               </li>
             );

@@ -19,4 +19,10 @@ describe('buildSummary', () => {
     expect(r.sequence).toHaveLength(1);
     expect(r.sequence[0].times).toBe(2 * Math.max(1, Math.round(a.executions)));
   });
+  it('guarda os golpes do card (arredondados) e fica abaixo do limite do servidor mesmo com muitos', () => {
+    const hits = Array.from({ length: 120 }, (_, i) => ({ at: i / 120 + 0.00049, to: 0.9, ticks: Array.from({ length: 80 }, (_, k) => k / 80), member: i % 4, weight: 0.123456, burst: false, letter: 'E', count: 80 }));
+    const r = buildSummary(p, { dps: 1, dpr: 2, duration: 30, shares: [1], hits });
+    expect(r.hits![1].at).toBe(0.009);
+    expect(JSON.stringify(r).length).toBeLessThan(20000);
+  });
 });

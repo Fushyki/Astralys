@@ -4,13 +4,16 @@ import { getPublic, publishTeam, unpublishTeam } from '../../online/api';
 import { cloneProject, loadStoredProject, saveProject } from '../rotation/persistence';
 import type { LoadedData } from '../rotation/data';
 import { adminToken, forgetPublished, ownedPublic, publishedOf, rememberPublished } from './published';
+import { hitTypeLookup, rotationHits } from '../card/cardModel';
 import { buildSummary } from './teamSummary';
 
 /** Calcula o time, publica e devolve o id público (o link é `/p/<id>`). */
 export async function publishProject(p: RotationProject, data: LoadedData, author: string): Promise<string> {
   const r = resolveProject(p, data.game, data.effects);
   const res = analyzeProject({ team: r.team, actions: r.actions, flatEffects: r.flatEffects, ampCoefficient: r.ampCoefficient }).optimization.result;
-  const resumo = buildSummary(p, { dps: res.totals.dps, dpr: res.totals.avg, duration: effectiveDuration(p), shares: res.members.map((m) => m.share) });
+  const avgById = new Map(res.actions.map((a) => [a.action.id, a.avg]));
+  const hits = rotationHits(p, (id) => avgById.get(id) ?? 0, hitTypeLookup(r));
+  const resumo = buildSummary(p, { dps: res.totals.dps, dpr: res.totals.avg, duration: effectiveDuration(p), shares: res.members.map((m) => m.share), hits });
   const { id, edit_token } = await publishTeam({
     nome: p.name, author, version: p.gameVersion, members: p.members.map((m) => m.character), resumo, dados: { ...p, meta: { ...p.meta, shared: false, favorite: false } },
   });

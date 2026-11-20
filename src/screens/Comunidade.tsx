@@ -3,8 +3,9 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppHeader } from '../app/AppHeader';
 import '../design/design.css';
-import { elementColor } from '../design/elements';
-import { CharacterAvatar } from '../design/primitives';
+import { memberColors } from '../design/elements';
+import type { CardModel } from '../features/card/cardModel';
+import { PosterCard, ScaledPoster } from './card/PosterCard';
 import { useSettings } from '../app/settings';
 import { toast } from '../app/toast';
 import { removeAsAdmin, unpublishPublic, useTeam } from '../features/community/publish';
@@ -12,7 +13,6 @@ import { ownedPublic } from '../features/community/published';
 import { useGameData } from '../features/rotation/data';
 import { listTeams, type CommunityTeam } from '../online/api';
 import { ONLINE_ENABLED } from '../online/config';
-import { formatDecimal } from '../ui/format';
 import './comunidade.css';
 
 const PAGE = 24;
@@ -59,6 +59,22 @@ export default function Comunidade() {
 
   const characters = data?.game.characters ?? [];
   const characterOf = (name: string) => characters.find((c) => c.name === name);
+
+  /** O card da galeria é o 4:5 do site (versão enxuta), montado só com o resumo que o time publicou. */
+  const modelOf = (t: CommunityTeam): CardModel | null => {
+    const r = t.resumo;
+    if (!r) return null;
+    const duration = Math.max(r.duration, 0.1);
+    const colors = memberColors(t.members.map((n) => characterOf(n)?.element));
+    const members = t.members.map((n, i) => ({ name: n, element: characterOf(n)?.element ?? null, icon: characterOf(n)?.icon, share: 0, avg: 0, weapon: '', sets: [], gear: [], mains: '', er: 1, critRate: 0, critDmg: 0, color: colors[i] }));
+    // Times publicados antes do card não têm os golpes do card: a sequência (com o instante, quando há) ocupa o lugar.
+    const hits = r.hits ?? r.sequence.map((x, i) => ({ at: x.time !== undefined ? Math.min(1, x.time / duration) : i / Math.max(1, r.sequence.length), member: x.member, weight: 0.5, burst: false, letter: '', count: Math.max(1, x.times) }));
+    return {
+      title: t.nome, badge: '', tag: '', members, dps: 0, dpr: 0, duration: r.duration, sequence: '', enemyLevel: 0, nick: t.author,
+      accent: colors[0] ?? '#e9c46a', characterLevel: 0, reaction: null,
+      lanes: t.members.map((_, i) => ({ member: i, hits: hits.filter((h) => h.member === i) })),
+    };
+  };
 
   // mudou um filtro: volta para a primeira página
   useEffect(() => {
@@ -125,53 +141,20 @@ export default function Comunidade() {
 
         <ul className="cm-list">
           {items.map((t) => {
-            const r = t.resumo;
-            const duration = Math.max(r?.duration ?? 0, 0.1);
+            const model = modelOf(t);
             return (
-              <li key={t.id} className="dz-panel cm-card">
-                <header className="cm-head">
-                  <b className="cm-name">{t.nome}</b>
-                  <span className="muted small">por {t.author}{t.version ? ` · patch ${t.version}` : ''}</span>
-                </header>
-                <div className="cm-faces">
-                  {t.members.map((n) => (
-                    <span key={n} className="cm-face" title={n}>
-                      <CharacterAvatar name={n} icon={characterOf(n)?.icon} color={elementColor(characterOf(n)?.element)} size={52} />
-                    </span>
-                  ))}
-                </div>
-                {r && (
-                  <>
-                    <div className="cm-tl" role="img" aria-label={`Linha do tempo da rotação: ${r.actionCount} golpes em ${formatDecimal(r.duration, 1)} segundos`}>
-                      {r.members.map((m, mi) => {
-                        const color = elementColor(characterOf(m.character)?.element);
-                        const mine = r.sequence.filter((x) => x.member === mi);
-                        return (
-                          <div key={mi} className="cm-lane" style={{ ['--c' as string]: color }}>
-                            <span className="cm-lane-n">{m.character}</span>
-                            <span className="cm-track">
-                              {mine.map((x, i) => (
-                                <i key={i} title={`${x.label}${x.times > 1 ? ` ×${x.times}` : ''}${x.time !== undefined ? ` · ${formatDecimal(x.time, 1)} s` : ''}`}
-                                  style={{ left: `${Math.min(97, ((x.time ?? (r.sequence.indexOf(x) / Math.max(1, r.sequence.length)) * duration) / duration) * 100)}%` }} />
-                              ))}
-                            </span>
-                          </div>
-                        );
-                      })}
-                      <div className="cm-axis num"><span>0 s</span><span>{formatDecimal(r.duration, 1)} s</span></div>
-                    </div>
-                    <div className="cm-kp">
-                      <span><b className="num">{formatDecimal(r.duration, 1)}</b> s</span>
-                      <span><b className="num">{r.actionCount}</b> golpes</span>
-                    </div>
-                  </>
+              <li key={t.id} className="cm-item">
+                {model ? (
+                  <ScaledPoster format="portrait"><PosterCard model={model} format="portrait" lite /></ScaledPoster>
+                ) : (
+                  <div className="dz-panel cm-nodata"><b>{t.nome}</b><span className="muted small">por {t.author}</span></div>
                 )}
-                <footer className="cm-foot">
+                <div className="cm-actions">
                   <button type="button" className="dz-btn gold" onClick={() => void utilizar(t.id)}>Utilizar</button>
                   <button type="button" className="dz-btn" onClick={() => void copiarLink(t.id)}>Copiar link</button>
                   {isAdmin && !ownedPublic(t.id) && <button type="button" className="dz-btn" onClick={() => removerAdmin(t.id)}>Remover (admin)</button>}
                   {ownedPublic(t.id) && <button type="button" className="dz-btn" onClick={() => void parar(t.id)}>Parar de compartilhar</button>}
-                </footer>
+                </div>
               </li>
             );
           })}

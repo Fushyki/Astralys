@@ -94,12 +94,13 @@ function WideCard({ model }: { model: CardModel }) {
 }
 
 /** 4:5 (padrão): retratos ligados por uma linha de constelação, DPS em destaque, participação com estrela e a rotação em faixas. */
-function PortraitCard({ model }: { model: CardModel }) {
+function PortraitCard({ model, lite = false }: { model: CardModel; lite?: boolean }) {
   const { w, h } = POSTER_SIZE.portrait;
   const sorted = [...model.members].sort((a, b) => b.share - a.share);
   const lead = sorted[0];
   const subtitle = [model.badge, model.tag].filter(Boolean).join(' · ');
   const n = model.members.length;
+  const hitCount = model.lanes.reduce((t, l) => t + l.hits.reduce((c, h) => c + h.count, 0), 0);
   return (
     <article className="pc pc-portrait" style={{ width: w, height: h, ...css({ '--accent': model.accent }) }} aria-label={`Card: ${model.title}`}>
       <svg className="pc-sky" width={w} height={h} viewBox={`0 0 ${w} ${h}`} aria-hidden="true">
@@ -123,11 +124,13 @@ function PortraitCard({ model }: { model: CardModel }) {
       <div className="pc-title">
         <span className="pc-sub">{subtitle || 'Rotação de time'}</span>
         <h1 className={model.title.length > 34 ? 'long' : undefined}>{model.title}</h1>
-        <div className="pc-chips">
-          {model.reaction && <span className="chip"><i />{model.reaction.name} · {formatPercent(model.reaction.fraction, 0)} do dano</span>}
-          <span className="chip"><i />Rotação de {formatDecimal(model.duration, 1)} s</span>
-          <span className="chip"><i />Nv {model.characterLevel} vs {model.enemyLevel}</span>
-        </div>
+        {!lite && (
+          <div className="pc-chips">
+            {model.reaction && <span className="chip"><i />{model.reaction.name} · {formatPercent(model.reaction.fraction, 0)} do dano</span>}
+            <span className="chip"><i />Rotação de {formatDecimal(model.duration, 1)} s</span>
+            <span className="chip"><i />Nv {model.characterLevel} vs {model.enemyLevel}</span>
+          </div>
+        )}
       </div>
 
       <div className="pc-chars">
@@ -147,13 +150,29 @@ function PortraitCard({ model }: { model: CardModel }) {
           <div key={m.name} className="pc-char">
             <Face name={m.name} icon={m.icon} color={m.color} />
             <span className="n">{m.name}</span>
-            <span className="w">{m.weapon}</span>
-            <GearLine gear={m.gear} />
-            <span className="sh num" style={css({ '--c': m.color })}>{formatPercent(m.share, m.share < 0.1 ? 1 : 0)}</span>
+            {!lite && (
+              <>
+                <span className="w">{m.weapon}</span>
+                <GearLine gear={m.gear} />
+                <span className="sh num" style={css({ '--c': m.color })}>{formatPercent(m.share, m.share < 0.1 ? 1 : 0)}</span>
+              </>
+            )}
           </div>
         ))}
       </div>
 
+      {lite ? (
+        <div className="pc-hero">
+          <div>
+            <span className="k"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d={starPath(12, 12, 11)} fill="var(--accent)" /></svg>Tempo da rotação</span>
+            <span className="big num">{formatDecimal(model.duration, 1)} s</span>
+          </div>
+          <div className="side">
+            <div><span className="v num">{hitCount}</span><span className="l">golpes</span></div>
+          </div>
+        </div>
+      ) : (
+        <>
       <div className="pc-hero">
         <div>
           <span className="k"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d={starPath(12, 12, 11)} fill="var(--accent)" /></svg>DPS do time</span>
@@ -175,20 +194,23 @@ function PortraitCard({ model }: { model: CardModel }) {
           </div>
         ))}
       </div>
+        </>
+      )}
 
       <footer className="pc-foot">
         <div className="pc-rothead"><span className="k">Rotação</span><i /></div>
-        <RotationLanes model={model} width={w - 144} rowH={38} labelW={142} labelSize={18} />
-        <div className="pc-seq"><span>{model.sequence}</span></div>
+        <RotationLanes model={model} width={w - 144} rowH={lite ? 132 : 38} labelW={lite ? 186 : 142} labelSize={lite ? 30 : 18} />
+        {!lite && <div className="pc-seq"><span>{model.sequence}</span></div>}
       </footer>
     </article>
   );
 }
 
-export function PosterCard({ model, format = 'portrait' }: { model: CardModel; format?: PosterFormat }) {
+/** `lite` (só o 4:5): versão da galeria da Comunidade, sem arma, artefatos nem dano por personagem; mostra o time, a rotação, o tempo e os golpes. */
+export function PosterCard({ model, format = 'portrait', lite = false }: { model: CardModel; format?: PosterFormat; lite?: boolean }) {
   if (format === 'wide') return <WideCard model={model} />;
   if (format === 'tall') return <TallCard model={model} />;
-  return <PortraitCard model={model} />;
+  return <PortraitCard model={model} lite={lite} />;
 }
 
 /** Mostra o card escalado para caber na largura do contêiner (a imagem exportada continua no tamanho real). */

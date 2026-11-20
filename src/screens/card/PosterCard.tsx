@@ -17,7 +17,7 @@ export const POSTER_SIZE: Record<PosterFormat, { w: number; h: number }> = {
   tall: { w: 1080, h: 1920 },
 };
 /** Tamanho do 4:5 enxuto da galeria (sem arma, artefatos nem dano por personagem): mais baixo que o 1080×1350 do card completo. */
-export const LITE_SIZE = { w: 1080, h: 1090 };
+export const LITE_SIZE = { w: 1080, h: 940 };
 export const POSTER_LABEL: Record<PosterFormat, string> = { portrait: '4:5', wide: '16:9', tall: '9:16' };
 
 function WideCard({ model }: { model: CardModel }) {
@@ -201,7 +201,7 @@ function PortraitCard({ model, lite = false }: { model: CardModel; lite?: boolea
 
       <footer className="pc-foot">
         <div className="pc-rothead"><span className="k">Rotação</span><i /></div>
-        <RotationLanes model={model} width={w - 144} rowH={lite ? 76 : 38} labelW={lite ? 160 : 142} labelSize={lite ? 24 : 18} />
+        <RotationLanes model={model} width={w - 144} rowH={38} labelW={142} labelSize={18} />
         {!lite && <div className="pc-seq"><span>{model.sequence}</span></div>}
       </footer>
     </article>

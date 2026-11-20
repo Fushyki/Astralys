@@ -43,7 +43,7 @@ function Side({ model, title, accent, win, showGear, letter }: { model: CardMode
       <div className="cc-strips">
         {model.members.map((m: CardMember) => (
           <div key={m.name} className="cc-strip" style={css({ '--c': m.color })}>
-            <Strip name={m.name} icon={m.icon} color={m.color} />
+            <div className="cc-art"><Strip name={m.name} icon={m.icon} color={m.color} /></div>
             <div className="cc-cap">
               <span className="n">{m.name}</span>
               <span className="w">{m.weapon}</span>

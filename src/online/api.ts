@@ -43,10 +43,12 @@ async function call<T>(path: string, init: RequestInit = {}): Promise<T> {
   let res: Response;
   try {
     res = await fetch(`${API_URL}${path}`, {
+      signal: AbortSignal.timeout(20_000), // servidor fora do ar ou dormindo: não deixa a tela carregando para sempre
       ...rest,
       headers: { 'Content-Type': 'application/json', ...headers },
     });
-  } catch {
+  } catch (e) {
+    if (e instanceof DOMException && e.name === 'TimeoutError') throw new ApiError('O servidor demorou demais para responder. Tente de novo em instantes.', 0);
     throw new ApiError('Não consegui falar com o servidor. Verifique a conexão.', 0);
   }
   let body: unknown = null;

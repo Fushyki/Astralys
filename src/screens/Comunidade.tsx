@@ -66,7 +66,7 @@ export default function Comunidade() {
   }, [q, personagem, versao]);
 
   useEffect(() => {
-    if (!ONLINE_ENABLED) return;
+    if (!ONLINE_ENABLED) { setState('ok'); return; } // sem servidor configurado: só o aviso, sem ficar carregando
     let cancelled = false;
     setState('loading');
     // espera o usuário parar de digitar (só na primeira página)
@@ -116,7 +116,7 @@ export default function Comunidade() {
         </section>
 
         {state === 'error' && <p className="dz-error" role="alert">{error || 'Não consegui abrir a galeria.'}</p>}
-        {state === 'ok' && items.length === 0 && (
+        {state === 'ok' && ONLINE_ENABLED && items.length === 0 && (
           <div className="dz-panel cm-empty">
             <h2 className="h2">Nenhum time encontrado</h2>
             <p className="muted">{filtered ? 'Nenhum time publicado bate com esses filtros.' : 'Ainda não há times publicados. Seja o primeiro: compartilhe um time do seu Vault.'}</p>

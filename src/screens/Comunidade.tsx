@@ -5,7 +5,7 @@ import { AppHeader } from '../app/AppHeader';
 import '../design/design.css';
 import { memberColors } from '../design/elements';
 import type { CardModel } from '../features/card/cardModel';
-import { PosterCard, ScaledPoster } from './card/PosterCard';
+import { LITE_SIZE, PosterCard, ScaledPoster } from './card/PosterCard';
 import { useSettings } from '../app/settings';
 import { toast } from '../app/toast';
 import { removeAsAdmin, unpublishPublic, useTeam } from '../features/community/publish';
@@ -145,7 +145,7 @@ export default function Comunidade() {
             return (
               <li key={t.id} className="cm-item">
                 {model ? (
-                  <ScaledPoster format="portrait"><PosterCard model={model} format="portrait" lite /></ScaledPoster>
+                  <ScaledPoster format="portrait" size={LITE_SIZE}><PosterCard model={model} format="portrait" lite /></ScaledPoster>
                 ) : (
                   <div className="dz-panel cm-nodata"><b>{t.nome}</b><span className="muted small">por {t.author}</span></div>
                 )}

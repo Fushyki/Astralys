@@ -16,6 +16,8 @@ export const POSTER_SIZE: Record<PosterFormat, { w: number; h: number }> = {
   wide: { w: 1600, h: 900 },
   tall: { w: 1080, h: 1920 },
 };
+/** Tamanho do 4:5 enxuto da galeria (sem arma, artefatos nem dano por personagem): mais baixo que o 1080×1350 do card completo. */
+export const LITE_SIZE = { w: 1080, h: 1090 };
 export const POSTER_LABEL: Record<PosterFormat, string> = { portrait: '4:5', wide: '16:9', tall: '9:16' };
 
 function WideCard({ model }: { model: CardModel }) {
@@ -95,7 +97,7 @@ function WideCard({ model }: { model: CardModel }) {
 
 /** 4:5 (padrão): retratos ligados por uma linha de constelação, DPS em destaque, participação com estrela e a rotação em faixas. */
 function PortraitCard({ model, lite = false }: { model: CardModel; lite?: boolean }) {
-  const { w, h } = POSTER_SIZE.portrait;
+  const { w, h } = lite ? LITE_SIZE : POSTER_SIZE.portrait;
   const sorted = [...model.members].sort((a, b) => b.share - a.share);
   const lead = sorted[0];
   const subtitle = [model.badge, model.tag].filter(Boolean).join(' · ');
@@ -199,7 +201,7 @@ function PortraitCard({ model, lite = false }: { model: CardModel; lite?: boolea
 
       <footer className="pc-foot">
         <div className="pc-rothead"><span className="k">Rotação</span><i /></div>
-        <RotationLanes model={model} width={w - 144} rowH={lite ? 132 : 38} labelW={lite ? 186 : 142} labelSize={lite ? 30 : 18} />
+        <RotationLanes model={model} width={w - 144} rowH={lite ? 76 : 38} labelW={lite ? 160 : 142} labelSize={lite ? 24 : 18} />
         {!lite && <div className="pc-seq"><span>{model.sequence}</span></div>}
       </footer>
     </article>
@@ -215,8 +217,8 @@ export function PosterCard({ model, format = 'portrait', lite = false }: { model
 
 /** Mostra o card escalado para caber na largura do contêiner (a imagem exportada continua no tamanho real). */
 /** `maxHeight` (px) também limita o tamanho: o card fica mais estreito, centralizado, em vez de passar do fim da tela. */
-export function ScaledPoster({ format, children, maxHeight }: { format: PosterFormat; children: ReactNode; maxHeight?: number }) {
-  const { w, h } = POSTER_SIZE[format];
+export function ScaledPoster({ format, children, maxHeight, size }: { format: PosterFormat; children: ReactNode; maxHeight?: number; size?: { w: number; h: number } }) {
+  const { w, h } = size ?? POSTER_SIZE[format];
   const box = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
   useEffect(() => {

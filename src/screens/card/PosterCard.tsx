@@ -17,7 +17,7 @@ export const POSTER_SIZE: Record<PosterFormat, { w: number; h: number }> = {
   tall: { w: 1080, h: 1920 },
 };
 /** Tamanho do 4:5 enxuto da galeria (sem arma, artefatos nem dano por personagem): mais baixo que o 1080×1350 do card completo. */
-export const LITE_SIZE = { w: 1080, h: 940 };
+export const LITE_SIZE = { w: 1080, h: 1000 };
 export const POSTER_LABEL: Record<PosterFormat, string> = { portrait: '4:5', wide: '16:9', tall: '9:16' };
 
 function WideCard({ model }: { model: CardModel }) {
@@ -104,7 +104,7 @@ function PortraitCard({ model, lite = false }: { model: CardModel; lite?: boolea
   const n = model.members.length;
   const hitCount = model.lanes.reduce((t, l) => t + l.hits.reduce((c, h) => c + h.count, 0), 0);
   return (
-    <article className="pc pc-portrait" style={{ width: w, height: h, ...css({ '--accent': model.accent }) }} aria-label={`Card: ${model.title}`}>
+    <article className={`pc pc-portrait${lite ? ' pc-lite' : ''}`} style={{ width: w, height: h, ...css({ '--accent': model.accent }) }} aria-label={`Card: ${model.title}`}>
       <svg className="pc-sky" width={w} height={h} viewBox={`0 0 ${w} ${h}`} aria-hidden="true">
         <path d={`M${w - 360} 0 A 700 700 0 0 1 ${w} 700`} fill="none" stroke="#1E2647" strokeWidth="1" />
         <path d={`M${w - 460} 0 A 840 840 0 0 1 ${w} 840`} fill="none" stroke="#161D3B" strokeWidth="1" />

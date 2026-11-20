@@ -198,12 +198,3 @@
 .cc-bar .tr { height: 14px; border-radius: 7px; background: var(--track); display: flex; overflow: hidden; }
 .cc-bar .tr.l { justify-content: flex-end; }
 .cc-bar .tr i { display: block; height: 100%; border-radius: 7px; }
-
-/* Galeria da Comunidade: retratos maiores, com os olhos acima do centro e brilho na cor do elemento. */
-.pc-lite .pc-chars { padding-top: 6px; }
-.pc-lite .pc-const { top: 58px; }
-.pc-lite .pc-face { width: 168px; height: 168px; background: radial-gradient(circle at 50% 35%, color-mix(in srgb, var(--c) 35%, #111733), #0A0E1C 75%); border-width: 4px; box-shadow: 0 0 0 5px #0A0E1C, 0 0 0 7px color-mix(in srgb, var(--accent) 70%, transparent), 0 0 38px color-mix(in srgb, var(--c) 45%, transparent); }
-.pc-lite .pc-face img { object-position: 50% 0; transform: scale(1.18); transform-origin: 50% 30%; }
-.pc-lite .pc-char { gap: 18px; }
-.pc-lite .pc-char .n { font-size: 34px; letter-spacing: .02em; }
-.pc-lite .pc-hero .big { text-shadow: 0 0 40px color-mix(in srgb, var(--accent) 35%, transparent); }

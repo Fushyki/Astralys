@@ -73,9 +73,9 @@ export function CompareCard({ a, b, cmp, opts }: { a: CardModel; b: CardModel; c
     const ea = avgEr(a), eb = avgEr(b);
     return { m, label: 'Recarga média', ch: ea > 0 ? eb / ea - 1 : null, text: `${formatDecimal(ea * 100, 0)}% · ${formatDecimal(eb * 100, 0)}%` };
   });
-  const members = cmp.members;
-  const top = Math.max(1, ...members.map((m) => Math.max(m.a?.avg ?? 0, m.b?.avg ?? 0)));
-  const colorOf = (m: (typeof members)[number]) => m.a?.color ?? m.b?.color ?? '#9aa3c7';
+  // Uma linha por posição (A à esquerda, B à direita): times diferentes não dobram a altura do rodapé e as artes mantêm a altura.
+  const rowsN = Math.max(a.members.length, b.members.length);
+  const top = Math.max(1, ...a.members.map((m) => m.avg), ...b.members.map((m) => m.avg));
   const tint = (ch: number | null) => (ch === null || Math.abs(ch) < 1e-4 ? 'var(--text)' : ch > 0 ? opts.accentB : opts.accentA);
   return (
     <article className="pc pc-cmp" style={{ width: w, height: h }} aria-label={`Comparação: ${opts.titleA} contra ${opts.titleB}`}>
@@ -117,17 +117,27 @@ export function CompareCard({ a, b, cmp, opts }: { a: CardModel; b: CardModel; c
         <Side model={b} title={opts.titleB} accent={opts.accentB} win={cmp.winner === 'b'} showGear={opts.showGear} letter="B" />
       </div>
 
-      {opts.showBars && members.length > 0 && (
+      {opts.showBars && rowsN > 0 && (
         <footer className="cc-bars" aria-label="Dano por personagem">
-          {members.map((m) => (
-            <div key={m.name} className="cc-bar" style={css({ '--c': colorOf(m) })}>
-              <span className="v num l">{m.a ? thousands(m.a.avg) : '—'}</span>
-              <span className="tr l"><i style={{ width: `${((m.a?.avg ?? 0) / top) * 100}%`, background: opts.accentA }} /></span>
-              <span className="n">{m.name}</span>
-              <span className="tr r"><i style={{ width: `${((m.b?.avg ?? 0) / top) * 100}%`, background: opts.accentB }} /></span>
-              <span className="v num r">{m.b ? thousands(m.b.avg) : '—'}</span>
-            </div>
-          ))}
+          {Array.from({ length: rowsN }, (_, i) => {
+            const x = a.members[i], y = b.members[i];
+            return (
+              <div key={i} className="cc-bar">
+                <span className="v num l">{x ? thousands(x.avg) : '—'}</span>
+                <span className="tr l"><i style={{ width: `${((x?.avg ?? 0) / top) * 100}%`, background: opts.accentA }} /></span>
+                {x && y && x.name === y.name ? (
+                  <span className="n same" style={css({ '--c': x.color })}>{x.name}</span>
+                ) : (
+                  <>
+                    <span className="n l" style={css({ '--c': x?.color ?? '#9aa3c7' })}>{x?.name ?? ''}</span>
+                    <span className="n r" style={css({ '--c': y?.color ?? '#9aa3c7' })}>{y?.name ?? ''}</span>
+                  </>
+                )}
+                <span className="tr r"><i style={{ width: `${((y?.avg ?? 0) / top) * 100}%`, background: opts.accentB }} /></span>
+                <span className="v num r">{y ? thousands(y.avg) : '—'}</span>
+              </div>
+            );
+          })}
         </footer>
       )}
     </article>

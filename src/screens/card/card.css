@@ -191,7 +191,10 @@
 .cc-rows .l { font: 600 15px 'Saira Condensed', sans-serif; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
 .cc-rows b { font: 700 32px/1 'Saira Condensed', sans-serif; }
 .cc-bars { display: flex; flex-direction: column; gap: 7px; padding-top: 12px; border-top: 1px solid var(--line); }
-.cc-bar { display: grid; grid-template-columns: 110px 1fr 150px 1fr 110px; align-items: center; gap: 12px; }
+.cc-bar { display: grid; grid-template-columns: 110px 1fr 130px 130px 1fr 110px; align-items: center; gap: 12px; }
+.cc-bar .n.same { grid-column: span 2; text-align: center; }
+.cc-bar .n.l { text-align: right; }
+.cc-bar .n.r { text-align: left; }
 .cc-bar .n { text-align: center; font: 700 22px/1 'Saira Condensed', sans-serif; color: var(--c); }
 .cc-bar .v { font: 600 20px 'Saira Condensed', sans-serif; color: var(--text); }
 .cc-bar .v.l { text-align: right; }

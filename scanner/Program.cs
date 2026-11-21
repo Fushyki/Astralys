@@ -98,18 +98,24 @@ static class Program
         var gridBox = new Box(layout.GridX0 - layout.Dx / 2, viewTop, layout.Dx * layout.Cols, viewBottom - viewTop);
         byte[][] Grid() { using var b = Native.Capture(game); using var c = Crop(b, gridBox); return Gray(c); }
         byte[][] SettleGrid() { Thread.Sleep(150); var g = Grid(); for (int i = 0; i < 20; i++) { Thread.Sleep(60); var g2 = Grid(); if (GridSame(g, g2, 1.0)) return g2; g = g2; } return g; }
-        // Rolagem do Inventory Kamera (MIT, github.com/Andrewthe13th/Inventory_Kamera): uma rajada de 10 giros por linha, giros com ~1 ms
-        // de intervalo, menos 1 giro (39 giros = ~3,9 linhas). Giros espacados andam menos no jogo. Depois mede quanto a lista andou.
-        // Devolve 0 = fim da lista, -1 = nao consegui medir.
+        // Rolagem em rajadas (giros com 1 ms de intervalo, como o Inventory Kamera, MIT): a 1a rajada de 10 giros calibra quanto o jogo
+        // anda por giro NESTE PC; as seguintes completam ~3,9 linhas (a pagina) medindo cada passo, sem nunca passar de ~4,4 linhas
+        // (alem disso uma linha some sem ser lida). Devolve quanto andou; 0 = fim da lista, -1 = nao consegui medir.
+        double perNotchMax = 0;
         double ScrollList()
         {
-            int sx = Px(layout.GridX0 + layout.Dx * 3, w), sy = (int)Math.Round(y0 + dyPx * 1.5);
-            using var fb = Native.Capture(game); var before = Gray(Crop(fb, gridBox));
-            Native.Scroll(game, sx, sy, 10 * layout.Rows - 1, 1);
-            var after = SettleGrid();
-            if (GridSame(before, after, 3)) return 0;
-            if (Shift(before, after, 3.9 * dyPx) is int s) return s;
-            Log("A lista se mexeu, mas não consegui medir o quanto."); Dump(fb, "rolagem-antes.png"); using var fa = Native.Capture(game); Dump(fa, "rolagem-depois.png"); return -1;
+            double total = 0, aim = 3.9 * dyPx, enough = 3.6 * dyPx; int sx = Px(layout.GridX0 + layout.Dx * 3, w), sy = (int)Math.Round(y0 + dyPx * 1.5);
+            for (int it = 0; it < 6 && total < enough && (perNotchMax == 0 || total + perNotchMax <= 4.4 * dyPx); it++)
+            {
+                using var fb = Native.Capture(game); var before = Gray(Crop(fb, gridBox));
+                int n = perNotchMax > 0 ? Math.Clamp((int)Math.Floor((aim - total) / perNotchMax), 1, 40) : 10;
+                Native.Scroll(game, sx, sy, n, 1);
+                var after = SettleGrid();
+                if (GridSame(before, after, 3)) return total; // nao andou: fim da lista (total 0 = ja estava no fim)
+                if (Shift(before, after, perNotchMax > 0 ? perNotchMax * n : 2.5 * dyPx) is int s) { total += s; perNotchMax = Math.Max(perNotchMax, (double)s / n); continue; }
+                Log("A lista se mexeu, mas não consegui medir o quanto."); Dump(fb, "rolagem-antes.png"); using var fa = Native.Capture(game); Dump(fa, "rolagem-depois.png"); return -1;
+            }
+            return total;
         }
         int dumps = 0; var dbg = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "astralys-scanner-debug");
         void Dump(Bitmap b, string name) { try { Directory.CreateDirectory(dbg); b.Save(Path.Combine(dbg, name), System.Drawing.Imaging.ImageFormat.Png); } catch { } }
@@ -127,15 +133,15 @@ static class Program
                     var before = prev ??= DetailHash();
                     Native.Click(game, Px(layout.GridX0 + c * layout.Dx, w), cy);
                     var changed = false; var cur = before;
-                    for (int t = 0; t < 60 && !changed; t++) { Thread.Sleep(15); cur = DetailHash(); changed = !cur.SequenceEqual(before); }
+                    for (int t = 0; t < 110 && !changed; t++) { Thread.Sleep(8); cur = DetailHash(); changed = !cur.SequenceEqual(before); }
                     prev = cur;
                     if (!changed) { if (++idle >= 3) { stop = true; break; } continue; }
                     idle = 0;
                     // O painel anima ao trocar de artefato: espera parar de mudar (duas capturas iguais) antes de ler.
                     var frame = Native.Capture(game); byte[] hp; using (var c0 = Crop(frame, layout.Detail)) hp = Hash(c0);
-                    for (int t = 0; t < 24; t++)
+                    for (int t = 0; t < 40; t++)
                     {
-                        Thread.Sleep(25); var f2 = Native.Capture(game); byte[] hn; using (var c1 = Crop(f2, layout.Detail)) hn = Hash(c1);
+                        Thread.Sleep(20); var f2 = Native.Capture(game); byte[] hn; using (var c1 = Crop(f2, layout.Detail)) hn = Hash(c1);
                         frame.Dispose(); frame = f2; if (Close(hp, hn, 2)) break; hp = hn;
                     }
                     prev = hp;
@@ -152,7 +158,7 @@ static class Program
                         }
                         finally { free.Add(e); frame.Dispose(); }
                     }));
-                    if (pending.Count >= 4) pending.Peek().Wait();
+                    if (pending.Count >= engines.Count) pending.Peek().Wait();
                     Drain(false);
                     if (stop) break;
                 }

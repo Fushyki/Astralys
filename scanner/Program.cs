@@ -101,18 +101,18 @@ static class Program
         // Rolagem em rajadas (giros com 1 ms de intervalo, como o Inventory Kamera, MIT): a 1a rajada de 10 giros calibra quanto o jogo
         // anda por giro NESTE PC; as seguintes completam ~3,9 linhas (a pagina) medindo cada passo, sem nunca passar de ~4,4 linhas
         // (alem disso uma linha some sem ser lida). Devolve quanto andou; 0 = fim da lista, -1 = nao consegui medir.
-        double perNotchMax = 0;
+        double perNotchMax = 0; int safeN = 5; // safeN: maior rajada ja medida; so cresce ate 2x por passo (o jogo pode acelerar em rajadas longas)
         double ScrollList()
         {
             double total = 0, aim = 3.9 * dyPx, enough = 3.6 * dyPx; int sx = Px(layout.GridX0 + layout.Dx * 3, w), sy = (int)Math.Round(y0 + dyPx * 1.5);
-            for (int it = 0; it < 6 && total < enough && (perNotchMax == 0 || total + perNotchMax <= 4.4 * dyPx); it++)
+            for (int it = 0; it < 8 && total < enough && (perNotchMax == 0 || total + perNotchMax <= 4.4 * dyPx); it++)
             {
                 using var fb = Native.Capture(game); var before = Gray(Crop(fb, gridBox));
-                int n = perNotchMax > 0 ? Math.Clamp((int)Math.Floor((aim - total) / perNotchMax), 1, 40) : 10;
+                int n = perNotchMax > 0 ? Math.Clamp((int)Math.Floor((aim - total) / perNotchMax), 1, Math.Min(40, 2 * safeN)) : safeN;
                 Native.Scroll(game, sx, sy, n, 1);
                 var after = SettleGrid();
                 if (GridSame(before, after, 3)) return total; // nao andou: fim da lista (total 0 = ja estava no fim)
-                if (Shift(before, after, perNotchMax > 0 ? perNotchMax * n : 2.5 * dyPx) is int s) { total += s; perNotchMax = Math.Max(perNotchMax, (double)s / n); continue; }
+                if (Shift(before, after, perNotchMax > 0 ? perNotchMax * n : dyPx, 100) is int s) { total += s; perNotchMax = Math.Max(perNotchMax, (double)s / n); safeN = Math.Max(safeN, n); continue; }
                 Log("A lista se mexeu, mas não consegui medir o quanto."); Dump(fb, "rolagem-antes.png"); using var fa = Native.Capture(game); Dump(fa, "rolagem-depois.png"); return -1;
             }
             return total;
@@ -295,9 +295,9 @@ static class Program
     /// 1/4 do tamanho (media de blocos 4x4): busca grossa rapida.
     public static byte[][] Down(byte[][] g) => Enumerable.Range(0, g.Length / 4).Select(y => Enumerable.Range(0, g[0].Length / 4).Select(x => { int s = 0; for (int dy = 0; dy < 4; dy++) for (int dx = 0; dx < 4; dx++) s += g[y * 4 + dy][x * 4 + dx]; return (byte)(s / 16); }).ToArray()).ToArray();
     /// Deslocamento em pixels reais (resolucao total), com erro de ~1 px: busca grossa em 1/4 e refina em volta.
-    public static int? Shift(byte[][] a, byte[][] b, double expectPx)
+    public static int? Shift(byte[][] a, byte[][] b, double expectPx, double reach = 1.3)
     {
-        if (FindShift(Down(a), Down(b), expectPx / 4) is not int s4) return null;
+        if (FindShift(Down(a), Down(b), expectPx / 4, reach) is not int s4) return null;
         return Enumerable.Range(Math.Max(1, s4 * 4 - 5), 11).Where(s => s < a.Length).OrderBy(s => RobustDiff(a, b, s)).First();
     }
     static double GridDiff(byte[][] a, byte[][] b, int shift) { long d = 0; int H = a.Length, W = a[0].Length; for (int y = 0; y < H - shift; y++) for (int x = 0; x < W; x++) d += Math.Abs(a[y + shift][x] - b[y][x]); return d / (double)((H - shift) * W); }
@@ -315,9 +315,9 @@ static class Program
     }
     static bool GridSame(byte[][] a, byte[][] b, double tol) => GridDiff(a, b, 0) < tol;
     /// Quantas linhas de pixel (na escala 1/4) o conteudo subiu entre as duas imagens. Procura ate 1,3x o esperado; empate (linhas iguais) fica com o mais perto do esperado.
-    public static int? FindShift(byte[][] a, byte[][] b, double expect)
+    public static int? FindShift(byte[][] a, byte[][] b, double expect, double reach = 1.3)
     {
-        int maxS = Math.Min((int)(expect * 1.3), a.Length - 15); if (maxS < 1) return null;
+        int maxS = Math.Min((int)(expect * reach), a.Length - 15); if (maxS < 1) return null;
         var sc = new double[maxS + 1]; for (int s = 1; s <= maxS; s++) sc[s] = RobustDiff(a, b, s);
         var min = sc.Skip(1).Min(); if (min > 12) return null;
         return Enumerable.Range(1, maxS).Where(s => sc[s] <= min * 1.1 + 0.5).OrderBy(s => Math.Abs(s - expect)).First();

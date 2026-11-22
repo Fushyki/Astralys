@@ -83,6 +83,8 @@ export interface RotationAction {
   contributors?: readonly number[];
   /** Dano fixo que ESTE golpe não consome (ids de `flatId`); o golpe fica de fora mesmo sobrando stacks. */
   flatOff?: readonly string[];
+  /** Vínculo (%) a partir deste golpe, para o dano fixo com `decay`; ausente = continua do golpe anterior. */
+  vinculo?: number;
   time?: number;
   note?: string;
 }
@@ -164,6 +166,8 @@ export interface FlatUse {
   off: boolean;
   /** Stacks totais do efeito (undefined = todos os golpes). */
   stacks?: number;
+  /** Recurso gasto por acerto (Vínculo, em %) no primeiro acerto deste golpe; só nos efeitos com `decay`. */
+  level?: number;
 }
 
 /** Id estável de um buff de dano fixo (quem dá + nome). */
@@ -318,6 +322,9 @@ function windowRes(base: ResistanceMap, shred: Record<string, number>): Resistan
   return out as ResistanceMap;
 }
 
+/** Os otimizadores olham sempre o recurso escolhido nos Talentos: tira o gasto por acerto (`decay`) do dano fixo. */
+export const withoutDecay = (flat: FlatDamageEffect[] | undefined): FlatDamageEffect[] | undefined => flat?.map((e) => (e.decay ? { ...e, decay: undefined } : e));
+
 export function evaluateRotation(ctx: RotationContext, actions: readonly RotationAction[]): RotationResult {
   const { members, assembly, config } = ctx;
   const names = members.map((m) => m.character.name);
@@ -369,7 +376,7 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
             const raw = e.perPoint * Math.max(0, sourceStatValue(e, statsFor(src, 'all'), members[src]) - e.threshold);
             return e.capPerHit === undefined ? raw : Math.min(raw, e.capPerHit);
           })();
-    return { effect: e, perHit, remaining: e.stacks ?? Infinity };
+    return { effect: e, perHit, remaining: e.stacks ?? Infinity, level: e.decay ? e.decay.startPct ?? e.decay.maxPct : 0 };
   });
 
   /** Elemento padrão do golpe (kit do jogo, infusão ou o do personagem). */
@@ -398,8 +405,21 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
       const off = !!action.flatOff?.includes(id);
       const covered = off || f.remaining <= 0 ? 0 : Math.min(hitsOfAction, f.remaining);
       f.remaining -= covered;
-      flatPass[idx].damage += covered * f.perHit;
-      flatPass[idx].use.push({ id, name: e.name, source: e.source, perHit: f.perHit, hits: covered, off, ...(e.stacks !== undefined ? { stacks: e.stacks } : {}) });
+      let damage = covered * f.perHit;
+      let levelAtStart: number | undefined;
+      if (e.decay && !off) {
+        // Cada acerto gasta `rate` do recurso atual; abaixo do piso o efeito não vale. `perHit` vale para `startPct`.
+        const start = e.decay.startPct ?? e.decay.maxPct;
+        if (action.vinculo !== undefined) f.level = action.vinculo;
+        levelAtStart = f.level;
+        damage = 0;
+        for (let h = 0; h < covered; h++) {
+          if (f.level >= e.decay.floorPct && start > 0) damage += f.perHit * (f.level / start);
+          f.level *= 1 - e.decay.rate;
+        }
+      }
+      flatPass[idx].damage += damage;
+      flatPass[idx].use.push({ id, name: e.name, source: e.source, perHit: covered > 0 ? damage / covered : f.perHit, hits: covered, off, ...(e.stacks !== undefined ? { stacks: e.stacks } : {}), ...(levelAtStart !== undefined ? { level: levelAtStart } : {}) });
     }
   });
 

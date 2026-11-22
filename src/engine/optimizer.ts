@@ -27,6 +27,7 @@ import {
 } from './artifacts';
 import {
   evaluateRotation,
+  withoutDecay,
   scaleAt,
   type RotationAction,
   type RotationContext,
@@ -342,7 +343,7 @@ export function optimizeTeam(ctx: OptimizerContext): TeamOptimization {
   let rolls = results.map((r) => r.rolls);
   const hasFlat = (ctx.flatEffects ?? []).some((f: FlatDamageEffect) => f.active);
   if (hasFlat) {
-    const pre = evaluateRotation({ ...ctx, rolls }, ctx.actions);
+    const pre = evaluateRotation({ ...ctx, rolls, flatEffects: withoutDecay(ctx.flatEffects) }, ctx.actions);
     results = run(pre.actions.map((a) => a.flatDamage));
     rolls = results.map((r) => r.rolls);
   }

@@ -116,6 +116,12 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
             <span className="n">{u.name}<small>de {u.source}</small></span>
             <span className="num v">{u.hits > 0 ? `+${formatInt(u.hits * u.perHit)} · ${u.hits} × ${formatInt(u.perHit)}` : u.off ? 'não consome' : 'sem stacks'}</span>
           </label>
+          {u.level !== undefined && (
+            <div className="qty">
+              <Num label="Vínculo neste golpe" className="sm" value={u.level} digits={1} min={0} unit="%" onCommit={(n) => (chainId ? setAll({ vinculo: n }) : update(action.id, { vinculo: n }))} />
+              {action.vinculo !== undefined && <Button variant="ghost" size="sm" onClick={() => (chainId ? setAll({ vinculo: undefined }) : update(action.id, { vinculo: undefined }))}>Automático</Button>}
+            </div>
+          )}
           <div className="qty">
             <Seg label={`Quantos golpes: ${u.name}`} value={u.stacks === undefined ? 'all' : 'n'} options={[{ value: 'all', label: 'Todos os golpes' }, { value: 'n', label: 'N golpes' }]} onChange={(m) => st().setFlatStacks(u.id, m === 'all' ? 'all' : (u.stacks ?? 5))} />
             {u.stacks !== undefined && <Num ariaLabel={`Quantidade de golpes de ${u.name}`} className="sm" value={u.stacks} digits={0} min={1} unit="golpes" onCommit={(n) => st().setFlatStacks(u.id, n)} />}

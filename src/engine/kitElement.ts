@@ -33,7 +33,7 @@ const ELEMENTAL_NORMALS: Record<string, RegExp> = {
 export const KIT_INFUSIONS: Record<string, { element: ElementOrPhysical; when: string }> = {
   Alhaitham: { element: 'Dendro', when: 'com os Espelhos de Projeção' },
   'Arataki Itto': { element: 'Geo', when: 'durante o Supremo' },
-  Arlecchino: { element: 'Pyro', when: 'com o Vínculo da Vida cheio' },
+  Arlecchino: { element: 'Pyro', when: 'com o Vínculo cheio' },
   Chiori: { element: 'Geo', when: 'depois do bônus da passiva A1' },
   Chongyun: { element: 'Cryo', when: 'dentro do campo da habilidade' },
   Cyno: { element: 'Electro', when: 'durante o Supremo' },

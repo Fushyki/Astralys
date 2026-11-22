@@ -17,6 +17,7 @@ import {
   type TeamAssembly,
   applyFlatLevels,
   evaluateRotation,
+  withoutDecay,
   finalizeMembers,
   finalStats,
   gearFlat,
@@ -191,7 +192,7 @@ export function createEvaluator(input: EvaluatorInput): Evaluator {
 
   const rotation = (r: ReturnType<typeof run>) =>
     evaluateRotation(
-      { members: r.members, assembly: r.assembly, config: r.team.config, rolls, flatEffects: r.flat, ampCoefficient: resolved.ampCoefficient, shared: r.hit.share },
+      { members: r.members, assembly: r.assembly, config: r.team.config, rolls, flatEffects: withoutDecay(r.flat), ampCoefficient: resolved.ampCoefficient, shared: r.hit.share },
       resolved.actions,
     );
 

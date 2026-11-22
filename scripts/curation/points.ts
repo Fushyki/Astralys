@@ -12,8 +12,6 @@ export interface PointMoveCur {
   key: string;
   unit: string;
   max: number;
-  /** Multiplica o valor da linha (ex.: 0,01 quando a linha é "por 100%" e os pontos são de 1%). */
-  scale?: number;
   /** Duração (s) da janela em que o golpe usa os pontos do Supremo lançado antes (Cadinho da Vida e da Morte). */
   cadinho?: number;
 }
@@ -27,11 +25,5 @@ export const POINT_MOVES: Record<string, PointMoveCur[]> = {
       kitTalent: 'burst', key: 'Flamestrider Normal Attack DMG Bonus', unit: 'Espírito Lutador', max: 200, cadinho: 7,
     },
     { talent: 'skill', labels: ['Flamestrider Charged Attack Cyclic DMG', 'Flamestrider Charged Attack Final DMG'], kitTalent: 'burst', key: 'Flamestrider Charged Attack DMG Bonus', unit: 'Espírito Lutador', max: 200, cadinho: 7 },
-  ],
-  // Masque of the Red Death: com o Vínculo da Vida em 30% ou mais, cada Normal soma "120,4% do ATK × Vínculo atual" (GO: bond_normal_dmgInc).
-  // A linha do Lunaris vale para 100% de Vínculo; os pontos são de 1%. O 4º golpe tem 2 acertos e cada um soma o bônus.
-  Arlecchino: [
-    { talent: 'normal', labels: ['1-Hit DMG', '2-Hit DMG', '3-Hit DMG', '5-Hit DMG', '6-Hit DMG'], kitTalent: 'normal', key: 'Masque of the Red Death Increase', unit: '% de Vínculo da Vida', max: 200, scale: 0.01 },
-    { talent: 'normal', labels: ['4-Hit DMG'], kitTalent: 'normal', key: 'Masque of the Red Death Increase', unit: '% de Vínculo da Vida', max: 200, scale: 0.02 },
   ],
 };

@@ -12429,6 +12429,50 @@
     "appliesToSelf": false,
     "buffs": [
       {
+        "id": "normal",
+        "label": "Arlecchino: Masque of the Red Death",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "level": {
+          "talent": "normal",
+          "table": [
+            1.204,
+            1.302,
+            1.4,
+            1.54,
+            1.638,
+            1.75,
+            1.904,
+            2.058,
+            2.212,
+            2.38,
+            2.548,
+            2.716,
+            2.884,
+            3.052,
+            3.22
+          ]
+        },
+        "flat": [
+          {
+            "name": "Masque of the Red Death por Vínculo",
+            "sourceStat": "ATK",
+            "perPoint": 2,
+            "hitTypes": [
+              "normal"
+            ]
+          }
+        ],
+        "stacks": {
+          "max": 40,
+          "unit": "% de Vínculo da Vida",
+          "default": 20,
+          "step": 5
+        },
+        "note": "Com o Vínculo da Vida em 30% ou mais, cada acerto de Normal soma ao dano base (valor do talento Normal × ATK × Vínculo atual). Escolha o Vínculo (padrão 100%). A infusão Pyro liga junto."
+      },
+      {
         "id": "a4",
         "label": "Arlecchino A4",
         "minConstellation": 0,

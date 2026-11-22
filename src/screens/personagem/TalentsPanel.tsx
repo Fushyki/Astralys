@@ -217,10 +217,18 @@ export function TalentsPanel({ v, index }: { v: ProjectView; index: number }) {
   const infusable = character.weapon !== 'Catalyst' && character.weapon !== 'Bow' && v.resolved.team.config.elementMode === 'kit';
   const kitInfusion = KIT_INFUSIONS[ref.character];
 
+  // Masque of the Red Death da Arlecchino: ligar o bônus liga a infusão Pyro junto, e sem a infusão o bônus fica desligado (os dois valem juntos no jogo).
+  const masque = ref.character === 'Arlecchino' ? buffs.find((b) => b.id === 'normal') : undefined;
+  const masqueId = masque ? toggleIdOf(index, masque) : undefined;
+  const masqueOff = !!masqueId && !disabled.includes(masqueId) && ref.normalInfusion !== 'Pyro';
+  useEffect(() => {
+    if (masqueOff && masqueId) setSourceEnabled(masqueId, false);
+  }, [masqueOff, masqueId, setSourceEnabled]);
+
   if (!tl) return <p className="note" role="status">Carregando os textos dos talentos…</p>;
 
   const conds = (pred: (b: CharacterBuff) => boolean) =>
-    buffs.filter(pred).map((b) => <Condition key={b.id} buff={b} index={index} constellation={constellation} disabled={disabled} chips={chipsOf(b)} stats={v.bundle.memberStats[index]} onToggle={setSourceEnabled} chosen={ref.stacks?.[b.stacks?.of ?? b.id]} onStacks={(n) => updateMember(index, { stacks: { ...ref.stacks, [b.stacks?.of ?? b.id]: n } })} />);
+    buffs.filter(pred).map((b) => <Condition key={b.id} buff={b} index={index} constellation={constellation} disabled={disabled} chips={chipsOf(b)} stats={v.bundle.memberStats[index]} onToggle={b === masque ? (id, on) => { updateMember(index, { normalInfusion: on ? 'Pyro' : undefined }); setSourceEnabled(id, on); } : setSourceEnabled} chosen={ref.stacks?.[b.stacks?.of ?? b.id]} onStacks={(n) => updateMember(index, { stacks: { ...ref.stacks, [b.stacks?.of ?? b.id]: n } })} />);
   const noteOf = (src: string) => notes.find((n) => n.src === src);
   const valueOf = (l: MoveLine) => `${l.hits > 1 ? `${l.hits}× ` : ''}${formatInt(l[crit])}`;
   const rowsOf = (lines: MoveLine[]) => lines.map((l) => ({ key: l.id, name: l.name, value: valueOf(l), tone: damageColor(l.element, l.special), special: l.special }));

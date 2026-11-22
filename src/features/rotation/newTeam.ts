@@ -1,7 +1,7 @@
 /**
  * Monta um projeto novo a partir dos personagens escolhidos. Puro e testado.
  * Rotação "básica": a habilidade e o supremo de cada personagem, em sequência (um ponto de partida para você ajustar
- * na linha do tempo); "em branco": nenhuma ação.
+ * no plano de combate); "em branco": nenhuma ação.
  */
 import type { Move } from '../../data/schema';
 import type { GameData, MemberRef, RotationProject } from '../../engine';

@@ -1,5 +1,5 @@
 /**
- * Modelo da tela Rotação (puro): rótulo curto do golpe na linha do tempo, quem está em campo, buffs agrupados por quem
+ * Modelo da tela Rotação (puro): rótulo curto do golpe no plano de combate, quem está em campo, buffs agrupados por quem
  * dá, linhas da Sequência (golpe contínuo = uma linha) e dados do gráfico de dano acumulado.
  */
 import type { ActionRef, ActionResult, MoveRef, RotationProject } from '../../engine';

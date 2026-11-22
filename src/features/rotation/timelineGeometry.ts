@@ -1,5 +1,5 @@
 /**
- * Geometria da linha do tempo (sem React): conversão tempo ↔ posição, snap e tamanho das estrelas.
+ * Geometria do plano de combate (sem React): conversão tempo ↔ posição, snap e tamanho das estrelas.
  * O SVG usa um viewBox de largura fixa (1000); o navegador escala.
  */
 import { effectiveDuration, type RotationProject } from '../../engine';

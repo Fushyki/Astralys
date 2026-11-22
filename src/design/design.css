@@ -299,7 +299,7 @@ body { font-family: var(--font-body); font-size: 15px; line-height: 1.5; -webkit
 @media (prefers-reduced-motion: reduce) { .dz-toast { animation: none; } }
 @media (max-width: 560px) { .dz-toasts { right: 16px; left: 16px; align-items: stretch; } .dz-toast { max-width: none; } }
 
-/* Telas de toque: alvos de pelo menos 44 px nos botões e cabeçalhos recolhíveis (a linha do tempo mantém os marcadores compactos). */
+/* Telas de toque: alvos de pelo menos 44 px nos botões e cabeçalhos recolhíveis (a plano de combate mantém os marcadores compactos). */
 @media (pointer: coarse) {
   .dz-btn, .bc-head, .dz-seg button, .ot-seg button { min-height: 44px; }
 }

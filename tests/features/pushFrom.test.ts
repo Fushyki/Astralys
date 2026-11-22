@@ -13,7 +13,7 @@ const base = () => {
   ] };
 };
 
-describe('empurrar a linha do tempo', () => {
+describe('empurrar o plano de combate', () => {
   it('empurra para a direita tudo que está a partir da linha', () => {
     const next = pushFrom(base(), 3, 2);
     expect(next.actions.map((a) => a.time)).toEqual([0, 2, 6, 8]);

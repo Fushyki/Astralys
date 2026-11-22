@@ -82,7 +82,7 @@ describe('buffs de personagem no motor', () => {
   const assemble = (p: RotationProject) => assembleTeam(resolveProject(p, game, effects).team);
   const buffIds = (p: RotationProject) => assemble(p).buffs.map((b) => b.id);
 
-  it('o buff de equipe só vale a partir da constelação e vira faixa na linha do tempo', () => {
+  it('o buff de equipe só vale a partir da constelação e vira faixa no plano de combate', () => {
     const c0 = team(['Hu Tao', 'Xingqiu', 'Yelan', 'Kamisato Ayaka'], 0);
     const c4 = team(['Hu Tao', 'Xingqiu', 'Yelan', 'Kamisato Ayaka'], 4);
     expect(buffIds(c0)).toContain('cbuff-0-a1');

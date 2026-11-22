@@ -14219,7 +14219,7 @@
         "procs": []
       }
     ],
-    "note": "Só reinicia a recarga da habilidade (chance): não muda os stats. Pode render uma habilidade a mais na rotação, que você coloca na linha do tempo.",
+    "note": "Só reinicia a recarga da habilidade (chance): não muda os stats. Pode render uma habilidade a mais na rotação, que você coloca no plano de combate.",
     "noDamage": true,
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
@@ -17972,7 +17972,7 @@
         "procs": []
       }
     ],
-    "note": "ATK depois de reação (assumido ativo); +16% (R1) de DMG Estelar por 12 s depois de uma reação Estelar: faixa na linha do tempo.",
+    "note": "ATK depois de reação (assumido ativo); +16% (R1) de DMG Estelar por 12 s depois de uma reação Estelar: faixa no plano de combate.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
   {
@@ -20906,7 +20906,7 @@
         "procs": []
       }
     ],
-    "note": "Ao trocar de personagem, o que entra ganha ATK por 10 s (1 vez a cada 20 s): faixa na linha do tempo, vale para os aliados do dono (parâmetro do Lunaris).",
+    "note": "Ao trocar de personagem, o que entra ganha ATK por 10 s (1 vez a cada 20 s): faixa no plano de combate, vale para os aliados do dono (parâmetro do Lunaris).",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
   {
@@ -21193,7 +21193,7 @@
         "procs": []
       }
     ],
-    "note": "DEF e +64% (R1) de DMG Lunar-Cristalizar por 5 s depois da habilidade: faixa na linha do tempo.",
+    "note": "DEF e +64% (R1) de DMG Lunar-Cristalizar por 5 s depois da habilidade: faixa no plano de combate.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
   {
@@ -22060,7 +22060,7 @@
         "procs": []
       }
     ],
-    "note": "Dano Crítico da fase Devotion (assumida ativa); a fase Defiance (+36% de Redemoinho Estelar no R1) é faixa na linha do tempo. A energia não entra.",
+    "note": "Dano Crítico da fase Devotion (assumida ativa); a fase Defiance (+36% de Redemoinho Estelar no R1) é faixa no plano de combate. A energia não entra.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
   {
@@ -22328,7 +22328,7 @@
         "procs": []
       }
     ],
-    "note": "Só reinicia a recarga da habilidade (chance): não muda os stats. Pode render uma habilidade a mais na rotação, que você coloca na linha do tempo.",
+    "note": "Só reinicia a recarga da habilidade (chance): não muda os stats. Pode render uma habilidade a mais na rotação, que você coloca no plano de combate.",
     "noDamage": true,
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
@@ -31420,7 +31420,7 @@
         "procs": []
       }
     ],
-    "note": "ATK base sempre (12% no R1). Fora de campo soma outros 12%: faixa na linha do tempo, ligue enquanto o portador está fora de campo. Sweet Echoes: +32% (R1) de ATK por 3 s para o portador e para quem ele curou depois de curar (vale fora de campo); são dois buffs separados (portador e curado). O motor não sabe quem foi curado: o do curado vale para todos os outros membros nas janelas que você ligar.",
+    "note": "ATK base sempre (12% no R1). Fora de campo soma outros 12%: faixa no plano de combate, ligue enquanto o portador está fora de campo. Sweet Echoes: +32% (R1) de ATK por 3 s para o portador e para quem ele curou depois de curar (vale fora de campo); são dois buffs separados (portador e curado). O motor não sabe quem foi curado: o do curado vale para todos os outros membros nas janelas que você ligar.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
   {
@@ -33252,7 +33252,7 @@
         "procs": []
       }
     ],
-    "note": "A música é sorteada: cada uma vira uma faixa na linha do tempo (ATK, DMG elemental ou Maestria) para você escolher qual vale em cada janela.",
+    "note": "A música é sorteada: cada uma vira uma faixa no plano de combate (ATK, DMG elemental ou Maestria) para você escolher qual vale em cada janela.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
   {
@@ -33341,7 +33341,7 @@
         "procs": []
       }
     ],
-    "note": "Só reinicia a recarga da habilidade (chance): não muda os stats. Pode render uma habilidade a mais na rotação, que você coloca na linha do tempo.",
+    "note": "Só reinicia a recarga da habilidade (chance): não muda os stats. Pode render uma habilidade a mais na rotação, que você coloca no plano de combate.",
     "noDamage": true,
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
@@ -41589,7 +41589,7 @@
         "procs": []
       }
     ],
-    "note": "A Maestria dos dois efeitos (assumidos ativos) e, com os dois, +120% de Florescer, +80% de Hiperflorescer e Brotar e +40% de Lunar-Florescer para a equipe (faixa na linha do tempo).",
+    "note": "A Maestria dos dois efeitos (assumidos ativos) e, com os dois, +120% de Florescer, +80% de Hiperflorescer e Brotar e +40% de Lunar-Florescer para a equipe (faixa no plano de combate).",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
   {
@@ -43259,7 +43259,7 @@
         "procs": []
       }
     ],
-    "note": "Só reinicia a recarga da habilidade (chance): não muda os stats. Pode render uma habilidade a mais na rotação, que você coloca na linha do tempo.",
+    "note": "Só reinicia a recarga da habilidade (chance): não muda os stats. Pode render uma habilidade a mais na rotação, que você coloca no plano de combate.",
     "noDamage": true,
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },

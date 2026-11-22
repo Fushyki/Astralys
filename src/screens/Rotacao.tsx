@@ -1,4 +1,4 @@
-/** Rotação e buffs (/projeto/:id/rotacao): golpes, linha do tempo, golpe e buff selecionados, sequência e gráficos de dano. */
+/** Rotação e buffs (/projeto/:id/rotacao): golpes, plano de combate, golpe e buff selecionados, sequência e gráficos de dano. */
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useProjectView } from '../app/ProjectContext';

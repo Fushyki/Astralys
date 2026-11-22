@@ -3,7 +3,7 @@
  * (`p` = índice em `params` da passiva/constelação indicada em `src`, `x` = multiplicador, ex.: stacks) ou de um
  * literal que só aparece na descrição (`lit`). `expect` trava se o texto do Lunaris mudar.
  *
- * Regras de modelagem: buffs de equipe e os que dependem de condição (`timed: true`) viram faixas na linha do tempo,
+ * Regras de modelagem: buffs de equipe e os que dependem de condição (`timed: true`) viram faixas no plano de combate,
  * ligadas por você nas janelas em que valem; só o que é do próprio personagem e sempre vale fica estático.
  */
 import type { Element } from '../../src/data/schema';

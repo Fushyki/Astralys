@@ -91,7 +91,7 @@ export type SpecialMove = z.infer<typeof SpecialMoveSchema>;
 
 /**
  * Golpe extra de proc (arma, set, passiva ou constelação): um dano próprio, com escala no stat do dono, que você coloca
- * na linha do tempo como qualquer golpe. Sem `element`, é do elemento do personagem; sem `hitType`, não conta como
+ * no plano de combate como qualquer golpe. Sem `element`, é do elemento do personagem; sem `hitType`, não conta como
  * Normal/Carregado/Imersivo/Habilidade/Supremo (não recebe bônus de tipo de golpe, como no Genshin Optimizer).
  */
 export const ProcSchema = z.object({
@@ -234,7 +234,7 @@ export type WeaponFlat = z.infer<typeof WeaponFlatSchema>;
  */
 export const CharacterBuffSchema = z.object({
   id: z.string().min(1),
-  /** Nome curto da faixa na linha do tempo, ex.: "Hu Tao: A1". */
+  /** Nome curto da faixa no plano de combate, ex.: "Hu Tao: A1". */
   label: z.string().min(1),
   minConstellation: z.number().int().min(0).max(6).default(0),
   scope: z.enum(['self', 'others', 'team']),
@@ -323,7 +323,7 @@ export const CharacterEffectSchema = z.object({
   notes: z.array(CharacterNoteSchema).default([]),
   /** Cura, escudo, energia e recarga do kit: informativos, fora do cálculo de dano. */
   infos: z.array(CharacterInfoSchema).optional(),
-  /** Golpes extras de passiva/constelação (a partir de `minConstellation`), para pôr na linha do tempo. */
+  /** Golpes extras de passiva/constelação (a partir de `minConstellation`), para pôr no plano de combate. */
   procs: z.array(ProcSchema).default([]),
   /** Facções que contam para regras de time (Genshin Optimizer `flags.isMoonsign` / `flags.isHexerei`). */
   factions: z.array(z.enum(['moonsign', 'hexerei'])).default([]),

@@ -57,7 +57,7 @@ export interface RotationState {
   moveAction: (id: string, time: number) => void;
   /** Troca o projeto inteiro (ex.: importar uma rotação compartilhada) como uma entrada do histórico. */
   applyProject: (next: RotationProject) => void;
-  /** Empurra tudo que está à direita de `at` por `delta` segundos (a linha do tempo). */
+  /** Empurra tudo que está à direita de `at` por `delta` segundos (a plano de combate). */
   pushFrom: (at: number, delta: number) => void;
   removeAction: (id: string) => void;
   duplicateAction: (id: string) => void;

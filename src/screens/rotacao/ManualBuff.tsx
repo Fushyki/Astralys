@@ -1,4 +1,4 @@
-/** Buff manual da rotação: qualquer bônus com nome, que vira uma faixa na linha do tempo (com janela) e pode valer só para os N primeiros golpes. */
+/** Buff manual da rotação: qualquer bônus com nome, que vira uma faixa no plano de combate (com janela) e pode valer só para os N primeiros golpes. */
 import { useState } from 'react';
 import type { ProjectView } from '../../app/ProjectContext';
 import { Button } from '../../design/Button';
@@ -43,7 +43,7 @@ export function ManualBuffForm({ v }: { v: ProjectView }) {
   return (
     <details className="rt-manual">
       <summary>Criar buff manual</summary>
-      <p className="rt-note">Qualquer bônus com um nome, para valer na rotação (ex.: Rift da Skirk: +20% de DMG Normal nos 10 primeiros golpes). Aparece como uma faixa na linha do tempo.</p>
+      <p className="rt-note">Qualquer bônus com um nome, para valer na rotação (ex.: Rift da Skirk: +20% de DMG Normal nos 10 primeiros golpes). Aparece como uma faixa no plano de combate.</p>
       <label className="rt-fld">Nome<input className="dz-input" value={label} maxLength={40} placeholder="Ex.: Rift da Skirk" onChange={(e) => setLabel(e.target.value)} /></label>
       <label className="rt-fld">Tipo de bônus
         <select className="dz-input" value={stat} onChange={(e) => setStat(e.target.value)}>

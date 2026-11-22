@@ -19,7 +19,7 @@ export function BuffPanel({ v, lanes }: { v: ProjectView; lanes: LaneInfo[] }) {
   const badge = w ? <span className="dz-badge" style={{ background: '#2a1f3a', color: '#c9b5f2' }}>{giver !== null ? v.project.members[giver]?.character : 'Time'}</span> : undefined;
 
   const body = (() => {
-    if (!w || !lane) return <p className="rt-empty">Selecione uma barra de buff na linha do tempo.</p>;
+    if (!w || !lane) return <p className="rt-empty">Selecione uma barra de buff no plano de combate.</p>;
     const mode = windowMode(w);
     const duration = effectiveDuration(v.project);
     const start = w.whole ? 0 : w.start;

@@ -10,7 +10,7 @@
 import { ALWAYS, LIYUE, NATLAN, type BuffCur, type GearCur } from './gear';
 
 const fav = (): GearCur => ({ noDamage: true, expect: 'CRIT Hits have a 60% chance to generate', note: 'Só gera partículas de energia: não muda o dano. A Recarga entra pela calculadora de Recarga.' });
-const sac = (): GearCur => ({ noDamage: true, expect: 'chance to end its own CD', note: 'Só reinicia a recarga da habilidade (chance): não muda os stats. Pode render uma habilidade a mais na rotação, que você coloca na linha do tempo.' });
+const sac = (): GearCur => ({ noDamage: true, expect: 'chance to end its own CD', note: 'Só reinicia a recarga da habilidade (chance): não muda os stats. Pode render uma habilidade a mais na rotação, que você coloca no plano de combate.' });
 const symbolsEm = (): GearCur => ({
   em: { p: 4, x: 3 },
   expect: "Stoic's Symbol",
@@ -97,7 +97,7 @@ export const WEAPONS_2: Record<string, GearCur> = {
     note: 'DMG do Supremo base e o extra conforme o custo de energia do Supremo do dono (até 60: +16%; até 40: +28%, R1).',
   },
   "Heretic's Molten Blade": { atkPct: { p: 2 }, expect: 'Gleam of First Light', note: 'Usa o MÍNIMO do ATK (18% no R1); o valor real vai até o dobro conforme a distância percorrida.' },
-  Emberwell: { atkPct: { p: 0 }, buffs: [{ id: 'estelar', label: 'DMG Estelar', timed: true, stats: { reactionBonus: { stellarconduct: { p: 2 }, stellarswirl: { p: 2 } } } }], expect: "ATK by 16% for 12s", note: 'ATK depois de reação (assumido ativo); +16% (R1) de DMG Estelar por 12 s depois de uma reação Estelar: faixa na linha do tempo.' },
+  Emberwell: { atkPct: { p: 0 }, buffs: [{ id: 'estelar', label: 'DMG Estelar', timed: true, stats: { reactionBonus: { stellarconduct: { p: 2 }, stellarswirl: { p: 2 } } } }], expect: "ATK by 16% for 12s", note: 'ATK depois de reação (assumido ativo); +16% (R1) de DMG Estelar por 12 s depois de uma reação Estelar: faixa no plano de combate.' },
   'New Bough': { atkPct: { p: 3, x: 3 }, em: { p: 5, x: 3 }, buffs: [{ id: 'radiance', label: 'Verdant (Radiance)', timed: true, stats: { reactionBonus: { stellarconduct: { p: 6, x: 3 }, stellarswirl: { p: 6, x: 3 } } } }], partial: true, expect: 'Verdant', note: 'Assume 3 stacks de ATK e Maestria. Com Radiance: Stellar Glimmer, +8% (R1) de DMG Estelar por stack (3) numa faixa; a troca do ATK (6% no lugar de 4%) e a perda da Maestria nessa versão NÃO entram.' },
   'Silver Light': { em: { p: 0, x: 2 }, expect: 'Elemental Mastery by', note: 'Assume 2 stacks.' },
   'Splendor of Tranquil Waters': {
@@ -130,12 +130,12 @@ export const WEAPONS_2: Record<string, GearCur> = {
   'Thrilling Tales of Dragon Slayers': {
     buffs: [{ id: 'time', label: 'ATK do próximo personagem', scope: 'others', timed: true, stats: { atkPct: { p: 0 } } }],
     expect: 'When switching characters',
-    note: 'Ao trocar de personagem, o que entra ganha ATK por 10 s (1 vez a cada 20 s): faixa na linha do tempo, vale para os aliados do dono (parâmetro do Lunaris).',
+    note: 'Ao trocar de personagem, o que entra ganha ATK por 10 s (1 vez a cada 20 s): faixa no plano de combate, vale para os aliados do dono (parâmetro do Lunaris).',
   },
-  'Lightbearing Moonshard': { defPct: { lit: 0.2 }, buffs: [{ id: 'lcr', label: 'DMG Lunar-Cristalizar', timed: true, stats: { reactionBonus: { lunarcrystallize: { p: 0 } } } }], expect: 'Lunar-Crystallize', note: 'DEF e +64% (R1) de DMG Lunar-Cristalizar por 5 s depois da habilidade: faixa na linha do tempo.' },
+  'Lightbearing Moonshard': { defPct: { lit: 0.2 }, buffs: [{ id: 'lcr', label: 'DMG Lunar-Cristalizar', timed: true, stats: { reactionBonus: { lunarcrystallize: { p: 0 } } } }], expect: 'Lunar-Crystallize', note: 'DEF e +64% (R1) de DMG Lunar-Cristalizar por 5 s depois da habilidade: faixa no plano de combate.' },
   'Whitelake Frostfeather': { atkPct: { p: 1, x: 3 }, buffs: [{ id: 'crit', label: 'Dano Crítico Estelar', stats: { reactionBonus: { stellarconductCritDmg: { p: 4 }, stellarswirlCritDmg: { p: 4 } } } }], expect: 'Lake-Hued Lament', note: 'ATK e, com 3 stacks (assumidos), +50% (R1) de Dano Crítico no dano Estelar. A energia não entra.' },
   'Exaiphanes Blade': { atkPct: { p: 0 }, expect: 'Traveler equips', note: 'Só o ATK (assumido ativo). A energia devolvida não entra.' },
-  'Beyond the Chrysalis': { critDmg: { p: 0 }, buffs: [{ id: 'defiance', label: 'Winds of Defiance', timed: true, stats: { reactionBonus: { stellarswirl: { p: 1 } } } }], expect: 'Winds of Devotion', note: 'Dano Crítico da fase Devotion (assumida ativa); a fase Defiance (+36% de Redemoinho Estelar no R1) é faixa na linha do tempo. A energia não entra.' },
+  'Beyond the Chrysalis': { critDmg: { p: 0 }, buffs: [{ id: 'defiance', label: 'Winds of Defiance', timed: true, stats: { reactionBonus: { stellarswirl: { p: 1 } } } }], expect: 'Winds of Devotion', note: 'Dano Crítico da fase Devotion (assumida ativa); a fase Defiance (+36% de Redemoinho Estelar no R1) é faixa no plano de combate. A energia não entra.' },
 
   // ---- Montantes ----
   'Favonius Greatsword': fav(),
@@ -215,7 +215,7 @@ export const WEAPONS_2: Record<string, GearCur> = {
       { id: 'echoes-self', label: 'Sweet Echoes do portador (ATK de quem cura)', scope: 'self', timed: true, stats: { atkPct: { p: 2 } } },
     ],
     expect: 'Sweet Echoes',
-    note: 'ATK base sempre (12% no R1). Fora de campo soma outros 12%: faixa na linha do tempo, ligue enquanto o portador está fora de campo. Sweet Echoes: +32% (R1) de ATK por 3 s para o portador e para quem ele curou depois de curar (vale fora de campo); são dois buffs separados (portador e curado). O motor não sabe quem foi curado: o do curado vale para todos os outros membros nas janelas que você ligar.',
+    note: 'ATK base sempre (12% no R1). Fora de campo soma outros 12%: faixa no plano de combate, ligue enquanto o portador está fora de campo. Sweet Echoes: +32% (R1) de ATK por 3 s para o portador e para quem ele curou depois de curar (vale fora de campo); são dois buffs separados (portador e curado). O motor não sabe quem foi curado: o do curado vale para todos os outros membros nas janelas que você ligar.',
   },
   'Fractured Halo': { atkPct: { p: 0 }, buffs: [{ id: 'edict', label: 'Electrifying Edict (DMG Lunar-Carregado da equipe)', scope: 'team', timed: true, stats: { reactionBonus: { lunarcharged: { p: 2 } } } }], expect: 'ATK is increased by', note: 'Assume o ATK depois de habilidade/Supremo sempre ativo. Electrifying Edict: +40% (R1) de DMG Lunar-Carregado da equipe por 20 s depois de criar um escudo com o ATK ativo: faixa, ligue nas janelas.' },
   'Bloodsoaked Ruins': { buffs: [{ id: 'lc', label: 'Lunar-Carregado depois do Supremo', timed: true, stats: { reactionBonus: { lunarcharged: { p: 1 } } } }, { id: 'requiem', label: 'Requiem of Ruin', timed: true, stats: { critDmg: { p: 3 } } }], expect: 'Lunar-Charged DMG', note: '+36% (R1) de DMG Lunar-Carregado por 3,5 s depois do Supremo e +28% de Dano Crítico por 6 s depois de um Lunar-Carregado: faixas. A energia não entra.' },
@@ -235,7 +235,7 @@ export const WEAPONS_2: Record<string, GearCur> = {
       { id: 'interludio', label: 'Interlúdio', timed: true, stats: { em: { p: 2 } } },
     ],
     expect: 'random theme song',
-    note: 'A música é sorteada: cada uma vira uma faixa na linha do tempo (ATK, DMG elemental ou Maestria) para você escolher qual vale em cada janela.',
+    note: 'A música é sorteada: cada uma vira uma faixa no plano de combate (ATK, DMG elemental ou Maestria) para você escolher qual vale em cada janela.',
   },
   'Sacrificial Fragments': sac(),
   'Solar Pearl': { byType: { normal: { p: 0 }, skill: { p: 0 }, burst: { p: 0 } }, expect: 'Normal Attack hits increase Elemental Skill and Elemental Burst DMG', note: 'Assume Normal, habilidade e Supremo se alimentando (todos com o bônus).' },
@@ -329,7 +329,7 @@ export const WEAPONS_2: Record<string, GearCur> = {
     em: [{ p: 0 }, { p: 2 }],
     buffs: [{ id: 'florescer', label: 'Florescer da equipe', scope: 'team', timed: true, stats: { reactionBonus: { bloom: { p: 4 }, hyperbloom: { p: 5 }, burgeon: { p: 5 }, lunarbloom: { p: 6 } } } }],
     expect: 'Prayer of the Far North',
-    note: 'A Maestria dos dois efeitos (assumidos ativos) e, com os dois, +120% de Florescer, +80% de Hiperflorescer e Brotar e +40% de Lunar-Florescer para a equipe (faixa na linha do tempo).',
+    note: 'A Maestria dos dois efeitos (assumidos ativos) e, com os dois, +120% de Florescer, +80% de Hiperflorescer e Brotar e +40% de Lunar-Florescer para a equipe (faixa no plano de combate).',
   },
   "Nocturne's Curtain Call": {
     hpPct: [{ re: 'Max HP increases by (\\d+(?:\\.\\d+)?)%' }, { p: 0 }],

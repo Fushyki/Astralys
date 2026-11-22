@@ -195,7 +195,7 @@ export default function NovoTime() {
         {step === 3 && (
           <section className="dz-panel nt-panel" aria-label="Passo 3: rotação">
             <h2 className="h2">Como começa a rotação?</h2>
-            <p className="muted">A rotação é a ordem dos golpes na linha do tempo. Você muda depois arrastando.</p>
+            <p className="muted">A rotação é a ordem dos golpes no plano de combate. Você muda depois arrastando.</p>
             <div className="nt-choices" role="radiogroup" aria-label="Rotação inicial">
               <label className="nt-choice" data-on={rotation === 'basic'}>
                 <input type="radio" name="rotation" checked={rotation === 'basic'} onChange={() => setRotation('basic')} />
@@ -208,7 +208,7 @@ export default function NovoTime() {
                 <input type="radio" name="rotation" checked={rotation === 'blank'} onChange={() => setRotation('blank')} />
                 <span>
                   <b>Em branco</b>
-                  <small>Nenhum golpe: você monta tudo na linha do tempo.</small>
+                  <small>Nenhum golpe: você monta tudo no plano de combate.</small>
                 </span>
               </label>
             </div>

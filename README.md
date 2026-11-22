@@ -1,7 +1,7 @@
 # Astralys
 
 **Teorycraft de Genshin Impact que mostra de onde vem cada número.**
-Monte um time, coloque a rotação numa linha do tempo e veja quanto dano cada personagem, cada buff e cada reação realmente rende.
+Monte um time, coloque a rotação num plano de combate e veja quanto dano cada personagem, cada buff e cada reação realmente rende.
 
 ### 👉 [astralys.vercel.app](https://astralys.vercel.app)
 
@@ -27,7 +27,7 @@ O motor reproduz uma planilha de theorycraft de referência com precisão total 
 1. **Na [página inicial](https://astralys.vercel.app)** clique em **Montar um time** e siga os 3 passos: escolha os personagens, o build (padrão ou importado do seu UID) e como a rotação começa. Se preferir só olhar, abra o time de exemplo.
 2. **Equipe:** veja os 4 personagens, o dano de cada um e o que cada um dá ao time.
 3. **Personagens:** a tela abre no **Resumo**. Em **Build** troque arma, artefatos e substats; em **Avançado** estão a tabela de dano completa, os buffs e as ferramentas (importar seu build pelo UID do jogo ou pelo arquivo do Genshin Optimizer).
-4. **Rotação e buffs:** arraste os golpes na linha do tempo e ligue os buffs nas janelas em que valem.
+4. **Rotação e buffs:** arraste os golpes no plano de combate e ligue os buffs nas janelas em que valem.
 5. **Dano do time:** leia o resultado (DPS, dano por personagem, reações) e gere o **Card** para compartilhar.
 
 ## Telas
@@ -38,7 +38,7 @@ O projeto tem 4 passos numerados no topo (Equipe → Personagens → Rotação e
 | --- | --- |
 | **Equipe** | Visão do time: DPS, divisão do dano, reação principal e um cartão por personagem. |
 | **Personagem** | Constelação, talentos, arma, artefatos, substats (otimizados ou à mão), tabela de dano de todo o kit, buffs recebidos e ferramentas. |
-| **Rotação e buffs** | Linha do tempo dos golpes, janelas de buff arrastáveis e cascata de multiplicadores de cada golpe. |
+| **Rotação e buffs** | Plano de combate dos golpes, janelas de buff arrastáveis e cascata de multiplicadores de cada golpe. |
 | **Dano do time** | Curva de dano acumulado, dano por fonte, valor de cada buff e os 10 maiores golpes. |
 | **Armas e constelações** | Compare todas as armas do tipo do personagem, refinamentos R1 a R5 e constelações C0 a C6. |
 | **Recarga** | Quanta recarga de energia cada personagem precisa (dentro do projeto ou avulsa). |

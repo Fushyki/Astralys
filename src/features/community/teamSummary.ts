@@ -9,7 +9,7 @@ export interface TeamSummary {
   shares: number[];
   members: { character: string; weapon: string; constellation: number; set?: string }[];
   /** Golpes em ordem de tempo, juntando repetições seguidas do mesmo golpe (`times` = quantas vezes). */
-  sequence: { member: number; label: string; times: number; /** instante do primeiro golpe, em s (ausente em times publicados antes da linha do tempo) */ time?: number }[];
+  sequence: { member: number; label: string; times: number; /** instante do primeiro golpe, em s (ausente em times publicados antes do plano de combate) */ time?: number }[];
   actionCount: number;
   /** Golpes da rotação como no card (instante de 0 a 1, tamanho, Supremo, letra); ausente em times publicados antes do card da galeria. */
   hits?: CardHit[];

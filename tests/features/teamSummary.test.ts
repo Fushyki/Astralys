@@ -9,7 +9,7 @@ describe('buildSummary', () => {
     expect(s.members.map((m) => m.character)).toEqual(p.members.map((m) => m.character));
     expect(s.sequence.length).toBeGreaterThan(0);
     expect(s.sequence.length).toBeLessThanOrEqual(30);
-    expect(s.sequence.every((x) => typeof x.time === 'number')).toBe(true); // instante de cada golpe, para a linha do tempo do card
+    expect(s.sequence.every((x) => typeof x.time === 'number')).toBe(true); // instante de cada golpe, para o plano de combate do card
     expect(s.actionCount).toBe(p.actions.length);
   });
   it('junta golpes iguais em sequência', () => {

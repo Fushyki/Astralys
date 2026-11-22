@@ -1,5 +1,5 @@
 /**
- * Linha do tempo (mockup RotacaoEstelar): régua com marcador, "Em campo", uma faixa por personagem (golpe único = círculo,
+ * Plano de combate (mockup RotacaoEstelar): régua com marcador, "Em campo", uma faixa por personagem (golpe único = círculo,
  * contínuo = linha com losangos), buffs agrupados por quem dá e janelas arrastáveis. Todas as faixas usam a mesma grade
  * (rótulo de 200 px + trilha). Arrastar muda o tempo (uma entrada de histórico ao soltar); setas movem (Shift = 0,5 s) e
  * Delete apaga o item selecionado.
@@ -190,18 +190,18 @@ export function Timeline({ v, lanes }: { v: ProjectView; lanes: LaneInfo[] }) {
   const ticks = Array.from({ length: tmax + 1 }, (_, i) => i);
   const title = (r: ActionResult | undefined, a: { time: number; displayName?: string; move: { label: string } }) =>
     `${a.displayName ?? a.move.label} · ${formatDecimal(a.time, 1)} s${r ? ` · ${formatInt(r.avg)} (${formatPercent(r.avg / total)} do time)` : ''}${flatTitle(r)}`;
-  /** Dano fixo que o golpe consome (para ver na linha do tempo quem usa qual buff flat). */
+  /** Dano fixo que o golpe consome (para ver no plano de combate quem usa qual buff flat). */
   const flatTitle = (r: ActionResult | undefined) => {
     const used = (r?.flatUse ?? []).filter((u) => u.hits > 0);
     return used.length ? ` · dano fixo: ${used.map((u) => `${u.name} ×${u.hits}`).join(', ')}` : '';
   };
 
   return (
-    <Panel bar title="Linha do tempo" aside={<Seg label="Zoom" value={zoom} onChange={setZoom} options={[{ value: 'fit', label: 'Ajustar' }, { value: '1', label: '1×' }, { value: '2', label: '2×' }]} />} className="rt-p0 rt-timeline">
+    <Panel bar title="Plano de combate" aside={<Seg label="Zoom" value={zoom} onChange={setZoom} options={[{ value: 'fit', label: 'Ajustar' }, { value: '1', label: '1×' }, { value: '2', label: '2×' }]} />} className="rt-p0 rt-timeline">
       <div className="rt-zoomscroll" ref={wrapRef} onScroll={syncFromTop}>
         <div className="rt-tlw" style={{ width: labelW + trackW, ['--cols' as string]: tmax }}>
           <div className="rt-caret" style={{ left: caretPx }} data-testid="caret" data-pushing={push ? true : undefined}>
-            <span className="grab" role="slider" aria-label="Linha do tempo: arraste para empurrar tudo que está à direita" aria-valuenow={Math.round(caret * 100) / 100} onPointerDown={onCaretDown} onPointerMove={onCaretMove} onPointerUp={onCaretUp} onPointerCancel={onCaretUp} />
+            <span className="grab" role="slider" aria-label="Plano de combate: arraste para empurrar tudo que está à direita" aria-valuenow={Math.round(caret * 100) / 100} onPointerDown={onCaretDown} onPointerMove={onCaretMove} onPointerUp={onCaretUp} onPointerCancel={onCaretUp} />
             <span className="flag num">{dec(caret, 1)} s{atHit ? ` · ${names[atHit.member]}: ${(atHit.displayName ?? atHit.move.label).replace(`${atHit.move.character} - `, '')}` : ''}{push && push.delta ? ` (${push.delta > 0 ? '+' : ''}${dec(push.delta, 1)} s)` : ''}</span>
           </div>
           {/* Tempo */}
@@ -318,7 +318,7 @@ export function Timeline({ v, lanes }: { v: ProjectView; lanes: LaneInfo[] }) {
         <input
           type="range"
           className="rt-hscroll"
-          aria-label="Rolar a linha do tempo na horizontal"
+          aria-label="Rolar o plano de combate na horizontal"
           min={0}
           max={scroll.max}
           step={1}

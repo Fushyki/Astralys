@@ -36,8 +36,8 @@ const num = (s) => Number(String(s).replace(/\./g, '').replace(',', '.'));
 
   // ---- Estrutura ----
   const titles = await page.$$eval('.dz-panel.bar > .bar-head h2', (e) => e.map((x) => x.textContent.trim()));
-  check('os painéis da tela, na ordem do mockup', ['Golpes', 'Linha do tempo', 'Golpe selecionado', 'Buff selecionado', 'Sequência', 'Dano acumulado na rotação', 'Divisão do dano'].join() === titles.join(), titles.join(' | '));
-  check('24 golpes na linha do tempo', (await hits()).length === 24, String((await hits()).length));
+  check('os painéis da tela, na ordem do mockup', ['Golpes', 'Plano de combate', 'Golpe selecionado', 'Buff selecionado', 'Sequência', 'Dano acumulado na rotação', 'Divisão do dano'].join() === titles.join(), titles.join(' | '));
+  check('24 golpes no plano de combate', (await hits()).length === 24, String((await hits()).length));
   check('DPS ao vivo do exemplo é 98.916', (await dps()) === '98.916', await dps());
   check('o cabeçalho conta golpes e buffs com janela', /24 golpes · \d+ buffs? com janela/.test(await page.textContent('.rt-head .sub')));
   check('a faixa do time tem 3 telas', (await page.$$eval('.dz-subnav nav a', (a) => a.map((x) => x.textContent.replace(/\s+/g, ' ').trim()))).join('|') === '1 · Equipe|2 · Personagens|3 · Rotação e buffs');
@@ -112,11 +112,11 @@ const num = (s) => Number(String(s).replace(/\./g, '').replace(',', '.'));
   const lenInput = sel.locator('.rt-fld:has-text("Duração") input');
   await lenInput.fill('25'); await lenInput.blur(); await settle();
   const hdr = (await page.textContent('.rt-head h1')).trim();
-  check('definir Duração 25 s estica a rotação e a linha do tempo', /Rotação · 2[5-9],\d s|Rotação · 26,\d s/.test(hdr) && hdr !== dur0, `${dur0} → ${hdr}`);
+  check('definir Duração 25 s estica a rotação e a plano de combate', /Rotação · 2[5-9],\d s|Rotação · 26,\d s/.test(hdr) && hdr !== dur0, `${dur0} → ${hdr}`);
   check('as execuções acompanham a duração (13 a cada 2 s)', (await sel.locator('.rt-exec .er').count()) >= 10);
   const execLabel = await sel.locator('.rt-exec .rt-lbl').textContent();
   check('"Contínuo" cria execuções editáveis uma a uma', /Execuções · \d+/.test(execLabel) && (await sel.locator('.rt-exec .er').count()) >= 2, execLabel);
-  check('a linha do tempo mostra losangos', (await page.locator('.rt-diamond').count()) >= 2);
+  check('a plano de combate mostra losangos', (await page.locator('.rt-diamond').count()) >= 2);
   await page.locator('.rt-zoomscroll').first().screenshot({ path: path.join(OUT, 'r-rotacao-continuo.png') });
   const total = await sel.locator('.rt-exec .er').count();
   await sel.locator('.rt-exec .er button[aria-label="Remover esta execução"]').nth(1).click(); await settle();

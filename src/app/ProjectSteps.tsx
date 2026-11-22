@@ -17,7 +17,7 @@ export function stepsFor(id: string, member: string): StepInfo[] {
   return [
     { n: 1, title: 'Equipe', hint: 'Confira quem está no time e os buffs que cada um recebe.', next: { label: 'Personagens', to: character } },
     { n: 2, title: 'Personagens', hint: 'Ajuste a arma, os artefatos e os substats de cada personagem (use as abas no topo para trocar de personagem).', prev: { label: 'Equipe', to: base }, next: { label: 'Rotação e buffs', to: `${base}/rotacao` } },
-    { n: 3, title: 'Rotação e buffs', hint: 'Coloque os golpes na linha do tempo e ligue os buffs nas janelas em que valem. O dano do time aparece aqui mesmo.', prev: { label: 'Personagens', to: character }, next: { label: 'Gerar card', to: `/card/${id}` } },
+    { n: 3, title: 'Rotação e buffs', hint: 'Coloque os golpes no plano de combate e ligue os buffs nas janelas em que valem. O dano do time aparece aqui mesmo.', prev: { label: 'Personagens', to: character }, next: { label: 'Gerar card', to: `/card/${id}` } },
   ];
 }
 

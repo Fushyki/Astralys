@@ -48,7 +48,7 @@ export interface BuffCur {
   id: string;
   label: string;
   scope?: 'self' | 'others' | 'team';
-  /** Vira faixa na linha do tempo (só vale nas janelas ligadas). Padrão: sempre ativo. */
+  /** Vira faixa no plano de combate (só vale nas janelas ligadas). Padrão: sempre ativo. */
   timed?: boolean;
   forElements?: Element[];
   stats?: StatsCur;

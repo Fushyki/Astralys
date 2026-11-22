@@ -1,5 +1,5 @@
 /**
- * Faixas de buff da linha do tempo: uma por fonte de buff de time (etiqueta) que a equipe realmente tem.
+ * Faixas de buff do plano de combate: uma por fonte de buff de time (etiqueta) que a equipe realmente tem.
  * O nome é curto para caber na coluna lateral; o detalhe completo vai no tooltip.
  */
 import { assembleTeam, type TeamInput } from '../../engine';

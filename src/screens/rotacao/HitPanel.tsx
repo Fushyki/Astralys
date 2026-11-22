@@ -33,7 +33,7 @@ export function HitPanel({ v }: { v: ProjectView }) {
   const badge = action ? <span className="dz-badge" style={{ background: '#2a1f3a', color: '#c9b5f2' }}>{memberName}</span> : undefined;
   return (
     <Panel bar title="Golpe selecionado" badge={badge} className="rt-order1">
-      {action ? <HitBody key={action.chainId ?? action.id} v={v} action={action} color={color} /> : <p className="rt-empty">Selecione um golpe na linha do tempo.</p>}
+      {action ? <HitBody key={action.chainId ?? action.id} v={v} action={action} color={color} /> : <p className="rt-empty">Selecione um golpe no plano de combate.</p>}
     </Panel>
   );
 }
@@ -185,7 +185,7 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
           </div>
           {flatSection}
           {buffsSection}
-          <span className="rt-note">Cada ponto tem tempo e reação próprios. Ex.: Durin derrete 1 a cada 2. Na linha do tempo, o ponto cheio tem reação e o vazado não.</span>
+          <span className="rt-note">Cada ponto tem tempo e reação próprios. Ex.: Durin derrete 1 a cada 2. No plano de combate, o ponto cheio tem reação e o vazado não.</span>
         </>
       ) : (
         <>

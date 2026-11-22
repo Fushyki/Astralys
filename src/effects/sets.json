@@ -755,7 +755,7 @@
       "procs": []
     },
     "twoPieceBuffs": [],
-    "note": "+50% de DMG do Carregado por 10 s depois de derrotar um inimigo: faixa na linha do tempo, ligue na janela.",
+    "note": "+50% de DMG do Carregado por 10 s depois de derrotar um inimigo: faixa no plano de combate, ligue na janela.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
   {
@@ -855,7 +855,7 @@
       "procs": []
     },
     "twoPieceBuffs": [],
-    "note": "+35% de DMG elemental da equipe por 10 s depois de pegar um fragmento de Cristalizar: faixa na linha do tempo. Só um elemento por vez; ligue em quem tem o elemento do fragmento.",
+    "note": "+35% de DMG elemental da equipe por 10 s depois de pegar um fragmento de Cristalizar: faixa no plano de combate. Só um elemento por vez; ligue em quem tem o elemento do fragmento.",
     "partial": true,
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
@@ -1930,7 +1930,7 @@
         }
       ]
     },
-    "note": "Duas faixas na linha do tempo, para o dono e a equipe: +12% por 15 s e, se o dono estava em Bênção do Espírito da Noite, +28% por 20 s. Valem para quem tem o elemento do dono ou um elemento da reação (escolhidos na Equipe, em \"Elementos da reação\"). Conjuntos com o mesmo nome não acumulam."
+    "note": "Duas faixas no plano de combate, para o dono e a equipe: +12% por 15 s e, se o dono estava em Bênção do Espírito da Noite, +28% por 20 s. Valem para quem tem o elemento do dono ou um elemento da reação (escolhidos na Equipe, em \"Elementos da reação\"). Conjuntos com o mesmo nome não acumulam."
   },
   {
     "set": "Obsidian Codex",
@@ -2591,7 +2591,7 @@
       "procs": []
     },
     "twoPieceBuffs": [],
-    "note": "+16% de Taxa Crítica e +40% de Redemoinho Estelar por 10 s depois de um Redemoinho Estelar: faixa na linha do tempo.",
+    "note": "+16% de Taxa Crítica e +40% de Redemoinho Estelar por 10 s depois de um Redemoinho Estelar: faixa no plano de combate.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
   {

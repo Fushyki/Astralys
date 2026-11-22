@@ -58,7 +58,7 @@
 .rt-mv .n { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .rt-mv .plus { color: var(--gold); font-weight: 700; font-size: var(--fs-4); }
 
-/* linha do tempo */
+/* plano de combate */
 .rt-zoomscroll { overflow-x: auto; }
 .rt-tlw { min-width: 100%; }
 .rt-lane { display: grid; grid-template-columns: 200px minmax(0, 1fr); min-height: 48px; border-bottom: 1px solid var(--line-0); align-items: stretch; }
@@ -283,7 +283,7 @@
 .rt-manual > summary { cursor: pointer; font: 700 var(--fs-3) var(--font-display); letter-spacing: .06em; text-transform: uppercase; color: var(--gold); }
 .rt-manual[open] > summary { margin-bottom: var(--sp-1); }
 
-/* Celular: o que se usa mais (desfazer, refazer) fica à mão e o resto vai para "Mais"; a linha do tempo vem antes da lista de golpes. */
+/* Celular: o que se usa mais (desfazer, refazer) fica à mão e o resto vai para "Mais"; a plano de combate vem antes da lista de golpes. */
 .rt-more-btn { display: none; }
 @media (max-width: 900px) {
   .rt-head .acts { margin-left: 0; width: 100%; }
@@ -300,7 +300,7 @@
   .rt-search { min-height: 44px; }
   .rt-ico { min-width: 40px; min-height: 40px; }
   .rt-bar { min-height: 32px; }
-  /* Os golpes da linha do tempo ficam pequenos para caber; a área de toque cresce sem mudar o desenho. */
+  /* Os golpes do plano de combate ficam pequenos para caber; a área de toque cresce sem mudar o desenho. */
   .rt-hit { position: relative; }
   .rt-hit::after { content: ''; position: absolute; inset: -8px; }
 }

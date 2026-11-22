@@ -1,5 +1,5 @@
 /**
- * "Fio de origem": a demonstração da página inicial. A rotação do time de exemplo numa linha do tempo; ao escolher um golpe,
+ * "Fio de origem": a demonstração da página inicial. A rotação do time de exemplo num plano de combate; ao escolher um golpe,
  * um fio liga o dano a cada buff que o alimenta, e cada buff pode ser tirado para ver quanto o golpe perde.
  * Todos os números vêm do motor (`scripts/make-home-demo.ts` → `demo.json`).
  */
@@ -13,7 +13,7 @@ import './origem.css';
 const demo = demoJson as Demo;
 const SECONDS = [0, 5, 10, 15];
 
-/** Largura do elemento, acompanhando o redimensionamento (a linha do tempo é desenhada em pixels). */
+/** Largura do elemento, acompanhando o redimensionamento (a plano de combate é desenhada em pixels). */
 function useWidth() {
   const ref = useRef<HTMLDivElement>(null);
   const [w, setW] = useState(640);
@@ -190,7 +190,7 @@ export default function OrigemDemo() {
             ))}
           </ul>
         )}
-        <p className="or-hint">{rows.length ? 'Toque num buff para tirá-lo e ver o golpe sem ele.' : 'Escolha outro golpe na linha do tempo.'}</p>
+        <p className="or-hint">{rows.length ? 'Toque num buff para tirá-lo e ver o golpe sem ele.' : 'Escolha outro golpe no plano de combate.'}</p>
       </div>
     </section>
   );

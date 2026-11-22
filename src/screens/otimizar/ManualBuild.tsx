@@ -23,9 +23,9 @@ interface SetData { id: number; name: string; namePt?: string; rarity?: number }
 interface Row { key: SubKey; procs: number; value: number }
 
 const SUB_NAME: Record<SubKey, string> = {
-  critRate_: 'Taxa Crítica', critDMG_: 'Dano Crítico', atk_: 'ATK%', atk: 'ATK', eleMas: 'Maestria', enerRech_: 'Recarga', hp_: 'HP%', hp: 'HP', def_: 'DEF%', def: 'DEF',
+  critRate_: 'Taxa Crítica', critDMG_: 'Dano Crítico', atk_: 'ATK%', atk: 'ATK', eleMas: 'Proficiência', enerRech_: 'Recarga', hp_: 'HP%', hp: 'HP', def_: 'DEF%', def: 'DEF',
 };
-const MAIN_NAME: Record<string, string> = { 'ATK%': 'ATK%', 'HP%': 'HP%', 'DEF%': 'DEF%', EM: 'Maestria', ER: 'Recarga', CR: 'Taxa Crítica', CD: 'Dano Crítico', 'DMG%': 'Bônus de dano', Healing: 'Cura' };
+const MAIN_NAME: Record<string, string> = { 'ATK%': 'ATK%', 'HP%': 'HP%', 'DEF%': 'DEF%', EM: 'Proficiência', ER: 'Recarga', CR: 'Taxa Crítica', CD: 'Dano Crítico', 'DMG%': 'Bônus de dano', Healing: 'Cura' };
 const SUBSTAT_OF =Object.fromEntries((SUBSTATS as readonly Substat[]).map((s) => [SUB_KEY[s], s])) as Record<SubKey, Substat>;
 const ALL_KEYS = (SUBSTATS as readonly Substat[]).map((s) => SUB_KEY[s]);
 /** Set provisório das peças manuais quando o personagem ainda não tem set: não casa com nenhum set, então não dá bônus. */

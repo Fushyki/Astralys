@@ -77,7 +77,7 @@ export interface KeyStat {
   v: string;
 }
 
-/** 4 stats-chave: o stat principal (ATK/HP/DEF), Maestria e, para DPS, os críticos; para suporte, Recarga e Taxa crítica. */
+/** 4 stats-chave: o stat principal (ATK/HP/DEF), Proficiência e, para DPS, os críticos; para suporte, Recarga e Taxa crítica. */
 export function keyStats(bundle: AnalysisBundle, index: number, role: Role): KeyStat[] {
   const s = bundle.memberStats[index];
   const scale = bundle.optimization.members[index]?.mainScale ?? 'atk';

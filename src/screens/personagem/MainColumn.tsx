@@ -35,7 +35,7 @@ export function Attributes({ v, index }: { v: ProjectView; index: number }) {
     { k: 'ATK', base: `${formatInt(character.baseAtk + (weapon?.baseAtk ?? 0))} base`, v: formatInt(s.atk) },
     { k: 'HP', base: `${formatInt(character.baseHp)} base`, v: formatInt(s.hp) },
     { k: 'DEF', base: `${formatInt(character.baseDef)} base`, v: formatInt(s.def) },
-    { k: 'Maestria Elemental', v: formatInt(s.em) },
+    { k: 'Proficiência Elemental', v: formatInt(s.em) },
     { k: 'Recarga de Energia', v: pct(s.er) },
     { k: 'Taxa crítica', v: pct(s.critRate) },
     { k: 'Dano crítico', v: pct(s.critDmg) },
@@ -201,7 +201,7 @@ export function ReceivedBuffsPanel({ v, index }: { v: ProjectView; index: number
 
 
 const ROLL_LABEL: Record<Substat, string> = {
-  CR: 'Taxa Crítica', CD: 'Dano Crítico', 'ATK%': 'ATK%', EM: 'Maestria', ER: 'Recarga', ATK: 'ATK fixo', 'HP%': 'HP%', HP: 'HP fixo', 'DEF%': 'DEF%', DEF: 'DEF fixo',
+  CR: 'Taxa Crítica', CD: 'Dano Crítico', 'ATK%': 'ATK%', EM: 'Proficiência', ER: 'Recarga', ATK: 'ATK fixo', 'HP%': 'HP%', HP: 'HP fixo', 'DEF%': 'DEF%', DEF: 'DEF fixo',
 };
 
 /** Quanto o dano da equipe sobe com mais um roll de cada substat deste personagem (abaixo de "Reações deste time"). */

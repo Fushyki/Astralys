@@ -88,7 +88,7 @@ function MovePanel({ title, badge, tone, lines, crit }: { title: string; badge: 
 // ---------- substats em estrelas ----------
 
 const SUB_NAME: Record<Substat, string> = {
-  CR: 'Taxa crítica', CD: 'Dano crítico', 'ATK%': 'ATK%', EM: 'Maestria Elemental', ER: 'Recarga', ATK: 'ATK fixo', 'HP%': 'HP%', HP: 'HP fixo', 'DEF%': 'DEF%', DEF: 'DEF fixo',
+  CR: 'Taxa crítica', CD: 'Dano crítico', 'ATK%': 'ATK%', EM: 'Proficiência Elemental', ER: 'Recarga', ATK: 'ATK fixo', 'HP%': 'HP%', HP: 'HP fixo', 'DEF%': 'DEF%', DEF: 'DEF fixo',
 };
 const PCT = new Set<Substat>(['CR', 'CD', 'ATK%', 'ER', 'HP%', 'DEF%']);
 const LEFT: Substat[] = ['CR', 'EM', 'ATK%', 'HP%', 'DEF%'];
@@ -222,7 +222,7 @@ export function Dashboard({ v, index, onGood }: { v: ProjectView; index: number;
     { ico: 'hp', k: 'HP', v: formatInt(s.hp) },
     { ico: 'atk', k: 'ATK', v: formatInt(s.atk) },
     { ico: 'def', k: 'DEF', v: formatInt(s.def) },
-    { ico: 'em', k: 'Maestria Elemental', v: formatInt(s.em) },
+    { ico: 'em', k: 'Proficiência Elemental', v: formatInt(s.em) },
     { ico: 'er', k: 'Recarga de Energia', v: pct(s.er) },
     { ico: 'cr', k: 'Taxa crítica', v: pct(s.critRate) },
     { ico: 'cd', k: 'Dano crítico', v: pct(s.critDmg) },

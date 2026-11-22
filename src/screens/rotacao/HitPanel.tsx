@@ -214,7 +214,7 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
                   ))}
                 </div>
               )}
-              <span className="rt-note">O dano é o maior valor + 1/2 do 2º + 1/12 do 3º + 1/12 do 4º (cada um já com o multiplicador de reação, 0,6 do golpe direto), cada um com a Maestria e o crítico dele. A ação conta para {memberLabel}.</span>
+              <span className="rt-note">O dano é o maior valor + 1/2 do 2º + 1/12 do 3º + 1/12 do 4º (cada um já com o multiplicador de reação, 0,6 do golpe direto), cada um com a Proficiência e o crítico dele. A ação conta para {memberLabel}.</span>
             </div>
           )}
           {pointsSection}

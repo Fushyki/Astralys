@@ -112,7 +112,7 @@ interface CondProps {
   stats?: { atk: number; hp: number; def: number; em: number };
 }
 
-const FLAT_STAT = { ATK: ['atk', 'do ATK'], HP: ['hp', 'do HP'], DEF: ['def', 'da DEF'], EM: ['em', 'da Maestria'], BaseATK: ['atk', 'do ATK base'] } as const;
+const FLAT_STAT = { ATK: ['atk', 'do ATK'], HP: ['hp', 'do HP'], DEF: ['def', 'da DEF'], EM: ['em', 'da Proficiência'], BaseATK: ['atk', 'do ATK base'] } as const;
 
 /** Linhas do dano fixo do buff: "120% do ATK" e, com os stats do dono, o valor por golpe na build atual. */
 function flatRows(buff: CharacterBuff, stats?: CondProps['stats']): { name: string; value: string }[] {

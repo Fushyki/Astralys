@@ -29,7 +29,7 @@ import { Button } from '../../design/Button';
 
 const SLOT_LABEL: Record<PieceSlot, string> = { flower: 'Flor', plume: 'Pena', sands: 'Areia', goblet: 'Cálice', circlet: 'Tiara' };
 const STAT_LABEL: Record<string, string> = {
-  'ATK%': 'ATK%', EM: 'Maestria Elemental', ER: 'Recarga de Energia', 'HP%': 'HP%', 'DEF%': 'DEF%', 'DMG%': 'DMG% elemental',
+  'ATK%': 'ATK%', EM: 'Proficiência Elemental', ER: 'Recarga de Energia', 'HP%': 'HP%', 'DEF%': 'DEF%', 'DMG%': 'DMG% elemental',
   CR: 'Taxa Crítica', CD: 'Dano Crítico', Healing: 'Bônus de Cura',
 };
 

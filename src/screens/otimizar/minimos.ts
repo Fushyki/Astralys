@@ -8,7 +8,7 @@ export const MIN_DEFS: { k: MinKey; label: string; pct: boolean }[] = [
   { k: 'er', label: 'Recarga', pct: true },
   { k: 'cr', label: 'Taxa crítica', pct: true },
   { k: 'cd', label: 'Dano crítico', pct: true },
-  { k: 'em', label: 'Maestria', pct: false },
+  { k: 'em', label: 'Proficiência', pct: false },
   { k: 'hp', label: 'HP', pct: false },
   { k: 'atk', label: 'ATK', pct: false },
   { k: 'def', label: 'DEF', pct: false },

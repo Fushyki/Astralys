@@ -133,11 +133,11 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   // ---- Foco num stat ----
   await rmMin('Recarga');
   await page.click('.ot-seg[aria-label="O que otimizar"] button:has-text("Stat")');
-  await page.click('.ot-seg button:has-text("Maestria")');
+  await page.click('.ot-seg button:has-text("Proficiência")');
   await page.click('.ot-go-btn');
   await page.waitForSelector('.ot-build', { timeout: 120000 });
   const em = await page.$$eval('.ot-build .val b', (b) => b.map((x) => Number(x.textContent.replace(/\./g, ''))));
-  check('foco em Maestria: o melhor build tem a maior Maestria', em.length > 0 && em[0] >= Math.max(...em), em.join(' > '));
+  check('foco em Proficiência: o melhor build tem a maior Proficiência', em.length > 0 && em[0] >= Math.max(...em), em.join(' > '));
 
   // ---- Um golpe do kit, com e sem reação ----
   await page.click('.ot-seg[aria-label="O que otimizar"] button:has-text("Dano")');

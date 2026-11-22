@@ -16,7 +16,7 @@ const RESONANCE_TEXT: Record<Element, { applied: boolean; text: string }> = {
   Pyro: { applied: true, text: '+25% de ATK para toda a equipe, já aplicado' },
   Hydro: { applied: true, text: '+25% de HP máximo para toda a equipe, já aplicado' },
   Cryo: { applied: true, text: '+15% de Taxa Crítica (contra inimigos sob Cryo, assumido sempre), já aplicado' },
-  Dendro: { applied: true, text: '+50 de Maestria Elemental, já aplicado (os bônus depois de reações não entram)' },
+  Dendro: { applied: true, text: '+50 de Proficiência Elemental, já aplicado (os bônus depois de reações não entram)' },
   Geo: { applied: true, text: '-20% de RES Geo do inimigo, já aplicado (o +15% de DMG com escudo não entra)' },
   Electro: { applied: false, text: 'não muda stats (só recupera energia), então não afeta o dano' },
   Anemo: { applied: false, text: 'não muda stats (estamina, velocidade e recarga de habilidade), então não afeta o dano' },

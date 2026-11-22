@@ -45,7 +45,7 @@ export function BuildComparePanel({ v, index, onOptimize }: { v: ProjectView; in
     { label: 'HP', cur: a.hp, best: b.hp, kind: 'int' },
     { label: 'ATK', cur: a.atk, best: b.atk, kind: 'int' },
     { label: 'DEF', cur: a.def, best: b.def, kind: 'int' },
-    { label: 'Maestria Elemental', cur: a.em, best: b.em, kind: 'int' },
+    { label: 'Proficiência Elemental', cur: a.em, best: b.em, kind: 'int' },
     { label: 'Recarga de Energia', cur: a.er, best: b.er, kind: 'pct' },
     { label: 'Taxa Crítica', cur: a.critRate, best: b.critRate, kind: 'pct' },
     { label: 'Dano Crítico', cur: a.critDmg, best: b.critDmg, kind: 'pct' },

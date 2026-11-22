@@ -31,7 +31,7 @@ export const CUSTOM_GROUPS: CustomGroup[] = [
     title: 'Atributos básicos',
     stats: [
       { stat: 'HP', label: 'HP fixo', pct: false }, { stat: 'HP%', label: 'HP%', pct: true }, { stat: 'ATK', label: 'ATK fixo', pct: false }, { stat: 'ATK%', label: 'ATK%', pct: true },
-      { stat: 'DEF', label: 'DEF fixo', pct: false }, { stat: 'DEF%', label: 'DEF%', pct: true }, { stat: 'EM', label: 'Maestria', pct: false }, { stat: 'ER', label: 'Recarga de Energia', pct: true },
+      { stat: 'DEF', label: 'DEF fixo', pct: false }, { stat: 'DEF%', label: 'DEF%', pct: true }, { stat: 'EM', label: 'Proficiência', pct: false }, { stat: 'ER', label: 'Recarga de Energia', pct: true },
       { stat: 'CR', label: 'Taxa Crítica', pct: true }, { stat: 'CD', label: 'Dano Crítico', pct: true },
     ],
   },

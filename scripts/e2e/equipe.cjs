@@ -62,7 +62,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   // A coluna de cada personagem lista só o que ELE passa (não o que recebe).
   await page.locator('.eq-card:has(.name:text-is("Citlali")) .bc-head').click();
   const cit = await page.locator('.eq-card:has(.name:text-is("Citlali"))').textContent();
-  check('a Citlali mostra o que passa ao time (RES e Maestria)', /RES Pyro do inimigo −20%/.test(cit) && /\+120 EM/.test(cit) && !/ATK fixo/.test(cit), cit.match(/RES[^A-Z]*/)?.[0]);
+  check('a Citlali mostra o que passa ao time (RES e Proficiência)', /RES Pyro do inimigo −20%/.test(cit) && /\+120 EM/.test(cit) && !/ATK fixo/.test(cit), cit.match(/RES[^A-Z]*/)?.[0]);
   await page.locator('.eq-card:has(.name:text-is("Bennett")) .bc-head').click();
   const ben = await page.locator('.eq-card:has(.name:text-is("Bennett"))').textContent();
   check('o Bennett mostra o ATK fixo e o set', /ATK fixo/.test(ben) && /\+20% ATK/.test(ben));

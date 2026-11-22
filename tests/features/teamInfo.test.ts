@@ -31,7 +31,7 @@ describe('ressonância', () => {
     for (const el of ['Electro', 'Anemo']) expect(by[el].applied, el).toBe(false);
     expect(by.Hydro.text).toMatch(/25%.*HP/);
     expect(by.Cryo.text).toMatch(/15%.*Taxa Crítica/);
-    expect(by.Dendro.text).toMatch(/50.*Maestria/);
+    expect(by.Dendro.text).toMatch(/50.*Proficiência/);
     expect(by.Geo.text).toMatch(/20%.*RES Geo/);
   });
 

@@ -57,8 +57,8 @@ type Goal = 'dano' | 'buff' | 'stat';
 type Scope = 'manual' | 'member' | 'move';
 type Crit = 'avg' | 'crit' | 'noCrit';
 type StatKey = 'hp' | 'atk' | 'def' | 'em' | 'er';
-const STAT_LABEL: Record<StatKey, string> = { hp: 'HP máximo', atk: 'ATK', def: 'DEF', em: 'Maestria', er: 'Recarga' };
-const FROM_LABEL: Record<string, string> = { atk: 'o ATK', baseAtk: 'o ATK base', hp: 'o HP', def: 'a DEF', em: 'a Maestria', er: 'a Recarga' };
+const STAT_LABEL: Record<StatKey, string> = { hp: 'HP máximo', atk: 'ATK', def: 'DEF', em: 'Proficiência', er: 'Recarga' };
+const FROM_LABEL: Record<string, string> = { atk: 'o ATK', baseAtk: 'o ATK base', hp: 'o HP', def: 'a DEF', em: 'a Proficiência', er: 'a Recarga' };
 const CRIT_LABEL: Record<Crit, string> = { avg: 'Média com crítico', crit: 'Sempre crítico', noCrit: 'Sem crítico' };
 const CRIT_SHORT: Record<Crit, string> = { avg: 'Média', crit: 'Sempre', noCrit: 'Nunca' };
 /** Glifo da posição quando falta a imagem da peça. */
@@ -418,7 +418,7 @@ export function OtimizadorPanel({ index }: { index: number }) {
     <div className="ot-field">
       <span className="lbl">Otimizar</span>
       <div className="ot-seg" role="group" aria-label="O que otimizar">
-        {([['dano', 'Dano', 'Dano do time, dele ou de um golpe'], ['buff', 'Buff', 'O maior valor de um buff que ele dá ao time (foco de suportes)'], ['stat', 'Stat', 'O maior valor final de HP, ATK, Maestria… (use os mínimos para não perder o resto)']] as [Goal, string, string][]).map(([k, label, tip]) => (
+        {([['dano', 'Dano', 'Dano do time, dele ou de um golpe'], ['buff', 'Buff', 'O maior valor de um buff que ele dá ao time (foco de suportes)'], ['stat', 'Stat', 'O maior valor final de HP, ATK, Proficiência… (use os mínimos para não perder o resto)']] as [Goal, string, string][]).map(([k, label, tip]) => (
           <button key={k} type="button" aria-pressed={ui.goal === k} title={tip} onClick={() => setUi({ ...ui, goal: k })}>{label}</button>
         ))}
       </div>

@@ -118,7 +118,7 @@ export function Moves({ v }: { v: ProjectView }) {
         )}
         {reactions.length > 0 && (
           <div className="rt-mvgroup">
-            <span className="rt-lbl" title="Dano da própria reação (Maestria e bônus de reação deste personagem)">Reações (dano da reação)</span>
+            <span className="rt-lbl" title="Dano da própria reação (Proficiência e bônus de reação deste personagem)">Reações (dano da reação)</span>
             {reactions.map((r) => (
               <button
                 key={r.key}

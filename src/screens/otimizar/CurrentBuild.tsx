@@ -13,7 +13,7 @@ interface SetInfo { name: string; id: number }
 export function currentStats(build: OptimizedBuild, field: boolean): { k: string; v: string; gold?: boolean; rate?: number }[] {
   const s = field ? build.report.fieldStats : build.report.bareStats;
   return [
-    { k: 'ATK', v: fmtInt(s.atk) }, { k: 'HP', v: fmtInt(s.hp) }, { k: 'DEF', v: fmtInt(s.def) }, { k: 'Maestria', v: fmtInt(s.em) },
+    { k: 'ATK', v: fmtInt(s.atk) }, { k: 'HP', v: fmtInt(s.hp) }, { k: 'DEF', v: fmtInt(s.def) }, { k: 'Proficiência', v: fmtInt(s.em) },
     { k: 'Taxa crít.', v: fmtPct(s.critRate), gold: true, rate: s.critRate }, { k: 'Dano crít.', v: fmtPct(s.critDmg), gold: true },
     { k: 'Recarga', v: fmtPct(s.er) }, { k: 'Crit Value', v: formatDecimal(critValue(s), 1) },
   ];

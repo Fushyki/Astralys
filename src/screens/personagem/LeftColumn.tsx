@@ -13,7 +13,7 @@ import { Button } from '../../design/Button';
 
 const WEAPON_LABEL: Record<string, string> = { Sword: 'ESPADA', Claymore: 'ESPADÃO', Polearm: 'LANÇA', Catalyst: 'CATALISADOR', Bow: 'ARCO' };
 const SUBSTAT_LABEL: Record<Substat, string> = {
-  CR: 'Taxa crít.', CD: 'Dano crít.', 'ATK%': 'ATK%', EM: 'Maestria', ER: 'Recarga', ATK: 'ATK fixo', 'HP%': 'HP%', HP: 'HP fixo', 'DEF%': 'DEF%', DEF: 'DEF fixo',
+  CR: 'Taxa crít.', CD: 'Dano crít.', 'ATK%': 'ATK%', EM: 'Proficiência', ER: 'Recarga', ATK: 'ATK fixo', 'HP%': 'HP%', HP: 'HP fixo', 'DEF%': 'DEF%', DEF: 'DEF fixo',
 };
 const SUBSTAT_TAG: Record<Substat, string> = { CR: 'CR', CD: 'CD', 'ATK%': 'ATK%', EM: 'EM', ER: 'ER', ATK: 'ATK', 'HP%': 'HP%', HP: 'HP', 'DEF%': 'DEF%', DEF: 'DEF' };
 const clamp = (v: number) => Math.max(1, Math.min(15, Math.round(v)));
@@ -122,7 +122,7 @@ export function SubstatsPanel({ memberRef, index, bundle, onGood, bases }: { mem
         { key: 'atk', label: 'ATK', value: finals.atk, shown: Math.round(finals.atk), step: 10, pct: false },
         { key: 'hp', label: 'HP', value: finals.hp, shown: Math.round(finals.hp), step: 100, pct: false },
         { key: 'def', label: 'DEF', value: finals.def, shown: Math.round(finals.def), step: 10, pct: false },
-        { key: 'em', label: 'Maestria', value: finals.em, shown: Math.round(finals.em), step: 1, pct: false },
+        { key: 'em', label: 'Proficiência', value: finals.em, shown: Math.round(finals.em), step: 1, pct: false },
         { key: 'er', label: 'Recarga (%)', value: finals.er, shown: Math.round(finals.er * 1000) / 10, step: 0.1, pct: true },
         { key: 'critRate', label: 'Taxa crít. (%)', value: finals.critRate, shown: Math.round(finals.critRate * 1000) / 10, step: 0.1, pct: true },
         { key: 'critDmg', label: 'Dano crít. (%)', value: finals.critDmg, shown: Math.round(finals.critDmg * 1000) / 10, step: 0.1, pct: true },

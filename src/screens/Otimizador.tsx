@@ -488,11 +488,11 @@ export function OtimizadorPanel({ index }: { index: number }) {
         </>
       ) : ui.goal === 'dano' && ui.scope === 'manual' ? (
         <>
+          <section className="ot-bar" aria-label="Foco da otimização"><div className="ot-bar-cfg"><div className="ot-bar-line">{goalField}{alvoField}</div></div></section>
           <div className="ot-top">
             <CurrentBuild build={current} field={fieldMode} onField={() => setFieldMode(!fieldMode)} sets={data.game.artifacts} kqm={!!kqmCurrent} />
             <div className="ot-manualwrap">{manualBox}</div>
           </div>
-          <section className="ot-bar" aria-label="Foco da otimização"><div className="ot-bar-cfg"><div className="ot-bar-line">{goalField}{alvoField}</div></div></section>
         </>
       ) : (
         <>

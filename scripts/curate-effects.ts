@@ -594,7 +594,7 @@ function buildCharacters(): CharacterEffect[] {
       const row = raw.skills?.[SKILL_KEY[p.kitTalent]]?.multipliers?.[p.key];
       if (!row || row.length !== 15) throw new Error(`${name}: a linha "${p.key}" não existe ou não tem 15 níveis`);
       for (const l of p.labels) if (!moves.some((m) => m.character === name && m.talent === p.talent && m.label === l)) errors.push(`${name}: golpe "${l}" (${p.talent}) não existe no Lunaris`);
-      return { talent: p.talent, labels: p.labels, levelTalent: p.kitTalent, perPoint: row.map((t) => percentOf(String(t))), max: p.max, unit: p.unit, ...(p.cadinho ? { cadinho: p.cadinho } : {}) };
+      return { talent: p.talent, labels: p.labels, levelTalent: p.kitTalent, perPoint: row.map((t) => percentOf(String(t)) * (p.scale ?? 1)), max: p.max, unit: p.unit, ...(p.cadinho ? { cadinho: p.cadinho } : {}) };
     });
     const specialMoves = SPECIAL_MOVES[name] ?? [];
     for (const s of specialMoves) {

@@ -1057,6 +1057,204 @@
     "fonte_info": "planilha Mavuika_Iansan_Combo2, aba \"Personagens (efeitos)\". Supremo: 139% do ATK base (nv 13 + C1, sua planilha)."
   },
   {
+    "character": "Arlecchino",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "a4",
+        "label": "Arlecchino A4",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.4,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "note": "+40% de DMG Pyro em combate, sempre."
+      },
+      {
+        "id": "c6",
+        "label": "Arlecchino C6",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {
+            "normal": 0.1,
+            "burst": 0.1
+          },
+          "critDmgByType": {
+            "normal": 0.7,
+            "burst": 0.7
+          },
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "note": "+10% de Taxa e +70% de Dano Crítico de Normal e Supremo por 20 s depois do All Is Ash: ligue nas janelas."
+      }
+    ],
+    "notes": [
+      {
+        "src": "p1",
+        "kind": "utility",
+        "note": "Só Bond of Life e cura."
+      },
+      {
+        "src": "const1",
+        "kind": "partial",
+        "note": "O aumento do Masque of the Red Death (+100% do ATK dos Normais) não entra: o dano extra dos Normais depende da % de Bond of Life no momento."
+      },
+      {
+        "src": "const4",
+        "kind": "utility",
+        "note": "Só recarga e energia (informativo)."
+      },
+      {
+        "src": "p2",
+        "kind": "utility",
+        "note": "Só RES própria (defesa), sem efeito no dano."
+      },
+      {
+        "src": "const2",
+        "kind": "partial",
+        "note": "Entra o golpe de 900% do ATK (a cada 10 s). A RES +20% por 15 s não muda o dano."
+      },
+      {
+        "src": "const6",
+        "kind": "partial",
+        "note": "Entram +10% de Taxa e +70% de Dano Crítico de Normal e Supremo por 20 s (janela). O dano extra do Balemoon Rising (ATK x 700% da % de Bond of Life) não entra: depende da % de Bond of Life no momento."
+      }
+    ],
+    "infos": [
+      {
+        "src": "const4",
+        "kind": "recarga",
+        "label": "Recarga do Balemoon Rising",
+        "text": "cai 2 s ao absorver uma Directive; no máximo uma vez a cada 10 s"
+      },
+      {
+        "src": "const4",
+        "kind": "energia",
+        "label": "Energia que ela recupera",
+        "text": "15 de Energia ao absorver uma Directive; no máximo uma vez a cada 10 s"
+      }
+    ],
+    "procs": [
+      {
+        "id": "c2",
+        "label": "Arlecchino C2: Balemoon Bloodfire",
+        "scale": {
+          "atk": 9
+        },
+        "minConstellation": 2,
+        "src": "const2",
+        "note": "900% do ATK a cada 10 s. A RES dela não muda o dano."
+      }
+    ],
+    "factions": [],
+    "specialMoves": [],
+    "pointMoves": [
+      {
+        "talent": "normal",
+        "labels": [
+          "1-Hit DMG",
+          "2-Hit DMG",
+          "3-Hit DMG",
+          "5-Hit DMG",
+          "6-Hit DMG"
+        ],
+        "levelTalent": "normal",
+        "perPoint": [
+          0.01204,
+          0.01302,
+          0.013999999999999999,
+          0.0154,
+          0.01638,
+          0.0175,
+          0.019039999999999998,
+          0.020579999999999998,
+          0.02212,
+          0.023799999999999998,
+          0.025480000000000003,
+          0.027160000000000004,
+          0.02884,
+          0.030520000000000002,
+          0.0322
+        ],
+        "max": 200,
+        "unit": "% de Vínculo da Vida"
+      },
+      {
+        "talent": "normal",
+        "labels": [
+          "4-Hit DMG"
+        ],
+        "levelTalent": "normal",
+        "perPoint": [
+          0.02408,
+          0.02604,
+          0.027999999999999997,
+          0.0308,
+          0.03276,
+          0.035,
+          0.038079999999999996,
+          0.041159999999999995,
+          0.04424,
+          0.047599999999999996,
+          0.050960000000000005,
+          0.05432000000000001,
+          0.05768,
+          0.061040000000000004,
+          0.0644
+        ],
+        "max": 200,
+        "unit": "% de Vínculo da Vida"
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
     "character": "Raiden Shogun",
     "atkPct": 0,
     "dmgPct": 0,
@@ -12414,147 +12612,6 @@
       }
     ],
     "procs": [],
-    "factions": [],
-    "specialMoves": [],
-    "pointMoves": [],
-    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
-  },
-  {
-    "character": "Arlecchino",
-    "atkPct": 0,
-    "dmgPct": 0,
-    "critRate": 0,
-    "critDmg": 0,
-    "em": 0,
-    "appliesToSelf": false,
-    "buffs": [
-      {
-        "id": "a4",
-        "label": "Arlecchino A4",
-        "minConstellation": 0,
-        "scope": "self",
-        "timed": false,
-        "stats": {
-          "atkPct": 0,
-          "dmgPct": 0.4,
-          "critRate": 0,
-          "critDmg": 0,
-          "em": 0,
-          "er": 0,
-          "hpPct": 0,
-          "defPct": 0,
-          "dmgPctByType": {},
-          "critRateByType": {},
-          "critDmgByType": {},
-          "baseMultByType": {},
-          "defIgnore": 0,
-          "atkFlat": 0,
-          "atkBaseFlat": 0,
-          "hpFlat": 0,
-          "defFlat": 0,
-          "physDmgPct": 0,
-          "physCritDmg": 0,
-          "reactionBonus": {}
-        },
-        "flat": [],
-        "note": "+40% de DMG Pyro em combate, sempre."
-      },
-      {
-        "id": "c6",
-        "label": "Arlecchino C6",
-        "minConstellation": 6,
-        "scope": "self",
-        "timed": true,
-        "stats": {
-          "atkPct": 0,
-          "dmgPct": 0,
-          "critRate": 0,
-          "critDmg": 0,
-          "em": 0,
-          "er": 0,
-          "hpPct": 0,
-          "defPct": 0,
-          "dmgPctByType": {},
-          "critRateByType": {
-            "normal": 0.1,
-            "burst": 0.1
-          },
-          "critDmgByType": {
-            "normal": 0.7,
-            "burst": 0.7
-          },
-          "baseMultByType": {},
-          "defIgnore": 0,
-          "atkFlat": 0,
-          "atkBaseFlat": 0,
-          "hpFlat": 0,
-          "defFlat": 0,
-          "physDmgPct": 0,
-          "physCritDmg": 0,
-          "reactionBonus": {}
-        },
-        "flat": [],
-        "note": "+10% de Taxa e +70% de Dano Crítico de Normal e Supremo por 20 s depois do All Is Ash: ligue nas janelas."
-      }
-    ],
-    "notes": [
-      {
-        "src": "p1",
-        "kind": "utility",
-        "note": "Só Bond of Life e cura."
-      },
-      {
-        "src": "const1",
-        "kind": "partial",
-        "note": "O aumento do Masque of the Red Death (+100% do ATK dos Normais) não entra: o dano extra dos Normais depende da % de Bond of Life no momento."
-      },
-      {
-        "src": "const4",
-        "kind": "utility",
-        "note": "Só recarga e energia (informativo)."
-      },
-      {
-        "src": "p2",
-        "kind": "utility",
-        "note": "Só RES própria (defesa), sem efeito no dano."
-      },
-      {
-        "src": "const2",
-        "kind": "partial",
-        "note": "Entra o golpe de 900% do ATK (a cada 10 s). A RES +20% por 15 s não muda o dano."
-      },
-      {
-        "src": "const6",
-        "kind": "partial",
-        "note": "Entram +10% de Taxa e +70% de Dano Crítico de Normal e Supremo por 20 s (janela). O dano extra do Balemoon Rising (ATK x 700% da % de Bond of Life) não entra: depende da % de Bond of Life no momento."
-      }
-    ],
-    "infos": [
-      {
-        "src": "const4",
-        "kind": "recarga",
-        "label": "Recarga do Balemoon Rising",
-        "text": "cai 2 s ao absorver uma Directive; no máximo uma vez a cada 10 s"
-      },
-      {
-        "src": "const4",
-        "kind": "energia",
-        "label": "Energia que ela recupera",
-        "text": "15 de Energia ao absorver uma Directive; no máximo uma vez a cada 10 s"
-      }
-    ],
-    "procs": [
-      {
-        "id": "c2",
-        "label": "Arlecchino C2: Balemoon Bloodfire",
-        "scale": {
-          "atk": 9
-        },
-        "minConstellation": 2,
-        "src": "const2",
-        "note": "900% do ATK a cada 10 s. A RES dela não muda o dano."
-      }
-    ],
     "factions": [],
     "specialMoves": [],
     "pointMoves": [],

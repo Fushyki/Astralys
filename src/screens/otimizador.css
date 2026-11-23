@@ -57,6 +57,9 @@
 
 /* Escolha do golpe: botão na barra de foco e popup com os tipos de dano em cores */
 .ot-movebtn { display: flex; align-items: center; gap: var(--sp-2); min-height: var(--ctl-md); padding: 0 var(--sp-3); border: 1px solid var(--line-3); border-radius: var(--r-ctl); background: var(--bg-sunk); color: var(--text); font: 500 var(--fs-3) var(--font-body); text-align: left; cursor: pointer; width: 100%; }
+.ot-focusdmg { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--sp-2); margin: var(--sp-2) 0 0; font-size: var(--fs-2); color: var(--muted); }
+.ot-focusdmg b { color: var(--gold); font: 700 var(--fs-4) var(--font-display); }
+.ot-focusdmg small { font-size: var(--fs-1); }
 .ot-movebtn:hover { border-color: var(--gold); }
 .ot-movebtn .n { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ot-movebtn .chev { color: var(--muted); }

@@ -436,6 +436,11 @@ export function OtimizadorPanel({ index }: { index: number }) {
   ) : null;
   const focusMove = moves.find((m) => m.id === ref.kqmFocus);
   const focusInRotation = !focusMove || v.resolved.actions.some((x) => x.member === index && x.move.id === focusMove.id);
+  /** Dano do foco no build atual (mesma conta do motor): os golpes do foco na rotação ou, sem foco, tudo do personagem. */
+  const focusDamage = (() => {
+    const mine = v.bundle.optimization.result.actions.filter((a) => a.action.member === index && (!focusMove || !focusInRotation || a.action.move.id === focusMove.id));
+    return { avg: mine.reduce((t, a) => t + a.avg, 0), noCrit: mine.reduce((t, a) => t + a.noCrit, 0), crit: mine.reduce((t, a) => t + a.crit, 0), n: mine.length };
+  })();
   /** Foco do KQM: o mesmo seletor de golpes da otimização; sem golpe vale a rotação inteira. */
   const focusNode = (
     <div className="ot-field">
@@ -447,6 +452,11 @@ export function OtimizadorPanel({ index }: { index: number }) {
         <span className="chev" aria-hidden="true">▾</span>
       </button>
       {!focusInRotation && <p className="note small">Este golpe não está na rotação: o KQM usa a rotação completa.</p>}
+      <p className="ot-focusdmg" data-testid="focus-damage" title="Soma dos golpes do foco na rotação, com a build atual (buffs ligados nas janelas)">
+        <span>{focusMove && focusInRotation ? 'Dano do foco' : 'Dano do personagem na rotação'}</span>
+        <b className="num">{formatInt(focusDamage.avg)}</b>
+        <small className="num">sem crítico {formatInt(focusDamage.noCrit)} · crítico {formatInt(focusDamage.crit)} · {focusDamage.n} {focusDamage.n === 1 ? 'golpe' : 'golpes'}</small>
+      </p>
     </div>
   );
   /** KQM sobre as peças dadas: roda o motor com um personagem sem peças, mas com os stats principais e o set delas. */

@@ -279,7 +279,8 @@ export function optimizeMember(ctx: OptimizerContext, memberIndex: number, flatB
     k = c; // o resto vai para crítico (CR), como na planilha
   } else {
     const forced = m.forcedCritRolls;
-    const kForced = forced === undefined ? undefined : Math.max(0, Math.min(damageRolls, forced - base.CR - base.CD));
+    // O forçado não passa do que cabe nos tetos de CR e CD: além disso a busca não achava combinação e jogava tudo na Proficiência.
+    const kForced = forced === undefined ? undefined : Math.max(0, Math.min(damageRolls, maxCR + maxCD, forced - base.CR - base.CD));
     // o mínimo de ATK% fica reservado: crítico só usa o que sobra
     const kMax = damageRolls - sMin;
     const range = kForced === undefined ? Array.from({ length: kMax + 1 }, (_, i) => i) : [Math.min(kForced, kMax)];

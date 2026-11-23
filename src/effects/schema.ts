@@ -455,6 +455,8 @@ export const FlatDamageEffectSchema = z.object({
   labels: z.array(z.string().min(1)).optional(),
   /** Quantos hits consomem o buff (undefined = ilimitado). Consumidos pelos primeiros hits elegíveis. */
   stacks: z.number().int().positive().optional(),
+  /** O usuário escolhe os golpes (`RotationAction.flatOn`); sem isso os golpes consomem em ordem de tempo. */
+  manual: z.boolean().optional(),
   /** Efeito do kit: `perPoint` é multiplicado por `table[nível do talento da fonte - 1]` ao montar o projeto. */
   level: BuffLevelSchema.optional(),
   active: z.boolean(),

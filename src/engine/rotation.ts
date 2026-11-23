@@ -83,6 +83,8 @@ export interface RotationAction {
   contributors?: readonly number[];
   /** Dano fixo que ESTE golpe não consome (ids de `flatId`); o golpe fica de fora mesmo sobrando stacks. */
   flatOff?: readonly string[];
+  /** Modo manual do buff: só estes (ids de `flatId`) consomem. */
+  flatOn?: readonly string[];
   time?: number;
   note?: string;
 }
@@ -164,6 +166,8 @@ export interface FlatUse {
   off: boolean;
   /** Stacks totais do efeito (undefined = todos os golpes). */
   stacks?: number;
+  /** O usuário escolhe os golpes deste buff (a caixa vale como "recebe"). */
+  manual?: boolean;
 }
 
 /** Id estável de um buff de dano fixo (quem dá + nome). */
@@ -395,11 +399,11 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
       const labelOk = !e.labels?.length || e.labels.includes(move.label);
       if (!(targetOk && elementOk && typeOk && labelOk)) continue;
       const id = flatId(e);
-      const off = !!action.flatOff?.includes(id);
+      const off = e.manual ? !action.flatOn?.includes(id) : !!action.flatOff?.includes(id);
       const covered = off || f.remaining <= 0 ? 0 : Math.min(hitsOfAction, f.remaining);
       f.remaining -= covered;
       flatPass[idx].damage += covered * f.perHit;
-      flatPass[idx].use.push({ id, name: e.name, source: e.source, perHit: f.perHit, hits: covered, off, ...(e.stacks !== undefined ? { stacks: e.stacks } : {}) });
+      flatPass[idx].use.push({ id, name: e.name, source: e.source, perHit: f.perHit, hits: covered, off, ...(e.stacks !== undefined ? { stacks: e.stacks } : {}), ...(e.manual ? { manual: true } : {}) });
     }
   });
 

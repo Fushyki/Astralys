@@ -12461,16 +12461,21 @@
             "perPoint": 2,
             "hitTypes": [
               "normal"
-            ]
+            ],
+            "decay": {
+              "rate": 0.075,
+              "floorPct": 30,
+              "maxPct": 200
+            }
           }
         ],
         "stacks": {
           "max": 40,
-          "unit": "% de Vínculo da Vida",
+          "unit": "% de Vínculo",
           "default": 20,
           "step": 5
         },
-        "note": "Com o Vínculo da Vida em 30% ou mais, cada acerto de Normal soma ao dano base (valor do talento Normal × ATK × Vínculo atual). Escolha o Vínculo (padrão 100%). A infusão Pyro liga junto."
+        "note": "Com o Vínculo em 30% ou mais, cada acerto de Normal soma ao dano base (valor do talento Normal × ATK × Vínculo atual) e consome 7,5% do Vínculo atual. Escolha o Vínculo inicial (padrão 100%); a Rotação desconta a cada acerto e o campo \"Vínculo\" do golpe recomeça a contagem. Os otimizadores usam sempre o valor escolhido aqui, sem desconto. A infusão Pyro liga junto e não desliga sozinha abaixo de 30%."
       },
       {
         "id": "a4",

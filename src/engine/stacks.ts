@@ -18,9 +18,11 @@ export const stackFraction = (stacks: NonNullable<CharacterBuff['stacks']>, n: n
 export function scaleBuffStacks(b: CharacterBuff, chosen: number | undefined): CharacterBuff {
   if (!b.stacks) return b;
   const n = stacksOf(b, chosen);
-  if (n === b.stacks.max) return b;
+  // O recurso que o dano fixo gasta por acerto começa no valor escolhido (em %).
+  const withStart = (b2: CharacterBuff): CharacterBuff => b2.flat?.some((f) => f.decay) ? { ...b2, flat: b2.flat.map((f) => (f.decay ? { ...f, decay: { ...f.decay, startPct: n * (b.stacks!.step ?? 1) } } : f)) } : b2;
+  if (n === b.stacks.max) return withStart(b);
   const k = stackFraction(b.stacks, n);
-  return {
+  return withStart({
     ...b,
     ...(b.stats ? { stats: scaleNumbers(b.stats, k) } : {}),
     ...(b.convert ? { convert: { ...b.convert, perPoint: b.convert.perPoint * k } } : {}),
@@ -28,7 +30,7 @@ export function scaleBuffStacks(b: CharacterBuff, chosen: number | undefined): C
     ...(b.flat?.length ? { flat: b.flat.map((f) => ({ ...f, perPoint: f.perPoint * k })) } : {}),
     ...(b.resShred ? { resShred: { ...b.resShred, value: b.resShred.value * k } } : {}),
     ...(b.defShred ? { defShred: b.defShred * k } : {}),
-  };
+  });
 }
 
 export function withStacks(effect: CharacterEffect | undefined, chosen: Record<string, number> | undefined): CharacterEffect | undefined {

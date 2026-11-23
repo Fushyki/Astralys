@@ -7,7 +7,7 @@ import type { CharacterEffect } from '../../src/effects/schema';
 const effects: CharacterEffect[] = JSON.parse(readFileSync(path.resolve(__dirname, '../../src/effects/characters.json'), 'utf8'));
 const buff = effects.find((e) => e.character === 'Arlecchino')!.buffs.find((b) => b.id === 'normal')!;
 
-it('Masque of the Red Death: Normais somam (valor do talento × ATK × Vínculo da Vida), escolhido em passos de 5%', () => {
+it('Masque of the Red Death: Normais somam (valor do talento × ATK × Vínculo), escolhido em passos de 5%', () => {
   expect(buff.flat[0]).toMatchObject({ sourceStat: 'ATK', hitTypes: ['normal'] });
   expect(buff.level!.talent).toBe('normal');
   expect(buff.level!.table[0]).toBeCloseTo(1.204, 6); // nível 1: 120,4% do ATK por 100% de Vínculo

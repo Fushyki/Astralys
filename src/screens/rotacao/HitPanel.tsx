@@ -121,6 +121,12 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
             <span className="n">{u.name}<small>de {u.source}</small></span>
             <span className="num v">{u.hits > 0 ? `+${formatInt(u.hits * u.perHit)} · ${u.hits} × ${formatInt(u.perHit)}` : u.off ? 'não consome' : 'sem stacks'}</span>
           </label>
+          {u.level !== undefined && (
+            <div className="qty">
+              <Num label="Vínculo neste golpe" className="sm" value={u.level} digits={1} min={0} unit="%" onCommit={(n) => (chainId ? setAll({ vinculo: n }) : update(action.id, { vinculo: n }))} />
+              {action.vinculo !== undefined && <Button variant="ghost" size="sm" onClick={() => (chainId ? setAll({ vinculo: undefined }) : update(action.id, { vinculo: undefined }))}>Automático</Button>}
+            </div>
+          )}
           <div className="qty">
             <Seg label={`Quais golpes: ${u.name}`} value={u.manual ? 'manual' : 'auto'} options={[{ value: 'auto', label: 'Em ordem' }, { value: 'manual', label: 'Escolher golpes' }]} onChange={(m) => st().setFlatManual(u.id, m === 'manual')} />
           </div>

@@ -210,6 +210,20 @@ export type BuffTeamRules = z.infer<typeof BuffTeamRulesSchema>;
 export const BuffLevelSchema = z.object({ talent: z.enum(['normal', 'skill', 'burst']), table: z.array(z.number()).length(15) });
 export type BuffLevel = z.infer<typeof BuffLevelSchema>;
 
+/**
+ * O dano fixo gasta o próprio recurso a cada acerto (Arlecchino: cada acerto de Normal consome 7,5% do Vínculo atual).
+ * Valores em % do recurso: `perPoint` vale para `startPct` (preenchido pelos stacks escolhidos; ausente = `maxPct`).
+ */
+export const FlatDecaySchema = z.object({
+  /** Fração do recurso consumida por acerto (0,075). */
+  rate: z.number().min(0).max(1),
+  /** Abaixo disto o efeito não vale (Masque: 30% do Vínculo). */
+  floorPct: z.number().min(0),
+  maxPct: z.number().positive(),
+  startPct: z.number().min(0).optional(),
+});
+export type FlatDecay = z.infer<typeof FlatDecaySchema>;
+
 /** Dano plano de arma/set: `perPoint` × stat do dono por golpe elegível, até `capPerHit` e `stacks` golpes. */
 export const WeaponFlatSchema = z.object({
   name: z.string().min(1),
@@ -221,6 +235,7 @@ export const WeaponFlatSchema = z.object({
   /** Só estes golpes, pelo rótulo do Lunaris (ex.: "Frostfall Storm DMG"); vazio = qualquer golpe do tipo. */
   labels: z.array(z.string().min(1)).optional(),
   stacks: z.number().int().positive().optional(),
+  decay: FlatDecaySchema.optional(),
   /** Quem recebe: o dono (padrão), a equipe inteira ou só os outros (ex.: Xilonen C4, nos Normais dos aliados). */
   targets: z.enum(['self', 'team', 'others']).optional(),
   /** Só golpes destes elementos (ex.: Faruzan A4, dano Anemo). */
@@ -457,6 +472,7 @@ export const FlatDamageEffectSchema = z.object({
   stacks: z.number().int().positive().optional(),
   /** O usuário escolhe os golpes (`RotationAction.flatOn`); sem isso os golpes consomem em ordem de tempo. */
   manual: z.boolean().optional(),
+  decay: FlatDecaySchema.optional(),
   /** Efeito do kit: `perPoint` é multiplicado por `table[nível do talento da fonte - 1]` ao montar o projeto. */
   level: BuffLevelSchema.optional(),
   active: z.boolean(),

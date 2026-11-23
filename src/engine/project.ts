@@ -187,6 +187,8 @@ export const ActionSchema = z.object({
   flatOff: z.array(z.string()).optional(),
   /** Buffs de dano fixo em modo manual (`RotationProject.flatManual`): só os golpes com o id aqui consomem o buff. */
   flatOn: z.array(z.string()).optional(),
+  /** Recurso que o dano fixo gasta por acerto (Vínculo da Arlecchino, em %): neste golpe a contagem recomeça daqui. Ausente = continua do golpe anterior. */
+  vinculo: z.number().min(0).max(400).optional(),
   /** Etiquetas de buff (faixas) que ESTE golpe ignora, mesmo dentro da janela delas (desligar um buff só para um golpe). */
   tagsOff: z.array(z.string()).optional(),
   /** Instante da rotação, em segundos. */
@@ -545,7 +547,7 @@ export function gearFlat(members: MemberInput[]): FlatDamageEffect[] {
         out.push({
           name: `${origin}: ${f.name}`, source: m.character.name, sourceStat: f.sourceStat, perPoint: f.perPoint, threshold: 0,
           ...(f.capPerHit !== undefined ? { capPerHit: f.capPerHit } : {}), targets, elements: f.elements ?? [], hitTypes: f.hitTypes, ...(f.labels?.length ? { labels: f.labels } : {}),
-          ...(f.stacks !== undefined ? { stacks: f.stacks } : {}), active: true, fonte_info: `Passiva de ${origin} (curadoria do Lunaris)`,
+          ...(f.stacks !== undefined ? { stacks: f.stacks } : {}), ...(f.decay ? { decay: f.decay } : {}), active: true, fonte_info: `Passiva de ${origin} (curadoria do Lunaris)`,
         });
       }
     }
@@ -862,6 +864,7 @@ export function resolveProject(project: RotationProject, data: GameData, effects
       ...(a.contributors?.length ? { contributors: a.contributors } : {}),
       ...(a.flatOff?.length ? { flatOff: a.flatOff } : {}),
       ...(a.flatOn?.length ? { flatOn: a.flatOn } : {}),
+      ...(a.vinculo !== undefined ? { vinculo: a.vinculo } : {}),
       time: a.time,
       note: a.note,
     };

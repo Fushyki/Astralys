@@ -349,6 +349,13 @@ export function OtimizadorPanel({ index }: { index: number }) {
     setEquippedKey(b.key);
   };
 
+  /** Escolha de artefato: com todos ligados, o escolhido fica sozinho; depois cada toque soma ou tira um. Sem nenhum ligado, volta a todos. */
+  const pickSet = (key: string): string[] => {
+    if (ui.offSets.length === 0) return setInfo.map((s) => s.key).filter((k) => k !== key);
+    if (ui.offSets.includes(key)) return ui.offSets.filter((k) => k !== key);
+    const next = [...ui.offSets, key];
+    return next.length >= setInfo.length ? [] : next;
+  };
   const toggle = (list: string[], key: string) => (list.includes(key) ? list.filter((k) => k !== key) : [...list, key]);
   const focusValue = (r: OptimizedBuild['report']) =>
     ui.goal === 'stat' ? (ui.stat === 'er' ? `${formatDecimal(r.value * 100, 0)}%` : formatInt(r.value))
@@ -436,11 +443,34 @@ export function OtimizadorPanel({ index }: { index: number }) {
   ) : null;
   const focusMove = moves.find((m) => m.id === ref.kqmFocus);
   const focusInRotation = !focusMove || v.resolved.actions.some((x) => x.member === index && x.move.id === focusMove.id);
-  /** Dano do foco no build atual (mesma conta do motor): os golpes do foco na rotação ou, sem foco, tudo do personagem. */
-  const focusDamage = (() => {
-    const mine = v.bundle.optimization.result.actions.filter((a) => a.action.member === index && (!focusMove || !focusInRotation || a.action.move.id === focusMove.id));
-    return { avg: mine.reduce((t, a) => t + a.avg, 0), noCrit: mine.reduce((t, a) => t + a.noCrit, 0), crit: mine.reduce((t, a) => t + a.crit, 0), n: mine.length };
+  /**
+   * Dano do golpe de foco SOZINHO (um golpe do kit com todos os buffs do time ligados, como o alvo "Golpe") no build atual, e o da rotação
+   * completa do personagem. O golpe não precisa estar na rotação; sem foco só aparece a rotação.
+   */
+  const focusReport = (() => {
+    if (!character) return null; // o foco só aparece no painel manual, que também abre sem inventário
+    const rotation = v.bundle.optimization.result.members[index]?.avg ?? 0;
+    if (!focusMove) return { rotation, hit: null };
+    const rx = (v.resolved.actions.find((x) => x.member === index && x.move.id === focusMove.id)?.reaction ?? 'none') as ReactionChoice;
+    const input = {
+      good: good ?? ({ format: 'GOOD', characters: [], weapons: [], artifacts: [] } as Good), characterKey, member: index, rolls: v.bundle.optimization.rolls, ref,
+      resolved: { team: v.resolved.team, actions: v.resolved.actions, flatEffects: v.resolved.flatEffects, ampCoefficient: v.resolved.ampCoefficient },
+      planilha: project.compat === 'planilha', game: data.game, effects: data.effects,
+    };
+    try {
+      // Sem peças reais o build é o KQM genérico (as 5 peças a partir dos rolls do motor), com ou sem inventário.
+      const first = ref.primarySet ? setKeyOf(ref.primarySet) : 'SemSet';
+      const second = ref.secondarySet && ref.fourPiece !== true ? setKeyOf(ref.secondarySet) : first;
+      const own = ref.pieces?.length
+        ? (ref.pieces as GoodArtifact[])
+        : kqmPieces(v.bundle.optimization.rolls[index], ref.artifacts, first, character.element).pieces.map((p) => (p.slotKey === 'sands' || p.slotKey === 'goblet' ? { ...p, setKey: second } : p));
+      const at = (crit: 'avg' | 'crit' | 'noCrit') => evaluateEquipped({ ...input, config: { ...config(), constraints: {}, objective: { kind: 'move', moveId: focusMove.id, reaction: rx, crit, points: ui.points } } }, own)?.report.value ?? 0;
+      return { rotation, hit: { avg: at('avg'), noCrit: at('noCrit'), crit: at('crit') } };
+    } catch {
+      return { rotation, hit: null };
+    }
   })();
+
   /** Foco do KQM: o mesmo seletor de golpes da otimização; sem golpe vale a rotação inteira. */
   const focusNode = (
     <div className="ot-field">
@@ -452,11 +482,21 @@ export function OtimizadorPanel({ index }: { index: number }) {
         <span className="chev" aria-hidden="true">▾</span>
       </button>
       {!focusInRotation && <p className="note small">Este golpe não está na rotação: o KQM usa a rotação completa.</p>}
-      <p className="ot-focusdmg" data-testid="focus-damage" title="Soma dos golpes do foco na rotação, com a build atual (buffs ligados nas janelas)">
-        <span>{focusMove && focusInRotation ? 'Dano do foco' : 'Dano do personagem na rotação'}</span>
-        <b className="num">{formatInt(focusDamage.avg)}</b>
-        <small className="num">sem crítico {formatInt(focusDamage.noCrit)} · crítico {formatInt(focusDamage.crit)} · {focusDamage.n} {focusDamage.n === 1 ? 'golpe' : 'golpes'}</small>
-      </p>
+      {focusReport && (
+        <div className="ot-focusdmg" data-testid="focus-damage">
+          {focusReport.hit && (
+            <p title="O golpe de foco sozinho, com todos os buffs do time ligados e a reação marcada na rotação (como o alvo Golpe)">
+              <span>Dano do golpe</span>
+              <b className="num">{formatInt(focusReport.hit.avg)}</b>
+              <small className="num">sem crítico {formatInt(focusReport.hit.noCrit)} · crítico {formatInt(focusReport.hit.crit)}</small>
+            </p>
+          )}
+          <p title="Dano médio de todos os golpes deste personagem na rotação, com a build atual">
+            <span>Rotação completa</span>
+            <b className="num">{formatInt(focusReport.rotation)}</b>
+          </p>
+        </div>
+      )}
     </div>
   );
   /** KQM sobre as peças dadas: roda o motor com um personagem sem peças, mas com os stats principais e o set delas. */
@@ -545,9 +585,9 @@ export function OtimizadorPanel({ index }: { index: number }) {
 
             <Panel
               bar
-              title="Sets"
+              title="Artefatos"
               badge={<span className={`dz-badge num${ui.offSets.length ? ' gold' : ''}`}>{setsOn}/{setInfo.length}</span>}
-              aside={<button type="button" className="ot-ghost" onClick={() => setUi({ ...ui, offSets: ui.offSets.length ? [] : setInfo.map((x) => x.key) })}>{ui.offSets.length ? 'Todos' : 'Nenhum'}</button>}
+              aside={ui.offSets.length ? <button type="button" className="ot-ghost" onClick={() => setUi({ ...ui, offSets: [] })}>Todos</button> : undefined}
             >
               <div className="ot-switches">
                 <button type="button" className="ot-switch" aria-pressed={ui.fillerSets} onClick={() => setUi({ ...ui, fillerSets: !ui.fillerSets })}>
@@ -558,11 +598,11 @@ export function OtimizadorPanel({ index }: { index: number }) {
                   <span className="dz-badge num">{ui.borrow ? othersCount : 0}/{othersCount}</span>
                 </button>
               </div>
-              <span className="ot-hint">Marque só os sets que podem dar bônus de 2 ou 4 peças.</span>
+              <span className="ot-hint">Todos começam ligados. Toque num artefato para usar só ele; toque em outros para somar, ou no ligado para tirar.</span>
               <div className="ot-sets-wrap">
                 <div className="ot-sets">
                   {setInfo.map((x) => (
-                    <button key={x.key} type="button" className="ot-set" aria-pressed={!ui.offSets.includes(x.key)} onClick={() => setUi({ ...ui, offSets: toggle(ui.offSets, x.key) })} title={`${x.name}: ${x.count} peças`} aria-label={`${x.name}: ${x.count} peças`}>
+                    <button key={x.key} type="button" className="ot-set" aria-pressed={!ui.offSets.includes(x.key)} onClick={() => setUi({ ...ui, offSets: pickSet(x.key) })} title={`${x.name}: ${x.count} peças`} aria-label={`${x.name}: ${x.count} peças`}>
                       <Img src={x.id ? pieceIconUrl(x.id, 'flower') : undefined} fallback="" />
                       <small className="num">{x.count}</small>
                     </button>

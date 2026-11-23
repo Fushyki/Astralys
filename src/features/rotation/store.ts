@@ -52,6 +52,7 @@ export interface RotationState {
   updateAction: (id: string, patch: Partial<Omit<ActionRef, 'id'>>) => void;
   /** Quantos golpes um buff de dano fixo atinge (número, "all" ou undefined = o do cadastro). */
   setFlatStacks: (id: string, value: number | 'all' | undefined) => void;
+  setFlatManual: (id: string, manual: boolean) => void;
   addExtra: (extra: ExtraBuff) => void;
   removeExtra: (index: number) => void;
   moveAction: (id: string, time: number) => void;
@@ -184,6 +185,7 @@ export const useRotationStore = create<RotationState>((set, get) => {
     addExtra: (extra) => commit(get().project && ops.addExtra(get().project!, extra)),
     removeExtra: (index) => commit(get().project && ops.removeExtra(get().project!, index)),
     setFlatStacks: (id, value) => commit(get().project && ops.setFlatStacks(get().project!, id, value)),
+    setFlatManual: (id, manual) => commit(get().project && ops.setFlatManual(get().project!, id, manual)),
     moveAction: (id, time) => commit(get().project && ops.moveAction(get().project!, id, time)),
     applyProject: (next) => commit(next, null),
     pushFrom: (at, delta) => {

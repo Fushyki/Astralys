@@ -95,10 +95,15 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
   const setAll = (patch: Partial<ActionRef>) => execs.forEach((e) => update(e.id, patch));
   /** Dano fixo: este golpe (ou todas as execuções do contínuo) consome ou não o buff. */
   const flatOff = action.flatOff ?? [];
-  const toggleFlat = (id: string, on: boolean) => {
-    const next = on ? flatOff.filter((x) => x !== id) : [...new Set([...flatOff, id])];
-    if (chainId) setAll({ flatOff: next.length ? next : undefined });
-    else update(action.id, { flatOff: next.length ? next : undefined });
+  const flatOn = action.flatOn ?? [];
+  const toggleFlat = (id: string, on: boolean, manual?: boolean) => {
+    // Modo manual: a caixa marca os golpes que recebem (flatOn). Automático: desmarca os que ficam de fora (flatOff).
+    const patch = manual
+      ? { flatOn: (on ? [...new Set([...flatOn, id])] : flatOn.filter((x) => x !== id)) }
+      : { flatOff: (on ? flatOff.filter((x) => x !== id) : [...new Set([...flatOff, id])]) };
+    const clean = Object.fromEntries(Object.entries(patch).map(([k, v]) => [k, v.length ? v : undefined]));
+    if (chainId) setAll(clean);
+    else update(action.id, clean);
   };
   const point = pointMoveOf(action.move, effect);
   const pointsSection = point?.cadinho ? (
@@ -112,10 +117,13 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
       {result.flatUse.map((u) => (
         <div className="fr" key={u.id} data-off={u.off}>
           <label>
-            <input type="checkbox" checked={!u.off} onChange={(e) => toggleFlat(u.id, e.target.checked)} aria-label={`Este golpe consome ${u.name}`} />
+            <input type="checkbox" checked={!u.off} onChange={(e) => toggleFlat(u.id, e.target.checked, u.manual)} aria-label={`Este golpe consome ${u.name}`} />
             <span className="n">{u.name}<small>de {u.source}</small></span>
             <span className="num v">{u.hits > 0 ? `+${formatInt(u.hits * u.perHit)} · ${u.hits} × ${formatInt(u.perHit)}` : u.off ? 'não consome' : 'sem stacks'}</span>
           </label>
+          <div className="qty">
+            <Seg label={`Quais golpes: ${u.name}`} value={u.manual ? 'manual' : 'auto'} options={[{ value: 'auto', label: 'Em ordem' }, { value: 'manual', label: 'Escolher golpes' }]} onChange={(m) => st().setFlatManual(u.id, m === 'manual')} />
+          </div>
           <div className="qty">
             <Seg label={`Quantos golpes: ${u.name}`} value={u.stacks === undefined ? 'all' : 'n'} options={[{ value: 'all', label: 'Todos os golpes' }, { value: 'n', label: 'N golpes' }]} onChange={(m) => st().setFlatStacks(u.id, m === 'all' ? 'all' : (u.stacks ?? 5))} />
             {u.stacks !== undefined && <Num ariaLabel={`Quantidade de golpes de ${u.name}`} className="sm" value={u.stacks} digits={0} min={1} unit="golpes" onCommit={(n) => st().setFlatStacks(u.id, n)} />}

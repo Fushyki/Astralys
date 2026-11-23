@@ -17,13 +17,13 @@ const icy = effects.flatDamage.find((e) => e.source === 'Shenhe' && e.stacks)!;
 const LEAD = flatId(icy);
 const STACKS = icy.stacks!;
 
-function run(times: number[], extra: Record<string, unknown> = {}, flatStacks: Record<string, number | 'all'> = {}) {
+function run(times: number[], extra: Record<string, unknown> = {}, flatStacks: Record<string, number | 'all'> = {}, flatManual?: string[]) {
   const base = { ...sampleProject(), compat: 'none' as const };
   const acts = times.map((t, i) => ({
     id: `a${i}`, member: 1, move: { character: 'Skirk', talent: 'burst', label: skirkMove.label, variant: skirkMove.variant }, executions: 1, reaction: 'none',
     activeTags: [] as string[], tagSource: 'manual', dmgAdjust: 0, time: t, ...(i === 0 ? extra : {}),
   }));
-  const p = { ...base, members: names.map((n) => ({ ...defaultMember(n, game), constellation: 0 })), actions: acts, buffWindows: [], disabled: [], flatStacks };
+  const p = { ...base, members: names.map((n) => ({ ...defaultMember(n, game), constellation: 0 })), actions: acts, buffWindows: [], disabled: [], flatStacks, flatManual };
   const r = resolveProject(p as never, game, effects);
   const res = evaluateRotation({ members: r.team.members, assembly: assembleTeam(r.team), config: r.team.config, rolls: r.team.members.map(() => minimumRolls(2)), flatEffects: r.flatEffects }, r.actions);
   return { res, r, project: p };
@@ -39,6 +39,15 @@ describe('buffs de dano fixo: quantos golpes e quais golpes consomem', () => {
     const late = res.actions.find((a) => a.action.id === 'a0')!;
     expect(lead(early)!.hits).toBe(Math.min(hits, STACKS));
     expect(lead(late)!.hits).toBe(Math.min(hits, Math.max(0, STACKS - lead(early)!.hits)));
+  });
+
+  it('modo manual: só os golpes marcados consomem, em qualquer ponto da rotação', () => {
+    const none = run([1, 2, 3], {}, {}, [LEAD]).res;
+    expect(none.actions.every((a) => lead(a)!.off && lead(a)!.hits === 0)).toBe(true);
+    const picked = run([1, 2, 3], { flatOn: [LEAD] }, {}, [LEAD]).res; // só o golpe a0 (instante 1) marcado
+    expect(lead(picked.actions.find((a) => a.action.id === 'a0')!)!.hits).toBeGreaterThan(0);
+    expect(picked.actions.filter((a) => a.action.id !== 'a0').every((a) => lead(a)!.hits === 0)).toBe(true);
+    expect(lead(picked.actions[0])!.manual).toBe(true);
   });
 
   it('um golpe pode ser tirado do buff (guarda os stacks para os outros)', () => {

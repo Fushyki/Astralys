@@ -185,6 +185,8 @@ export const ActionSchema = z.object({
   contributors: z.array(z.number().int().min(0)).max(4).optional(),
   /** Buffs de dano fixo que ESTE golpe não consome (ids `fonte|nome`). Por padrão o golpe consome todos os que servem a ele. */
   flatOff: z.array(z.string()).optional(),
+  /** Buffs de dano fixo em modo manual (`RotationProject.flatManual`): só os golpes com o id aqui consomem o buff. */
+  flatOn: z.array(z.string()).optional(),
   /** Etiquetas de buff (faixas) que ESTE golpe ignora, mesmo dentro da janela delas (desligar um buff só para um golpe). */
   tagsOff: z.array(z.string()).optional(),
   /** Instante da rotação, em segundos. */
@@ -212,6 +214,8 @@ export const RotationProjectSchema = z
     extras: z.array(ExtraBuffSchema).default([]),
     /** Quantos golpes cada buff de dano fixo atinge (id `fonte|nome`): um número ou "all" (todos os golpes). Ausente = o do cadastro. */
     flatStacks: z.record(z.union([z.literal('all'), z.number().int().min(1)])).default({}),
+    /** Buffs de dano fixo (ids `fonte|nome`) em que VOCÊ escolhe os golpes (`ActionRef.flatOn`), em vez de consumir em ordem de tempo. */
+    flatManual: z.array(z.string()).optional(),
     actions: z.array(ActionSchema).default([]),
     /** Janelas de buff no tempo; dão as etiquetas das ações com `tagSource: 'windows'`. */
     buffWindows: z.array(BuffWindowSchema).default([]),
@@ -857,6 +861,7 @@ export function resolveProject(project: RotationProject, data: GameData, effects
       dmgAdjust: a.dmgAdjust,
       ...(a.contributors?.length ? { contributors: a.contributors } : {}),
       ...(a.flatOff?.length ? { flatOff: a.flatOff } : {}),
+      ...(a.flatOn?.length ? { flatOn: a.flatOn } : {}),
       time: a.time,
       note: a.note,
     };
@@ -872,7 +877,8 @@ export function resolveProject(project: RotationProject, data: GameData, effects
     actions,
     flatEffects: [...applyFlatLevels(effects.flatDamage, members), ...gearFlat(members)].map((e) => {
       const o = project.flatStacks?.[flatId(e)];
-      return o === undefined ? e : { ...e, stacks: o === 'all' ? undefined : o };
+      const manual = project.flatManual?.includes(flatId(e)) ? { manual: true as const } : {};
+      return o === undefined ? { ...e, ...manual } : { ...e, ...manual, stacks: o === 'all' ? undefined : o };
     }),
     ampCoefficient: project.compat === 'planilha' ? AMP_EM_COEFFICIENT_SHEET : undefined,
   };

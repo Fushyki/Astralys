@@ -472,6 +472,8 @@ export const FlatDamageEffectSchema = z.object({
   stacks: z.number().int().positive().optional(),
   /** O usuário escolhe os golpes (`RotationAction.flatOn`); sem isso os golpes consomem em ordem de tempo. */
   manual: z.boolean().optional(),
+  /** No automático só os golpes dentro da janela da faixa do buff (`flatTag`) consomem; o manual ignora a janela. */
+  window: z.boolean().optional(),
   decay: FlatDecaySchema.optional(),
   /** Efeito do kit: `perPoint` é multiplicado por `table[nível do talento da fonte - 1]` ao montar o projeto. */
   level: BuffLevelSchema.optional(),

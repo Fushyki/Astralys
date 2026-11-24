@@ -1,7 +1,8 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { assembleTeam, evaluateRotation, flatId, resolveProject, type EffectsData, type GameData } from '../../src/engine';
+import { laneInfos } from '../../src/features/rotation/rotationModel';
+import { assembleTeam, evaluateRotation, flatId, flatTag, resolveProject, type EffectsData, type GameData } from '../../src/engine';
 import { minimumRolls } from '../../src/engine/stats';
 import { sampleProject } from '../../src/features/rotation/persistence';
 import { setFlatStacks } from '../../src/features/rotation/projectOps';
@@ -21,7 +22,7 @@ function run(times: number[], extra: Record<string, unknown> = {}, flatStacks: R
   const base = { ...sampleProject(), compat: 'none' as const };
   const acts = times.map((t, i) => ({
     id: `a${i}`, member: 1, move: { character: 'Skirk', talent: 'burst', label: skirkMove.label, variant: skirkMove.variant }, executions: 1, reaction: 'none',
-    activeTags: [] as string[], tagSource: 'manual', dmgAdjust: 0, time: t, ...(i === 0 ? extra : {}),
+    activeTags: [flatTag(icy)], tagSource: 'manual', dmgAdjust: 0, time: t, ...(i === 0 ? extra : {}),
   }));
   const p = { ...base, members: names.map((n) => ({ ...defaultMember(n, game), constellation: 0 })), actions: acts, buffWindows: [], disabled: [], flatStacks, flatManual };
   const r = resolveProject(p as never, game, effects);
@@ -48,6 +49,27 @@ describe('buffs de dano fixo: quantos golpes e quais golpes consomem', () => {
     expect(lead(picked.actions.find((a) => a.action.id === 'a0')!)!.hits).toBeGreaterThan(0);
     expect(picked.actions.filter((a) => a.action.id !== 'a0').every((a) => lead(a)!.hits === 0)).toBe(true);
     expect(lead(picked.actions[0])!.manual).toBe(true);
+  });
+
+  it('modo manual ignora o limite de stacks: todo golpe marcado recebe o buff', () => {
+    const { res } = run([1, 2], { flatOn: [LEAD] }, { [LEAD]: 1 }, [LEAD]);
+    const marked = res.actions.find((a) => a.action.id === 'a0')!;
+    expect(lead(marked)!.hits).toBe(Math.max(1, skirkMove.hits)); // 1 stack no cadastro, mesmo assim todos os acertos
+  });
+
+  it('automático: só os golpes dentro da janela do buff consomem; manual ignora a janela', () => {
+    const outside = run([1, 2], { activeTags: [] }).res; // a0 fora da janela
+    const a0 = outside.actions.find((a) => a.action.id === 'a0')!;
+    expect(lead(a0)!.outside).toBe(true);
+    expect(lead(a0)!.hits).toBe(0);
+    expect(lead(outside.actions.find((a) => a.action.id === 'a1')!)!.hits).toBeGreaterThan(0);
+    const manual = run([1, 2], { activeTags: [], flatOn: [LEAD] }, {}, [LEAD]).res;
+    expect(lead(manual.actions.find((a) => a.action.id === 'a0')!)!.hits).toBeGreaterThan(0);
+  });
+
+  it('o buff com limite de golpes ganha uma faixa no plano de combate', () => {
+    const { r, project } = run([1]);
+    expect(laneInfos(project as never, r).some((l) => l.tag === flatTag(icy))).toBe(true);
   });
 
   it('um golpe pode ser tirado do buff (guarda os stacks para os outros)', () => {

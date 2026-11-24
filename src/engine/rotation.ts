@@ -170,12 +170,16 @@ export interface FlatUse {
   stacks?: number;
   /** O usuário escolhe os golpes deste buff (a caixa vale como "recebe"). */
   manual?: boolean;
+  /** Automático e o golpe está fora da janela do buff. */
+  outside?: boolean;
   /** Recurso gasto por acerto (Vínculo, em %) no primeiro acerto deste golpe; só nos efeitos com `decay`. */
   level?: number;
 }
 
 /** Id estável de um buff de dano fixo (quem dá + nome). */
 export const flatId = (e: { source: string; name: string }): string => `${e.source}|${e.name}`;
+/** Etiqueta da faixa (janela) de um buff de dano fixo no plano de combate. */
+export const flatTag = (e: { source: string; name: string }): string => `flat:${flatId(e)}`;
 
 export type DamageKind = 'direct' | 'transformative' | 'lunar' | 'stellar';
 
@@ -406,9 +410,11 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
       const labelOk = !e.labels?.length || e.labels.includes(move.label);
       if (!(targetOk && elementOk && typeOk && labelOk)) continue;
       const id = flatId(e);
-      const off = e.manual ? !action.flatOn?.includes(id) : !!action.flatOff?.includes(id);
-      const covered = off || f.remaining <= 0 ? 0 : Math.min(hitsOfAction, f.remaining);
-      f.remaining -= covered;
+      const outside = !e.manual && !!e.window && !action.activeTags.includes(flatTag(e));
+      const off = e.manual ? !action.flatOn?.includes(id) : outside || !!action.flatOff?.includes(id);
+      // Manual: o golpe marcado recebe o buff em todos os acertos, sem gastar nem respeitar o limite de stacks.
+      const covered = off ? 0 : e.manual ? hitsOfAction : f.remaining <= 0 ? 0 : Math.min(hitsOfAction, f.remaining);
+      if (!e.manual) f.remaining -= covered;
       let damage = covered * f.perHit;
       let levelAtStart: number | undefined;
       if (e.decay && !off) {
@@ -423,7 +429,7 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
         }
       }
       flatPass[idx].damage += damage;
-      flatPass[idx].use.push({ id, name: e.name, source: e.source, perHit: covered > 0 ? damage / covered : f.perHit, hits: covered, off, ...(e.stacks !== undefined ? { stacks: e.stacks } : {}), ...(levelAtStart !== undefined ? { level: levelAtStart } : {}), ...(e.manual ? { manual: true } : {}) });
+      flatPass[idx].use.push({ id, name: e.name, source: e.source, perHit: covered > 0 ? damage / covered : f.perHit, hits: covered, off, ...(e.stacks !== undefined ? { stacks: e.stacks } : {}), ...(levelAtStart !== undefined ? { level: levelAtStart } : {}), ...(e.manual ? { manual: true } : {}), ...(outside ? { outside: true } : {}) });
     }
   });
 

@@ -292,6 +292,7 @@ export function Timeline({ v, lanes }: { v: ProjectView; lanes: LaneInfo[] }) {
                             key={a.id}
                             type="button"
                             className={`rt-diamond ${full ? 'full' : 'empty'}`}
+                            data-flat={(byId.get(a.id)?.flatUse ?? []).some((u) => u.hits > 0) ? true : undefined}
                             aria-pressed={selectedActionId === a.id}
                             aria-label={`${label}, execução em ${dec(a.time, 1)} s, ${full ? 'com' : 'sem'} reação`}
                             title={title(byId.get(a.id), a)}

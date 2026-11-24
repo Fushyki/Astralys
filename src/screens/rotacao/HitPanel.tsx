@@ -185,7 +185,15 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
               const on = e.reaction !== 'none';
               return (
                 <div className="er" key={e.id}>
-                  <span className="mk" style={{ background: on ? color : '#0c1128', borderColor: on ? '#eef1ff' : color }} />
+                  <button
+                    type="button"
+                    className="mk"
+                    aria-pressed={e.id === action.id}
+                    aria-label={`Selecionar a execução em ${dec(e.time, 1)} s`}
+                    data-flat={(v.bundle.optimization.result.actions.find((r) => r.action.id === e.id)?.flatUse ?? []).some((u) => u.hits > 0) ? true : undefined}
+                    style={{ background: on ? color : '#0c1128', borderColor: on ? '#eef1ff' : color }}
+                    onClick={() => st().select(e.id)}
+                  />
                   <Num ariaLabel={`Instante da execução ${dec(e.time, 1)} s`} className="sm" value={e.time} unit="s" onCommit={(t) => st().moveAction(e.id, t)} min={0} />
                   <Sel className="sm" ariaLabel="Reação desta execução" value={e.reaction} options={REACTION_OPTIONS} onChange={(r) => update(e.id, { reaction: r })} />
                   <span className="num dmg" title="Dano médio desta execução">{formatInt(execAvg(e.id))}</span>

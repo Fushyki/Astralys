@@ -30,6 +30,7 @@ export function scaleBuffStacks(b: CharacterBuff, chosen: number | undefined): C
     ...(b.flat?.length ? { flat: b.flat.map((f) => ({ ...f, perPoint: f.perPoint * k })) } : {}),
     ...(b.resShred ? { resShred: { ...b.resShred, value: b.resShred.value * k } } : {}),
     ...(b.defShred ? { defShred: b.defShred * k } : {}),
+    ...(b.moveMult ? { moveMult: { ...b.moveMult, extra: b.moveMult.extra * k } } : {}),
   });
 }
 

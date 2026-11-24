@@ -69,7 +69,9 @@ describe('buffs de dano fixo: quantos golpes e quais golpes consomem', () => {
 
   it('o buff com limite de golpes ganha uma faixa no plano de combate', () => {
     const { r, project } = run([1]);
-    expect(laneInfos(project as never, r).some((l) => l.tag === flatTag(icy))).toBe(true);
+    const tags = laneInfos(project as never, r).filter((l) => l.tag.startsWith('flat:')).map((l) => l.tag);
+    expect(tags).toContain(flatTag(icy));
+    expect(tags.every((t) => names.some((n) => t.startsWith(`flat:${n}|`)))).toBe(true); // só de quem está no time (Shenhe e Skirk aqui)
   });
 
   it('um golpe pode ser tirado do buff (guarda os stacks para os outros)', () => {

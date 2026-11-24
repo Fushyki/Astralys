@@ -56,7 +56,7 @@ export function laneInfos(project: RotationProject, resolved: ResolvedProject): 
   const buffs = assembleTeam(team).buffs;
   // Buff de dano fixo: faixa própria, a janela diz onde o automático procura os golpes.
   const flatLanes: LaneInfo[] = resolved.flatEffects
-    .filter((e) => e.window && e.active)
+    .filter((e) => e.window && e.active && names.includes(e.source))
     .map((e) => {
       const giver = names.indexOf(e.source);
       const detail = `${e.name}: dano fixo${e.stacks ? `, ${e.stacks} golpes` : ''}. No automático vale só para os golpes dentro da janela.`;

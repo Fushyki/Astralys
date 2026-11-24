@@ -102,7 +102,8 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
       ? { flatOn: (on ? [...new Set([...flatOn, id])] : flatOn.filter((x) => x !== id)) }
       : { flatOff: (on ? flatOff.filter((x) => x !== id) : [...new Set([...flatOff, id])]) };
     const clean = Object.fromEntries(Object.entries(patch).map(([k, v]) => [k, v.length ? v : undefined]));
-    if (chainId) setAll(clean);
+    // Escolher golpes vale para a execução aberta; só o modo em ordem espalha para o contínuo inteiro.
+    if (chainId && !manual) setAll(clean);
     else update(action.id, clean);
   };
   const point = pointMoveOf(action.move, effect);

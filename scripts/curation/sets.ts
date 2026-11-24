@@ -86,7 +86,12 @@ export const FOUR_PIECE: Record<string, FourCuration> = {
     note: 'ATK (7/16/25%) e dano Hydro (4/9/15%) de Mirrored Nymph: a quantidade de stacks é escolha sua (padrão: 3).',
   },
   'Marechaussee Hunter': { critRate: { p: 0, x: 3 }, note: 'Assume 3 stacks de +12% de Taxa Crítica (variação de HP).' },
-  'Golden Troupe': { byType: { skill: { p: 0 } }, note: 'Só os +25% de dano da habilidade em campo. Os +25% fora de campo NÃO entram.' },
+  'Golden Troupe': {
+    byType: { skill: { p: 0 } },
+    buffs: [{ id: 'fora-de-campo', label: 'Fora de campo (+25% DMG da habilidade)', timed: true, stats: { byType: { skill: { p: 0 } } } }],
+    expect: 'when not on the field, Elemental Skill DMG will be further increased by 25%',
+    note: '+25% de dano da habilidade sempre (somado aos +20% do 2 peças) e mais +25% fora de campo: faixa no plano de combate, ligue na janela (o bônus some 2 s depois de entrar em campo).',
+  },
   'Fragment of Harmonic Whimsy': { dmgPct: { p: 0, x: 3 }, note: 'Assume 3 stacks de +18% de dano (Bond of Life).' },
   'Unfinished Reverie': { dmgPct: { lit: 0.5 }, note: 'Assume o bônus máximo de 50% de dano (fora de combate ou com inimigo em Queimadura).' },
   "Long Night's Oath": { byType: { plunge: { p: 3, x: 5 } }, note: 'Assume 5 stacks de +15% de dano do ataque imersivo.' },

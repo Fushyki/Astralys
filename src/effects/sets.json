@@ -1734,13 +1734,46 @@
       "er": 0,
       "hpPct": 0,
       "defPct": 0,
-      "buffs": [],
+      "buffs": [
+        {
+          "id": "fora-de-campo",
+          "label": "Fora de campo (+25% DMG da habilidade)",
+          "minConstellation": 0,
+          "scope": "self",
+          "timed": true,
+          "stats": {
+            "atkPct": 0,
+            "dmgPct": 0,
+            "critRate": 0,
+            "critDmg": 0,
+            "em": 0,
+            "er": 0,
+            "hpPct": 0,
+            "defPct": 0,
+            "dmgPctByType": {
+              "skill": 0.25
+            },
+            "critRateByType": {},
+            "critDmgByType": {},
+            "baseMultByType": {},
+            "defIgnore": 0,
+            "atkFlat": 0,
+            "atkBaseFlat": 0,
+            "hpFlat": 0,
+            "defFlat": 0,
+            "physDmgPct": 0,
+            "physCritDmg": 0,
+            "reactionBonus": {}
+          },
+          "flat": []
+        }
+      ],
       "flat": [],
       "reactionBonus": {},
       "procs": []
     },
     "twoPieceBuffs": [],
-    "note": "Só os +25% de dano da habilidade em campo. Os +25% fora de campo NÃO entram.",
+    "note": "+25% de dano da habilidade sempre (somado aos +20% do 2 peças) e mais +25% fora de campo: faixa no plano de combate, ligue na janela (o bônus some 2 s depois de entrar em campo).",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
   {

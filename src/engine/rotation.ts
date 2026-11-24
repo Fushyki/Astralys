@@ -408,7 +408,9 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
       const elementOk = e.elements.length === 0 || (element !== 'Physical' && e.elements.some((x) => sameEl(x, element)));
       const typeOk = e.hitTypes.length === 0 || (move.hitType !== 'other' && e.hitTypes.includes(move.hitType));
       const labelOk = !e.labels?.length || e.labels.includes(move.label);
-      if (!(targetOk && elementOk && typeOk && labelOk)) continue;
+      // O 1º personagem do time é sempre o que fica em campo; os outros, fora de campo.
+      const fieldOk = e.manual || !e.field || (e.field === 'on') === (action.member === 0);
+      if (!(targetOk && elementOk && typeOk && labelOk && fieldOk)) continue;
       const id = flatId(e);
       const outside = !e.manual && !!e.window && !action.activeTags.includes(flatTag(e));
       const off = e.manual ? !action.flatOn?.includes(id) : outside || !!action.flatOff?.includes(id);

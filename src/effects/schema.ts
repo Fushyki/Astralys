@@ -472,6 +472,8 @@ export const FlatDamageEffectSchema = z.object({
   stacks: z.number().int().positive().optional(),
   /** O usuário escolhe os golpes (`RotationAction.flatOn`); sem isso os golpes consomem em ordem de tempo. */
   manual: z.boolean().optional(),
+  /** Só golpes do 1º personagem do time, que fica em campo (`on`), ou dos outros, fora de campo (`off`); ausente = qualquer. O manual ignora. */
+  field: z.enum(['on', 'off']).optional(),
   /** No automático só os golpes dentro da janela da faixa do buff (`flatTag`) consomem; o manual ignora a janela. */
   window: z.boolean().optional(),
   decay: FlatDecaySchema.optional(),

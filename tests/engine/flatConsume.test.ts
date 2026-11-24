@@ -74,6 +74,17 @@ describe('buffs de dano fixo: quantos golpes e quais golpes consomem', () => {
     expect(tags.every((t) => names.some((n) => t.startsWith(`flat:${n}|`)))).toBe(true); // só de quem está no time (Shenhe e Skirk aqui)
   });
 
+  it('field: "on" vale só para o 1º personagem do time (em campo) e "off" para os demais', () => {
+    const { r } = run([1]); // golpe do membro 1 (Skirk): fora de campo
+    const hitsOf = (field: 'on' | 'off') => {
+      const flatEffects = r.flatEffects.map((e) => (flatId(e) === LEAD ? { ...e, targets: 'all' as const, field } : e));
+      const res = evaluateRotation({ members: r.team.members, assembly: assembleTeam(r.team), config: r.team.config, rolls: r.team.members.map(() => minimumRolls(2)), flatEffects }, r.actions);
+      return res.actions[0].flatUse?.find((u) => u.id === LEAD)?.hits ?? 0;
+    };
+    expect(hitsOf('on')).toBe(0);
+    expect(hitsOf('off')).toBeGreaterThan(0);
+  });
+
   it('um golpe pode ser tirado do buff (guarda os stacks para os outros)', () => {
     const { res } = run([1, 2], { flatOff: [LEAD] });
     const off = res.actions.find((a) => a.action.id === 'a0')!;

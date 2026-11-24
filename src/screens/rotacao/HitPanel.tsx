@@ -120,7 +120,7 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
           <label>
             <input type="checkbox" checked={!u.off} onChange={(e) => toggleFlat(u.id, e.target.checked, u.manual)} aria-label={`Este golpe consome ${u.name}`} />
             <span className="n">{u.name}<small>de {u.source}</small></span>
-            <span className="num v">{u.hits > 0 ? `+${formatInt(u.hits * u.perHit)} · ${u.hits} × ${formatInt(u.perHit)}` : u.off ? 'não consome' : 'sem stacks'}</span>
+            <span className="num v">{u.hits > 0 ? `+${formatInt(u.hits * u.perHit)} · ${u.hits} × ${formatInt(u.perHit)}` : u.outside ? 'fora da janela' : u.off ? 'não consome' : 'sem stacks'}</span>
           </label>
           {u.level !== undefined && (
             <div className="qty">
@@ -129,7 +129,7 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
             </div>
           )}
           <div className="qty">
-            <Seg label={`Quais golpes: ${u.name}`} value={u.manual ? 'manual' : 'auto'} options={[{ value: 'auto', label: 'Em ordem' }, { value: 'manual', label: 'Escolher golpes' }]} onChange={(m) => st().setFlatManual(u.id, m === 'manual')} />
+            <Seg label={`Modo: ${u.name}`} value={u.manual ? 'manual' : 'auto'} options={[{ value: 'auto', label: 'Auto' }, { value: 'manual', label: 'Manual' }]} onChange={(m) => st().setFlatManual(u.id, m === 'manual')} />
           </div>
           {!u.manual && <div className="qty">
             <Seg label={`Quantos golpes: ${u.name}`} value={u.stacks === undefined ? 'all' : 'n'} options={[{ value: 'all', label: 'Todos os golpes' }, { value: 'n', label: 'N golpes' }]} onChange={(m) => st().setFlatStacks(u.id, m === 'all' ? 'all' : (u.stacks ?? 5))} />

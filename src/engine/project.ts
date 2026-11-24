@@ -878,7 +878,7 @@ export function resolveProject(project: RotationProject, data: GameData, effects
     team,
     gearIds,
     actions,
-    flatEffects: [...applyFlatLevels(effects.flatDamage, members), ...gearFlat(members)].map((e) => {
+    flatEffects: [...applyFlatLevels(effects.flatDamage, members).map((e) => ({ ...e, ...(project.compat !== 'planilha' && e.stacks !== undefined ? { window: true as const } : {}) })), ...gearFlat(members)].map((e) => {
       const o = project.flatStacks?.[flatId(e)];
       const manual = project.flatManual?.includes(flatId(e)) ? { manual: true as const } : {};
       return o === undefined ? { ...e, ...manual } : { ...e, ...manual, stacks: o === 'all' ? undefined : o };

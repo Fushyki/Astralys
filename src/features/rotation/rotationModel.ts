@@ -6,6 +6,7 @@ import {
   assembleTeam,
   critFactor,
   evaluateRotation,
+  flatTag,
   type ActionResult,
   type AnalysisBundle,
   type ResolvedProject,
@@ -53,7 +54,15 @@ export function laneInfos(project: RotationProject, resolved: ResolvedProject): 
   const names = team.members.map((m) => m.character.name);
   const lanes = buffLanes(team);
   const buffs = assembleTeam(team).buffs;
-  return lanes.map((lane) => {
+  // Buff de dano fixo: faixa própria, a janela diz onde o automático procura os golpes.
+  const flatLanes: LaneInfo[] = resolved.flatEffects
+    .filter((e) => e.window && e.active)
+    .map((e) => {
+      const giver = names.indexOf(e.source);
+      const detail = `${e.name}: dano fixo${e.stacks ? `, ${e.stacks} golpes` : ''}. No automático vale só para os golpes dentro da janela.`;
+      return { tag: flatTag(e), label: e.name, source: giver >= 0 ? `${e.source} · ${e.name}` : e.name, target: 'dano fixo', value: 'Dano fixo', giver: giver >= 0 ? giver : null, detail };
+    });
+  return [...lanes.map((lane) => {
     const group = buffs.filter((b) => b.tag === lane.tag);
     const giver = group.map((b) => giverOf(b, names)).find((g) => g !== null) ?? null;
     const targets = new Set<string>();
@@ -67,7 +76,7 @@ export function laneInfos(project: RotationProject, resolved: ResolvedProject): 
     const source = giver !== null ? `${names[giver]} · ${lane.label}` : lane.label;
     void project;
     return { tag: lane.tag, label: lane.label, source, target, value: chips.join(' · ') || lane.label, giver, detail: lane.detail, ...(lane.duration ? { duration: lane.duration } : {}) };
-  });
+  }), ...flatLanes];
 }
 
 // ---------- Cascata do golpe ----------

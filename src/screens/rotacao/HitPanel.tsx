@@ -131,10 +131,10 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
           <div className="qty">
             <Seg label={`Quais golpes: ${u.name}`} value={u.manual ? 'manual' : 'auto'} options={[{ value: 'auto', label: 'Em ordem' }, { value: 'manual', label: 'Escolher golpes' }]} onChange={(m) => st().setFlatManual(u.id, m === 'manual')} />
           </div>
-          <div className="qty">
+          {!u.manual && <div className="qty">
             <Seg label={`Quantos golpes: ${u.name}`} value={u.stacks === undefined ? 'all' : 'n'} options={[{ value: 'all', label: 'Todos os golpes' }, { value: 'n', label: 'N golpes' }]} onChange={(m) => st().setFlatStacks(u.id, m === 'all' ? 'all' : (u.stacks ?? 5))} />
             {u.stacks !== undefined && <Num ariaLabel={`Quantidade de golpes de ${u.name}`} className="sm" value={u.stacks} digits={0} min={1} unit="golpes" onCommit={(n) => st().setFlatStacks(u.id, n)} />}
-          </div>
+          </div>}
         </div>
       ))}
     </div>

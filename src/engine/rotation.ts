@@ -407,8 +407,9 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
       if (!(targetOk && elementOk && typeOk && labelOk)) continue;
       const id = flatId(e);
       const off = e.manual ? !action.flatOn?.includes(id) : !!action.flatOff?.includes(id);
-      const covered = off || f.remaining <= 0 ? 0 : Math.min(hitsOfAction, f.remaining);
-      f.remaining -= covered;
+      // Manual: o golpe marcado recebe o buff em todos os acertos, sem gastar nem respeitar o limite de stacks.
+      const covered = off ? 0 : e.manual ? hitsOfAction : f.remaining <= 0 ? 0 : Math.min(hitsOfAction, f.remaining);
+      if (!e.manual) f.remaining -= covered;
       let damage = covered * f.perHit;
       let levelAtStart: number | undefined;
       if (e.decay && !off) {

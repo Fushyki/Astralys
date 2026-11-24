@@ -50,6 +50,12 @@ describe('buffs de dano fixo: quantos golpes e quais golpes consomem', () => {
     expect(lead(picked.actions[0])!.manual).toBe(true);
   });
 
+  it('modo manual ignora o limite de stacks: todo golpe marcado recebe o buff', () => {
+    const { res } = run([1, 2], { flatOn: [LEAD] }, { [LEAD]: 1 }, [LEAD]);
+    const marked = res.actions.find((a) => a.action.id === 'a0')!;
+    expect(lead(marked)!.hits).toBe(Math.max(1, skirkMove.hits)); // 1 stack no cadastro, mesmo assim todos os acertos
+  });
+
   it('um golpe pode ser tirado do buff (guarda os stacks para os outros)', () => {
     const { res } = run([1, 2], { flatOff: [LEAD] });
     const off = res.actions.find((a) => a.action.id === 'a0')!;

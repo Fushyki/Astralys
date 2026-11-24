@@ -533,9 +533,16 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
     });
 
     const noCrit = breakdown.total;
-    // Parte do dano de cada acerto (soma 1): a escala é igual em todos, o dano fixo só nos que o receberam.
-    const nHits = flatPass[idx].hits.length;
-    const hitShare = nHits > 1 && breakdown.baseTotal > 0 ? flatPass[idx].hits.map((f) => ((breakdown.baseTotal - flatDamage) / nHits + f) / breakdown.baseTotal) : undefined;
+    // Parte do dano de cada acerto do golpe (soma 1): a escala é igual em todos, o dano fixo só nos que o receberam.
+    // "Hits por vez" repete o golpe inteiro: os acertos de mesma posição de todas as repetições somam na mesma parte.
+    const perMove = Math.max(1, move.hits);
+    const hitShare = perMove > 1 && breakdown.baseTotal > 0
+      ? Array.from({ length: perMove }, (_, j) => {
+          let f = 0;
+          for (let e = 0; e < action.executions; e++) f += flatPass[idx].hits[e * perMove + j] ?? 0;
+          return ((breakdown.baseTotal - flatDamage) / perMove + f) / breakdown.baseTotal;
+        })
+      : undefined;
     return {
       action,
       element,

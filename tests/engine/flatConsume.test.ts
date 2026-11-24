@@ -129,4 +129,10 @@ describe('buffs de dano fixo: quantos golpes e quais golpes consomem', () => {
     const all = run([1], {}, { [LEAD]: 'all' }).res.actions[0].hitShare!;
     expect(all[0]).toBeCloseTo(all[skirkMove.hits - 1], 9); // todos cobertos: iguais
   });
+
+  it('hitShare: "Hits por vez" repete o golpe e não vira acertos extras', () => {
+    const rep = run([1], { executions: 3 }, { [LEAD]: 'all' }).res.actions[0].hitShare!;
+    expect(rep).toHaveLength(skirkMove.hits); // 5 partes (os acertos do golpe), não 15
+    expect(rep.reduce((a, b) => a + b, 0)).toBeCloseTo(1, 9);
+  });
 });

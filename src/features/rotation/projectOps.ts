@@ -89,6 +89,12 @@ export function setFlatStacks(project: RotationProject, id: string, value: numbe
   return touch({ ...project, flatStacks: next });
 }
 
+/** Volta um buff de dano fixo ao automático em TODOS os golpes: tira as caixas desmarcadas (`flatOff`) e os golpes forçados (`flatOn`). */
+export function resetFlat(project: RotationProject, id: string): RotationProject {
+  const clean = (list?: string[]) => { const l = (list ?? []).filter((x) => x !== id); return l.length ? l : undefined; };
+  return touch({ ...project, actions: project.actions.map((a) => ({ ...a, flatOff: clean(a.flatOff), flatOn: clean(a.flatOn) })) });
+}
+
 /** Janelas "Por golpe": começam `delay` s depois do golpe-gatilho e acompanham se ele mudar de lugar (a duração fica). */
 function followAnchors(windows: BuffWindow[], actions: ActionRef[], moved: Set<string>): BuffWindow[] {
   return windows.map((w) => {

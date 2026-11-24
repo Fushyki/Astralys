@@ -133,6 +133,9 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
           <div className="qty">
             <Seg label={`Neste golpe: ${u.name}`} value={u.forced ? 'manual' : 'auto'} options={[{ value: 'auto', label: 'Auto' }, { value: 'manual', label: 'Manual' }]} onChange={(m) => forceFlat(u.id, m === 'manual')} />
           </div>
+          <div className="qty">
+            <Button variant="ghost" size="sm" onClick={() => st().resetFlat(u.id)} title="Tira as caixas desmarcadas e os golpes em Manual deste buff, em todos os golpes">Tudo no Auto</Button>
+          </div>
           {!u.forced && <div className="qty">
             <Seg label={`Quantos golpes: ${u.name}`} value={u.stacks === undefined ? 'all' : 'n'} options={[{ value: 'all', label: 'Todos os golpes' }, { value: 'n', label: 'N golpes' }]} onChange={(m) => st().setFlatStacks(u.id, m === 'all' ? 'all' : (u.stacks ?? 5))} />
             {u.stacks !== undefined && <Num ariaLabel={`Quantidade de golpes de ${u.name}`} className="sm" value={u.stacks} digits={0} min={1} unit="golpes" onCommit={(n) => st().setFlatStacks(u.id, n)} />}

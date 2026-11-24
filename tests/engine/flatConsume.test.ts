@@ -5,7 +5,7 @@ import { laneInfos } from '../../src/features/rotation/rotationModel';
 import { assembleTeam, evaluateRotation, flatId, flatTag, resolveProject, type EffectsData, type GameData } from '../../src/engine';
 import { minimumRolls } from '../../src/engine/stats';
 import { sampleProject } from '../../src/features/rotation/persistence';
-import { setFlatStacks } from '../../src/features/rotation/projectOps';
+import { resetFlat, setFlatStacks } from '../../src/features/rotation/projectOps';
 import { defaultMember } from '../../src/features/rotation/teamOps';
 
 const json = <T,>(rel: string): T => JSON.parse(readFileSync(path.join(__dirname, '../..', rel), 'utf8'));
@@ -111,5 +111,12 @@ describe('buffs de dano fixo: quantos golpes e quais golpes consomem', () => {
     expect(a.flatStacks[LEAD]).toBe('all');
     expect(setFlatStacks(a, LEAD, undefined).flatStacks[LEAD]).toBeUndefined();
     expect(flatId({ source: icy.source, name: icy.name })).toBe(LEAD);
+  });
+
+  it('resetFlat tira flatOff e flatOn só deste buff, em todos os golpes', () => {
+    const { project } = run([1, 2], { flatOff: [LEAD, 'outro'], flatOn: [LEAD] });
+    const r = resetFlat(project as never, LEAD);
+    expect(r.actions[0].flatOff).toEqual(['outro']);
+    expect(r.actions[0].flatOn).toBeUndefined();
   });
 });

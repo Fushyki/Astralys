@@ -246,7 +246,8 @@
 .rt-flat .v { grid-column: 2; color: var(--gold-hi); overflow-wrap: anywhere; }
 .rt-flat .fr[data-off='true'] .n, .rt-flat .fr[data-off='true'] .v { opacity: .5; text-decoration: line-through; }
 .rt-flat .qty { display: flex; align-items: center; gap: var(--sp-2); flex-wrap: wrap; }
-.rt-hit[data-flat]::after { content: ''; position: absolute; right: -3px; top: -3px; width: 8px; height: 8px; border-radius: 50%; background: var(--gold); border: 1px solid var(--bg); }
+/* No topo e centrada: nos golpes colados (Normais em sequência) o vizinho cobria a bolinha do canto. */
+.rt-hit[data-flat]::after { content: ''; position: absolute; left: 50%; top: -7px; transform: translateX(-50%); width: 8px; height: 8px; border-radius: 50%; background: var(--gold); border: 1px solid var(--bg); }
 
 /* linha amarela do tempo (como o cursor do Word): clique na régua põe a linha; arrastar a linha empurra tudo à direita */
 .rt-tlw { position: relative; }

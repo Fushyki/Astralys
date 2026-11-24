@@ -17,7 +17,7 @@ import {
   reactionOptions,
   type MoveLine,
 } from '../../features/character/characterModel';
-import { formatDecimal, formatInt, formatPercent } from '../../ui/format';
+import { formatDecimal, formatHits, formatInt, formatPercent } from '../../ui/format';
 import { BuildStrip } from './BuildStrip';
 import { SubstatsPanel } from './LeftColumn';
 import { useDamageGroups } from './MainColumn';
@@ -75,9 +75,9 @@ function MovePanel({ title, badge, tone, lines, crit }: { title: string; badge: 
         {lines.map((l) => (
           <li key={l.id}>
             <span className="k" style={{ color: damageColor(l.element, l.special) }} title={l.special ? undefined : `Dano ${l.element === 'Physical' ? 'Físico' : l.element}`}>
-              {l.name}{l.hits > 1 ? <i className="muted"> · {l.hits}×</i> : null} <FamilyBadge special={l.special} />
+              {l.name} <FamilyBadge special={l.special} />
             </span>
-            <b className="num">{formatInt(l[crit])}</b>
+            <b className="num">{formatHits(l[crit], l.result.hitShare)}</b>
           </li>
         ))}
       </ul>

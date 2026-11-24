@@ -21,7 +21,7 @@ import { energyMembers, energyResults } from '../features/energy/energyModel';
 import { analyzeProject, kitElement, kitProcMoves, resolveProject, type ElementOrPhysical, type ReactionChoice } from '../engine';
 import { mainStatValue } from '../engine/pieces';
 import { MAIN_LABEL, SUB_LABEL, characterDisplayName, formatMain, formatSub } from '../features/good/labels';
-import { formatDecimal, formatInt } from '../ui/format';
+import { formatDecimal, formatHits, formatInt } from '../ui/format';
 import './otimizador.css';
 import { Button, ButtonLink } from '../design/Button';
 import { CurrentBuild } from './otimizar/CurrentBuild';
@@ -447,6 +447,8 @@ export function OtimizadorPanel({ index }: { index: number }) {
    * Dano do golpe de foco SOZINHO (um golpe do kit com todos os buffs do time ligados, como o alvo "Golpe") no build atual, e o da rotação
    * completa do personagem. O golpe não precisa estar na rotação; sem foco só aparece a rotação.
    */
+  /** Golpe de foco com vários acertos: o dano se divide por igual (o dano fixo do time não entra nesta divisão). */
+  const focusShare = focusMove && focusMove.hits > 1 ? Array<number>(focusMove.hits).fill(1 / focusMove.hits) : undefined;
   const focusReport = (() => {
     if (!character) return null; // o foco só aparece no painel manual, que também abre sem inventário
     const rotation = v.bundle.optimization.result.members[index]?.avg ?? 0;
@@ -487,8 +489,8 @@ export function OtimizadorPanel({ index }: { index: number }) {
           {focusReport.hit && (
             <p title="O golpe de foco sozinho, com todos os buffs do time ligados e a reação marcada na rotação (como o alvo Golpe)">
               <span>Dano do golpe</span>
-              <b className="num">{formatInt(focusReport.hit.avg)}</b>
-              <small className="num">sem crítico {formatInt(focusReport.hit.noCrit)} · crítico {formatInt(focusReport.hit.crit)}</small>
+              <b className="num">{formatHits(focusReport.hit.avg, focusShare)}</b>
+              <small className="num">sem crítico {formatHits(focusReport.hit.noCrit, focusShare)} · crítico {formatHits(focusReport.hit.crit, focusShare)}</small>
             </p>
           )}
           <p title="Dano médio de todos os golpes deste personagem na rotação, com a build atual">

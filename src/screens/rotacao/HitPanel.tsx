@@ -11,7 +11,7 @@ import { REACTION_LABEL } from '../../features/character/characterModel';
 import { chainOf } from '../../features/rotation/projectOps';
 import { hitBuffRows, hitFigures } from '../../features/rotation/rotationModel';
 import { useRotationStore } from '../../features/rotation/store';
-import { formatInt, formatPercent } from '../../ui/format';
+import { formatHits, formatInt, formatPercent } from '../../ui/format';
 import { Num, Sel, Seg, dec } from './ui';
 
 const REACTIONS: ActionRef['reaction'][] = ['none', 'melt', 'vaporize', 'spread', 'aggravate'];
@@ -201,7 +201,7 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
                   />
                   <Num ariaLabel={`Instante da execução ${dec(e.time, 1)} s`} className="sm" value={e.time} unit="s" onCommit={(t) => st().moveAction(e.id, t)} min={0} />
                   <Sel className="sm" ariaLabel="Reação desta execução" value={e.reaction} options={REACTION_OPTIONS} onChange={(r) => update(e.id, { reaction: r })} />
-                  <span className="num dmg" title="Dano médio desta execução">{formatInt(execAvg(e.id))}</span>
+                  <span className="num dmg" title="Dano médio desta execução">{formatHits(execAvg(e.id), v.bundle.optimization.result.actions.find((r) => r.action.id === e.id)?.hitShare)}</span>
                   <button type="button" className="rt-ico sm" aria-label="Remover esta execução" onClick={() => st().removeAction(e.id)}><TrashX /></button>
                 </div>
               );
@@ -259,7 +259,7 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
               </div>
               <div className="total">
                 <span className="rt-lbl">Dano médio · {formatPercent(total > 0 ? result.avg / total : 0)}</span>
-                <span className="num" data-testid="hit-avg">{formatInt(result.avg)}</span>
+                <span className="num" data-testid="hit-avg">{formatHits(result.avg, result.hitShare)}</span>
               </div>
             </div>
           )}

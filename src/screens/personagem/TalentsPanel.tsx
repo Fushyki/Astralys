@@ -18,7 +18,7 @@ import { REACTION_LABEL, characterReactions, memberBuffCards, reactionOptions, t
 import { buffHome, paramRows, skillIconUrl, splitChip, useTalents, type CharacterTalents, type TalentText } from '../../features/character/talents';
 import { useRotationStore } from '../../features/rotation/store';
 import { deltaChips } from '../../features/team/teamModel';
-import { formatDecimal, formatInt } from '../../ui/format';
+import { formatDecimal, formatHits, formatInt } from '../../ui/format';
 import { useDamageGroups } from './MainColumn';
 import '../talentos.css';
 
@@ -230,7 +230,7 @@ export function TalentsPanel({ v, index }: { v: ProjectView; index: number }) {
   const conds = (pred: (b: CharacterBuff) => boolean) =>
     buffs.filter(pred).map((b) => <Condition key={b.id} buff={b} index={index} constellation={constellation} disabled={disabled} chips={chipsOf(b)} stats={v.bundle.memberStats[index]} onToggle={b === masque ? (id, on) => { updateMember(index, { normalInfusion: on ? 'Pyro' : undefined }); setSourceEnabled(id, on); } : setSourceEnabled} chosen={ref.stacks?.[b.stacks?.of ?? b.id]} onStacks={(n) => updateMember(index, { stacks: { ...ref.stacks, [b.stacks?.of ?? b.id]: n } })} />);
   const noteOf = (src: string) => notes.find((n) => n.src === src);
-  const valueOf = (l: MoveLine) => `${l.hits > 1 ? `${l.hits}× ` : ''}${formatInt(l[crit])}`;
+  const valueOf = (l: MoveLine) => formatHits(l[crit], l.result.hitShare);
   const rowsOf = (lines: MoveLine[]) => lines.map((l) => ({ key: l.id, name: l.name, value: valueOf(l), tone: damageColor(l.element, l.special), special: l.special }));
   const setTalent = (k: 'normal' | 'skill' | 'burst', d: number) => updateMember(index, { talents: { ...ref.talents, [k]: Math.max(1, Math.min(15, ref.talents[k] + d)) } });
   const setCons = (n: number) => updateMember(index, { constellation: Math.max(0, Math.min(6, n)) || undefined });

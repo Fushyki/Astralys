@@ -119,4 +119,14 @@ describe('buffs de dano fixo: quantos golpes e quais golpes consomem', () => {
     expect(r.actions[0].flatOff).toEqual(['outro']);
     expect(r.actions[0].flatOn).toBeUndefined();
   });
+
+  it('hitShare: golpe de vários acertos divide o dano por acerto (o dano fixo só nos acertos cobertos)', () => {
+    const one = run([1], {}, { [LEAD]: 1 }).res.actions[0].hitShare!; // 1 stack para os 5 acertos do Supremo
+    expect(one).toHaveLength(skirkMove.hits);
+    expect(one.reduce((a, b) => a + b, 0)).toBeCloseTo(1, 9);
+    expect(one[0]).toBeGreaterThan(one[1]);
+    expect(one[1]).toBeCloseTo(one[skirkMove.hits - 1], 9);
+    const all = run([1], {}, { [LEAD]: 'all' }).res.actions[0].hitShare!;
+    expect(all[0]).toBeCloseTo(all[skirkMove.hits - 1], 9); // todos cobertos: iguais
+  });
 });

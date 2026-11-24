@@ -598,7 +598,6 @@ export function OtimizadorPanel({ index }: { index: number }) {
                   <span className="dz-badge num">{ui.borrow ? othersCount : 0}/{othersCount}</span>
                 </button>
               </div>
-              <span className="ot-hint">Todos começam ligados. Toque num artefato para usar só ele; toque em outros para somar, ou no ligado para tirar.</span>
               <div className="ot-sets-wrap">
                 <div className="ot-sets">
                   {setInfo.map((x) => (

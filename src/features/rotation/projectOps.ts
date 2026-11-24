@@ -89,12 +89,6 @@ export function setFlatStacks(project: RotationProject, id: string, value: numbe
   return touch({ ...project, flatStacks: next });
 }
 
-/** Modo do buff de dano fixo: manual (você marca os golpes em `ActionRef.flatOn`) ou automático (ordem de tempo). */
-export function setFlatManual(project: RotationProject, id: string, manual: boolean): RotationProject {
-  const rest = (project.flatManual ?? []).filter((x) => x !== id);
-  return touch({ ...project, flatManual: manual ? [...rest, id] : rest });
-}
-
 /** Janelas "Por golpe": começam `delay` s depois do golpe-gatilho e acompanham se ele mudar de lugar (a duração fica). */
 function followAnchors(windows: BuffWindow[], actions: ActionRef[], moved: Set<string>): BuffWindow[] {
   return windows.map((w) => {

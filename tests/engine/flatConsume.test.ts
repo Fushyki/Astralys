@@ -18,13 +18,13 @@ const icy = effects.flatDamage.find((e) => e.source === 'Shenhe' && e.stacks)!;
 const LEAD = flatId(icy);
 const STACKS = icy.stacks!;
 
-function run(times: number[], extra: Record<string, unknown> = {}, flatStacks: Record<string, number | 'all'> = {}, flatManual?: string[]) {
+function run(times: number[], extra: Record<string, unknown> = {}, flatStacks: Record<string, number | 'all'> = {}) {
   const base = { ...sampleProject(), compat: 'none' as const };
   const acts = times.map((t, i) => ({
     id: `a${i}`, member: 1, move: { character: 'Skirk', talent: 'burst', label: skirkMove.label, variant: skirkMove.variant }, executions: 1, reaction: 'none',
     activeTags: [flatTag(icy)], tagSource: 'manual', dmgAdjust: 0, time: t, ...(i === 0 ? extra : {}),
   }));
-  const p = { ...base, members: names.map((n) => ({ ...defaultMember(n, game), constellation: 0 })), actions: acts, buffWindows: [], disabled: [], flatStacks, flatManual };
+  const p = { ...base, members: names.map((n) => ({ ...defaultMember(n, game), constellation: 0 })), actions: acts, buffWindows: [], disabled: [], flatStacks };
   const r = resolveProject(p as never, game, effects);
   const res = evaluateRotation({ members: r.team.members, assembly: assembleTeam(r.team), config: r.team.config, rolls: r.team.members.map(() => minimumRolls(2)), flatEffects: r.flatEffects }, r.actions);
   return { res, r, project: p };
@@ -42,19 +42,18 @@ describe('buffs de dano fixo: quantos golpes e quais golpes consomem', () => {
     expect(lead(late)!.hits).toBe(Math.min(hits, Math.max(0, STACKS - lead(early)!.hits)));
   });
 
-  it('modo manual: só os golpes marcados consomem, em qualquer ponto da rotação', () => {
-    const none = run([1, 2, 3], {}, {}, [LEAD]).res;
-    expect(none.actions.every((a) => lead(a)!.off && lead(a)!.hits === 0)).toBe(true);
-    const picked = run([1, 2, 3], { flatOn: [LEAD] }, {}, [LEAD]).res; // só o golpe a0 (instante 1) marcado
-    expect(lead(picked.actions.find((a) => a.action.id === 'a0')!)!.hits).toBeGreaterThan(0);
-    expect(picked.actions.filter((a) => a.action.id !== 'a0').every((a) => lead(a)!.hits === 0)).toBe(true);
-    expect(lead(picked.actions[0])!.manual).toBe(true);
+  it('manual neste golpe: só ele é forçado, os outros seguem no automático', () => {
+    const { res } = run([1, 2, 3], { flatOn: [LEAD] });
+    const a0 = res.actions.find((a) => a.action.id === 'a0')!;
+    expect(lead(a0)!.forced).toBe(true);
+    expect(lead(a0)!.hits).toBe(Math.max(1, skirkMove.hits));
+    expect(lead(res.actions.find((a) => a.action.id === 'a1')!)!.forced).toBeUndefined(); // a1 continua no automático
   });
 
-  it('modo manual ignora o limite de stacks: todo golpe marcado recebe o buff', () => {
-    const { res } = run([1, 2], { flatOn: [LEAD] }, { [LEAD]: 1 }, [LEAD]);
-    const marked = res.actions.find((a) => a.action.id === 'a0')!;
-    expect(lead(marked)!.hits).toBe(Math.max(1, skirkMove.hits)); // 1 stack no cadastro, mesmo assim todos os acertos
+  it('manual ignora o limite de stacks: o golpe forçado recebe todos os acertos e não gasta os stacks dos outros', () => {
+    const { res } = run([1, 2], { flatOn: [LEAD] }, { [LEAD]: 1 });
+    expect(lead(res.actions.find((a) => a.action.id === 'a0')!)!.hits).toBe(Math.max(1, skirkMove.hits));
+    expect(lead(res.actions.find((a) => a.action.id === 'a1')!)!.hits).toBeGreaterThan(0); // o único stack ficou para o a1
   });
 
   it('automático: só os golpes dentro da janela do buff consomem; manual ignora a janela', () => {
@@ -63,7 +62,7 @@ describe('buffs de dano fixo: quantos golpes e quais golpes consomem', () => {
     expect(lead(a0)!.outside).toBe(true);
     expect(lead(a0)!.hits).toBe(0);
     expect(lead(outside.actions.find((a) => a.action.id === 'a1')!)!.hits).toBeGreaterThan(0);
-    const manual = run([1, 2], { activeTags: [], flatOn: [LEAD] }, {}, [LEAD]).res;
+    const manual = run([1, 2], { activeTags: [], flatOn: [LEAD] }).res;
     expect(lead(manual.actions.find((a) => a.action.id === 'a0')!)!.hits).toBeGreaterThan(0);
   });
 

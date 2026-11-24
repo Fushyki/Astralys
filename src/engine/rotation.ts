@@ -83,7 +83,7 @@ export interface RotationAction {
   contributors?: readonly number[];
   /** Dano fixo que ESTE golpe não consome (ids de `flatId`); o golpe fica de fora mesmo sobrando stacks. */
   flatOff?: readonly string[];
-  /** Modo manual do buff: só estes (ids de `flatId`) consomem. */
+  /** Buffs que o usuário FORÇA neste golpe (ids de `flatId`): todos os acertos recebem, sem janela, campo nem limite de stacks. */
   flatOn?: readonly string[];
   /** Vínculo (%) a partir deste golpe, para o dano fixo com `decay`; ausente = continua do golpe anterior. */
   vinculo?: number;
@@ -169,8 +169,8 @@ export interface FlatUse {
   /** Stacks totais do efeito (undefined = todos os golpes). */
   stacks?: number;
   /** O usuário escolhe os golpes deste buff (a caixa vale como "recebe"). */
-  manual?: boolean;
-  /** Automático e o golpe está fora da janela do buff. */
+  forced?: boolean;
+  /** O golpe fica de fora pela regra (fora da janela do buff ou do campo certo). */
   outside?: boolean;
   /** Recurso gasto por acerto (Vínculo, em %) no primeiro acerto deste golpe; só nos efeitos com `decay`. */
   level?: number;
@@ -408,15 +408,16 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
       const elementOk = e.elements.length === 0 || (element !== 'Physical' && e.elements.some((x) => sameEl(x, element)));
       const typeOk = e.hitTypes.length === 0 || (move.hitType !== 'other' && e.hitTypes.includes(move.hitType));
       const labelOk = !e.labels?.length || e.labels.includes(move.label);
-      // O 1º personagem do time é sempre o que fica em campo; os outros, fora de campo.
-      const fieldOk = e.manual || !e.field || (e.field === 'on') === (action.member === 0);
-      if (!(targetOk && elementOk && typeOk && labelOk && fieldOk)) continue;
+      if (!(targetOk && elementOk && typeOk && labelOk)) continue;
       const id = flatId(e);
-      const outside = !e.manual && !!e.window && !action.activeTags.includes(flatTag(e));
-      const off = e.manual ? !action.flatOn?.includes(id) : outside || !!action.flatOff?.includes(id);
-      // Manual: o golpe marcado recebe o buff em todos os acertos, sem gastar nem respeitar o limite de stacks.
-      const covered = off ? 0 : e.manual ? hitsOfAction : f.remaining <= 0 ? 0 : Math.min(hitsOfAction, f.remaining);
-      if (!e.manual) f.remaining -= covered;
+      // Forçado (manual neste golpe): vale em todos os acertos, ignorando janela, campo e stacks, e não gasta stacks dos outros.
+      const forced = !!action.flatOn?.includes(id);
+      // O 1º personagem do time é sempre o que fica em campo; os outros, fora de campo.
+      const wrongField = !!e.field && (e.field === 'on') !== (action.member === 0);
+      const outside = !forced && (wrongField || (!!e.window && !action.activeTags.includes(flatTag(e))));
+      const off = !forced && (outside || !!action.flatOff?.includes(id));
+      const covered = forced ? hitsOfAction : off || f.remaining <= 0 ? 0 : Math.min(hitsOfAction, f.remaining);
+      if (!forced) f.remaining -= covered;
       let damage = covered * f.perHit;
       let levelAtStart: number | undefined;
       if (e.decay && !off) {
@@ -431,7 +432,7 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
         }
       }
       flatPass[idx].damage += damage;
-      flatPass[idx].use.push({ id, name: e.name, source: e.source, perHit: covered > 0 ? damage / covered : f.perHit, hits: covered, off, ...(e.stacks !== undefined ? { stacks: e.stacks } : {}), ...(levelAtStart !== undefined ? { level: levelAtStart } : {}), ...(e.manual ? { manual: true } : {}), ...(outside ? { outside: true } : {}) });
+      flatPass[idx].use.push({ id, name: e.name, source: e.source, perHit: covered > 0 ? damage / covered : f.perHit, hits: covered, off, ...(e.stacks !== undefined ? { stacks: e.stacks } : {}), ...(levelAtStart !== undefined ? { level: levelAtStart } : {}), ...(forced ? { forced: true } : {}), ...(outside ? { outside: true } : {}) });
     }
   });
 

@@ -185,7 +185,7 @@ export const ActionSchema = z.object({
   contributors: z.array(z.number().int().min(0)).max(4).optional(),
   /** Buffs de dano fixo que ESTE golpe não consome (ids `fonte|nome`). Por padrão o golpe consome todos os que servem a ele. */
   flatOff: z.array(z.string()).optional(),
-  /** Buffs de dano fixo em modo manual (`RotationProject.flatManual`): só os golpes com o id aqui consomem o buff. */
+  /** Buffs de dano fixo que o usuário força NESTE golpe (ids `fonte|nome`), além do automático. */
   flatOn: z.array(z.string()).optional(),
   /** Recurso que o dano fixo gasta por acerto (Vínculo da Arlecchino, em %): neste golpe a contagem recomeça daqui. Ausente = continua do golpe anterior. */
   vinculo: z.number().min(0).max(400).optional(),
@@ -216,8 +216,6 @@ export const RotationProjectSchema = z
     extras: z.array(ExtraBuffSchema).default([]),
     /** Quantos golpes cada buff de dano fixo atinge (id `fonte|nome`): um número ou "all" (todos os golpes). Ausente = o do cadastro. */
     flatStacks: z.record(z.union([z.literal('all'), z.number().int().min(1)])).default({}),
-    /** Buffs de dano fixo (ids `fonte|nome`) em que VOCÊ escolhe os golpes (`ActionRef.flatOn`), em vez de consumir em ordem de tempo. */
-    flatManual: z.array(z.string()).optional(),
     actions: z.array(ActionSchema).default([]),
     /** Janelas de buff no tempo; dão as etiquetas das ações com `tagSource: 'windows'`. */
     buffWindows: z.array(BuffWindowSchema).default([]),
@@ -880,8 +878,7 @@ export function resolveProject(project: RotationProject, data: GameData, effects
     actions,
     flatEffects: [...applyFlatLevels(effects.flatDamage, members).map((e) => ({ ...e, ...(project.compat !== 'planilha' && e.stacks !== undefined ? { window: true as const } : {}) })), ...gearFlat(members)].map((e) => {
       const o = project.flatStacks?.[flatId(e)];
-      const manual = project.flatManual?.includes(flatId(e)) ? { manual: true as const } : {};
-      return o === undefined ? { ...e, ...manual } : { ...e, ...manual, stacks: o === 'all' ? undefined : o };
+      return o === undefined ? e : { ...e, stacks: o === 'all' ? undefined : o };
     }),
     ampCoefficient: project.compat === 'planilha' ? AMP_EM_COEFFICIENT_SHEET : undefined,
   };

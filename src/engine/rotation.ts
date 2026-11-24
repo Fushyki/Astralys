@@ -155,6 +155,8 @@ export interface ActionResult {
   contributors?: { member: number; avg: number; weight: number }[];
   /** Dano fixo que este golpe poderia receber: quantos hits consumiu de cada efeito (0 = não consumiu: desligado aqui ou sem stacks). */
   flatUse?: FlatUse[];
+  /** Golpe de vários acertos: fração do dano de cada acerto (soma 1), na ordem. Ausente com 1 acerto ou fora do dano direto. */
+  hitShare?: number[];
 }
 
 /** Uso de um buff de dano fixo por um golpe. */
@@ -393,7 +395,7 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
     return action.move.element ?? (config.elementMode === 'kit' ? kitElement(m.character, action.move, m.normalInfusion) : m.character.element);
   };
   // Dano fixo: os golpes consomem os stacks na ORDEM DO TEMPO (empate: ordem da lista), salvo os que o usuário tirou do efeito.
-  const flatPass: { damage: number; use: FlatUse[] }[] = actions.map(() => ({ damage: 0, use: [] }));
+  const flatPass: { damage: number; use: FlatUse[]; hits: number[] }[] = actions.map(() => ({ damage: 0, use: [], hits: [] }));
   [...actions.keys()].sort((x, y) => (actions[x].time ?? 0) - (actions[y].time ?? 0) || x - y).forEach((idx) => {
     const action = actions[idx];
     const move = action.move;
@@ -401,6 +403,8 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
     const member = members[action.member];
     const element = elementOfAction(action);
     const hitsOfAction = action.executions * Math.max(1, move.hits);
+    const perHitFlat = flatPass[idx].hits;
+    while (perHitFlat.length < hitsOfAction) perHitFlat.push(0);
     for (const f of flat) {
       if (f.perHit <= 0) continue;
       const e = f.effect;
@@ -419,6 +423,7 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
       const covered = forced ? hitsOfAction : off || f.remaining <= 0 ? 0 : Math.min(hitsOfAction, f.remaining);
       if (!forced) f.remaining -= covered;
       let damage = covered * f.perHit;
+      for (let h = 0; h < covered; h++) perHitFlat[h] += f.perHit; // os acertos cobertos são os primeiros do golpe
       let levelAtStart: number | undefined;
       if (e.decay && !off) {
         // Cada acerto gasta `rate` do recurso atual; abaixo do piso o efeito não vale. `perHit` vale para `startPct`.
@@ -427,7 +432,12 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
         levelAtStart = f.level;
         damage = 0;
         for (let h = 0; h < covered; h++) {
-          if (f.level >= e.decay.floorPct && start > 0) damage += f.perHit * (f.level / start);
+          perHitFlat[h] -= f.perHit; // troca o valor cheio pelo do Vínculo naquele acerto
+          if (f.level >= e.decay.floorPct && start > 0) {
+            const v = f.perHit * (f.level / start);
+            damage += v;
+            perHitFlat[h] += v;
+          }
           f.level *= 1 - e.decay.rate;
         }
       }
@@ -523,6 +533,9 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
     });
 
     const noCrit = breakdown.total;
+    // Parte do dano de cada acerto (soma 1): a escala é igual em todos, o dano fixo só nos que o receberam.
+    const nHits = flatPass[idx].hits.length;
+    const hitShare = nHits > 1 && breakdown.baseTotal > 0 ? flatPass[idx].hits.map((f) => ((breakdown.baseTotal - flatDamage) / nHits + f) / breakdown.baseTotal) : undefined;
     return {
       action,
       element,
@@ -537,6 +550,7 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
       crit: noCrit * critFactor('crit', critRate, critDmg),
       avg: noCrit * critFactor('avg', critRate, critDmg),
       flatUse: flatPass[idx].use,
+      ...(hitShare ? { hitShare } : {}),
     };
   });
 

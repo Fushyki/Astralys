@@ -15,7 +15,7 @@ import { elementColor } from '../../design/elements';
 import { FamilyBadge, damageColor } from '../../design/damageFamily';
 import { useRotationStore } from '../../features/rotation/store';
 import { FormulaView } from './FormulaView';
-import { formatDecimal, formatInt, formatPercent } from '../../ui/format';
+import { formatDecimal, formatHits, formatInt, formatPercent } from '../../ui/format';
 
 export function Attributes({ v, index }: { v: ProjectView; index: number }) {
   const character = v.data.game.characters.find((c) => c.name === v.project.members[index].character)!;
@@ -123,11 +123,11 @@ function GroupRows({ g, color, openId, onOpen, calc }: { g: ReturnType<typeof mo
           <tr className="fx-row" data-open={openId === l.id} onClick={() => onOpen(l.id)} style={{ ['--e' as string]: damageColor(l.element, l.special) ?? elementColor(l.element) ?? color }}>
             <td className="el" title={l.special ? undefined : `Dano ${l.element === 'Physical' ? 'Físico' : l.element}`}>
               <button type="button" className="fx-name" aria-expanded={openId === l.id} onClick={(e) => { e.stopPropagation(); onOpen(l.id); }}>{l.name}</button>
-              {l.hits > 1 ? <span className="muted"> · {l.hits}×</span> : null} <FamilyBadge special={l.special} />
+              <FamilyBadge special={l.special} />
             </td>
-            <td>{formatInt(l.noCrit)}</td>
-            <td>{formatInt(l.crit)}</td>
-            <td className="avg">{formatInt(l.avg)}</td>
+            <td>{formatHits(l.noCrit, l.result.hitShare)}</td>
+            <td>{formatHits(l.crit, l.result.hitShare)}</td>
+            <td className="avg">{formatHits(l.avg, l.result.hitShare)}</td>
           </tr>
           {openId === l.id && <tr className="fx-detail"><td colSpan={4}>{calc(l)}</td></tr>}
         </Fragment>

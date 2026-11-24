@@ -5,6 +5,12 @@ const intFmt = new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 0 });
 
 export const formatInt = (n: number): string => intFmt.format(Math.round(n));
 
+/** Golpe de vários acertos: o dano de cada acerto, "x + y" (sem o total). Com um acerto, ou sem a divisão, só o número. */
+export function formatHits(value: number, share?: readonly number[]): string {
+  if (!share || share.length < 2 || share.length > 6) return formatInt(value);
+  return share.map((s) => formatInt(value * s)).join(' + ');
+}
+
 export function formatDecimal(n: number, digits = 1): string {
   return n.toLocaleString('pt-BR', { minimumFractionDigits: digits, maximumFractionDigits: digits });
 }

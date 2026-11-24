@@ -16,7 +16,7 @@ export const SHARE_PARTS: { id: SharePart; label: string; hint: string }[] = [
   { id: 'team', label: 'Equipe e builds', hint: 'Personagens, armas, sets, peças, constelações e stacks. Sem isto, quem recebe usa o próprio time.' },
 ];
 
-type Rotation = Pick<RotationProject, 'actions' | 'buffWindows' | 'chains' | 'flatStacks' | 'flatManual' | 'disabled' | 'enabled' | 'profiles'>;
+type Rotation = Pick<RotationProject, 'actions' | 'buffWindows' | 'chains' | 'flatStacks' | 'disabled' | 'enabled' | 'profiles'>;
 
 export interface ShareFile {
   kind: typeof SHARE_KIND;
@@ -43,7 +43,7 @@ export function buildShare(project: RotationProject, parts: SharePart[]): ShareF
     createdAt: new Date().toISOString(),
     parts,
     members: project.members.map((m) => m.character),
-    ...(has('rotation') ? { rotation: { actions: project.actions, buffWindows: project.buffWindows, chains: project.chains, flatStacks: project.flatStacks, flatManual: project.flatManual, disabled: project.disabled, enabled: project.enabled, profiles: project.profiles } } : {}),
+    ...(has('rotation') ? { rotation: { actions: project.actions, buffWindows: project.buffWindows, chains: project.chains, flatStacks: project.flatStacks, disabled: project.disabled, enabled: project.enabled, profiles: project.profiles } } : {}),
     ...(has('scenario') ? { scenario: { config: project.config, elementMode: project.elementMode } } : {}),
     ...(has('extras') ? { extras: project.extras } : {}),
     ...(has('team') ? { team: { members: project.members, compat: project.compat } } : {}),
@@ -129,7 +129,6 @@ export function applyShare(project: RotationProject, file: ShareFile, which: Sha
       buffWindows,
       chains: Object.fromEntries(Object.entries(r.chains).filter(([id]) => live.has(id))),
       flatStacks: r.flatStacks,
-      flatManual: r.flatManual,
       disabled: keep(r.disabled, map),
       enabled: keep(r.enabled, map),
       profiles: Object.fromEntries(Object.entries(r.profiles).map(([name, tags]) => [name, keep(tags, map)])),

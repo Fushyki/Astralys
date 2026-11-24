@@ -249,6 +249,8 @@ export type WeaponFlat = z.infer<typeof WeaponFlatSchema>;
  */
 export const CharacterBuffSchema = z.object({
   id: z.string().min(1),
+  /** Multiplicador sobre o dano base só destes golpes (pelo rótulo do Lunaris): `extra` = 0,4 vale ×1,4 (Membros do Salon da Furina). */
+  moveMult: z.object({ labels: z.array(z.string().min(1)).min(1), extra: z.number() }).optional(),
   /** Nome curto da faixa no plano de combate, ex.: "Hu Tao: A1". */
   label: z.string().min(1),
   minConstellation: z.number().int().min(0).max(6).default(0),

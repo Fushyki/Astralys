@@ -497,6 +497,7 @@ function buildCharacters(): CharacterEffect[] {
         ...(b.forElements ? { forElements: b.forElements } : {}),
         ...(b.decay ? { decay: b.decay } : {}),
         ...(b.forFactions ? { forFactions: b.forFactions } : {}),
+        ...(b.moveMult ? { moveMult: { labels: b.moveMult.labels, extra: v(b.moveMult.extra) } } : {}),
         ...(b.replaces ? { replaces: b.replaces } : {}),
         ...(b.onCharTag ? { onCharTag: true } : {}),
         ...(s

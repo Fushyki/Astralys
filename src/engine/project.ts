@@ -835,7 +835,11 @@ function withPoints(a: Pick<ActionRef, 'move' | 'extraScale'>, points: number | 
 /** Transforma o projeto salvo nas entradas do motor. Lança ProjectResolveError se algo não existir nos dados. */
 export function resolveProject(project: RotationProject, data: GameData, effects: EffectsData): ResolvedProject {
   const planilha = project.compat === 'planilha';
-  const members = finalizeMembers(project.members.map((m) => resolveMember(m, data, effects, project.config.minRollsPerSubstat, project.config.characterLevel)), planilha);
+  const members = finalizeMembers(project.members.map((m) => resolveMember(m, data, effects, project.config.minRollsPerSubstat, project.config.characterLevel)), planilha).map((m, i) => {
+    // Multiplicador de golpes (Furina): o motor de dano o lê direto do kit, então o interruptor do buff o tira daqui.
+    const off = (m.characterEffect?.buffs ?? []).filter((b) => b.moveMult && project.disabled.includes(`cbuff-${i}-${b.id}`));
+    return off.length ? { ...m, characterEffect: { ...m.characterEffect!, buffs: m.characterEffect!.buffs.filter((b) => !off.includes(b)) } } : m;
+  });
   const moves = indexMoves(data.moves);
   const config: GlobalConfig = { ...project.config, rotationDuration: effectiveDuration(project), elementMode: planilha || project.elementMode === 'personagem' ? 'character' : 'kit' };
 

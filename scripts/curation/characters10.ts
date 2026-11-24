@@ -14,6 +14,12 @@ export const CHARACTERS_14: Record<string, BuffCuration[]> = {
   ],
   Furina: [
     { id: 'a4', label: 'Furina A4', src: 'p2', scope: 'self', timed: false, convert: { from: 'hp', perPoint: { p: 0, x: 0.001 }, cap: { p: 1 }, to: ['skill'] }, expect: "Salon Members' DMG dealt by 0.7%", note: '+0,7% de DMG da habilidade (Salon Members) por 1.000 de HP máximo, até 28%.' },
+    {
+      id: 'skill', label: 'Salon Members: personagens acima de 50% de HP', src: 'kit', kit: { talent: 'skill' }, scope: 'self', timed: false,
+      moveMult: { labels: ['Gentilhomme Usher DMG', 'Surintendante Chevalmarin DMG', 'Mademoiselle Crabaletta DMG'], extra: { lit: 0.4 } },
+      stacks: { max: 4, default: 4, unit: 'personagens acima de 50% de HP', levels: [{ lit: 0.1 }, { lit: 0.2 }, { lit: 0.3 }, { lit: 0.4 }] },
+      expect: '110%/120%/130%/140%', note: 'Multiplicador dos Membros do Salon sobre o dano original: ×1,1 / ×1,2 / ×1,3 / ×1,4 com 1 / 2 / 3 / 4 ou mais personagens com mais de 50% de HP (fórmula do Genshin Optimizer). Padrão: 4. O consumo de HP desses personagens não entra.',
+    },
     { id: 'c2', label: 'Furina C2', src: 'const2', scope: 'self', timed: true, stats: { hpPct: { p: 4 } }, expect: 'Her maximum Max HP increase is 140%', note: 'Assume o aumento máximo de HP (+140%, com Fanfare muito acima do limite): ligue na janela do Supremo.' },
   ],
   Navia: [

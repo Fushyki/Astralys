@@ -12,7 +12,7 @@ import { computeHit, type EnemyStats, type HitBreakdown, type ResistanceMap } fr
 import { critFactor } from './formulas';
 import { computeLunarReaction, computeSpecial, computeStellarSwirlReaction, computeTransformative, type SpecialBreakdown } from './reactions';
 import type { Rolls } from './artifacts';
-import { activeTeamDelta, finalStats, hitDmgBonus, type FinalStats, type MemberInput, type StatBlock, type TeamBuff } from './stats';
+import { activeCharacterBuffs, activeTeamDelta, finalStats, hitDmgBonus, type FinalStats, type MemberInput, type StatBlock, type TeamBuff } from './stats';
 import type { GlobalConfig, TeamAssembly } from './team';
 
 export type ReactionChoice = 'none' | AmplifyingReaction | AdditiveReaction;
@@ -503,7 +503,9 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
     const level = move.talent === 'proc' || move.talent === 'reaction' ? 1 : member.talents[move.talent];
     const scale = scaleAt(move, level);
     // O multiplicador sobre o dano base (Skirk A4: ×1,7 no Normal) vale para a parte que vem da escala × stat, não para o valor fixo do golpe.
-    const baseMult = 1 + ((move.hitType === 'other' ? undefined : stats.baseMultByType?.[move.hitType]) ?? 0);
+    // Multiplicador só de certos golpes (Membros do Salon da Furina, ×1,1 a ×1,4): vale sobre a escala × stat, como o de tipo.
+    const labelMult = 1 + activeCharacterBuffs(member).reduce((s, b) => (b.moveMult?.labels.includes(move.label) ? s + b.moveMult.extra : s), 0);
+    const baseMult = (1 + ((move.hitType === 'other' ? undefined : stats.baseMultByType?.[move.hitType]) ?? 0)) * labelMult;
     const base = (stats.atk * scale.atk + stats.em * scale.em + stats.hp * scale.hp + stats.def * scale.def) * baseMult + scale.flat;
 
     const byType = <T,>(r: Record<HitType, T> | undefined) => (move.hitType === 'other' ? undefined : r?.[move.hitType]);

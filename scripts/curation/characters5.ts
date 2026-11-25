@@ -27,7 +27,8 @@ const forTraveler = (name: string, element: string): [string, BuffCuration[]] =>
 export const CHARACTERS_5: Record<string, BuffCuration[]> = {
   ...Object.fromEntries(['Aether', 'Lumine'].flatMap((n) => Object.keys(TRAVELER).map((e) => forTraveler(n, e)))),
   Linnea: [
-    { id: 'a1', label: 'Linnea A1', src: 'p1', scope: 'self', timed: false, resShred: { value: { p: 0 }, elements: ['Geo'] }, expect: 'the Geo RES of opponents near Lumi will decrease by 15%', note: 'Assume a redução de RES Geo perto da Lumi sempre ativa. A redução extra do Moonsign Ascendant Gleam não entra.' },
+    { id: 'a1', label: 'Linnea A1', src: 'p1', scope: 'self', timed: false, resShred: { value: { p: 0 }, elements: ['Geo'] }, expect: 'the Geo RES of opponents near Lumi will decrease by 15%', note: 'Assume a redução de RES Geo perto da Lumi sempre ativa.' },
+    { id: 'a1g', label: 'Linnea A1 (Ascendant Gleam)', src: 'p1', scope: 'self', timed: false, team: { moonsign: 2 }, resShred: { value: { p: 0 }, elements: ['Geo'] }, expect: 'will be further decreased by 15%', note: 'Com 2+ membros Moonsign, mais -15% de RES Geo (como no texto, depois de invocar a Lumi): assumido sempre ativo.' },
     { id: 'c2', label: 'Linnea C2', src: 'const2', scope: 'team', timed: true, forElements: ['Hydro', 'Geo'], stats: { critDmg: { p: 0 } }, expect: 'all Hydro and Geo party members have their CRIT DMG increased by 40%', note: '+40% de Dano Crítico de Hydro e Geo por 8 s depois do Moondrift Harmony: ligue nas janelas.' },
   ],
   Prune: [

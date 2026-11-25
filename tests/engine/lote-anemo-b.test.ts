@@ -32,7 +32,7 @@ describe('rótulos dos golpes usados existem', () => {
     L('Wanderer', 'burst', 'Skill DMG');
     L('Faruzan', 'burst', 'Skill DMG');
     L('Xianyun', 'skill', 'Driftcloud Wave DMG');
-    L('Xianyun', 'normal', 'Plunge DMG');
+    L('Xianyun', 'normal', 'Low/High Plunge DMG');
     L('Chasca', 'skill', 'Shining Shadowhunt Shell DMG');
   });
 });
@@ -88,7 +88,8 @@ describe('Xianyun', () => {
     expect(solo('Xianyun', 6, wave, { c6: 1 }).critDmg - off.critDmg).toBeCloseTo(0.15, 5);
   });
   it('C2: Starwicker 400% do ATK (teto 18.000) no lugar de 200% (teto 9.000)', () => {
-    const plunge: Act = { talent: 'normal', label: 'Plunge DMG' };
+    // Só a onda de choque recebe (o dano durante a queda não).
+    const plunge: Act = { talent: 'normal', label: 'Low/High Plunge DMG' };
     const c1 = solo('Xianyun', 1, plunge);
     const c2 = solo('Xianyun', 2, plunge);
     // O dano fixo lê o ATK com todos os buffs ligados, não o da ação: compara os dois com o teto.

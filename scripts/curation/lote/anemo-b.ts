@@ -50,14 +50,14 @@ export const LOTE: Lote = {
       },
       {
         id: 'c2f', label: 'Xianyun C2 (Starwicker reforçado)', src: 'const2', scope: 'self', timed: false, replaces: 'a4',
-        flat: [{ name: 'Starwicker (C2)', sourceStat: 'ATK', perPoint: { lit: 4 }, cap: { lit: 18000 }, hitTypes: ['plunge'], targets: 'team' }],
+        flat: [{ name: 'Starwicker (C2)', sourceStat: 'ATK', perPoint: { lit: 4 }, cap: { lit: 18000 }, hitTypes: ['plunge', 'skill'], labels: ['Low/High Plunge DMG', 'Fiery Passion Low/High Plunge DMG', 'Flamestrider Plunge DMG', 'Plunging Attack: Charmed Cloudstrider DMG'], targets: 'team' }, { name: 'Starwicker (C2) (Driftcloud Wave)', sourceStat: 'ATK', perPoint: { lit: 4 }, cap: { lit: 18000 }, hitTypes: ['skill'], labels: ['Driftcloud Wave DMG'], targets: 'self' }],
         expect: "Plunging Attack shockwave DMG will be increased by 400% of Xianyun's ATK",
         note: 'REFORÇA o A4: 400% do ATK dela (teto 18.000, literais do texto) somados ao dano de cada Imersivo da equipe, no lugar dos 200% / 9.000. Assume Adeptal Assistance ativo; o intervalo de 0,4 s por personagem não é limitado (use os usos do dano fixo na rotação).',
       },
     ],
     Chasca: [
       {
-        id: 'a1', label: 'Chasca A1 (Spirit of the Radiant Shadow)', src: 'p1', scope: 'self', timed: true,
+        id: 'a1', label: 'Chasca A1 (Spirit of the Radiant Shadow)', src: 'p1', scope: 'self', onlyLabels: ['Shining Shadowhunt Shell DMG'], timed: true,
         stats: { byType: { skill: { p: 5 } } }, stacks: { max: 3, unit: 'Spirit of the Radiant Shadow', levels: [{ p: 3 }, { p: 4 }, { p: 5 }] },
         expect: 'increasing the DMG of Shining Shadowhunt Shell by 15%/35%/65%',
         note: 'DMG do Shining Shadowhunt Shell: 15%/35%/65% com 1/2/3 stacks (um por elemento diferente elegível no time; na C2 ela já começa com 1). No cadastro o Shining é golpe de habilidade, então o bônus vale em todo golpe de habilidade dela na janela: ligue só nos Shining Shadowhunt Shell. A conversão por chance do 3º projétil não entra.',

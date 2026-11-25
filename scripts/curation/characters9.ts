@@ -53,7 +53,7 @@ export const CHARACTERS_13: Record<string, BuffCuration[]> = {
     { id: 'a4', label: 'Lynette A4', src: 'p2', scope: 'self', timed: true, stats: { byType: { burst: { p: 0 } } }, expect: "Lynette's Elemental Burst will deal 15% more DMG", note: '+15% de DMG do Supremo depois da Conversão Elemental da caixa: ligue na janela.' },
   ],
   Freminet: [
-    { id: 'a4', label: 'Freminet A4', src: 'p2', scope: 'self', timed: true, stats: { byType: { skill: { p: 0 } } }, expect: 'the DMG dealt by Pressurized Floe: Shattering Pressure will be increased by 40% for 5s', note: '+40% de DMG da habilidade por 5 s depois de Estilhaçar: ligue na janela.' },
+    { id: 'a4', label: 'Freminet A4', src: 'p2', scope: 'self', onlyLabels: ['Level 0 Shattering Pressure DMG', 'Level 4 Shattering Pressure DMG'], timed: true, stats: { byType: { skill: { p: 0 } } }, expect: 'the DMG dealt by Pressurized Floe: Shattering Pressure will be increased by 40% for 5s', note: '+40% de DMG da habilidade por 5 s depois de Estilhaçar: ligue na janela.' },
   ],
   Wriothesley: [
     { id: 'a1', label: 'Wriothesley A1', src: 'p1', scope: 'self', timed: true, stats: { byType: { charged: { p: 1 } } }, expect: 'will deal 50% increased DMG', note: '+50% de DMG do Carregado (Rebuke: Vaulting Fist) com HP abaixo de 60%: ligue só nesse Carregado.' },

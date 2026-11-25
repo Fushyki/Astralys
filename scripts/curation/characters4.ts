@@ -6,7 +6,7 @@ export const CHARACTERS_4: Record<string, BuffCuration[]> = {
     { id: 'c4', label: 'Mualani C4', src: 'const4', scope: 'self', timed: false, stats: { byType: { burst: { p: 1 } } }, expect: 'Boomsharka-laka deals 75% increased DMG', note: '+75% de DMG do Supremo, sempre.' },
   ],
   Xilonen: [
-    { id: 'a1', label: 'Xilonen A1', src: 'p1', scope: 'self', timed: true, stats: { byType: { normal: { p: 1 }, plunge: { p: 1 } } }, expect: 'Normal and Plunging Attacks deal 30% increased DMG', note: '+30% de DMG de Normal/Plunging com menos de 2 Amostras alteradas no Nightsoul: ligue nas janelas.' },
+    { id: 'a1', label: 'Xilonen A1', src: 'p1', scope: 'self', team: { fewerThan: { of: ['Pyro', 'Hydro', 'Electro', 'Cryo'], count: 2 } }, timed: true, stats: { byType: { normal: { p: 1 }, plunge: { p: 1 } } }, expect: 'Normal and Plunging Attacks deal 30% increased DMG', note: '+30% de DMG de Normal/Plunging com menos de 2 Amostras alteradas no Nightsoul: ligue nas janelas.' },
     { id: 'c2geo', label: 'Xilonen C2 (Geo)', src: 'const2', scope: 'team', timed: true, forElements: ['Geo'], stats: { dmgPct: { p: 3 } }, expect: 'Geo: DMG dealt +50%', note: '+50% de DMG para personagens Geo com a Amostra Geo ativa: ligue nas janelas.' },
     { id: 'c2pyro', label: 'Xilonen C2 (Pyro)', src: 'const2', scope: 'team', timed: true, forElements: ['Pyro'], stats: { atkPct: { p: 0 } }, expect: 'Pyro: ATK +45%', note: '+45% de ATK para personagens Pyro com a Amostra Pyro ativa: ligue nas janelas.' },
     { id: 'c2hydro', label: 'Xilonen C2 (Hydro)', src: 'const2', scope: 'team', timed: true, forElements: ['Hydro'], stats: { hpPct: { p: 1 } }, expect: 'Hydro: Max HP +45%', note: '+45% de HP máximo para personagens Hydro com a Amostra Hydro ativa: ligue nas janelas.' },

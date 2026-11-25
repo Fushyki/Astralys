@@ -13,6 +13,7 @@ import { critFactor } from './formulas';
 import { computeLunarReaction, computeSpecial, computeStellarSwirlReaction, computeTransformative, type SpecialBreakdown } from './reactions';
 import type { Rolls } from './artifacts';
 import { activeCharacterBuffs, activeTeamDelta, finalStats, hitDmgBonus, type FinalStats, type MemberInput, type StatBlock, type TeamBuff } from './stats';
+import { labelTag } from './team';
 import type { GlobalConfig, TeamAssembly } from './team';
 
 export type ReactionChoice = 'none' | AmplifyingReaction | AdditiveReaction;
@@ -449,7 +450,9 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
   const results: ActionResult[] = actions.map((action, idx) => {
     const member = members[action.member];
     const move = action.move;
-    const tg = tagsOf(action.activeTags);
+    // Buff próprio restrito a certos golpes (`onlyLabels`): nos outros a etiqueta dele não conta.
+    const foreign = activeCharacterBuffs(member).flatMap((b) => (b.onlyLabels && !b.onlyLabels.includes(move.label) ? [labelTag(b.label)] : []));
+    const tg = tagsOf(foreign.length ? action.activeTags.filter((t) => !foreign.includes(t)) : action.activeTags);
     const tags = tg.set;
     const stats = statsFor(action.member, tags, action.tagAges, tg);
     const enemy: EnemyStats = {

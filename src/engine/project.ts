@@ -656,6 +656,7 @@ export function applyTeamRules(members: MemberInput[]): MemberInput[] {
       const t = b.team;
       if (t?.moonsign && moonsign < t.moonsign) return [];
       if (t?.moonsignMax && moonsign > t.moonsignMax) return [];
+      if (t?.fewerThan && elements.filter((e) => t.fewerThan!.of.includes(e)).length >= t.fewerThan.count) return [];
       if (t?.hexerei && hexerei < t.hexerei) return [];
       if (t?.only && !elements.every((e) => t.only!.includes(e))) return [];
       if (t?.eachOf && !t.eachOf.every((e) => elements.includes(e))) return [];

@@ -50,7 +50,7 @@ it('cada buff em janela dos personagens muda o dano ou os stats quando ligado (s
   for (const e of effects.characters) {
     // Um buff substituído por outro (constelação, o teste usa C6) não tem o que mudar.
     const replaced = new Set((e.buffs ?? []).flatMap((x) => (x.replaces ? [x.replaces] : [])));
-    for (const b of (e.buffs ?? []).filter((x) => x.timed && !replaced.has(x.id))) {
+    for (const b of (e.buffs ?? []).filter((x) => x.timed && !replaced.has(x.id) && !x.onlyLabels && !x.team?.fewerThan)) { // golpe ou time específicos: ver loteGo2.test.ts
       checked++;
       if (total(e.character, OTHERS) === total(e.character, [...OTHERS, b.onCharTag ? CHARS[0] : `label:${b.label}`])) dead.push(`${e.character}:${b.id}`);
     }

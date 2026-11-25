@@ -194,6 +194,8 @@ export const BuffTeamRulesSchema = z.object({
   moonsign: z.number().int().positive().optional(),
   /** Só vale com no máximo tantos membros Moonsign (1 = "Moonsign: Nascent Gleam", que não se soma ao Ascendant). */
   moonsignMax: z.number().int().positive().optional(),
+  /** Não vale com `count` ou mais membros destes elementos no time (ex.: Xilonen A1). */
+  fewerThan: z.object({ of: z.array(ElementSchema).min(1), count: z.number().int().positive() }).optional(),
   /** Só vale com ao menos tantos membros Hexerei no time (Genshin Optimizer `tally.hexerei`). */
   hexerei: z.number().int().positive().optional(),
   /**
@@ -272,6 +274,8 @@ export const CharacterBuffSchema = z.object({
   condition: z.string().optional(),
   /** Bônus de um golpe Lunar do próprio dono: dano somado (fração da DEF) e bônus de dano da reação; `first` = só a 1ª execução. */
   onMove: z.object({ labels: z.array(z.string()).min(1), defFlat: z.number().optional(), dmg: z.number().optional(), first: z.boolean().optional() }).optional(),
+  /** Buff próprio com janela que só vale nestes golpes (rótulos do kit). */
+  onlyLabels: z.array(z.string()).min(1).optional(),
   /** Id de outro buff do mesmo personagem que este REFORÇA: com este ativo (constelação), o outro sai e este entra no lugar (não somam; ex.: Flins C4 sobre o A4). */
   replaces: z.string().optional(),
   /** Usa a faixa do personagem (`char:<membro>`) em vez de uma faixa com o nome do buff: mantém as janelas de projetos que já tinham o ATK fixo dele. */

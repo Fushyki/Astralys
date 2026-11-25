@@ -12323,11 +12323,30 @@
     "appliesToSelf": false,
     "buffs": [
       {
+        "id": "burst",
+        "moveMult": {
+          "labels": [
+            "Frost DMG"
+          ],
+          "extra": 1
+        },
+        "label": "Freminet: Caçador Subaquático (Gelo)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "flat": [],
+        "note": "No modo Subnautical Hunter o gelo dos Normais causa 200% do dano original. Desligue para golpes fora do modo."
+      },
+      {
         "id": "a4",
         "label": "Freminet A4",
         "minConstellation": 0,
         "scope": "self",
         "timed": true,
+        "onlyLabels": [
+          "Level 0 Shattering Pressure DMG",
+          "Level 4 Shattering Pressure DMG"
+        ],
         "stats": {
           "atkPct": 0,
           "dmgPct": 0,
@@ -12910,9 +12929,29 @@
             "perPoint": 2,
             "capPerHit": 9000,
             "hitTypes": [
-              "plunge"
+              "plunge",
+              "skill"
+            ],
+            "labels": [
+              "Low/High Plunge DMG",
+              "Fiery Passion Low/High Plunge DMG",
+              "Flamestrider Plunge DMG",
+              "Plunging Attack: Charmed Cloudstrider DMG"
             ],
             "targets": "team"
+          },
+          {
+            "name": "Starwicker (Driftcloud Wave)",
+            "sourceStat": "ATK",
+            "perPoint": 2,
+            "capPerHit": 9000,
+            "hitTypes": [
+              "skill"
+            ],
+            "labels": [
+              "Driftcloud Wave DMG"
+            ],
+            "targets": "self"
           }
         ],
         "note": "Soma 200% do ATK dela a todo Imersivo da equipe (Starwicker com stacks), até 9.000 (teto do Genshin Optimizer: 200% × 4.500 de ATK)."
@@ -12974,9 +13013,29 @@
             "perPoint": 4,
             "capPerHit": 18000,
             "hitTypes": [
-              "plunge"
+              "plunge",
+              "skill"
+            ],
+            "labels": [
+              "Low/High Plunge DMG",
+              "Fiery Passion Low/High Plunge DMG",
+              "Flamestrider Plunge DMG",
+              "Plunging Attack: Charmed Cloudstrider DMG"
             ],
             "targets": "team"
+          },
+          {
+            "name": "Starwicker (C2) (Driftcloud Wave)",
+            "sourceStat": "ATK",
+            "perPoint": 4,
+            "capPerHit": 18000,
+            "hitTypes": [
+              "skill"
+            ],
+            "labels": [
+              "Driftcloud Wave DMG"
+            ],
+            "targets": "self"
           }
         ],
         "note": "REFORÇA o A4: 400% do ATK dela (teto 18.000, literais do texto) somados ao dano de cada Imersivo da equipe, no lugar dos 200% / 9.000. Assume Adeptal Assistance ativo; o intervalo de 0,4 s por personagem não é limitado (use os usos do dano fixo na rotação)."
@@ -13971,6 +14030,17 @@
           "physDmgPct": 0,
           "physCritDmg": 0,
           "reactionBonus": {}
+        },
+        "team": {
+          "fewerThan": {
+            "of": [
+              "Pyro",
+              "Hydro",
+              "Electro",
+              "Cryo"
+            ],
+            "count": 2
+          }
         },
         "flat": [],
         "note": "+30% de DMG de Normal/Plunging com menos de 2 Amostras alteradas no Nightsoul: ligue nas janelas."
@@ -19741,7 +19811,25 @@
           ]
         },
         "flat": [],
-        "note": "Assume a redução de RES Geo perto da Lumi sempre ativa. A redução extra do Moonsign Ascendant Gleam não entra."
+        "note": "Assume a redução de RES Geo perto da Lumi sempre ativa."
+      },
+      {
+        "id": "a1g",
+        "label": "Linnea A1 (Ascendant Gleam)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "team": {
+          "moonsign": 2
+        },
+        "resShred": {
+          "value": 0.15,
+          "elements": [
+            "Geo"
+          ]
+        },
+        "flat": [],
+        "note": "Com 2+ membros Moonsign, mais -15% de RES Geo (como no texto, depois de invocar a Lumi): assumido sempre ativo."
       },
       {
         "id": "c2",
@@ -26123,6 +26211,9 @@
         "minConstellation": 0,
         "scope": "self",
         "timed": true,
+        "onlyLabels": [
+          "Shining Shadowhunt Shell DMG"
+        ],
         "stats": {
           "atkPct": 0,
           "dmgPct": 0,

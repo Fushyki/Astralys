@@ -32,6 +32,7 @@ export interface BuffCuration {
   forFactions?: ('moonsign' | 'hexerei')[];
   /** Condição da aba Talentos (chave da ficha do Genshin Optimizer) que liga e desliga este buff. */
   condition?: string;
+  onlyLabels?: string[];
   /** Bônus de um golpe Lunar do próprio dono. */
   onMove?: { labels: string[]; defFlat?: Val; dmg?: Val; first?: boolean };
   /** Id do buff que este reforça e substitui quando ativo. */
@@ -66,7 +67,7 @@ export interface BuffCuration {
    */
   kit?: { talent: 'normal' | 'skill' | 'burst'; key?: string; /** Linha do kit (números puros, 15 níveis) que vira o teto da conversão por nível. */ capKey?: string; /** Tabela dos 15 níveis (fração) que o Lunaris não traz; vem do Genshin Optimizer (`skillParam.json`). */ table?: number[] };
   /** Regras de composição do time (ver `BuffTeamRulesSchema`); `scale.table` vem de parâmetros do Lunaris. */
-  team?: { only?: Element[]; eachOf?: Element[]; scale?: { of: 'distinct' | 'same' | 'different' | Element[]; table: Val[] }; /** Mínimo de membros Moonsign / Hexerei no time. */ moonsign?: number; moonsignMax?: number; hexerei?: number };
+  team?: { only?: Element[]; eachOf?: Element[]; scale?: { of: 'distinct' | 'same' | 'different' | Element[]; table: Val[] }; fewerThan?: { of: Element[]; count: number }; /** Mínimo de membros Moonsign / Hexerei no time. */ moonsign?: number; moonsignMax?: number; hexerei?: number };
   /** Bônus que depende de um stat da fonte (ver `BuffConvertSchema`). Substitui `stats`. */
   convert?: {
     from: 'atk' | 'baseAtk' | 'hp' | 'def' | 'em' | 'er';

@@ -2,6 +2,8 @@
 export interface GoMember {
   key: string;
   element: string;
+  /** Conta para o Presságio Lunar mesmo sem ficha empacotada. */
+  moonsign?: boolean;
   level: number;
   constellation: number;
   ascension: number;

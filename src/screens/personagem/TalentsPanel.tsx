@@ -136,7 +136,7 @@ function Condition({ buff, index, constellation, disabled, chips, onToggle, chos
   const active = !locked && !disabled.includes(id);
   const fallback = buff.stats ? deltaChips(characterBuffDelta(scaleBuffStacks(buff, chosen).stats, !!buff.forElements)) : [];
   const n = stacksOf(buff, chosen);
-  const mult = buff.moveMult ? [{ name: 'dano base dos Membros do Salon', value: `×${formatDecimal(1 + scaleBuffStacks(buff, chosen).moveMult!.extra, 1)}` }] : [];
+  const mult = buff.moveMult ? [{ name: 'dano base dos golpes afetados', value: `×${formatDecimal(1 + scaleBuffStacks(buff, chosen).moveMult!.extra, 1)}` }] : [];
   const rows = ratio([...(chips.length ? chips : fallback).map(splitChip), ...mult, ...flatRows(buff, stats)]);
   return (
     <div className="tl-cond" data-active={active} data-locked={locked}>

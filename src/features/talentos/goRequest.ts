@@ -88,6 +88,7 @@ export function goRequest(project: RotationProject, resolved: ResolvedProject, r
     return {
       key,
       element: m.character.element.toLowerCase(),
+      moonsign: m.factions?.includes('moonsign') ?? false,
       level,
       constellation: ref.constellation ?? 0,
       ascension: ascensionAt(level),

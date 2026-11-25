@@ -778,8 +778,13 @@ const KQM_LIQUID_ROLLS = 20;
 export function finalizeMembers(members: MemberInput[], planilha: boolean): MemberInput[] {
   // Passiva "Mestre do Armamento" do Tartaglia: +1 nível de Ataque Normal para o time inteiro, ele incluído.
   const master = !planilha && members.some((m) => m.character.name === 'Tartaglia');
-  const leveled = master ? members.map((m) => ({ ...m, talents: { ...m.talents, normal: Math.min(15, m.talents.normal + 1) } })) : members;
-  return applyTeamRules(leveled).map((m) =>
+  // "Mentoria Mútua das Armas" da Skirk: com o time só de Hydro e Cryo (ao menos um de cada), +1 na Habilidade de todos.
+  const elements = new Set(members.map((m) => m.character.element));
+  const mentor = !planilha && members.some((m) => m.character.name === 'Skirk') && elements.size === 2 && elements.has('Hydro') && elements.has('Cryo');
+  const leveled = master || mentor ? members.map((m) => ({ ...m, talents: { ...m.talents, normal: Math.min(15, m.talents.normal + (master ? 1 : 0)), skill: Math.min(15, m.talents.skill + (mentor ? 1 : 0)) } })) : members;
+  // Teto de pontos que sobe com a constelação.
+  const raised = leveled.map((m) => (m.characterEffect?.pointMoves?.some((p) => p.maxBy) ? { ...m, characterEffect: { ...m.characterEffect, pointMoves: m.characterEffect.pointMoves.map((p) => (p.maxBy && (m.constellation ?? 0) >= p.maxBy.constellation ? { ...p, max: p.maxBy.max } : p)) } } : m));
+  return applyTeamRules(raised).map((m) =>
     planilha
       ? { ...(m.characterEffect && !m.characterEffect.fonte_info.includes('scripts/curation/') ? { ...m, characterEffect: planilhaEffect(m.characterEffect) } : m), weaponEffect: planilhaWeapon(m.weaponEffect), minOwnAtk: undefined, liquidRolls: undefined } // a planilha não tem o ATK próprio mínimo nem o padrão KQMS (o gabarito não muda)
       : { ...withoutPlanilhaSeed(m), liquidRolls: m.liquidRolls ?? KQM_LIQUID_ROLLS - 2 * Object.values(m.artifacts.rarity).filter((r) => r === 4).length },

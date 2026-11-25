@@ -2,13 +2,16 @@
 //   git clone --depth 1 --filter=blob:none --sparse https://github.com/frzyc/genshin-optimizer.git go
 //   git -C go sparse-checkout set libs/gi libs/common libs/pando libs/game-opt
 //   node scripts/go-talentos/build.mjs <caminho do clone>
+// Para comparar outros personagens sem mexer no site (condições sem tradução ficam em inglês):
+//   node scripts/go-talentos/build.mjs <clone> Mavuika,Skirk <saida.js>
 import { execFileSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import * as esbuild from 'esbuild';
 
 const go = path.resolve(process.argv[2] ?? '');
-const CHARS = ['Illuga', 'Zibai'];
+const CHARS = process.argv[3]?.split(',') ?? ['Illuga', 'Zibai'];
+const OUT = process.argv[4] ?? 'src/vendor/go/talentos.js';
 const paths = JSON.parse(readFileSync(path.join(go, 'tsconfig.base.json'), 'utf8')).compilerOptions.paths;
 const UI = /^@genshin-optimizer\/(common\/(ui|svgicons)|gi\/(i18n|svgicons|assets|ui|db-ui|theme|char-cards|formula-ui))($|\/)/;
 const readJson = (rel) => JSON.parse(readFileSync(path.join(go, rel), 'utf8'));
@@ -26,15 +29,23 @@ for (const c of CHARS) {
   const gen = readJson(`${dm}/char_${c}_gen.json`);
   // Só o que a tela usa: nomes dos talentos e dos números.
   locale[`char_${c}_gen`] = Object.fromEntries(Object.entries(gen).filter(([, v]) => v && typeof v === 'object').map(([k, v]) => [k, { name: v.name, skillParams: v.skillParams, fields: v.fields }]));
-  const en = readJson(`libs/gi/localization/assets/locales/en/char_${c}.json`);
+  // Quem não tem condição escrita pelo GO não tem esse arquivo.
+  const own = `libs/gi/localization/assets/locales/en/char_${c}.json`;
+  const en = existsSync(path.join(go, own)) ? readJson(own) : {};
   const missing = Object.keys(en).filter((k) => !OURS.chars[c]?.[k]);
-  if (missing.length) throw new Error(`pt.json sem tradução de ${c}: ${missing.join(', ')}`);
-  locale[`char_${c}`] = OURS.chars[c];
+  if (missing.length && !process.argv[4]) throw new Error(`pt.json sem tradução de ${c}: ${missing.join(', ')}`);
+  locale[`char_${c}`] = { ...en, ...OURS.chars[c] };
 }
 
 const plugin = {
   name: 'go',
   setup(b) {
+    // Os imports das fichas saem daqui, um por personagem pedido.
+    b.onResolve({ filter: /^go-sheets$/ }, () => ({ path: 'go-sheets', namespace: 'sheets' }));
+    b.onLoad({ filter: /.*/, namespace: 'sheets' }, () => ({
+      contents: [...CHARS.map((c) => `import ${c} from '@genshin-optimizer/gi/sheets/../Characters/${c}';`), `export default { ${CHARS.join(', ')} };`].join(' '),
+      resolveDir: go,
+    }));
     b.onResolve({ filter: /^go-locale$/ }, () => ({ path: 'go-locale', namespace: 'locale' }));
     b.onLoad({ filter: /.*/, namespace: 'locale' }, () => ({ contents: JSON.stringify(locale), loader: 'json' }));
     b.onResolve({ filter: /jsx-runtime$/ }, () => ({ path: 'jsx', namespace: 'jsx' }));
@@ -75,8 +86,8 @@ const plugin = {
 const commit = execFileSync('git', ['-C', go, 'rev-parse', '--short', 'HEAD']).toString().trim();
 await esbuild.build({
   entryPoints: [new URL('./adapter.ts', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1')],
-  outfile: 'src/vendor/go/talentos.js', bundle: true, format: 'esm', platform: 'browser', target: ['chrome109', 'firefox115', 'safari15'],
+  outfile: OUT, bundle: true, format: 'esm', platform: 'browser', target: ['chrome109', 'firefox115', 'safari15'],
   jsx: 'automatic', minify: true, legalComments: 'none', define: { 'process.env.NODE_ENV': '"production"' }, plugins: [plugin], logLevel: 'warning',
   banner: { js: `// Gerado por scripts/go-talentos/build.mjs a partir do Genshin Optimizer ${commit} (MIT, ver THIRD_PARTY_NOTICES.md). Não editar.` },
 });
-console.log(`talentos.js: ${(readFileSync('src/vendor/go/talentos.js').length / 1024).toFixed(0)} KB (GO ${commit}; ${CHARS.join(', ')})`);
+console.log(`${OUT}: ${(readFileSync(OUT).length / 1024).toFixed(0)} KB (GO ${commit}; ${CHARS.join(', ')})`);

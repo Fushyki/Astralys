@@ -243,6 +243,7 @@
         "minConstellation": 6,
         "scope": "self",
         "timed": true,
+        "replaces": "c2anel",
         "defShred": 0.2,
         "flat": [],
         "note": "DEF do inimigo -20% enquanto ela cavalga a Flamestrider com o Anel seguidor (20% é literal do texto). Janela de tempo: o usuário liga e decide a duração."
@@ -1055,6 +1056,363 @@
     "specialMoves": [],
     "pointMoves": [],
     "fonte_info": "planilha Mavuika_Iansan_Combo2, aba \"Personagens (efeitos)\". Supremo: 139% do ATK base (nv 13 + C1, sua planilha)."
+  },
+  {
+    "character": "Skirk",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "c2",
+        "label": "Skirk C2",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0.7,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "note": "+70% de ATK por 12,5 s depois do Havoc: Extinction no modo Sete Fases: ligue nas janelas."
+      },
+      {
+        "id": "a4n",
+        "moveMult": {
+          "labels": [
+            "1-Hit DMG",
+            "2-Hit DMG",
+            "3-Hit DMG",
+            "4-Hit DMG",
+            "5-Hit DMG",
+            "char:c6n"
+          ],
+          "extra": 0.7,
+          "talents": [
+            "skill",
+            "proc"
+          ]
+        },
+        "label": "Skirk A4 (Normal)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "flat": [],
+        "stacks": {
+          "max": 3,
+          "unit": "stacks de Death's Crossing",
+          "table": [
+            0,
+            0.142857,
+            0.285714,
+            1
+          ]
+        },
+        "note": "Assume 3 stacks: o Normal no Seven-Phase Flash (e o Normal do C6) causa 110%/120%/170% do dano ORIGINAL (multiplica o dano base, não soma ao DMG%). O Normal físico não recebe."
+      },
+      {
+        "id": "rift",
+        "label": "Skirk: Fendas do Vazio absorvidas (Normal)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {
+            "normal": 1
+          },
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "level": {
+          "talent": "burst",
+          "table": [
+            0.11,
+            0.12,
+            0.13,
+            0.14,
+            0.15,
+            0.16,
+            0.17,
+            0.18,
+            0.19,
+            0.2,
+            0.21,
+            0.22,
+            0.23,
+            0.24,
+            0.25
+          ]
+        },
+        "flat": [],
+        "stacks": {
+          "max": 3,
+          "unit": "Fendas do Vazio absorvidas",
+          "table": [
+            0,
+            0.6,
+            0.8,
+            1
+          ]
+        },
+        "note": "DMG de Ataque Normal depois do Havoc: Extinction, pelo nível do Supremo e pelas Fendas absorvidas (padrão 3). Vale para os 10 primeiros acertos: ligue na janela. O caso sem nenhuma Fenda (+8% no nível 10) não entra."
+      },
+      {
+        "id": "a4b",
+        "label": "Skirk A4 (Supremo)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {
+            "burst": 0.6
+          },
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "stacks": {
+          "max": 3,
+          "table": [
+            0,
+            0.083333,
+            0.25,
+            1
+          ],
+          "of": "a4n"
+        },
+        "note": "Assume 3 stacks: o Supremo (Havoc: Ruin) causa 105%/115%/160% do dano ORIGINAL (multiplica o dano base): ligue na janela."
+      },
+      {
+        "id": "c4",
+        "label": "Skirk C4",
+        "minConstellation": 4,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0.4,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "stacks": {
+          "max": 3,
+          "table": [
+            0,
+            0.25,
+            0.5,
+            1
+          ],
+          "of": "a4n"
+        },
+        "note": "Assume 3 stacks (+40% de ATK): ligue na janela."
+      }
+    ],
+    "notes": [
+      {
+        "src": "const6",
+        "kind": "partial",
+        "note": "Entram os 3 golpes extras do Havoc: Sever (750% do ATK por stack no Supremo, 3 x 180% no Normal e ao ser atingida). Quantos stacks há (de 0 a 3, 15 s cada) é você quem decide em execuções."
+      },
+      {
+        "src": "p1",
+        "kind": "partial",
+        "note": "Pendente: os Void Rifts dão 8 pontos de Serpent's Subtlety cada, e o Supremo ganha dano por ponto acima de 50 (19,32% do ATK por ponto no nível 1, até 12 pontos), mas o texto não diz se o bônus vale em cada Slash ou uma vez por instância. O bônus por Rift do Havoc: Extinction (3,5%/6,6%/8,8%/11%) também não diz sobre qual dano atua."
+      },
+      {
+        "src": "p3",
+        "kind": "partial",
+        "note": "Pendente: +1 nível de habilidade dos aliados com time só Hydro/Cryo; o formato não muda o nível de talento dos outros."
+      },
+      {
+        "src": "const2",
+        "kind": "partial",
+        "note": "Entra o ATK +70% por 12,5 s depois do Havoc: Extinction (janela). Pendente: os +10 pontos de Serpent's Subtlety no dano do Supremo (mesma dúvida do A1)."
+      }
+    ],
+    "infos": [],
+    "procs": [
+      {
+        "id": "c1",
+        "label": "Skirk C1: lâmina de cristal",
+        "scale": {
+          "atk": 5
+        },
+        "hitType": "charged",
+        "minConstellation": 1,
+        "src": "const1",
+        "note": "500% do ATK por Void Rift absorvido (conta como Carregado)."
+      },
+      {
+        "id": "c6b",
+        "label": "Skirk C6: Havoc: Sever (Supremo)",
+        "scale": {
+          "atk": 7.5
+        },
+        "hitType": "burst",
+        "minConstellation": 6,
+        "src": "const6",
+        "note": "750% do ATK POR stack de Havoc: Sever consumido pelo Havoc: Ruin (conta como Supremo). Use uma execução por stack (até 3)."
+      },
+      {
+        "id": "c6n",
+        "label": "Skirk C6: Havoc: Sever (Normal)",
+        "scale": {
+          "atk": 5.4
+        },
+        "hitType": "normal",
+        "minConstellation": 6,
+        "src": "const6",
+        "note": "3 ataques de 180% do ATK (540%) por stack consumido no 3º ou 5º golpe do Normal no Seven-Phase Flash (conta como Normal). 1 stack por vez."
+      },
+      {
+        "id": "c6c",
+        "label": "Skirk C6: Havoc: Sever (ao ser atingida)",
+        "scale": {
+          "atk": 5.4
+        },
+        "hitType": "charged",
+        "minConstellation": 6,
+        "src": "const6",
+        "note": "3 ataques de 180% do ATK (540%) por stack consumido quando ela leva dano no Seven-Phase Flash (conta como Carregado). A redução de 80% do dano recebido não muda o dano causado."
+      }
+    ],
+    "factions": [],
+    "specialMoves": [],
+    "pointMoves": [
+      {
+        "talent": "burst",
+        "labels": [
+          "Slash DMG"
+        ],
+        "levelTalent": "burst",
+        "perPoint": [
+          0.966,
+          1.0385,
+          1.111,
+          1.2075,
+          1.28,
+          1.3525,
+          1.449,
+          1.546,
+          1.6425,
+          1.739,
+          1.8355,
+          1.9325,
+          2.053,
+          2.174,
+          2.2945
+        ],
+        "max": 12,
+        "maxBy": {
+          "constellation": 2,
+          "max": 22
+        },
+        "unit": "Serpent's Subtlety acima de 50"
+      },
+      {
+        "talent": "burst",
+        "labels": [
+          "Final Slash DMG"
+        ],
+        "levelTalent": "burst",
+        "perPoint": [
+          0.1932,
+          0.2077,
+          0.2222,
+          0.2415,
+          0.256,
+          0.2705,
+          0.2898,
+          0.3092,
+          0.3285,
+          0.3478,
+          0.3671,
+          0.3865,
+          0.4106,
+          0.4348,
+          0.4589
+        ],
+        "max": 12,
+        "maxBy": {
+          "constellation": 2,
+          "max": 22
+        },
+        "unit": "Serpent's Subtlety acima de 50"
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
     "character": "Raiden Shogun",
@@ -14649,248 +15007,6 @@
         "minConstellation": 6,
         "src": "const6",
         "note": "120% do ATK com 50% de chance no tiro segurado (conta como Normal)."
-      }
-    ],
-    "factions": [],
-    "specialMoves": [],
-    "pointMoves": [],
-    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
-  },
-  {
-    "character": "Skirk",
-    "atkPct": 0,
-    "dmgPct": 0,
-    "critRate": 0,
-    "critDmg": 0,
-    "em": 0,
-    "appliesToSelf": false,
-    "buffs": [
-      {
-        "id": "c2",
-        "label": "Skirk C2",
-        "minConstellation": 2,
-        "scope": "self",
-        "timed": true,
-        "stats": {
-          "atkPct": 0.7,
-          "dmgPct": 0,
-          "critRate": 0,
-          "critDmg": 0,
-          "em": 0,
-          "er": 0,
-          "hpPct": 0,
-          "defPct": 0,
-          "dmgPctByType": {},
-          "critRateByType": {},
-          "critDmgByType": {},
-          "baseMultByType": {},
-          "defIgnore": 0,
-          "atkFlat": 0,
-          "atkBaseFlat": 0,
-          "hpFlat": 0,
-          "defFlat": 0,
-          "physDmgPct": 0,
-          "physCritDmg": 0,
-          "reactionBonus": {}
-        },
-        "flat": [],
-        "note": "+70% de ATK por 12,5 s depois do Havoc: Extinction no modo Sete Fases: ligue nas janelas."
-      },
-      {
-        "id": "a4n",
-        "label": "Skirk A4 (Normal)",
-        "minConstellation": 0,
-        "scope": "self",
-        "timed": true,
-        "stats": {
-          "atkPct": 0,
-          "dmgPct": 0,
-          "critRate": 0,
-          "critDmg": 0,
-          "em": 0,
-          "er": 0,
-          "hpPct": 0,
-          "defPct": 0,
-          "dmgPctByType": {},
-          "critRateByType": {},
-          "critDmgByType": {},
-          "baseMultByType": {
-            "normal": 0.7
-          },
-          "defIgnore": 0,
-          "atkFlat": 0,
-          "atkBaseFlat": 0,
-          "hpFlat": 0,
-          "defFlat": 0,
-          "physDmgPct": 0,
-          "physCritDmg": 0,
-          "reactionBonus": {}
-        },
-        "flat": [],
-        "stacks": {
-          "max": 3,
-          "unit": "stacks de Death's Crossing",
-          "table": [
-            0,
-            0.142857,
-            0.285714,
-            1
-          ]
-        },
-        "note": "Assume 3 stacks: o Normal no Seven-Phase Flash causa 110%/120%/170% do dano ORIGINAL (multiplica o dano base, não soma ao DMG%): ligue na janela."
-      },
-      {
-        "id": "a4b",
-        "label": "Skirk A4 (Supremo)",
-        "minConstellation": 0,
-        "scope": "self",
-        "timed": true,
-        "stats": {
-          "atkPct": 0,
-          "dmgPct": 0,
-          "critRate": 0,
-          "critDmg": 0,
-          "em": 0,
-          "er": 0,
-          "hpPct": 0,
-          "defPct": 0,
-          "dmgPctByType": {},
-          "critRateByType": {},
-          "critDmgByType": {},
-          "baseMultByType": {
-            "burst": 0.6
-          },
-          "defIgnore": 0,
-          "atkFlat": 0,
-          "atkBaseFlat": 0,
-          "hpFlat": 0,
-          "defFlat": 0,
-          "physDmgPct": 0,
-          "physCritDmg": 0,
-          "reactionBonus": {}
-        },
-        "flat": [],
-        "stacks": {
-          "max": 3,
-          "table": [
-            0,
-            0.083333,
-            0.25,
-            1
-          ],
-          "of": "a4n"
-        },
-        "note": "Assume 3 stacks: o Supremo (Havoc: Ruin) causa 105%/115%/160% do dano ORIGINAL (multiplica o dano base): ligue na janela."
-      },
-      {
-        "id": "c4",
-        "label": "Skirk C4",
-        "minConstellation": 4,
-        "scope": "self",
-        "timed": true,
-        "stats": {
-          "atkPct": 0.4,
-          "dmgPct": 0,
-          "critRate": 0,
-          "critDmg": 0,
-          "em": 0,
-          "er": 0,
-          "hpPct": 0,
-          "defPct": 0,
-          "dmgPctByType": {},
-          "critRateByType": {},
-          "critDmgByType": {},
-          "baseMultByType": {},
-          "defIgnore": 0,
-          "atkFlat": 0,
-          "atkBaseFlat": 0,
-          "hpFlat": 0,
-          "defFlat": 0,
-          "physDmgPct": 0,
-          "physCritDmg": 0,
-          "reactionBonus": {}
-        },
-        "flat": [],
-        "stacks": {
-          "max": 3,
-          "table": [
-            0,
-            0.25,
-            0.5,
-            1
-          ],
-          "of": "a4n"
-        },
-        "note": "Assume 3 stacks (+40% de ATK): ligue na janela."
-      }
-    ],
-    "notes": [
-      {
-        "src": "p1",
-        "kind": "partial",
-        "note": "Pendente: os Void Rifts dão 8 pontos de Serpent's Subtlety cada, e o Supremo ganha dano por ponto acima de 50 (19,32% do ATK por ponto no nível 1, até 12 pontos), mas o texto não diz se o bônus vale em cada Slash ou uma vez por instância. O bônus por Rift do Havoc: Extinction (3,5%/6,6%/8,8%/11%) também não diz sobre qual dano atua."
-      },
-      {
-        "src": "const6",
-        "kind": "partial",
-        "note": "Entram os 3 golpes extras do Havoc: Sever (750% do ATK por stack no Supremo, 3 x 180% no Normal e ao ser atingida). Quantos stacks há (de 0 a 3, 15 s cada) é você quem decide em execuções."
-      },
-      {
-        "src": "p3",
-        "kind": "partial",
-        "note": "Pendente: +1 nível de habilidade dos aliados com time só Hydro/Cryo; o formato não muda o nível de talento dos outros."
-      },
-      {
-        "src": "const2",
-        "kind": "partial",
-        "note": "Entra o ATK +70% por 12,5 s depois do Havoc: Extinction (janela). Pendente: os +10 pontos de Serpent's Subtlety no dano do Supremo (mesma dúvida do A1)."
-      }
-    ],
-    "infos": [],
-    "procs": [
-      {
-        "id": "c1",
-        "label": "Skirk C1: lâmina de cristal",
-        "scale": {
-          "atk": 5
-        },
-        "hitType": "charged",
-        "minConstellation": 1,
-        "src": "const1",
-        "note": "500% do ATK por Void Rift absorvido (conta como Carregado)."
-      },
-      {
-        "id": "c6b",
-        "label": "Skirk C6: Havoc: Sever (Supremo)",
-        "scale": {
-          "atk": 7.5
-        },
-        "hitType": "burst",
-        "minConstellation": 6,
-        "src": "const6",
-        "note": "750% do ATK POR stack de Havoc: Sever consumido pelo Havoc: Ruin (conta como Supremo). Use uma execução por stack (até 3)."
-      },
-      {
-        "id": "c6n",
-        "label": "Skirk C6: Havoc: Sever (Normal)",
-        "scale": {
-          "atk": 5.4
-        },
-        "hitType": "normal",
-        "minConstellation": 6,
-        "src": "const6",
-        "note": "3 ataques de 180% do ATK (540%) por stack consumido no 3º ou 5º golpe do Normal no Seven-Phase Flash (conta como Normal). 1 stack por vez."
-      },
-      {
-        "id": "c6c",
-        "label": "Skirk C6: Havoc: Sever (ao ser atingida)",
-        "scale": {
-          "atk": 5.4
-        },
-        "hitType": "charged",
-        "minConstellation": 6,
-        "src": "const6",
-        "note": "3 ataques de 180% do ATK (540%) por stack consumido quando ela leva dano no Seven-Phase Flash (conta como Carregado). A redução de 80% do dano recebido não muda o dano causado."
       }
     ],
     "factions": [],

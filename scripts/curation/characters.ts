@@ -22,7 +22,7 @@ export interface BuffCuration {
   /** Stacks/pontos: sem isto, vem do multiplicador inteiro `x` (2 a 20) dos valores em `stats`; `false` desliga. Os números valem para `max`. */
   stacks?: { max: number; unit?: string; levels?: Val[]; of?: string; default?: number; step?: number } | false;
   /** Multiplicador sobre o dano base só destes golpes (ver `CharacterBuff.moveMult`); `extra` vale no máximo de stacks. */
-  moveMult?: { labels: string[]; extra: Val };
+  moveMult?: { labels: string[]; extra: Val; talents?: ('normal' | 'skill' | 'burst' | 'proc')[] };
   /** Cai com o tempo (ver `CharacterBuff.decay`). */
   decay?: { duration: number; noDecayFrom?: number };
   /** Constelação mínima (por padrão vem de `src`; num buff do kit, informe aqui, ex.: +1 stack na C2). */

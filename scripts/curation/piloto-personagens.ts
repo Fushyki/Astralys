@@ -64,7 +64,7 @@ export const PILOTO_BUFFS: Record<string, BuffCuration[]> = {
       note: 'Soma 90% do ATK ao dano base de cada golpe do Carregado da Ignimoto (Cyclic e Final). O Carregado comum não recebe.',
     },
     {
-      id: 'c6def', label: 'Mavuika C6 (Anel seguidor: DEF do inimigo)', src: 'const6', scope: 'self', timed: true, defShred: { lit: 0.2 },
+      id: 'c6def', label: 'Mavuika C6 (Anel seguidor: DEF do inimigo)', src: 'const6', scope: 'self', timed: true, defShred: { lit: 0.2 }, replaces: 'c2anel',
       expect: "decrease nearby opponents' DEF by 20%",
       note: 'DEF do inimigo -20% enquanto ela cavalga a Flamestrider com o Anel seguidor (20% é literal do texto). Janela de tempo: o usuário liga e decide a duração.',
     },

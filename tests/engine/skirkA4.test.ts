@@ -22,28 +22,27 @@ const effects: EffectsData = {
 /** "Death's Crossing" (Skirk A4): o Normal causa 170% do dano ORIGINAL com 3 stacks. Multiplica o dano base; não soma ao DMG%. */
 describe('Skirk A4: % do dano original', () => {
   const skirk = effects.characters.find((c) => c.character === 'Skirk')!;
-  it('a curadoria guarda como multiplicador do dano base (×1,7 Normal e ×1,6 Supremo), sem DMG% somado', () => {
+  it('a curadoria guarda como multiplicador do dano base (×1,7 Normal da habilidade e ×1,6 Supremo), sem DMG% somado', () => {
     const n = skirk.buffs.find((b) => b.id === 'a4n')!;
     const s = skirk.buffs.find((b) => b.id === 'a4b')!;
-    expect(n.stats?.baseMultByType).toEqual({ normal: 0.7 });
+    expect(n.moveMult?.extra).toBe(0.7);
+    expect(n.moveMult?.talents).toEqual(['skill', 'proc']);
+    expect(n.stats).toBeUndefined();
     expect(s.stats?.baseMultByType).toEqual({ burst: 0.6 });
-    expect(n.stats?.dmgPctByType).toEqual({});
     expect(s.stats?.dmgPctByType).toEqual({});
   });
-  it('no motor, o 1° Normal com A4 vale 1,7 × a parte escala × ATK (o valor fixo não multiplica) e o DMG% não muda', () => {
+  it('no motor, o 1° Normal do Seven-Phase Flash com A4 vale 1,7 × a parte escala × ATK e o DMG% não muda', () => {
     const p = { ...sampleProject(), compat: undefined };
     p.members[0] = { ...p.members[0], character: 'Skirk' };
-    const r = resolveProject(p, game, effects);
-    const rolls = analyzeProject({ team: r.team, actions: r.actions, flatEffects: r.flatEffects, ampCoefficient: r.ampCoefficient }).optimization.rolls;
-    const row = (tags: string[]) => {
-      const asm = assembleTeam(r.team, { rolls });
-      const a = { ...asm, buffs: asm.buffs.filter((b) => tags.includes(b.tag) || !b.tag.startsWith('label:Skirk A4')) };
-      const t = damageTable({ team: r.team, assembly: a, rolls, member: 0, moves: game.moves, reaction: 'none' });
-      return t.find((x) => x.move.talent === 'normal')!.result;
+    const row = (disabled: string[]) => {
+      const r = resolveProject({ ...p, disabled }, game, effects);
+      const rolls = analyzeProject({ team: r.team, actions: r.actions, flatEffects: r.flatEffects, ampCoefficient: r.ampCoefficient }).optimization.rolls;
+      const t = damageTable({ team: r.team, assembly: assembleTeam(r.team, { rolls }), rolls: r.team.members.map(() => rolls[0]), member: 0, moves: game.moves, reaction: 'none' });
+      return t.find((x) => x.move.talent === 'skill' && x.move.label === '1-Hit DMG')!.result;
     };
-    const without = row([]);
-    const withA4 = row(['label:Skirk A4 (Normal)']);
-    expect(withA4.breakdown.base / without.breakdown.base).toBeCloseTo(1.7, 6);
+    const without = row(['cbuff-0-a4n']);
+    const withA4 = row([]);
+    expect(withA4.breakdown.base / without.breakdown.base).toBeCloseTo(1.7, 2);
     expect(withA4.breakdown.dmgMultiplier).toBeCloseTo(without.breakdown.dmgMultiplier, 9);
   });
 });

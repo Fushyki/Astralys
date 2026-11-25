@@ -13,7 +13,7 @@ export const NOTES_5: CharacterNotes = {
     const4: u('Só cura e energia.'),
   },
   Ifa: { p1: x(LUNAR), const1: u('Só energia.'), const2: x(LUNAR) },
-  Skirk: { p1: x('Os Void Rifts e a absorção (dano extra) não entram.'), const6: x('Os ataques coordenados por Havoc: Sever não entram.') },
+  Skirk: { const6: x('Os ataques coordenados por Havoc: Sever não entram.') },
   Dahlia: { p1: u('Só stacks de Benison.'), p2: u('Só velocidade de ataque.'), const1: u('Só energia.'), const2: u('Só escudo.'), const4: u('Só duração.'), const6: u('Só velocidade de ataque e reviver.') },
   Ineffa: { const4: u('Só energia.') },
   Lauma: { const1: u('Só cura.'), const4: u('Só energia.') },

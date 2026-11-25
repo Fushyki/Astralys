@@ -517,7 +517,7 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
     const scale = scaleAt(move, level);
     // O multiplicador sobre o dano base (Skirk A4: ×1,7 no Normal) vale para a parte que vem da escala × stat, não para o valor fixo do golpe.
     // Multiplicador só de certos golpes (Membros do Salon da Furina, ×1,1 a ×1,4): vale sobre a escala × stat, como o de tipo.
-    const labelMult = 1 + activeCharacterBuffs(member).reduce((s, b) => (b.moveMult?.labels.includes(move.label) ? s + b.moveMult.extra : s), 0);
+    const labelMult = 1 + activeCharacterBuffs(member).reduce((s, b) => (b.moveMult?.labels.includes(move.label) && (!b.moveMult.talents || (b.moveMult.talents as string[]).includes(move.talent)) ? s + b.moveMult.extra : s), 0);
     const baseMult = (1 + ((move.hitType === 'other' ? undefined : stats.baseMultByType?.[move.hitType]) ?? 0)) * labelMult;
     const base = (stats.atk * scale.atk + stats.em * scale.em + stats.hp * scale.hp + stats.def * scale.def) * baseMult + scale.flat;
 

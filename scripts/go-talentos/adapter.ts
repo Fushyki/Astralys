@@ -1,13 +1,13 @@
 // Ponte entre o Astralys e as fichas do Genshin Optimizer (MIT). Empacotado por build.mjs em src/vendor/go/talentos.js:
 // os imports `@genshin-optimizer/*` só existem dentro do clone do GO, por isso este arquivo fica fora do tsc do projeto.
-import Illuga from '@genshin-optimizer/gi/sheets/../Characters/Illuga';
-import Zibai from '@genshin-optimizer/gi/sheets/../Characters/Zibai';
+// Lista de fichas gerada pelo build.mjs a partir dos personagens pedidos.
+import SHEETS_IN from 'go-sheets';
 import { resonanceData } from '@genshin-optimizer/gi/sheets/../Resonance';
 import { common, constant, dataObjForCharacterNew, infoManager, input, percent } from '@genshin-optimizer/gi/wr';
 import { uiDataForTeam } from '@genshin-optimizer/gi/uidata';
 import locale from 'go-locale';
 
-const SHEETS: Record<string, any> = { Illuga, Zibai };
+const SHEETS: Record<string, any> = SHEETS_IN;
 export const supported = Object.keys(SHEETS);
 
 const CARDS = ['auto', 'skill', 'burst', 'passive1', 'passive2', 'passive3', 'constellation1', 'constellation2', 'constellation3', 'constellation4', 'constellation5', 'constellation6'];
@@ -65,7 +65,8 @@ function row(ui: any, node: any, extra: { team?: boolean } = {}) {
   };
 }
 
-const shown = (ui: any, doc: any) => !doc.canShow || ui.get(doc.canShow).value === 1;
+// `canShow` é um nó da ficha ou, em algumas, uma função.
+const shown = (ui: any, doc: any) => !doc.canShow || (typeof doc.canShow === 'function' ? !!doc.canShow(ui) : ui.get(doc.canShow).value === 1);
 
 function fields(ui: any, list: any[], team?: boolean) {
   const out: any[] = [];
@@ -114,7 +115,7 @@ export function computeTalents(req: any) {
     const sheet = SHEETS[m.key];
     if (!sheet) {
       // Sem ficha empacotada: o personagem só conta para elemento e Presságio Lunar do time.
-      data[m.key] = [{ charKey: constant(m.key), charEle: constant(m.element), teamBuff: { tally: { [m.element]: constant(1) } } }];
+      data[m.key] = [{ charKey: constant(m.key), charEle: constant(m.element), teamBuff: { tally: { [m.element]: constant(1), ...(m.moonsign ? { moonsign: constant(1) } : {}) } } }];
       continue;
     }
     const gear = Object.fromEntries(Object.entries<number>(m.stats).filter(([k, v]) => k !== 'weaponAtk' && v).map(([k, v]) => [k, k.endsWith('_') ? percent(v) : constant(v)]));

@@ -138,6 +138,8 @@ export const PointMoveSchema = z.object({
   /** Fração do ATK por ponto, nos níveis 1 a 15 do talento. */
   perPoint: z.array(z.number()).length(15),
   max: z.number().int().positive(),
+  /** Teto maior a partir de uma constelação (ex.: Skirk C2, de 12 para 22). */
+  maxBy: z.object({ constellation: z.number().int().min(1).max(6), max: z.number().int().positive() }).optional(),
   unit: z.string().min(1),
   /** Duração (s) da janela em que o golpe usa os pontos do Supremo lançado antes (Cadinho da Vida e da Morte da Mavuika). Ausente = pontos do próprio golpe. Fora da janela, 0. */
   cadinho: z.number().positive().optional(),
@@ -250,7 +252,7 @@ export type WeaponFlat = z.infer<typeof WeaponFlatSchema>;
 export const CharacterBuffSchema = z.object({
   id: z.string().min(1),
   /** Multiplicador sobre o dano base só destes golpes (pelo rótulo do Lunaris): `extra` = 0,4 vale ×1,4 (Membros do Salon da Furina). */
-  moveMult: z.object({ labels: z.array(z.string().min(1)).min(1), extra: z.number() }).optional(),
+  moveMult: z.object({ labels: z.array(z.string().min(1)).min(1), extra: z.number(), /** Só nestes talentos (rótulos repetidos entre o Normal e a Habilidade). */ talents: z.array(z.enum(['normal', 'skill', 'burst', 'proc'])).optional() }).optional(),
   /** Nome curto da faixa no plano de combate, ex.: "Hu Tao: A1". */
   label: z.string().min(1),
   minConstellation: z.number().int().min(0).max(6).default(0),

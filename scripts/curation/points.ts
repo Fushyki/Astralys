@@ -12,11 +12,18 @@ export interface PointMoveCur {
   key: string;
   unit: string;
   max: number;
+  maxBy?: { constellation: number; max: number };
+  /** O valor por ponto vale por acerto: multiplica pelo número de acertos do golpe. */
+  times?: number;
   /** Duração (s) da janela em que o golpe usa os pontos do Supremo lançado antes (Cadinho da Vida e da Morte). */
   cadinho?: number;
 }
 
 export const POINT_MOVES: Record<string, PointMoveCur[]> = {
+  Skirk: [
+    { talent: 'burst', labels: ['Slash DMG'], kitTalent: 'burst', key: "Serpent's Subtlety Bonus", unit: "Serpent's Subtlety acima de 50", max: 12, maxBy: { constellation: 2, max: 22 }, times: 5 },
+    { talent: 'burst', labels: ['Final Slash DMG'], kitTalent: 'burst', key: "Serpent's Subtlety Bonus", unit: "Serpent's Subtlety acima de 50", max: 12, maxBy: { constellation: 2, max: 22 } },
+  ],
   Mavuika: [
     { talent: 'burst', labels: ['Skill DMG'], kitTalent: 'burst', key: 'Sunfell Slice DMG Bonus', unit: 'Espírito Lutador', max: 200 },
     {

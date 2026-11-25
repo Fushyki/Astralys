@@ -44,6 +44,17 @@ describe('aba Talentos pelas fichas do Genshin Optimizer', () => {
   });
 });
 
+describe('colegas sem ficha empacotada', () => {
+  it('contam para o Presságio Lunar', () => {
+    const p = buildNewTeam({ characters: ['Zibai', 'Columbina'], rotation: 'basic' }, game);
+    const r = resolveProject(p, game, effects);
+    const req = goRequest(p, r, rolls, 0, 'hit', {});
+    const label = 'Dano Adicional do 4º Golpe de Conversão de Fase Lunar';
+    expect(rows(computeTalents(req), 'skill').map((x) => x.label)).toContain(label);
+    expect(rows(computeTalents({ ...req, team: req.team.map((m, i) => (i ? { ...m, moonsign: false } : m)) }), 'skill').map((x) => x.label)).not.toContain(label);
+  });
+});
+
 describe('condições da aba ligadas à rotação', () => {
   const linkedOf = (p: typeof project) => rotationConditions(p, resolveProject(p, game, effects), effects.characters);
   const toggle = (p: typeof project, owner: string, id: string, on: boolean) => setCondition(p, linkedOf(p)[owner][id].ids, on, resolveProject(p, game, effects).gearIds);

@@ -108,11 +108,13 @@ describe('Sucrose: Hexerei (p4) e C6 extra', () => {
     const jean: Act = { member: 2, talent: 'burst', label: 'Burst DMG' };
     expect(run(mixed, { ...jean, tags: [label('Sucrose', 'p4l')] }).stats.dmgByType.burst).toBe(run(mixed, jean).stats.dmgByType.burst);
   });
-  it('C6 Hexerei: +8,57142% de DMG só para Hexerei', () => {
-    const six = team.map((m) => ({ ...m, constellation: 6 }));
-    const off = run(six, hit);
-    const on = run(six, { ...hit, tags: [label('Sucrose', 'c6hex')] });
+  it('C6 Hexerei: +8,57142% de DMG só para Hexerei do elemento absorvido (Anemo não é absorvido)', () => {
+    const six: Mem[] = [{ character: 'Sucrose', constellation: 6, factions: ['hexerei'] }, { character: 'Klee', factions: ['hexerei'] }];
+    const klee: Act = { member: 1, talent: 'skill', label: 'Jumpy Dumpty DMG' };
+    const off = run(six, klee);
+    const on = run(six, { ...klee, tags: [label('Sucrose', 'c6hex')] });
     expect(on.stats.dmgBonus - off.stats.dmgBonus).toBeCloseTo(0.085714, 5);
+    expect(run(six, { ...hit, tags: [label('Sucrose', 'c6hex')] }).stats.dmgBonus).toBe(run(six, hit).stats.dmgBonus);
   });
 });
 

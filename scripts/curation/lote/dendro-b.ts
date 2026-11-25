@@ -214,11 +214,11 @@ export const LOTE: Lote = {
       const2: x('Entram a RES Dendro -30% por 6 s (janela) e o +100% do primeiro canhão (golpe extra).'),
     },
     Lauma: {
-      p2: x('Entra o +0,04% de DMG da habilidade por ponto de Maestria (teto 32%); o 1-Hit/2-Hit Hold estão cadastrados como Normal em moves.json e não recebem. A redução da recarga do Spirit Envoy Metamorphosis não muda o dano.'),
+      p2: null,
       p4: u('Só mini-mapa.'),
     },
     Nefer: {
-      p1: x('Entra a Maestria +100 com 3 stacks de Véu da Falsidade (Moonsign: Ascendant Gleam). Pendente: o +40% de DMG do Supremo por stack (linha "DMG Bonus" do Supremo) não entra: os dois golpes do Supremo estão cadastrados como Normal em moves.json e o bônus não distingue golpe específico.'),
+      p1: x('Entra a Maestria +100 com 3 stacks de Véu da Falsidade (Moonsign: Ascendant Gleam). Pendente: o +40% de DMG do Supremo por stack (linha "DMG Bonus" do Supremo) não entra: o formato não aplica esse bônus por stack ao Supremo.'),
     },
     'Aether (Dendro)': travelerNotes,
     'Lumine (Dendro)': travelerNotes,

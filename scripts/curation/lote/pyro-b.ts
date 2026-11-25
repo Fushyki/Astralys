@@ -67,7 +67,7 @@ export const LOTE: Lote = {
       },
       {
         id: 'a1', label: 'Lyney A1 (chapéu)', src: 'p1', scope: 'self', timed: false,
-        flat: [{ name: 'Pyrotechnic Strike do chapéu (A1)', sourceStat: 'ATK', perPoint: { p: 1 }, hitTypes: ['normal'], labels: ['Pyrotechnic Strike DMG'] }],
+        flat: [{ name: 'Pyrotechnic Strike do chapéu (A1)', sourceStat: 'ATK', perPoint: { p: 1 }, hitTypes: ['charged'], labels: ['Pyrotechnic Strike DMG'] }],
         expect: 'increase DMG dealt by 80% of his ATK',
         note: 'Soma 80% do ATK ao dano base do Pyrotechnic Strike (o golpe do chapéu), assumindo que o Prop Arrow gastou HP. A explosão do chapéu feita pela habilidade NÃO entra (o texto não diz se recebe).',
       },

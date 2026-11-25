@@ -9,7 +9,7 @@
  * Falha (exit 1) se algum dado não passar na validação Zod. Linhas de talento de dano que o parser
  * não reconhece NÃO derrubam o sync: são listadas no relatório final para revisão.
  */
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { cleanGenerated } from './clean-generated';
 import path from 'node:path';
 import { z } from 'zod';
@@ -28,6 +28,7 @@ import {
   type Talent,
   type Weapon,
 } from '../src/data/schema';
+import type { LevelsData } from '../src/data/levels';
 import { fetchJson, fetchVersion, mapLimit, type FetchOptions } from './lib/lunaris';
 import {
   hitTypeFor,
@@ -116,6 +117,15 @@ function displayName(entry: RawCharListEntry): string {
 
 const round = (n: number) => Math.round(n * 1e8) / 1e8;
 
+/** O Lunaris traz HP/ATK/DEF errados para a Aloy e o Viajante: usa os do Genshin Optimizer (levels.json, `sync-levels.ts`), nível 90. */
+const WRONG_BASE = /^(Aloy$|Aether \(|Lumine \()/;
+function goBase(name: string, levels: LevelsData) {
+  const d = levels.chars[name];
+  if (!d) throw new Error(`levels.json sem ${name}: rode scripts/sync-levels.ts`);
+  const at90 = (k: 'hp' | 'atk' | 'def') => Math.round((d[k][0] * levels.curves[d[k][1]][90] + d.asc[k][6]) * 1000) / 1000;
+  return { baseHp: at90('hp'), baseAtk: at90('atk'), baseDef: at90('def') };
+}
+
 /** Separa o stat secundário (qualquer chave que não seja hp/atk/def) dos stats base. */
 function splitAscension(stats: AscensionStats) {
   const { hp, atk, def, ...rest } = stats;
@@ -193,7 +203,7 @@ function buildMoves(char: Character, detail: RawCharDetail, detailPt: RawCharDet
           characterId: char.id,
           character: char.name,
           talent,
-          hitType: hitTypeFor(label, talent),
+          hitType: hitTypeFor(label, talent, char.name),
           label,
           ...(labelPt ? { labelPt } : {}),
           variant: v,
@@ -304,6 +314,7 @@ async function main() {
     }
   });
 
+  const levels = JSON.parse(await readFile(path.join(OUT_DIR, 'levels.json'), 'utf8')) as LevelsData;
   charIds.forEach((id, i) => {
     const entry = charList[id];
     const detail = charDetails[i];
@@ -329,6 +340,7 @@ async function main() {
       baseHp: hp,
       baseAtk: atk,
       baseDef: def,
+      ...(WRONG_BASE.test(displayName(entry)) ? goBase(displayName(entry), levels) : {}),
       ascension,
       burst: burstInfo(detail),
       constellationBoosts: constellationBoosts(detail),

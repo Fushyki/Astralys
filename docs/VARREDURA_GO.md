@@ -3,6 +3,13 @@
 GO no commit `39eccbe` (22/11/2026). Cada um dos 136 personagens nível 90, talentos 10, sem arma nem artefatos, C0 e C6, sem ligar condições no GO.
 Ferramenta: `scripts/go-piloto/`. Nada no cálculo foi alterado.
 
+## Situação (Issue #41)
+
+Feito: item 1 (menos Gaming, Xianyun, Chasca, Varesa e Iansan), item 3 (Maestria base como buff `base-em`) e item 4 (os 24 buffs de elemento; tabela `ELEMENT_ONLY` em `scripts/curate-effects.ts`).
+Depois das correções (C0): 1609 de 1786 golpes batem; 88 personagens sem diferença. Tighnari (Wreath e Clusterbloom) e Clorinde (Swift Hunt, Impale the Night) passaram a receber bônus ligados por padrão.
+Falta: Furina A4 no Ousia Bubble e os itens de motor (2, 6 e Tartaglia); Gaming, Xianyun, Chasca e Varesa precisam de bônus limitado a golpe; Iansan "Swift Stormflight" depende de decidir entre a planilha (Normal) e o GO (Carregado).
+Kazuha A4 e Sucrose C6 agora só chegam a personagens Pyro, Hydro, Electro ou Cryo; golpes Anemo do próprio Kazuha que na prática são do elemento absorvido deixam de receber.
+
 ## Números (C0, com HP/ATK/DEF base igualados aos do GO para isolar o resto)
 
 1781 golpes: 1582 batem (±0,25%), 129 só batem com os nossos buffs removidos, 70 não batem. 85 personagens sem diferença.

@@ -69,14 +69,14 @@ export const LOTE: Lote = {
     Sethos: [
       {
         id: 'a4', label: 'Sethos A4', src: 'p2', scope: 'self', timed: false,
-        flat: [{ name: 'Shadowpiercing Shot por Maestria', sourceStat: 'EM', perPoint: { p: 1 }, hitTypes: ['normal'], labels: ['Shadowpiercing Shot DMG'], stacks: 4 }],
+        flat: [{ name: 'Shadowpiercing Shot por Maestria', sourceStat: 'EM', perPoint: { p: 1 }, hitTypes: ['charged'], labels: ['Shadowpiercing Shot DMG'], stacks: 4 }],
         expect: "increasing the DMG dealt by Shadowpiercing Shots by 700% of Sethos's Elemental Mastery",
-        note: 'Soma 700% da Maestria ao dano base dos 4 primeiros Shadowpiercing Shots (no cadastro é golpe Normal, não Carregado). Antes caía no Aimed Shot por engano. A regra de 5 s e a volta do efeito em 15 s ficam por sua conta (use os stacks).',
+        note: 'Soma 700% da Maestria ao dano base dos 4 primeiros Shadowpiercing Shots (golpe Carregado). Só ele recebe. A regra de 5 s e a volta do efeito em 15 s ficam por sua conta (use os stacks).',
       },
       {
-        id: 'c1', label: 'Sethos C1', src: 'const1', scope: 'self', timed: true, stats: { critRateByType: { normal: { p: 0 } } },
+        id: 'c1', label: 'Sethos C1', src: 'const1', scope: 'self', timed: true, stats: { critRateByType: { charged: { p: 0 } } },
         expect: 'The CRIT Rate of Shadowpiercing Shot is increased by 15%',
-        note: '+15% de Taxa Crítica nos Shadowpiercing Shots. Como o golpe é Normal no cadastro e o bônus é por tipo, ligue a janela SÓ nos Shadowpiercing Shots (nos Normais comuns ele também valeria).',
+        note: '+15% de Taxa Crítica nos Shadowpiercing Shots. O bônus é por tipo (Carregado): ligue a janela SÓ nos Shadowpiercing Shots (no tiro mirado ele também valeria).',
       },
     ],
   },

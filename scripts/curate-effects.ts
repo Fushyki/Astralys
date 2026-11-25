@@ -43,6 +43,7 @@ import { EXTRA_BUFFS, EXTRA_FACTIONS, EXTRA_PROCS, EXTRA_SPECIAL } from './curat
 import { PILOTO_BUFFS, PILOTO_INFOS, PILOTO_NOTES, PILOTO_PROCS } from './curation/piloto-personagens';
 import { LOTES } from './curation/lote';
 import type { InfoCuration } from './curation/piloto-personagens';
+import type { Element } from '../src/data/schema';
 
 /** Junta listas por personagem de vários arquivos de curadoria. */
 const mergeLists = <T>(...all: Record<string, T[]>[]): Record<string, T[]> => {
@@ -85,6 +86,35 @@ for (const lote of LOTES) {
     CHARACTER_NOTES[name] = cur as (typeof CHARACTER_NOTES)[string];
   }
   for (const [name, list] of Object.entries(lote.infos ?? {})) INFOS[name] = [...(INFOS[name] ?? []).filter((x) => !list.some((y) => y.src === x.src && y.label === x.label)), ...list];
+}
+
+/**
+ * Buffs que o texto limita a um elemento (sem `forElements` eles somavam também em golpe Físico ou de outro elemento).
+ * Aqui, depois de juntar os lotes, para o limite não se perder quando um lote sobrepõe o buff.
+ */
+const ABSORBED: Element[] = ['Pyro', 'Hydro', 'Electro', 'Cryo'];
+const ELEMENT_ONLY: Record<string, Record<string, Element[]>> = {
+  Alhaitham: { c4d: ['Dendro'] }, Arlecchino: { a4: ['Pyro'] }, Baizhu: { a1: ['Dendro'] }, Chiori: { a4: ['Geo'] }, Cyno: { c2: ['Electro'] },
+  Diluc: { a4: ['Pyro'] }, 'Hu Tao': { a4: ['Pyro'] }, 'Kaedehara Kazuha': { a4: ABSORBED }, 'Kamisato Ayaka': { a4: ['Cryo'] }, Keqing: { c6: ['Electro'] },
+  Klee: { c6s: ['Pyro'] }, Mona: { a4: ['Hydro'] }, 'Raiden Shogun': { a4: ['Electro'] }, 'Sangonomiya Kokomi': { c6: ['Hydro'] }, Sethos: { c2: ['Electro'] },
+  Sucrose: { c6: ABSORBED, c6hex: ABSORBED }, Tighnari: { c2: ['Dendro'] }, Varka: { a1: ['Anemo'] }, Xingqiu: { a4: ['Hydro'] },
+  Yanfei: { a1: ['Pyro'], c6: ['Pyro'] }, Yoimiya: { a1: ['Pyro'], c2: ['Pyro'] },
+};
+for (const [name, ids] of Object.entries(ELEMENT_ONLY)) {
+  for (const [id, forElements] of Object.entries(ids)) {
+    const list = CHARACTER_BUFFS[name] ?? [];
+    if (!list.some((b) => b.id === id)) throw new Error(`ELEMENT_ONLY: ${name} não tem o buff "${id}"`);
+    CHARACTER_BUFFS[name] = list.map((b) => (b.id === id ? { ...b, forElements } : b));
+  }
+}
+
+// Nefer e Mitya nascem com 100 de Maestria (`baseStats.eleMas` no Genshin Optimizer), que o Lunaris não traz.
+// shortcut: entra como buff do próprio personagem; se o motor ganhar Maestria base nos dados, sai daqui.
+for (const name of ['Nefer', 'Mitya']) {
+  CHARACTER_BUFFS[name] = [...(CHARACTER_BUFFS[name] ?? []), {
+    id: 'base-em', label: 'Maestria base', src: 'kit', kit: { talent: 'normal' }, scope: 'self', timed: false, stats: { em: { lit: 100 } }, expect: 'Normal Attack',
+    note: '+100 de Maestria que o personagem tem de nascença (Genshin Optimizer). Sempre ativa.',
+  }];
 }
 
 const root = process.cwd();

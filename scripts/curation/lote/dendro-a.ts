@@ -16,7 +16,7 @@ export const LOTE: Lote = {
         id: 'a4', label: 'Tighnari A4', src: 'p2', scope: 'self', timed: false,
         convert: { from: 'em', perPoint: { p: 0 }, cap: { p: 1 }, to: ['charged', 'burst'] },
         expect: "his Charged Attack and Fashioner's Tanglevine Shaft DMG are increased by 0.06%",
-        note: '+0,06% de DMG por ponto de Maestria, teto de 60%, nos Carregados e no Supremo (Fashioner\'s Tanglevine Shaft e o Secondary Tanglevine Shaft), sempre. Pendente: o Wreath Arrow e o Clusterbloom Arrow estão cadastrados como Normal em moves.json, então não recebem.',
+        note: '+0,06% de DMG por ponto de Maestria, teto de 60%, nos Carregados e no Supremo (Fashioner\'s Tanglevine Shaft e o Secondary Tanglevine Shaft), sempre. Inclui o Wreath Arrow e o Clusterbloom Arrow (Carregados).',
       },
       {
         id: 'c4r', label: 'Tighnari C4 (reação)', src: 'const4', scope: 'team', timed: true, stats: { em: { lit: 60 } },
@@ -93,8 +93,8 @@ export const LOTE: Lote = {
       const1: x('Pendente: cada Cat Grass Cardamom extra (1 a cada 8.000 de HP máximo, até 4) explode no Supremo, mas o texto não diz quantas explosões acertam; some execuções do Cat Grass Cardamom Explosion DMG à mão.'),
     },
     Tighnari: {
-      p2: x('Pendente: Wreath Arrow e Clusterbloom Arrow estão cadastrados como Normal e ficam sem o bônus de Carregado.'),
-      const1: x('Pendente: a Taxa Crítica só entra no Carregado cadastrado como tal (Aimed Shot); Wreath Arrow e Clusterbloom Arrow estão como Normal.'),
+      p2: null,
+      const1: null,
     },
     Nahida: {
       p2: x('Entra o DMG da Tri-Karma Purification (e, por limite do formato, de todo golpe de habilidade). Pendente: a Taxa Crítica (0,03% por ponto, até 24%) não cabe no formato.'),

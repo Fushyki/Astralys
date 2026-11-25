@@ -37,8 +37,8 @@ describe('rótulos usados existem em moves.json', () => {
     ['Kuki Shinobu', 'Skill DMG'], ['Kuki Shinobu', 'Grass Ring of Sanctification DMG'], ['Kuki Shinobu', '1-Hit DMG'],
     ['Cyno', 'Mortuary Rite DMG'], ['Cyno', '1-Hit DMG'], ['Sethos', 'Shadowpiercing Shot DMG'], ['Sethos', '1-Hit DMG'],
   ])('%s: %s', (c, l) => expect(hasMove(c, l)).toBe(true));
-  it('Shadowpiercing Shot é golpe Normal no cadastro', () => {
-    expect(game.moves.find((m) => m.character === 'Sethos' && m.label === 'Shadowpiercing Shot DMG')!.hitType).toBe('normal');
+  it('Shadowpiercing Shot é golpe Carregado', () => {
+    expect(game.moves.find((m) => m.character === 'Sethos' && m.label === 'Shadowpiercing Shot DMG')!.hitType).toBe('charged');
   });
 });
 

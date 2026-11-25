@@ -69,7 +69,7 @@ const ororonProcs: ProcCuration[] = [
 
 const valeriyProcs: ProcCuration[] = [
   {
-    id: 'c6mortar', label: 'Valeriy C6: Direct-Fire Mortar (+100%)', src: 'const6', scale: {}, hitType: 'normal',
+    id: 'c6mortar', label: 'Valeriy C6: Direct-Fire Mortar (+100%)', src: 'const6', scale: {}, hitType: 'charged',
     of: { talent: 'normal', label: 'Direct-Fire Mortar: Point-Blank Bombardment DMG', variant: 0, fraction: { p: 0 } },
     expect: 'Their DMG is increased by 100%',
     note: 'Soma +100% do dano do Direct-Fire Mortar como golpe extra de 100% desse golpe (ponha junto dele). O crítico do Electro está no buff "Valeriy C6 (Electro)".',

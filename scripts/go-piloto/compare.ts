@@ -101,10 +101,11 @@ for (const c of game.characters) for (const constellation of [0, 6]) {
       const mult = scales.every(([, x]) => inGo(x, m.hits));
       const nearest = theirs.map((t) => ({ id: t.id, ratio: bare2[i].noCrit / t.value })).sort((a, b) => Math.abs(Math.log(a.ratio)) - Math.abs(Math.log(b.ratio)))[0];
       // Elemento: golpes de mesmo valor no GO (mesmo talento) e o elemento deles.
-      const same = (theirs as any[]).filter((t) => t.section === (m.talent === 'normal' ? t.section : m.talent) && (m.talent !== 'normal' || ['normal', 'charged', 'plunging'].includes(t.section)) && Math.abs(t.value / ours2[i].noCrit - 1) < TOL);
+      const near = (v: number) => (theirs as any[]).filter((t) => (m.talent === 'normal' ? ['normal', 'charged', 'plunging'].includes(t.section) : t.section === m.talent) && Math.abs(t.value / v - 1) < TOL);
+      const same = near(ours2[i].noCrit).length ? near(ours2[i].noCrit) : near(bare2[i].noCrit);
       const goEle = [...new Set(same.map((t) => t.ele))];
       const goKind = same.length && same.every((t) => kindOf[t.id]) ? [...new Set(same.flatMap((t) => kindOf[t.id]))] : [];
-      return { goEle, goKind, hitType: m.hitType, talent: m.talent, label: m.label, variant: m.variant, hits: m.hits, element: o.element, status, mult, scales, ours: +o.noCrit.toFixed(1), bare: +bare.res[i].noCrit.toFixed(1), dmgMult: +(o.breakdown as any).dmgMultiplier.toFixed(4), nearest };
+      return { goEle, goIds: same.map((t) => t.id), goKind, hitType: m.hitType, talent: m.talent, label: m.label, variant: m.variant, hits: m.hits, element: o.element, status, mult, scales, ours: +o.noCrit.toFixed(1), bare: +bare.res[i].noCrit.toFixed(1), dmgMult: +(o.breakdown as any).dmgMultiplier.toFixed(4), nearest };
     }).filter(Boolean);
     out.push({ name, constellation, hits, statDiff, theirs: theirs.map((t) => `${t.id}=${t.value.toFixed(1)}`) });
   } catch (e) { out.push({ name, constellation, error: String((e as Error).message).slice(0, 200) }); }
@@ -121,4 +122,4 @@ for (const r of out) if (r.constellation === 0 && r.statDiff?.length) console.lo
 console.log('Elemento diferente do GO (mesmo valor, outro elemento):');
 for (const r of out) if (r.constellation === 0 && r.hits) for (const h of r.hits) if (h.goEle.length && h.goEle.every((e: string) => e && e !== 'invalid' && e !== String(h.element).toLowerCase())) console.log(' ', r.name, '|', h.talent, h.label, 'nosso', h.element, 'GO', h.goEle.join('/'));
 console.log('Categoria diferente do GO (mesmo valor):');
-for (const r of out) if (r.constellation === 0 && r.hits) { const bad = r.hits.filter((h: any) => h.goKind.length && !h.goKind.includes(h.hitType === 'plunge' ? 'plunging' : h.hitType)); if (bad.length) console.log(' ', r.name, '|', bad.map((h: any) => `${h.talent} ${h.label.replace(/ DMG/, '')}: nosso ${h.hitType}, GO ${h.goKind.join('/')}`).join('; ')); }
+for (const r of out) if (r.constellation === 0 && r.hits) { const bad = r.hits.filter((h: any) => h.goKind.length && !h.goKind.includes(h.hitType === 'plunge' ? 'plunging' : h.hitType)); if (bad.length) console.log(' ', r.name, '|', bad.map((h: any) => `${h.talent} ${h.label.replace(/ DMG/, '')}: nosso ${h.hitType}, GO ${h.goKind.join('/')} [${h.goIds.join(',')}]`).join('; ')); }

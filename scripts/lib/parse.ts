@@ -146,8 +146,44 @@ export function isNonDamageLabel(label: string): boolean {
   return NOT_DAMAGE.test(label);
 }
 
+/**
+ * Golpes em que o jogo usa uma categoria diferente da que o rótulo sugere. Fonte: o tipo de golpe (`move`) das fichas do Genshin
+ * Optimizer (MIT), conferido pela varredura de docs/VARREDURA_GO.md.
+ * shortcut: Gaming, Xianyun, Chasca e Varesa ficam de fora (bônus próprios deles precisam valer só em um golpe, o que o motor ainda não
+ * faz) e a Iansan também (a planilha de referência diz Normal).
+ */
+const KIT_HIT_TYPES: Record<string, [Talent, RegExp, HitType][]> = {
+  'Arataki Itto': [['normal', /Kesagiri|Saichimonji/, 'charged']],
+  Candace: [['skill', /Charged Up/, 'skill']],
+  Chevreuse: [['skill', /Overcharged Ball/, 'skill']],
+  Clorinde: [['skill', /Swift Hunt|Impale the Night/, 'normal']],
+  Diluc: [['skill', /-Hit/, 'skill']],
+  Ganyu: [['normal', /Frostflake/, 'charged']],
+  Ifa: [['skill', /Tonicshot/, 'normal']],
+  Lauma: [['normal', /Spiritcall Prayer/, 'charged'], ['skill', /Hold/, 'skill']],
+  Lyney: [['normal', /Prop Arrow|Pyrotechnic|Spiritbreath/, 'charged']],
+  Mitya: [['normal', /Gradient Detonation/, 'charged']],
+  Mualani: [['skill', /Sharky's Bite/, 'normal']],
+  Nefer: [['skill', /Phantasm Performance .*\(Nefer\)/, 'charged'], ['burst', /-Hit/, 'burst']],
+  Nilou: [['skill', /-Hit/, 'skill']],
+  Ningguang: [['normal', /Star Jade/, 'charged']],
+  'Raiden Shogun': [['burst', /./, 'burst']],
+  Sandrone: [['normal', /Power Overdrive/, 'charged']],
+  Sethos: [['normal', /Shadowpiercing/, 'charged']],
+  Sigewinne: [['normal', /Bubble/, 'charged']],
+  Tighnari: [['normal', /Wreath|Clusterbloom/, 'charged']],
+  Valeriy: [['normal', /Direct-Fire Mortar/, 'charged']],
+  Varka: [['burst', /-Hit/, 'burst']],
+  Xiangling: [['burst', /Swing/, 'burst']],
+  Yelan: [['normal', /Breakthrough Barb/, 'charged']],
+  Yoimiya: [['normal', /Kindling/, 'charged']],
+  Zibai: [['skill', /Stride 1-Hit/, 'skill'], ['burst', /Skill 1-Hit/, 'burst']],
+};
+
 /** Tipo de golpe para os bônus de DMG% por tipo (Normal/Carregado/Imersivo/Habilidade/Supremo). */
-export function hitTypeFor(label: string, talent: Talent): HitType {
+export function hitTypeFor(label: string, talent: Talent, character = ''): HitType {
+  const kit = KIT_HIT_TYPES[character]?.find(([t, re]) => t === talent && re.test(label));
+  if (kit) return kit[2];
   if (/plunge/i.test(label)) return 'plunge';
   if (/(?<!lunar-)charged|aimed shot/i.test(label)) return 'charged';
   if (talent === 'normal') return 'normal';

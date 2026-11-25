@@ -47,9 +47,9 @@ const buffs: Record<string, BuffCuration[]> = {
   ],
   Ganyu: [
     {
-      id: 'a1', label: 'Ganyu A1', src: 'p1', scope: 'self', timed: true, stats: { critRateByType: { normal: { p: 1 } } },
+      id: 'a1', label: 'Ganyu A1', src: 'p1', scope: 'self', timed: true, stats: { critRateByType: { charged: { p: 1 } } },
       expect: 'CRIT Rate of subsequent Frostflake Arrows',
-      note: '+20% de Taxa Crítica por 5 s nas Frostflake Arrows seguintes e nos florescimentos (no cadastro são golpes de Normal; antes valia em todo golpe). A primeira flecha não recebe. Ligue a janela só sobre elas: os Normais 1 a 6 também receberiam.',
+      note: '+20% de Taxa Crítica por 5 s nas Frostflake Arrows seguintes e nos florescimentos (são golpes de Carregado). A primeira flecha não recebe. Ligue a janela só sobre elas: o tiro mirado comum também receberia.',
     },
     {
       id: 'c1', label: 'Ganyu C1', src: 'const1', scope: 'self', timed: true, resShred: { value: { p: 0, x: -1 }, elements: ['Cryo'] },

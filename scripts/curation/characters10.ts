@@ -62,7 +62,7 @@ export const CHARACTERS_14: Record<string, BuffCuration[]> = {
   ],
   Mualani: [
     { id: 'a4', label: 'Mualani A4', src: 'p2', scope: 'self', timed: false, flat: [{ name: 'Boomsharka-laka por HP', sourceStat: 'HP', perPoint: { p: 3 }, hitTypes: ['burst'], stacks: 1 }], stacks: { max: 3, unit: "stacks de Wavechaser's Exploits", levels: [{ p: 1 }, { p: 2 }, { p: 3 }] }, expect: 'increase the DMG of this Boomsharka-laka by 15%/30%/45% of her Max HP', note: 'Soma 45% do HP máximo (3 stacks) ao dano base do Boomsharka-laka (Supremo).' },
-    { id: 'c1', label: 'Mualani C1', src: 'const1', scope: 'self', timed: false, flat: [{ name: "Sharky's Surging Bite por HP", sourceStat: 'HP', perPoint: { p: 0 }, hitTypes: ['skill'], stacks: 1 }], expect: "increased by 66% of Mualani's Max HP", note: 'Soma 66% do HP máximo ao primeiro golpe da habilidade (Sharky\'s Surging Bite), com a regra de dano decrescente do Surfshark Wavebreaker NÃO aplicada.' },
+    { id: 'c1', label: 'Mualani C1', src: 'const1', scope: 'self', timed: false, flat: [{ name: "Sharky's Surging Bite por HP", sourceStat: 'HP', perPoint: { p: 0 }, hitTypes: ['normal'], labels: ["Sharky's Bite Base DMG"], stacks: 1 }], expect: "increased by 66% of Mualani's Max HP", note: 'Soma 66% do HP máximo ao primeiro golpe da habilidade (Sharky\'s Surging Bite), com a regra de dano decrescente do Surfshark Wavebreaker NÃO aplicada.' },
   ],
   Xilonen: [
     { id: 'a4', label: 'Xilonen A4', src: 'p2', scope: 'self', timed: true, stats: { defPct: { p: 1 } }, expect: "Xilonen's DEF is increased by 20% for 15s", note: '+20% de DEF por 15 s depois do Nightsoul Burst de um aliado: ligue na janela.' },

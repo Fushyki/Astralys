@@ -40,9 +40,9 @@ const buffs: Record<string, BuffCuration[]> = {
   'Arataki Itto': [
     {
       id: 'a4', label: 'Itto A4', src: 'p2', scope: 'self', timed: false,
-      flat: [{ name: 'Arataki Kesagiri por DEF', sourceStat: 'DEF', perPoint: { p: 0 }, hitTypes: ['normal'], labels: ['Arataki Kesagiri Combo Slash DMG', 'Arataki Kesagiri Final Slash DMG'] }],
+      flat: [{ name: 'Arataki Kesagiri por DEF', sourceStat: 'DEF', perPoint: { p: 0 }, hitTypes: ['charged'], labels: ['Arataki Kesagiri Combo Slash DMG', 'Arataki Kesagiri Final Slash DMG'] }],
       expect: "Arataki Kesagiri DMG is increased by 35% of Arataki Itto's DEF",
-      note: 'Soma 35% da DEF ao dano base de cada Arataki Kesagiri (Combo Slash e Final Slash). O Saichimonji Slash (sem stacks) NÃO recebe: o texto fala só do Kesagiri. A curadoria antiga filtrava por "charged" e nunca somava, porque no cadastro esses golpes são "normal".',
+      note: 'Soma 35% da DEF ao dano base de cada Arataki Kesagiri (Combo Slash e Final Slash). O Saichimonji Slash (sem stacks) NÃO recebe: o texto fala só do Kesagiri.',
     },
   ],
   Albedo: [

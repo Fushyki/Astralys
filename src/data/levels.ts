@@ -31,7 +31,7 @@ export function characterAtLevel(character: Character, level: number, levels?: L
   if (!levels || !data || lv === MAX_CHARACTER_LEVEL) return character;
   const asc = ascensionAt(lv);
   const raw = (k: 'hp' | 'atk' | 'def', l: number, a: number) => data[k][0] * levels.curves[data[k][1]][l] + data.asc[k][a];
-  // Ancorado no Lunaris: o nível 90 continua sendo exatamente o dado dele (Aloy e o Viajante têm base diferente no GO).
+  // Ancorado nos dados: o nível 90 continua sendo exatamente o de characters.json (Aloy e o Viajante já vêm com a base do GO).
   const base = { hp: character.baseHp, atk: character.baseAtk, def: character.baseDef };
   const stat = (k: 'hp' | 'atk' | 'def') => (raw(k, lv, asc) * base[k]) / raw(k, MAX_CHARACTER_LEVEL, 6);
   const top = data.asc.special?.[6];

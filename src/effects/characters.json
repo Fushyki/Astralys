@@ -1102,6 +1102,9 @@
         "minConstellation": 0,
         "scope": "self",
         "timed": false,
+        "forElements": [
+          "Electro"
+        ],
         "convert": {
           "from": "er",
           "source": "self",
@@ -1536,6 +1539,9 @@
         "minConstellation": 0,
         "scope": "self",
         "timed": true,
+        "forElements": [
+          "Pyro"
+        ],
         "stats": {
           "atkPct": 0,
           "dmgPct": 0.33,
@@ -1768,7 +1774,7 @@
           "defPct": 0,
           "dmgPctByType": {},
           "critRateByType": {
-            "normal": 0.2
+            "charged": 0.2
           },
           "critDmgByType": {},
           "baseMultByType": {},
@@ -1782,7 +1788,7 @@
           "reactionBonus": {}
         },
         "flat": [],
-        "note": "+20% de Taxa Crítica por 5 s nas Frostflake Arrows seguintes e nos florescimentos (no cadastro são golpes de Normal; antes valia em todo golpe). A primeira flecha não recebe. Ligue a janela só sobre elas: os Normais 1 a 6 também receberiam."
+        "note": "+20% de Taxa Crítica por 5 s nas Frostflake Arrows seguintes e nos florescimentos (são golpes de Carregado). A primeira flecha não recebe. Ligue a janela só sobre elas: o tiro mirado comum também receberia."
       },
       {
         "id": "c1",
@@ -1911,6 +1917,9 @@
         "minConstellation": 0,
         "scope": "self",
         "timed": true,
+        "forElements": [
+          "Cryo"
+        ],
         "stats": {
           "atkPct": 0,
           "dmgPct": 0.18,
@@ -2045,6 +2054,9 @@
         "minConstellation": 0,
         "scope": "self",
         "timed": false,
+        "forElements": [
+          "Hydro"
+        ],
         "stats": {
           "atkPct": 0,
           "dmgPct": 0.2,
@@ -2426,6 +2438,9 @@
         "minConstellation": 0,
         "scope": "self",
         "timed": true,
+        "forElements": [
+          "Pyro"
+        ],
         "stats": {
           "atkPct": 0,
           "dmgPct": 0.2,
@@ -2648,6 +2663,9 @@
         "minConstellation": 6,
         "scope": "self",
         "timed": true,
+        "forElements": [
+          "Pyro"
+        ],
         "stats": {
           "atkPct": 0,
           "dmgPct": 0.5,
@@ -3389,6 +3407,9 @@
         "minConstellation": 4,
         "scope": "self",
         "timed": true,
+        "forElements": [
+          "Dendro"
+        ],
         "stats": {
           "atkPct": 0,
           "dmgPct": 0.3,
@@ -4952,7 +4973,7 @@
             "sourceStat": "ATK",
             "perPoint": 0.8,
             "hitTypes": [
-              "normal"
+              "charged"
             ],
             "labels": [
               "Pyrotechnic Strike DMG"
@@ -5648,6 +5669,9 @@
         "minConstellation": 0,
         "scope": "self",
         "timed": true,
+        "forElements": [
+          "Geo"
+        ],
         "stats": {
           "atkPct": 0,
           "dmgPct": 0.2,
@@ -7799,6 +7823,9 @@
         "minConstellation": 0,
         "scope": "self",
         "timed": false,
+        "forElements": [
+          "Hydro"
+        ],
         "convert": {
           "from": "er",
           "source": "self",
@@ -8119,6 +8146,9 @@
         "minConstellation": 6,
         "scope": "self",
         "timed": true,
+        "forElements": [
+          "Electro"
+        ],
         "stats": {
           "atkPct": 0,
           "dmgPct": 0.24,
@@ -8226,6 +8256,12 @@
         "minConstellation": 6,
         "scope": "team",
         "timed": true,
+        "forElements": [
+          "Pyro",
+          "Hydro",
+          "Electro",
+          "Cryo"
+        ],
         "stats": {
           "atkPct": 0,
           "dmgPct": 0.2,
@@ -8358,6 +8394,12 @@
         "minConstellation": 6,
         "scope": "team",
         "timed": true,
+        "forElements": [
+          "Pyro",
+          "Hydro",
+          "Electro",
+          "Cryo"
+        ],
         "forFactions": [
           "hexerei"
         ],
@@ -8570,6 +8612,9 @@
         "minConstellation": 0,
         "scope": "self",
         "timed": true,
+        "forElements": [
+          "Pyro"
+        ],
         "stats": {
           "atkPct": 0,
           "dmgPct": 0.2,
@@ -8701,6 +8746,9 @@
         "minConstellation": 2,
         "scope": "self",
         "timed": true,
+        "forElements": [
+          "Pyro"
+        ],
         "stats": {
           "atkPct": 0,
           "dmgPct": 0.25,
@@ -8768,6 +8816,9 @@
         "minConstellation": 6,
         "scope": "self",
         "timed": true,
+        "forElements": [
+          "Hydro"
+        ],
         "stats": {
           "atkPct": 0,
           "dmgPct": 0.4,
@@ -9128,7 +9179,7 @@
             "sourceStat": "DEF",
             "perPoint": 0.35,
             "hitTypes": [
-              "normal"
+              "charged"
             ],
             "labels": [
               "Arataki Kesagiri Combo Slash DMG",
@@ -9136,7 +9187,7 @@
             ]
           }
         ],
-        "note": "Soma 35% da DEF ao dano base de cada Arataki Kesagiri (Combo Slash e Final Slash). O Saichimonji Slash (sem stacks) NÃO recebe: o texto fala só do Kesagiri. A curadoria antiga filtrava por \"charged\" e nunca somava, porque no cadastro esses golpes são \"normal\"."
+        "note": "Soma 35% da DEF ao dano base de cada Arataki Kesagiri (Combo Slash e Final Slash). O Saichimonji Slash (sem stacks) NÃO recebe: o texto fala só do Kesagiri."
       }
     ],
     "notes": [
@@ -10059,6 +10110,9 @@
         "minConstellation": 2,
         "scope": "self",
         "timed": true,
+        "forElements": [
+          "Dendro"
+        ],
         "stats": {
           "atkPct": 0,
           "dmgPct": 0.2,
@@ -10166,7 +10220,7 @@
           ]
         },
         "flat": [],
-        "note": "+0,06% de DMG por ponto de Maestria, teto de 60%, nos Carregados e no Supremo (Fashioner's Tanglevine Shaft e o Secondary Tanglevine Shaft), sempre. Pendente: o Wreath Arrow e o Clusterbloom Arrow estão cadastrados como Normal em moves.json, então não recebem."
+        "note": "+0,06% de DMG por ponto de Maestria, teto de 60%, nos Carregados e no Supremo (Fashioner's Tanglevine Shaft e o Secondary Tanglevine Shaft), sempre. Inclui o Wreath Arrow e o Clusterbloom Arrow (Carregados)."
       },
       {
         "id": "c4r",
@@ -10200,18 +10254,7 @@
         "note": "Soma +60 de Maestria à equipe (além dos +60 do C4) quando o Fashioner's Tanglevine Shaft dispara Queimadura, Florescer, Lunar-Florescer, Acelerar ou Propagar: ligue a janela só quando a reação acontecer (renova os 8 s)."
       }
     ],
-    "notes": [
-      {
-        "src": "p2",
-        "kind": "partial",
-        "note": "Pendente: Wreath Arrow e Clusterbloom Arrow estão cadastrados como Normal e ficam sem o bônus de Carregado."
-      },
-      {
-        "src": "const1",
-        "kind": "partial",
-        "note": "Pendente: a Taxa Crítica só entra no Carregado cadastrado como tal (Aimed Shot); Wreath Arrow e Clusterbloom Arrow estão como Normal."
-      }
-    ],
+    "notes": [],
     "infos": [],
     "procs": [
       {
@@ -10245,6 +10288,9 @@
         "minConstellation": 2,
         "scope": "self",
         "timed": true,
+        "forElements": [
+          "Electro"
+        ],
         "stats": {
           "atkPct": 0,
           "dmgPct": 0.5,
@@ -11327,6 +11373,9 @@
         "minConstellation": 0,
         "scope": "self",
         "timed": true,
+        "forElements": [
+          "Dendro"
+        ],
         "stats": {
           "atkPct": 0,
           "dmgPct": 0.25,
@@ -12483,6 +12532,9 @@
         "minConstellation": 0,
         "scope": "self",
         "timed": false,
+        "forElements": [
+          "Pyro"
+        ],
         "stats": {
           "atkPct": 0,
           "dmgPct": 0.4,
@@ -12624,6 +12676,9 @@
         "minConstellation": 2,
         "scope": "self",
         "timed": true,
+        "forElements": [
+          "Electro"
+        ],
         "stats": {
           "atkPct": 0,
           "dmgPct": 0.3,
@@ -12695,7 +12750,7 @@
             "sourceStat": "EM",
             "perPoint": 7,
             "hitTypes": [
-              "normal"
+              "charged"
             ],
             "labels": [
               "Shadowpiercing Shot DMG"
@@ -12703,7 +12758,7 @@
             "stacks": 4
           }
         ],
-        "note": "Soma 700% da Maestria ao dano base dos 4 primeiros Shadowpiercing Shots (no cadastro é golpe Normal, não Carregado). Antes caía no Aimed Shot por engano. A regra de 5 s e a volta do efeito em 15 s ficam por sua conta (use os stacks)."
+        "note": "Soma 700% da Maestria ao dano base dos 4 primeiros Shadowpiercing Shots (golpe Carregado). Só ele recebe. A regra de 5 s e a volta do efeito em 15 s ficam por sua conta (use os stacks)."
       },
       {
         "id": "c1",
@@ -12722,7 +12777,7 @@
           "defPct": 0,
           "dmgPctByType": {},
           "critRateByType": {
-            "normal": 0.15
+            "charged": 0.15
           },
           "critDmgByType": {},
           "baseMultByType": {},
@@ -12736,7 +12791,7 @@
           "reactionBonus": {}
         },
         "flat": [],
-        "note": "+15% de Taxa Crítica nos Shadowpiercing Shots. Como o golpe é Normal no cadastro e o bônus é por tipo, ligue a janela SÓ nos Shadowpiercing Shots (nos Normais comuns ele também valeria)."
+        "note": "+15% de Taxa Crítica nos Shadowpiercing Shots. O bônus é por tipo (Carregado): ligue a janela SÓ nos Shadowpiercing Shots (no tiro mirado ele também valeria)."
       }
     ],
     "notes": [
@@ -13149,7 +13204,10 @@
             "sourceStat": "HP",
             "perPoint": 0.66,
             "hitTypes": [
-              "skill"
+              "normal"
+            ],
+            "labels": [
+              "Sharky's Bite Base DMG"
             ],
             "stacks": 1
           }
@@ -15483,6 +15541,37 @@
         },
         "flat": [],
         "note": "RES Dendro do inimigo -20% enquanto ela está no Shadow Dance (9 s) e mais 4,5 s depois: janela de tempo (antes estava sempre ligado)."
+      },
+      {
+        "id": "base-em",
+        "label": "Maestria base",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 100,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "note": "+100 de Maestria que o personagem tem de nascença (Genshin Optimizer). Sempre ativa."
       }
     ],
     "notes": [
@@ -15504,7 +15593,7 @@
       {
         "src": "p1",
         "kind": "partial",
-        "note": "Entra a Maestria +100 com 3 stacks de Véu da Falsidade (Moonsign: Ascendant Gleam). Pendente: o +40% de DMG do Supremo por stack (linha \"DMG Bonus\" do Supremo) não entra: os dois golpes do Supremo estão cadastrados como Normal em moves.json e o bônus não distingue golpe específico."
+        "note": "Entra a Maestria +100 com 3 stacks de Véu da Falsidade (Moonsign: Ascendant Gleam). Pendente: o +40% de DMG do Supremo por stack (linha \"DMG Bonus\" do Supremo) não entra: o formato não aplica esse bônus por stack ao Supremo."
       }
     ],
     "infos": [],
@@ -16860,6 +16949,9 @@
         "minConstellation": 0,
         "scope": "self",
         "timed": false,
+        "forElements": [
+          "Anemo"
+        ],
         "convert": {
           "from": "atk",
           "source": "self",
@@ -19704,6 +19796,37 @@
         },
         "flat": [],
         "note": "Detection Core Overloaded: +234 de Maestria só para o personagem em campo (ligue a janela dele). Substitui o \"Mitya C2 (Maestria)\" do Steady State (123 para todos)."
+      },
+      {
+        "id": "base-em",
+        "label": "Maestria base",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 100,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "note": "+100 de Maestria que o personagem tem de nascença (Genshin Optimizer). Sempre ativa."
       }
     ],
     "notes": [
@@ -19914,7 +20037,7 @@
         "id": "c6mortar",
         "label": "Valeriy C6: Direct-Fire Mortar (+100%)",
         "scale": {},
-        "hitType": "normal",
+        "hitType": "charged",
         "minConstellation": 6,
         "src": "const6",
         "of": {
@@ -20688,6 +20811,12 @@
         "minConstellation": 0,
         "scope": "team",
         "timed": true,
+        "forElements": [
+          "Pyro",
+          "Hydro",
+          "Electro",
+          "Cryo"
+        ],
         "convert": {
           "from": "em",
           "source": "self",
@@ -21047,6 +21176,9 @@
         "minConstellation": 0,
         "scope": "self",
         "timed": true,
+        "forElements": [
+          "Pyro"
+        ],
         "stats": {
           "atkPct": 0,
           "dmgPct": 0.15,
@@ -21082,6 +21214,9 @@
         "minConstellation": 6,
         "scope": "self",
         "timed": true,
+        "forElements": [
+          "Pyro"
+        ],
         "replaces": "a1",
         "stats": {
           "atkPct": 0,
@@ -23064,11 +23199,6 @@
         "src": "const4",
         "kind": "utility",
         "note": "Só energia."
-      },
-      {
-        "src": "p2",
-        "kind": "partial",
-        "note": "Entra o +0,04% de DMG da habilidade por ponto de Maestria (teto 32%); o 1-Hit/2-Hit Hold estão cadastrados como Normal em moves.json e não recebem. A redução da recarga do Spirit Envoy Metamorphosis não muda o dano."
       },
       {
         "src": "p4",

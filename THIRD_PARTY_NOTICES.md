@@ -5,6 +5,9 @@
 As fórmulas de dano e reações do motor (`src/engine/`) seguem o código do Genshin Optimizer, usado como
 referência de correção, e as tabelas de multiplicador por nível (`src/engine/constants/levelMultipliers.json`)
 foram extraídas de `libs/gi/keymap/src/StatConstants.ts` (commit `cbee3af`).
+A aba Talentos de alguns personagens usa `src/vendor/go/talentos.js`, gerado por `scripts/go-talentos/build.mjs` a partir do código das fichas, do
+motor e dos textos em português do Genshin Optimizer (commit `39eccbe9`).
+
 A tabela de main stat de artefato por raridade e nível (`src/engine/constants/artifactMainStat.ts`) foi copiada
 de `libs/gi/stats/Data/Artifacts/artifact_main.json` (commit `532274a`).
 

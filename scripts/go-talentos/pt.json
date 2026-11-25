@@ -1,0 +1,20 @@
+{
+  "extra": { "stats": { "burstBoost": "Níveis a mais no Supremo", "skillBoost": "Níveis a mais na Habilidade" } },
+  "chars": {
+    "Illuga": {
+      "burstCond": "Acúmulo da Canção do Rouxinol consumido",
+      "c4Cond": "Efeito do Supremo ativo",
+      "c6Text": "Talento passivo Pacto do Forjatochas fortalecido"
+    },
+    "Zibai": {
+      "a1Cond": "Sob o efeito Queda da Lua",
+      "stride_dmgInc": "Dano adicional do Passo do Corcel Espiritual",
+      "stride_lunarcrystallize_dmg_": "Bônus de Lunar-Cristalizar do Passo do Corcel Espiritual",
+      "shift_lunarcrystallize_mult_": "Multiplicador Lunar-Cristalizar da Mudança de Fase Lunar",
+      "c1Cond": "Primeiro Passo do Corcel Espiritual depois de entrar na Mudança de Fase Lunar",
+      "c2Cond": "No modo Mudança de Fase Lunar",
+      "c4Cond": "Sob o efeito Esplendor da Lua Dispersa",
+      "c6Cond": "Fulgor da Mudança de Fase consumido acima de 70"
+    }
+  }
+}

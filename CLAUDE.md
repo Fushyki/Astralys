@@ -107,3 +107,10 @@ Plano completo: `C:\Users\dabiv\.claude\plans\hashed-nibbling-island.md`. Strix 
 
 ## Mais detalhes
 - Histórico das fases e atualizações: `docs/ESTADO_DAS_FASES.md`, `docs/ATUALIZACOES.md`. Otimizador: `src/features/optimizer/CLAUDE.md`. Bases GOOD: `src/features/good/CLAUDE.md` (carregam ao trabalhar nessas pastas).
+
+## Leveza e compatibilidade
+- Navegadores mínimos: Chrome/Edge 109, Firefox 115, Safari 15. Nada de API ou CSS mais novo sem alternativa.
+- `color-mix()` sempre com uma cor sólida antes, na mesma regra. `:has()` só como melhoria, nunca necessário para o layout.
+- A rota `/` não baixa dados do jogo. Dados só entram nas rotas que os usam.
+- Biblioteca pesada (tesseract, html-to-image, xlsx) só por `import()` dinâmico.
+- Antes de cada commit: `npm run build && npm run budget`. Se estourar, corrija; só aumente `budget.json` com o motivo escrito na Issue.

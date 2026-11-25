@@ -16,7 +16,8 @@
 .rc-head .x { border: 0; background: none; color: #e06c75; font-size: 20px; line-height: 1; cursor: pointer; padding: 0 4px; }
 .rc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(310px, 100%), 1fr)); gap: 14px 16px; }
 /* Subgrid: cabeçalho, nome, necessidade, parâmetros e fontes ficam na mesma altura em todos os cartões da linha, tenham ou não medidor ou "Usa o Supremo". */
-.dz-panel.rc-card { position: relative; overflow: hidden; display: grid; grid-row: span 5; grid-template-rows: subgrid; gap: 14px; align-content: start; min-width: 0; border: 0; border-bottom: 3px solid var(--c); border-radius: 0; box-shadow: none; background: linear-gradient(100deg, var(--surface) 35%, color-mix(in srgb, var(--c) 13%, var(--bg)) 100%); }
+.dz-panel.rc-card { position: relative; overflow: hidden; display: grid; grid-row: span 5; grid-template-rows: subgrid; gap: 14px; align-content: start; min-width: 0; border: 0; border-bottom: 3px solid var(--c); border-radius: 0; box-shadow: none; background: linear-gradient(100deg, var(--surface) 35%, var(--bg) 100%); }
+@supports (color: color-mix(in srgb, red, blue)) { .dz-panel.rc-card { background: linear-gradient(100deg, var(--surface) 35%, color-mix(in srgb, var(--c) 13%, var(--bg)) 100%); } }
 .rc-card .splash { position: absolute; top: 0; right: 0; width: 150px; height: 250px; object-fit: cover; object-position: center 12%; opacity: .6; pointer-events: none; -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 45%), linear-gradient(180deg, #000 55%, transparent 100%); -webkit-mask-composite: source-in; mask-image: linear-gradient(90deg, transparent 0, #000 45%), linear-gradient(180deg, #000 55%, transparent 100%); mask-composite: intersect; }
 .rc-card > :not(.splash) { position: relative; }
 .rc-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding-bottom: 10px; border-bottom: 1px solid var(--divider); }
@@ -44,14 +45,16 @@
 .rc-break .hl { color: var(--gold-hi); }
 .rc-break .total { border-top: 1px solid var(--divider); padding-top: 6px; font-weight: 700; color: var(--text); }
 .rc-card .note { margin: 0; font-size: 13px; color: var(--muted); }
-.rc-saves { display: flex; flex-direction: column; gap: 12px; border-color: color-mix(in srgb, var(--gold) 35%, var(--border)); }
+.rc-saves { display: flex; flex-direction: column; gap: 12px; border-color: rgb(101, 93, 83); }
+@supports (color: color-mix(in srgb, red, blue)) { .rc-saves { border-color: color-mix(in srgb, var(--gold) 35%, var(--border)); } }
 .rc-saves-top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; }
 .rc-saves-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .rc-saves-actions .dz-input { width: 220px; }
 .rc-saved-list { display: flex; flex-wrap: wrap; gap: 8px; padding-top: 10px; border-top: 1px solid var(--divider); }
-.rc-saved { display: inline-flex; align-items: center; gap: 8px; padding: 5px 12px; border-radius: 10px; border: 1px solid color-mix(in srgb, var(--gold) 35%, var(--border)); background: var(--bg-header); font-weight: 600; }
+.rc-saved { display: inline-flex; align-items: center; gap: 8px; padding: 5px 12px; border-radius: 10px; border: 1px solid rgb(101, 93, 83); background: var(--bg-header); font-weight: 600; }
+@supports (color: color-mix(in srgb, red, blue)) { .rc-saved { border: 1px solid color-mix(in srgb, var(--gold) 35%, var(--border)); } }
 .rc-saved .x { border: 0; background: none; color: #e06c75; font-size: 18px; line-height: 1; cursor: pointer; padding: 0 2px; }
 .rc-tips summary { cursor: pointer; font-weight: 700; color: var(--gold-hi); }
 .rc-tips ul { margin: 12px 0 0; padding-left: 18px; display: flex; flex-direction: column; gap: 8px; font-size: 14px; color: var(--text-2); }
-.rc-params .dz-field:has(select) { grid-template-columns: minmax(0, 1fr); }
+.rc-params .dz-field.stack { grid-template-columns: minmax(0, 1fr); }
 .rc-params .dz-field select { width: 100%; }

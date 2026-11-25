@@ -9,14 +9,28 @@ async function cardPng(el: HTMLElement, format: PosterFormat): Promise<string> {
   return toPng(el, { width: w, height: h, pixelRatio: 1, cacheBust: true, fontEmbedCSS, style: { transform: 'none', margin: '0' } });
 }
 
-export async function copyCardImage(el: HTMLElement, format: PosterFormat): Promise<void> {
-  const blob = await (await fetch(await cardPng(el, format))).blob();
-  await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+const download = (href: string, name: string) => {
+  const a = document.createElement('a');
+  a.href = href;
+  a.download = `${name}.png`;
+  a.click();
+};
+
+export const DOWNLOADED_INSTEAD = 'Este navegador não deixou copiar a imagem; ela foi baixada.';
+
+/** Devolve false quando não deu para copiar (sem `ClipboardItem` ou sem permissão) e a imagem foi baixada. */
+export async function copyCardImage(el: HTMLElement, format: PosterFormat, name = 'astralys-card'): Promise<boolean> {
+  const png = await cardPng(el, format);
+  try {
+    const blob = await (await fetch(png)).blob();
+    await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+    return true;
+  } catch {
+    download(png, name);
+    return false;
+  }
 }
 
 export async function saveCardImage(el: HTMLElement, format: PosterFormat, name: string): Promise<void> {
-  const a = document.createElement('a');
-  a.href = await cardPng(el, format);
-  a.download = `${name}.png`;
-  a.click();
+  download(await cardPng(el, format), name);
 }

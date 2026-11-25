@@ -13,7 +13,7 @@ import { useGameData, type LoadedData } from '../features/rotation/data';
 import { listProjects, loadProject } from '../features/rotation/persistence';
 import { COMPARE_METRICS, CompareCard, type CompareMetric } from './card/CompareCard';
 import { toast } from '../app/toast';
-import { copyCardImage, saveCardImage } from './card/copyCard';
+import { copyCardImage, DOWNLOADED_INSTEAD, saveCardImage } from './card/copyCard';
 import { ScaledPoster } from './card/PosterCard';
 import './cardpage.css';
 import './comparar.css';
@@ -106,9 +106,11 @@ export default function Comparar() {
     setBusy(true);
     setMsg(null);
     try {
-      if (kind === 'copy') await copyCardImage(el, 'wide');
-      else await saveCardImage(el, 'wide', 'astralys-comparacao');
-      toast(kind === 'copy' ? 'Imagem copiada.' : 'Imagem salva.');
+      if (kind === 'copy') toast((await copyCardImage(el, 'wide', 'astralys-comparacao')) ? 'Imagem copiada.' : DOWNLOADED_INSTEAD);
+      else {
+        await saveCardImage(el, 'wide', 'astralys-comparacao');
+        toast('Imagem salva.');
+      }
     } catch (e) {
       toast(`Não foi possível gerar a imagem: ${e instanceof Error ? e.message : String(e)}`, 'error');
     } finally {

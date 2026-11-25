@@ -179,6 +179,7 @@ export function EnergyView({
               <div className="rc-params">
                 {m.burstCost > 0 && (
                   <SelectField<'sim' | 'nao'>
+                    className="stack"
                     label="Usa o Supremo (Q)?"
                     value={s.useBurst ? 'sim' : 'nao'}
                     onChange={(v) => setSlot(m.name, { useBurst: v === 'sim' })}
@@ -194,6 +195,7 @@ export function EnergyView({
                   onCommit={(v) => setSlot(m.name, { particles: v === info.tableParticles ? undefined : Math.max(0, v) })}
                 />
                 <SelectField<string>
+                  className="stack"
                   label="Quem absorve as partículas do E"
                   value={fun}
                   onChange={(v) => v !== CUSTOM && setSlot(m.name, { onField: funnelReceivers(v, names) })}

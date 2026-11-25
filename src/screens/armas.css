@@ -1,7 +1,8 @@
 /* Tela Armas e constelações. */
 .ar-members { display: flex; flex-wrap: wrap; gap: 8px; }
 .ar-member { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding: 6px 16px 6px 8px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface); color: var(--text-2); text-decoration: none; font-weight: 500; }
-.ar-member[aria-selected="true"] { color: var(--text); border-color: var(--gold); background: color-mix(in srgb, var(--gold) 10%, var(--surface)); }
+.ar-member[aria-selected="true"] { color: var(--text); border-color: var(--gold); background: rgb(39, 40, 57); }
+@supports (color: color-mix(in srgb, red, blue)) { .ar-member[aria-selected="true"] { background: color-mix(in srgb, var(--gold) 10%, var(--surface)); } }
 .ar-grid { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 16px; align-items: start; }
 .ar-filters { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
 .ar-filters .dz-btn[aria-pressed="true"] { border-color: var(--gold); color: var(--gold); }

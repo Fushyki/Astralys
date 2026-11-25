@@ -15,7 +15,14 @@ async function pipe(bytes: Uint8Array, stream: CompressionStream | Decompression
 const toB64 = (b: Uint8Array) => btoa(String.fromCharCode(...b)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 const fromB64 = (s: string) => Uint8Array.from(atob(s.replace(/-/g, '+').replace(/_/g, '/')), (c) => c.charCodeAt(0));
 
+/** Safari anterior ao 16.4 não tem CompressionStream. */
+const requireStreams = () => {
+  if (typeof CompressionStream === 'undefined' || typeof DecompressionStream === 'undefined')
+    throw new Error('Este navegador não gera nem abre links de time. Atualize-o ou use "Exportar" para levar o time num arquivo.');
+};
+
 export async function projectLink(project: RotationProject, origin: string): Promise<string> {
+  requireStreams();
   const zipped = await pipe(new TextEncoder().encode(JSON.stringify(project)), new CompressionStream('gzip'));
   return `${origin}/vault#${KEY}${toB64(zipped)}`;
 }
@@ -24,6 +31,7 @@ export async function projectLink(project: RotationProject, origin: string): Pro
 export async function projectFromLink(text: string): Promise<RotationProject | null> {
   const i = text.indexOf(KEY);
   if (i < 0) return null;
+  requireStreams();
   try {
     const json = new TextDecoder().decode(await pipe(fromB64(text.slice(i + KEY.length).trim()), new DecompressionStream('gzip')));
     return { ...parseProject(JSON.parse(json)), id: newProjectId() };

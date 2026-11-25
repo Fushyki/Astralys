@@ -11,12 +11,16 @@ export interface MenuProps {
   align?: 'left' | 'right';
   /** Itens: use `onPick` para fechar o menu depois de uma ação. */
   children: (close: () => void) => ReactNode;
+  /** Avisa quando abre ou fecha (para subir o contêiner sem depender de `:has()`). */
+  onOpenChange?: (open: boolean) => void;
 }
 
-export function Menu({ label, ariaLabel, className = 'dz-btn', align = 'right', children }: MenuProps) {
+export function Menu({ label, ariaLabel, className = 'dz-btn', align = 'right', children, onOpenChange }: MenuProps) {
   const [open, setOpen] = useState(false);
   const root = useRef<HTMLSpanElement>(null);
   const button = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => onOpenChange?.(open), [open]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!open) return;

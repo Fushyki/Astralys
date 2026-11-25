@@ -109,7 +109,8 @@ describe('golpes gerados vs. aba L_Golpes da planilha', () => {
       const move = candidates.find((m) => m.variant === occurrence);
       expect(move, `variante ${occurrence} não encontrada`).toBeDefined();
 
-      expect(move!.hitType).toBe(TYPE_MAP[typePt as string]);
+      // A planilha marca o Swift Stormflight como Normal; no jogo é Carregado (confirmado pelo Davi).
+      expect(move!.hitType).toBe(label === 'Swift Stormflight DMG' ? 'charged' : TYPE_MAP[typePt as string]);
       expect(move!.hits).toBe(Number(r[65]));
 
       const blocks = { atk: 5, em: 20, hp: 35, def: 50 } as const;

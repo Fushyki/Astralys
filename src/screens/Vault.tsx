@@ -14,7 +14,7 @@ import { useProjectCards } from '../features/rotation/useProjectCards';
 import { Menu } from '../design/Menu';
 import { useSettings } from '../app/settings';
 import { toast } from '../app/toast';
-import { copyCardImage } from './card/copyCard';
+import { copyCardImage, DOWNLOADED_INSTEAD } from './card/copyCard';
 import { POSTER_SIZE, PosterCard, ScaledPoster } from './card/PosterCard';
 import { publishedOf, saveAuthor, savedAuthor } from '../features/community/published';
 import { publishProject, unpublishProject } from '../features/community/publish';
@@ -72,8 +72,7 @@ export default function Vault() {
     const el = document.querySelector<HTMLElement>(`.vt-card[data-id="${id}"] .pc`);
     try {
       if (!el) throw new Error('o card ainda está sendo calculado');
-      await copyCardImage(el, cardFormat);
-      toast(`Card de “${name}” copiado.`);
+      toast((await copyCardImage(el, cardFormat, name)) ? `Card de “${name}” copiado.` : DOWNLOADED_INSTEAD);
     } catch (e) {
       toast(`Não foi possível copiar o card: ${e instanceof Error ? e.message : String(e)}`, 'error');
     }
@@ -168,6 +167,7 @@ export default function Vault() {
 
   const [linkText, setLinkText] = useState('');
   const [newOpen, setNewOpen] = useState(false);
+  const [menuId, setMenuId] = useState<string | null>(null);
   const importLink = (text: string) =>
     void run(async () => {
       const project = await projectFromLink(text);
@@ -185,8 +185,15 @@ export default function Vault() {
   const copyLink = async (id: string) => {
     const full = loadProject(id);
     if (!full) return;
+    let link: string;
     try {
-      await navigator.clipboard.writeText(await projectLink(full, window.location.origin));
+      link = await projectLink(full, window.location.origin);
+    } catch (e) {
+      toast(e instanceof Error ? e.message : 'Não foi possível gerar o link.', 'error');
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(link);
       toast('Link do time copiado. Abra-o em outro computador para importar.');
     } catch {
       toast('Não foi possível copiar o link.', 'error');
@@ -245,7 +252,7 @@ export default function Vault() {
               const model = cards[p.id];
               const lead = p.members[0] ? elementColor(elementOf(p.members[0])) : '#e9c46a';
               return (
-                <li key={p.id} className="vt-card" data-id={p.id} data-name={p.name} style={{ ['--c' as string]: lead }}>
+                <li key={p.id} className={menuId === p.id ? 'vt-card menu-open' : 'vt-card'} data-id={p.id} data-name={p.name} style={{ ['--c' as string]: lead }}>
                   <Link className="vt-poster" to={`/projeto/${p.id}`} aria-label={`Abrir ${p.name}`}>
                     {model && model !== 'error' ? (
                       <ScaledPoster format={cardFormat}><PosterCard model={model} format={cardFormat} /></ScaledPoster>
@@ -261,7 +268,7 @@ export default function Vault() {
                   <div className="vt-over">
                     {p.shared && <span className="vt-tag" title="Tem link público">compartilhado</span>}
                     <button type="button" className="dz-iconbtn vt-fav" aria-pressed={p.favorite} aria-label={p.favorite ? `Tirar ${p.name} dos favoritos` : `Favoritar ${p.name}`} onClick={() => toggleFavorite(p.id)}>★</button>
-                    <Menu label="⋯" ariaLabel={`Opções de ${p.name}`} className="dz-iconbtn">
+                    <Menu label="⋯" ariaLabel={`Opções de ${p.name}`} className="dz-iconbtn" onOpenChange={(open) => setMenuId((cur) => (open ? p.id : cur === p.id ? null : cur))}>
                       {(close) =>
                         confirmDelete === p.id ? (
                           <>

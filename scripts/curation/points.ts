@@ -13,6 +13,10 @@ export interface PointMoveCur {
   unit: string;
   max: number;
   maxBy?: { constellation: number; max: number };
+  /** Qual porcentagem da linha vale (ex.: Raiden, "7% Initial/1.31% ATK DMG Per Stack"). */
+  part?: number;
+  /** Linha com o bônus extra no teto de pontos. */
+  fullKey?: string;
   /** O valor por ponto vale por acerto: multiplica pelo número de acertos do golpe. */
   times?: number;
   /** Duração (s) da janela em que o golpe usa os pontos do Supremo lançado antes (Cadinho da Vida e da Morte). */
@@ -20,6 +24,13 @@ export interface PointMoveCur {
 }
 
 export const POINT_MOVES: Record<string, PointMoveCur[]> = {
+  Lyney: [{ talent: 'skill', labels: ['Skill DMG'], kitTalent: 'skill', key: 'Skill DMG Bonus', unit: 'Prop Surplus', max: 5 }],
+  'Shikanoin Heizou': [{ talent: 'skill', labels: ['Skill DMG'], kitTalent: 'skill', key: 'Declension DMG Bonus', fullKey: 'Conviction DMG Bonus', unit: 'Declension', max: 4 }],
+  'Raiden Shogun': [
+    { talent: 'burst', labels: ['Musou no Hitotachi Base DMG'], kitTalent: 'burst', key: 'Resolve Bonus', unit: 'Resolve', max: 60, times: 1 },
+    { talent: 'burst', labels: ['1-Hit DMG','2-Hit DMG','3-Hit DMG','5-Hit DMG','Plunge DMG','Low/High Plunge DMG'], kitTalent: 'burst', key: 'Resolve Bonus', part: 1, unit: 'Resolve', max: 60, times: 1 },
+    { talent: 'burst', labels: ['4-Hit DMG','Charged Attack DMG'], kitTalent: 'burst', key: 'Resolve Bonus', part: 1, unit: 'Resolve', max: 60, times: 2 },
+  ],
   Skirk: [
     { talent: 'burst', labels: ['Slash DMG'], kitTalent: 'burst', key: "Serpent's Subtlety Bonus", unit: "Serpent's Subtlety acima de 50", max: 12, maxBy: { constellation: 2, max: 22 }, times: 5 },
     { talent: 'burst', labels: ['Final Slash DMG'], kitTalent: 'burst', key: "Serpent's Subtlety Bonus", unit: "Serpent's Subtlety acima de 50", max: 12, maxBy: { constellation: 2, max: 22 } },

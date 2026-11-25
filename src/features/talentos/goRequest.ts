@@ -19,10 +19,15 @@ export function gearStats(resolved: ResolvedProject, rolls: Rolls[], i: number):
   const m = resolved.team.members[i];
   const off = new Set(resolved.team.disabled);
   const own = staticSources(m, i).filter((s) => !off.has(s.id) && s.kind !== 'ascension' && (s.kind !== 'character' || /cbuff-(arma|set)/.test(s.id)));
-  const f = finalStats(m, foldSources(own), rolls[i], zeroBlock());
+  const block = foldSources(own);
+  const f = finalStats(m, block, rolls[i], zeroBlock());
+  // O ATK% vai separado do fixo: a ficha o aplica também sobre ATK base ganho depois (Mavuika C2, Bennett).
+  const base = m.character.baseAtk + m.weapon.baseAtk;
+  const atkPct = (finalStats(m, block, rolls[i], { ...zeroBlock(), atkBaseFlat: 1000 }).atk - f.atk) / 1000 - 1;
   return {
     weaponAtk: m.weapon.baseAtk,
-    atk: f.atk - m.character.baseAtk - m.weapon.baseAtk,
+    atk: f.atk - base * (1 + atkPct),
+    atk_: atkPct,
     hp: f.hp - m.character.baseHp,
     def: f.def - m.character.baseDef,
     eleMas: f.em,

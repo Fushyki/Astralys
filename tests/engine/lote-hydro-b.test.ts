@@ -77,9 +77,9 @@ describe('Nilou e Sigewinne: RES Hydro só na janela', () => {
 describe('Neuvillette', () => {
   const hit: Act = { talent: 'normal', label: 'Charged Attack: Equitable Judgment' };
   it('A1: 3 stacks multiplicam o dano base em +60%; 1 stack, +10%', () => {
-    const t = ['label:Neuvillette A1'];
-    expect(withStacks('Neuvillette', 0, { a1: 3 }, { ...hit, tags: t }).out.stats.baseMultByType.charged).toBeCloseTo(0.6, 9);
-    expect(withStacks('Neuvillette', 0, { a1: 1 }, { ...hit, tags: t }).out.stats.baseMultByType.charged).toBeCloseTo(0.1, 5);
+    const base = (a1: number) => withStacks('Neuvillette', 0, { a1 }, hit).out.breakdown.base;
+    expect(base(3) / base(0)).toBeCloseTo(1.6, 5);
+    expect(base(1) / base(0)).toBeCloseTo(1.1, 5);
   });
   it('A4: +30% de DMG Hydro com HP alto, menos com HP baixo', () => {
     const hi = withStacks('Neuvillette', 0, { a4: 50 }, hit).out.stats.dmgBonus;

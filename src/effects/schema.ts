@@ -138,6 +138,8 @@ export const PointMoveSchema = z.object({
   /** Fração do ATK por ponto, nos níveis 1 a 15 do talento. */
   perPoint: z.array(z.number()).length(15),
   max: z.number().int().positive(),
+  /** Bônus extra (fração do ATK, níveis 1 a 15) quando os pontos chegam ao teto (ex.: Convicção do Heizou). */
+  full: z.array(z.number()).length(15).optional(),
   /** Teto maior a partir de uma constelação (ex.: Skirk C2, de 12 para 22). */
   maxBy: z.object({ constellation: z.number().int().min(1).max(6), max: z.number().int().positive() }).optional(),
   unit: z.string().min(1),

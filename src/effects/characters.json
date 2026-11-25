@@ -1058,6 +1058,642 @@
     "fonte_info": "planilha Mavuika_Iansan_Combo2, aba \"Personagens (efeitos)\". Supremo: 139% do ATK base (nv 13 + C1, sua planilha)."
   },
   {
+    "character": "Lyney",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "c2",
+        "label": "Lyney C2",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0.6,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "stacks": {
+          "max": 3
+        },
+        "note": "Assume 3 stacks de +20% de Dano Crítico: ligue nas janelas."
+      },
+      {
+        "id": "a4",
+        "label": "Lyney A4",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0.6,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "note": "Assume o inimigo sob Pyro: +60% de DMG. Os +20% por outro Pyro do time estão em \"Lyney A4 (outros Pyro)\"."
+      },
+      {
+        "id": "a4t",
+        "label": "Lyney A4 (outros Pyro)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 1,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "team": {
+          "scale": {
+            "of": [
+              "Pyro"
+            ],
+            "table": [
+              0,
+              0.2,
+              0.4,
+              0.4
+            ]
+          }
+        },
+        "flat": [],
+        "note": "+20% de DMG por outro membro Pyro do time (o time conta o Lyney: 2 Pyro = +20%, 3 ou 4 = +40%, teto de 100% com os 60% do A4). Assume o inimigo sob Pyro."
+      },
+      {
+        "id": "c4",
+        "label": "Lyney C4",
+        "minConstellation": 4,
+        "scope": "self",
+        "timed": true,
+        "resShred": {
+          "value": 0.2,
+          "elements": [
+            "Pyro"
+          ]
+        },
+        "flat": [],
+        "note": "RES Pyro do inimigo -20% por 6 s depois de um Carregado Pyro dele acertar: janela de tempo, o usuário liga e decide a duração. Antes estava sempre ligado."
+      },
+      {
+        "id": "a1",
+        "label": "Lyney A1 (chapéu)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "flat": [
+          {
+            "name": "Pyrotechnic Strike do chapéu (A1)",
+            "sourceStat": "ATK",
+            "perPoint": 0.8,
+            "hitTypes": [
+              "charged"
+            ],
+            "labels": [
+              "Pyrotechnic Strike DMG"
+            ]
+          }
+        ],
+        "note": "Soma 80% do ATK ao dano base do Pyrotechnic Strike (o golpe do chapéu), assumindo que o Prop Arrow gastou HP. A explosão do chapéu feita pela habilidade NÃO entra (o texto não diz se recebe)."
+      }
+    ],
+    "notes": [
+      {
+        "src": "p1",
+        "kind": "partial",
+        "note": "Entra o +80% do ATK no Pyrotechnic Strike (assumindo gasto de HP). A explosão do chapéu feita pela habilidade fica de fora e a Energia (3) é só informativa."
+      },
+      {
+        "src": "const1",
+        "kind": "utility",
+        "note": "Só chapéus e stacks."
+      }
+    ],
+    "infos": [
+      {
+        "src": "p1",
+        "kind": "energia",
+        "label": "Energia do chapéu",
+        "text": "3 de Energia quando o chapéu (com gasto de HP) acerta um inimigo"
+      }
+    ],
+    "procs": [
+      {
+        "id": "c6",
+        "label": "Lyney C6: Pyrotechnic Strike: Reprised",
+        "scale": {},
+        "hitType": "charged",
+        "minConstellation": 6,
+        "src": "const6",
+        "of": {
+          "talent": "normal",
+          "label": "Pyrotechnic Strike DMG",
+          "variant": 0,
+          "fraction": 0.8
+        },
+        "note": "80% do Pyrotechnic Strike a cada Prop Arrow (conta como Carregado)."
+      }
+    ],
+    "factions": [],
+    "specialMoves": [],
+    "pointMoves": [
+      {
+        "talent": "skill",
+        "labels": [
+          "Skill DMG"
+        ],
+        "levelTalent": "skill",
+        "perPoint": [
+          0.532,
+          0.5719,
+          0.6118,
+          0.665,
+          0.7049,
+          0.7448,
+          0.798,
+          0.8512,
+          0.9044,
+          0.9576,
+          1.0108,
+          1.064,
+          1.1305,
+          1.197,
+          1.2635
+        ],
+        "max": 5,
+        "unit": "Prop Surplus"
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Shikanoin Heizou",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "a4",
+        "label": "Heizou A4",
+        "minConstellation": 0,
+        "scope": "others",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 80,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "note": "+80 de Maestria dos demais por 10 s depois do Golpe: ligue nas janelas."
+      },
+      {
+        "id": "c6",
+        "label": "Heizou C6 (Taxa Crítica)",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {
+            "skill": 0.16
+          },
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "stacks": {
+          "max": 4,
+          "unit": "Declension",
+          "default": 4
+        },
+        "note": "+4% de Taxa Crítica por Declension (até 4 = 16%) no Heartstopper Strike (o Skill DMG dele): ligue a janela só no golpe e escolha os stacks de 0 a 4. O máximo de 4 stacks vem do multiplicador do texto antigo; confirmar."
+      },
+      {
+        "id": "c6cd",
+        "label": "Heizou C6 (Convicção)",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {
+            "skill": 0.32
+          },
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "note": "+32% de Dano Crítico no Heartstopper Strike quando ele tem Convicção. O texto não diz como se ganha a Convicção: ligue a janela só quando tiver. Antes estava junto do bônus de Taxa e sempre ligado."
+      }
+    ],
+    "notes": [
+      {
+        "src": "p1",
+        "kind": "utility",
+        "note": "Só stacks de Declension."
+      },
+      {
+        "src": "const1",
+        "kind": "utility",
+        "note": "Só velocidade de ataque."
+      },
+      {
+        "src": "const2",
+        "kind": "utility",
+        "note": "Só puxão e duração."
+      },
+      {
+        "src": "const4",
+        "kind": "utility",
+        "note": "Só energia."
+      },
+      {
+        "src": "const6",
+        "kind": "partial",
+        "note": "Entram +4% de Taxa Crítica por Declension e +32% de Dano Crítico com Convicção (duas janelas) no Heartstopper Strike."
+      }
+    ],
+    "infos": [
+      {
+        "src": "const4",
+        "kind": "energia",
+        "label": "Energia que ele recupera",
+        "text": "9 de Energia na 1ª explosão do Windmuster Iris de cada Windmuster Kick e +1.5 em cada explosão seguinte, no máximo 13.5 por uso"
+      }
+    ],
+    "procs": [],
+    "factions": [],
+    "specialMoves": [],
+    "pointMoves": [
+      {
+        "talent": "skill",
+        "labels": [
+          "Skill DMG"
+        ],
+        "levelTalent": "skill",
+        "perPoint": [
+          0.5688,
+          0.6115,
+          0.6541,
+          0.711,
+          0.7537,
+          0.7963,
+          0.8532,
+          0.9101,
+          0.967,
+          1.0238,
+          1.0807,
+          1.1376,
+          1.2087,
+          1.2798,
+          1.3509
+        ],
+        "max": 4,
+        "full": [
+          1.1376,
+          1.2229,
+          1.3082,
+          1.422,
+          1.5073,
+          1.5926,
+          1.7064,
+          1.8202,
+          1.9339,
+          2.0477,
+          2.1614,
+          2.2752,
+          2.4174,
+          2.5596,
+          2.7018
+        ],
+        "unit": "Declension"
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
+    "character": "Raiden Shogun",
+    "atkPct": 0,
+    "dmgPct": 0,
+    "critRate": 0,
+    "critDmg": 0,
+    "em": 0,
+    "appliesToSelf": false,
+    "buffs": [
+      {
+        "id": "c4",
+        "label": "Raiden C4",
+        "minConstellation": 4,
+        "scope": "others",
+        "timed": true,
+        "stats": {
+          "atkPct": 0.3,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "note": "ATK da equipe (menos a Raiden) por 10 s depois do Supremo: ligue nas janelas."
+      },
+      {
+        "id": "a4",
+        "label": "Raiden A4",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "forElements": [
+          "Electro"
+        ],
+        "convert": {
+          "from": "er",
+          "source": "self",
+          "perPoint": 0.4,
+          "threshold": 1,
+          "to": [
+            "dmgPct"
+          ]
+        },
+        "flat": [],
+        "note": "+0,4% de DMG Electro por 1% de Recarga acima de 100%, sempre. A energia extra do Musou Isshin não entra."
+      },
+      {
+        "id": "c2",
+        "label": "Raiden C2",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0.6,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "note": "Ignora 60% da DEF do inimigo durante o Musou Isshin: ligue só na janela do Supremo (vale para todos os golpes dela dentro da janela)."
+      }
+    ],
+    "notes": [
+      {
+        "src": "p1",
+        "kind": "utility",
+        "note": "Só stacks de Resolve."
+      },
+      {
+        "src": "const1",
+        "kind": "utility",
+        "note": "Só stacks de Resolve."
+      },
+      {
+        "src": "const6",
+        "kind": "utility",
+        "note": "Só recarga do Supremo dos aliados."
+      }
+    ],
+    "infos": [
+      {
+        "src": "p2",
+        "kind": "energia",
+        "label": "Energia do Musou Isshin",
+        "text": "+0.6% de Energia restaurada pelo Musou Isshin para cada 1% de Recarga acima de 100%"
+      },
+      {
+        "src": "const6",
+        "kind": "recarga",
+        "label": "Recarga do Supremo dos aliados",
+        "text": "cai 1 s por acerto do Supremo dela no Musou Isshin; no máximo uma vez a cada 1 s"
+      }
+    ],
+    "procs": [],
+    "factions": [],
+    "specialMoves": [],
+    "pointMoves": [
+      {
+        "talent": "burst",
+        "labels": [
+          "Musou no Hitotachi Base DMG"
+        ],
+        "levelTalent": "burst",
+        "perPoint": [
+          0.0389,
+          0.0418,
+          0.0447,
+          0.0486,
+          0.0515,
+          0.0544,
+          0.0583,
+          0.0622,
+          0.0661,
+          0.07,
+          0.0739,
+          0.0778,
+          0.0826,
+          0.0875,
+          0.0923
+        ],
+        "max": 60,
+        "unit": "Resolve"
+      },
+      {
+        "talent": "burst",
+        "labels": [
+          "1-Hit DMG",
+          "2-Hit DMG",
+          "3-Hit DMG",
+          "5-Hit DMG",
+          "Plunge DMG",
+          "Low/High Plunge DMG"
+        ],
+        "levelTalent": "burst",
+        "perPoint": [
+          0.0073,
+          0.0078,
+          0.0084,
+          0.0091,
+          0.0096,
+          0.0102,
+          0.0109,
+          0.0116,
+          0.0123,
+          0.0131,
+          0.0138,
+          0.0145,
+          0.0154,
+          0.0163,
+          0.0172
+        ],
+        "max": 60,
+        "unit": "Resolve"
+      },
+      {
+        "talent": "burst",
+        "labels": [
+          "4-Hit DMG",
+          "Charged Attack DMG"
+        ],
+        "levelTalent": "burst",
+        "perPoint": [
+          0.0146,
+          0.0156,
+          0.0168,
+          0.0182,
+          0.0192,
+          0.0204,
+          0.0218,
+          0.0232,
+          0.0246,
+          0.0262,
+          0.0276,
+          0.029,
+          0.0308,
+          0.0326,
+          0.0344
+        ],
+        "max": 60,
+        "unit": "Resolve"
+      }
+    ],
+    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
+  },
+  {
     "character": "Skirk",
     "atkPct": 0,
     "dmgPct": 0,
@@ -1397,136 +2033,6 @@
         "unit": "Serpent's Subtlety acima de 50"
       }
     ],
-    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
-  },
-  {
-    "character": "Raiden Shogun",
-    "atkPct": 0,
-    "dmgPct": 0,
-    "critRate": 0,
-    "critDmg": 0,
-    "em": 0,
-    "appliesToSelf": false,
-    "buffs": [
-      {
-        "id": "c4",
-        "label": "Raiden C4",
-        "minConstellation": 4,
-        "scope": "others",
-        "timed": true,
-        "stats": {
-          "atkPct": 0.3,
-          "dmgPct": 0,
-          "critRate": 0,
-          "critDmg": 0,
-          "em": 0,
-          "er": 0,
-          "hpPct": 0,
-          "defPct": 0,
-          "dmgPctByType": {},
-          "critRateByType": {},
-          "critDmgByType": {},
-          "baseMultByType": {},
-          "defIgnore": 0,
-          "atkFlat": 0,
-          "atkBaseFlat": 0,
-          "hpFlat": 0,
-          "defFlat": 0,
-          "physDmgPct": 0,
-          "physCritDmg": 0,
-          "reactionBonus": {}
-        },
-        "flat": [],
-        "note": "ATK da equipe (menos a Raiden) por 10 s depois do Supremo: ligue nas janelas."
-      },
-      {
-        "id": "a4",
-        "label": "Raiden A4",
-        "minConstellation": 0,
-        "scope": "self",
-        "timed": false,
-        "forElements": [
-          "Electro"
-        ],
-        "convert": {
-          "from": "er",
-          "source": "self",
-          "perPoint": 0.4,
-          "threshold": 1,
-          "to": [
-            "dmgPct"
-          ]
-        },
-        "flat": [],
-        "note": "+0,4% de DMG Electro por 1% de Recarga acima de 100%, sempre. A energia extra do Musou Isshin não entra."
-      },
-      {
-        "id": "c2",
-        "label": "Raiden C2",
-        "minConstellation": 2,
-        "scope": "self",
-        "timed": true,
-        "stats": {
-          "atkPct": 0,
-          "dmgPct": 0,
-          "critRate": 0,
-          "critDmg": 0,
-          "em": 0,
-          "er": 0,
-          "hpPct": 0,
-          "defPct": 0,
-          "dmgPctByType": {},
-          "critRateByType": {},
-          "critDmgByType": {},
-          "baseMultByType": {},
-          "defIgnore": 0.6,
-          "atkFlat": 0,
-          "atkBaseFlat": 0,
-          "hpFlat": 0,
-          "defFlat": 0,
-          "physDmgPct": 0,
-          "physCritDmg": 0,
-          "reactionBonus": {}
-        },
-        "flat": [],
-        "note": "Ignora 60% da DEF do inimigo durante o Musou Isshin: ligue só na janela do Supremo (vale para todos os golpes dela dentro da janela)."
-      }
-    ],
-    "notes": [
-      {
-        "src": "p1",
-        "kind": "utility",
-        "note": "Só stacks de Resolve."
-      },
-      {
-        "src": "const1",
-        "kind": "utility",
-        "note": "Só stacks de Resolve."
-      },
-      {
-        "src": "const6",
-        "kind": "utility",
-        "note": "Só recarga do Supremo dos aliados."
-      }
-    ],
-    "infos": [
-      {
-        "src": "p2",
-        "kind": "energia",
-        "label": "Energia do Musou Isshin",
-        "text": "+0.6% de Energia restaurada pelo Musou Isshin para cada 1% de Recarga acima de 100%"
-      },
-      {
-        "src": "const6",
-        "kind": "recarga",
-        "label": "Recarga do Supremo dos aliados",
-        "text": "cai 1 s por acerto do Supremo dela no Musou Isshin; no máximo uma vez a cada 1 s"
-      }
-    ],
-    "procs": [],
-    "factions": [],
-    "specialMoves": [],
-    "pointMoves": [],
     "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
   },
   {
@@ -3844,6 +4350,57 @@
         "note": "+25% de DEF da equipe por 12 s depois da habilidade: ligue nas janelas. Só importa para quem escala com DEF."
       },
       {
+        "id": "skill-def",
+        "label": "Gorou: Estandarte (DEF)",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 1,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "level": {
+          "talent": "skill",
+          "table": [
+            206,
+            222,
+            237,
+            258,
+            273,
+            289,
+            309,
+            330,
+            350,
+            371,
+            392,
+            412,
+            438,
+            464,
+            490
+          ]
+        },
+        "flat": [],
+        "note": "DEF fixa do Estandarte pelo nível da habilidade, para quem está no campo dele: ligue nas janelas."
+      },
+      {
         "id": "skill",
         "label": "Gorou: Estandarte (Geo)",
         "minConstellation": 0,
@@ -4723,34 +5280,16 @@
     "buffs": [
       {
         "id": "a1",
+        "moveMult": {
+          "labels": [
+            "Charged Attack: Equitable Judgment"
+          ],
+          "extra": 0.6
+        },
         "label": "Neuvillette A1",
         "minConstellation": 0,
         "scope": "self",
-        "timed": true,
-        "stats": {
-          "atkPct": 0,
-          "dmgPct": 0,
-          "critRate": 0,
-          "critDmg": 0,
-          "em": 0,
-          "er": 0,
-          "hpPct": 0,
-          "defPct": 0,
-          "dmgPctByType": {},
-          "critRateByType": {},
-          "critDmgByType": {},
-          "baseMultByType": {
-            "charged": 0.6
-          },
-          "defIgnore": 0,
-          "atkFlat": 0,
-          "atkBaseFlat": 0,
-          "hpFlat": 0,
-          "defFlat": 0,
-          "physDmgPct": 0,
-          "physCritDmg": 0,
-          "reactionBonus": {}
-        },
+        "timed": false,
         "flat": [],
         "stacks": {
           "max": 3,
@@ -5164,203 +5703,6 @@
           "fraction": 1
         },
         "note": "100% do dano base do Carregado (Rebuke: Vaulting Fist), em Cryo, conta como Carregado. Insira junto com o Rebuke. A versão Radiance (20%, Stellar-Conduct) não entra."
-      }
-    ],
-    "factions": [],
-    "specialMoves": [],
-    "pointMoves": [],
-    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
-  },
-  {
-    "character": "Lyney",
-    "atkPct": 0,
-    "dmgPct": 0,
-    "critRate": 0,
-    "critDmg": 0,
-    "em": 0,
-    "appliesToSelf": false,
-    "buffs": [
-      {
-        "id": "c2",
-        "label": "Lyney C2",
-        "minConstellation": 2,
-        "scope": "self",
-        "timed": true,
-        "stats": {
-          "atkPct": 0,
-          "dmgPct": 0,
-          "critRate": 0,
-          "critDmg": 0.6,
-          "em": 0,
-          "er": 0,
-          "hpPct": 0,
-          "defPct": 0,
-          "dmgPctByType": {},
-          "critRateByType": {},
-          "critDmgByType": {},
-          "baseMultByType": {},
-          "defIgnore": 0,
-          "atkFlat": 0,
-          "atkBaseFlat": 0,
-          "hpFlat": 0,
-          "defFlat": 0,
-          "physDmgPct": 0,
-          "physCritDmg": 0,
-          "reactionBonus": {}
-        },
-        "flat": [],
-        "stacks": {
-          "max": 3
-        },
-        "note": "Assume 3 stacks de +20% de Dano Crítico: ligue nas janelas."
-      },
-      {
-        "id": "a4",
-        "label": "Lyney A4",
-        "minConstellation": 0,
-        "scope": "self",
-        "timed": false,
-        "stats": {
-          "atkPct": 0,
-          "dmgPct": 0.6,
-          "critRate": 0,
-          "critDmg": 0,
-          "em": 0,
-          "er": 0,
-          "hpPct": 0,
-          "defPct": 0,
-          "dmgPctByType": {},
-          "critRateByType": {},
-          "critDmgByType": {},
-          "baseMultByType": {},
-          "defIgnore": 0,
-          "atkFlat": 0,
-          "atkBaseFlat": 0,
-          "hpFlat": 0,
-          "defFlat": 0,
-          "physDmgPct": 0,
-          "physCritDmg": 0,
-          "reactionBonus": {}
-        },
-        "flat": [],
-        "note": "Assume o inimigo sob Pyro: +60% de DMG. Os +20% por outro Pyro do time estão em \"Lyney A4 (outros Pyro)\"."
-      },
-      {
-        "id": "a4t",
-        "label": "Lyney A4 (outros Pyro)",
-        "minConstellation": 0,
-        "scope": "self",
-        "timed": false,
-        "stats": {
-          "atkPct": 0,
-          "dmgPct": 1,
-          "critRate": 0,
-          "critDmg": 0,
-          "em": 0,
-          "er": 0,
-          "hpPct": 0,
-          "defPct": 0,
-          "dmgPctByType": {},
-          "critRateByType": {},
-          "critDmgByType": {},
-          "baseMultByType": {},
-          "defIgnore": 0,
-          "atkFlat": 0,
-          "atkBaseFlat": 0,
-          "hpFlat": 0,
-          "defFlat": 0,
-          "physDmgPct": 0,
-          "physCritDmg": 0,
-          "reactionBonus": {}
-        },
-        "team": {
-          "scale": {
-            "of": [
-              "Pyro"
-            ],
-            "table": [
-              0,
-              0.2,
-              0.4,
-              0.4
-            ]
-          }
-        },
-        "flat": [],
-        "note": "+20% de DMG por outro membro Pyro do time (o time conta o Lyney: 2 Pyro = +20%, 3 ou 4 = +40%, teto de 100% com os 60% do A4). Assume o inimigo sob Pyro."
-      },
-      {
-        "id": "c4",
-        "label": "Lyney C4",
-        "minConstellation": 4,
-        "scope": "self",
-        "timed": true,
-        "resShred": {
-          "value": 0.2,
-          "elements": [
-            "Pyro"
-          ]
-        },
-        "flat": [],
-        "note": "RES Pyro do inimigo -20% por 6 s depois de um Carregado Pyro dele acertar: janela de tempo, o usuário liga e decide a duração. Antes estava sempre ligado."
-      },
-      {
-        "id": "a1",
-        "label": "Lyney A1 (chapéu)",
-        "minConstellation": 0,
-        "scope": "self",
-        "timed": false,
-        "flat": [
-          {
-            "name": "Pyrotechnic Strike do chapéu (A1)",
-            "sourceStat": "ATK",
-            "perPoint": 0.8,
-            "hitTypes": [
-              "charged"
-            ],
-            "labels": [
-              "Pyrotechnic Strike DMG"
-            ]
-          }
-        ],
-        "note": "Soma 80% do ATK ao dano base do Pyrotechnic Strike (o golpe do chapéu), assumindo que o Prop Arrow gastou HP. A explosão do chapéu feita pela habilidade NÃO entra (o texto não diz se recebe)."
-      }
-    ],
-    "notes": [
-      {
-        "src": "p1",
-        "kind": "partial",
-        "note": "Entra o +80% do ATK no Pyrotechnic Strike (assumindo gasto de HP). A explosão do chapéu feita pela habilidade fica de fora e a Energia (3) é só informativa."
-      },
-      {
-        "src": "const1",
-        "kind": "utility",
-        "note": "Só chapéus e stacks."
-      }
-    ],
-    "infos": [
-      {
-        "src": "p1",
-        "kind": "energia",
-        "label": "Energia do chapéu",
-        "text": "3 de Energia quando o chapéu (com gasto de HP) acerta um inimigo"
-      }
-    ],
-    "procs": [
-      {
-        "id": "c6",
-        "label": "Lyney C6: Pyrotechnic Strike: Reprised",
-        "scale": {},
-        "hitType": "charged",
-        "minConstellation": 6,
-        "src": "const6",
-        "of": {
-          "talent": "normal",
-          "label": "Pyrotechnic Strike DMG",
-          "variant": 0,
-          "fraction": 0.8
-        },
-        "note": "80% do Pyrotechnic Strike a cada Prop Arrow (conta como Carregado)."
       }
     ],
     "factions": [],
@@ -8950,6 +9292,48 @@
     "appliesToSelf": false,
     "buffs": [
       {
+        "id": "skill",
+        "moveMult": {
+          "labels": [
+            "1-Hit DMG",
+            "2-Hit DMG",
+            "3-Hit DMG",
+            "4-Hit DMG",
+            "5-Hit DMG"
+          ],
+          "extra": 1,
+          "talents": [
+            "normal"
+          ]
+        },
+        "label": "Yoimiya: Niwabi (Normal)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "level": {
+          "talent": "skill",
+          "table": [
+            0.3791,
+            0.4018,
+            0.4245,
+            0.454,
+            0.4767,
+            0.4994,
+            0.5289,
+            0.5584,
+            0.5879,
+            0.6174,
+            0.647,
+            0.6765,
+            0.706,
+            0.7355,
+            0.765
+          ]
+        },
+        "flat": [],
+        "note": "No Niwabi Fire-Dance o Normal vira Blazing Arrow e causa a porcentagem do dano original do nível da habilidade."
+      },
+      {
         "id": "a1",
         "label": "Yoimiya A1",
         "minConstellation": 0,
@@ -9186,6 +9570,47 @@
         },
         "flat": [],
         "note": "+40% de DMG Hydro por 4 s quando Normal/Carregado curam alguém com 80% de HP ou mais: ligue nas janelas."
+      },
+      {
+        "id": "burst",
+        "label": "Kokomi: Vestes (Água-viva)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "level": {
+          "talent": "burst",
+          "table": [
+            0.071,
+            0.0763,
+            0.0816,
+            0.0887,
+            0.094,
+            0.0993,
+            0.1064,
+            0.1135,
+            0.1206,
+            0.1277,
+            0.1348,
+            0.1419,
+            0.1508,
+            0.1597,
+            0.1685
+          ]
+        },
+        "flat": [
+          {
+            "name": "Água-viva por HP",
+            "sourceStat": "HP",
+            "perPoint": 1,
+            "hitTypes": [
+              "skill"
+            ],
+            "labels": [
+              "Ripple DMG"
+            ]
+          }
+        ],
+        "note": "Durante o Ceremonial Garment a Água-viva soma uma parte do HP máximo (nível do Supremo). Desligue para golpes fora do estado."
       },
       {
         "id": "p4",
@@ -9561,159 +9986,6 @@
         "kind": "recarga",
         "label": "Recarga e energia do Supremo",
         "text": "cada membro Geo reduz a recarga do Supremo em 1.5 s (até 4,5 s) e dá 6 de Energia ao Itto (até 18)"
-      }
-    ],
-    "procs": [],
-    "factions": [],
-    "specialMoves": [],
-    "pointMoves": [],
-    "fonte_info": "Lunaris 7.1.53 (passivas e constelações); curadoria em scripts/curation/characters.ts."
-  },
-  {
-    "character": "Shikanoin Heizou",
-    "atkPct": 0,
-    "dmgPct": 0,
-    "critRate": 0,
-    "critDmg": 0,
-    "em": 0,
-    "appliesToSelf": false,
-    "buffs": [
-      {
-        "id": "a4",
-        "label": "Heizou A4",
-        "minConstellation": 0,
-        "scope": "others",
-        "timed": true,
-        "stats": {
-          "atkPct": 0,
-          "dmgPct": 0,
-          "critRate": 0,
-          "critDmg": 0,
-          "em": 80,
-          "er": 0,
-          "hpPct": 0,
-          "defPct": 0,
-          "dmgPctByType": {},
-          "critRateByType": {},
-          "critDmgByType": {},
-          "baseMultByType": {},
-          "defIgnore": 0,
-          "atkFlat": 0,
-          "atkBaseFlat": 0,
-          "hpFlat": 0,
-          "defFlat": 0,
-          "physDmgPct": 0,
-          "physCritDmg": 0,
-          "reactionBonus": {}
-        },
-        "flat": [],
-        "note": "+80 de Maestria dos demais por 10 s depois do Golpe: ligue nas janelas."
-      },
-      {
-        "id": "c6",
-        "label": "Heizou C6 (Taxa Crítica)",
-        "minConstellation": 6,
-        "scope": "self",
-        "timed": true,
-        "stats": {
-          "atkPct": 0,
-          "dmgPct": 0,
-          "critRate": 0,
-          "critDmg": 0,
-          "em": 0,
-          "er": 0,
-          "hpPct": 0,
-          "defPct": 0,
-          "dmgPctByType": {},
-          "critRateByType": {
-            "skill": 0.16
-          },
-          "critDmgByType": {},
-          "baseMultByType": {},
-          "defIgnore": 0,
-          "atkFlat": 0,
-          "atkBaseFlat": 0,
-          "hpFlat": 0,
-          "defFlat": 0,
-          "physDmgPct": 0,
-          "physCritDmg": 0,
-          "reactionBonus": {}
-        },
-        "flat": [],
-        "stacks": {
-          "max": 4,
-          "unit": "Declension",
-          "default": 4
-        },
-        "note": "+4% de Taxa Crítica por Declension (até 4 = 16%) no Heartstopper Strike (o Skill DMG dele): ligue a janela só no golpe e escolha os stacks de 0 a 4. O máximo de 4 stacks vem do multiplicador do texto antigo; confirmar."
-      },
-      {
-        "id": "c6cd",
-        "label": "Heizou C6 (Convicção)",
-        "minConstellation": 6,
-        "scope": "self",
-        "timed": true,
-        "stats": {
-          "atkPct": 0,
-          "dmgPct": 0,
-          "critRate": 0,
-          "critDmg": 0,
-          "em": 0,
-          "er": 0,
-          "hpPct": 0,
-          "defPct": 0,
-          "dmgPctByType": {},
-          "critRateByType": {},
-          "critDmgByType": {
-            "skill": 0.32
-          },
-          "baseMultByType": {},
-          "defIgnore": 0,
-          "atkFlat": 0,
-          "atkBaseFlat": 0,
-          "hpFlat": 0,
-          "defFlat": 0,
-          "physDmgPct": 0,
-          "physCritDmg": 0,
-          "reactionBonus": {}
-        },
-        "flat": [],
-        "note": "+32% de Dano Crítico no Heartstopper Strike quando ele tem Convicção. O texto não diz como se ganha a Convicção: ligue a janela só quando tiver. Antes estava junto do bônus de Taxa e sempre ligado."
-      }
-    ],
-    "notes": [
-      {
-        "src": "p1",
-        "kind": "utility",
-        "note": "Só stacks de Declension."
-      },
-      {
-        "src": "const1",
-        "kind": "utility",
-        "note": "Só velocidade de ataque."
-      },
-      {
-        "src": "const2",
-        "kind": "utility",
-        "note": "Só puxão e duração."
-      },
-      {
-        "src": "const4",
-        "kind": "utility",
-        "note": "Só energia."
-      },
-      {
-        "src": "const6",
-        "kind": "partial",
-        "note": "Entram +4% de Taxa Crítica por Declension e +32% de Dano Crítico com Convicção (duas janelas) no Heartstopper Strike."
-      }
-    ],
-    "infos": [
-      {
-        "src": "const4",
-        "kind": "energia",
-        "label": "Energia que ele recupera",
-        "text": "9 de Energia na 1ª explosão do Windmuster Iris de cada Windmuster Kick e +1.5 em cada explosão seguinte, no máximo 13.5 por uso"
       }
     ],
     "procs": [],
@@ -11001,6 +11273,84 @@
     "appliesToSelf": false,
     "buffs": [
       {
+        "id": "skill",
+        "moveMult": {
+          "labels": [
+            "1-Hit DMG",
+            "2-Hit DMG",
+            "3-Hit DMG"
+          ],
+          "extra": 1,
+          "talents": [
+            "normal"
+          ]
+        },
+        "label": "Wanderer: Windfavored (Normal)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "level": {
+          "talent": "skill",
+          "table": [
+            0.3298,
+            0.3496,
+            0.3693,
+            0.395,
+            0.4147,
+            0.4345,
+            0.4602,
+            0.4858,
+            0.5115,
+            0.5372,
+            0.5629,
+            0.5885,
+            0.6142,
+            0.6399,
+            0.6656
+          ]
+        },
+        "flat": [],
+        "note": "No estado Windfavored o Normal causa a porcentagem do dano original do nível da habilidade. Desligue para golpes fora do estado."
+      },
+      {
+        "id": "skill-carregado",
+        "moveMult": {
+          "labels": [
+            "Charged Attack DMG"
+          ],
+          "extra": 1,
+          "talents": [
+            "normal"
+          ]
+        },
+        "label": "Wanderer: Windfavored (Carregado)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "level": {
+          "talent": "skill",
+          "table": [
+            0.2639,
+            0.2797,
+            0.2955,
+            0.316,
+            0.3318,
+            0.3476,
+            0.3681,
+            0.3887,
+            0.4092,
+            0.4298,
+            0.4503,
+            0.4708,
+            0.4914,
+            0.5119,
+            0.5325
+          ]
+        },
+        "flat": [],
+        "note": "No estado Windfavored o Carregado causa a porcentagem do dano original do nível da habilidade."
+      },
+      {
         "id": "a1pyro",
         "label": "Wanderer A1 (Pyro)",
         "minConstellation": 0,
@@ -12199,7 +12549,7 @@
         "id": "a4",
         "label": "Chevreuse A4",
         "minConstellation": 0,
-        "scope": "others",
+        "scope": "team",
         "timed": true,
         "forElements": [
           "Pyro",

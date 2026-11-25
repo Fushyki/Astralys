@@ -30,7 +30,8 @@ export function buffHome(id: string): BuffHome {
   if (a) return a[1] === '1' ? { kind: 'passive', id: 'p1' } : a[1] === '4' ? { kind: 'passive', id: 'p2' } : { kind: 'other' };
   const c = /^c(\d)/.exec(id);
   if (c) return { kind: 'const', n: Number(c[1]) };
-  if (id === 'normal' || id === 'skill' || id === 'burst') return { kind: 'talent', talent: id };
+  const t = /^(normal|skill|burst)(-|$)/.exec(id);
+  if (t) return { kind: 'talent', talent: t[1] as 'normal' | 'skill' | 'burst' };
   return { kind: 'other' };
 }
 

@@ -35,7 +35,7 @@ export const CHARACTERS_6: Record<string, BuffCuration[]> = {
     { id: 'a1', label: 'Nahida A1', src: 'p1', scope: 'others', timed: true, convert: { from: 'em', source: 'highestEm', perPoint: { p: 0 }, cap: { p: 1 }, to: ['em'] }, expect: 'increased by 25% of the Elemental Mastery of the party member with the highest Elemental Mastery', note: '+25% da maior Maestria do time (teto de 250) para os demais dentro do campo do Supremo: ligue nas janelas.' },
   ],
   Chevreuse: [
-    { id: 'a4', label: 'Chevreuse A4', src: 'p2', scope: 'others', timed: true, forElements: ['Pyro', 'Electro'], convert: { from: 'hp', perPoint: { p: 0, x: 0.001 }, cap: { p: 2 }, to: ['atkPct'] }, expect: 'gain 1% increased ATK for every 1,000 Max HP', note: '+1% de ATK por 1.000 de HP máximo dela (teto de 40%) para os Pyro e Electro por 30 s: ligue nas janelas.' },
+    { id: 'a4', label: 'Chevreuse A4', src: 'p2', scope: 'team', timed: true, forElements: ['Pyro', 'Electro'], convert: { from: 'hp', perPoint: { p: 0, x: 0.001 }, cap: { p: 2 }, to: ['atkPct'] }, expect: 'gain 1% increased ATK for every 1,000 Max HP', note: '+1% de ATK por 1.000 de HP máximo dela (teto de 40%) para os Pyro e Electro por 30 s: ligue nas janelas.' },
   ],
 };
 
@@ -96,6 +96,7 @@ export const CHARACTERS_8: Record<string, BuffCuration[]> = {
     { id: 'burst', label: 'Candace: Prece da Coroa', src: 'kit', kit: { talent: 'burst', key: 'DMG Bonus' }, scope: 'team', timed: true, stats: { byType: { normal: { lit: 1 } } }, expect: 'Characters deal increased Elemental DMG with their Normal Attacks', note: 'DMG de Ataque Normal elemental pelo nível do Supremo: ligue nas janelas (vale para quem tem a infusão Hydro).' },
   ],
   Gorou: [
+    { id: 'skill-def', label: 'Gorou: Estandarte (DEF)', src: 'kit', kit: { talent: 'skill', table: [206, 222, 237, 258, 273, 289, 309, 330, 350, 371, 392, 412, 438, 464, 490] }, scope: 'team', timed: true, stats: { defFlat: { lit: 1 } }, expect: 'DEF', note: 'DEF fixa do Estandarte pelo nível da habilidade, para quem está no campo dele: ligue nas janelas.' },
     { id: 'skill', label: 'Gorou: Estandarte (Geo)', src: 'kit', kit: { talent: 'skill', key: 'Geo DMG Bonus' }, scope: 'team', timed: true, forElements: ['Geo'], stats: { dmgPct: { lit: 1 } }, team: { scale: { of: ['Geo'], table: [{ lit: 0 }, { lit: 0 }, { lit: 1 }] } }, expect: 'Adds "Crunch" - Geo DMG Bonus', note: '+15% de DMG Geo com 3 personagens Geo no time (o Gorou conta): ligue nas janelas. Os bônus de DEF e de resistência a interrupção não entram.' },
   ],
 };

@@ -110,13 +110,16 @@ interface CondProps {
   onStacks?: (n: number) => void;
   /** Stats finais do dono (para mostrar quanto vale o dano fixo na build atual). */
   stats?: { atk: number; hp: number; def: number; em: number };
+  /** Fator do nível do talento nos buffs que crescem com ele (`level`). */
+  scale?: number;
 }
 
 const FLAT_STAT = { ATK: ['atk', 'do ATK'], HP: ['hp', 'do HP'], DEF: ['def', 'da DEF'], EM: ['em', 'da Proficiência'], BaseATK: ['atk', 'do ATK base'] } as const;
 
 /** Linhas do dano fixo do buff: "120% do ATK" e, com os stats do dono, o valor por golpe na build atual. */
-function flatRows(buff: CharacterBuff, stats?: CondProps['stats']): { name: string; value: string }[] {
-  return (buff.flat ?? []).map((f) => {
+function flatRows(buff: CharacterBuff, stats?: CondProps['stats'], scale = 1): { name: string; value: string }[] {
+  return (buff.flat ?? []).map((raw) => {
+    const f = { ...raw, perPoint: raw.perPoint * scale };
     const [key, of] = FLAT_STAT[f.sourceStat];
     const base = `${formatDecimal(f.perPoint * 100, 1).replace(/,0$/, '')}% ${of}`;
     const now = stats && f.sourceStat !== 'BaseATK' ? Math.min(f.perPoint * stats[key], f.capPerHit ?? Infinity) : undefined;
@@ -130,14 +133,14 @@ function toggleIdOf(index: number, b: CharacterBuff): string {
 }
 
 /** Condição: caixa dourada com o checkbox, o texto, o valor em destaque e os efeitos que ela dá. */
-function Condition({ buff, index, constellation, disabled, chips, onToggle, chosen, onStacks, stats }: CondProps) {
+function Condition({ buff, index, constellation, disabled, chips, onToggle, chosen, onStacks, stats, scale = 1 }: CondProps) {
   const id = toggleIdOf(index, buff);
   const locked = buff.minConstellation > constellation;
   const active = !locked && !disabled.includes(id);
   const fallback = buff.stats ? deltaChips(characterBuffDelta(scaleBuffStacks(buff, chosen).stats, !!buff.forElements)) : [];
   const n = stacksOf(buff, chosen);
-  const mult = buff.moveMult ? [{ name: 'dano base dos golpes afetados', value: `×${formatDecimal(1 + scaleBuffStacks(buff, chosen).moveMult!.extra, 1)}` }] : [];
-  const rows = ratio([...(chips.length ? chips : fallback).map(splitChip), ...mult, ...flatRows(buff, stats)]);
+  const mult = buff.moveMult ? [{ name: 'dano base dos golpes afetados', value: `×${formatDecimal(1 + scaleBuffStacks(buff, chosen).moveMult!.extra * scale, 2)}` }] : [];
+  const rows = ratio([...(chips.length ? chips : fallback).map(splitChip), ...mult, ...flatRows(buff, stats, scale)]);
   return (
     <div className="tl-cond" data-active={active} data-locked={locked}>
       <label>
@@ -229,7 +232,7 @@ export function TalentsPanel({ v, index }: { v: ProjectView; index: number }) {
   if (!tl) return <p className="note" role="status">Carregando os textos dos talentos…</p>;
 
   const conds = (pred: (b: CharacterBuff) => boolean) =>
-    buffs.filter(pred).map((b) => <Condition key={b.id} buff={b} index={index} constellation={constellation} disabled={disabled} chips={chipsOf(b)} stats={v.bundle.memberStats[index]} onToggle={b === masque ? (id, on) => { updateMember(index, { normalInfusion: on ? 'Pyro' : undefined }); setSourceEnabled(id, on); } : setSourceEnabled} chosen={ref.stacks?.[b.stacks?.of ?? b.id]} onStacks={(n) => updateMember(index, { stacks: { ...ref.stacks, [b.stacks?.of ?? b.id]: n } })} />);
+    buffs.filter(pred).map((b) => <Condition key={b.id} buff={b} index={index} constellation={constellation} disabled={disabled} chips={chipsOf(b)} stats={v.bundle.memberStats[index]} scale={b.level ? b.level.table[eff[b.level.talent] - 1] ?? 1 : 1} onToggle={b === masque ? (id, on) => { updateMember(index, { normalInfusion: on ? 'Pyro' : undefined }); setSourceEnabled(id, on); } : setSourceEnabled} chosen={ref.stacks?.[b.stacks?.of ?? b.id]} onStacks={(n) => updateMember(index, { stacks: { ...ref.stacks, [b.stacks?.of ?? b.id]: n } })} />);
   const noteOf = (src: string) => notes.find((n) => n.src === src);
   const valueOf = (l: MoveLine) => formatHits(l[crit], l.result.hitShare);
   const rowsOf = (lines: MoveLine[]) => lines.map((l) => ({ key: l.id, name: l.name, value: valueOf(l), tone: damageColor(l.element, l.special), special: l.special }));

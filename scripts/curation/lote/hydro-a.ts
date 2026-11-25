@@ -47,6 +47,7 @@ const buffs: Record<string, BuffCuration[]> = {
     },
   ],
   'Sangonomiya Kokomi': [
+    { id: 'burst', label: 'Kokomi: Vestes (Água-viva)', src: 'kit', kit: { talent: 'burst', table: [0.071, 0.0763, 0.0816, 0.0887, 0.094, 0.0993, 0.1064, 0.1135, 0.1206, 0.1277, 0.1348, 0.1419, 0.1508, 0.1597, 0.1685] }, scope: 'self', timed: false, flat: [{ name: 'Água-viva por HP', sourceStat: 'HP', perPoint: { lit: 1 }, hitTypes: ['skill'], labels: ['Ripple DMG'] }], expect: 'Bake-Kurage', note: 'Durante o Ceremonial Garment a Água-viva soma uma parte do HP máximo (nível do Supremo). Desligue para golpes fora do estado.' },
     {
       id: 'p4', label: 'Kokomi A4 (Taxa Crítica)', src: 'p4', scope: 'self', timed: false, stats: { critRate: { lit: -1 } },
       expect: 'a 100% decrease in CRIT Rate',

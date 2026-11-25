@@ -503,7 +503,7 @@ export function pointExtra(move: { talent: string; label: string }, effect: Pick
   if (!pm) return undefined;
   const n = Math.min(pm.max, Math.max(0, points ?? pm.max));
   const level = Math.min(15, Math.max(1, Math.round(talents[pm.levelTalent])));
-  const atk = pm.perPoint[level - 1] * n;
+  const atk = pm.perPoint[level - 1] * n + (n === pm.max ? pm.full?.[level - 1] ?? 0 : 0);
   return atk > 0 ? { atk } : undefined;
 }
 
@@ -681,12 +681,14 @@ export function applyTeamRules(members: MemberInput[]): MemberInput[] {
         ...b.stats,
         atkPct: b.stats.atkPct * k, dmgPct: b.stats.dmgPct * k, critRate: b.stats.critRate * k, critDmg: b.stats.critDmg * k,
         em: b.stats.em * k, er: b.stats.er * k, hpPct: b.stats.hpPct * k, defPct: b.stats.defPct * k,
+        atkFlat: (b.stats.atkFlat ?? 0) * k, hpFlat: (b.stats.hpFlat ?? 0) * k, defFlat: (b.stats.defFlat ?? 0) * k,
         dmgPctByType: Object.fromEntries(Object.entries(b.stats.dmgPctByType ?? {}).map(([h, x]) => [h, x * k])),
         reactionBonus: Object.fromEntries(Object.entries(b.stats.reactionBonus ?? {}).map(([h, x]) => [h, x * k])),
       };
       return [{
         ...b,
         stats,
+        ...(b.moveMult && b.level ? { moveMult: { ...b.moveMult, extra: b.moveMult.extra * k } } : {}),
         ...(b.resShred ? { resShred: { ...b.resShred, value: b.resShred.value * k } } : {}),
         ...(b.convert ? { convert: { ...b.convert, perPoint: b.convert.perPoint * k } } : {}),
         ...(b.flat?.length ? { flat: b.flat.map((f) => ({ ...f, perPoint: f.perPoint * k, ...(f.capPerHit !== undefined ? { capPerHit: f.capPerHit * k } : {}) })) } : {}),

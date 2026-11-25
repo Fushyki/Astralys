@@ -52,7 +52,7 @@ const buffs: Record<string, BuffCuration[]> = {
   ],
   Neuvillette: [
     {
-      id: 'a1', label: 'Neuvillette A1', src: 'p1', scope: 'self', timed: true, stats: { baseMultByType: { charged: { p: 2 } } },
+      id: 'a1', label: 'Neuvillette A1', src: 'p1', scope: 'self', timed: false, moveMult: { labels: ['Charged Attack: Equitable Judgment'], extra: { p: 2 } },
       stacks: { max: 3, unit: 'stacks de Past Draconic Glories', levels: [{ p: 0 }, { p: 1 }, { p: 2 }] },
       expect: 'to deal 110%/125%/160% of its original DMG',
       note: 'O Equitable Judgment causa 110%/125%/160% do dano ORIGINAL (multiplica o dano base, não soma no DMG%), por stack escolhido de 0 a 3 (30 s). O formato não separa por golpe: vale para todo Carregado na janela, então desligue nos Carregados que não são o Equitable Judgment.',

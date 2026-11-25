@@ -11,5 +11,7 @@ export default defineConfig({
   // O `vite preview` (usado pelos testes e2e) herdaria `server.open` e abriria uma aba do navegador a cada execução.
   preview: {
     open: false
-  }
+  },
+  json: { stringify: true },
+  build: { target: ['chrome109', 'edge109', 'firefox115', 'safari15'] }
 });

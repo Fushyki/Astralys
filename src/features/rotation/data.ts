@@ -40,6 +40,6 @@ export async function loadData(): Promise<LoadedData> {
   };
 }
 
-export function useGameData() {
-  return useQuery({ queryKey: ['game-data'], queryFn: loadData, staleTime: Infinity, gcTime: Infinity });
+export function useGameData(enabled = true) {
+  return useQuery({ queryKey: ['game-data'], queryFn: loadData, staleTime: Infinity, gcTime: Infinity, enabled });
 }

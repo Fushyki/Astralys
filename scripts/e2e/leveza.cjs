@@ -10,11 +10,6 @@ const CHANNEL = process.env.E2E_BROWSER || 'msedge';
 
 const results = [];
 const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 'OK  ' : 'FALHA'} ${name}${extra ? ' — ' + extra : ''}`); };
-/** Falha conhecida, com Issue aberta: aparece no relatório mas não derruba o roteiro. */
-const expectedFail = (issue, name, ok, extra = '') => {
-  if (ok) return check(`${name} (já passa: troque por check() e feche a Issue #${issue})`, true);
-  console.log(`ESPERADO FALHAR (Issue #${issue}) ${name}${extra ? ' — ' + extra : ''}`);
-};
 const DATA_CHUNK = /\/assets\/(characters|moves|weapons|talents|artifacts|levels|sets|particles)-[\w-]{8}\.js/;
 
 (async () => {
@@ -30,7 +25,7 @@ const DATA_CHUNK = /\/assets\/(characters|moves|weapons|talents|artifacts|levels
   await page.waitForTimeout(1000);
   check('a home carrega o JS do site', requests.some((u) => /\/assets\/index-[\w-]{8}\.js/.test(u)));
   const data = requests.filter((u) => DATA_CHUNK.test(u)).map((u) => u.split('/').pop());
-  expectedFail(37, 'home não baixa dados do jogo', data.length === 0, data.join(', '));
+  check('home não baixa dados do jogo', data.length === 0, data.join(', '));
 
   await page.goto(`${BASE}/projeto/exemplo/rotacao`, { waitUntil: 'networkidle' });
   const dps = await page.textContent('[data-testid="live-dps"]');

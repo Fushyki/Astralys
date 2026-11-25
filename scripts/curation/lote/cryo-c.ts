@@ -165,9 +165,6 @@ export const LOTE: Lote = {
       const4: u('Só cura e energia (informativo).'),
     },
     Skirk: {
-      p1: x('Pendente: os Void Rifts dão 8 pontos de Serpent\'s Subtlety cada, e o Supremo ganha dano por ponto acima de 50 (19,32% do ATK por ponto no nível 1, até 12 pontos), mas o texto não diz se o bônus vale em cada Slash ou uma vez por instância. O bônus por Rift do Havoc: Extinction (3,5%/6,6%/8,8%/11%) também não diz sobre qual dano atua.'),
-      p3: x('Pendente: +1 nível de habilidade dos aliados com time só Hydro/Cryo; o formato não muda o nível de talento dos outros.'),
-      const2: x('Entra o ATK +70% por 12,5 s depois do Havoc: Extinction (janela). Pendente: os +10 pontos de Serpent\'s Subtlety no dano do Supremo (mesma dúvida do A1).'),
       const6: x('Entram os 3 golpes extras do Havoc: Sever (750% do ATK por stack no Supremo, 3 x 180% no Normal e ao ser atingida). Quantos stacks há (de 0 a 3, 15 s cada) é você quem decide em execuções.'),
     },
     Lohen: {

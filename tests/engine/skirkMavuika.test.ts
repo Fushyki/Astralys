@@ -5,6 +5,7 @@ import { describe, expect, it } from 'vitest';
 import { assembleTeam, evaluateRotation, resolveProject, type EffectsData, type GameData } from '../../src/engine';
 import { activeCharacterBuffs, minimumRolls } from '../../src/engine/stats';
 import { pointMoveOf } from '../../src/engine/project';
+import { buffHome } from '../../src/features/character/talents';
 import { sampleProject } from '../../src/features/rotation/persistence';
 import { defaultMember } from '../../src/features/rotation/teamOps';
 
@@ -43,6 +44,13 @@ describe('Skirk', () => {
     expect(pointMoveOf(slash, team(MONO, 2)[0].characterEffect)!.max).toBe(22);
     // 5 acertos de 220,97% no nível 10, mais 12 pontos de 34,78% em cada um.
     expect(hit('burst', 'Slash DMG', 12) / hit('burst', 'Slash DMG', 0)).toBeCloseTo(1 + (12 * 0.3478) / 2.2097, 2);
+  });
+});
+
+describe('Skirk na aba Talentos', () => {
+  it('todo buff dela tem um cartão onde aparecer', () => {
+    const ids = effects.characters.find((c) => c.character === 'Skirk')!.buffs.map((b) => b.id);
+    expect(ids.filter((id) => buffHome(id).kind === 'other')).toEqual([]);
   });
 });
 

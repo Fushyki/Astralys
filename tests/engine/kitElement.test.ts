@@ -22,6 +22,19 @@ const effects: EffectsData = {
 const ch = (name: string) => game.characters.find((c) => c.name === name)!;
 
 describe('elemento padrão dos golpes pelo kit', () => {
+  it.each([
+    ['Ganyu', 'normal', 'Aimed Shot Charge Level 1', 'Cryo'], ['Tighnari', 'normal', 'Level 1 Aimed Shot', 'Dendro'], ['Tighnari', 'normal', 'Aimed Shot', 'Physical'],
+    ['Eula', 'burst', 'Lightfall Sword Base DMG', 'Physical'], ['Xinyan', 'burst', 'Skill DMG', 'Physical'], ['Xinyan', 'skill', 'Skill DMG', 'Pyro'], ['Xinyan', 'burst', 'Pyro DoT', 'Pyro'],
+  ])('%s %s %s é %s', (name, talent, label, element) => {
+    expect(kitElement(ch(name), { talent, hitType: talent === 'normal' ? 'charged' : talent, label })).toBe(element);
+  });
+
+  it('Tartaglia no time dá +1 nível de Ataque Normal a todos', () => {
+    const levels = (names: string[]) => resolveProject({ ...sampleProject(), compat: 'none', members: names.map((n) => defaultMember(n, game)), actions: [], buffWindows: [] }, game, effects).team.members.map((m) => m.talents.normal);
+    expect(levels(['Tartaglia', 'Bennett'])).toEqual([11, 11]);
+    expect(levels(['Bennett'])).toEqual([10]);
+  });
+
   it('ataque normal de arma física é Físico; habilidade e supremo têm o elemento do personagem', () => {
     const flins = ch('Flins');
     expect(kitElement(flins, { talent: 'normal', hitType: 'normal', label: '1-Hit DMG' })).toBe('Physical');

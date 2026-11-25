@@ -25875,11 +25875,6 @@
         "src": "const6",
         "kind": "utility",
         "note": "Só recarga."
-      },
-      {
-        "src": "p3",
-        "kind": "partial",
-        "note": "Pendente: +1 nível de Ataque Normal dos aliados muda o dano deles, mas o formato só soma nível de talento pelas constelações do próprio personagem; não entra."
       }
     ],
     "infos": [

@@ -92,7 +92,7 @@ export const LOTE: Lote = {
       const6: x('Pendente: o texto diz que a terceira chuva de espadas fica "muito mais forte" sem dar o número, então o aumento de dano não entra. A Energia (3) é só informativa.'),
     },
     Tartaglia: {
-      p3: x('Pendente: +1 nível de Ataque Normal dos aliados muda o dano deles, mas o formato só soma nível de talento pelas constelações do próprio personagem; não entra.'),
+      p3: null,
       const4: x('Pendente: o Riptide Slash (estilo Corpo a Corpo, conta como habilidade) e o Riptide Flash (estilo Distância, conta como Normal) a cada 4 s já existem no kit dele; adicione as execuções na rotação conforme a duração. Nada é automático.'),
     },
     Mona: {

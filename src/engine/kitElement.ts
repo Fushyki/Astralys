@@ -56,6 +56,19 @@ export const KIT_INFUSIONS: Record<string, { element: ElementOrPhysical; when: s
   Xilonen: { element: 'Geo', when: 'no Nightsoul' },
 };
 
+/** Golpes cujo elemento foge da regra geral (casados pelo rótulo em inglês). Fonte: fichas do Genshin Optimizer (docs/VARREDURA_GO.md). */
+const MOVE_ELEMENT: Record<string, [RegExp, ElementOrPhysical]> = {
+  Eula: [/Lightfall Sword|DMG Per Stack/, 'Physical'],
+  Freminet: [/Level 4 Shattering/, 'Physical'],
+  Ganyu: [/Charge Level 1/, 'Cryo'],
+  Lyney: [/Charge Level 1/, 'Pyro'],
+  Sethos: [/Charge Level 1/, 'Electro'],
+  Tighnari: [/^Level 1 Aimed Shot/, 'Dendro'],
+  Valeriy: [/Direct-Fire Mortar/, 'Electro'],
+  // Só o golpe do Supremo; o dano contínuo é Pyro.
+  Xinyan: [/^Skill DMG$/, 'Physical'],
+};
+
 export interface KitMoveLike {
   talent: string;
   hitType: string;
@@ -65,6 +78,9 @@ export interface KitMoveLike {
 /** Elemento do golpe pelo kit. `infusion` é a infusão de Ataque Normal escolhida para o personagem (ou undefined). */
 export function kitElement(character: Pick<Character, 'name' | 'element' | 'weapon'>, move: KitMoveLike, infusion?: ElementOrPhysical): ElementOrPhysical {
   const own = character.element as ElementOrPhysical;
+  const special = MOVE_ELEMENT[character.name];
+  // A Xinyan só muda no Supremo (o "Skill DMG" da habilidade continua Pyro).
+  if (special?.[0].test(move.label) && (character.name !== 'Xinyan' || move.talent === 'burst')) return special[1];
   // Habilidade e Supremo (inclusive os golpes de Ataque Normal que o personagem faz durante a habilidade): o elemento dele.
   if (move.talent !== 'normal') return own;
   if (character.weapon === 'Catalyst') return own;

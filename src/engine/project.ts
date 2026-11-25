@@ -772,7 +772,10 @@ function withoutPlanilhaSeed(m: MemberInput): MemberInput {
 const KQM_LIQUID_ROLLS = 20;
 
 export function finalizeMembers(members: MemberInput[], planilha: boolean): MemberInput[] {
-  return applyTeamRules(members).map((m) =>
+  // Passiva "Mestre do Armamento" do Tartaglia: +1 nível de Ataque Normal para o time inteiro, ele incluído.
+  const master = !planilha && members.some((m) => m.character.name === 'Tartaglia');
+  const leveled = master ? members.map((m) => ({ ...m, talents: { ...m.talents, normal: Math.min(15, m.talents.normal + 1) } })) : members;
+  return applyTeamRules(leveled).map((m) =>
     planilha
       ? { ...(m.characterEffect && !m.characterEffect.fonte_info.includes('scripts/curation/') ? { ...m, characterEffect: planilhaEffect(m.characterEffect) } : m), weaponEffect: planilhaWeapon(m.weaponEffect), minOwnAtk: undefined, liquidRolls: undefined } // a planilha não tem o ATK próprio mínimo nem o padrão KQMS (o gabarito não muda)
       : { ...withoutPlanilhaSeed(m), liquidRolls: m.liquidRolls ?? KQM_LIQUID_ROLLS - 2 * Object.values(m.artifacts.rarity).filter((r) => r === 4).length },

@@ -18,7 +18,7 @@
 
 .vt-card { position: relative; }
 /* o menu aberto passa por cima dos cards vizinhos e não é cortado pelo card */
-.vt-card:has(.dz-menu-list) { z-index: 10; }
+.vt-card.menu-open { z-index: 10; }
 /* Só o card: favorito e opções ficam sobre o canto, e o menu reúne as ações. */
 .vt-over { position: absolute; top: 10px; right: 10px; display: flex; align-items: center; gap: 8px; z-index: 2; }
 .vt-over .dz-iconbtn { background: rgba(10, 14, 28, .72); backdrop-filter: blur(4px); }
@@ -38,20 +38,26 @@
 /* Card vazio no fim da lista: criar ou importar sem precisar de um time antes. */
 .vt-new { display: flex; flex-direction: column; min-width: 0; overflow: hidden; border: 1px dashed var(--border); border-radius: 16px; background: transparent; }
 .vt-new-body { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 16px; }
-.vt-plus { position: relative; width: 96px; height: 96px; padding: 0; border-radius: 50%; border: 1px solid color-mix(in srgb, var(--gold) 55%, transparent); background: radial-gradient(circle, color-mix(in srgb, var(--gold) 14%, transparent), transparent 70%); cursor: pointer; font-size: 0; box-shadow: 0 0 0 10px color-mix(in srgb, var(--gold) 5%, transparent), 0 0 28px color-mix(in srgb, var(--gold) 18%, transparent); transition: transform .2s, box-shadow .2s, border-color .2s; }
+.vt-plus { position: relative; width: 96px; height: 96px; padding: 0; border-radius: 50%; border: 1px solid rgba(233, 196, 106, .55); background: radial-gradient(circle, rgba(233, 196, 106, .14), transparent 70%); cursor: pointer; font-size: 0; box-shadow: 0 0 0 10px rgba(233, 196, 106, .05), 0 0 28px rgba(233, 196, 106, .18); transition: transform .2s, box-shadow .2s, border-color .2s; }
+@supports (color: color-mix(in srgb, red, blue)) { .vt-plus { border: 1px solid color-mix(in srgb, var(--gold) 55%, transparent); background: radial-gradient(circle, color-mix(in srgb, var(--gold) 14%, transparent), transparent 70%); box-shadow: 0 0 0 10px color-mix(in srgb, var(--gold) 5%, transparent), 0 0 28px color-mix(in srgb, var(--gold) 18%, transparent); } }
 .vt-plus::before, .vt-plus::after { content: ''; position: absolute; inset: 50% auto auto 50%; background: var(--gold); border-radius: 2px; transform: translate(-50%, -50%); }
 .vt-plus::before { width: 34px; height: 2px; }
 .vt-plus::after { width: 2px; height: 34px; }
-.vt-plus:hover, .vt-plus:focus-visible { transform: scale(1.06); border-color: var(--gold); box-shadow: 0 0 0 14px color-mix(in srgb, var(--gold) 8%, transparent), 0 0 40px color-mix(in srgb, var(--gold) 32%, transparent); }
+.vt-plus:hover, .vt-plus:focus-visible { transform: scale(1.06); border-color: var(--gold); box-shadow: 0 0 0 14px rgba(233, 196, 106, .08), 0 0 40px rgba(233, 196, 106, .32); }
+@supports (color: color-mix(in srgb, red, blue)) { .vt-plus:hover, .vt-plus:focus-visible { box-shadow: 0 0 0 14px color-mix(in srgb, var(--gold) 8%, transparent), 0 0 40px color-mix(in srgb, var(--gold) 32%, transparent); } }
 .vt-opts { display: flex; flex-direction: column; gap: 10px; width: min(100%, 380px); }
-.vt-opt { display: flex; align-items: center; gap: 14px; width: 100%; min-height: 64px; padding: 10px 16px; text-align: left; color: var(--text); background: color-mix(in srgb, var(--surface-2, #1a2145) 70%, transparent); border: 1px solid var(--border); border-radius: 14px; cursor: pointer; font: inherit; transition: border-color .15s, background .15s, transform .15s; }
-.vt-opt:hover:not(:disabled), .vt-opt:focus-within { border-color: color-mix(in srgb, var(--gold) 70%, transparent); background: color-mix(in srgb, var(--gold) 8%, transparent); }
+.vt-opt { display: flex; align-items: center; gap: 14px; width: 100%; min-height: 64px; padding: 10px 16px; text-align: left; color: var(--text); background: rgba(23, 32, 66, .7); border: 1px solid var(--border); border-radius: 14px; cursor: pointer; font: inherit; transition: border-color .15s, background .15s, transform .15s; }
+@supports (color: color-mix(in srgb, red, blue)) { .vt-opt { background: color-mix(in srgb, var(--surface-2, #1a2145) 70%, transparent); } }
+.vt-opt:hover:not(:disabled), .vt-opt:focus-within { border-color: rgba(233, 196, 106, .7); background: rgba(233, 196, 106, .08); }
+@supports (color: color-mix(in srgb, red, blue)) { .vt-opt:hover:not(:disabled), .vt-opt:focus-within { border-color: color-mix(in srgb, var(--gold) 70%, transparent); background: color-mix(in srgb, var(--gold) 8%, transparent); } }
 .vt-opt:disabled { opacity: .5; cursor: default; }
-.vt-opt i { flex: none; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; font-style: normal; font-size: 20px; color: var(--gold); border: 1px solid color-mix(in srgb, var(--gold) 45%, transparent); background: radial-gradient(circle, color-mix(in srgb, var(--gold) 16%, transparent), transparent 75%); }
+.vt-opt i { flex: none; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; font-style: normal; font-size: 20px; color: var(--gold); border: 1px solid rgba(233, 196, 106, .45); background: radial-gradient(circle, rgba(233, 196, 106, .16), transparent 75%); }
+@supports (color: color-mix(in srgb, red, blue)) { .vt-opt i { border: 1px solid color-mix(in srgb, var(--gold) 45%, transparent); background: radial-gradient(circle, color-mix(in srgb, var(--gold) 16%, transparent), transparent 75%); } }
 .vt-opt span { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
 .vt-opt b { font-weight: 600; font-size: 15px; }
 .vt-opt small { color: var(--muted); font-size: 12.5px; }
-.vt-opt.gold { border-color: color-mix(in srgb, var(--gold) 60%, transparent); background: color-mix(in srgb, var(--gold) 10%, transparent); }
+.vt-opt.gold { border-color: rgba(233, 196, 106, .6); background: rgba(233, 196, 106, .1); }
+@supports (color: color-mix(in srgb, red, blue)) { .vt-opt.gold { border-color: color-mix(in srgb, var(--gold) 60%, transparent); background: color-mix(in srgb, var(--gold) 10%, transparent); } }
 .vt-optlink input { width: 100%; min-width: 0; padding: 4px 0; font: inherit; font-size: 13px; color: var(--text); background: transparent; border: 0; border-bottom: 1px solid var(--border); outline: 0; }
 .vt-optlink input:focus { border-bottom-color: var(--gold); }
 .vt-close { align-self: center; padding: 4px 12px; font: inherit; font-size: 13px; color: var(--muted); background: transparent; border: 0; cursor: pointer; }

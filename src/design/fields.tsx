@@ -52,9 +52,9 @@ export function NumberInput({
   );
 }
 
-export function SelectField<T extends string>({ label, value, options, onChange }: { label: string; value: T; options: { value: T; label: string }[]; onChange: (v: T) => void }) {
+export function SelectField<T extends string>({ label, value, options, onChange, className }: { label: string; value: T; options: { value: T; label: string }[]; onChange: (v: T) => void; className?: string }) {
   return (
-    <label className="dz-field">
+    <label className={className ? `dz-field ${className}` : 'dz-field'}>
       <span>{label}</span>
       <select value={value} onChange={(e) => onChange(e.target.value as T)}>
         {options.map((o) => (

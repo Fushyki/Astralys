@@ -1,5 +1,6 @@
 /* Demonstração da página inicial ("Fio de origem"). Só tokens de src/design/tokens.css. */
-.or-demo { position: relative; display: flex; flex-direction: column; gap: var(--sp-4); min-width: 0; padding: var(--sp-4); border: 1px solid var(--line-1); border-radius: var(--r-panel); background: color-mix(in srgb, var(--panel-bg) 92%, transparent); }
+.or-demo { position: relative; display: flex; flex-direction: column; gap: var(--sp-4); min-width: 0; padding: var(--sp-4); border: 1px solid var(--line-1); border-radius: var(--r-panel); background: rgba(12, 17, 40, .92); }
+@supports (color: color-mix(in srgb, red, blue)) { .or-demo { background: color-mix(in srgb, var(--panel-bg) 92%, transparent); } }
 .or-head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--sp-3); }
 .or-head h2 { margin: 0; font: 700 var(--fs-5) var(--font-display); letter-spacing: .02em; }
 .or-head p { margin: 2px 0 0; font-size: var(--fs-2); color: var(--muted); }

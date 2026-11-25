@@ -40,15 +40,19 @@ export function messageOf(status: number, body: unknown): string {
 
 async function call<T>(path: string, init: RequestInit = {}): Promise<T> {
   const { headers, ...rest } = init;
+  // AbortSignal.timeout não existe no Safari 15. O limite corta a espera se o servidor estiver fora do ar ou dormindo.
+  const timeout = new AbortController();
+  const timer = setTimeout(() => timeout.abort(), 20_000);
   let res: Response;
   try {
     res = await fetch(`${API_URL}${path}`, {
-      signal: AbortSignal.timeout(20_000), // servidor fora do ar ou dormindo: não deixa a tela carregando para sempre
+      signal: timeout.signal,
       ...rest,
       headers: { 'Content-Type': 'application/json', ...headers },
     });
   } catch (e) {
-    if (e instanceof DOMException && e.name === 'TimeoutError') throw new ApiError('O servidor demorou demais para responder. Tente de novo em instantes.', 0);
+    clearTimeout(timer);
+    if (timeout.signal.aborted) throw new ApiError('O servidor demorou demais para responder. Tente de novo em instantes.', 0);
     throw new ApiError('Não consegui falar com o servidor. Verifique a conexão.', 0);
   }
   let body: unknown = null;
@@ -57,6 +61,7 @@ async function call<T>(path: string, init: RequestInit = {}): Promise<T> {
   } catch {
     /* resposta sem corpo */
   }
+  clearTimeout(timer);
   if (!res.ok) throw new ApiError(messageOf(res.status, body), res.status);
   return body as T;
 }

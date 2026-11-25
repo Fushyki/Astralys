@@ -110,7 +110,8 @@
 .aa-drop b { font: 700 20px var(--font-display); color: var(--text); }
 .aa-drop img { max-width: 100%; max-height: 420px; border-radius: 8px; object-fit: contain; }
 .aa-status { margin: 0; color: var(--gold); font-size: 14px; }
-.aa-note { margin: 0; padding: 8px 12px; border-radius: 8px; font-size: 13px; background: color-mix(in srgb, var(--gold) 10%, var(--bg-header)); border: 1px solid color-mix(in srgb, var(--gold) 35%, var(--border)); }
+.aa-note { margin: 0; padding: 8px 12px; border-radius: 8px; font-size: 13px; background: rgb(35, 36, 45); border: 1px solid rgb(101, 93, 83); }
+@supports (color: color-mix(in srgb, red, blue)) { .aa-note { background: color-mix(in srgb, var(--gold) 10%, var(--bg-header)); border: 1px solid color-mix(in srgb, var(--gold) 35%, var(--border)); } }
 .aa-setsel { position: relative; }
 .aa-setbtn { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; cursor: pointer; }
 .aa-seticon { width: 36px; height: 36px; object-fit: contain; flex: none; border-radius: 8px; background: rgba(255,255,255,.04); }

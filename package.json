@@ -8,6 +8,7 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "budget": "node scripts/check-budget.cjs",
+    "e2e:motores": "node scripts/e2e/leveza.cjs chromium && node scripts/e2e/leveza.cjs firefox && node scripts/e2e/leveza.cjs webkit",
     "test": "vitest run",
     "test:watch": "vitest",
     "sync:data": "tsx scripts/sync-data.ts",

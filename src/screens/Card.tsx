@@ -10,7 +10,7 @@ import { useGameData } from '../features/rotation/data';
 import { SAMPLE_ID, loadProject, loadVaultCardFormat, saveProject, saveVaultCardFormat } from '../features/rotation/persistence';
 import { useAnalysis } from '../features/rotation/useAnalysis';
 import { toast } from '../app/toast';
-import { copyCardImage } from './card/copyCard';
+import { copyCardImage, DOWNLOADED_INSTEAD } from './card/copyCard';
 import { POSTER_LABEL, PosterCard, ScaledPoster, type PosterFormat } from './card/PosterCard';
 import './cardpage.css';
 
@@ -48,8 +48,7 @@ export default function Card() {
     try {
       const el = viewRef.current?.querySelector<HTMLElement>('.pc');
       if (!el) throw new Error('O card ainda não está pronto.');
-      await copyCardImage(el, format);
-      toast('Imagem copiada.');
+      toast((await copyCardImage(el, format)) ? 'Imagem copiada.' : DOWNLOADED_INSTEAD);
     } catch (e) {
       toast(`Não foi possível copiar a imagem: ${e instanceof Error ? e.message : String(e)}`, 'error');
     } finally {

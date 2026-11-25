@@ -11,7 +11,8 @@
 .tl-reacts .x { display: inline-flex; align-items: baseline; gap: var(--sp-2); font-size: var(--fs-2); }
 .tl-reacts .x b { font-weight: 600; }
 
-.tl-infusion { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--sp-3) var(--sp-5); padding: var(--sp-3) var(--panel-pad); border-radius: var(--r-panel); border: 1px solid color-mix(in srgb, var(--gold) 40%, var(--border)); background: var(--panel-bg); }
+.tl-infusion { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--sp-3) var(--sp-5); padding: var(--sp-3) var(--panel-pad); border-radius: var(--r-panel); border: 1px solid rgb(111, 101, 85); background: var(--panel-bg); }
+@supports (color: color-mix(in srgb, red, blue)) { .tl-infusion { border: 1px solid color-mix(in srgb, var(--gold) 40%, var(--border)); } }
 .tl-infusion p { margin: var(--sp-1) 0 0; font-size: var(--fs-2); color: var(--text-2); max-width: 640px; }
 .tl-infusion .dz-seg button[aria-pressed='true'] { background: var(--c, var(--gold)); color: var(--bg); }
 

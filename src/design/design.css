@@ -49,7 +49,8 @@ body { font-family: var(--font-body); font-size: 15px; line-height: 1.5; -webkit
 .dz-btn.gold { background: var(--gold); color: var(--on-gold) !important; border-color: var(--gold); }
 .dz-btn.gold:hover { background: var(--gold-hi); }
 .dz-btn.ghost { background: transparent; border-color: var(--border-ctl); color: var(--gold-hi) !important; }
-.dz-btn.ghost:hover:not(:disabled) { border-color: var(--gold); background: color-mix(in srgb, var(--gold) 12%, transparent); }
+.dz-btn.ghost:hover:not(:disabled) { border-color: var(--gold); background: rgba(233, 196, 106, .12); }
+@supports (color: color-mix(in srgb, red, blue)) { .dz-btn.ghost:hover:not(:disabled) { background: color-mix(in srgb, var(--gold) 12%, transparent); } }
 .dz-btn.sm { min-height: var(--ctl-sm); padding: 0 var(--sp-3); font-size: var(--fs-2); }
 .dz-btn.lg { min-height: var(--ctl-lg); padding: 0 var(--sp-5); font-size: var(--fs-4); }
 .dz-btn:disabled { opacity: .4; cursor: not-allowed; }
@@ -74,7 +75,8 @@ body { font-family: var(--font-body); font-size: 15px; line-height: 1.5; -webkit
 /* ---- Chips e segmentado ---- */
 .dz-chip { font-size: 13px; padding: 4px 10px; border-radius: 999px; background: var(--surface-2); color: var(--text-2); border: 1px solid var(--border-ctl); white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; display: inline-flex; align-items: center; gap: 6px; }
 .dz-chip.warn { color: var(--warn); border-color: var(--warn-border); background: var(--warn-bg); }
-.dz-chip.tone { color: var(--tone, var(--text-2)); border-color: color-mix(in srgb, var(--tone, var(--border-ctl)) 40%, transparent); background: color-mix(in srgb, var(--tone, var(--surface-2)) 14%, var(--bg)); }
+.dz-chip.tone { color: var(--tone, var(--text-2)); border-color: var(--tone, var(--border-ctl)); background: var(--bg); }
+@supports (color: color-mix(in srgb, red, blue)) { .dz-chip.tone { border-color: color-mix(in srgb, var(--tone, var(--border-ctl)) 40%, transparent); background: color-mix(in srgb, var(--tone, var(--surface-2)) 14%, var(--bg)); } }
 .dz-seg { display: inline-flex; flex-wrap: wrap; gap: 4px; padding: 4px; background: var(--bg-header); border: 1px solid var(--border-ctl); border-radius: 10px; }
 .dz-seg button { min-height: 36px; padding: 6px 14px; border: 0; border-radius: 7px; background: none; color: var(--muted); font-family: var(--font-display); font-weight: 600; font-size: 15px; letter-spacing: .05em; text-transform: uppercase; cursor: pointer; }
 .dz-seg button:hover { color: var(--text); }
@@ -118,7 +120,8 @@ body { font-family: var(--font-body); font-size: 15px; line-height: 1.5; -webkit
 .dz-table th:first-child, .dz-table td:first-child { text-align: left; }
 .dz-table tr.grp td { background: var(--surface-2); font-family: var(--font-display); font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--text-2); text-align: left; }
 .dz-table td.avg { color: var(--gold-soft); font-weight: 600; }
-.dz-table tr[data-current="true"] td { background: color-mix(in srgb, var(--gold) 8%, transparent); }
+.dz-table tr[data-current="true"] td { background: rgba(233, 196, 106, .08); }
+@supports (color: color-mix(in srgb, red, blue)) { .dz-table tr[data-current="true"] td { background: color-mix(in srgb, var(--gold) 8%, transparent); } }
 
 /* ---- Mensagens ---- */
 .dz-error { color: var(--warn); background: var(--warn-bg); border: 1px solid var(--warn-border); border-radius: var(--radius-ctl); padding: 10px 14px; margin: 0; font-size: 14px; }
@@ -284,16 +287,19 @@ body { font-family: var(--font-body); font-size: 15px; line-height: 1.5; -webkit
 :root[data-card-bg='plain'] .pe-card,
 :root[data-card-bg='plain'] .dz-panel.rc-card { background: var(--surface); }
 /* Times: a faixa colorida do topo fica sempre; a config só troca o fundo do card (com a cor do personagem principal ou o fundo escuro liso). */
-:root[data-card-bg='color'] .vt-poster .pc { background: radial-gradient(circle at 50% 30%, color-mix(in srgb, var(--c) 28%, var(--bg-header)), var(--bg-header)); }
+:root[data-card-bg='color'] .vt-poster .pc { background: var(--bg-header); }
+@supports (color: color-mix(in srgb, red, blue)) { :root[data-card-bg='color'] .vt-poster .pc { background: radial-gradient(circle at 50% 30%, color-mix(in srgb, var(--c) 28%, var(--bg-header)), var(--bg-header)); } }
 
 /* Avisos (popup) de exportar, copiar, enviar e importar */
 .dz-toasts { position: fixed; right: 20px; bottom: 20px; z-index: 60; display: flex; flex-direction: column; gap: 10px; align-items: flex-end; pointer-events: none; max-width: calc(100vw - 32px); }
-.dz-toast { pointer-events: auto; display: flex; align-items: center; gap: 12px; min-width: 240px; max-width: 420px; padding: 12px 14px; border-radius: 12px; background: var(--surface); border: 1px solid color-mix(in srgb, var(--good, #7dd3a8) 55%, var(--border)); box-shadow: 0 12px 32px rgba(0, 0, 0, .5); color: var(--text); font-size: 15px; animation: dz-toast-in .2s ease-out; }
+.dz-toast { pointer-events: auto; display: flex; align-items: center; gap: 12px; min-width: 240px; max-width: 420px; padding: 12px 14px; border-radius: 12px; background: var(--surface); border: 1px solid rgb(83, 135, 122); box-shadow: 0 12px 32px rgba(0, 0, 0, .5); color: var(--text); font-size: 15px; animation: dz-toast-in .2s ease-out; }
+@supports (color: color-mix(in srgb, red, blue)) { .dz-toast { border: 1px solid color-mix(in srgb, var(--good, #7dd3a8) 55%, var(--border)); } }
 .dz-toast i { flex: none; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; font-style: normal; font-weight: 700; color: #0a0e1c; background: var(--good, #7dd3a8); }
 .dz-toast span { flex: 1; line-height: 1.35; }
 .dz-toast button { flex: none; width: 28px; height: 28px; border: 0; border-radius: 6px; background: none; color: var(--muted); font-size: 20px; line-height: 1; cursor: pointer; }
 .dz-toast button:hover { color: var(--text); background: var(--bg-header); }
-.dz-toast.error { border-color: color-mix(in srgb, #f08a8a 60%, var(--border)); }
+.dz-toast.error { border-color: rgb(156, 98, 111); }
+@supports (color: color-mix(in srgb, red, blue)) { .dz-toast.error { border-color: color-mix(in srgb, #f08a8a 60%, var(--border)); } }
 .dz-toast.error i { background: #f08a8a; }
 @keyframes dz-toast-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .dz-toast { animation: none; } }

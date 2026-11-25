@@ -29,7 +29,7 @@ function total(character: string, tags: string[]): string {
   );
   const p = {
     ...sampleProject(), compat: 'none', elementMode: 'personagem',
-    members: names.map((n) => ({ ...defaultMember(n, game), constellation: 6 })),
+    members: names.map((n) => ({ ...defaultMember(n, game), condManual: undefined, constellation: 6 })),
     actions: actions.map((a, i) => ({ id: `a${i}`, member: a.member, move: a.move, executions: 1, reaction: 'none', activeTags: a.tags, tagSource: 'manual', dmgAdjust: 0, time: i })),
     buffWindows: [], disabled: [],
   };
@@ -42,7 +42,7 @@ function total(character: string, tags: string[]): string {
  * Buffs que NÃO mudaram nada neste cenário (time fixo, sem stacks, sem Hexerei/Moonsign, sem reação). Podem ser só condicionados
  * (Gorou pede 2 Geo, Furina pede Fanfarra, Fischl hex pede Hexerei) ou podem ser erro: revisar um a um. A lista só pode ENCOLHER.
  */
-const NAO_VERIFICADOS = new Set(["Albedo:a4hs","Albedo:a4hx","Gorou:skill","Shenhe:c4","Nilou:a1","Wriothesley:a1","Mona:c4h","Sucrose:p4s","Sucrose:p4l","Sucrose:c6hex","Wanderer:c2","Chevreuse:a1","Xilonen:c2hydro","Flins:c2res","Aino:c6g","Nefer:c2","Nefer:a1","Durin:a1hex","Jahoda:c6","Columbina:c2lc","Columbina:c2lb","Columbina:c2lcr","Illuga:a1","Illuga:c6","Varka:c4-hydro","Lohen:a4hex","Aether (Dendro):c6h","Lumine (Dendro):c6h","Prune:hex-self","Prune:hex-trig","Mitya:c2em","Mitya:a1","Escoffier:c1","Yanfei:a1","Furina:burst","Lauma:a1a","Fischl:hex-atk","Fischl:hex-em","Fischl:c6atk","Fischl:c6em"]);
+const NAO_VERIFICADOS = new Set(["Albedo:a4hs","Albedo:a4hx","Gorou:skill","Shenhe:c4","Nilou:a1","Wriothesley:a1","Mona:c4h","Sucrose:p4s","Sucrose:p4l","Sucrose:c6hex","Wanderer:c2","Chevreuse:a1","Xilonen:c2hydro","Flins:c2res","Aino:c6g","Nefer:c2","Nefer:a1","Durin:a1hex","Jahoda:c6","Columbina:c2lc","Columbina:c2lb","Columbina:c2lcr","Illuga:a1","Illuga:c6","Illuga:a1g","Illuga:c6g","Varka:c4-hydro","Lohen:a4hex","Aether (Dendro):c6h","Lumine (Dendro):c6h","Prune:hex-self","Prune:hex-trig","Mitya:c2em","Mitya:a1","Escoffier:c1","Yanfei:a1","Furina:burst","Lauma:a1a","Fischl:hex-atk","Fischl:hex-em","Fischl:c6atk","Fischl:c6em"]);
 
 it('cada buff em janela dos personagens muda o dano ou os stats quando ligado (salvo os não verificados)', () => {
   const dead: string[] = [];

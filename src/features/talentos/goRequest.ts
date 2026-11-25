@@ -1,6 +1,7 @@
 /** Monta o pedido das fichas do Genshin Optimizer a partir do time aberto. Puro e testado. */
 import { ascensionAt } from '../../data/levels';
-import type { ResolvedProject, RotationProject } from '../../engine';
+import type { CharacterBuff, CharacterEffect } from '../../effects/schema';
+import { characterTag, labelTag, type ResolvedProject, type RotationProject } from '../../engine';
 import type { Rolls } from '../../engine/artifacts';
 import { finalStats, foldSources, staticSources, zeroBlock } from '../../engine/stats';
 import type { GoMember, GoRequest } from '../../vendor/go/talentos';
@@ -36,6 +37,45 @@ export function gearStats(resolved: ResolvedProject, rolls: Rolls[], i: number):
     skill_dmg_: f.dmgByType.skill,
     burst_dmg_: f.dmgByType.burst,
   };
+}
+
+export interface RotationCondition {
+  /** Índice do membro dono da condição. */
+  member: number;
+  /** Buffs da rotação que a condição liga (ids do motor). Vazio nunca: sem buff, a condição vale só na aba. */
+  ids: string[];
+  /** Estado atual no formato da ficha do GO: '' = desligada, 'on' ou a quantidade. */
+  value: string;
+  /** Chave dos stacks no membro, quando a condição é uma quantidade. */
+  stackKey?: string;
+  /** Nenhum buff com duração desta condição tem janela na rotação: ligada, essa parte ainda não vale. */
+  needsWindow: boolean;
+}
+
+/** Condições da aba que a rotação conhece, por personagem (chave do GO) e id da condição: o projeto é a única fonte do estado. */
+export function rotationConditions(project: RotationProject, resolved: ResolvedProject, effects: CharacterEffect[]): Record<string, Record<string, RotationCondition>> {
+  const out: Record<string, Record<string, RotationCondition>> = {};
+  project.members.forEach((ref, member) => {
+    const byCondition = new Map<string, CharacterBuff[]>();
+    for (const b of effects.find((e) => e.character === ref.character)?.buffs ?? []) {
+      if (b.condition) byCondition.set(b.condition, [...(byCondition.get(b.condition) ?? []), b]);
+    }
+    for (const [condition, buffs] of byCondition) {
+      const ids = buffs.map((b) => `cbuff-${member}-${b.id}`);
+      const on = ids.every((id) => !project.disabled.includes(id) && (!resolved.gearIds.includes(id) || project.enabled.includes(id)));
+      const stacked = buffs.find((b) => b.stacks);
+      const stackKey = stacked ? stacked.stacks!.of ?? stacked.id : undefined;
+      // Só os buffs que valem neste time e nesta constelação pedem janela.
+      const active = resolved.team.members[member].characterEffect?.buffs ?? [];
+      const timed = active.filter((b) => b.condition === condition && b.timed && b.minConstellation <= (ref.constellation ?? 0));
+      const needsWindow = timed.length > 0 && !timed.some((b) => project.buffWindows.some((w) => w.tag === (b.onCharTag ? characterTag(member) : labelTag(b.label))));
+      (out[goKey(ref.character)] ??= {})[condition] = {
+        member, ids, stackKey, needsWindow,
+        value: !on ? '' : stacked ? String(ref.stacks?.[stackKey!] ?? stacked.stacks!.max) : 'on',
+      };
+    }
+  });
+  return out;
 }
 
 export function goRequest(project: RotationProject, resolved: ResolvedProject, rolls: Rolls[], index: number, hitMode: GoRequest['hitMode'], conditionals: GoConditionals): GoRequest {

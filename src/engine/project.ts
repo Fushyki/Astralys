@@ -84,6 +84,8 @@ export const MemberRefSchema = z.object({
    * (`RotationProject.enabled`). Ausente = como antes: ligados (projetos antigos e o gabarito da planilha).
    */
   gearManual: z.boolean().optional(),
+  /** Membro novo: os buffs ligados a condições da aba Talentos começam desligados (ligados em `enabled`). Ausente = ligados. */
+  condManual: z.boolean().optional(),
   /** Quantos stacks (ou pontos) de cada buff do personagem valem, por id do buff (`CharacterBuff.stacks`). Ausente = o máximo. */
   stacks: z.record(z.string(), z.number().int().min(0)).optional(),
   /** Elementos com que o personagem reage em campo (buffs `forReacted`, ex.: Scroll of the Hero of Cinder City). */
@@ -532,13 +534,13 @@ export function procMove(procs: readonly MemberProc[], ref: MoveRef, displayName
 }
 
 /** Dano fixo de arma e de set de 4 peças (ex.: "Dano de Habilidade aumentado em 40% da DEF"). */
-export function gearFlat(members: MemberInput[]): FlatDamageEffect[] {
+export function gearFlat(members: MemberInput[], off: ReadonlySet<string> = new Set()): FlatDamageEffect[] {
   const out: FlatDamageEffect[] = [];
-  members.forEach((m) => {
+  members.forEach((m, i) => {
     const lists: [string, WeaponFlat[]][] = [];
     if (m.weaponEffect) lists.push([m.weapon.name, weaponStatsAt(m.weaponEffect, m.refinement).flat]);
     if (m.primarySet && !m.secondarySet && m.fourPiece !== false) lists.push([m.primarySet.name, m.primarySet.effect?.fourPiece?.flat ?? []]);
-    for (const b of activeCharacterBuffs(m)) if (b.flat?.length) lists.push([b.label, b.flat]);
+    for (const b of activeCharacterBuffs(m)) if (b.flat?.length && !off.has(`cbuff-${i}-${b.id}`) && !off.has(`m${i}:cbuff-${b.id}`)) lists.push([b.label, b.flat]);
     for (const [origin, flat] of lists) {
       for (const f of flat) {
         const others = members.map((x) => x.character.name).filter((n) => n !== m.character.name);
@@ -625,9 +627,11 @@ export function manualToRolls(partial: Partial<Record<(typeof SUBSTATS)[number],
 
 export interface ResolvedProject {
   team: TeamInput;
-  /** Ids de buffs de arma e set de membros com `gearManual` (começam desligados; os ligados estão em `project.enabled`). */
+  /** Ids que começam desligados (arma e set com `gearManual`, mais `condIds`); os ligados estão em `project.enabled`. */
   gearIds: string[];
   actions: RotationAction[];
+  /** Parte de `gearIds` que vem de condições da aba Talentos (o otimizador não as liga sozinho). */
+  condIds: string[];
   flatEffects: FlatDamageEffect[];
   /** Coeficiente de EM das amplificadoras (undefined = o padrão do motor, 25/9). */
   ampCoefficient: number | undefined;
@@ -876,14 +880,17 @@ export function resolveProject(project: RotationProject, data: GameData, effects
   });
 
   const gearIds = members.flatMap((m, i) => (project.members[i]?.gearManual ? gearSourceIds(m, i) : []));
+  const condIds = members.flatMap((m, i) => (project.members[i]?.condManual ? (m.characterEffect?.buffs ?? []).filter((b) => b.condition).map((b) => `cbuff-${i}-${b.id}`) : []));
+  gearIds.push(...condIds.filter((id) => !gearIds.includes(id)));
   const gearOff = gearIds.filter((id) => !project.enabled.includes(id));
   const team: TeamInput = { members, extras: project.extras, config, disabled: [...project.disabled, ...gearOff] };
   if (project.buffWindows.some((w) => w.maxHits)) applyHitLimits(project.buffWindows, actions, assembleTeam(team, {}), members.map((m) => m.character.name));
   return {
     team,
     gearIds,
+    condIds,
     actions,
-    flatEffects: [...applyFlatLevels(effects.flatDamage, members).map((e) => ({ ...e, ...(project.compat !== 'planilha' && e.stacks !== undefined ? { window: true as const } : {}) })), ...gearFlat(members)].map((e) => {
+    flatEffects: [...applyFlatLevels(effects.flatDamage, members).map((e) => ({ ...e, ...(project.compat !== 'planilha' && e.stacks !== undefined ? { window: true as const } : {}) })), ...gearFlat(members, new Set(team.disabled))].map((e) => {
       const o = project.flatStacks?.[flatId(e)];
       return o === undefined ? e : { ...e, stacks: o === 'all' ? undefined : o };
     }),

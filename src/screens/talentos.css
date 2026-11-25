@@ -114,3 +114,4 @@
 /* Condição das fichas do GO: desligada é o estado normal, não um efeito cortado. */
 .tl-cond.go[data-active="false"] .txt { color: var(--text-2); text-decoration: none; }
 .tl-cond.go[data-active="false"] .dz-badge { opacity: 1; }
+.tl-cond.go > .note { display: block; margin: 0; padding: var(--sp-2) var(--sp-3); font-size: var(--fs-1); line-height: 1.35; }

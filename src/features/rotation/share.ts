@@ -6,6 +6,9 @@
 import { toast } from '../../app/toast';
 import { parseProject, type MemberRef, type RotationProject } from '../../engine';
 import { newProjectId } from './persistence';
+import { remapMemberId } from './teamOps';
+
+export { remapMemberId };
 
 export const SHARE_KIND = 'astralys-compartilhamento';
 export type SharePart = 'rotation' | 'scenario' | 'extras' | 'team';
@@ -67,20 +70,6 @@ export function downloadShare(file: ShareFile): void {
   a.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
   toast(`Rotação exportada: ${a.download}`);
-}
-
-/** Troca o índice do membro dentro de um id (etiqueta de buff, fonte desligada...). null = era de um membro que não existe aqui. */
-export function remapMemberId(id: string, map: ReadonlyMap<number, number>): string | null {
-  const swap = (n: string) => map.get(Number(n));
-  let m = /^(gear|char):(\d+)$/.exec(id);
-  if (m) { const t = swap(m[2]); return t === undefined ? null : `${m[1]}:${t}`; }
-  m = /^m(\d+):(.*)$/.exec(id);
-  if (m) { const t = swap(m[1]); return t === undefined ? null : `m${t}:${m[2]}`; }
-  m = /^(cbuff-(?:res-|def-)?)(\d+)(-.*)$/.exec(id);
-  if (m) { const t = swap(m[2]); return t === undefined ? null : `${m[1]}${t}${m[3]}`; }
-  m = /^(gear-|set-res-shred-|res-shred-)(\d+)$/.exec(id);
-  if (m) { const t = swap(m[2]); return t === undefined ? null : `${m[1]}${t}`; }
-  return id;
 }
 
 export interface ShareResult {

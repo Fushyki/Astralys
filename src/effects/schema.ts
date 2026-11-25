@@ -264,6 +264,8 @@ export const CharacterBuffSchema = z.object({
   duration: z.number().positive().optional(),
   /** Só personagens destas facções recebem (ex.: Jahoda C6, "personagens Moonsign"). */
   forFactions: z.array(z.enum(['moonsign', 'hexerei'])).optional(),
+  /** Condição da aba Talentos (ficha do Genshin Optimizer) que liga e desliga este buff; em membro com `condManual`, começa desligado. */
+  condition: z.string().optional(),
   /** Id de outro buff do mesmo personagem que este REFORÇA: com este ativo (constelação), o outro sai e este entra no lugar (não somam; ex.: Flins C4 sobre o A4). */
   replaces: z.string().optional(),
   /** Usa a faixa do personagem (`char:<membro>`) em vez de uma faixa com o nome do buff: mantém as janelas de projetos que já tinham o ATK fixo dele. */

@@ -194,6 +194,8 @@ export const BuffTeamRulesSchema = z.object({
   moonsign: z.number().int().positive().optional(),
   /** Só vale com no máximo tantos membros Moonsign (1 = "Moonsign: Nascent Gleam", que não se soma ao Ascendant). */
   moonsignMax: z.number().int().positive().optional(),
+  /** Acúmulos limitados aos colegas destes elementos, 1 por colega, sem contar o dono (Death's Crossing da Skirk). */
+  stackPerMate: z.array(ElementSchema).min(1).optional(),
   /** Só vale com ao menos tantos membros Hexerei no time (Genshin Optimizer `tally.hexerei`). */
   hexerei: z.number().int().positive().optional(),
   /**

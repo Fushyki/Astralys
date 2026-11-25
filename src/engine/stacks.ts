@@ -38,5 +38,6 @@ export function withStacks(effect: CharacterEffect | undefined, chosen: Record<s
   const key = (b: CharacterBuff) => b.stacks?.of ?? b.id;
   const changes = (b: CharacterBuff) => !!b.stacks && (chosen?.[key(b)] !== undefined || b.stacks.default !== undefined);
   if (!effect || !effect.buffs.some(changes)) return effect;
-  return { ...effect, buffs: effect.buffs.map((b) => scaleBuffStacks(b, chosen?.[key(b)])) };
+  // Com `stackPerMate` o teto depende do time: guarda a escolha e deixa a escala para `applyTeamRules`.
+  return { ...effect, buffs: effect.buffs.map((b) => (b.team?.stackPerMate && b.stacks ? { ...b, stacks: { ...b.stacks, default: chosen?.[key(b)] ?? b.stacks.default } } : scaleBuffStacks(b, chosen?.[key(b)]))) };
 }

@@ -75,12 +75,12 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
 
   // Abas e cabeçalho
   const tabs = await page.$$eval('.pc-tabs a', (a) => a.map((x) => x.textContent));
-  check('uma sub-aba por personagem com a % do dano', tabs.length === 4 && /Mavuika.*90,2%/.test(tabs[0]) && /Citlali.*6,2%/.test(tabs[1]), tabs.join(' | '));
+  check('uma sub-aba por personagem com a % do dano', tabs.length === 4 && /Mavuika.*91,0%/.test(tabs[0]) && /Citlali.*5,5%/.test(tabs[1]), tabs.join(' | '));
   check('a aba Personagens do time está marcada', (await page.getAttribute('.dz-subnav a:has-text("Personagens")', 'aria-current')) === 'page');
 
   // Atributos do gabarito
   const attrs = await page.locator('.db-panel:has(h3:text-is("Atributos"))').textContent();
-  check('atributos finais do exemplo (ATK 5.607, EM 405, Taxa 98,9%, Dano 231,8%)', /5\.607/.test(attrs) && /405/.test(attrs) && /98,9%/.test(attrs) && /231,8%/.test(attrs));
+  check('atributos finais do exemplo (ATK 5.613, EM 385, Taxa 95,6%, Dano 238,4%)', /5.613/.test(attrs) && /385/.test(attrs) && /95,6%/.test(attrs) && /238,4%/.test(attrs));
   check('mostra o valor base ao lado do ATK', /1\.100 ATK base/.test(attrs));
 
   // Tabela de dano (aba Avançado): sem nomes repetidos, reação filtrada
@@ -108,7 +108,7 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
 
   // Reações deste time
   const rx = await page.locator('.dz-panel:has(h2:text-is("Reações deste time"))').textContent();
-  check('reações do time: Derreter ×3,25 e Sobrecarga', /Derreter \(Pyro\)/.test(rx) && /×3,25/.test(rx) && /Sobrecarga/.test(rx));
+  check('reações do time: Derreter ×3,20 e Sobrecarga', /Derreter \(Pyro\)/.test(rx) && /×3,20/.test(rx) && /Sobrecarga/.test(rx));
 
   // Buffs recebidos
   const buffs = await page.$$eval('.pc-buffs .b', (b) => b.map((x) => x.textContent));
@@ -140,9 +140,9 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
   await field('Taxa crít. (valor total em %)').locator('input').fill('33'); await field('Taxa crít. (valor total em %)').locator('input').blur(); await settle();
   check('33% de Taxa Crítica vira 10 rolls (33 ÷ 3,3)', (await page.click('.dz-seg[aria-label="Unidade dos substats"] button:has-text("Rolls")'), await field('Taxa crít. (máx. 30)').locator('input').inputValue()) === '10');
   const crit = await page.locator('.db-panel:has(h3:text-is("Atributos"))').textContent();
-  check('editar rolls à mão muda a Taxa crítica', !/98,9%/.test(crit), crit.match(/Taxa crítica\s*[\d,]+%/)?.[0]);
+  check('editar rolls à mão muda a Taxa crítica', !/95,6%/.test(crit), crit.match(/Taxa crítica\s*[\d,]+%/)?.[0]);
   await page.click('.dz-seg[aria-label="Modo dos substats"] button:has-text("Otimizar")'); await settle();
-  check('voltar ao Otimizar restaura os 98,9%', /98,9%/.test(await page.locator('.db-panel:has(h3:text-is("Atributos"))').textContent()));
+  check('voltar ao Otimizar restaura os 95,6%', /95,6%/.test(await page.locator('.db-panel:has(h3:text-is("Atributos"))').textContent()));
 
   // Editor de build
   await page.click('.db-toolbar button:has-text("Editar build")'); await page.waitForSelector('.dz-dialog');

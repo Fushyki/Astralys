@@ -31,7 +31,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
 
   const tabs = await page.$$eval('.dz-subnav nav a', (a) => a.map((x) => x.textContent.replace(/\s+/g, ' ').trim()));
   check('a faixa do time tem os 3 passos numerados', tabs.join('|') === '1 · Equipe|2 · Personagens|3 · Rotação e buffs', tabs.join('|'));
-  check('o menu geral é Times, Personagens, Inventário, Recarga, Comparar, Armas e Card (dentro do time)', (await page.$$eval('.dz-header .dz-nav > a', (a) => a.map((x) => x.textContent.trim()))).join('|') === 'Times|Personagens|Inventário|Recarga|Comparar|Armas|Card');
+  check('o menu geral é Times, Comunidade, Personagens, Inventário, Scanner, Recarga, Comparar, Armas e Card (dentro do time)', (await page.$$eval('.dz-header .dz-nav > a', (a) => a.map((x) => x.textContent.trim()))).join('|') === 'Times|Comunidade|Personagens|Inventário|Scanner|Recarga|Comparar|Armas|Card');
   check('o passo 1 explica o que fazer e oferece o próximo', /Passo 1 de 3/.test(await bar()) && (await page.locator('.dz-stepbar a:has-text("Próximo passo: Personagens")').count()) === 1);
   check('no passo 1 não há botão de voltar', (await page.locator('.dz-stepbar a:has-text("←")').count()) === 0);
 
@@ -50,7 +50,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
 
   // Barra geral: telas de apoio do time
   const items = await page.$$eval('.dz-header .dz-nav > a', (e) => e.map((x) => x.textContent.trim()));
-  check('a barra reúne Times, Personagens, Inventário, Recarga, Comparar, Armas e Card dentro de um time', items.join('|') === 'Times|Personagens|Inventário|Recarga|Comparar|Armas|Card', items.join('|'));
+  check('a barra reúne Times, Comunidade, Personagens, Inventário, Scanner, Recarga, Comparar, Armas e Card dentro de um time', items.join('|') === 'Times|Comunidade|Personagens|Inventário|Scanner|Recarga|Comparar|Armas|Card', items.join('|'));
   await page.click('.dz-header .dz-nav a:has-text("Armas")');
   await page.waitForURL(/armas/);
   await settle();

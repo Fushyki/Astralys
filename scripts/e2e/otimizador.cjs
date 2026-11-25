@@ -1,5 +1,5 @@
 /**
- * Navegação nova (Times · Personagens · Inventário · Recarga · Comparar), Inventário e Otimizador de artefatos.
+ * Navegação nova (Times · Comunidade · Personagens · Inventário · Scanner · Recarga · Comparar), Inventário e Otimizador de artefatos.
  *   1) npm run build && npx vite preview --port 4173
  *   2) node scripts/e2e/otimizador.cjs
  */
@@ -29,7 +29,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
 
   // ---- Menu ----
   const nav = await page.$$eval('.dz-header .dz-nav > a', (a) => a.map((x) => x.textContent.trim()));
-  check('o menu é Times · Personagens · Inventário · Recarga · Comparar (otimizar é individual: fica no personagem)', nav.join('|') === 'Times|Personagens|Inventário|Recarga|Comparar', nav.join('|'));
+  check('o menu é Times · Comunidade · Personagens · Inventário · Scanner · Recarga · Comparar (otimizar é individual: fica no personagem)', nav.join('|') === 'Times|Comunidade|Personagens|Inventário|Scanner|Recarga|Comparar', nav.join('|'));
   check('Inventário está marcado', (await page.getAttribute('.dz-nav a:has-text("Inventário")', 'aria-current')) === 'page');
 
   // ---- Inventário ----

@@ -237,7 +237,8 @@
 .cm-node .halo { fill: none; stroke: transparent; }
 .cm-node[data-lit="true"] .halo { fill: rgba(233, 196, 106, .14); stroke: rgba(233, 196, 106, .45); }
 @supports (color: color-mix(in srgb, red, blue)) { .cm-node[data-lit="true"] .halo { fill: color-mix(in srgb, var(--gold) 14%, transparent); stroke: color-mix(in srgb, var(--gold) 45%, transparent); } }
-.cm-node:hover .cm-star, .cm-node:focus-visible .cm-star { stroke: var(--gold-hi); }
+.cm-node:hover .cm-star { stroke: var(--gold-hi); }
+.cm-node:focus-visible .cm-star { stroke: var(--gold-hi); }
 .sc-cons p { margin: 0; }
 
 /* talentos em círculos */
@@ -368,7 +369,8 @@
 
 /* Popup da arma: o ícone da arma (Resumo e build) abre a passiva, os stats e os buffs com o botão de ativar */
 .pc-weapon .art.info, .gt-weapon .art.info { cursor: help; border-radius: var(--r-ctl); }
-.pc-weapon .art.info:hover, .gt-weapon .art.info:hover, .pc-weapon .art.info:focus-visible, .gt-weapon .art.info:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.pc-weapon .art.info:hover, .gt-weapon .art.info:hover { outline: 2px solid var(--gold); outline-offset: 2px; }
+.pc-weapon .art.info:focus-visible, .gt-weapon .art.info:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 .dz-dialog.wi { width: min(560px, calc(100vw - 32px)); height: auto; display: flex; flex-direction: column; }
 .wi-body { display: flex; flex-direction: column; gap: var(--sp-4, 16px); padding: var(--sp-4, 16px) 20px 20px; overflow-y: auto; min-height: 0; }
 .wi-top { display: flex; align-items: center; gap: var(--sp-4, 16px); padding: var(--sp-3); border-radius: var(--r-inner); background: var(--bg-header); border: 1px solid var(--border); }

@@ -1,19 +1,21 @@
 /** Copia (ou baixa) a imagem de um card (elemento `.pc`) no tamanho real do formato. */
-import { toPng } from 'html-to-image';
 import { embeddedFontCss } from '../../features/card/fontCss';
 import { POSTER_SIZE, type PosterFormat } from './PosterCard';
 
 async function cardPng(el: HTMLElement, format: PosterFormat): Promise<string> {
   const { w, h } = POSTER_SIZE[format];
-  const fontEmbedCSS = await embeddedFontCss();
+  const [{ toPng }, fontEmbedCSS] = await Promise.all([import('html-to-image'), embeddedFontCss()]);
   return toPng(el, { width: w, height: h, pixelRatio: 1, cacheBust: true, fontEmbedCSS, style: { transform: 'none', margin: '0' } });
 }
 
-const download = (href: string, name: string) => {
+/** Por `blob:`: no WebKit 15.4 um link `data:` não gera arquivo. */
+const download = async (png: string, name: string) => {
+  const url = URL.createObjectURL(await (await fetch(png)).blob());
   const a = document.createElement('a');
-  a.href = href;
+  a.href = url;
   a.download = `${name}.png`;
   a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 60_000);
 };
 
 export const DOWNLOADED_INSTEAD = 'Este navegador não deixou copiar a imagem; ela foi baixada.';
@@ -26,11 +28,11 @@ export async function copyCardImage(el: HTMLElement, format: PosterFormat, name 
     await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
     return true;
   } catch {
-    download(png, name);
+    await download(png, name);
     return false;
   }
 }
 
 export async function saveCardImage(el: HTMLElement, format: PosterFormat, name: string): Promise<void> {
-  download(await cardPng(el, format), name);
+  await download(await cardPng(el, format), name);
 }

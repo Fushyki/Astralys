@@ -85,6 +85,23 @@ describe('compatibilidade do CSS', () => {
     expect(novos, `color-mix() sem cor sólida de reserva:\n${novos.join('\n')}`).toEqual([]);
   });
 
+  it(':focus-visible não divide a regra com outros seletores (o Safari 15.0 a 15.3 descartaria a regra inteira)', () => {
+    const novos = files.flatMap((file) => (read(file).match(/[^{};]+(?=\{)/g) ?? []).filter((selector) => {
+      const parts = selector.split(',');
+      return parts.some((p) => p.includes(':focus-visible')) && !parts.every((p) => p.includes(':focus-visible'));
+    }).map((selector) => `${file}: ${selector.trim()}`));
+    expect(novos, `separe o :focus-visible numa regra própria:\n${novos.join('\n')}`).toEqual([]);
+  });
+
+  it('biblioteca pesada só entra por import() dinâmico', () => {
+    const estatico = /^(?:import|export)\s+(?!type\b)(?:[^;'"()]*?\bfrom\s+)?['"](html-to-image|tesseract\.js|xlsx)['"]/m;
+    for (const ruim of ["import { toPng } from 'html-to-image';", 'import {\n  a,\n} from "xlsx";', "import 'tesseract.js';"]) expect(ruim).toMatch(estatico);
+    for (const ok of ["import type { WorkBook } from 'xlsx';", "export async function f() {\n  await import('tesseract.js')"]) expect(ok).not.toMatch(estatico);
+    const novos = (readdirSync(path.join(ROOT, 'src'), { recursive: true }) as string[])
+      .filter((f) => /\.tsx?$/.test(f) && estatico.test(read(`src/${f}`)));
+    expect(novos, 'import estático de biblioteca pesada').toEqual([]);
+  });
+
   it(':has() só nos arquivos já permitidos (o layout precisa funcionar sem ele)', () => {
     const novos = files.filter((f) => !HAS_PERMITIDO.includes(f)).flatMap((file) =>
       read(file).split('\n').flatMap((text, i) => (text.includes(':has(') ? [`${file}:${i + 1}`] : [])));

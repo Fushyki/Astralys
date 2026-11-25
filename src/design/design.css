@@ -151,7 +151,8 @@ body { font-family: var(--font-body); font-size: 15px; line-height: 1.5; -webkit
 .dz-menu-list.right { right: 0; }
 .dz-menu-list.left { left: 0; }
 .dz-menu-item { display: flex; align-items: center; min-height: 44px; padding: 0 14px; border: 0; border-radius: 8px; background: none; color: var(--text); font: inherit; font-size: 15px; text-align: left; text-decoration: none; cursor: pointer; white-space: nowrap; }
-.dz-menu-item:hover, .dz-menu-item:focus-visible { background: var(--bg-header, #0d1226); color: var(--gold); outline: none; }
+.dz-menu-item:hover { background: var(--bg-header, #0d1226); color: var(--gold); outline: none; }
+.dz-menu-item:focus-visible { background: var(--bg-header, #0d1226); color: var(--gold); outline: none; }
 .dz-menu-item.danger { color: #f08a8a; }
 .dz-menu-item:disabled { opacity: .5; cursor: default; }
 .dz-menu-note { padding: 10px 14px 4px; font-size: 14px; color: var(--muted); }

@@ -339,7 +339,8 @@ button.ot-ch[aria-pressed='true'] b { color: var(--gold-hi); }
 .pcard.weapon[data-rarity='4'] .bar { background: var(--rar4-accent); }
 .pcard.weapon .phead em { background: var(--gold); color: var(--on-gold); }
 .pcard.weapon .art.info { cursor: help; border-radius: var(--r-inner); }
-.pcard.weapon .art.info:hover, .pcard.weapon .art.info:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.pcard.weapon .art.info:hover { outline: 2px solid var(--gold); outline-offset: 2px; }
+.pcard.weapon .art.info:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 .pcard.weapon:hover { border-color: var(--gold); }
 .pcard.weapon .mv b { color: var(--text); }
 

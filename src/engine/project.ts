@@ -3,7 +3,7 @@
  * O projeto guarda NOMES (personagem, arma, set, golpe), nunca os dados do jogo: o mesmo arquivo continua válido
  * quando o Lunaris atualiza os números. A resolução junta o projeto com os dados do jogo e os efeitos.
  */
-import { withStacks } from './stacks';
+import { scaleBuffStacks, stacksOf, withStacks } from './stacks';
 import { z } from 'zod';
 import { ElementSchema, type ArtifactSet, type Character, type Move, type Talent, type Weapon } from '../data/schema';
 import { characterAtLevel, type LevelsData } from '../data/levels';
@@ -663,6 +663,11 @@ export function applyTeamRules(members: MemberInput[]): MemberInput[] {
       if (t?.minDistinct && new Set(elements).size < t.minDistinct) return [];
       if (t?.onlyWeapons && !t.onlyWeapons.includes(m.character.weapon)) return [];
       if (t?.maxBurstEnergy && (m.character.burst.energyCost ?? Infinity) > t.maxBurstEnergy) return [];
+      if (t?.stackPerMate && b.stacks) {
+        const cap = Math.min(b.stacks.max, others.filter((x) => t.stackPerMate!.includes(x.character.element)).length);
+        const n = Math.min(stacksOf(b, undefined), cap);
+        return n ? [{ ...scaleBuffStacks(b, n), stacks: { ...b.stacks, max: cap, default: n } }] : [];
+      }
       let k = 1;
       if (t?.scale) {
         const of = t.scale.of;
@@ -792,6 +797,12 @@ export function finalizeMembers(members: MemberInput[], planilha: boolean): Memb
       ? { ...(m.characterEffect && !m.characterEffect.fonte_info.includes('scripts/curation/') ? { ...m, characterEffect: planilhaEffect(m.characterEffect) } : m), weaponEffect: planilhaWeapon(m.weaponEffect), minOwnAtk: undefined, liquidRolls: undefined } // a planilha não tem o ATK próprio mínimo nem o padrão KQMS (o gabarito não muda)
       : { ...withoutPlanilhaSeed(m), liquidRolls: m.liquidRolls ?? KQM_LIQUID_ROLLS - 2 * Object.values(m.artifacts.rarity).filter((r) => r === 4).length },
   );
+}
+
+/** Time com o membro `index` trocado por `next` (recém-resolvido), já com as regras do time. Os outros vêm finalizados: não passam de novo. */
+export function swapMember(members: MemberInput[], index: number, next: MemberInput, planilha: boolean): MemberInput[] {
+  const done = finalizeMembers(members.map((m, i) => (i === index ? next : m)), planilha)[index];
+  return members.map((m, i) => (i === index ? done : m));
 }
 
 /**

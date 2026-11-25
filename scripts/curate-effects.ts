@@ -565,6 +565,7 @@ function buildCharacters(): CharacterEffect[] {
                 ...(b.team.eachOf ? { eachOf: b.team.eachOf } : {}),
                 ...(b.team.scale ? { scale: { of: b.team.scale.of, table: b.team.scale.table.map((x) => v(x)) } } : {}),
                 ...(b.team.fewerThan ? { fewerThan: b.team.fewerThan } : {}),
+                ...(b.team.stackPerMate ? { stackPerMate: b.team.stackPerMate } : {}),
                 ...(b.team.moonsign ? { moonsign: b.team.moonsign } : {}),
                 ...(b.team.moonsignMax ? { moonsignMax: b.team.moonsignMax } : {}),
                 ...(b.team.hexerei ? { hexerei: b.team.hexerei } : {}),

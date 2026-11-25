@@ -21,7 +21,7 @@ export const LOTE: Lote = {
       {
         id: 'a4', label: 'Freminet A4', src: 'p2', scope: 'self', timed: true, onlyLabels: ['Level 0 Shattering Pressure DMG', 'Level 4 Shattering Pressure DMG'], stats: { byType: { skill: { p: 0 } } },
         expect: 'the DMG dealt by Pressurized Floe: Shattering Pressure will be increased by 40% for 5s',
-        note: '+40% de DMG por 5 s depois de Estilhaçar (Shatter): janela. O bônus é só do Shattering Pressure, mas o formato dá o bônus a todo golpe de habilidade: ligue só nos golpes Shattering Pressure.',
+        note: '+40% de DMG por 5 s depois de Estilhaçar (Shatter): janela. Só os golpes Shattering Pressure recebem.',
       },
       {
         id: 'c1', label: 'Freminet C1', src: 'const1', scope: 'self', timed: true, stats: { critRateByType: { skill: { p: 0 } } },

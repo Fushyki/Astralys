@@ -3,6 +3,7 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { analyzeProject, assembleTeam, damageTable, resolveProject, type EffectsData, type GameData } from '../../src/engine';
 import { sampleProject } from '../../src/features/rotation/persistence';
+import { defaultMember } from '../../src/features/rotation/teamOps';
 
 const root = path.resolve(__dirname, '../..');
 const json = <T>(rel: string): T => JSON.parse(readFileSync(path.join(root, rel), 'utf8'));
@@ -34,6 +35,8 @@ describe('Skirk A4: % do dano original', () => {
   it('no motor, o 1° Normal do Seven-Phase Flash com A4 vale 1,7 × a parte escala × ATK e o DMG% não muda', () => {
     const p = { ...sampleProject(), compat: undefined };
     p.members[0] = { ...p.members[0], character: 'Skirk' };
+    // 3 acúmulos pedem 3 colegas Hydro ou Cryo.
+    p.members = [p.members[0], ...['Furina', 'Escoffier', 'Shenhe'].map((n) => defaultMember(n, game))];
     const row = (disabled: string[]) => {
       const r = resolveProject({ ...p, disabled }, game, effects);
       const rolls = analyzeProject({ team: r.team, actions: r.actions, flatEffects: r.flatEffects, ampCoefficient: r.ampCoefficient }).optimization.rolls;

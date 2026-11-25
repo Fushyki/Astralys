@@ -196,6 +196,8 @@ export const BuffTeamRulesSchema = z.object({
   moonsignMax: z.number().int().positive().optional(),
   /** Não vale com `count` ou mais membros destes elementos no time (ex.: Xilonen A1). */
   fewerThan: z.object({ of: z.array(ElementSchema).min(1), count: z.number().int().positive() }).optional(),
+  /** Acúmulos limitados aos colegas destes elementos, 1 por colega, sem contar o dono (Death's Crossing da Skirk). */
+  stackPerMate: z.array(ElementSchema).min(1).optional(),
   /** Só vale com ao menos tantos membros Hexerei no time (Genshin Optimizer `tally.hexerei`). */
   hexerei: z.number().int().positive().optional(),
   /**

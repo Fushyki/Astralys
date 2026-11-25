@@ -1,6 +1,6 @@
 /** Compara as armas do tipo do personagem no Web Worker (a rotação inteira é reanalisada para cada arma). */
 import { useEffect, useRef, useState } from 'react';
-import { resolveMember, type ResolvedProject, type RotationProject, type WeaponCandidate, type WeaponCompareRow } from '../../engine';
+import { resolveMember, swapMember, type ResolvedProject, type RotationProject, type WeaponCandidate, type WeaponCompareRow } from '../../engine';
 import type { LoadedData } from './data';
 import { EngineClient } from './engineClient';
 import { weaponsFor } from './teamOps';
@@ -29,9 +29,7 @@ export function useWeaponCompare(project: RotationProject, resolved: ResolvedPro
           weapon: w.name,
           team: {
             ...resolved.team,
-            members: resolved.team.members.map((m, i) =>
-              i === member ? resolveMember({ ...ref, weapon: w.name, ...(refinement ? { refinement } : {}) }, data.game, data.effects, project.config.minRollsPerSubstat, project.config.characterLevel, project.compat === 'planilha') : m,
-            ),
+            members: swapMember(resolved.team.members, member, resolveMember({ ...ref, weapon: w.name, ...(refinement ? { refinement } : {}) }, data.game, data.effects, project.config.minRollsPerSubstat, project.config.characterLevel, project.compat === 'planilha'), project.compat === 'planilha'),
           },
         }));
         const hasTable = data.effects.weapons.find((e) => e.weapon === ref.weapon)?.refinements;
@@ -42,7 +40,7 @@ export function useWeaponCompare(project: RotationProject, resolved: ResolvedPro
               refinement: r,
               team: {
                 ...resolved.team,
-                members: resolved.team.members.map((m, i) => (i === member ? resolveMember({ ...ref, refinement: r }, data.game, data.effects, project.config.minRollsPerSubstat, project.config.characterLevel, project.compat === 'planilha') : m)),
+                members: swapMember(resolved.team.members, member, resolveMember({ ...ref, refinement: r }, data.game, data.effects, project.config.minRollsPerSubstat, project.config.characterLevel, project.compat === 'planilha'), project.compat === 'planilha'),
               },
             });
           }
@@ -53,7 +51,7 @@ export function useWeaponCompare(project: RotationProject, resolved: ResolvedPro
             constellation: c,
             team: {
               ...resolved.team,
-              members: resolved.team.members.map((m, i) => (i === member ? resolveMember({ ...ref, constellation: c || undefined }, data.game, data.effects, project.config.minRollsPerSubstat, project.config.characterLevel, project.compat === 'planilha') : m)),
+              members: swapMember(resolved.team.members, member, resolveMember({ ...ref, constellation: c || undefined }, data.game, data.effects, project.config.minRollsPerSubstat, project.config.characterLevel, project.compat === 'planilha'), project.compat === 'planilha'),
             },
           });
         }

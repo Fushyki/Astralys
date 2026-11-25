@@ -463,7 +463,20 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
     // Golpe Lunar/Estelar ou reação: fórmula própria, sem DMG% nem dano fixo comuns (não consome stacks).
     if (kind !== 'direct') {
       const scale = move.reactionHit ? { atk: 0, em: 0, hp: 0, def: 0, flat: 0 } : scaleAt(move, move.talent === 'proc' || move.talent === 'reaction' ? 1 : member.talents[move.talent]);
-      const r = reactionAction({ move, executions: action.executions, ownElement: member.character.element, stats, scale, characterLevel: member.level ?? config.characterLevel, enemy });
+      // Bônus do kit para este golpe Lunar; com `first`, só uma execução, na primeira vez (no tempo) que o golpe sai.
+      let own = stats;
+      for (const b of activeCharacterBuffs(member)) {
+        const o = b.onMove;
+        if (!o || !move.special || !o.labels.includes(move.label)) continue;
+        const first = () => [...actions.keys()].sort((x, y) => (actions[x].time ?? 0) - (actions[y].time ?? 0) || x - y).find((k) => actions[k].member === action.member && o.labels.includes(actions[k].move.label));
+        if (o.first && first() !== idx) continue;
+        const share = o.first ? 1 / Math.max(1, action.executions) : 1;
+        const bonus = own.reactionBonus as Record<string, number>;
+        const key = move.special.reaction;
+        const next = { ...bonus, [key]: (bonus[key] ?? 0) + (o.dmg ?? 0) * share, [`${key}Flat`]: (bonus[`${key}Flat`] ?? 0) + (o.defFlat ?? 0) * own.def * share };
+        own = { ...own, reactionBonus: next as StatBlock['reactionBonus'] };
+      }
+      const r = reactionAction({ move, executions: action.executions, ownElement: member.character.element, stats: own, scale, characterLevel: member.level ?? config.characterLevel, enemy });
       const hit = move.reactionHit;
       if (hit && (hit.kind === 'lunar' || hit.kind === 'stellarswirl')) {
         // Reação do time: cada contribuinte vale por si (EM e crítico próprios) e o total é a soma ponderada 1 + 1/2 + 1/12 + 1/12.

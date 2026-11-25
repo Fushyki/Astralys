@@ -50,9 +50,12 @@ function Rows({ rows }: { rows: GoRow[] }) {
 
 type Linked = Record<string, Record<string, RotationCondition>>;
 
+/** Condições cujo efeito a rotação traz por outro caminho. */
+const ROTATION_HINT: Record<string, string> = { 'Zibai.c4Splendor': 'Na rotação, adicione o golpe extra “Zibai C4: Scattermoon Splendor”.' };
+
 /** O que a condição faz na rotação, dito no próprio cartão. */
-function rotationNote(c: RotationCondition | undefined, on: boolean) {
-  if (!c) return 'Vale só nesta aba; não muda a rotação.';
+function rotationNote(key: string, c: RotationCondition | undefined, on: boolean) {
+  if (!c) return ROTATION_HINT[key] ?? 'Vale só nesta aba; não muda a rotação.';
   if (on && c.needsWindow) return 'Muda a rotação, mas a parte com duração só vale com a janela marcada em Rotação e buffs.';
   return 'Muda a rotação.';
 }
@@ -78,7 +81,7 @@ function Blocks({ blocks, linked, onSet }: { blocks: GoBlock[]; linked: Linked; 
           )}
         </label>
         {b.rows.length > 0 && <div className="rows"><Rows rows={b.rows} /></div>}
-        <span className="note">{rotationNote(linked[b.owner]?.[b.id], !!b.value)}</span>
+        <span className="note">{rotationNote(`${b.owner}.${b.id}`, linked[b.owner]?.[b.id], !!b.value)}</span>
       </div>
     );
   })}</>;

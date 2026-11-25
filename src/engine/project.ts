@@ -883,7 +883,13 @@ export function resolveProject(project: RotationProject, data: GameData, effects
   const condIds = members.flatMap((m, i) => (project.members[i]?.condManual ? (m.characterEffect?.buffs ?? []).filter((b) => b.condition).map((b) => `cbuff-${i}-${b.id}`) : []));
   gearIds.push(...condIds.filter((id) => !gearIds.includes(id)));
   const gearOff = gearIds.filter((id) => !project.enabled.includes(id));
-  const team: TeamInput = { members, extras: project.extras, config, disabled: [...project.disabled, ...gearOff] };
+  const disabled = [...project.disabled, ...gearOff];
+  // Bônus de um golpe só (`onMove`) é lido do kit pelo motor de dano: o desligado sai dali.
+  const playing = members.map((m, i) => {
+    const off = (m.characterEffect?.buffs ?? []).filter((b) => b.onMove && disabled.includes(`cbuff-${i}-${b.id}`));
+    return off.length ? { ...m, characterEffect: { ...m.characterEffect!, buffs: m.characterEffect!.buffs.filter((b) => !off.includes(b)) } } : m;
+  });
+  const team: TeamInput = { members: playing, extras: project.extras, config, disabled };
   if (project.buffWindows.some((w) => w.maxHits)) applyHitLimits(project.buffWindows, actions, assembleTeam(team, {}), members.map((m) => m.character.name));
   return {
     team,

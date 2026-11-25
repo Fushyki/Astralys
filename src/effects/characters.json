@@ -23570,6 +23570,58 @@
         "note": "+30% de DMG Lunar-Cristalizar da equipe no modo Lunar Phase Shift: ligue nas janelas."
       },
       {
+        "id": "a1stride",
+        "label": "Zibai A1: 2º golpe do Stride",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "condition": "a1Moonfall",
+        "onMove": {
+          "labels": [
+            "Spirit Steed's Stride 2-Hit DMG"
+          ],
+          "defFlat": 0.6
+        },
+        "flat": [],
+        "note": "+60% da DEF no dano do 2º golpe do Spirit Steed's Stride, como no GO: vale em todos enquanto a condição estiver ligada."
+      },
+      {
+        "id": "c2stride",
+        "label": "Zibai C2: 2º golpe do Stride",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": false,
+        "condition": "a1Moonfall",
+        "onMove": {
+          "labels": [
+            "Spirit Steed's Stride 2-Hit DMG"
+          ],
+          "defFlat": 5.5
+        },
+        "team": {
+          "moonsign": 2
+        },
+        "flat": [],
+        "note": "Com 2+ membros Moonsign, mais 550% da DEF no mesmo golpe (junto com a condição da A1)."
+      },
+      {
+        "id": "c1stride",
+        "label": "Zibai C1: 1º Stride",
+        "minConstellation": 1,
+        "scope": "self",
+        "timed": false,
+        "condition": "c1FirstStride",
+        "onMove": {
+          "labels": [
+            "Spirit Steed's Stride 2-Hit DMG"
+          ],
+          "dmg": 2.2,
+          "first": true
+        },
+        "flat": [],
+        "note": "+220% de DMG Lunar-Cristalizar só no 1º 2º golpe do Stride da rotação."
+      },
+      {
         "id": "c6",
         "label": "Zibai C6",
         "minConstellation": 6,
@@ -23611,17 +23663,12 @@
       {
         "src": "p1",
         "kind": "partial",
-        "note": "Pendente: o +60% da DEF no 2º golpe do Spirit Steed's Stride não entra. É dano fixo de um golpe Lunar e o dano fixo só vale para golpes diretos."
+        "note": "O dano extra do 2º golpe do Spirit Steed's Stride (60% da DEF) não entra: o motor não tem bônus Lunar só de um golpe."
       },
       {
         "src": "const1",
         "kind": "partial",
-        "note": "Pendente: o +220% de DMG Lunar-Cristalizar só no 1º Spirit Steed's Stride de cada modo não entra (bônus de um golpe só). O uso extra e os 100 pontos de Radiance são mecânica."
-      },
-      {
-        "src": "const2",
-        "kind": "partial",
-        "note": "Entra o +30% de DMG Lunar-Cristalizar da equipe (janela). Pendente: os +550% da DEF no 2º golpe do Spirit Steed's Stride (Moonsign: Ascendant Gleam) não entram, pelo mesmo motivo do A1."
+        "note": "Os +220% de DMG Lunar-Cristalizar só no 1º Spirit Steed's Stride não entram (bônus de um golpe só)."
       }
     ],
     "infos": [],

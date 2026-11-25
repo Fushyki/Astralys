@@ -33,7 +33,6 @@ export const NOTES_5: CharacterNotes = {
   Zibai: {
     p1: x('O dano extra do 2º golpe do Spirit Steed\'s Stride (60% da DEF) não entra: o motor não tem bônus Lunar só de um golpe.'),
     const1: x('Os +220% de DMG Lunar-Cristalizar só no 1º Spirit Steed\'s Stride não entram (bônus de um golpe só).'),
-    const2: x('O +30% da equipe entra (faixa); os +550% da DEF no 2º golpe do Spirit Steed\'s Stride não entram (bônus de um golpe só).'),
   },
   Illuga: { const1: u('Só energia.') },
   Varka: {

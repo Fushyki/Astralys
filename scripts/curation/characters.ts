@@ -32,6 +32,8 @@ export interface BuffCuration {
   forFactions?: ('moonsign' | 'hexerei')[];
   /** Condição da aba Talentos (chave da ficha do Genshin Optimizer) que liga e desliga este buff. */
   condition?: string;
+  /** Bônus de um golpe Lunar do próprio dono. */
+  onMove?: { labels: string[]; defFlat?: Val; dmg?: Val; first?: boolean };
   /** Id do buff que este reforça e substitui quando ativo. */
   replaces?: string;
   /** Ver `CharacterBuff.onCharTag`. */

@@ -12,12 +12,13 @@ export const goKey = (name: string) => name.replace(/[^A-Za-z]/g, '');
 export type GoConditionals = Record<string, Record<string, string>>;
 
 /**
- * Só o que vem do build: arma e artefatos (com as passivas de arma e conjunto que o Astralys já aplica sempre). Ascensão, passivas,
+ * Só o que vem do build: arma e artefatos (com as passivas de arma e conjunto que estão ligadas no time). Ascensão, passivas,
  * constelações e condições são calculadas pela ficha do GO.
  */
 export function gearStats(resolved: ResolvedProject, rolls: Rolls[], i: number): Record<string, number> {
   const m = resolved.team.members[i];
-  const own = staticSources(m, i).filter((s) => s.kind !== 'ascension' && (s.kind !== 'character' || /cbuff-(arma|set)/.test(s.id)));
+  const off = new Set(resolved.team.disabled);
+  const own = staticSources(m, i).filter((s) => !off.has(s.id) && s.kind !== 'ascension' && (s.kind !== 'character' || /cbuff-(arma|set)/.test(s.id)));
   const f = finalStats(m, foldSources(own), rolls[i], zeroBlock());
   return {
     weaponAtk: m.weapon.baseAtk,

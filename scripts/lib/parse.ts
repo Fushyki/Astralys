@@ -150,7 +150,7 @@ export function isNonDamageLabel(label: string): boolean {
  * Golpes em que o jogo usa uma categoria diferente da que o rótulo sugere. Fonte: o tipo de golpe (`move`) das fichas do Genshin
  * Optimizer (MIT), conferido pela varredura de docs/VARREDURA_GO.md.
  * shortcut: Gaming, Xianyun, Chasca e Varesa ficam de fora (bônus próprios deles precisam valer só em um golpe, o que o motor ainda não
- * faz) e a Iansan também (a planilha de referência diz Normal).
+ * faz).
  */
 const KIT_HIT_TYPES: Record<string, [Talent, RegExp, HitType][]> = {
   'Arataki Itto': [['normal', /Kesagiri|Saichimonji/, 'charged']],
@@ -159,6 +159,8 @@ const KIT_HIT_TYPES: Record<string, [Talent, RegExp, HitType][]> = {
   Clorinde: [['skill', /Swift Hunt|Impale the Night/, 'normal']],
   Diluc: [['skill', /-Hit/, 'skill']],
   Ganyu: [['normal', /Frostflake/, 'charged']],
+  // Confirmado pelo Davi no jogo (o combo é E, carregado, Q); a planilha de referência dizia Normal.
+  Iansan: [['normal', /Swift Stormflight/, 'charged']],
   Ifa: [['skill', /Tonicshot/, 'normal']],
   Lauma: [['normal', /Spiritcall Prayer/, 'charged'], ['skill', /Hold/, 'skill']],
   Lyney: [['normal', /Prop Arrow|Pyrotechnic|Spiritbreath/, 'charged']],

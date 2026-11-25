@@ -117,7 +117,8 @@ export function optimizeMember(ctx: OptimizerContext, memberIndex: number, flatB
 
   const er0 = 1 + statics.er + floor * rv.ER;
   const minER = m.minER ?? 0;
-  const erRolls = minER <= er0 ? 0 : Math.min(maxFree('ER'), free, ceilTol((minER - er0) / rv.ER));
+  const statFocus = m.kqmStat;
+  const erRolls = statFocus === 'er' ? Math.min(maxFree('ER'), free) : minER <= er0 ? 0 : Math.min(maxFree('ER'), free, ceilTol((minER - er0) / rv.ER));
   let damageRolls = Math.min(MAX_DAMAGE_ROLLS, free - erRolls);
   // ATK próprio mínimo: preenchido depois que a escala principal é conhecida (precisa de maxScale)
   const erFinal = er0 + erRolls * rv.ER;
@@ -193,10 +194,14 @@ export function optimizeMember(ctx: OptimizerContext, memberIndex: number, flatB
     const e = (ctx.flatEffects ?? []).find((f) => f.source === m.character.name);
     return e ? ({ ATK: 'atk', HP: 'hp', DEF: 'def' } as const)[e.sourceStat as 'ATK' | 'HP' | 'DEF'] : undefined;
   })();
-  const support = noOwnDamage && supportStat !== undefined;
+  const support = statFocus !== undefined || (noOwnDamage && supportStat !== undefined);
 
-  const mainScale: MainScale = support
-    ? supportStat!
+  const mainScale: MainScale = statFocus === 'hp' || statFocus === 'atk' || statFocus === 'def'
+    ? statFocus
+    : support && supportStat
+    ? supportStat
+    : support
+    ? 'atk' // foco em EM/ER: a escala não recebe procs
     : weight.atk >= weight.hp && weight.atk >= weight.def ? 'atk' : weight.hp >= weight.def ? 'hp' : 'def';
   const scaleSubstat: Substat = ({ atk: 'ATK%', hp: 'HP%', def: 'DEF%' } as const)[mainScale];
   const base = minimumRolls(floor);
@@ -274,9 +279,12 @@ export function optimizeMember(ctx: OptimizerContext, memberIndex: number, flatB
   let k = 0;
   let c = 0;
   let s = 0;
+  let emFocus = 0;
   if (support) {
-    s = Math.min(damageRolls, maxScale);
-    c = kqm ? Math.min(damageRolls - s, maxCR) : damageRolls - s;
+    const toScale = statFocus === 'em' || statFocus === 'er' ? 0 : Math.min(damageRolls, maxScale);
+    s = toScale;
+    if (statFocus === 'em') emFocus = Math.min(damageRolls, maxEM);
+    c = kqm ? Math.min(damageRolls - s - emFocus, maxCR) : damageRolls - s - emFocus;
     k = c; // o resto vai para crítico (CR), como na planilha
   } else {
     const forced = m.forcedCritRolls;
@@ -313,7 +321,7 @@ export function optimizeMember(ctx: OptimizerContext, memberIndex: number, flatB
   rolls.CR += c;
   rolls.CD += support ? 0 : k - c;
   rolls[scaleSubstat] += s;
-  rolls.EM += support ? 0 : em;
+  rolls.EM += support ? emFocus : em;
   rolls.ER += erRolls;
 
   return {
@@ -322,7 +330,7 @@ export function optimizeMember(ctx: OptimizerContext, memberIndex: number, flatB
     mainScale,
     support,
     budget: { total, free, erRolls, damageRolls },
-    free: { cr: c, cd: support ? 0 : k - c, scale: s, em: support ? 0 : em, er: erRolls },
+    free: { cr: c, cd: support ? 0 : k - c, scale: s, em: support ? emFocus : em, er: erRolls },
     expectedAvg: 0,
   };
 }

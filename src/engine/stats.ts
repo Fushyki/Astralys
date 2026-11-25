@@ -219,6 +219,8 @@ export interface MemberInput {
   liquidRolls?: number;
   /** Foco do KQM: id do golpe cujo dano o otimizador de substats maximiza. Ausente = a rotação inteira do membro. */
   kqmFocus?: string;
+  /** Foco do KQM em um stat (personagem que escala em HP, ER…): os procs livres vão para ele em vez de seguir o dano. Tem prioridade sobre `kqmFocus`. */
+  kqmStat?: 'hp' | 'atk' | 'def' | 'em' | 'er';
   /** Infusão dos ataques normais, carregados e de queda (Hu Tao, Xiao, Yoimiya…): elemento no lugar do Físico. */
   normalInfusion?: ElementOrPhysical;
   /** Rolls totais de substat (padrão: 9 por peça 5★ + 7 por peça 4★). */

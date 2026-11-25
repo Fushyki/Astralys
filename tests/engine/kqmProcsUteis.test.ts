@@ -41,3 +41,16 @@ it('KQM: o foco no golpe muda a escolha dos substats', () => {
   expect(moves.length).toBeGreaterThan(1);
   expect(diff).toBe(true);
 });
+
+it('KQM: o foco em um stat joga os procs livres nele (HP%, EM, ER), sem regra por personagem', () => {
+  const i = 0;
+  const com = (kqmStat: 'hp' | 'em' | 'er' | 'atk') => run(resolved.team.members.map((x, j) => (j === i ? { ...x, kqmStat } : x))).rolls[i];
+  const sem = run(resolved.team.members).rolls[i];
+  const hp = com('hp');
+  const em = com('em');
+  const er = com('er');
+  expect(hp['HP%']).toBeGreaterThan(sem['HP%']);
+  expect(em.EM).toBeGreaterThan(sem.EM);
+  expect(er.ER).toBeGreaterThan(sem.ER);
+  expect(com('atk')['ATK%']).toBeGreaterThanOrEqual(sem['ATK%']);
+});

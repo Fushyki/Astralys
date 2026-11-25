@@ -93,6 +93,8 @@ export const MemberRefSchema = z.object({
   minER: z.number().min(0).optional(),
   /** Foco do KQM: id do golpe que o otimizador de substats maximiza (ausente = a rotação inteira). */
   kqmFocus: z.string().min(1).optional(),
+  /** Foco do KQM em um stat: os procs livres vão para ele (tem prioridade sobre `kqmFocus`). */
+  kqmStat: z.enum(['hp', 'atk', 'def', 'em', 'er']).optional(),
   totalRolls: z.number().int().min(0).optional(),
   forcedCritRolls: z.number().int().min(0).optional(),
   /** Rolls totais por substat definidos à mão (os que faltam valem o mínimo). Ausente = otimizar. */
@@ -604,6 +606,7 @@ export function resolveMember(ref: MemberRef, data: GameData, effects: EffectsDa
     factions: factionsOf(ref.factions, own?.factions),
     minER: ref.minER,
     kqmFocus: ref.kqmFocus,
+    kqmStat: ref.kqmStat,
     normalInfusion: ref.normalInfusion,
     totalRolls: ref.totalRolls,
     forcedCritRolls: ref.forcedCritRolls,

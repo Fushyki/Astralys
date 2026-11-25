@@ -476,8 +476,15 @@ export function OtimizadorPanel({ index }: { index: number }) {
   /** Foco do KQM: o mesmo seletor de golpes da otimização; sem golpe vale a rotação inteira. */
   const focusNode = (
     <div className="ot-field">
-      <span className="lbl">Foco do dano</span>
-      <button type="button" className="ot-movebtn" aria-haspopup="dialog" aria-label="Escolher o golpe de foco do KQM" onClick={() => setPickingFocus(true)}>
+      <span className="lbl">Foco do KQM</span>
+      <div className="ot-seg" role="group" aria-label="Foco do KQM: dano ou um stat">
+        <button type="button" aria-pressed={!ref.kqmStat} onClick={() => update(index, { kqmStat: undefined })}>Dano</button>
+        {(Object.keys(STAT_LABEL) as StatKey[]).map((k) => (
+          <button key={k} type="button" aria-pressed={ref.kqmStat === k} onClick={() => update(index, { kqmStat: k })}>{STAT_LABEL[k]}</button>
+        ))}
+      </div>
+      {ref.kqmStat && <p className="note small">Os procs livres vão para {STAT_LABEL[ref.kqmStat]}; o golpe de foco não pesa.</p>}
+      <button type="button" className="ot-movebtn" aria-haspopup="dialog" aria-label="Escolher o golpe de foco do KQM" disabled={!!ref.kqmStat} onClick={() => setPickingFocus(true)}>
         {focusMove && <KindBadge kind={kindOf(focusMove)} />}
         <span className="n" style={{ color: focusMove ? damageColor(character ? (kitMode ? kitElement(character, focusMove, infusion) : (character.element as ElementOrPhysical)) : undefined, specialOfMove(focusMove, 0, effect)) : undefined }}>{focusMove ? displayName(focusMove) : 'Rotação completa'}</span>
         {focusMove && <FamilyBadge special={specialOfMove(focusMove, 0, effect)} />}

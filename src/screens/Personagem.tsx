@@ -11,6 +11,8 @@ import { BuildComparePanel } from './personagem/BuildCompare';
 import { DamageTablePanel, ReactionsPanel, ReceivedBuffsPanel, RollValuePanel } from './personagem/MainColumn';
 import { OtimizadorPanel } from './Otimizador';
 import { TalentsPanel } from './personagem/TalentsPanel';
+import { GoTalentsPanel } from './personagem/GoTalentsPanel';
+import { GO_TALENT_CHARACTERS } from '../features/talentos/goRequest';
 import { AsideCard } from './otimizar/AsideCard';
 import './personagem.css';
 
@@ -102,7 +104,7 @@ export default function Personagem() {
 
         <div className="pc-main">
           {view === 'resumo' && <Dashboard v={v} index={index} onGood={goToGood} />}
-          {view === 'talentos' && <TalentsPanel v={v} index={index} />}
+          {view === 'talentos' && (GO_TALENT_CHARACTERS.includes(v.project.members[index].character) ? <GoTalentsPanel key={`${v.id}-${index}`} v={v} index={index} /> : <TalentsPanel v={v} index={index} />)}
           {view === 'otimizar' && <OtimizadorPanel index={index} />}
           {view === 'avancado' && (
             <>

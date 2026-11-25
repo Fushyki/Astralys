@@ -133,7 +133,7 @@ export function createEvaluator(input: EvaluatorInput): Evaluator {
       // Só o membro refeito passa pelas regras: os outros já vieram finalizados e rodá-las de novo contaria duas vezes o que escala por nível.
       const done = finalizeMembers(base, !!input.planilha);
       const members = base.map((m, i) => (i === member ? done[i] : resolved.team.members[i]));
-      hit = { members, flat: [...applyFlatLevels(effects.flatDamage, members), ...gearFlat(members)] };
+      hit = { members, flat: [...applyFlatLevels(effects.flatDamage, members), ...gearFlat(members, new Set(resolved.team.disabled))] };
       cache.set(key, hit);
     }
     return hit;

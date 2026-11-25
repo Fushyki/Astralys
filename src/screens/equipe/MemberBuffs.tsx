@@ -105,7 +105,7 @@ export function MemberBuffs({ v, index, inline = false }: { v: ProjectView; inde
               <Button variant="ghost" size="sm" onClick={() => setAll(false)}>Desligar todos</Button>
             </span>
           </div>
-          {cards.some((c) => c.gear && !c.active) && <p className="bc-note">Os buffs de arma e de artefatos começam desligados: ligue só os que valem neste time.</p>}
+          {cards.some((c) => c.gear && !c.active) && <p className="bc-note">Os buffs de arma, de artefatos e as condições de talento começam desligados: ligue só os que valem neste time.</p>}
           {cards.length === 0 && <p className="muted small">Nenhum buff com número cadastrado chega a este personagem.</p>}
           {groups.map((g) => (
             <section key={g.key} className="bc-grp" style={{ ['--g' as string]: g.color ?? 'var(--muted)' }}>
@@ -154,7 +154,7 @@ export function GivenBuffs({ v, index }: { v: ProjectView; index: number }) {
               <Button variant="ghost" size="sm" onClick={() => setAll(false)}>Desligar todas</Button>
             </span>
           </div>
-          {cards.some((c) => c.gear && !c.active) && <p className="bc-note">Os buffs de arma e de artefatos começam desligados: ligue só os que valem neste time.</p>}
+          {cards.some((c) => c.gear && !c.active) && <p className="bc-note">Os buffs de arma, de artefatos e as condições de talento começam desligados: ligue só os que valem neste time.</p>}
           {cards.length === 0 && <p className="muted small">{name} não passa nenhum buff com número cadastrado.</p>}
           {groups.map((g) => (
             <section key={g.key} className="bc-grp" style={{ ['--g' as string]: v.colors[index] }}>

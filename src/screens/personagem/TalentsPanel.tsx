@@ -35,7 +35,7 @@ const UNLOCK: Record<string, string> = { p1: 'Ascensão 1', p2: 'Ascensão 4' };
 /** Pontos do mapa de estrelas (viewBox 250 × 120) e a ramificação final. */
 const NODES: [number, number][] = [[22, 96], [66, 58], [114, 74], [150, 26], [200, 42], [228, 100]];
 
-function Icon({ name, color }: { name: string; color?: string }) {
+export function Icon({ name, color }: { name: string; color?: string }) {
   const [failed, setFailed] = useState(false);
   return name && !failed ? <img src={skillIconUrl(name)} alt="" loading="lazy" crossOrigin="anonymous" onError={() => setFailed(true)} style={color ? { borderColor: color } : undefined} /> : <StarIcon size={20} color={color} />;
 }
@@ -55,7 +55,7 @@ function FullText({ text }: { text: string }) {
 }
 
 /** Descrição (até 8 linhas; 5 nas constelações); "ver tudo" só aparece quando o texto não cabe e abre o texto completo, com rolagem. */
-function OneLine({ title, text, limit = 360 }: { title: string; text: string; limit?: number }) {
+export function OneLine({ title, text, limit = 360 }: { title: string; text: string; limit?: number }) {
   const [open, setOpen] = useState(false);
   useEffect(() => {
     if (!open) return;
@@ -84,7 +84,7 @@ function OneLine({ title, text, limit = 360 }: { title: string; text: string; li
   );
 }
 
-function Stepper({ label, value, text, onDec, onInc, decOff, incOff }: { label: string; value: number; text: string; onDec: () => void; onInc: () => void; decOff?: boolean; incOff?: boolean }) {
+export function Stepper({ label, value, text, onDec, onInc, decOff, incOff }: { label: string; value: number; text: string; onDec: () => void; onInc: () => void; decOff?: boolean; incOff?: boolean }) {
   return (
     <div className="step" role="group" aria-label={label} data-value={value}>
       <button type="button" aria-label={`Diminuir: ${label}`} onClick={onDec} disabled={decOff}>−</button>

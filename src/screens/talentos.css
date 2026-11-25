@@ -109,3 +109,9 @@
 .stack-in { width: 3.4em; min-width: 0; text-align: center; background: transparent; border: 0; border-bottom: 1px solid var(--border-ctl-hi); color: inherit; font: inherit; padding: 0 2px; }
 .stack-in:focus { outline: none; border-bottom-color: var(--gold); }
 .stack-in:disabled { opacity: .5; }
+
+.tl-cond label select { min-height: var(--row-h); max-width: 50%; }
+/* Condição das fichas do GO: desligada é o estado normal, não um efeito cortado. */
+.tl-cond.go[data-active="false"] .txt { color: var(--text-2); text-decoration: none; }
+.tl-cond.go[data-active="false"] .dz-badge { opacity: 1; }
+.tl-cond.go > .note { display: block; margin: 0; padding: var(--sp-2) var(--sp-3); font-size: var(--fs-1); line-height: 1.35; }

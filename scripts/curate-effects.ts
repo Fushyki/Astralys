@@ -527,6 +527,8 @@ function buildCharacters(): CharacterEffect[] {
         ...(b.forElements ? { forElements: b.forElements } : {}),
         ...(b.decay ? { decay: b.decay } : {}),
         ...(b.forFactions ? { forFactions: b.forFactions } : {}),
+        ...(b.condition ? { condition: b.condition } : {}),
+        ...(b.onMove ? { onMove: { labels: b.onMove.labels, ...(b.onMove.defFlat !== undefined ? { defFlat: v(b.onMove.defFlat) } : {}), ...(b.onMove.dmg !== undefined ? { dmg: v(b.onMove.dmg) } : {}), ...(b.onMove.first ? { first: true } : {}) } } : {}),
         ...(b.moveMult ? { moveMult: { labels: b.moveMult.labels, extra: v(b.moveMult.extra) } } : {}),
         ...(b.replaces ? { replaces: b.replaces } : {}),
         ...(b.onCharTag ? { onCharTag: true } : {}),

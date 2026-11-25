@@ -81,9 +81,6 @@ export const LOTE: Lote = {
       p1: x('Entra o ataque coordenado do Tamoto (100% do golpe para cima, conta como habilidade). A infusão Geo do efeito Tailoring (5 s) não entra: escolha o elemento do golpe à mão.'),
     },
     Zibai: {
-      p1: x('Pendente: o +60% da DEF no 2º golpe do Spirit Steed\'s Stride não entra. É dano fixo de um golpe Lunar e o dano fixo só vale para golpes diretos.'),
-      const1: x('Pendente: o +220% de DMG Lunar-Cristalizar só no 1º Spirit Steed\'s Stride de cada modo não entra (bônus de um golpe só). O uso extra e os 100 pontos de Radiance são mecânica.'),
-      const2: x('Entra o +30% de DMG Lunar-Cristalizar da equipe (janela). Pendente: os +550% da DEF no 2º golpe do Spirit Steed\'s Stride (Moonsign: Ascendant Gleam) não entram, pelo mesmo motivo do A1.'),
     },
   },
   infos,

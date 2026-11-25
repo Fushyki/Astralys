@@ -329,6 +329,20 @@ export function setSourceEnabled(project: RotationProject, id: string, enabled: 
   return touch({ ...project, disabled: enabled ? project.disabled.filter((x) => x !== id) : [...project.disabled, id] });
 }
 
+/**
+ * Liga ou desliga de uma vez os buffs de uma condição da aba Talentos. Os que começam desligados (`manual`) entram ou saem de
+ * `enabled`; `stacks` grava a quantidade escolhida no membro, na mesma edição (um desfazer só).
+ */
+export function setCondition(project: RotationProject, ids: string[], enabled: boolean, manual: string[], stacks?: { member: number; key: string; n: number }): RotationProject {
+  const others = (list: string[]) => list.filter((x) => !ids.includes(x));
+  return touch({
+    ...project,
+    disabled: enabled ? others(project.disabled) : [...others(project.disabled), ...ids],
+    enabled: enabled ? [...others(project.enabled), ...ids.filter((id) => manual.includes(id))] : others(project.enabled),
+    ...(stacks ? { members: project.members.map((m, i) => (i === stacks.member ? { ...m, stacks: { ...m.stacks, [stacks.key]: stacks.n } } : m)) } : {}),
+  });
+}
+
 /** Qual interruptor de buff o usuário mexeu. */
 export interface BuffToggle {
   /** Id gravado em `disabled`: o da fonte (estática) ou `<buff>@<Nome>` (buff de time só para quem recebe). */

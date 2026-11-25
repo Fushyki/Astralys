@@ -280,7 +280,7 @@ export function OtimizadorPanel({ index }: { index: number }) {
   /** Para escolher artefatos o motor avalia os efeitos de arma e set (que começam desligados) como ligados; o que o usuário desligou de propósito continua desligado. */
   const optimizerTeam = {
     ...v.resolved.team,
-    disabled: (v.resolved.team.disabled ?? []).filter((id) => !v.resolved.gearIds.includes(id) || project.disabled.includes(id)),
+    disabled: (v.resolved.team.disabled ?? []).filter((id) => !v.resolved.gearIds.includes(id) || v.resolved.condIds.includes(id) || project.disabled.includes(id)),
   };
 
   /**

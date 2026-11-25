@@ -16709,6 +16709,7 @@
         "forElements": [
           "Geo"
         ],
+        "condition": "a1AfterSkillBurst",
         "stats": {
           "atkPct": 0,
           "dmgPct": 0,
@@ -16743,6 +16744,7 @@
         "forElements": [
           "Geo"
         ],
+        "condition": "a1AfterSkillBurst",
         "stats": {
           "atkPct": 0,
           "dmgPct": 0,
@@ -16769,11 +16771,169 @@
         "note": "A C6 troca o bônus da A1 por +10% de Taxa e +30% de Dano Crítico; este buff soma só a diferença (+5% e +20%) sobre o da A1. Ligue nas mesmas janelas."
       },
       {
+        "id": "a1g",
+        "label": "Illuga A1 (Maestria, Ascendant Gleam)",
+        "minConstellation": 0,
+        "scope": "others",
+        "timed": true,
+        "condition": "a1AfterSkillBurst",
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 50,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "team": {
+          "moonsign": 2
+        },
+        "flat": [],
+        "note": "+50 de Maestria para os demais afetados pela A1, com 2+ membros Moonsign: ligue nas mesmas janelas."
+      },
+      {
+        "id": "c6g",
+        "label": "Illuga C6 (Maestria, diferença)",
+        "minConstellation": 6,
+        "scope": "others",
+        "timed": true,
+        "condition": "a1AfterSkillBurst",
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 30,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "team": {
+          "moonsign": 2
+        },
+        "flat": [],
+        "note": "A C6 troca os +50 de Maestria da A1 por +80; este buff soma só a diferença (+30). Ligue nas mesmas janelas."
+      },
+      {
+        "id": "burst",
+        "label": "Illuga: Nightingale's Song (Supremo)",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "condition": "burstSong",
+        "level": {
+          "talent": "burst",
+          "table": [
+            0.336,
+            0.3612,
+            0.3864,
+            0.42,
+            0.4452,
+            0.4704,
+            0.504,
+            0.5376,
+            0.5712,
+            0.6048,
+            0.6384,
+            0.672,
+            0.714,
+            0.756,
+            0.798
+          ]
+        },
+        "flat": [
+          {
+            "name": "Bônus de Dano Geo por Maestria",
+            "sourceStat": "EM",
+            "perPoint": 1,
+            "hitTypes": [
+              "normal",
+              "charged",
+              "plunge",
+              "skill",
+              "burst"
+            ],
+            "stacks": 21,
+            "targets": "team",
+            "elements": [
+              "Geo"
+            ]
+          }
+        ],
+        "note": "Soma ao Dano Geo da equipe uma parte da Maestria dele (nível do Supremo), em 21 golpes Geo (os 15 extras por construto Geo NÃO entram)."
+      },
+      {
+        "id": "burstlcr",
+        "label": "Illuga: Nightingale's Song (Supremo, Lunar-Cristalizar)",
+        "minConstellation": 0,
+        "scope": "team",
+        "timed": true,
+        "condition": "burstSong",
+        "convert": {
+          "from": "em",
+          "source": "self",
+          "perPoint": 1,
+          "threshold": 0,
+          "to": [
+            "lunarcrystallizeFlat"
+          ]
+        },
+        "level": {
+          "talent": "burst",
+          "table": [
+            2.2592,
+            2.4286,
+            2.5981,
+            2.824,
+            2.9934,
+            3.1629,
+            3.3888,
+            3.6147,
+            3.8406,
+            4.0666,
+            4.2925,
+            4.5184,
+            4.8008,
+            5.0832,
+            5.3656
+          ]
+        },
+        "flat": [],
+        "note": "Parte da Maestria dele (nível do Supremo) somada ao dano Lunar-Cristalizar por golpe: ligue nas janelas (o motor não conta os 21 stacks nesta parte)."
+      },
+      {
         "id": "a4geo",
         "label": "Illuga A4 (Nightingale's Song)",
         "minConstellation": 0,
         "scope": "self",
         "timed": false,
+        "condition": "burstSong",
         "team": {
           "scale": {
             "of": [
@@ -16814,6 +16974,7 @@
         "minConstellation": 0,
         "scope": "team",
         "timed": true,
+        "condition": "burstSong",
         "convert": {
           "from": "em",
           "source": "self",
@@ -16845,6 +17006,7 @@
         "minConstellation": 4,
         "scope": "team",
         "timed": true,
+        "condition": "c4BurstActive",
         "stats": {
           "atkPct": 0,
           "dmgPct": 0,
@@ -23379,6 +23541,7 @@
         "minConstellation": 2,
         "scope": "team",
         "timed": true,
+        "condition": "c2ShiftMode",
         "stats": {
           "atkPct": 0,
           "dmgPct": 0,
@@ -23405,6 +23568,58 @@
         },
         "flat": [],
         "note": "+30% de DMG Lunar-Cristalizar da equipe no modo Lunar Phase Shift: ligue nas janelas."
+      },
+      {
+        "id": "a1stride",
+        "label": "Zibai A1: 2º golpe do Stride",
+        "minConstellation": 0,
+        "scope": "self",
+        "timed": false,
+        "condition": "a1Moonfall",
+        "onMove": {
+          "labels": [
+            "Spirit Steed's Stride 2-Hit DMG"
+          ],
+          "defFlat": 0.6
+        },
+        "flat": [],
+        "note": "+60% da DEF no dano do 2º golpe do Spirit Steed's Stride, como no GO: vale em todos enquanto a condição estiver ligada."
+      },
+      {
+        "id": "c2stride",
+        "label": "Zibai C2: 2º golpe do Stride",
+        "minConstellation": 2,
+        "scope": "self",
+        "timed": false,
+        "condition": "a1Moonfall",
+        "onMove": {
+          "labels": [
+            "Spirit Steed's Stride 2-Hit DMG"
+          ],
+          "defFlat": 5.5
+        },
+        "team": {
+          "moonsign": 2
+        },
+        "flat": [],
+        "note": "Com 2+ membros Moonsign, mais 550% da DEF no mesmo golpe (junto com a condição da A1)."
+      },
+      {
+        "id": "c1stride",
+        "label": "Zibai C1: 1º Stride",
+        "minConstellation": 1,
+        "scope": "self",
+        "timed": false,
+        "condition": "c1FirstStride",
+        "onMove": {
+          "labels": [
+            "Spirit Steed's Stride 2-Hit DMG"
+          ],
+          "dmg": 2.2,
+          "first": true
+        },
+        "flat": [],
+        "note": "+220% de DMG Lunar-Cristalizar só no 1º 2º golpe do Stride da rotação."
       },
       {
         "id": "c6",
@@ -23448,17 +23663,12 @@
       {
         "src": "p1",
         "kind": "partial",
-        "note": "Pendente: o +60% da DEF no 2º golpe do Spirit Steed's Stride não entra. É dano fixo de um golpe Lunar e o dano fixo só vale para golpes diretos."
+        "note": "O dano extra do 2º golpe do Spirit Steed's Stride (60% da DEF) não entra: o motor não tem bônus Lunar só de um golpe."
       },
       {
         "src": "const1",
         "kind": "partial",
-        "note": "Pendente: o +220% de DMG Lunar-Cristalizar só no 1º Spirit Steed's Stride de cada modo não entra (bônus de um golpe só). O uso extra e os 100 pontos de Radiance são mecânica."
-      },
-      {
-        "src": "const2",
-        "kind": "partial",
-        "note": "Entra o +30% de DMG Lunar-Cristalizar da equipe (janela). Pendente: os +550% da DEF no 2º golpe do Spirit Steed's Stride (Moonsign: Ascendant Gleam) não entram, pelo mesmo motivo do A1."
+        "note": "Os +220% de DMG Lunar-Cristalizar só no 1º Spirit Steed's Stride não entram (bônus de um golpe só)."
       }
     ],
     "infos": [],

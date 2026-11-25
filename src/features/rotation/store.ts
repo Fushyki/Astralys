@@ -75,6 +75,7 @@ export interface RotationState {
   realign: (step?: number) => void;
   updateConfig: (patch: Partial<RotationProject['config']>) => void;
   setSourceEnabled: (id: string, enabled: boolean) => void;
+  setCondition: (ids: string[], enabled: boolean, manual: string[], stacks?: { member: number; key: string; n: number }) => void;
   setElementMode: (mode: RotationProject['elementMode']) => void;
   setBuff: (toggle: ops.BuffToggle, enabled: boolean) => void;
   /** Liga ou desliga a habilidade de quem dá o buff, para todos que o recebem. */
@@ -241,6 +242,7 @@ export const useRotationStore = create<RotationState>((set, get) => {
     realign: (step) => commit(get().project && ops.realignActions(get().project!, step)),
     updateConfig: (patch) => commit(get().project && ops.updateConfig(get().project!, patch)),
     setSourceEnabled: (id, enabled) => commit(get().project && ops.setSourceEnabled(get().project!, id, enabled)),
+    setCondition: (ids, enabled, manual, stacks) => commit(get().project && ops.setCondition(get().project!, ids, enabled, manual, stacks)),
     setBuff: (toggle, enabled) => commit(get().project && ops.setBuffEnabled(get().project!, toggle, enabled)),
     setGivenBuff: (baseId, gear, enabled) => commit(get().project && ops.setGivenBuffEnabled(get().project!, baseId, gear, enabled)),
     setElementMode: (mode) => commit(get().project && ops.setElementMode(get().project!, mode)),

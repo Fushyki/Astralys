@@ -5,6 +5,7 @@
  */
 import type { Character, Weapon } from '../../data/schema';
 import { MAX_TEAM_SIZE, NO_WEAPON, SUBSTATS, type GameData, type MemberRef, type RotationProject, type Substat } from '../../engine';
+import { GO_TALENT_CHARACTERS } from '../talentos/goRequest';
 
 const touch = (p: RotationProject): RotationProject => ({ ...p, meta: { ...p.meta, updatedAt: new Date().toISOString() } });
 
@@ -30,12 +31,33 @@ export function addMember(project: RotationProject, ref: MemberRef): RotationPro
   return touch({ ...project, members: [...project.members, ref] });
 }
 
+/** Troca o índice do membro dentro de um id (etiqueta de buff, fonte desligada...). null = era de um membro que não existe aqui. */
+export function remapMemberId(id: string, map: ReadonlyMap<number, number>): string | null {
+  const swap = (n: string) => map.get(Number(n));
+  let m = /^(gear|char):(\d+)$/.exec(id);
+  if (m) { const t = swap(m[2]); return t === undefined ? null : `${m[1]}:${t}`; }
+  m = /^m(\d+):(.*)$/.exec(id);
+  if (m) { const t = swap(m[1]); return t === undefined ? null : `m${t}:${m[2]}`; }
+  m = /^(cbuff-(?:res-|def-)?)(\d+)(-.*)$/.exec(id);
+  if (m) { const t = swap(m[2]); return t === undefined ? null : `${m[1]}${t}${m[3]}`; }
+  m = /^(gear-|set-res-shred-|res-shred-)(\d+)$/.exec(id);
+  if (m) { const t = swap(m[2]); return t === undefined ? null : `${m[1]}${t}`; }
+  return id;
+}
+
+/** Reindexa os buffs desligados e ligados; os de quem saiu (índice fora do mapa) somem. */
+function remapToggles(p: RotationProject, map: ReadonlyMap<number, number>): Pick<RotationProject, 'disabled' | 'enabled'> {
+  const keep = (list: string[]) => list.map((id) => remapMemberId(id, map)).filter((id): id is string => id !== null);
+  return { disabled: keep(p.disabled), enabled: keep(p.enabled) };
+}
+
 /** Remove um membro e tudo que dependia dele. Não remove o último membro. */
 export function removeMember(project: RotationProject, index: number): RotationProject {
   if (project.members.length <= 1 || !project.members[index]) return project;
   return touch({
     ...project,
     members: project.members.filter((_, i) => i !== index),
+    ...remapToggles(project, new Map(project.members.flatMap((_, i) => (i === index ? [] : [[i, i > index ? i - 1 : i] as const])))),
     actions: project.actions
       .filter((a) => a.member !== index)
       .map((a) => ({
@@ -63,6 +85,7 @@ export function replaceMember(project: RotationProject, index: number, ref: Memb
   return touch({
     ...project,
     members: project.members.map((m, i) => (i === index ? ref : m)),
+    ...remapToggles(project, new Map(project.members.flatMap((_, i) => (i === index ? [] : [[i, i] as const])))),
     actions: project.actions.filter((a) => a.member !== index),
   });
 }
@@ -115,6 +138,7 @@ export function defaultMember(characterName: string, data: Pick<GameData, 'chara
     talents: { normal: 10, skill: 10, burst: 10 },
     minER: 0,
     gearManual: true,
+    ...(GO_TALENT_CHARACTERS.includes(character.name) ? { condManual: true } : {}),
   };
 }
 

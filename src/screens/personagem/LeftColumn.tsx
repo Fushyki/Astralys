@@ -33,7 +33,7 @@ export function CharacterCard({ character, memberRef, index, color, level, share
     <Panel>
       <div className="pp-portrait" style={{ ['--c' as string]: color }}>
         {character.splash ? <img src={`${SPLASH}/${character.splash}.webp`} alt="" crossOrigin="anonymous" loading="lazy" /> : <CharacterAvatar name={character.name} icon={character.icon} color={color} size={120} />}
-        <span className="num lvl">Nv {level}/90</span>
+        <span className="num lvl">Nv {level}/{Math.max(90, level)}</span>
       </div>
       <div className="pc-id">
         <span className="n">{character.name}</span>

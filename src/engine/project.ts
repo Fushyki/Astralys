@@ -70,8 +70,8 @@ export const MemberRefSchema = z.object({
   talents: z.object({ normal: TalentLevel, skill: TalentLevel, burst: TalentLevel }),
   /** 'generic' = o usuário voltou ao build genérico de propósito: o projeto não abre mais com as peças do inventário. */
   piecesChoice: z.literal('generic').optional(),
-  /** Nível do personagem (1 a 90). Ausente = o nível padrão do cenário (`config.characterLevel`). */
-  level: z.number().int().min(1).max(90).optional(),
+  /** Nível do personagem (1 a 90, 95 ou 100). Ausente = o nível padrão do cenário (`config.characterLevel`). */
+  level: z.number().int().min(1).max(100).optional(),
   /** Constelação (0 a 6). Ausente = C0. Sobe em 3 o nível dos talentos da C3 e da C5. */
   constellation: z.number().int().min(0).max(6).optional(),
   /**

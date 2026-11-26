@@ -153,7 +153,7 @@ export function optimizeMember(ctx: OptimizerContext, memberIndex: number, flatB
     const element = a.move.element ?? m.character.element;
     // Golpe Lunar/Estelar: sem DMG% comum (a parte da Maestria dele a busca não enxerga; o dano final usa a fórmula certa).
     const dmg = a.move.special ? 1 : 1 + hitDmgBonus(stats, element, m.character.element, a.move.hitType) + a.dmgAdjust - lockoutCut(assembly.lockouts?.[memberIndex], a.move.hitType, a.sinceType);
-    const def = defMultiplier(config.characterLevel, config.enemyLevel, assembly.enemyDefRed, config.enemyDefIgnore ?? 0);
+    const def = defMultiplier(m.level ?? config.characterLevel, config.enemyLevel, assembly.enemyDefRed, config.enemyDefIgnore ?? 0);
     const res = resMultiplier(enemyRes({ level: config.enemyLevel, res: assembly.enemyRes }, element));
     const w = a.executions * dmg * def * res;
     const sc = scaleAt(a.move, a.move.talent === 'proc' ? 1 : m.talents[a.move.talent]);
@@ -242,7 +242,7 @@ export function optimizeMember(ctx: OptimizerContext, memberIndex: number, flatB
       } else if (g.reaction === 'spread' || g.reaction === 'aggravate') {
         const info = ADDITIVE[g.reaction];
         const bonus = (statics.reactionBonus?.[g.reaction] ?? 0) + (t.reactionBonus?.[g.reaction] ?? 0);
-        if (g.element === info.element) part += g.sW * additiveTerm(g.reaction, g.element as never, config.characterLevel, em, bonus);
+        if (g.element === info.element) part += g.sW * additiveTerm(g.reaction, g.element as never, m.level ?? config.characterLevel, em, bonus);
       }
       const cf = crit ? 1 + Math.min(cr0 + t.critRate + crit.c * rv.CR, 1) * (cd0 + t.critDmg + crit.d * rv.CD) : 1;
       acc += amp * part * cf;

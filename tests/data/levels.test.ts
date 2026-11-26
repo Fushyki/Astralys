@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { ASCENSION_CAPS, ascensionAt, characterAtLevel, type LevelsData } from '../../src/data/levels';
+import { ASCENSION_CAPS, ascensionAt, characterAtLevel, snapLevel, type LevelsData } from '../../src/data/levels';
 import type { Character } from '../../src/data/schema';
 import { analyzeProject, resolveProject, type EffectsData, type GameData } from '../../src/engine';
 import { sampleProject } from '../../src/features/rotation/persistence';
@@ -38,6 +38,15 @@ describe('nível do personagem', () => {
     expect(l80.ascension!.value).toBeCloseTo(0.192, 9); // A6 também no 80
     expect(characterAtLevel(col, 40, levels).ascension!.value).toBeCloseTo(0.048, 9); // A2
     expect(characterAtLevel(col, 1, levels).baseAtk).toBeLessThan(l80.baseAtk);
+  });
+
+  it('95 e 100 sobem os stats pela curva, sem mudar o stat de ascensão', () => {
+    const col = characters.find((c) => c.name === 'Columbina')!;
+    const [l95, l100] = [95, 100].map((l) => characterAtLevel(col, l, levels));
+    expect(l95.baseHp).toBeGreaterThan(col.baseHp);
+    expect(l100.baseAtk).toBeGreaterThan(l95.baseAtk);
+    expect(l100.ascension!.value).toBeCloseTo(col.ascension!.value, 9);
+    expect([1, 89, 90, 91, 92, 93, 97, 98, 120].map(snapLevel)).toEqual([1, 89, 90, 90, 90, 95, 95, 100, 100]);
   });
 
   it('sem curva (ou sem dados do personagem) devolve o mesmo personagem', () => {

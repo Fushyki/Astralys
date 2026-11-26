@@ -1,5 +1,5 @@
 /**
- * Stats base do personagem em qualquer nível (1 a 90). O Lunaris só traz o nível 90; a curva de nível e os bônus de ascensão vêm do
+ * Stats base do personagem em qualquer nível (1 a 100). O Lunaris só traz o nível 90; a curva de nível e os bônus de ascensão vêm do
  * Genshin Optimizer (`scripts/sync-levels.ts` → `levels.json`): stat = base × curva[nível] + bônus[ascensão].
  */
 import type { Character } from './schema';
@@ -15,7 +15,14 @@ export interface LevelsData {
   chars: Record<string, LevelChar>;
 }
 
-export const MAX_CHARACTER_LEVEL = 90;
+/** Nível dos stats do Lunaris e o padrão de quem entra no time. */
+export const DEFAULT_CHARACTER_LEVEL = 90;
+export const MAX_CHARACTER_LEVEL = 100;
+/** Acima do 90 o jogo só tem o 95 e o 100 (mesmo arredondamento do GO). */
+export const snapLevel = (level: number): number => {
+  const lv = Math.min(MAX_CHARACTER_LEVEL, Math.max(1, Math.round(level)));
+  return lv <= DEFAULT_CHARACTER_LEVEL ? lv : lv > 97 ? MAX_CHARACTER_LEVEL : lv > 92 ? 95 : DEFAULT_CHARACTER_LEVEL;
+};
 /** Níveis em que o personagem pode estar ascendido (20, 40, 50, 60, 70, 80). */
 export const ASCENSION_CAPS = [20, 40, 50, 60, 70, 80];
 
@@ -28,12 +35,12 @@ export const hasLevelData = (name: string, levels?: LevelsData): boolean => !!le
 export function characterAtLevel(character: Character, level: number, levels?: LevelsData): Character {
   const lv = Math.min(MAX_CHARACTER_LEVEL, Math.max(1, Math.round(level)));
   const data = levels?.chars[character.name];
-  if (!levels || !data || lv === MAX_CHARACTER_LEVEL) return character;
+  if (!levels || !data || lv === DEFAULT_CHARACTER_LEVEL) return character;
   const asc = ascensionAt(lv);
   const raw = (k: 'hp' | 'atk' | 'def', l: number, a: number) => data[k][0] * levels.curves[data[k][1]][l] + data.asc[k][a];
   // Ancorado nos dados: o nível 90 continua sendo exatamente o de characters.json (Aloy e o Viajante já vêm com a base do GO).
   const base = { hp: character.baseHp, atk: character.baseAtk, def: character.baseDef };
-  const stat = (k: 'hp' | 'atk' | 'def') => (raw(k, lv, asc) * base[k]) / raw(k, MAX_CHARACTER_LEVEL, 6);
+  const stat = (k: 'hp' | 'atk' | 'def') => (raw(k, lv, asc) * base[k]) / raw(k, DEFAULT_CHARACTER_LEVEL, 6);
   const top = data.asc.special?.[6];
   return {
     ...character,

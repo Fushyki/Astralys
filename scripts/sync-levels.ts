@@ -1,5 +1,5 @@
 /**
- * Stats base dos personagens em qualquer nível (1 a 90): o Lunaris só traz o nível 90, então a curva de nível e os bônus de
+ * Stats base dos personagens em qualquer nível (1 a 100): o Lunaris só traz o nível 90, então a curva de nível e os bônus de
  * ascensão vêm do Genshin Optimizer (MIT, `libs/gi/stats/src/allStat_gen.json`; ver THIRD_PARTY_NOTICES.md).
  * Rode `npx tsx scripts/sync-levels.ts [--refresh]`. Saída: src/data/generated/levels.json.
  *   stat(nível, ascensão) = base × curva[nível] + bônus[ascensão]
@@ -62,7 +62,7 @@ for (const c of characters) {
   };
 }
 
-const curves = Object.fromEntries([...used].sort().map((k) => [k, go.char.expCurve[k].slice(0, 91).map((v, i) => (i === 0 ? 0 : r6(v)))]));
+const curves = Object.fromEntries([...used].sort().map((k) => [k, go.char.expCurve[k].slice(0, 101).map((v, i) => (i === 0 ? 0 : r6(v)))]));
 await writeFile(OUT, JSON.stringify({ source: 'Genshin Optimizer (MIT): libs/gi/stats/src/allStat_gen.json', curves, chars }, null, 1) + '\n');
 console.log(`levels.json: ${Object.keys(chars).length} personagens, ${Object.keys(curves).length} curvas`);
 if (missing.length) console.log(`sem dados de nível (ficam no nível 90): ${missing.join(', ')}`);

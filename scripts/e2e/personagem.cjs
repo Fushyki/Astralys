@@ -171,12 +171,12 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
   await page.click('.pcard.weapon .art.info');
   await page.waitForSelector('[role="dialog"][aria-label^="Passiva de"]');
   check('o ícone da arma abre o popup com a passiva e os stats', (await page.locator('.dz-dialog.wi .wi-sec h3').count()) >= 2 && /ATK base\s*\d/.test(await page.textContent('.wi-top')) && (await page.locator('.dz-dialog .wcard').count()) === 0);
-  const sw = page.locator('.wi-buff input');
+  const sw = page.locator('.dz-dialog .wi-buff input');
   if (await sw.count()) {
     const before = await sw.first().isChecked();
     await sw.first().click(); await settle();
-    check('o botão do buff liga e desliga', (await page.locator('.wi-buff input').first().isChecked()) === !before);
-    await page.locator('.wi-buff input').first().click(); await settle();
+    check('o botão do buff liga e desliga', (await page.locator('.dz-dialog .wi-buff input').first().isChecked()) === !before);
+    await page.locator('.dz-dialog .wi-buff input').first().click(); await settle();
   } else check('a arma sem buff cadastrado avisa isso', /não tem buff/.test(await page.textContent('.dz-dialog.wi')));
   await page.keyboard.press('Escape');
   check('Esc fecha o popup', (await page.locator('.dz-dialog.wi').count()) === 0);

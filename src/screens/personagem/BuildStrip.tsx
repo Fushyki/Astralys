@@ -15,7 +15,7 @@ import { cleanText, pieceIconUrl, weaponIconUrl } from '../../design/images';
 import { FLOWER_HP, MAIN_STAT_VALUES, PLUME_ATK, PIECE_SLOTS, buildFromPieces, mainStatOf, type MemberRef, type PieceSlot, type RealPiece } from '../../engine';
 import { weaponsFor } from '../../features/rotation/teamOps';
 import { WeaponPickerDialog } from './WeaponPicker';
-import { WeaponInfoDialog } from './WeaponInfo';
+import { WeaponBuffs, WeaponInfoDialog } from './WeaponInfo';
 import { CustomBuffs } from './CustomBuffs';
 import { PieceCard } from '../otimizar/PieceCard';
 
@@ -260,6 +260,7 @@ export function BuildStrip({ data, index, member: memberRef, projectId, compact,
             )}
           </header>
           <Passive text={cleanText(weapon?.passive?.refinements[refine - 1]?.descriptionPt ?? weapon?.passive?.refinements[refine - 1]?.description)} />
+          <WeaponBuffs index={index} />
         </section>
 
         <section className="pc-pcard" aria-label="Bônus dos sets">
@@ -310,6 +311,7 @@ export function BuildStrip({ data, index, member: memberRef, projectId, compact,
             )}
           </header>
           <Passive text={cleanText(weapon?.passive?.refinements[refine - 1]?.descriptionPt ?? weapon?.passive?.refinements[refine - 1]?.description)} />
+          <WeaponBuffs index={index} />
         </section>
 
         <section className="pc-pcard" aria-label="Bônus dos sets">

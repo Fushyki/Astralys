@@ -22,8 +22,11 @@ export function remapTag(tag: string, removed: number): string | null {
 
 export function updateMember(project: RotationProject, index: number, patch: Partial<MemberRef>): RotationProject {
   if (!project.members[index]) return project;
-  return touch({ ...project, members: project.members.map((m, i) => (i === index ? { ...m, ...patch } : m)) });
+  return touch({ ...project, members: project.members.map((m, i) => (i === index ? { ...m, ...patch, ...(patch.weapon && patch.weapon !== m.weapon && m.stacks ? { stacks: withoutWeaponStacks(m.stacks) } : {}) } : m)) });
 }
+
+/** Os stacks escolhidos para a arma antiga não passam para a nova. */
+const withoutWeaponStacks = (stacks: Record<string, number>) => Object.fromEntries(Object.entries(stacks).filter(([id]) => !id.startsWith('arma:')));
 
 export function addMember(project: RotationProject, ref: MemberRef): RotationProject {
   if (project.members.length >= MAX_TEAM_SIZE) return project;

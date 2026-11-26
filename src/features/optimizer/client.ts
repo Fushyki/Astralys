@@ -4,6 +4,7 @@
  * thread principal.
  */
 import type { FromWorker, ToWorker, WorkerData } from './optimizer.worker';
+import workerUrl from './optimizer.worker.ts?worker&url';
 import { runOptimizer, type OptimizedBuild, type OptimizerResult } from './run';
 
 export interface OptimizerProgress {
@@ -47,7 +48,7 @@ export function mergeResults(results: OptimizerResult[], topN: number): Optimize
   };
 }
 
-export function startOptimizerJob(data: WorkerData, onProgress?: (p: OptimizerProgress) => void, workers = defaultWorkerCount()): OptimizerJob {
+export function startOptimizerJob(data: WorkerData, onProgress?: (p: OptimizerProgress) => void, workers = defaultWorkerCount(), retry = true): OptimizerJob {
   const t0 = performance.now();
   if (typeof Worker === 'undefined') {
     // sem workers: roda na thread principal, de uma vez
@@ -71,9 +72,10 @@ export function startOptimizerJob(data: WorkerData, onProgress?: (p: OptimizerPr
     pool.forEach((w) => w.terminate());
   };
 
-  pool.forEach(() => undefined);
+  let second: OptimizerJob | undefined;
+  let asked = false;
   for (let i = 0; i < workers; i++) {
-    const w = new Worker(new URL('./optimizer.worker.ts', import.meta.url), { type: 'module' });
+    const w = new Worker(workerUrl, { type: 'module' });
     pool.push(w);
     w.onmessage = (event: MessageEvent<FromWorker>) => {
       const m = event.data;
@@ -106,10 +108,25 @@ export function startOptimizerJob(data: WorkerData, onProgress?: (p: OptimizerPr
     w.onerror = (event) => {
       if (settled) return;
       finish();
-      // Quase sempre é o arquivo do Worker que sumiu depois de uma atualização do site: o jogador recarrega quando quiser.
-      rejectJob(new Error(`O otimizador parou de responder. Recarregue a página (Ctrl+F5) e tente de novo.${event.message ? ` Detalhe: ${event.message}` : ''}`));
+      const failed = new Error(`O otimizador parou de responder. Recarregue a página (Ctrl+F5) e tente de novo.${event.message ? ` Detalhe: ${event.message}` : ''}`);
+      // O navegador pode ter guardado uma falha deste arquivo (a Vercel manda o 404 com cache de um ano, e recarregar não
+      // resolve): baixa de novo ignorando o cache e tenta mais uma vez.
+      void fetch(workerUrl, { cache: 'reload' }).then(
+        (r) => {
+          if (!r.ok || !retry) return rejectJob(failed);
+          second = startOptimizerJob(data, onProgress, workers, false);
+          second.promise.then(resolveJob, rejectJob);
+          if (asked) second.stop();
+        },
+        () => rejectJob(failed),
+      );
     };
     w.postMessage({ type: 'start', data, partition: { index: i, count: workers } } satisfies ToWorker);
   }
-  return { promise, stop: () => pool.forEach((w) => w.postMessage({ type: 'stop' } satisfies ToWorker)) };
+  const stop = () => {
+    asked = true;
+    if (second) second.stop();
+    else pool.forEach((w) => w.postMessage({ type: 'stop' } satisfies ToWorker));
+  };
+  return { promise, stop };
 }

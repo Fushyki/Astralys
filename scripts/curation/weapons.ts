@@ -90,7 +90,6 @@ export const WEAPONS: Record<string, WeaponCuration> = {
     expect: 'increases ATK by',
     note: 'Assume 7 stacks de ATK e o +12% de DMG que vem com eles.',
   },
-  'Crimson Moon\'s Semblance': { dmgPct: [{ p: 2 }, { p: 4 }], expect: 'Bond of Life', note: 'Assume o Bond of Life de 30% do HP máximo ativo (+12% e +24% de DMG).' },
   'Blackcliff Pole': blackcliff(),
   'Royal Spear': royal(),
   "Dragon's Bane": { dmgPct: { p: 0 }, expect: 'Increases DMG against opponents affected by Hydro or Pyro', note: 'Assume inimigo sob Hydro ou Pyro.' },
@@ -112,7 +111,6 @@ export const WEAPONS: Record<string, WeaponCuration> = {
   "Starcaller's Watch": { em: { re: 'Elemental Mastery by (\\d+)', x: 100 }, team: { dmgPct: { p: 0 } }, expect: 'Mirror of Night', note: 'Maestria fixa (100 no R1 a 200 no R5) sempre ativa. O +DMG vale para o personagem ativo, só nas janelas de buff.' },
   'Mappa Mare': { dmgPct: { p: 0, x: 2 }, expect: 'Elemental DMG Bonus for', note: 'Assume 2 stacks de DMG elemental ativos.' },
   'Oathsworn Eye': { er: { p: 0 }, expect: 'Increases Energy Recharge by', note: 'Assume a Recarga de 10 s depois da habilidade sempre ativa.' },
-  'Dodoco Tales': { atkPct: { p: 2 }, byType: { charged: { p: 0 } }, expect: 'Charged Attack DMG', note: 'Assume os dois bônus (Carregado +DMG e ATK) ativos.' },
 
   // ---- Arcos ----
   'Skyward Harp': { critDmg: { p: 0 }, procs: [{ id: 'area', label: "Skyward Harp: área", scale: { atk: { p: 2 } }, element: 'Physical' }], expect: 'Increases CRIT DMG by', note: 'Dano Crítico. Golpe extra na paleta da rotação (coloque quantas vezes ele acontece). Dano em área de 125% do ATK, Físico, com 60% (R1) de chance a cada 4 s (R1).' },
@@ -127,7 +125,6 @@ export const WEAPONS: Record<string, WeaponCuration> = {
     expect: 'Ashen Nightstar',
     note: 'ATK de Ashen Nightstar (10/20/30/48% no R1 com 1 a 4 stacks): a quantidade é escolha sua (padrão: 4).',
   },
-  'Aqua Simulacra': { hpPct: { p: 0 }, dmgPct: { p: 1 }, expect: 'HP is increased by', note: 'Assume inimigos por perto (+DMG sempre ativo).' },
   'Thundering Pulse': { atkPct: { p: 0 }, buffs: [{ id: 'emblema', label: 'Thunder Emblem', stats: { byType: { normal: { p: 3 } } }, stacks: { max: 3, unit: 'stacks do Emblema', levels: [{ p: 1 }, { p: 2 }, { p: 3 }] } }], expect: 'Thunder Emblem', note: 'ATK fixo + DMG de Ataque Normal do Thunder Emblem (12/24/40% no R1 com 1/2/3 stacks): a quantidade é escolha sua (padrão: 3).' },
   'Blackcliff Warbow': blackcliff(),
   'Royal Bow': royal(),

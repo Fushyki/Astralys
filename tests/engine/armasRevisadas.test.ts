@@ -51,3 +51,43 @@ describe('revisão das armas', () => {
     expect(a - b).toBeCloseTo(0.12, 9);
   });
 });
+
+describe('uma caixa por condição e versões alternativas', () => {
+  const at = (weapon: string, r = 1) => {
+    const w = effects.weapons.find((x) => x.weapon === weapon)!;
+    return { root: w.refinements![r - 1], by: Object.fromEntries(w.refinements![r - 1].buffs.map((b) => [b.id, b.stats!])) };
+  };
+  it('separadas somam o mesmo de antes', () => {
+    const s = at('Sunny Morning Sleep-In');
+    expect(s.root.em).toBe(0);
+    expect(s.by.redemoinho.em + s.by.habilidade.em + s.by.supremo.em).toBeCloseTo(248, 9);
+    const a = at('Azurelight');
+    expect(a.by.habilidade.atkPct + a.by['sem-energia'].atkPct).toBeCloseTo(0.48, 9);
+  });
+  it('a faixa da versão alternativa, por cima da base, dá os números dela (R1 e R5)', () => {
+    for (const r of [1, 5]) {
+      const k = r === 1 ? 1 : 2;
+      const d = at('Deathmatch', r).by;
+      expect(d.um.atkPct + d.dois.atkPct).toBeCloseTo(0.16 * k, 9);
+      expect(d.dois.defPct).toBeCloseTo(0.16 * k, 9);
+      const n = at('New Bough', r).by;
+      expect(n.stacks.atkPct + n.radiance.atkPct).toBeCloseTo(0.06 * 3 * k, 9);
+      expect(n.stacks.em + n.radiance.em).toBeCloseTo(0, 9);
+      const w = at("Winter's Heavy Heart", r).by;
+      expect(w.cryo.em + w['radiance-cryo'].em).toBeCloseTo(20 * k, 9);
+      expect(w['radiance-electro'].em).toBeCloseTo(20 * k, 9);
+      expect(w.electro.atkPct + w['radiance-electro'].atkPct).toBeCloseTo(0, 9);
+    }
+  });
+  it('Engulfing Lightning respeita o refino e a Recarga extra tem caixa', () => {
+    for (const [refinement, coef, er] of [[1, 0.28, 0.3], [5, 0.56, 0.5]] as const) {
+      expect(at('Engulfing Lightning', refinement).root.atkPctPerEr!.coef).toBeCloseTo(coef, 9);
+      const patch = { weapon: 'Engulfing Lightning', refinement };
+      const on = run('Xiangling', patch).stats;
+      const off = run('Xiangling', patch, ['m0:cbuff-arma:recarga']).stats;
+      expect(on.er - off.er).toBeCloseTo(er, 9);
+      expect(on.atk).toBeGreaterThan(off.atk);
+    }
+  });
+});
+

@@ -100,7 +100,6 @@ export const WEAPONS_3: Record<string, GearCur> = {
   'The Unforged': shielded(),
   'Memory of Dust': shielded(),
   "Wolf's Gravestone": { atkPct: { p: 0 }, buffs: [{ id: 'lobo', label: 'ATK da equipe (inimigo com pouca vida)', scope: 'team', timed: true, stats: { atkPct: { p: 1 } } }], expect: 'Increases ATK by', note: 'ATK sempre; o da equipe (inimigo abaixo de 30% de HP) é faixa.' },
-  'Beacon of the Reed Sea': { atkPct: [{ p: 0 }, { p: 2 }], buffs: [{ id: 'sem-escudo', label: 'HP sem escudo', stats: { hpPct: { p: 4 } } }], expect: 'ATK will be increased by', note: 'Assume os dois bônus de ATK e o HP sem escudo.' },
   'Redhorn Stonethresher': { defPct: { p: 0 }, flat: [{ name: 'DMG do Normal e Carregado por DEF', sourceStat: 'DEF', perPoint: { p: 1 }, hitTypes: ['normal', 'charged'] }], expect: 'DEF is increased by', note: 'DEF e o dano extra por DEF no Normal e no Carregado.' },
   'Gest of the Mighty Wolf': {
     dmgPct: { p: 1, x: 4 },
@@ -150,23 +149,6 @@ export const WEAPONS_3: Record<string, GearCur> = {
   'Lumidouce Elegy': { atkPct: { p: 0 }, dmgPct: { p: 1, x: 2 }, expect: 'ATK increased by', note: 'ATK e os stacks de DMG com Queimadura (2 por padrão).' },
 
   // ---- Catalisadores ----
-  "Angelos' Heptades": {
-    atkPct: { p: 0 },
-    buffs: [{ id: 'luz', label: 'DMG do personagem ativo por ATK', scope: 'team', timed: true, convert: { from: 'atk', perPoint: { p: 2, x: 0.001 }, cap: { p: 3 }, to: ['dmgPct'] } }],
-    partial: true,
-    expect: 'ATK is increased by',
-    note: 'ATK; o DMG por ATK depois de criar um escudo é faixa (ligue nos golpes do personagem ativo). O bônus Hexerei para quem está fora de campo NÃO entra.',
-  },
-  'Reliquary of Truth': {
-    critRate: { p: 5 },
-    em: { p: 0 },
-    buffs: [
-      { id: 'verdade', label: 'Moon of Truth (Dano Crítico)', stats: { critDmg: { p: 1 } } },
-      { id: 'ambos', label: 'Os dois efeitos juntos (+50%)', stats: { em: { p: 0, x: 0.5 }, critDmg: { p: 1, x: 0.5 } } },
-    ],
-    expect: 'Secret of Lies',
-    note: 'Assume a Maestria depois da habilidade, o Dano Crítico depois do Lunar-Florescer e o reforço dos dois juntos.',
-  },
   "Kagura's Verity": {
     byType: { skill: { p: 0, x: 3 } },
     dmgPct: { p: 2 },

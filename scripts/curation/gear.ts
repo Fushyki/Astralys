@@ -53,6 +53,7 @@ export interface BuffCur {
   forElements?: Element[];
   /** Vai só para quem o usuário escolher (ver `CharacterBuff.pickReceiver`). */
   pickReceiver?: true;
+  forFactions?: ('moonsign' | 'hexerei')[];
   stats?: StatsCur;
   /** Stacks/pontos que o usuário escolhe: os números valem para `max`; `levels` = o valor em cada quantidade (1..max) quando sobe aos saltos. */
   stacks?: { max: number; unit?: string; levels?: Val[]; /** Usa a quantidade escolhida em outro buff do mesmo efeito (id dele), sem pedir de novo. */ of?: string; /** Quantidade enquanto o usuário não escolhe (padrão: `max`). */ default?: number; step?: number; /** O teto da conversão cresce junto. */ scalesCap?: true } | false;
@@ -74,6 +75,8 @@ export interface FlatCur {
 }
 
 export interface GearCur extends StatsCur {
+  /** ATK% = coef × (Recarga − 100%), até `cap` (Engulfing Lightning). */
+  atkPctPerEr?: { coef: Val; cap: Val };
   /** Buff que a arma dá à equipe inteira (vale nas janelas de buff). */
   team?: { atkPct?: Sum; dmgPct?: Sum; em?: Sum };
   buffs?: BuffCur[];

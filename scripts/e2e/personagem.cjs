@@ -76,12 +76,12 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
 
   // Abas e cabeçalho
   const tabs = await page.$$eval('.pc-tabs a', (a) => a.map((x) => x.textContent));
-  check('uma sub-aba por personagem com a % do dano', tabs.length === 4 && /Mavuika.*91,0%/.test(tabs[0]) && /Citlali.*5,5%/.test(tabs[1]), tabs.join(' | '));
+  check('uma sub-aba por personagem com a % do dano', tabs.length === 4 && /Mavuika.*90,7%/.test(tabs[0]) && /Citlali.*5,5%/.test(tabs[1]), tabs.join(' | '));
   check('a aba Personagens do time está marcada', (await page.getAttribute('.dz-subnav a:has-text("Personagens")', 'aria-current')) === 'page');
 
   // Atributos do gabarito
   const attrs = await page.locator('.db-panel:has(h3:text-is("Atributos"))').textContent();
-  check('atributos finais do exemplo (ATK 5.613, EM 385, Taxa 95,6%, Dano 238,4%)', /5.613/.test(attrs) && /385/.test(attrs) && /95,6%/.test(attrs) && /238,4%/.test(attrs));
+  check('atributos finais do exemplo (ATK 5.611, EM 385, Taxa 95,6%, Dano 238,4%)', /5.611/.test(attrs) && /385/.test(attrs) && /95,6%/.test(attrs) && /238,4%/.test(attrs), attrs.replace(/s+/g, ' ').slice(0, 260));
   check('mostra o valor base ao lado do ATK', /1\.100 ATK base/.test(attrs));
 
   // Tabela de dano (aba Avançado): sem nomes repetidos, reação filtrada

@@ -78,7 +78,7 @@ describe('efeitos de armas cadastrados', () => {
   });
 
   it('sem tabela por refinamento (efeitos da planilha), qualquer refino devolve os valores da raiz', () => {
-    expect(weaponStatsAt(get('Engulfing Lightning'), 4).atkPctPerEr).toEqual({ coef: 0.28, cap: 0.8 });
+    expect(weaponStatsAt(get('Predator'), 4).atkPct).toBe(0);
   });
 });
 

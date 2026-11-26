@@ -71,7 +71,6 @@ export const WEAPONS_2: Record<string, GearCur> = {
   },
   'Prized Isshin Blade': noPassive(TRAVELER),
   'Toukabou Shigure': { dmgPct: { p: 1 }, expect: 'Cursed Parasol', note: 'Assume o inimigo marcado (Cursed Parasol) sempre.' },
-  'Finale of the Deep': { atkPct: { p: 0 }, partial: true, expect: 'Bond of Life', note: `${ALWAYS} O ATK extra por Bond of Life limpo (até 150) NÃO entra.` },
   "The Dockhand's Assistant": symbolsEm(),
   'Sword of Narzissenkreuz': { procs: [{ id: 'rajada', label: "Narzissenkreuz: rajada", scale: { atk: { p: 0 } }, element: 'Physical' }], expect: 'Pneuma or Ousia', note: 'Golpe extra na paleta da rotação (coloque quantas vezes ele acontece). Rajada de 160% (R1) do ATK, Física (Genshin Optimizer), a cada 12 s, só para quem não tem Arkhe.' },
   'Sturdy Bone': {
@@ -96,7 +95,6 @@ export const WEAPONS_2: Record<string, GearCur> = {
     expect: "Energy Capacity does not exceed 60/40",
     note: 'DMG do Supremo base e o extra conforme o custo de energia do Supremo do dono (até 60: +16%; até 40: +28%, R1).',
   },
-  "Heretic's Molten Blade": { atkPct: { p: 2 }, expect: 'Gleam of First Light', note: 'Usa o MÍNIMO do ATK (18% no R1); o valor real vai até o dobro conforme a distância percorrida.' },
   Emberwell: { atkPct: { p: 0 }, buffs: [{ id: 'estelar', label: 'DMG Estelar', timed: true, stats: { reactionBonus: { stellarconduct: { p: 2 }, stellarswirl: { p: 2 } } } }], expect: "ATK by 16% for 12s", note: 'ATK depois de reação (assumido ativo); +16% (R1) de DMG Estelar por 12 s depois de uma reação Estelar: faixa no plano de combate.' },
   'New Bough': { atkPct: { p: 3, x: 3 }, em: { p: 5, x: 3 }, buffs: [{ id: 'radiance', label: 'Verdant (Radiance)', timed: true, stats: { reactionBonus: { stellarconduct: { p: 6, x: 3 }, stellarswirl: { p: 6, x: 3 } } } }], partial: true, expect: 'Verdant', note: 'Assume 3 stacks de ATK e Maestria. Com Radiance: Stellar Glimmer, +8% (R1) de DMG Estelar por stack (3) numa faixa; a troca do ATK (6% no lugar de 4%) e a perda da Maestria nessa versão NÃO entram.' },
   'Silver Light': { em: { p: 0, x: 2 }, expect: 'Elemental Mastery by', note: 'Assume 2 stacks.' },
@@ -151,7 +149,6 @@ export const WEAPONS_2: Record<string, GearCur> = {
   'Makhaira Aquamarine': evenstar(),
   'Forest Regalia': { em: { p: 0 }, expect: 'Leaf of Consciousness', note: 'Assume a Folha coletada e a Maestria ativa.' },
   'Talking Stick': { atkPct: { p: 4 }, dmgPct: { p: 5 }, expect: 'affected by Pyro', note: 'Assume o personagem afetado por Pyro (ATK) E por Hydro, Cryo, Electro ou Dendro (DMG), os dois ativos. No jogo isso exige reações dos dois tipos.' },
-  "\"Ultimate Overlord's Mega Magic Sword\"": { atkPct: [{ p: 0 }, { p: 2 }], expect: 'ATK increased by', note: 'Assume todas as Melusines ajudadas: bônus máximo (12% + 12% no R1).' },
   'Portable Power Saw': symbolsEm(),
   'Fruitful Hook': {
     critRateByType: { plunge: { p: 0 } },

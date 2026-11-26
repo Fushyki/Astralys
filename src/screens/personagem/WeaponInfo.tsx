@@ -79,7 +79,7 @@ export function WeaponBuffs({ index }: { index: number }) {
             <span className="b">
               <b>{card.name}</b>
               {card.chips.length > 0 && <span className="num chips">{card.chips.join(' · ')}</span>}
-              <small>{card.timed ? `Janela: ${card.window}` : 'Vale o tempo todo'}</small>
+              <small>{card.timed ? `Janela: ${card.window}${card.window === 'sem janela' ? ' (crie em Rotação e buffs)' : ''}` : 'Vale o tempo todo'}</small>
             </span>
             <span className="st">{on ? 'Ativo' : 'Desligado'}</span>
           </label>

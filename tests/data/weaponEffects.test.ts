@@ -26,7 +26,8 @@ const get = (n: string) => weapons.find((w) => w.weapon === n)!;
 /** Números no máximo de stacks: a raiz da arma + o buff `stacks` (o usuário escolhe quantos valem). */
 const atMax = (n: string, refinement: number) => {
   const w = weaponStatsAt(get(n), refinement);
-  const st = w.buffs.filter((b) => b.stacks).map((b) => b.stats);
+  // Os que seguem os stacks de outro (`of`) são extras à parte (dobro com escudo, fora de campo).
+  const st = w.buffs.filter((b) => b.stacks && !b.stacks.of).map((b) => b.stats);
   const sum = (k: 'atkPct' | 'critRate' | 'dmgPct' | 'hpPct') => w[k] + st.reduce((a, x) => a + (x?.[k] ?? 0), 0);
   const byType = { ...w.dmgPctByType } as Record<string, number>;
   for (const x of st) for (const [k, v] of Object.entries(x?.dmgPctByType ?? {})) byType[k] = (byType[k] ?? 0) + v;
@@ -77,7 +78,7 @@ describe('efeitos de armas cadastrados', () => {
   });
 
   it('sem tabela por refinamento (efeitos da planilha), qualquer refino devolve os valores da raiz', () => {
-    expect(weaponStatsAt(get("Wolf's Gravestone"), 4).atkPct).toBe(0.2);
+    expect(weaponStatsAt(get('Engulfing Lightning'), 4).atkPctPerEr).toEqual({ coef: 0.28, cap: 0.8 });
   });
 });
 

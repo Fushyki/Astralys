@@ -22,6 +22,7 @@ import { POINT_MOVES } from './curation/points';
 import { WEAPONS } from './curation/weapons';
 import { WEAPONS_2 } from './curation/weapons2';
 import { PILOTO_ARMAS } from './curation/piloto-armas';
+import { WEAPONS_3 } from './curation/weapons3';
 import type { BuffCur, FlatCur, GearCur, ProcCur, StatsCur, Sum } from './curation/gear';
 import { CHARACTERS as CHARACTERS_1 } from './curation/characters';
 import { CHARACTERS_2 } from './curation/characters2';
@@ -410,7 +411,7 @@ function buildWeapons(): WeaponEffect[] {
   const out: WeaponEffect[] = [...existing];
   const errors: string[] = [];
   const source = `Lunaris ${meta.gameVersion} (descrição e parâmetros por refinamento)`;
-  const all: Record<string, GearCur> = { ...WEAPONS, ...WEAPONS_2, ...PILOTO_ARMAS };
+  const all: Record<string, GearCur> = { ...WEAPONS, ...WEAPONS_2, ...PILOTO_ARMAS, ...WEAPONS_3 };
 
   for (const [name, cur] of Object.entries(all)) {
     if (keep.has(name)) continue; // já veio da planilha de referência: não sobrescrever
@@ -420,7 +421,7 @@ function buildWeapons(): WeaponEffect[] {
       continue;
     }
     const flags = { ...(cur.noDamage ? { noDamage: true } : {}), ...(cur.partial ? { partial: true } : {}) };
-    const fonte = `${source}; curadoria em scripts/curation/${name in PILOTO_ARMAS ? 'piloto-armas' : name in WEAPONS_2 ? 'weapons2' : 'weapons'}.ts.`;
+    const fonte = `${source}; curadoria em scripts/curation/${name in WEAPONS_3 ? 'weapons3' : name in PILOTO_ARMAS ? 'piloto-armas' : name in WEAPONS_2 ? 'weapons2' : 'weapons'}.ts.`;
     if (!w.passive || w.passive.refinements.length !== 5) {
       if (cur.expect) {
         errors.push(`${name}: tem "expect", mas a arma não tem passiva no Lunaris`);

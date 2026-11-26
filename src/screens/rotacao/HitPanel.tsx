@@ -109,6 +109,31 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
     const next = forced ? [...new Set([...flatOn, id])] : flatOn.filter((x) => x !== id);
     update(action.id, { flatOn: next.length ? next : undefined });
   };
+  /** Quem contribui para a reação do time: no contínuo vale para a execução selecionada, com um botão para copiar às outras. */
+  const contribSection = teamReaction ? (
+    <div className="rt-contrib" role="group" aria-label="Quem contribui para a reação">
+      <span className="rt-lbl">Quem contribui (aplicou os elementos){chainId ? ` · execução em ${dec(action.time, 1)} s` : ''}</span>
+      <div className="chips">
+        {project.members.map((m, i) => (
+          <button key={m.character} type="button" aria-pressed={who.includes(i)} style={{ ['--c' as string]: v.colors[i] }} onClick={() => toggleWho(i)}>
+            <i />{m.character}
+          </button>
+        ))}
+      </div>
+      {result?.contributors && (
+        <div className="list">
+          {result.contributors.map((c) => (
+            <div className="r" key={c.member}>
+              <span>{project.members[c.member]?.character}</span>
+              <span className="num">{formatInt(c.avg)} × {c.weight === 1 ? '100%' : c.weight === 0.5 ? '1/2' : '1/12'}</span>
+            </div>
+          ))}
+        </div>
+      )}
+      {chainId && <Button variant="ghost" size="sm" onClick={() => setAll({ contributors: [...who] })}>Usar em todas as execuções</Button>}
+      <span className="rt-note">O dano é o maior valor + 1/2 do 2º + 1/12 do 3º + 1/12 do 4º (cada um já com o multiplicador de reação, 0,6 do golpe direto), cada um com a Proficiência e o crítico dele. A ação conta para {memberLabel}.{chainId ? ' Toque no ponto de uma execução para escolher quem contribui nela.' : ''}</span>
+    </div>
+  ) : null;
   const point = pointMoveOf(action.move, effect);
   const pointsSection = point?.cadinho ? (
     <span className="rt-lbl" title={`Os pontos são os do último Supremo, até ${point.cadinho} s depois e enquanto o personagem fica em campo (Cadinho da Vida e da Morte). Fora disso, 0.`}>{point.unit}: do Supremo (janela de {point.cadinho} s)</span>
@@ -218,6 +243,7 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
               <Button variant="ghost" size="sm" onClick={() => chainId && st().rebuildChain(chainId, { start, every, until: start + length })}>Refazer pelo intervalo</Button>
             </div>
           </div>
+          {contribSection}
           {cutNote}
           {flatSection}
           {buffsSection}
@@ -230,29 +256,7 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
             <Num label={teamReaction ? 'Procs' : 'Hits'} value={action.executions} digits={0} onCommit={(n) => update(action.id, { executions: Math.max(1, Math.round(n)) })} min={1} />
             <Sel label="Reação" value={action.reaction} options={REACTION_OPTIONS} onChange={(r) => update(action.id, { reaction: r })} />
           </div>
-          {teamReaction && (
-            <div className="rt-contrib" role="group" aria-label="Quem contribui para a reação">
-              <span className="rt-lbl">Quem contribui (aplicou os elementos)</span>
-              <div className="chips">
-                {project.members.map((m, i) => (
-                  <button key={m.character} type="button" aria-pressed={who.includes(i)} style={{ ['--c' as string]: v.colors[i] }} onClick={() => toggleWho(i)}>
-                    <i />{m.character}
-                  </button>
-                ))}
-              </div>
-              {result?.contributors && (
-                <div className="list">
-                  {result.contributors.map((c) => (
-                    <div className="r" key={c.member}>
-                      <span>{project.members[c.member]?.character}</span>
-                      <span className="num">{formatInt(c.avg)} × {c.weight === 1 ? '100%' : c.weight === 0.5 ? '1/2' : '1/12'}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-              <span className="rt-note">O dano é o maior valor + 1/2 do 2º + 1/12 do 3º + 1/12 do 4º (cada um já com o multiplicador de reação, 0,6 do golpe direto), cada um com a Proficiência e o crítico dele. A ação conta para {memberLabel}.</span>
-            </div>
-          )}
+          {contribSection}
           {pointsSection}
           <Sel label="Elemento do dano" value={(action.element ?? '') as (typeof ELEMENTS)[number]} options={ELEMENTS.map((e) => ({ value: e, label: ELEMENT_LABEL[e] }))} onChange={(e) => update(action.id, { element: e === '' ? undefined : e })} />
           {result && (

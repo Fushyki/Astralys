@@ -34,10 +34,16 @@ export function scaleBuffStacks(b: CharacterBuff, chosen: number | undefined): C
   });
 }
 
+/** Acúmulos compartilhados com os extras que o usuário escolheu (`pool:<pool>`). */
+function withExtra(b: CharacterBuff, chosen: Record<string, number> | undefined): CharacterBuff {
+  if (!b.flat?.some((f) => f.extra)) return b;
+  return { ...b, flat: b.flat.map((f) => (f.extra && f.pool && f.stacks !== undefined ? { ...f, stacks: f.stacks + Math.min(f.extra.max, Math.max(0, chosen?.[`pool:${f.pool}`] ?? 0)) * f.extra.step } : f)) };
+}
+
 export function withStacks(effect: CharacterEffect | undefined, chosen: Record<string, number> | undefined): CharacterEffect | undefined {
   const key = (b: CharacterBuff) => b.stacks?.of ?? b.id;
-  const changes = (b: CharacterBuff) => !!b.stacks && (chosen?.[key(b)] !== undefined || b.stacks.default !== undefined);
+  const changes = (b: CharacterBuff) => (!!b.stacks && (chosen?.[key(b)] !== undefined || b.stacks.default !== undefined)) || !!b.flat?.some((f) => f.extra && chosen?.[`pool:${f.pool}`]);
   if (!effect || !effect.buffs.some(changes)) return effect;
   // Com `stackPerMate` o teto depende do time: guarda a escolha e deixa a escala para `applyTeamRules`.
-  return { ...effect, buffs: effect.buffs.map((b) => (b.team?.stackPerMate && b.stacks ? { ...b, stacks: { ...b.stacks, default: chosen?.[key(b)] ?? b.stacks.default } } : scaleBuffStacks(b, chosen?.[key(b)]))) };
+  return { ...effect, buffs: effect.buffs.map((b) => withExtra(b.team?.stackPerMate && b.stacks ? { ...b, stacks: { ...b.stacks, default: chosen?.[key(b)] ?? b.stacks.default } } : scaleBuffStacks(b, chosen?.[key(b)]), chosen)) };
 }

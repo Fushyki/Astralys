@@ -177,6 +177,8 @@ export interface FlatUse {
   off: boolean;
   /** Stacks totais do efeito (undefined = todos os golpes). */
   stacks?: number;
+  /** Acúmulos compartilhados com outros efeitos do mesmo dono. */
+  pool?: string;
   /** O usuário escolhe os golpes deste buff (a caixa vale como "recebe"). */
   forced?: boolean;
   /** O golpe fica de fora pela regra (fora da janela do buff ou do campo certo). */
@@ -403,10 +405,19 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
   };
   // Dano fixo: os golpes consomem os stacks na ORDEM DO TEMPO (empate: ordem da lista), salvo os que o usuário tirou do efeito.
   const flatPass: { damage: number; use: FlatUse[]; hits: number[] }[] = actions.map(() => ({ damage: 0, use: [], hits: [] }));
+  // Acúmulos compartilhados: o que resta de cada reservatório (`dono|pool`).
+  const pools = new Map<string, number>();
+  const poolKey = (e: FlatDamageEffect) => (e.pool ? `${e.source}|${e.pool}` : undefined);
+  for (const f of flat) { const k = poolKey(f.effect); if (k && !pools.has(k)) pools.set(k, f.remaining); }
   [...actions.keys()].sort((x, y) => (actions[x].time ?? 0) - (actions[y].time ?? 0) || x - y).forEach((idx) => {
     const action = actions[idx];
     const move = action.move;
-    if (damageKind(move) !== 'direct') return; // Lunar/Estelar e reações não consomem dano fixo
+    const direct = damageKind(move) === 'direct';
+    // Golpe Lunar do kit só recebe o dano fixo da própria reação; Estelar e reações do time não consomem.
+    const lunar = move.special && !move.reactionHit ? move.special.reaction : undefined;
+    if (!direct && !lunar) return;
+    /** Acertos que gastaram cada reservatório neste golpe (os efeitos dele gastam juntos). */
+    const spent = new Map<string, number>();
     const member = members[action.member];
     const element = elementOfAction(action);
     const hitsOfAction = action.executions * Math.max(1, move.hits);
@@ -415,8 +426,9 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
     for (const f of flat) {
       if (f.perHit <= 0) continue;
       const e = f.effect;
+      if (e.reaction ? e.reaction !== lunar : !direct) continue;
       const targetOk = e.targets === 'all' || e.targets.includes(member.character.name);
-      const elementOk = e.elements.length === 0 || (element !== 'Physical' && e.elements.some((x) => sameEl(x, element)));
+      const elementOk = !!e.reaction || e.elements.length === 0 || (element !== 'Physical' && e.elements.some((x) => sameEl(x, element)));
       const typeOk = e.hitTypes.length === 0 || (move.hitType !== 'other' && e.hitTypes.includes(move.hitType));
       const labelOk = !e.labels?.length || e.labels.includes(move.label);
       if (!(targetOk && elementOk && typeOk && labelOk)) continue;
@@ -427,8 +439,11 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
       const wrongField = !!e.field && (e.field === 'on') !== (action.member === 0);
       const outside = !forced && (wrongField || (!!e.window && !action.activeTags.includes(flatTag(e))));
       const off = !forced && (outside || !!action.flatOff?.includes(id));
-      const covered = forced ? hitsOfAction : off || f.remaining <= 0 ? 0 : Math.min(hitsOfAction, f.remaining);
-      if (!forced) f.remaining -= covered;
+      const shared = poolKey(e);
+      const left = shared ? pools.get(shared)! : f.remaining;
+      const covered = forced ? hitsOfAction : off || left <= 0 ? 0 : Math.min(hitsOfAction, left);
+      if (!forced && shared) spent.set(shared, Math.max(spent.get(shared) ?? 0, covered));
+      else if (!forced) f.remaining -= covered;
       let damage = covered * f.perHit;
       for (let h = 0; h < covered; h++) perHitFlat[h] += f.perHit; // os acertos cobertos são os primeiros do golpe
       let levelAtStart: number | undefined;
@@ -449,8 +464,9 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
         }
       }
       flatPass[idx].damage += damage;
-      flatPass[idx].use.push({ id, name: e.name, source: e.source, perHit: covered > 0 ? damage / covered : f.perHit, hits: covered, off, ...(e.stacks !== undefined ? { stacks: e.stacks } : {}), ...(levelAtStart !== undefined ? { level: levelAtStart } : {}), ...(forced ? { forced: true } : {}), ...(outside ? { outside: true } : {}) });
+      flatPass[idx].use.push({ id, name: e.name, source: e.source, perHit: covered > 0 ? damage / covered : f.perHit, hits: covered, off, ...(e.stacks !== undefined ? { stacks: e.stacks } : {}), ...(e.pool ? { pool: e.pool } : {}), ...(levelAtStart !== undefined ? { level: levelAtStart } : {}), ...(forced ? { forced: true } : {}), ...(outside ? { outside: true } : {}) });
     }
+    for (const [k, n] of spent) pools.set(k, pools.get(k)! - n);
   });
 
   const results: ActionResult[] = actions.map((action, idx) => {
@@ -474,6 +490,12 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
       const scale = move.reactionHit ? { atk: 0, em: 0, hp: 0, def: 0, flat: 0 } : scaleAt(move, move.talent === 'proc' || move.talent === 'reaction' ? 1 : member.talents[move.talent]);
       // Bônus do kit para este golpe Lunar; com `first`, só uma execução, na primeira vez (no tempo) que o golpe sai.
       let own = stats;
+      // Dano fixo da reação neste golpe: entra na base de cada execução (antes de crítico e RES).
+      if (move.special && !move.reactionHit && flatPass[idx].damage > 0) {
+        const key = `${move.special.reaction}Flat`;
+        const bonus = own.reactionBonus as Record<string, number>;
+        own = { ...own, reactionBonus: { ...bonus, [key]: (bonus[key] ?? 0) + flatPass[idx].damage / Math.max(1, action.executions) } as StatBlock['reactionBonus'] };
+      }
       for (const b of activeCharacterBuffs(member)) {
         const o = b.onMove;
         if (!o || !move.special || !o.labels.includes(move.label)) continue;
@@ -511,6 +533,7 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
       }
       const noCrit = r.breakdown.total;
       return {
+        ...(flatPass[idx].use.length ? { flatUse: flatPass[idx].use } : {}),
         action, element: r.element, stats, scale, flatDamage: 0, breakdown: r.breakdown, kind, critRate: r.critRate, critDmg: r.critDmg,
         noCrit, crit: noCrit * critFactor('crit', r.critRate, r.critDmg), avg: noCrit * critFactor('avg', r.critRate, r.critDmg),
       };

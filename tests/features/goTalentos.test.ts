@@ -79,7 +79,7 @@ describe('condições da aba ligadas à rotação', () => {
     expect(burstFlat(project)).toEqual([]);
     const on = toggle(project, 'Illuga', 'burstSong', true);
     expect(linkedOf(on).Illuga.burstSong.value).toBe('on');
-    expect(burstFlat(on)).toHaveLength(2);
+    expect(burstFlat(on)).toHaveLength(4); // Geo e Lunar-Cristalizar, do Supremo e da A4
     expect(total(on)).toBeGreaterThan(total(project));
     expect(burstFlat(toggle(on, 'Illuga', 'burstSong', false))).toEqual([]);
   });
@@ -87,7 +87,7 @@ describe('condições da aba ligadas à rotação', () => {
   it('projeto salvo antes (sem condManual) continua ligado e desligar tira o dano fixo', () => {
     const saved = { ...project, members: project.members.map(({ condManual: _, ...m }) => m) };
     expect(linkedOf(saved).Illuga.burstSong.value).toBe('on');
-    expect(burstFlat(saved)).toHaveLength(2);
+    expect(burstFlat(saved)).toHaveLength(4); // Geo e Lunar-Cristalizar, do Supremo e da A4
     expect(burstFlat(toggle(saved, 'Illuga', 'burstSong', false))).toEqual([]);
   });
 

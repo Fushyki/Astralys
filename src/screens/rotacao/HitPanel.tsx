@@ -12,6 +12,7 @@ import { chainOf } from '../../features/rotation/projectOps';
 import { hitBuffRows, hitFigures } from '../../features/rotation/rotationModel';
 import { useRotationStore } from '../../features/rotation/store';
 import { formatHits, formatInt, formatPercent } from '../../ui/format';
+import { PoolExtra } from '../personagem/PoolExtra';
 import { Num, Sel, Seg, dec } from './ui';
 
 const REACTIONS: ActionRef['reaction'][] = ['none', 'melt', 'vaporize', 'spread', 'aggravate'];
@@ -139,7 +140,10 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
           <div className="qty">
             <Button variant="ghost" size="sm" onClick={() => st().resetFlat(u.id)} title="Tira as caixas desmarcadas e os golpes em Manual deste buff, em todos os golpes">Tudo no Auto</Button>
           </div>
-          {!u.forced && <div className="qty">
+          {!u.forced && u.pool && result.flatUse!.find((x) => x.source === u.source && x.pool === u.pool) === u && (
+            <PoolExtra v={v} member={v.project.members.findIndex((m) => m.character === u.source)} />
+          )}
+          {!u.forced && !u.pool && <div className="qty">
             <Seg label={`Quantos golpes: ${u.name}`} value={u.stacks === undefined ? 'all' : 'n'} options={[{ value: 'all', label: 'Todos os golpes' }, { value: 'n', label: 'N golpes' }]} onChange={(m) => st().setFlatStacks(u.id, m === 'all' ? 'all' : (u.stacks ?? 5))} />
             {u.stacks !== undefined && <Num ariaLabel={`Quantidade de golpes de ${u.name}`} className="sm" value={u.stacks} digits={0} min={1} unit="golpes" onCommit={(n) => st().setFlatStacks(u.id, n)} />}
           </div>}

@@ -15,6 +15,7 @@ import { useRotationStore } from '../../features/rotation/store';
 import { goKey, goRequest, rotationConditions, type GoConditionals, type RotationCondition } from '../../features/talentos/goRequest';
 import { formatDecimal, formatInt } from '../../ui/format';
 import type { GoBlock, GoRow, GoTalents } from '../../vendor/go/talentos';
+import { PoolExtra } from './PoolExtra';
 import { Icon, OneLine, Stepper } from './TalentsPanel';
 import '../talentos.css';
 
@@ -175,7 +176,10 @@ export function GoTalentsPanel({ v, index }: { v: ProjectView; index: number }) 
               <Stepper label={`Nível de ${TALENT_TYPE[t.talent]}`} value={ref.talents[t.talent]} text={`Nv ${eff[t.talent]}`} onDec={() => setTalent(t.talent, -1)} onInc={() => setTalent(t.talent, 1)} decOff={ref.talents[t.talent] <= 1} incOff={ref.talents[t.talent] >= MAX_BASE_TALENT} />
             </header>
             <OneLine title={t.name} text={t.description} />
-            <div className="body"><Blocks blocks={blocksOf(t.talent === 'normal' ? 'auto' : t.talent)} linked={linked} onSet={onSet} /></div>
+            <div className="body">
+              <Blocks blocks={blocksOf(t.talent === 'normal' ? 'auto' : t.talent)} linked={linked} onSet={onSet} />
+              {t.talent === 'burst' && <PoolExtra v={v} member={index} />}
+            </div>
           </article>
         ))}
 

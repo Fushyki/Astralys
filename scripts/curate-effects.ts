@@ -561,6 +561,7 @@ function buildCharacters(): CharacterEffect[] {
                 name: f.name, sourceStat: f.sourceStat, perPoint: v(f.perPoint), ...(f.cap !== undefined ? { capPerHit: v(f.cap) } : {}),
                 hitTypes: f.hitTypes, ...(f.labels ? { labels: f.labels } : {}), ...(f.stacks !== undefined ? { stacks: f.stacks } : {}),
                 ...(f.targets ? { targets: f.targets } : {}), ...(f.elements ? { elements: f.elements } : {}), ...(f.decay ? { decay: f.decay } : {}),
+                ...(f.reaction ? { reaction: f.reaction } : {}), ...(f.pool ? { pool: f.pool } : {}), ...(f.extra ? { extra: f.extra } : {}),
               })),
             }
           : {}),

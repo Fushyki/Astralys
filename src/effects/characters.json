@@ -17419,30 +17419,27 @@
               "burst"
             ],
             "stacks": 21,
+            "pool": "quills",
+            "extra": {
+              "max": 3,
+              "step": 5,
+              "label": "Acúmulos extras (construções Geo)"
+            },
             "targets": "team",
             "elements": [
               "Geo"
             ]
           }
         ],
-        "note": "Soma ao Dano Geo da equipe uma parte da Maestria dele (nível do Supremo), em 21 golpes Geo (os 15 extras por construto Geo NÃO entram)."
+        "note": "Soma ao Dano Geo da equipe uma parte da Maestria dele (nível do Supremo). Cada golpe gasta 1 acúmulo de Canção de Luscinia (21, mais os extras por construção Geo que você escolher), do mesmo total do Lunar-Cristalizar."
       },
       {
         "id": "burstlcr",
         "label": "Illuga: Nightingale's Song (Supremo, Lunar-Cristalizar)",
         "minConstellation": 0,
-        "scope": "team",
-        "timed": true,
+        "scope": "self",
+        "timed": false,
         "condition": "burstSong",
-        "convert": {
-          "from": "em",
-          "source": "self",
-          "perPoint": 1,
-          "threshold": 0,
-          "to": [
-            "lunarcrystallizeFlat"
-          ]
-        },
         "level": {
           "talent": "burst",
           "table": [
@@ -17463,8 +17460,30 @@
             5.3656
           ]
         },
-        "flat": [],
-        "note": "Parte da Maestria dele (nível do Supremo) somada ao dano Lunar-Cristalizar por golpe: ligue nas janelas (o motor não conta os 21 stacks nesta parte)."
+        "flat": [
+          {
+            "name": "Bônus de Lunar-Cristalizar por Maestria",
+            "sourceStat": "EM",
+            "perPoint": 1,
+            "hitTypes": [
+              "normal",
+              "charged",
+              "plunge",
+              "skill",
+              "burst"
+            ],
+            "stacks": 21,
+            "reaction": "lunarcrystallize",
+            "pool": "quills",
+            "extra": {
+              "max": 3,
+              "step": 5,
+              "label": "Acúmulos extras (construções Geo)"
+            },
+            "targets": "team"
+          }
+        ],
+        "note": "Parte da Maestria dele (nível do Supremo) somada aos golpes Lunar-Cristalizar dos personagens, gastando os mesmos acúmulos do Dano Geo. A reação do time não gasta acúmulo (como no GO)."
       },
       {
         "id": "a4geo",
@@ -17499,30 +17518,27 @@
               "burst"
             ],
             "stacks": 21,
+            "pool": "quills",
+            "extra": {
+              "max": 3,
+              "step": 5,
+              "label": "Acúmulos extras (construções Geo)"
+            },
             "targets": "team",
             "elements": [
               "Geo"
             ]
           }
         ],
-        "note": "Dano Geo da equipe +7%/14%/24% da Maestria dele com 1/2/3 membros Hydro ou Geo, nos 21 golpes Geo da rotação (21 stacks do Supremo; os 15 extras por construto Geo NÃO entram)."
+        "note": "Dano Geo da equipe +7%/14%/24% da Maestria dele com 1/2/3 membros Hydro ou Geo, nos mesmos acúmulos do Supremo."
       },
       {
         "id": "a4lcr",
         "label": "Illuga A4 (Lunar-Cristalizar)",
         "minConstellation": 0,
-        "scope": "team",
-        "timed": true,
+        "scope": "self",
+        "timed": false,
         "condition": "burstSong",
-        "convert": {
-          "from": "em",
-          "source": "self",
-          "perPoint": 1,
-          "threshold": 0,
-          "to": [
-            "lunarcrystallizeFlat"
-          ]
-        },
         "team": {
           "scale": {
             "of": [
@@ -17536,8 +17552,30 @@
             ]
           }
         },
-        "flat": [],
-        "note": "Dano Lunar-Cristalizar +48%/96%/160% da Maestria dele por golpe durante o Supremo: ligue nas janelas (o motor não conta os 21 stacks nesta parte)."
+        "flat": [
+          {
+            "name": "Nightingale's Song por Maestria (Lunar-Cristalizar)",
+            "sourceStat": "EM",
+            "perPoint": 1,
+            "hitTypes": [
+              "normal",
+              "charged",
+              "plunge",
+              "skill",
+              "burst"
+            ],
+            "stacks": 21,
+            "reaction": "lunarcrystallize",
+            "pool": "quills",
+            "extra": {
+              "max": 3,
+              "step": 5,
+              "label": "Acúmulos extras (construções Geo)"
+            },
+            "targets": "team"
+          }
+        ],
+        "note": "Golpes Lunar-Cristalizar +48%/96%/160% da Maestria dele, nos mesmos acúmulos do Supremo."
       },
       {
         "id": "c4",

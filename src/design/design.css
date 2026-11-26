@@ -205,6 +205,10 @@ body { font-family: var(--font-body); font-size: 15px; line-height: 1.5; -webkit
 /* Faixa do time (abaixo do cabeçalho): voltar, nome e as 3 telas do time. */
 .dz-subnav { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; padding: 8px var(--gutter); background: var(--surface); border-bottom: 1px solid var(--border); }
 .dz-subnav .name { font-family: var(--font-display); font-weight: 700; font-size: 20px; max-width: 28ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+button.name { background: none; border: 1px solid transparent; border-radius: var(--r-ctl); padding: 2px 6px; margin-inline: -6px; color: inherit; text-align: left; cursor: text; }
+.dz-subnav button.name:hover { border-color: var(--border-ctl-hi); }
+.dz-subnav button.name:focus-visible { outline: 2px solid var(--gold); outline-offset: 1px; }
+.dz-subnav input.name { width: 28ch; max-width: 100%; }
 .dz-subnav nav { display: flex; gap: 8px; flex: 1; flex-wrap: wrap; }
 .dz-subnav nav a { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; min-height: 40px; border-radius: 999px; border: 1px solid var(--border-ctl); background: var(--bg-header); color: var(--text-2); text-decoration: none; font-family: var(--font-display); font-weight: 600; font-size: 16px; letter-spacing: .04em; }
 .dz-subnav nav a:hover { border-color: var(--border-ctl-hi); color: var(--text); }

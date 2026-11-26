@@ -56,6 +56,20 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await settle();
   check('Armas e constelações é tela de apoio: sem a barra de passos', (await page.locator('.dz-stepbar').count()) === 0);
 
+  // Renomear o time sem sair da página
+  await page.goto(`${BASE}/projeto/exemplo/rotacao`, { waitUntil: 'networkidle' });
+  await page.waitForSelector('.dz-subnav button.name');
+  const before = (await page.textContent('.dz-subnav .name')).trim();
+  await page.click('.dz-subnav button.name');
+  await page.fill('.dz-subnav input.name', 'Não vale'); await page.keyboard.press('Escape'); await page.waitForTimeout(300);
+  check('Esc desiste de renomear', (await page.textContent('.dz-subnav .name')).trim() === before);
+  await page.click('.dz-subnav button.name');
+  await page.fill('.dz-subnav input.name', 'Meu time novo'); await page.keyboard.press('Enter'); await page.waitForTimeout(900);
+  check('clicar no nome do time renomeia na própria tela', (await page.textContent('.dz-subnav .name')).trim() === 'Meu time novo' && /\/rotacao$/.test(page.url()));
+  await page.reload({ waitUntil: 'networkidle' });
+  await page.waitForSelector('.dz-subnav button.name');
+  check('o nome novo continua depois de recarregar', (await page.textContent('.dz-subnav .name')).trim() === 'Meu time novo');
+
   // Celular
   await page.goto(`${BASE}/projeto/exemplo`, { waitUntil: 'networkidle' });
   await page.setViewportSize({ width: 390, height: 900 });

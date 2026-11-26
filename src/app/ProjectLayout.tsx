@@ -145,7 +145,7 @@ export default function ProjectLayout() {
 
   return (
     <div className="dz">
-      <AppHeader projectId={id} memberName={headerMember} projectName={current.name} favorite={!!current.meta.favorite} onToggleFavorite={() => toggleFavorite(current)} />
+      <AppHeader projectId={id} memberName={headerMember} projectName={current.name} onRename={(name) => useRotationStore.getState().rename(name)} favorite={!!current.meta.favorite} onToggleFavorite={() => toggleFavorite(current)} />
       <ProjectProvider value={{ id, project: current, data, bundle: ready.bundle, resolved: ready.resolved, stale: ready.stale, inSync, summary, colors }}>
         <div className={ready.stale ? 'dz-busy' : undefined}>
           <Outlet />

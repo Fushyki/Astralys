@@ -11,6 +11,7 @@ import { Menu } from '../design/Menu';
 import { Segmented } from '../design/primitives';
 import { POSTER_LABEL, type PosterFormat } from '../screens/card/PosterCard';
 import { useSettings, type CardBg } from './settings';
+import { TeamName } from './TeamName';
 
 /** Marca do Astralys: um A de traço simples com uma estrela de quatro pontas no topo. Ver `public/favicon.svg`. */
 export function StarMark({ size = 26 }: { size?: number }) {
@@ -30,6 +31,8 @@ export interface AppHeaderProps {
   memberName?: string;
   /** Nome do time, para a faixa. */
   projectName?: string;
+  /** Com ele, o nome na faixa vira editável com um clique. */
+  onRename?: (name: string) => void;
   favorite?: boolean;
   onToggleFavorite?: () => void;
 }
@@ -73,7 +76,7 @@ function SettingsMenu() {
   );
 }
 
-export function AppHeader({ projectId, memberName, projectName, favorite, onToggleFavorite }: AppHeaderProps) {
+export function AppHeader({ projectId, memberName, projectName, onRename, favorite, onToggleFavorite }: AppHeaderProps) {
   const { pathname } = useLocation();
   const [open, setOpen] = useState(false);
   useEffect(() => setOpen(false), [pathname]);
@@ -119,7 +122,7 @@ export function AppHeader({ projectId, memberName, projectName, favorite, onTogg
       {projectId && (
         <div className="dz-subnav" aria-label="Telas do time">
           <ButtonLink variant="ghost" size="sm" to="/vault">‹ Times</ButtonLink>
-          <span className="name" title={projectName}>{projectName}</span>
+          {onRename && projectName ? <TeamName key={projectId} name={projectName} onRename={onRename} /> : <span className="name" title={projectName}>{projectName}</span>}
           <nav aria-label="Telas do time">
             {tabs.map((t, i) => (
               <Link key={t.label} to={t.to} aria-current={t.on ? 'page' : undefined}>

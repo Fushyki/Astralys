@@ -106,7 +106,6 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.click('.pc-views button:has-text("Resumo e build")');
   await page.waitForSelector('.pc-gear');
   check('depois de Equipar, o Equipamento mostra as 5 peças reais do inventário', (await page.locator('.gr .pcard:not(.weapon)').count()) === 5 && (await page.locator('.gt-piece.real.empty').count()) === 0);
-  check('com peças reais o panorama mostra as 5 peças', /5\/5 peças/.test(await page.textContent('.db-over header')));
   await page.locator('.gr .pcard:not(.weapon)').nth(2).click();
   await page.waitForSelector('.dz-dialog .pp-tile');
   check('tocar numa peça abre o inventário com as peças da posição (Areia)', /Areia do inventário/.test(await page.textContent('.dz-dialog')) && (await page.locator('.dz-dialog .pp-tile').count()) === 8);
@@ -118,7 +117,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.click('.dz-dialog button:has-text("Deixar sem peça")');
   check('"Deixar sem peça" esvazia a posição', (await page.locator('.gt-piece.real.empty').count()) === 1);
   await page.click('button:has-text("Voltar ao build genérico")');
-  check('"Voltar ao build genérico" volta aos rolls e main stats', (await page.locator('.gt-piece.real').count()) === 0 && /Substats/.test(await page.textContent('.db-over header')));
+  check('"Voltar ao build genérico" volta aos rolls e main stats', (await page.locator('.gt-piece.real').count()) === 0);
   await page.click('.pc-views button:has-text("Otimizar")');
   await page.waitForSelector('.ot-top');
 

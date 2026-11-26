@@ -317,18 +317,6 @@
 .gr-more[open] { padding-bottom: 12px; }
 .gr-foot { margin-top: 8px; display: flex; justify-content: flex-end; }
 
-/* panorama da build */
-.db-over table { width: 100%; border-collapse: collapse; font-size: 14px; }
-.db-over th, .db-over td { padding: 7px 14px; text-align: right; }
-.db-over th:first-child { text-align: left; }
-.db-over thead th { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
-.db-over tbody th { color: var(--text-2); font-weight: 400; }
-.db-over tbody tr:nth-child(odd) { background: rgba(255, 255, 255, .025); }
-.db-over td { font-weight: 700; font-size: 15px; white-space: nowrap; }
-.db-over td[data-up] { color: var(--gold-hi); }
-.db-over > p { padding-top: 10px; }
-@media (max-width: 520px) { .db-over th, .db-over td { padding: 7px 8px; } }
-
 /* Aba Otimizar: coluna lateral ao lado dos filtros; a barra de foco e os builds ocupam a largura toda */
 .pc-page.opt .pc-main, .pc-page.opt .ot { display: contents; }
 @media (min-width: 1101px) {

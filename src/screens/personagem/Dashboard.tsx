@@ -1,6 +1,6 @@
 /**
  * "Resumo" do personagem num painel só (estilo calculadora): equipamento em uma linha, controles de crítico e reação,
- * atributos, golpes por tipo, reações, buffs do time e o panorama da build (stats fora e em campo).
+ * atributos, golpes por tipo, reações, buffs do time.
  */
 import { useDamageView } from '../../features/character/damageView';
 import { useMemo, useState, type ReactNode } from 'react';
@@ -10,7 +10,6 @@ import { Segmented } from '../../design/primitives';
 import { elementColor } from '../../design/elements';
 import { DamageLegend, FamilyBadge, damageColor } from '../../design/damageFamily';
 import { assembleTeam, type MemberRef } from '../../engine';
-import { overviewRows, sheetStats } from '../../features/character/buildOverview';
 import { useRotationStore } from '../../features/rotation/store';
 import {
   REACTION_LABEL,
@@ -86,43 +85,6 @@ function MovePanel({ title, badge, tone, lines, crit }: { title: string; badge: 
   );
 }
 
-// ---------- panorama da build ----------
-
-function BuildOverview({ v, index, element }: { v: ProjectView; index: number; element: string }) {
-  const useAuto = useRotationStore((s) => s.useAutoRolls);
-  const ref = v.project.members[index];
-  const member = v.resolved.team.members[index];
-  const rolls = v.bundle.optimization.rolls[index];
-  const assembly = useMemo(() => assembleTeam(v.resolved.team), [v.resolved.team]);
-  const field = v.bundle.memberStats[index];
-  if (!rolls || !field || !assembly.sources[index]) return <Panel title="Panorama da build"><p className="muted small">Calculando…</p></Panel>;
-  const rows = overviewRows(sheetStats(member, assembly, index, rolls), field, element);
-  const badge = ref.pieces ? `${ref.pieces.length}/5 peças` : ref.manualRolls ? 'Substats à mão' : 'Substats otimizados';
-  const warnings = v.bundle.rollWarnings.filter((w) => w.member === index);
-  return (
-    <Panel title="Panorama da build" badge={badge} className="db-over">
-      <table>
-        <thead>
-          <tr><th scope="col">Status</th><th scope="col" title="Personagem sem buffs, como na tela dele no jogo: sem passivas, set de 4 peças nem time">Fora de campo</th><th scope="col" title="Com todos os buffs ativos (arma, set, passivas e time)">Em campo</th></tr>
-        </thead>
-        <tbody>
-          {rows.map((r) => (
-            <tr key={r.key} data-stat={r.key}>
-              <th scope="row">{r.label}</th>
-              <td className="num">{r.out}</td>
-              <td className="num" data-up={r.changed || undefined}>{r.in}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <p className="muted small">Fora de campo: sem buffs. Em campo: com todos os buffs ativos. Para editar os substats, use a aba Otimizar (alvo Manual).</p>
-      {!ref.pieces && ref.manualRolls && <Button variant="secondary" size="sm" onClick={() => useAuto(index)}>Usar substats otimizados</Button>}
-      {warnings.map((w) => <p className="dz-error" role="alert" key={w.message}>{w.message}</p>)}
-    </Panel>
-  );
-}
-
-
 // ---------- buffs do time somados por atributo ----------
 
 interface AggRow { key: string; label: string; pct: boolean; total: number; sources: string[]; flagged: boolean }
@@ -170,6 +132,7 @@ export function Dashboard({ v, index }: { v: ProjectView; index: number }) {
   const { crit, setCrit, reaction, setReaction } = useDamageView(v.id, ref.character);
   const active = options.includes(reaction) ? reaction : 'none';
   const [editBuild, setEditBuild] = useState(false);
+  const useAutoRolls = useRotationStore((st) => st.useAutoRolls);
   const groups = useDamageGroups(v, index, active);
   const team = v.resolved.team;
   const assembly = useMemo(() => assembleTeam(team), [team]);
@@ -219,7 +182,6 @@ export function Dashboard({ v, index }: { v: ProjectView; index: number }) {
   return (
     <div className="db">
       <BuildStrip data={v.data} index={index} member={ref} projectId={v.id} compact editOpen={editBuild} onEditClose={() => setEditBuild(false)} />
-      <BuildOverview v={v} index={index} element={character.element} />
 
       <div className="db-toolbar">
         <Segmented label="Crítico" value={crit} options={CRIT_OPTIONS} onChange={setCrit} />
@@ -250,6 +212,9 @@ export function Dashboard({ v, index }: { v: ProjectView; index: number }) {
               ))}
             </ul>
             <p className="db-sub num">{formatInt(basePieces.atk)} ATK base · {formatInt(basePieces.hp)} HP base · {formatInt(basePieces.def)} DEF base</p>
+            {/* Substats à mão ou importados: a edição fica no Otimizar; daqui só se volta aos otimizados. */}
+            {!ref.pieces && ref.manualRolls && <Button variant="secondary" size="sm" onClick={() => useAutoRolls(index)}>Usar substats otimizados</Button>}
+            {v.bundle.rollWarnings.filter((w) => w.member === index).map((w) => <p className="dz-error" role="alert" key={w.message}>{w.message}</p>)}
           </Panel>
           <Panel title="Bônus extras">
             <ul className="db-rows">

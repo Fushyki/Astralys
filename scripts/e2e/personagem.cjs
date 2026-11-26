@@ -70,7 +70,7 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
   await page.click('.pc-views button:has-text("Resumo e build")');
   check('abre no Resumo, com o painel de colunas', (await page.getAttribute('.pc-views button:has-text("Resumo e build")', 'aria-selected')) === 'true' && (await page.locator('.db-cols').count()) === 1);
   check('o Resumo não tem o bloco "Maiores golpes" nem a tabela inteira', (await page.locator('.dz-panel:has(h2:text-is("Maiores golpes"))').count()) === 0 && (await page.locator('.dz-panel:has(h2:text-is("Tabela de dano"))').count()) === 0);
-  check('Resumo e build na mesma página: faixa de build, panorama e atributos', (await page.locator('.pcard.weapon').count()) === 1 && (await page.locator('.gt-piece').count()) === 5 && (await page.locator('.db-over').count()) === 1 && (await page.locator('.db-panel:has(h3:text-is("Atributos"))').count()) === 1);
+  check('Resumo e build na mesma página: faixa de build e atributos', (await page.locator('.pcard.weapon').count()) === 1 && (await page.locator('.gt-piece').count()) === 5 && (await page.locator('.db-over, .db-subs').count()) === 0 && (await page.locator('.db-panel:has(h3:text-is("Atributos"))').count()) === 1);
   check('as ferramentas ficam só no Avançado', (await page.locator('.dz-panel:has(h2:text-is("Ferramentas"))').count()) === 0);
 
   // Abas e cabeçalho
@@ -133,15 +133,8 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
   await page.keyboard.press('Control+z'); await settle();
   await page.keyboard.press('Control+z'); await settle();
 
-  // Panorama da build: fora de campo e em campo
   await view('Build');
-  const over = async (k) => page.locator(`.db-over tr[data-stat="${k}"] td`).allTextContents();
-  const valor = (t) => Number(t.replace(/\./g, '').replace(',', '.').replace('%', ''));
-  const [atkOut, atkIn] = await over('atk');
-  check('o panorama mostra os 9 status com as colunas Fora de campo e Em campo', (await page.locator('.db-over tbody tr').count()) === 9 && /Fora de campo/.test(await page.textContent('.db-over thead')) && /Em campo/.test(await page.textContent('.db-over thead')));
-  const attrAtk = (await page.locator('.db-panel:has(h3:text-is("Atributos")) li:has-text("ATK") b').first().textContent()).trim();
-  check('em campo o ATK é o dos atributos com buffs; fora de campo é menor', atkIn === attrAtk && valor(atkOut) < valor(atkIn), `${atkOut} → ${atkIn} (atributos ${attrAtk})`);
-  check('o Resumo não edita mais substats', (await page.locator('.db-subs, [aria-label="Modo dos substats"]').count()) === 0 && (await page.locator('.db-over input').count()) === 0);
+  check('o Resumo não edita mais substats', (await page.locator('[aria-label="Modo dos substats"]').count()) === 0);
 
   // Editor de build
   await page.click('.db-toolbar button:has-text("Editar build")'); await page.waitForSelector('.dz-dialog');

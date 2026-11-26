@@ -5,9 +5,9 @@
  * O membro otimizado entra com `externalStats` (a soma exata das peças). Os outros membros ficam como estão, com os
  * rolls que a análise do projeto já escolheu para eles.
  */
-import { BARE_KINDS } from '../character/buildOverview';
 import type { Element } from '../../data/schema';
 import {
+  type StatSourceKind,
   activeTeamDelta,
   assembleTeam,
   addDelta,
@@ -265,6 +265,9 @@ export function createEvaluator(input: EvaluatorInput): Evaluator {
     },
   };
 }
+
+/** Fontes que contam no personagem "sem buff" (a ficha do jogo): o resto (passivas, arma, set de 4 peças, ressonância, extras) é buff. */
+const BARE_KINDS: ReadonlySet<StatSourceKind> = new Set<StatSourceKind>(['ascension', 'weapon-substat', 'set-2p', 'main-stat']);
 
 /** Elemento do personagem (para o bônus de DMG% do cálice). */
 export const elementOf = (resolved: Pick<ResolvedProject, 'team'>, member: number): Element => resolved.team.members[member].character.element;

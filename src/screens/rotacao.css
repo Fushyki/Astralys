@@ -82,7 +82,7 @@
 .rt-hit { position: absolute; top: 50%; transform: translate(-50%, -50%); border-radius: 999px; box-sizing: border-box; padding: 0 4px; font: 700 10px var(--font-display); color: var(--bg); border: 2px solid var(--bg); cursor: grab; touch-action: none; }
 .rt-hit.big { font-size: 12px; }
 .rt-hit.lunar { border-color: var(--text-hi); }
-.rt-hit[aria-pressed='true'] { border: 3px solid var(--gold); box-shadow: 0 0 0 3px #060914; }
+.rt-hit[aria-pressed='true'] { border: 3px solid var(--gold); box-shadow: 0 0 0 3px #7ec8ff; }
 .rt-hit:focus-visible { outline: 2px solid #fff; }
 .rt-chainline { position: absolute; height: 2px; opacity: .7; }
 .rt-diamond { position: absolute; transform: translate(-50%, -50%) rotate(45deg); box-sizing: border-box; border: 2px solid; padding: 0; cursor: grab; touch-action: none; }

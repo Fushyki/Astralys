@@ -4,7 +4,7 @@ import { useProjectView } from '../../app/ProjectContext';
 import { cleanLunarisMarkup } from '../../data/clean';
 import { weaponIconUrl } from '../../design/images';
 import { weaponStatsAt } from '../../effects/schema';
-import { stacksOf } from '../../engine';
+import { pickedReceivers, stacksOf } from '../../engine';
 import { memberBuffCards, type BuffCard } from '../../features/character/characterModel';
 import { useRotationStore } from '../../features/rotation/store';
 import { formatDecimal, formatInt } from '../../ui/format';
@@ -27,6 +27,10 @@ export function WeaponBuffs({ index }: { index: number }) {
   const teamGear = !!effect && (() => { const t = weaponStatsAt(effect, refine).team; return !!t && (t.atkPct > 0 || t.dmgPct > 0 || t.em > 0); })();
   // Saem do kit resolvido, não dos cartões: com 0 stacks o cartão some e a quantidade precisa continuar à vista.
   const stacked = (v.resolved.team.members[index].characterEffect?.buffs ?? []).filter((b) => b.id.startsWith('arma:') && b.stacks && !b.stacks.of);
+
+  // Buffs que vão só para quem o usuário escolher (ex.: quem recebe a cura).
+  const names = v.resolved.team.members.map((m) => m.character.name);
+  const pickable = (v.resolved.team.members[index].characterEffect?.buffs ?? []).filter((b) => b.id.startsWith('arma:') && b.pickReceiver);
 
   // Um cartão por buff da arma (os mesmos números de "Buffs recebidos"), mesmo que só os aliados o recebam.
   const buffs = useMemo(() => {
@@ -55,6 +59,17 @@ export function WeaponBuffs({ index }: { index: number }) {
           </div>
         </div>
       ))}
+      {pickable.map((b) => {
+        const chosen = pickedReceivers(names, index, ref.receivers?.[b.id]);
+        return (
+          <div className="wi-who" role="group" aria-label={`Quem recebe: ${b.label}`} key={b.id}>
+            <span>Quem recebe: {b.label}</span>
+            {names.filter((_, j) => j !== index).map((n) => (
+              <button type="button" className="dz-btn sm" key={n} aria-pressed={chosen.includes(n)} onClick={() => updateMember(index, { receivers: { ...ref.receivers, [b.id]: chosen.includes(n) ? chosen.filter((x) => x !== n) : [...chosen, n] } })}>{chosen.includes(n) ? '✓ ' : ''}{n}</button>
+            ))}
+          </div>
+        );
+      })}
       {buffs.length === 0 && stacked.length === 0 && <p className="muted">Esta arma não tem buff com número cadastrado.</p>}
       {buffs.map(({ base, card }) => {
         const on = isOn(base);

@@ -211,11 +211,11 @@ export const WEAPONS_2: Record<string, GearCur> = {
     buffs: [
       { id: 'offfield', label: 'ATK fora de campo', timed: true, stats: { atkPct: { p: 1 } } },
       // O rótulo antigo fica no buff do curado: projetos salvos têm janelas com essa etiqueta.
-      { id: 'echoes', label: 'Sweet Echoes (ATK de quem cura e de quem foi curado)', scope: 'others', timed: true, stats: { atkPct: { p: 2 } } },
+      { id: 'echoes', label: 'Sweet Echoes (ATK de quem cura e de quem foi curado)', scope: 'others', pickReceiver: true, timed: true, stats: { atkPct: { p: 2 } } },
       { id: 'echoes-self', label: 'Sweet Echoes do portador (ATK de quem cura)', scope: 'self', timed: true, stats: { atkPct: { p: 2 } } },
     ],
     expect: 'Sweet Echoes',
-    note: 'ATK base sempre (12% no R1). Fora de campo soma outros 12%: faixa no plano de combate, ligue enquanto o portador está fora de campo. Sweet Echoes: +32% (R1) de ATK por 3 s para o portador e para quem ele curou depois de curar (vale fora de campo); são dois buffs separados (portador e curado). O motor não sabe quem foi curado: o do curado vale para todos os outros membros nas janelas que você ligar.',
+    note: 'ATK base sempre (12% no R1). Fora de campo soma outros 12%: faixa no plano de combate, ligue enquanto o portador está fora de campo. Sweet Echoes: +32% (R1) de ATK por 3 s para o portador e para quem ele curou depois de curar (vale fora de campo); são dois buffs separados (portador e curado). O do curado vai só para quem você escolher no bloco da arma (padrão: o 1º do time, em campo).',
   },
   'Fractured Halo': { atkPct: { p: 0 }, buffs: [{ id: 'edict', label: 'Electrifying Edict (DMG Lunar-Carregado da equipe)', scope: 'team', timed: true, stats: { reactionBonus: { lunarcharged: { p: 2 } } } }], expect: 'ATK is increased by', note: 'Assume o ATK depois de habilidade/Supremo sempre ativo. Electrifying Edict: +40% (R1) de DMG Lunar-Carregado da equipe por 20 s depois de criar um escudo com o ATK ativo: faixa, ligue nas janelas.' },
   'Bloodsoaked Ruins': { buffs: [{ id: 'lc', label: 'Lunar-Carregado depois do Supremo', timed: true, stats: { reactionBonus: { lunarcharged: { p: 1 } } } }, { id: 'requiem', label: 'Requiem of Ruin', timed: true, stats: { critDmg: { p: 3 } } }], expect: 'Lunar-Charged DMG', note: '+36% (R1) de DMG Lunar-Carregado por 3,5 s depois do Supremo e +28% de Dano Crítico por 6 s depois de um Lunar-Carregado: faixas. A energia não entra.' },
@@ -340,12 +340,13 @@ export const WEAPONS_2: Record<string, GearCur> = {
   'Hymn of the Maelstrom': {
     hpPct: { p: 0, x: 3 },
     buffs: [
-      { id: 'hp-atk', label: 'ATK por HP (equipe)', scope: 'team', convert: { from: 'hp', perPoint: { p: 2, x: 0.001 }, threshold: { p: 1 }, cap: { p: 3 }, to: ['atkPct'] } },
-      { id: 'reforco-hp', label: 'Vatsamonga +75% (HP)', timed: true, stats: { hpPct: { p: 0, x: 2.25 } } },
-      { id: 'reforco-atk', label: 'Vatsamonga +75% (ATK da equipe)', scope: 'team', timed: true, convert: { from: 'hp', perPoint: { p: 2, x: 0.00075 }, threshold: { p: 1 }, cap: { p: 3, x: 0.75 }, to: ['atkPct'] } },
+      // Como no GO, o ATK por HP (e o teto de 8%) vale por stack; os números abaixo são os de 3 stacks.
+      { id: 'hp-atk', label: 'ATK por HP (equipe)', scope: 'team', stacks: { max: 3, of: 'stacks', scalesCap: true }, convert: { from: 'hp', perPoint: { p: 2, x: 0.003 }, threshold: { p: 1 }, cap: { p: 3, x: 3 }, to: ['atkPct'] } },
+      { id: 'reforco-hp', label: 'Vatsamonga +75% (HP)', timed: true, stacks: { max: 3, of: 'stacks' }, stats: { hpPct: { p: 0, x: 2.25 } } },
+      { id: 'reforco-atk', label: 'Vatsamonga +75% (ATK da equipe)', scope: 'team', timed: true, stacks: { max: 3, of: 'stacks', scalesCap: true }, convert: { from: 'hp', perPoint: { p: 2, x: 0.00225 }, threshold: { p: 1 }, cap: { p: 3, x: 2.25 }, to: ['atkPct'] } },
     ],
     expect: 'Vatsamonga',
-    note: 'HP (3 stacks) e +ATK por HP acima de 40.000 para o membro ativo; os +75% por 5 s depois de Congelado ou Redemoinho Estelar viram faixas (3 stacks × 4% × 75% de HP e 75% do ATK).',
+    note: 'HP e +ATK por HP acima de 40.000 (até 8% no R1) para o membro ativo, os dois por stack (3 por padrão); os +75% por 5 s depois de Congelado ou Redemoinho Estelar viram faixas.',
   },
   'Starsealed Edict': {
     critDmg: { re: 'Increases CRIT DMG by (\\d+(?:\\.\\d+)?)%' },

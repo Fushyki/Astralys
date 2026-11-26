@@ -266,6 +266,8 @@ export const CharacterBuffSchema = z.object({
   timed: z.boolean(),
   /** Só personagens destes elementos recebem (ex.: "+15% de DMG Pyro" para a equipe). */
   forElements: z.array(ElementSchema).optional(),
+  /** O buff vai só para quem o usuário escolher entre os outros membros (`MemberRef.receivers`; padrão: o 1º do time). Ex.: quem recebe a cura. */
+  pickReceiver: z.boolean().optional(),
   /** Só recebem personagens do elemento do dono ou de um elemento que ele reagiu (`MemberRef.reacted`, escolhido pelo usuário). */
   forReacted: z.boolean().optional(),
   /** Duração do efeito em segundos, lida da descrição (ex.: Scroll of the Hero of Cinder City, 15 s e 20 s): tamanho padrão da janela. */
@@ -312,6 +314,8 @@ export const CharacterBuffSchema = z.object({
     default: z.number().int().min(0).optional(),
     /** Quanto vale cada passo na tela (ex.: 2 = o seletor mostra 0, 2, 4… segundos, com `max` passos). */
     step: z.number().positive().optional(),
+    /** O teto da conversão também cresce com os stacks (Hymn of the Maelstrom: até 8% de ATK por stack). */
+    scalesCap: z.boolean().optional(),
   }).optional(),
   /** O que foi assumido e o que não entra. */
   note: z.string().optional(),

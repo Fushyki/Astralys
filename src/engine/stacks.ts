@@ -25,7 +25,7 @@ export function scaleBuffStacks(b: CharacterBuff, chosen: number | undefined): C
   return withStart({
     ...b,
     ...(b.stats ? { stats: scaleNumbers(b.stats, k) } : {}),
-    ...(b.convert ? { convert: { ...b.convert, perPoint: b.convert.perPoint * k } } : {}),
+    ...(b.convert ? { convert: { ...b.convert, perPoint: b.convert.perPoint * k, ...(b.stacks.scalesCap && b.convert.cap !== undefined ? { cap: b.convert.cap * k } : {}) } } : {}),
     // O teto por golpe (capPerHit) não muda com os stacks: é o máximo do efeito inteiro.
     ...(b.flat?.length ? { flat: b.flat.map((f) => ({ ...f, perPoint: f.perPoint * k })) } : {}),
     ...(b.resShred ? { resShred: { ...b.resShred, value: b.resShred.value * k } } : {}),

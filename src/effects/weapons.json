@@ -30835,6 +30835,7 @@
         "minConstellation": 0,
         "scope": "others",
         "timed": true,
+        "pickReceiver": true,
         "stats": {
           "atkPct": 0.32,
           "dmgPct": 0,
@@ -30941,6 +30942,7 @@
             "minConstellation": 0,
             "scope": "others",
             "timed": true,
+            "pickReceiver": true,
             "stats": {
               "atkPct": 0.32,
               "dmgPct": 0,
@@ -31046,6 +31048,7 @@
             "minConstellation": 0,
             "scope": "others",
             "timed": true,
+            "pickReceiver": true,
             "stats": {
               "atkPct": 0.4,
               "dmgPct": 0,
@@ -31151,6 +31154,7 @@
             "minConstellation": 0,
             "scope": "others",
             "timed": true,
+            "pickReceiver": true,
             "stats": {
               "atkPct": 0.48,
               "dmgPct": 0,
@@ -31256,6 +31260,7 @@
             "minConstellation": 0,
             "scope": "others",
             "timed": true,
+            "pickReceiver": true,
             "stats": {
               "atkPct": 0.56,
               "dmgPct": 0,
@@ -31361,6 +31366,7 @@
             "minConstellation": 0,
             "scope": "others",
             "timed": true,
+            "pickReceiver": true,
             "stats": {
               "atkPct": 0.64,
               "dmgPct": 0,
@@ -31420,7 +31426,7 @@
         "procs": []
       }
     ],
-    "note": "ATK base sempre (12% no R1). Fora de campo soma outros 12%: faixa no plano de combate, ligue enquanto o portador está fora de campo. Sweet Echoes: +32% (R1) de ATK por 3 s para o portador e para quem ele curou depois de curar (vale fora de campo); são dois buffs separados (portador e curado). O motor não sabe quem foi curado: o do curado vale para todos os outros membros nas janelas que você ligar.",
+    "note": "ATK base sempre (12% no R1). Fora de campo soma outros 12%: faixa no plano de combate, ligue enquanto o portador está fora de campo. Sweet Echoes: +32% (R1) de ATK por 3 s para o portador e para quem ele curou depois de curar (vale fora de campo); são dois buffs separados (portador e curado). O do curado vai só para quem você escolher no bloco da arma (padrão: o 1º do time, em campo).",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
   {
@@ -41944,14 +41950,19 @@
         "convert": {
           "from": "hp",
           "source": "self",
-          "perPoint": 0.000004,
+          "perPoint": 0.000012,
           "threshold": 40000,
-          "cap": 0.08,
+          "cap": 0.24,
           "to": [
             "atkPct"
           ]
         },
-        "flat": []
+        "flat": [],
+        "stacks": {
+          "max": 3,
+          "of": "stacks",
+          "scalesCap": true
+        }
       },
       {
         "id": "reforco-hp",
@@ -41981,7 +41992,11 @@
           "physCritDmg": 0,
           "reactionBonus": {}
         },
-        "flat": []
+        "flat": [],
+        "stacks": {
+          "max": 3,
+          "of": "stacks"
+        }
       },
       {
         "id": "reforco-atk",
@@ -41992,14 +42007,19 @@
         "convert": {
           "from": "hp",
           "source": "self",
-          "perPoint": 0.000003,
+          "perPoint": 0.000009,
           "threshold": 40000,
-          "cap": 0.06,
+          "cap": 0.18,
           "to": [
             "atkPct"
           ]
         },
-        "flat": []
+        "flat": [],
+        "stacks": {
+          "max": 3,
+          "of": "stacks",
+          "scalesCap": true
+        }
       }
     ],
     "flat": [],
@@ -42059,14 +42079,19 @@
             "convert": {
               "from": "hp",
               "source": "self",
-              "perPoint": 0.000004,
+              "perPoint": 0.000012,
               "threshold": 40000,
-              "cap": 0.08,
+              "cap": 0.24,
               "to": [
                 "atkPct"
               ]
             },
-            "flat": []
+            "flat": [],
+            "stacks": {
+              "max": 3,
+              "of": "stacks",
+              "scalesCap": true
+            }
           },
           {
             "id": "reforco-hp",
@@ -42096,7 +42121,11 @@
               "physCritDmg": 0,
               "reactionBonus": {}
             },
-            "flat": []
+            "flat": [],
+            "stacks": {
+              "max": 3,
+              "of": "stacks"
+            }
           },
           {
             "id": "reforco-atk",
@@ -42107,14 +42136,19 @@
             "convert": {
               "from": "hp",
               "source": "self",
-              "perPoint": 0.000003,
+              "perPoint": 0.000009,
               "threshold": 40000,
-              "cap": 0.06,
+              "cap": 0.18,
               "to": [
                 "atkPct"
               ]
             },
-            "flat": []
+            "flat": [],
+            "stacks": {
+              "max": 3,
+              "of": "stacks",
+              "scalesCap": true
+            }
           }
         ],
         "flat": [],
@@ -42173,14 +42207,19 @@
             "convert": {
               "from": "hp",
               "source": "self",
-              "perPoint": 0.000005,
+              "perPoint": 0.000015,
               "threshold": 40000,
-              "cap": 0.1,
+              "cap": 0.3,
               "to": [
                 "atkPct"
               ]
             },
-            "flat": []
+            "flat": [],
+            "stacks": {
+              "max": 3,
+              "of": "stacks",
+              "scalesCap": true
+            }
           },
           {
             "id": "reforco-hp",
@@ -42210,7 +42249,11 @@
               "physCritDmg": 0,
               "reactionBonus": {}
             },
-            "flat": []
+            "flat": [],
+            "stacks": {
+              "max": 3,
+              "of": "stacks"
+            }
           },
           {
             "id": "reforco-atk",
@@ -42221,14 +42264,19 @@
             "convert": {
               "from": "hp",
               "source": "self",
-              "perPoint": 0.000004,
+              "perPoint": 0.000011,
               "threshold": 40000,
-              "cap": 0.075,
+              "cap": 0.225,
               "to": [
                 "atkPct"
               ]
             },
-            "flat": []
+            "flat": [],
+            "stacks": {
+              "max": 3,
+              "of": "stacks",
+              "scalesCap": true
+            }
           }
         ],
         "flat": [],
@@ -42287,14 +42335,19 @@
             "convert": {
               "from": "hp",
               "source": "self",
-              "perPoint": 0.000006,
+              "perPoint": 0.000018,
               "threshold": 40000,
-              "cap": 0.12,
+              "cap": 0.36,
               "to": [
                 "atkPct"
               ]
             },
-            "flat": []
+            "flat": [],
+            "stacks": {
+              "max": 3,
+              "of": "stacks",
+              "scalesCap": true
+            }
           },
           {
             "id": "reforco-hp",
@@ -42324,7 +42377,11 @@
               "physCritDmg": 0,
               "reactionBonus": {}
             },
-            "flat": []
+            "flat": [],
+            "stacks": {
+              "max": 3,
+              "of": "stacks"
+            }
           },
           {
             "id": "reforco-atk",
@@ -42335,14 +42392,19 @@
             "convert": {
               "from": "hp",
               "source": "self",
-              "perPoint": 0.000005,
+              "perPoint": 0.000014,
               "threshold": 40000,
-              "cap": 0.09,
+              "cap": 0.27,
               "to": [
                 "atkPct"
               ]
             },
-            "flat": []
+            "flat": [],
+            "stacks": {
+              "max": 3,
+              "of": "stacks",
+              "scalesCap": true
+            }
           }
         ],
         "flat": [],
@@ -42401,14 +42463,19 @@
             "convert": {
               "from": "hp",
               "source": "self",
-              "perPoint": 0.000007,
+              "perPoint": 0.000021,
               "threshold": 40000,
-              "cap": 0.14,
+              "cap": 0.42,
               "to": [
                 "atkPct"
               ]
             },
-            "flat": []
+            "flat": [],
+            "stacks": {
+              "max": 3,
+              "of": "stacks",
+              "scalesCap": true
+            }
           },
           {
             "id": "reforco-hp",
@@ -42438,7 +42505,11 @@
               "physCritDmg": 0,
               "reactionBonus": {}
             },
-            "flat": []
+            "flat": [],
+            "stacks": {
+              "max": 3,
+              "of": "stacks"
+            }
           },
           {
             "id": "reforco-atk",
@@ -42449,14 +42520,19 @@
             "convert": {
               "from": "hp",
               "source": "self",
-              "perPoint": 0.000005,
+              "perPoint": 0.000016,
               "threshold": 40000,
-              "cap": 0.105,
+              "cap": 0.315,
               "to": [
                 "atkPct"
               ]
             },
-            "flat": []
+            "flat": [],
+            "stacks": {
+              "max": 3,
+              "of": "stacks",
+              "scalesCap": true
+            }
           }
         ],
         "flat": [],
@@ -42515,14 +42591,19 @@
             "convert": {
               "from": "hp",
               "source": "self",
-              "perPoint": 0.000008,
+              "perPoint": 0.000024,
               "threshold": 40000,
-              "cap": 0.16,
+              "cap": 0.48,
               "to": [
                 "atkPct"
               ]
             },
-            "flat": []
+            "flat": [],
+            "stacks": {
+              "max": 3,
+              "of": "stacks",
+              "scalesCap": true
+            }
           },
           {
             "id": "reforco-hp",
@@ -42552,7 +42633,11 @@
               "physCritDmg": 0,
               "reactionBonus": {}
             },
-            "flat": []
+            "flat": [],
+            "stacks": {
+              "max": 3,
+              "of": "stacks"
+            }
           },
           {
             "id": "reforco-atk",
@@ -42563,21 +42648,26 @@
             "convert": {
               "from": "hp",
               "source": "self",
-              "perPoint": 0.000006,
+              "perPoint": 0.000018,
               "threshold": 40000,
-              "cap": 0.12,
+              "cap": 0.36,
               "to": [
                 "atkPct"
               ]
             },
-            "flat": []
+            "flat": [],
+            "stacks": {
+              "max": 3,
+              "of": "stacks",
+              "scalesCap": true
+            }
           }
         ],
         "flat": [],
         "procs": []
       }
     ],
-    "note": "HP (3 stacks) e +ATK por HP acima de 40.000 para o membro ativo; os +75% por 5 s depois de Congelado ou Redemoinho Estelar viram faixas (3 stacks × 4% × 75% de HP e 75% do ATK).",
+    "note": "HP e +ATK por HP acima de 40.000 (até 8% no R1) para o membro ativo, os dois por stack (3 por padrão); os +75% por 5 s depois de Congelado ou Redemoinho Estelar viram faixas.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
   },
   {

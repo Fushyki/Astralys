@@ -197,6 +197,8 @@ export interface MemberInput {
   characterEffect?: CharacterEffect;
   /** Elementos com que reage em campo, além do próprio (buffs `forReacted`). */
   reacted?: Element[];
+  /** Quem recebe os buffs com `pickReceiver` (ver `MemberRef.receivers`). */
+  receivers?: Record<string, string[]>;
   /** Recurso dos golpes com bônus por ponto (ver `MemberRef.points`). */
   points?: number;
   weaponEffect?: WeaponEffect;

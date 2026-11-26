@@ -135,7 +135,7 @@ const STACK_UNITS: Record<string, string> = {
 };
 
 /** Stacks/pontos de um buff: informado na curadoria ou o multiplicador inteiro `x` (2 a 20) dos valores de `stats` (todos iguais). */
-function stackInfo(b: { stats?: unknown; stacks?: { max: number; unit?: string; levels?: Val[]; of?: string; default?: number; step?: number } | false }): { max: number; unit?: string; levels?: Val[]; of?: string; default?: number; step?: number } | undefined {
+function stackInfo(b: { stats?: unknown; stacks?: { max: number; unit?: string; levels?: Val[]; of?: string; default?: number; step?: number; scalesCap?: true } | false }): { max: number; unit?: string; levels?: Val[]; of?: string; default?: number; step?: number; scalesCap?: true } | undefined {
   if (b.stacks === false) return undefined;
   if (b.stacks) return b.stacks;
   const xs = new Set<number>();
@@ -241,7 +241,7 @@ function stackMeta(b: { stats?: unknown; stacks?: { max: number; unit?: string; 
     table = [0, ...vals.map((x) => round(x / top))];
   }
   const u = unit ?? info.unit;
-  return { max: info.max, ...(u ? { unit: u } : {}), ...(table ? { table } : {}), ...(info.of ? { of: info.of } : {}), ...(info.default !== undefined ? { default: info.default } : {}), ...(info.step !== undefined ? { step: info.step } : {}) };
+  return { max: info.max, ...(u ? { unit: u } : {}), ...(table ? { table } : {}), ...(info.of ? { of: info.of } : {}), ...(info.default !== undefined ? { default: info.default } : {}), ...(info.step !== undefined ? { step: info.step } : {}), ...(info.scalesCap ? { scalesCap: true } : {}) };
 }
 
 function buildSets(): SetEffect[] {
@@ -358,6 +358,7 @@ function buildBuff(b: BuffCur, c: Ctx): CharacterBuff {
   return CharacterBuffSchema.parse({
     id: b.id, label: b.label, minConstellation: 0, scope: b.scope ?? 'self', timed: b.timed ?? false,
     ...(b.forElements ? { forElements: b.forElements } : {}),
+    ...(b.pickReceiver ? { pickReceiver: true } : {}),
     ...(b.stats ? { stats: buffStats(b.stats, c) } : {}),
     ...(b.convert
       ? {

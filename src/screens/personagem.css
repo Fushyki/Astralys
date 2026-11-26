@@ -387,6 +387,9 @@
 .wi-sec { display: flex; flex-direction: column; gap: var(--sp-2); }
 .wi-sec h3 { margin: 0; font: 700 var(--fs-3) var(--font-display); letter-spacing: .1em; text-transform: uppercase; color: var(--gold); }
 .wi-sec p { margin: 0; font-size: var(--fs-2); line-height: 1.5; color: var(--text-2); }
+.wi-who { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-2); font-size: var(--fs-1); color: var(--text-2); }
+.wi-who > span { flex: 1 1 100%; }
+.wi-who button[aria-pressed='true'] { border-color: var(--gold); color: var(--gold); }
 .wi-buff { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: var(--sp-3); padding: var(--sp-2) var(--sp-3); border-radius: var(--r-inner); border: 1px solid var(--border); background: var(--bg-header); cursor: pointer; }
 .wi-buff[data-on='true'] { border-color: var(--rar5-border); background: #2a2312; }
 .wi-buff input { width: 18px; height: 18px; accent-color: var(--gold); }

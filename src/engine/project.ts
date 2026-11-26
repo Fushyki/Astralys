@@ -88,6 +88,8 @@ export const MemberRefSchema = z.object({
   condManual: z.boolean().optional(),
   /** Quantos stacks (ou pontos) de cada buff do personagem valem, por id do buff (`CharacterBuff.stacks`). Ausente = o máximo. */
   stacks: z.record(z.string(), z.number().int().min(0)).optional(),
+  /** Por id de buff com `pickReceiver`: os nomes de quem recebe. Ausente = o 1º do time que não é o dono. */
+  receivers: z.record(z.string(), z.array(z.string())).optional(),
   /** Recurso dos golpes com bônus por ponto (Serpent's Subtlety, Espírito Lutador), escolhido na aba Talentos. Ausente = o máximo. */
   points: z.number().int().min(0).optional(),
   /** Elementos com que o personagem reage em campo (buffs `forReacted`, ex.: Scroll of the Hero of Cinder City). */
@@ -610,6 +612,7 @@ export function resolveMember(ref: MemberRef, data: GameData, effects: EffectsDa
     characterEffect,
     reacted: ref.reacted,
     points: ref.points,
+    receivers: ref.receivers,
     weaponEffect: planilha ? planilhaWeapon(weaponEffect) : weaponEffect,
     primarySet,
     secondarySet,

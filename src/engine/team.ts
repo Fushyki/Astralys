@@ -122,6 +122,13 @@ export function pyroResonanceAtkPct(members: MemberInput[]): number {
   return members.filter((m) => m.character.element === 'Pyro').length >= 2 ? 0.25 : 0;
 }
 
+/** Quem recebe um buff `pickReceiver`: os escolhidos que estão no time; sem escolha (ou se saíram todos), o 1º que não é o dono. */
+export function pickedReceivers(names: readonly string[], owner: number, picked: readonly string[] | undefined): string[] {
+  const others = names.filter((_, j) => j !== owner);
+  const present = others.filter((n) => picked?.includes(n));
+  return picked && (present.length > 0 || picked.length === 0) ? present : others.slice(0, 1);
+}
+
 /** O buff chega a `target` pelo elemento? `forElements` fixo; `forReacted` = elemento do dono (`owner`) mais os que ele reagiu. */
 function receivesByElement(b: { forElements?: Element[]; forReacted?: boolean }, owner: MemberInput, target: MemberInput): boolean {
   const el = target.character.element;
@@ -191,7 +198,9 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
       if (!b.stats || (!b.timed && b.scope === 'self')) continue;
       const delta = characterBuffDelta(b.stats, !!b.forElements || !!b.forReacted);
       if (isEmptyDelta(delta) || off(`cbuff-${i}-${b.id}`)) continue;
+      const chosen = b.pickReceiver ? pickedReceivers(names, i, m.receivers?.[b.id]) : undefined;
       const targets = names.filter((n, j) => {
+        if (chosen && !chosen.includes(n)) return false;
         if (b.scope === 'self' && j !== i) return false;
         if (b.scope === 'others' && j === i) return false;
         if (b.forFactions && !b.forFactions.some((f) => members[j].factions?.includes(f))) return false;

@@ -8,6 +8,7 @@ import type { ResistanceMap } from './damage';
 import type { ElementOrPhysical } from './constants/reactions';
 import type { Rolls } from './artifacts';
 import {
+  type SetLockout,
   activeCharacterBuffs,
   addDelta,
   characterBuffDelta,
@@ -74,6 +75,8 @@ export interface TeamAssembly {
   /** Fontes de cada bônus estático (a soma de `sources[i]` é `statics[i]`). */
   sources: StatSource[][];
   buffs: TeamBuff[];
+  /** Por membro, os bônus de set que param por golpe (só se o 4 peças está ligado). */
+  lockouts?: (SetLockout | undefined)[];
   /** ATK% de ressonância (Pyro: +25% com 2+ Pyro), aplicado a todos. */
   resonanceAtkPct: number;
   /** ATK de referência de cada membro (rolls mínimos, buffs de %, sem ATK fixo de time). */
@@ -322,6 +325,11 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
   });
   const enemyDefRed = Math.min(0.9, config.enemyDefRed + defShred);
 
-  return { statics, sources, buffs, resonanceAtkPct, referenceAtk, enemyRes, enemyDefRed, hasDerived, warnings };
+  const lockouts = members.map((m, i) => {
+    const four = sources[i].some((x) => x.id === `m${i}:set4p`) ? m.primarySet?.effect?.fourPiece : undefined;
+    return four?.lockout && { ...four.lockout, cut: four.dmgPctByType };
+  });
+
+  return { statics, sources, buffs, ...(lockouts.some(Boolean) ? { lockouts } : {}), resonanceAtkPct, referenceAtk, enemyRes, enemyDefRed, hasDerived, warnings };
 }
 

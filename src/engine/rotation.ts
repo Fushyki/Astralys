@@ -12,7 +12,7 @@ import { computeHit, type EnemyStats, type HitBreakdown, type ResistanceMap } fr
 import { critFactor } from './formulas';
 import { computeLunarReaction, computeSpecial, computeStellarSwirlReaction, computeTransformative, type SpecialBreakdown } from './reactions';
 import type { Rolls } from './artifacts';
-import { activeCharacterBuffs, activeTeamDelta, finalStats, hitDmgBonus, type FinalStats, type MemberInput, type StatBlock, type TeamBuff } from './stats';
+import { activeCharacterBuffs, activeTeamDelta, finalStats, hitDmgBonus, lockoutCut, type FinalStats, type MemberInput, type StatBlock, type TeamBuff } from './stats';
 import { labelTag } from './team';
 import type { GlobalConfig, TeamAssembly } from './team';
 
@@ -75,6 +75,8 @@ export interface RotationAction {
   activeTags: readonly string[];
   /** Ajuste de DMG% desta linha (ex.: decaimento do A4 da Mavuika, na planilha, à mão). */
   dmgAdjust: number;
+  /** Segundos desde o último dano do mesmo membro, por tipo de golpe (para `TeamAssembly.lockouts`). */
+  sinceType?: Partial<Record<HitType, number>>;
   /** Segundos desde o início da janela de cada etiqueta no instante do golpe (faz cair os buffs com `decay`). */
   tagAges?: Readonly<Record<string, number>>;
   /** Fração (0 a 1) do buff de cada etiqueta neste golpe, quando o limite de acertos acaba no meio dele. */
@@ -140,6 +142,8 @@ const LIVE_CACHE = new WeakMap<object, { dec: Set<string>; tags: number; live: R
 
 export interface ActionResult {
   action: RotationAction;
+  /** DMG% do set que não valeu neste golpe (`TeamAssembly.lockouts`). */
+  setCut?: number;
   element: ElementOrPhysical;
   stats: FinalStats;
   /** Escala efetiva do golpe no nível de talento do personagem (já com a escala extra). */
@@ -536,12 +540,13 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
       : action.reaction === 'spread' || action.reaction === 'aggravate' ? stats.reactionBonus?.[action.reaction] ?? 0
       : 0;
 
+    const setCut = lockoutCut(assembly.lockouts?.[action.member], move.hitType, action.sinceType);
     const breakdown = computeHit({
       element,
       base,
       executions: action.executions,
       flatDamage,
-      dmgBonus: hitDmgBonus(stats, element, member.character.element, move.hitType) + action.dmgAdjust,
+      dmgBonus: hitDmgBonus(stats, element, member.character.element, move.hitType) + action.dmgAdjust - setCut,
       critRate,
       critDmg,
       critMode: 'hit',
@@ -564,6 +569,7 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
         })
       : undefined;
     return {
+      ...(setCut ? { setCut } : {}),
       action,
       element,
       stats,

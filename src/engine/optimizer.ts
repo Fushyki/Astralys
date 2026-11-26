@@ -38,6 +38,7 @@ import {
   defaultTotalRolls,
   finalStats,
   hitDmgBonus,
+  lockoutCut,
   maxRollsFor,
   minimumRolls,
   rollValues,
@@ -151,7 +152,7 @@ export function optimizeMember(ctx: OptimizerContext, memberIndex: number, flatB
     const stats = minStats(a.activeTags, a.tagShare); // só para os bônus de DMG% (não dependem dos rolls)
     const element = a.move.element ?? m.character.element;
     // Golpe Lunar/Estelar: sem DMG% comum (a parte da Maestria dele a busca não enxerga; o dano final usa a fórmula certa).
-    const dmg = a.move.special ? 1 : 1 + hitDmgBonus(stats, element, m.character.element, a.move.hitType) + a.dmgAdjust;
+    const dmg = a.move.special ? 1 : 1 + hitDmgBonus(stats, element, m.character.element, a.move.hitType) + a.dmgAdjust - lockoutCut(assembly.lockouts?.[memberIndex], a.move.hitType, a.sinceType);
     const def = defMultiplier(config.characterLevel, config.enemyLevel, assembly.enemyDefRed, config.enemyDefIgnore ?? 0);
     const res = resMultiplier(enemyRes({ level: config.enemyLevel, res: assembly.enemyRes }, element));
     const w = a.executions * dmg * def * res;

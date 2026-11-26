@@ -5,7 +5,7 @@
  */
 import { scaleBuffStacks, stacksOf, withStacks } from './stacks';
 import { z } from 'zod';
-import { ElementSchema, type ArtifactSet, type Character, type Move, type Talent, type Weapon } from '../data/schema';
+import { ElementSchema, type HitType, type ArtifactSet, type Character, type Move, type Talent, type Weapon } from '../data/schema';
 import { characterAtLevel, type LevelsData } from '../data/levels';
 import { planilhaEffect, planilhaWeapon } from './compat/planilha';
 import { activeCharacterBuffs } from './stats';
@@ -88,6 +88,8 @@ export const MemberRefSchema = z.object({
   condManual: z.boolean().optional(),
   /** Quantos stacks (ou pontos) de cada buff do personagem valem, por id do buff (`CharacterBuff.stacks`). Ausente = o máximo. */
   stacks: z.record(z.string(), z.number().int().min(0)).optional(),
+  /** Recurso dos golpes com bônus por ponto (Serpent's Subtlety, Espírito Lutador), escolhido na aba Talentos. Ausente = o máximo. */
+  points: z.number().int().min(0).optional(),
   /** Elementos com que o personagem reage em campo (buffs `forReacted`, ex.: Scroll of the Hero of Cinder City). */
   reacted: z.array(ElementSchema).optional(),
   /** Infusão dos ataques normais, carregados e de queda (Hu Tao no Paramita, Xiao no Supremo…). Ausente = sem infusão (Físico em quem usa arma física). */
@@ -607,6 +609,7 @@ export function resolveMember(ref: MemberRef, data: GameData, effects: EffectsDa
     weapon,
     characterEffect,
     reacted: ref.reacted,
+    points: ref.points,
     weaponEffect: planilha ? planilhaWeapon(weaponEffect) : weaponEffect,
     primarySet,
     secondarySet,
@@ -886,6 +889,9 @@ export function resolveProject(project: RotationProject, data: GameData, effects
   const chronological = [...project.actions].sort((a, b) => a.time - b.time);
   const procs = members.map((m) => memberProcs(m, data.moves));
   const points = effectivePoints(chronological, members);
+  // Último instante de dano de cada membro por tipo de golpe, em ordem de tempo.
+  // shortcut: só a primeira volta (o fim da rotação não conta para o começo); trocar se o site passar a simular o ciclo.
+  const lastHit: Partial<Record<HitType, number>>[] = members.map(() => ({}));
   const actions: RotationAction[] = chronological.map((a, i) => {
     const base =
       a.move.talent === 'proc' ? procMove(procs[a.member] ?? [], a.move, a.displayName)
@@ -893,7 +899,11 @@ export function resolveProject(project: RotationProject, data: GameData, effects
       : withSpecial(resolveMove(moves, a.move, a.displayName, withPoints(a, points[i], members[a.member])), a.move.variant, members[a.member]?.characterEffect);
     // Sem `element` na ação, o golpe é do elemento do personagem (no modo planilha, sempre).
     const move = a.element ? { ...base, element: a.element } : base;
+    const mine = lastHit[a.member] ?? {};
+    const sinceType = Object.fromEntries(Object.entries(mine).map(([t, at]) => [t, Math.round((a.time - at) * 1000) / 1000]));
+    if (move.hitType !== 'other') mine[move.hitType] = a.time;
     return {
+      ...(Object.keys(sinceType).length ? { sinceType } : {}),
       id: a.id,
       member: a.member,
       move,

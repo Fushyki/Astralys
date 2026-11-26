@@ -60,7 +60,7 @@ export function damageTable(input: DamageTableInput): DamageRow[] {
     id: m.id,
     member,
     // Golpes que no jogo causam dano Lunar/Estelar usam a fórmula deles (curadoria `specialMoves`).
-    move: procById.get(m.id) ?? withSpecial(toResolved(m, pointExtra(m, team.members[member].characterEffect, team.members[member].talents)), m.variant, team.members[member].characterEffect),
+    move: procById.get(m.id) ?? withSpecial(toResolved(m, pointExtra(m, team.members[member].characterEffect, team.members[member].talents, team.members[member].points)), m.variant, team.members[member].characterEffect),
     executions: 1,
     reaction,
     activeTags: tags,

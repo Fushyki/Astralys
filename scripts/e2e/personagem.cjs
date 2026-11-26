@@ -65,7 +65,7 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
   await page.keyboard.press('Escape');
   check('Esc fecha o texto completo', (await page.locator('.dz-dialog').count()) === 0);
   const tlBefore = await page.locator('.tl-cond[data-active="true"]').count();
-  await page.locator('.tl-cond[data-active="true"]').first().locator('input').uncheck(); await page.waitForTimeout(900);
+  await page.locator('.tl-cond[data-active="true"] input[type="checkbox"]').first().uncheck(); await page.waitForTimeout(900);
   check('desligar uma condição do personagem a marca como desligada', (await page.locator('.tl-cond[data-active="true"]').count()) === tlBefore - 1);
   await page.locator('.tl-cond[data-active="false"]:not([data-locked="true"])').first().locator('input').check(); await page.waitForTimeout(600);
   await page.click('.pc-views button:has-text("Resumo e build")');

@@ -114,6 +114,9 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
   ) : point ? (
     <Num label={point.unit} value={action.points ?? 0} unit="pts" digits={0} min={0} onCommit={(n) => (chainId ? setAll({ points: Math.min(point.max, Math.max(0, Math.round(n))) }) : update(action.id, { points: Math.min(point.max, Math.max(0, Math.round(n))) }))} />
   ) : null;
+  const cutNote = result?.setCut ? (
+    <span className="rt-lbl" role="note">{v.resolved.team.members[action.member]?.primarySet?.name}: o +{formatPercent(result.setCut)} deste tipo de golpe está desligado (dano do outro tipo nos 6 s anteriores).</span>
+  ) : null;
   const flatSection = result?.flatUse && result.flatUse.length > 0 ? (
     <div className="rt-flat" role="group" aria-label="Dano fixo">
       <span className="rt-lbl">Dano fixo (buffs flat)</span>
@@ -211,6 +214,7 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
               <Button variant="ghost" size="sm" onClick={() => chainId && st().rebuildChain(chainId, { start, every, until: start + length })}>Refazer pelo intervalo</Button>
             </div>
           </div>
+          {cutNote}
           {flatSection}
           {buffsSection}
           <span className="rt-note">Cada ponto tem tempo e reação próprios. Ex.: Durin derrete 1 a cada 2. No plano de combate, o ponto cheio tem reação e o vazado não.</span>
@@ -263,6 +267,7 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
               </div>
             </div>
           )}
+          {cutNote}
           {flatSection}
           {buffsSection}
         </>

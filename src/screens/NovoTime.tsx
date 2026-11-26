@@ -94,6 +94,7 @@ export default function NovoTime() {
       const project = buildNewTeam(
         { name, characters: picked, builds: source === 'uid' ? builds : undefined, rotation, gameVersion: data.meta.gameVersion },
         data.game,
+        data.effects,
       );
       saveProject(project);
       navigate(`/projeto/${project.id}`);

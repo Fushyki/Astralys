@@ -189,6 +189,7 @@ export function TalentsPanel({ v, index }: { v: ProjectView; index: number }) {
   const setSourceEnabled = useRotationStore((s) => s.setSourceEnabled);
   const setCondition = useRotationStore((s) => s.setCondition);
   const updateMember = useRotationStore((s) => s.updateMember);
+  const setMemberPoints = useRotationStore((s) => s.setMemberPoints);
   const ref: MemberRef = v.project.members[index];
   const member = v.resolved.team.members[index];
   const character = member.character;
@@ -261,6 +262,14 @@ export function TalentsPanel({ v, index }: { v: ProjectView; index: number }) {
     return out.filter((g) => g.rows.length > 0);
   };
 
+  // Recurso dos golpes com bônus por ponto (como a condição do GO no cartão do talento).
+  const pointMoves = member.characterEffect?.pointMoves ?? [];
+  const point = pointMoves.find((p) => !p.cadinho);
+  const points = point ? Math.min(point.max, ref.points ?? point.max) : 0;
+  const takesPoints = (m: { talent: string; label: string }) => pointMoves.some((p) => !p.cadinho && p.talent === m.talent && p.labels.includes(m.label));
+  const otherPoints = v.project.actions.filter((a) => a.member === index && takesPoints(a.move) && (a.points ?? 0) !== points).length;
+  const pickPoints = (n: number) => setMemberPoints(index, n, takesPoints);
+
   const talentCard = (t: CharacterTalents['skills'][number]) => {
     const k = t.talent;
     const level = eff[k];
@@ -291,6 +300,19 @@ export function TalentsPanel({ v, index }: { v: ProjectView; index: number }) {
             <div className="grp">
               <div className="gh">Duração e limites</div>
               {params.map((p) => <div className="r" key={p.label}><span className="k">{p.label}</span><span className="v num">{p.value}</span></div>)}
+            </div>
+          )}
+          {point?.talent === k && (
+            <div className="tl-cond" data-active={points > 0}>
+              <div className="tl-stacks" role="group" aria-label={point.unit}>
+                <span>{point.unit}</span>
+                <StackInput value={points} max={point.max} label={point.unit} onChange={pickPoints} />
+              </div>
+              {otherPoints > 0 && (
+                <div className="rows">
+                  <div className="r"><span className="k">{otherPoints === 1 ? '1 golpe da rotação usa outro valor' : `${otherPoints} golpes da rotação usam outro valor`}</span><Button variant="secondary" size="sm" onClick={() => pickPoints(points)}>Aplicar {points}</Button></div>
+                </div>
+              )}
             </div>
           )}
           {mine}

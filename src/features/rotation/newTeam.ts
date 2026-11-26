@@ -4,9 +4,10 @@
  * no plano de combate); "em branco": nenhuma ação.
  */
 import type { Move } from '../../data/schema';
-import type { GameData, MemberRef, RotationProject } from '../../engine';
+import { resolveProject, type EffectsData, type GameData, type MemberRef, type RotationProject } from '../../engine';
+import { pointMoveOf } from '../../engine/project';
 import { newProjectId, sampleProject } from './persistence';
-import { addAction } from './projectOps';
+import { addAction, newPoints } from './projectOps';
 import { nakedMember } from './teamOps';
 
 export type RotationStart = 'basic' | 'blank';
@@ -32,7 +33,8 @@ export function defaultTeamName(characters: string[]): string {
   return characters.join(' · ').slice(0, MAX_START_NAME) || 'Novo time';
 }
 
-export function buildNewTeam(input: NewTeamInput, game: Pick<GameData, 'characters' | 'weapons' | 'moves'>): RotationProject {
+/** Com `effects`, os golpes com bônus por ponto da rotação básica entram com o teto (que depende da constelação). */
+export function buildNewTeam(input: NewTeamInput, game: Pick<GameData, 'characters' | 'weapons' | 'moves'> & Partial<GameData>, effects?: EffectsData): RotationProject {
   const names = [...new Set(input.characters)].slice(0, 4);
   if (names.length === 0) throw new Error('Escolha pelo menos um personagem.');
   const now = new Date().toISOString();
@@ -68,6 +70,13 @@ export function buildNewTeam(input: NewTeamInput, game: Pick<GameData, 'characte
       }
     });
     project = { ...project, config: { ...project.config, rotationDuration: Math.max(10, Math.ceil(t + 3)) } };
+    if (effects) {
+      const { members } = resolveProject(project, game as GameData, effects).team;
+      project = { ...project, actions: project.actions.map((a) => {
+        const points = newPoints(pointMoveOf(a.move, members[a.member].characterEffect), members[a.member].points);
+        return points === undefined ? a : { ...a, points };
+      }) };
+    }
   } else {
     project = { ...project, config: { ...project.config, rotationDuration: 15 } };
   }

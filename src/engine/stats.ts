@@ -197,6 +197,8 @@ export interface MemberInput {
   characterEffect?: CharacterEffect;
   /** Elementos com que reage em campo, além do próprio (buffs `forReacted`). */
   reacted?: Element[];
+  /** Recurso dos golpes com bônus por ponto (ver `MemberRef.points`). */
+  points?: number;
   weaponEffect?: WeaponEffect;
   /** Refinamento da arma (1 a 5) para efeitos com tabela por refinamento. Padrão: 1. */
   refinement?: number;
@@ -589,6 +591,19 @@ export function hitDmgBonus(
   const ele = element === ownElement ? 0 : stats.eleDmg ?? 0;
   const phys = element === 'Physical' ? stats.physDmg ?? 0 : 0;
   return stats.dmgBonus - ele + phys + typed;
+}
+
+/** Bônus por tipo do 4 peças que param depois de dano de outro tipo, com o valor de cada um. */
+export interface SetLockout {
+  types: readonly string[];
+  seconds: number;
+  cut: Readonly<Partial<Record<string, number>>>;
+}
+
+/** DMG% do set que NÃO vale neste golpe: o dono causou dano de outro tipo da lista há menos de `seconds`. */
+export function lockoutCut(lock: SetLockout | undefined, hitType: string, since: Readonly<Partial<Record<string, number>>> | undefined): number {
+  if (!lock || !since || !lock.types.includes(hitType)) return 0;
+  return lock.types.some((t) => t !== hitType && (since[t] ?? Infinity) < lock.seconds) ? lock.cut[hitType] ?? 0 : 0;
 }
 
 /** Rolls mínimos: `min` em cada um dos 10 substats. */

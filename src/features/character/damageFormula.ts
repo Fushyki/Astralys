@@ -134,7 +134,7 @@ export function damageFormula(args: { result: ActionResult; team: TeamInput; ass
   const dmgTotal = b.dmgMultiplier - 1;
   const dmgTerms = termsOf(ctx, (d) => (d.dmgBonus ?? 0) - (sameElement ? 0 : d.eleDmg ?? 0) + byType(d.dmgByType) + (r.element === 'Physical' ? d.physDmg ?? 0 : 0));
   const adjust = r.action.dmgAdjust ?? 0;
-  blocks.push({ id: 'dmg', title: 'Bônus de dano', total: pct(dmgTotal), expr: `1 + ${pct(dmgTotal)}`, terms: withRest([...dmgTerms, ...(adjust ? [{ label: 'Ajuste manual do golpe', v: adjust }] : [])], dmgTotal, (n) => sgn(n)) });
+  blocks.push({ id: 'dmg', title: 'Bônus de dano', total: pct(dmgTotal), expr: `1 + ${pct(dmgTotal)}`, terms: withRest([...dmgTerms, ...(adjust ? [{ label: 'Ajuste manual do golpe', v: adjust }] : []), ...(r.setCut ? [{ label: 'Conjunto: bônus desligado neste golpe (6 s)', v: -r.setCut }] : [])], dmgTotal, (n) => sgn(n)) });
 
   // ---- Crítico ----
   const crTerms = termsOf(ctx, (d) => (d.critRate ?? 0) + byType(d.critRateByType));

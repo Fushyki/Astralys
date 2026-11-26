@@ -42,7 +42,7 @@ export const FOUR_PIECE_2: Record<string, FourCuration> = {
     note: 'Florescer, Hiperflorescer e Brotar +40% e Lunar-Florescer +10%; cada stack soma +25% desses valores (até 4): a quantidade é escolha sua (padrão: 4).',
   },
   'Song of Days Past': { partial: true, expect: 'Yearning effect', note: 'O bônus de dano por cura acumulada (Yearning) NÃO entra: o motor não acompanha cura.' },
-  'Finale of the Deep Galleries': { byType: { normal: { p: 0 }, burst: { p: 1 } }, expect: 'has 0 Elemental Energy, Normal Attack DMG is increased by 60%', note: 'Assume 0 de energia: +60% de DMG do Normal e do Supremo. No jogo o efeito de um deixa de valer por 6 s depois do outro.' },
+  'Finale of the Deep Galleries': { byType: { normal: { p: 0 }, burst: { p: 1 } }, lockout: { types: ['normal', 'burst'], seconds: { p: 2 } }, expect: 'has 0 Elemental Energy, Normal Attack DMG is increased by 60%', note: 'Assume 0 de energia: +60% de DMG do Normal e do Supremo. Na rotação, o bônus de um para por 6 s depois de dano do outro; na aba Talentos (golpe isolado) os dois valem.' },
   "Night of the Sky's Unveiling": {
     buffs: [
       { id: 'cr-n', label: 'Gleaming Moon: Intent (Nascent)', timed: true, team: { moonsignMax: 1 }, stats: { critRate: { p: 1 } } },

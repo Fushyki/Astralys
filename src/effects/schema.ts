@@ -435,6 +435,8 @@ export const SetEffectSchema = z.object({
       critDmg: frac,
       em: frac,
       dmgPctByType: z.record(HitTypeSchema, z.number()).default({}),
+      /** O bônus de um destes tipos para por `seconds` depois de o dono causar dano de outro deles (Epílogo do Corredor). */
+      lockout: z.object({ types: z.array(HitTypeSchema).min(2), seconds: z.number().positive() }).optional(),
       /** Bônus de reação amplificadora (Derreter / Vaporizar). */
       meltBonus: frac,
       vaporizeBonus: frac,

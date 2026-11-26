@@ -19,6 +19,8 @@ export interface FourCuration {
   meltBonus?: Val;
   byType?: Partial<Record<'normal' | 'charged' | 'plunge' | 'skill' | 'burst', Val>>;
   team?: { atkPct?: Val; dmgPct?: Val; em?: Val };
+  /** Bônus por tipo que param depois de dano de outro tipo da lista (ver `SetEffect.fourPiece.lockout`). */
+  lockout?: { types: ('normal' | 'charged' | 'plunge' | 'skill' | 'burst')[]; seconds: Val };
   er?: Val;
   critRateByType?: Partial<Record<'normal' | 'charged' | 'plunge' | 'skill' | 'burst', Val>>;
   critDmgByType?: Partial<Record<'normal' | 'charged' | 'plunge' | 'skill' | 'burst', Val>>;

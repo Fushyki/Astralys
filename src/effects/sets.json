@@ -2075,6 +2075,13 @@
         "normal": 0.6,
         "burst": 0.6
       },
+      "lockout": {
+        "types": [
+          "normal",
+          "burst"
+        ],
+        "seconds": 6
+      },
       "meltBonus": 0,
       "vaporizeBonus": 0,
       "er": 0,
@@ -2086,7 +2093,7 @@
       "procs": []
     },
     "twoPieceBuffs": [],
-    "note": "Assume 0 de energia: +60% de DMG do Normal e do Supremo. No jogo o efeito de um deixa de valer por 6 s depois do outro.",
+    "note": "Assume 0 de energia: +60% de DMG do Normal e do Supremo. Na rotação, o bônus de um para por 6 s depois de dano do outro; na aba Talentos (golpe isolado) os dois valem.",
     "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
   },
   {

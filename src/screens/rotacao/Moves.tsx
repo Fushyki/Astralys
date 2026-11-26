@@ -7,7 +7,7 @@ import { specialOfMoveRef } from '../../features/rotation/screenModel';
 import { REACTION_ACTIONS, kitElement, memberProcs } from '../../engine';
 import { pointMoveOf, specialOfMove } from '../../engine/project';
 import { cleanMoveName } from '../../features/character/characterModel';
-import { insertTime } from '../../features/rotation/projectOps';
+import { insertTime, newPoints } from '../../features/rotation/projectOps';
 import { useRotationStore } from '../../features/rotation/store';
 import { Num, Seg, Static } from './ui';
 
@@ -87,7 +87,7 @@ export function Moves({ v }: { v: ProjectView }) {
                     className="rt-mv"
                     title={m.label}
                     style={{ ['--c' as string]: colorOf(m) }}
-                    onClick={() => insert({ member, move: { character: m.character, talent: m.talent, label: m.label, variant: m.variant }, displayName: `${m.character} - ${label}`, points: pointMoveOf(m, effect)?.cadinho ? undefined : pointMoveOf(m, effect)?.max })}
+                    onClick={() => insert({ member, move: { character: m.character, talent: m.talent, label: m.label, variant: m.variant }, displayName: `${m.character} - ${label}`, points: newPoints(pointMoveOf(m, effect), v.resolved.team.members[member].points) })}
                   >
                     <span className="dot" />
                     <span className="n">{label}</span>

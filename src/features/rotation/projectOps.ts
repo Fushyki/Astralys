@@ -54,6 +54,20 @@ export function addAction(project: RotationProject, input: NewAction): RotationP
   return touch({ ...project, actions: [...project.actions, action] });
 }
 
+/** Pontos com que um golpe novo entra: o escolhido na aba Talentos, limitado ao teto; golpe com Cadinho usa os do Supremo. */
+export function newPoints(point: { max: number; cadinho?: number } | undefined, chosen?: number): number | undefined {
+  return point && !point.cadinho ? Math.min(point.max, chosen ?? point.max) : undefined;
+}
+
+/** Escolhe os pontos do membro: vale para a aba Talentos, para os golpes novos e para os que já estão na rotação. */
+export function setMemberPoints(project: RotationProject, member: number, points: number, takes: (move: ActionRef['move']) => boolean): RotationProject {
+  return {
+    ...project,
+    members: project.members.map((m, i) => (i === member ? { ...m, points } : m)),
+    actions: project.actions.map((a) => (a.member === member && takes(a.move) ? { ...a, points } : a)),
+  };
+}
+
 export function updateAction(project: RotationProject, id: string, patch: Partial<Omit<ActionRef, 'id'>>): RotationProject {
   if (!project.actions.some((a) => a.id === id)) return project;
   const next = {

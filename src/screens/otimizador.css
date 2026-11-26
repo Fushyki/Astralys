@@ -97,6 +97,14 @@
 .oa-fac button { padding: 3px var(--sp-2); border-radius: var(--r-chip); border: 1px solid var(--border-ctl); background: var(--surface-2); color: var(--text-2); font: 600 11px var(--font-display); letter-spacing: .06em; text-transform: uppercase; cursor: pointer; }
 .oa-fac button[aria-pressed='true'] { background: var(--gold); color: var(--on-gold); border-color: var(--gold); }
 .oa-sec { display: flex; flex-direction: column; gap: 6px; }
+.oa-passive { border: 1px solid var(--border); border-radius: var(--r-inner); background: var(--bg-header); min-width: 0; }
+.oa-passive summary { cursor: pointer; min-height: var(--ctl-md, 40px); display: flex; align-items: center; padding: 0 var(--sp-3); font: 600 var(--fs-1) var(--font-display); letter-spacing: .08em; text-transform: uppercase; color: var(--gold-hi); }
+.oa-passive .body { display: flex; flex-direction: column; gap: var(--sp-2); padding: 0 var(--sp-2) var(--sp-2); }
+.oa-passive .wi-buff { grid-template-columns: auto minmax(0, 1fr); }
+.oa-passive .wi-buff .st { display: none; }
+/* A coluna é estreita: a nota longa da arma fica no Resumo. */
+.oa-passive .body > p.muted:not(:last-child) { display: none; }
+.oa-passive .tl-stacks { flex-wrap: wrap; }
 .oa-sec .lbl { font: 600 var(--fs-1) var(--font-display); letter-spacing: .1em; text-transform: uppercase; color: var(--faint); }
 .oa-cons { display: flex; gap: var(--sp-1); }
 .oa-cons button { flex: 1; min-height: 30px; padding: 0; border-radius: var(--r-chip); border: 1px solid var(--border); background: var(--bg-header); color: var(--muted); font: 700 var(--fs-1) var(--font-display); cursor: pointer; }

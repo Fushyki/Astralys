@@ -10,6 +10,7 @@ import { effectStatus } from '../../features/rotation/teamInfo';
 import { weaponsFor } from '../../features/rotation/teamOps';
 import { useRotationStore } from '../../features/rotation/store';
 import { formatDecimal, formatInt, formatPercent } from '../../ui/format';
+import { WeaponPassiveDetails } from '../personagem/WeaponInfo';
 import { WeaponPickerDialog } from '../personagem/WeaponPicker';
 
 const WEAPON_LABEL: Record<string, string> = { Sword: 'Espada', Claymore: 'Espadão', Polearm: 'Lança', Catalyst: 'Catalisador', Bow: 'Arco' };
@@ -81,6 +82,7 @@ export function AsideCard({ v, index }: { v: ProjectView; index: number }) {
             <span><small>{weapon?.substat?.stat ?? 'Substat'}</small><b className="num gold">{substatValue}</b></span>
           </span>
         </button>
+        <WeaponPassiveDetails index={index} />
         <div className="oa-sec">
           <span className="lbl">Constelação</span>
           <div className="oa-cons" role="group" aria-label="Constelação">

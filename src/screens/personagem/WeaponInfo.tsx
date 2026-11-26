@@ -16,22 +16,13 @@ const TYPE_LABEL: Record<string, string> = { Sword: 'Espada', Claymore: 'Espadã
 const isWeaponId = (id: string, index: number, teamGear: boolean) =>
   id === `m${index}:weapon` || id.startsWith(`cbuff-${index}-arma:`) || id.startsWith(`m${index}:cbuff-arma:`) || (teamGear && id === `gear-${index}`);
 
-/** Os buffs da arma do membro: a quantidade de stacks e o botão de ativar cada um. */
-export function WeaponBuffs({ index }: { index: number }) {
+/** Os cartões de buff da arma do membro, e quais estão ligados. */
+function useWeaponCards(index: number) {
   const v = useProjectView();
-  const setBuff = useRotationStore((s) => s.setBuff);
-  const updateMember = useRotationStore((s) => s.updateMember);
   const ref = v.project.members[index];
   const effect = v.data.effects.weapons.find((e) => e.weapon === ref.weapon);
   const refine = Math.min(5, Math.max(1, ref.refinement ?? 1));
   const teamGear = !!effect && (() => { const t = weaponStatsAt(effect, refine).team; return !!t && (t.atkPct > 0 || t.dmgPct > 0 || t.em > 0); })();
-  // Saem do kit resolvido, não dos cartões: com 0 stacks o cartão some e a quantidade precisa continuar à vista.
-  const stacked = (v.resolved.team.members[index].characterEffect?.buffs ?? []).filter((b) => b.id.startsWith('arma:') && b.stacks && !b.stacks.of);
-
-  // Buffs que vão só para quem o usuário escolher (ex.: quem recebe a cura).
-  const names = v.resolved.team.members.map((m) => m.character.name);
-  const pickable = (v.resolved.team.members[index].characterEffect?.buffs ?? []).filter((b) => b.id.startsWith('arma:') && b.pickReceiver);
-
   // Um cartão por buff da arma (os mesmos números de "Buffs recebidos"), mesmo que só os aliados o recebam.
   const buffs = useMemo(() => {
     const seen = new Map<string, BuffCard>();
@@ -43,9 +34,42 @@ export function WeaponBuffs({ index }: { index: number }) {
     });
     return [...seen.entries()].map(([base, card]) => ({ base, card }));
   }, [v.project, v.resolved, v.bundle, index, teamGear]);
+  const isOn = (base: string) => !v.project.disabled.includes(base) && !(v.resolved.gearIds.includes(base) && !v.project.enabled.includes(base));
+  return { effect, buffs, isOn };
+}
+
+/** A passiva da arma na coluna do Otimizar: fechada, diz quantos buffs estão ligados. */
+export function WeaponPassiveDetails({ index }: { index: number }) {
+  const { buffs, isOn } = useWeaponCards(index);
+  const on = buffs.filter((b) => isOn(b.base)).length;
+  return (
+    <details className="oa-passive">
+      <summary>Passiva da arma{buffs.length > 0 ? ` · ${on}/${buffs.length} ativas` : ''}</summary>
+      <div className="body">
+        <WeaponBuffs index={index} />
+        <p className="muted small">Em "Um golpe" vale o que está marcado. Em "Rotação completa" o otimizador conta a arma como ligada, menos o que você desmarcar.</p>
+      </div>
+    </details>
+  );
+}
+
+/** Os buffs da arma do membro: a quantidade de stacks e o botão de ativar cada um. */
+export function WeaponBuffs({ index }: { index: number }) {
+  const v = useProjectView();
+  const setBuff = useRotationStore((s) => s.setBuff);
+  const updateMember = useRotationStore((s) => s.updateMember);
+  const { buffs, isOn } = useWeaponCards(index);
+  const ref = v.project.members[index];
+  const effect = v.data.effects.weapons.find((e) => e.weapon === ref.weapon);
+  const refine = Math.min(5, Math.max(1, ref.refinement ?? 1));
+  // Saem do kit resolvido, não dos cartões: com 0 stacks o cartão some e a quantidade precisa continuar à vista.
+  const stacked = (v.resolved.team.members[index].characterEffect?.buffs ?? []).filter((b) => b.id.startsWith('arma:') && b.stacks && !b.stacks.of);
+
+  // Buffs que vão só para quem o usuário escolher (ex.: quem recebe a cura).
+  const names = v.resolved.team.members.map((m) => m.character.name);
+  const pickable = (v.resolved.team.members[index].characterEffect?.buffs ?? []).filter((b) => b.id.startsWith('arma:') && b.pickReceiver);
 
   const gearIds = v.resolved.gearIds;
-  const isOn = (base: string) => !v.project.disabled.includes(base) && !(gearIds.includes(base) && !v.project.enabled.includes(base));
   const toggle = (base: string, on: boolean) =>
     setBuff({ toggleId: base, baseId: base, gear: gearIds.includes(base), receiver: ref.character, receivers: [] }, on);
 

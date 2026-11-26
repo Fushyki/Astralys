@@ -409,6 +409,9 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
   const pools = new Map<string, number>();
   const poolKey = (e: FlatDamageEffect) => (e.pool ? `${e.source}|${e.pool}` : undefined);
   for (const f of flat) { const k = poolKey(f.effect); if (k && !pools.has(k)) pools.set(k, f.remaining); }
+  const fullPools = new Map(pools);
+  /** Instante do último Supremo de cada dono de efeito `afterBurst`. shortcut: só a primeira volta da rotação. */
+  const lastBurst = new Map<string, number>();
   [...actions.keys()].sort((x, y) => (actions[x].time ?? 0) - (actions[y].time ?? 0) || x - y).forEach((idx) => {
     const action = actions[idx];
     const move = action.move;
@@ -437,7 +440,9 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
       const forced = !!action.flatOn?.includes(id);
       // O 1º personagem do time é sempre o que fica em campo; os outros, fora de campo.
       const wrongField = !!e.field && (e.field === 'on') !== (action.member === 0);
-      const outside = !forced && (wrongField || (!!e.window && !action.activeTags.includes(flatTag(e))));
+      const cast = lastBurst.get(e.source);
+      const noBurst = !!e.afterBurst && (cast === undefined || (action.time ?? 0) - cast > e.afterBurst);
+      const outside = !forced && (wrongField || noBurst || (!!e.window && !action.activeTags.includes(flatTag(e))));
       const off = !forced && (outside || !!action.flatOff?.includes(id));
       const shared = poolKey(e);
       const left = shared ? pools.get(shared)! : f.remaining;
@@ -467,6 +472,16 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
       flatPass[idx].use.push({ id, name: e.name, source: e.source, perHit: covered > 0 ? damage / covered : f.perHit, hits: covered, off, ...(e.stacks !== undefined ? { stacks: e.stacks } : {}), ...(e.pool ? { pool: e.pool } : {}), ...(levelAtStart !== undefined ? { level: levelAtStart } : {}), ...(forced ? { forced: true } : {}), ...(outside ? { outside: true } : {}) });
     }
     for (const [k, n] of spent) pools.set(k, pools.get(k)! - n);
+    // O Supremo do dono renova os acúmulos DEPOIS do próprio golpe, que não os gasta.
+    if (move.talent === 'burst') {
+      for (const f of flat) {
+        if (!f.effect.afterBurst || f.effect.source !== member.character.name) continue;
+        lastBurst.set(f.effect.source, action.time ?? 0);
+        const k = poolKey(f.effect);
+        if (k) pools.set(k, fullPools.get(k)!);
+        else f.remaining = f.effect.stacks ?? Infinity;
+      }
+    }
   });
 
   const results: ActionResult[] = actions.map((action, idx) => {

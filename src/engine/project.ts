@@ -563,7 +563,7 @@ export function gearFlat(members: MemberInput[], off: ReadonlySet<string> = new 
         out.push({
           name: `${origin}: ${f.name}`, source: m.character.name, sourceStat: f.sourceStat, perPoint: f.perPoint, threshold: 0,
           ...(f.capPerHit !== undefined ? { capPerHit: f.capPerHit } : {}), targets, elements: f.elements ?? [], hitTypes: f.hitTypes, ...(f.labels?.length ? { labels: f.labels } : {}),
-          ...(f.stacks !== undefined ? { stacks: f.stacks } : {}), ...(f.decay ? { decay: f.decay } : {}), ...(f.reaction ? { reaction: f.reaction } : {}), ...(f.pool ? { pool: f.pool } : {}), active: true, fonte_info: `Passiva de ${origin} (curadoria do Lunaris)`,
+          ...(f.stacks !== undefined ? { stacks: f.stacks } : {}), ...(f.decay ? { decay: f.decay } : {}), ...(f.reaction ? { reaction: f.reaction } : {}), ...(f.pool ? { pool: f.pool } : {}), ...(f.afterBurst ? { afterBurst: f.afterBurst } : {}), active: true, fonte_info: `Passiva de ${origin} (curadoria do Lunaris)`,
         });
       }
     }

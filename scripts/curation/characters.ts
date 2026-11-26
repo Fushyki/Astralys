@@ -57,7 +57,7 @@ export interface BuffCuration {
     reactionBonus?: Partial<Record<ReactionKey, Val>>;
   };
   /** Dano fixo por golpe elegível (ex.: Gorou A4, 156% da DEF no dano da habilidade). */
-  flat?: { name: string; sourceStat: 'ATK' | 'HP' | 'DEF' | 'EM' | 'BaseATK'; perPoint: Val; cap?: Val; hitTypes: ('normal' | 'charged' | 'plunge' | 'skill' | 'burst')[]; labels?: string[]; stacks?: number; targets?: 'self' | 'team' | 'others'; elements?: Element[]; /** Ver `WeaponFlat.reaction`, `pool` e `extra`. */ reaction?: 'lunarcrystallize'; pool?: string; extra?: { max: number; step: number; label: string }; /** Gasta o recurso a cada acerto (Masque da Arlecchino). */ decay?: { rate: number; floorPct: number; maxPct: number } }[];
+  flat?: { name: string; sourceStat: 'ATK' | 'HP' | 'DEF' | 'EM' | 'BaseATK'; perPoint: Val; cap?: Val; hitTypes: ('normal' | 'charged' | 'plunge' | 'skill' | 'burst')[]; labels?: string[]; stacks?: number; targets?: 'self' | 'team' | 'others'; elements?: Element[]; /** Ver `WeaponFlat.reaction`, `pool` e `extra`. */ reaction?: 'lunarcrystallize'; pool?: string; afterBurst?: number; extra?: { max: number; step: number; label: string }; /** Gasta o recurso a cada acerto (Masque da Arlecchino). */ decay?: { rate: number; floorPct: number; maxPct: number } }[];
   resShred?: { value: Val; elements: (Element | 'Physical')[] };
   /** Redução de DEF do inimigo, em fração (vale o tempo todo). */
   defShred?: Val;

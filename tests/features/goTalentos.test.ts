@@ -80,7 +80,9 @@ describe('condições da aba ligadas à rotação', () => {
     const on = toggle(project, 'Illuga', 'burstSong', true);
     expect(linkedOf(on).Illuga.burstSong.value).toBe('on');
     expect(burstFlat(on)).toHaveLength(4); // Geo e Lunar-Cristalizar, do Supremo e da A4
-    expect(total(on)).toBeGreaterThan(total(project));
+    // Os acúmulos só existem depois do Supremo da Illuga: ela age primeiro.
+    const illugaFirst = (p: typeof project) => ({ ...p, actions: p.actions.map((a) => (a.move.character === 'Illuga' ? { ...a, time: 0 } : a)) });
+    expect(total(illugaFirst(on))).toBeGreaterThan(total(illugaFirst(project)));
     expect(burstFlat(toggle(on, 'Illuga', 'burstSong', false))).toEqual([]);
   });
 

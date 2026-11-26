@@ -151,7 +151,7 @@ function HitBody({ v, action, color }: { v: ProjectView; action: ActionRef; colo
           <label>
             <input type="checkbox" checked={!u.off} disabled={u.forced} onChange={(e) => toggleFlat(u.id, e.target.checked)} aria-label={`Este golpe consome ${u.name}`} />
             <span className="n">{u.name}<small>de {u.source}</small></span>
-            <span className="num v">{u.hits > 0 ? `+${formatInt(u.hits * u.perHit)} · ${u.hits} × ${formatInt(u.perHit)}` : u.outside ? 'fora da janela ou do campo' : u.off ? 'não consome' : 'sem stacks'}</span>
+            <span className="num v">{u.hits > 0 ? `+${formatInt(u.hits * u.perHit)} · ${u.hits} × ${formatInt(u.perHit)}` : u.outside ? 'fora da janela, do campo ou antes do Supremo' : u.off ? 'não consome' : 'sem stacks'}</span>
           </label>
           {u.level !== undefined && (
             <div className="qty">

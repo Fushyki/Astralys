@@ -17420,6 +17420,7 @@
             ],
             "stacks": 21,
             "pool": "quills",
+            "afterBurst": 20,
             "extra": {
               "max": 3,
               "step": 5,
@@ -17475,6 +17476,7 @@
             "stacks": 21,
             "reaction": "lunarcrystallize",
             "pool": "quills",
+            "afterBurst": 20,
             "extra": {
               "max": 3,
               "step": 5,
@@ -17519,6 +17521,7 @@
             ],
             "stacks": 21,
             "pool": "quills",
+            "afterBurst": 20,
             "extra": {
               "max": 3,
               "step": 5,
@@ -17567,6 +17570,7 @@
             "stacks": 21,
             "reaction": "lunarcrystallize",
             "pool": "quills",
+            "afterBurst": 20,
             "extra": {
               "max": 3,
               "step": 5,

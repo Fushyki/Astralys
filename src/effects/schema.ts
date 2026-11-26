@@ -248,6 +248,8 @@ export const WeaponFlatSchema = z.object({
   reaction: z.enum(['lunarcrystallize']).optional(),
   /** Acúmulos compartilhados: os efeitos do mesmo dono e `pool` gastam um só por acerto (Canção de Luscinia do Illuga). */
   pool: z.string().min(1).optional(),
+  /** Só vale depois do Supremo do dono, por estes segundos; cada Supremo renova os acúmulos (Canção de Luscinia: 20 s). */
+  afterBurst: z.number().positive().optional(),
   /** Acúmulos a mais que o usuário escolhe (0 a `max` vezes `step`; `MemberRef.stacks['pool:<pool>']`). */
   extra: z.object({ max: z.number().int().positive(), step: z.number().int().positive(), label: z.string().min(1) }).optional(),
   /** Quem recebe: o dono (padrão), a equipe inteira ou só os outros (ex.: Xilonen C4, nos Normais dos aliados). */
@@ -498,9 +500,10 @@ export const FlatDamageEffectSchema = z.object({
   labels: z.array(z.string().min(1)).optional(),
   /** Quantos hits consomem o buff (undefined = ilimitado). Consumidos pelos primeiros hits elegíveis. */
   stacks: z.number().int().positive().optional(),
-  /** Ver `WeaponFlat.reaction` e `WeaponFlat.pool`. */
+  /** Ver `WeaponFlat.reaction`, `WeaponFlat.pool` e `WeaponFlat.afterBurst`. */
   reaction: z.enum(['lunarcrystallize']).optional(),
   pool: z.string().min(1).optional(),
+  afterBurst: z.number().positive().optional(),
   /** Só golpes do 1º personagem do time, que fica em campo (`on`), ou dos outros, fora de campo (`off`); ausente = qualquer. O manual ignora. */
   field: z.enum(['on', 'off']).optional(),
   /** No automático só os golpes dentro da janela da faixa do buff (`flatTag`) consomem; o golpe forçado ignora a janela. */

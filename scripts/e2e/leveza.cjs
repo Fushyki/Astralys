@@ -1,5 +1,6 @@
 /**
- * Leveza: o que a home baixa e se o site continua funcionando, em Chromium, Firefox e WebKit.
+ * Leveza: o que a home e o time de exemplo baixam (`dadosDoExemplo` em budget.json) e se o site continua funcionando, em
+ * Chromium, Firefox e WebKit.
  *   1) npm run build && npx vite preview --port 4173
  *   2) node scripts/e2e/leveza.cjs                 (Edge instalado; E2E_BROWSER troca o canal)
  *      node scripts/e2e/leveza.cjs firefox         (ou E2E_ENGINE=chromium|firefox|webkit)
@@ -12,6 +13,7 @@
 const playwright = require('playwright-core');
 const path = require('path');
 const fs = require('fs');
+const zlib = require('zlib');
 
 const BASE = process.env.E2E_URL || 'http://localhost:4173';
 const ENGINE = process.argv[2] || process.env.E2E_ENGINE || 'chromium';
@@ -57,6 +59,18 @@ const DATA_CHUNK = /\/assets\/dados-[^/]+\.js/;
 
   await open('/projeto/exemplo', '.eq-card');
   await shot('equipe');
+
+  // Visita nova (sem cache): tudo o que é dado do jogo, com o índice dos arquivos, em gzip como no `npm run budget`.
+  const first = await (await browser.newContext()).newPage();
+  const chunks = [];
+  first.on('response', (r) => { if (DATA_CHUNK.test(r.url())) chunks.push(r.body().then((b) => zlib.gzipSync(b).length)); });
+  await first.goto(BASE + '/projeto/exemplo', { waitUntil: 'networkidle' });
+  await first.waitForSelector('.eq-card');
+  await first.waitForTimeout(1000);
+  const bytes = (await Promise.all(chunks)).reduce((a, b) => a + b, 0);
+  const limit = require('../budget.json').dadosDoExemplo;
+  check('dados ao abrir /projeto/exemplo dentro do orçamento', chunks.length > 0 && bytes <= limit, `${bytes} bytes em ${chunks.length} arquivos, limite ${limit}`);
+  await first.context().close();
 
   await open('/projeto/exemplo/rotacao', '[data-testid="live-dps"]');
   const dps = await page.textContent('[data-testid="live-dps"]');

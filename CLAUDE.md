@@ -116,5 +116,6 @@ Plano completo: `C:\Users\dabiv\.claude\plans\hashed-nibbling-island.md`. Strix 
 - A rota `/` não baixa dados do jogo. Dados só entram nas rotas que os usam.
 - O site não importa `src/data/generated/` nem `src/effects/characters.json` direto: `scripts/app-data.ts` gera `src/data/app/` (fora do git; o vite e o vitest geram ao iniciar), sem os campos que o site não lê e com golpes, efeitos e talentos em um arquivo por personagem. Campo novo que o site precise e que a cópia corte: ajuste lá.
 - `useGameData(nomes)` carrega golpes e efeitos só desses personagens. Antes de montar um time com o motor, confira `covers(data, teamNames(projeto))` ou use `dataFor`.
+- Dados ao abrir um time: limite `dadosDoExemplo` em `budget.json`, conferido por `scripts/e2e/leveza.cjs` (faz parte do `npm run e2e`).
 - Biblioteca pesada (tesseract, html-to-image, xlsx) só por `import()` dinâmico.
 - Antes de cada commit: `npm run build && npm run budget`. Se estourar, corrija; só aumente `budget.json` com o motivo escrito na Issue.

@@ -15,7 +15,7 @@ import type { CharacterBuff, CharacterInfo } from '../../effects/schema';
 import { KIT_INFUSIONS, MAX_BASE_TALENT, assembleTeam, characterBuffDelta, scaleBuffStacks, stacksOf } from '../../engine';
 import type { MemberRef, ReactionChoice } from '../../engine';
 import { REACTION_LABEL, characterReactions, memberBuffCards, reactionOptions, type MoveLine } from '../../features/character/characterModel';
-import { buffHome, paramRows, skillIconUrl, splitChip, useTalents, type CharacterTalents, type TalentText } from '../../features/character/talents';
+import { buffHome, conditionIds, paramRows, shredRows, skillIconUrl, splitChip, useTalents, type CharacterTalents, type TalentText } from '../../features/character/talents';
 import { useRotationStore } from '../../features/rotation/store';
 import { deltaChips } from '../../features/team/teamModel';
 import { formatDecimal, formatHits, formatInt } from '../../ui/format';
@@ -106,7 +106,9 @@ interface CondProps {
   constellation: number;
   disabled: string[];
   chips: string[];
-  onToggle: (id: string, enabled: boolean) => void;
+  /** O buff já com time, nível e stacks (para o valor da redução de RES/DEF). */
+  now?: CharacterBuff;
+  onToggle: (ids: string[], enabled: boolean) => void;
   /** Stacks escolhidos (undefined = o máximo) e como mudar, se o buff tem stacks. */
   chosen?: number;
   onStacks?: (n: number) => void;
@@ -129,24 +131,19 @@ function flatRows(buff: CharacterBuff, stats?: CondProps['stats'], scale = 1): {
   });
 }
 
-/** Id do motor do buff do personagem: fonte estática (só dele, sempre) ou buff de time (faixa/regra). */
-function toggleIdOf(index: number, b: CharacterBuff): string {
-  return !b.timed && b.scope === 'self' && b.stats ? `m${index}:cbuff-${b.id}` : `cbuff-${index}-${b.id}`;
-}
-
 /** Condição: caixa dourada com o checkbox, o texto, o valor em destaque e os efeitos que ela dá. */
-function Condition({ buff, index, constellation, disabled, chips, onToggle, chosen, onStacks, stats, scale = 1, cap }: CondProps) {
-  const id = toggleIdOf(index, buff);
+function Condition({ buff, now, index, constellation, disabled, chips, onToggle, chosen, onStacks, stats, scale = 1, cap }: CondProps) {
+  const ids = conditionIds(index, buff);
   const locked = buff.minConstellation > constellation;
-  const active = !locked && !disabled.includes(id);
+  const active = !locked && !ids.some((id) => disabled.includes(id));
   const fallback = buff.stats ? deltaChips(characterBuffDelta(scaleBuffStacks(buff, chosen).stats, !!buff.forElements)) : [];
   const n = stacksOf(buff, chosen);
   const mult = buff.moveMult ? [{ name: 'dano base dos golpes afetados', value: `×${formatDecimal(1 + scaleBuffStacks(buff, chosen).moveMult!.extra * scale, 2)}` }] : [];
-  const rows = ratio([...(chips.length ? chips : fallback).map(splitChip), ...mult, ...flatRows(buff, stats, scale)]);
+  const rows = ratio([...(chips.length ? chips : fallback).map(splitChip), ...mult, ...flatRows(buff, stats, scale), ...shredRows(buff, now)]);
   return (
     <div className="tl-cond" data-active={active} data-locked={locked}>
       <label>
-        <input type="checkbox" checked={active} disabled={locked} onChange={(e) => onToggle(id, e.target.checked)} aria-label={buff.label} />
+        <input type="checkbox" checked={active} disabled={locked} onChange={(e) => onToggle(ids, e.target.checked)} aria-label={buff.label} />
         <span className="txt" title={buff.note}>{buff.label}{locked ? ` · libera na C${buff.minConstellation}` : buff.timed ? '' : ' · sempre'}</span>
         {rows[0] && <span className="dz-badge gold num">{rows[0].value || rows[0].name}</span>}
       </label>
@@ -190,6 +187,7 @@ function InfoRows({ list }: { list: CharacterInfo[] }) {
 export function TalentsPanel({ v, index }: { v: ProjectView; index: number }) {
   const { data: all } = useTalents();
   const setSourceEnabled = useRotationStore((s) => s.setSourceEnabled);
+  const setCondition = useRotationStore((s) => s.setCondition);
   const updateMember = useRotationStore((s) => s.updateMember);
   const ref: MemberRef = v.project.members[index];
   const member = v.resolved.team.members[index];
@@ -225,7 +223,7 @@ export function TalentsPanel({ v, index }: { v: ProjectView; index: number }) {
 
   // Masque of the Red Death da Arlecchino: ligar o bônus liga a infusão Pyro junto, e sem a infusão o bônus fica desligado (os dois valem juntos no jogo).
   const masque = ref.character === 'Arlecchino' ? buffs.find((b) => b.id === 'normal') : undefined;
-  const masqueId = masque ? toggleIdOf(index, masque) : undefined;
+  const masqueId = masque ? conditionIds(index, masque)[0] : undefined;
   const masqueOff = !!masqueId && !disabled.includes(masqueId) && ref.normalInfusion !== 'Pyro';
   useEffect(() => {
     if (masqueOff && masqueId) setSourceEnabled(masqueId, false);
@@ -234,7 +232,7 @@ export function TalentsPanel({ v, index }: { v: ProjectView; index: number }) {
   if (!tl) return <p className="note" role="status">Carregando os textos dos talentos…</p>;
 
   const conds = (pred: (b: CharacterBuff) => boolean) =>
-    buffs.filter(pred).map((b) => { const cap = b.team?.stackPerMate && teamElements.filter((e, i) => i !== index && b.team!.stackPerMate!.includes(e)).length; const picked = ref.stacks?.[b.stacks?.of ?? b.id]; return <Condition key={b.id} cap={cap === undefined ? undefined : Math.min(cap, b.stacks?.max ?? cap)} buff={b} index={index} constellation={constellation} disabled={disabled} chips={chipsOf(b)} stats={v.bundle.memberStats[index]} scale={b.level ? b.level.table[eff[b.level.talent] - 1] ?? 1 : 1} onToggle={b === masque ? (id, on) => { updateMember(index, { normalInfusion: on ? 'Pyro' : undefined }); setSourceEnabled(id, on); } : setSourceEnabled} chosen={cap === undefined ? picked : Math.min(stacksOf(b, picked), cap)} onStacks={(n) => updateMember(index, { stacks: { ...ref.stacks, [b.stacks?.of ?? b.id]: n } })} />; });
+    buffs.filter(pred).map((b) => { const cap = b.team?.stackPerMate && teamElements.filter((e, i) => i !== index && b.team!.stackPerMate!.includes(e)).length; const picked = ref.stacks?.[b.stacks?.of ?? b.id]; const toggle = (ids: string[], on: boolean) => setCondition(ids, on, []); return <Condition key={b.id} now={member.characterEffect?.buffs.find((x) => x.id === b.id)} cap={cap === undefined ? undefined : Math.min(cap, b.stacks?.max ?? cap)} buff={b} index={index} constellation={constellation} disabled={disabled} chips={chipsOf(b)} stats={v.bundle.memberStats[index]} scale={b.level ? b.level.table[eff[b.level.talent] - 1] ?? 1 : 1} onToggle={b === masque ? (ids, on) => { updateMember(index, { normalInfusion: on ? 'Pyro' : undefined }); toggle(ids, on); } : toggle} chosen={cap === undefined ? picked : Math.min(stacksOf(b, picked), cap)} onStacks={(n) => updateMember(index, { stacks: { ...ref.stacks, [b.stacks?.of ?? b.id]: n } })} />; });
   const noteOf = (src: string) => notes.find((n) => n.src === src);
   const valueOf = (l: MoveLine) => formatHits(l[crit], l.result.hitShare);
   const rowsOf = (lines: MoveLine[]) => lines.map((l) => ({ key: l.id, name: l.name, value: valueOf(l), tone: damageColor(l.element, l.special), special: l.special }));

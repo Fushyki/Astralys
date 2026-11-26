@@ -1,4 +1,4 @@
-/** Personagens (/personagens): quem você tem no inventário e em que times cada um está, com atalho para ajustar ou otimizar. */
+/** Personagens (/personagens): os seus (inventário e times) e em que times cada um está, com atalho para ajustar ou otimizar. */
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AppHeader } from '../app/AppHeader';
@@ -8,6 +8,7 @@ import { Segmented } from '../design/primitives';
 import { splashCrop, splashUrl } from './card/cardParts';
 import { norm } from '../features/good/goodImport';
 import { loadGood } from '../features/good/goodStore';
+import { ownedCharacters } from '../features/good/owned';
 import { useGameData } from '../features/rotation/data';
 import { listProjects } from '../features/rotation/persistence';
 import './personagens.css';
@@ -21,9 +22,10 @@ export default function Personagens() {
   const projects = useMemo(() => listProjects(), []);
   const [query, setQuery] = useState('');
   const [element, setElement] = useState('');
-  const [scope, setScope] = useState<'meus' | 'todos'>(good ? 'meus' : 'todos');
-
-  const owned = useMemo(() => new Map((good?.characters ?? []).map((c) => [norm(c.key), c])), [good]);
+  const owned = useMemo(() => ownedCharacters(good, projects), [good, projects]);
+  const [scope, setScope] = useState<'meus' | 'todos'>(owned.size > 0 ? 'meus' : 'todos');
+  /** Os do inventário, com constelação, nível e equipamento. */
+  const inventory = useMemo(() => new Map((good?.characters ?? []).map((c) => [norm(c.key), c])), [good]);
   const list = useMemo(() => {
     const q = query.trim().toLowerCase();
     return (data?.game.characters ?? [])
@@ -48,7 +50,7 @@ export default function Personagens() {
             <b className="big num">{list.length}</b>
           </div>
           <div className="side">
-            <p>{good ? 'Do seu inventário importado.' : 'Importe o inventário para ver só os que você tem.'} Toque em um time para ajustar o build dele lá.</p>
+            <p>{owned.size > 0 ? 'Dos seus times e do inventário importado.' : 'Monte um time ou importe o inventário para ver só os seus.'} Toque em um time para ajustar o build dele lá.</p>
             <div className="mix" role="img" aria-label={mix.map(([e, n]) => `${e} ${n}`).join(', ')}>
               {mix.map(([e, n]) => <i key={e} style={{ flex: n, background: elementColor(e) }} title={`${e}: ${n}`} />)}
             </div>
@@ -58,7 +60,7 @@ export default function Personagens() {
 
         <div className="pe-tools">
           <input className="dz-input" type="search" placeholder="Buscar personagem" aria-label="Buscar personagem" value={query} onChange={(e) => setQuery(e.target.value)} />
-          {good && <Segmented label="Quais" value={scope} options={[{ value: 'meus', label: `Meus (${owned.size})` }, { value: 'todos', label: 'Todos' }]} onChange={setScope} />}
+          {owned.size > 0 && <Segmented label="Quais" value={scope} options={[{ value: 'meus', label: `Meus (${owned.size})` }, { value: 'todos', label: 'Todos' }]} onChange={setScope} />}
           <div className="pe-els" role="group" aria-label="Elemento">
             {ELEMENTS.map((e) => (
               <button key={e} type="button" aria-pressed={element === e} style={{ ['--c' as string]: elementColor(e) }} onClick={() => setElement(element === e ? '' : e)}>{e}</button>
@@ -71,12 +73,12 @@ export default function Personagens() {
         ) : (
           <div className="pe-grid">
             {list.map((c) => {
-              const mine = owned.get(norm(c.name));
+              const mine = inventory.get(norm(c.name));
               const teams = projects.filter((p) => p.members.includes(c.name));
               const weapon = good?.weapons.find((w) => norm(w.location) === norm(c.name));
               const pieces = good?.artifacts.filter((a) => norm(a.location) === norm(c.name)).length ?? 0;
               return (
-                <article className="pe-card" key={c.id} style={{ ['--c' as string]: elementColor(c.element) }} data-rarity={c.rarity} data-mine={mine ? '' : undefined}>
+                <article className="pe-card" key={c.id} style={{ ['--c' as string]: elementColor(c.element) }} data-rarity={c.rarity} data-mine={owned.has(norm(c.name)) ? '' : undefined}>
                   <img className="splash" style={splashCrop(c.icon ?? '')} src={splashUrl(c.icon ?? '')} alt="" loading="lazy" crossOrigin="anonymous" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
                   <div className="info">
                     <span className="el">{c.element} · {c.weapon}</span>

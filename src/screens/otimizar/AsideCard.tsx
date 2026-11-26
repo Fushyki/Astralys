@@ -5,7 +5,7 @@ import { CharacterAvatar } from '../../design/primitives';
 import { elementColor } from '../../design/elements';
 import { weaponIconUrl } from '../../design/images';
 import { LevelControl } from '../personagem/LevelControl';
-import { effectiveTalents, factionsOf } from '../../engine';
+import { MAX_BASE_TALENT, factionsOf } from '../../engine';
 import { effectStatus } from '../../features/rotation/teamInfo';
 import { weaponsFor } from '../../features/rotation/teamOps';
 import { useRotationStore } from '../../features/rotation/store';
@@ -15,7 +15,7 @@ import { WeaponPickerDialog } from '../personagem/WeaponPicker';
 const WEAPON_LABEL: Record<string, string> = { Sword: 'Espada', Claymore: 'Espadão', Polearm: 'Lança', Catalyst: 'Catalisador', Bow: 'Arco' };
 const FACTION_LABEL = { moonsign: 'Moonsign', hexerei: 'Hexerei' } as const;
 const SPLASH = 'https://api.lunaris.moe/data/assets/gachaimg';
-const clamp = (n: number) => Math.max(1, Math.min(15, Math.round(n)));
+const clamp = (n: number) => Math.max(1, Math.min(MAX_BASE_TALENT, Math.round(n)));
 
 function Img({ src, fallback }: { src: string | undefined; fallback: string }) {
   const [failed, setFailed] = useState(false);
@@ -33,7 +33,7 @@ export function AsideCard({ v, index }: { v: ProjectView; index: number }) {
   const share = v.summary.members[index]?.fraction ?? 0;
   const eligible = v.data.effects.characters.find((c) => c.character === character.name)?.factions ?? [];
   const cons = ref.constellation ?? 0;
-  const eff = effectiveTalents(ref.talents, ref.constellation, character);
+  const eff = v.resolved.team.members[index].talents;
   const refine = Math.min(5, Math.max(1, ref.refinement ?? 1));
   const substatValue = weapon?.substat ? `${formatDecimal(weapon.substat.value < 1 ? weapon.substat.value * 100 : weapon.substat.value, 1)}${weapon.substat.value < 1 ? '%' : ''}` : '—';
 
@@ -95,13 +95,15 @@ export function AsideCard({ v, index }: { v: ProjectView; index: number }) {
             {(['normal', 'skill', 'burst'] as const).map((k) => (
               <input
                 key={`${k}${ref.talents[k]}`}
-                className="num" type="number" inputMode="numeric" min={1} max={15} step={1}
+                className="num" type="number" inputMode="numeric" min={1} max={Math.max(MAX_BASE_TALENT, ref.talents[k])} step={1}
                 aria-label={`Nível de talento: ${k === 'normal' ? 'Normal' : k === 'skill' ? 'Habilidade' : 'Supremo'}${eff[k] > ref.talents[k] ? ` (efetivo ${eff[k]})` : ''}`}
                 defaultValue={ref.talents[k]}
                 onBlur={(e) => {
                   const n = Number(e.currentTarget.value);
-                  if (Number.isFinite(n) && clamp(n) !== ref.talents[k]) update(index, { talents: { ...ref.talents, [k]: clamp(n) } });
-                  else e.currentTarget.value = String(ref.talents[k]);
+                  const next = Number.isFinite(n) && n !== ref.talents[k] ? clamp(n) : ref.talents[k];
+                  // O campo mostra o que valeu (13 digitado vira 10, mesmo quando o nível já era 10).
+                  e.currentTarget.value = String(next);
+                  if (next !== ref.talents[k]) update(index, { talents: { ...ref.talents, [k]: next } });
                 }}
                 onKeyDown={(e) => e.key === 'Enter' && e.currentTarget.blur()}
               />

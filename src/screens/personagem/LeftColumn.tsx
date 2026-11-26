@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { NumberInput } from '../../design/fields';
 import { CharacterAvatar, Panel, Segmented } from '../../design/primitives';
 import { SecHead, StatChip } from '../../design/filtros';
-import { SUBSTATS, factionsOf, defaultTotalRolls, effectiveTalents, maxRollsFor, rollValues, type AnalysisBundle, type MemberRef, type Substat } from '../../engine';
+import { MAX_BASE_TALENT, SUBSTATS, factionsOf, defaultTotalRolls, effectiveTalents, maxRollsFor, rollValues, type AnalysisBundle, type MemberRef, type Substat } from '../../engine';
 import { SUB_LABEL, formatSub } from '../../features/good/labels';
 import type { Character } from '../../data/schema';
 import { useRotationStore } from '../../features/rotation/store';
@@ -16,7 +16,7 @@ const SUBSTAT_LABEL: Record<Substat, string> = {
   CR: 'Taxa crít.', CD: 'Dano crít.', 'ATK%': 'ATK%', EM: 'Proficiência', ER: 'Recarga', ATK: 'ATK fixo', 'HP%': 'HP%', HP: 'HP fixo', 'DEF%': 'DEF%', DEF: 'DEF fixo',
 };
 const SUBSTAT_TAG: Record<Substat, string> = { CR: 'CR', CD: 'CD', 'ATK%': 'ATK%', EM: 'EM', ER: 'ER', ATK: 'ATK', 'HP%': 'HP%', HP: 'HP', 'DEF%': 'DEF%', DEF: 'DEF' };
-const clamp = (v: number) => Math.max(1, Math.min(15, Math.round(v)));
+const clamp = (v: number) => Math.max(1, Math.min(MAX_BASE_TALENT, Math.round(v)));
 const SPLASH = 'https://api.lunaris.moe/data/assets/gachaimg';
 
 const FACTION_LABEL = { moonsign: 'Moonsign', hexerei: 'Hexerei' } as const;
@@ -67,9 +67,9 @@ export function CharacterCard({ character, memberRef, index, color, level, share
       <div className="pc-talents">
         <span className="lbl">Talentos</span>
         <div className="row">
-          <NumberInput label="Normal" value={memberRef.talents.normal} min={1} max={15} step={1} onCommit={(v) => update(index, { talents: { ...memberRef.talents, normal: clamp(v) } })} />
-          <NumberInput label="Habilidade" value={memberRef.talents.skill} min={1} max={15} step={1} onCommit={(v) => update(index, { talents: { ...memberRef.talents, skill: clamp(v) } })} />
-          <NumberInput label="Supremo" value={memberRef.talents.burst} min={1} max={15} step={1} onCommit={(v) => update(index, { talents: { ...memberRef.talents, burst: clamp(v) } })} />
+          <NumberInput label="Normal" value={memberRef.talents.normal} min={1} max={Math.max(MAX_BASE_TALENT, memberRef.talents.normal)} step={1} onCommit={(v) => update(index, { talents: { ...memberRef.talents, normal: clamp(v) } })} />
+          <NumberInput label="Habilidade" value={memberRef.talents.skill} min={1} max={Math.max(MAX_BASE_TALENT, memberRef.talents.skill)} step={1} onCommit={(v) => update(index, { talents: { ...memberRef.talents, skill: clamp(v) } })} />
+          <NumberInput label="Supremo" value={memberRef.talents.burst} min={1} max={Math.max(MAX_BASE_TALENT, memberRef.talents.burst)} step={1} onCommit={(v) => update(index, { talents: { ...memberRef.talents, burst: clamp(v) } })} />
         </div>
         <span className="muted small num" data-testid="effective-talents">
           Níveis efetivos: {talents.normal}/{talents.skill}/{talents.burst}{c >= 3 ? ' (com o +3 da constelação)' : ''} · {formatPercent(share, 1)} do dano do time

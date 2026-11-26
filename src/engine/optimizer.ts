@@ -126,19 +126,19 @@ export function optimizeMember(ctx: OptimizerContext, memberIndex: number, flatB
 
   // ---- 2) Grupos de ações do membro ----
   const profileCache = new Map<string, StatBlock>();
-  const profileOf = (tags: readonly string[]) => {
-    const key = [...tags].sort().join(',');
+  const profileOf = (tags: readonly string[], share?: Readonly<Record<string, number>>) => {
+    const key = [...tags].sort().join(',') + (share ? JSON.stringify(share) : '');
     let p = profileCache.get(key);
     if (!p) {
-      p = activeTeamDelta(assembly.buffs, names[memberIndex], new Set(tags));
+      p = activeTeamDelta(assembly.buffs, names[memberIndex], new Set(tags), undefined, undefined, share);
       profileCache.set(key, p);
     }
     return { key, team: p };
   };
 
   const groups = new Map<string, Group>();
-  const minStats = (tags: readonly string[]) =>
-    finalStats(m, statics, minimumRolls(floor), profileOf(tags).team, assembly.resonanceAtkPct);
+  const minStats = (tags: readonly string[], share?: Readonly<Record<string, number>>) =>
+    finalStats(m, statics, minimumRolls(floor), profileOf(tags, share).team, assembly.resonanceAtkPct);
 
   // Foco do KQM: só o golpe escolhido pesa na busca (se ele não está na rotação, vale a rotação inteira).
   const focus = m.kqmFocus && ctx.actions.some((a) => a.member === memberIndex && a.move.id === m.kqmFocus) ? m.kqmFocus : undefined;
@@ -147,8 +147,8 @@ export function optimizeMember(ctx: OptimizerContext, memberIndex: number, flatB
     if (focus && a.move.id !== focus) return;
     // Reação posta na rotação: só depende da Maestria e dos bônus de reação; a busca de substats não a enxerga.
     if (a.move.reactionHit || a.move.talent === 'reaction') return;
-    const { key, team } = profileOf(a.activeTags);
-    const stats = minStats(a.activeTags); // só para os bônus de DMG% (não dependem dos rolls)
+    const { key, team } = profileOf(a.activeTags, a.tagShare);
+    const stats = minStats(a.activeTags, a.tagShare); // só para os bônus de DMG% (não dependem dos rolls)
     const element = a.move.element ?? m.character.element;
     // Golpe Lunar/Estelar: sem DMG% comum (a parte da Maestria dele a busca não enxerga; o dano final usa a fórmula certa).
     const dmg = a.move.special ? 1 : 1 + hitDmgBonus(stats, element, m.character.element, a.move.hitType) + a.dmgAdjust;

@@ -66,7 +66,7 @@ export const MemberRefSchema = z.object({
   /** false = só 2 peças do set principal (sem o bônus de 4 peças). Padrão: 4 peças quando não há segundo set. */
   fourPiece: z.boolean().optional(),
   artifacts: ArtifactConfigSchema,
-  /** Níveis BASE dos talentos (sem o +3 das constelações). */
+  /** Níveis BASE dos talentos (até 10, sem o +3 das constelações nem o +1 de passivas do time). */
   talents: z.object({ normal: TalentLevel, skill: TalentLevel, burst: TalentLevel }),
   /** 'generic' = o usuário voltou ao build genérico de propósito: o projeto não abre mais com as peças do inventário. */
   piecesChoice: z.literal('generic').optional(),
@@ -361,19 +361,29 @@ function byName<T extends { name: string }>(list: T[], name: string, what: strin
   return found;
 }
 
-/** Níveis efetivos dos talentos: o nível base mais 3 no talento da C3 (se C≥3) e no da C5 (se C≥5), no máximo 15. */
+/** Nível máximo de um talento sem bônus (coroado). Um valor digitado acima disso já inclui os bônus do jogo. */
+export const MAX_BASE_TALENT = 10;
+
+type Boosts = { c3: Talent | null; c5: Talent | null } | undefined;
+/** Quanto a C3/C5 soma a um talento nesta constelação. */
+const constellationBonus = (c: number, b: Boosts, t: Talent): number => (b?.c3 === t && c >= 3 ? 3 : 0) + (b?.c5 === t && c >= 5 ? 3 : 0);
+
+/**
+ * Nível do talento com o +3 da C3/C5. O bônus entra sobre o nível base (até 10) e nunca é somado a um valor digitado que já
+ * o inclui (ex.: 13 com C3 continua 13).
+ */
 export function effectiveTalents(
   base: { normal: number; skill: number; burst: number },
   constellation: number | undefined,
   character: { constellationBoosts?: { c3: Talent | null; c5: Talent | null } },
 ): { normal: number; skill: number; burst: number } {
-  const out = { ...base };
-  const c = constellation ?? 0;
-  const b = character.constellationBoosts;
-  if (b?.c3 && c >= 3) out[b.c3] = Math.min(15, out[b.c3] + 3);
-  if (b?.c5 && c >= 5) out[b.c5] = Math.min(15, out[b.c5] + 3);
-  return out;
+  const at = (t: Talent) => Math.min(15, Math.max(base[t], Math.min(base[t], MAX_BASE_TALENT) + constellationBonus(constellation ?? 0, character.constellationBoosts, t)));
+  return { normal: at('normal'), skill: at('skill'), burst: at('burst') };
 }
+
+/** +1 de passiva do time (Tartaglia, Skirk). Um nível acima do que a constelação explica já foi digitado com ele. */
+const withPartyLevel = (m: MemberInput, t: Talent): number =>
+  m.talents[t] > MAX_BASE_TALENT + constellationBonus(m.constellation ?? 0, m.character.constellationBoosts, t) ? m.talents[t] : Math.min(15, m.talents[t] + 1);
 
 /** Buffs de arma e de set (conversões, crítico por golpe, regras de time) no formato dos buffs de personagem. */
 export function gearBuffs(m: Pick<MemberInput, 'weapon' | 'weaponEffect' | 'refinement' | 'primarySet' | 'secondarySet' | 'fourPiece'>): CharacterBuff[] {
@@ -789,7 +799,7 @@ export function finalizeMembers(members: MemberInput[], planilha: boolean): Memb
   // "Mentoria Mútua das Armas" da Skirk: com o time só de Hydro e Cryo (ao menos um de cada), +1 na Habilidade de todos.
   const elements = new Set(members.map((m) => m.character.element));
   const mentor = !planilha && members.some((m) => m.character.name === 'Skirk') && elements.size === 2 && elements.has('Hydro') && elements.has('Cryo');
-  const leveled = master || mentor ? members.map((m) => ({ ...m, talents: { ...m.talents, normal: Math.min(15, m.talents.normal + (master ? 1 : 0)), skill: Math.min(15, m.talents.skill + (mentor ? 1 : 0)) } })) : members;
+  const leveled = master || mentor ? members.map((m) => ({ ...m, talents: { ...m.talents, ...(master ? { normal: withPartyLevel(m, 'normal') } : {}), ...(mentor ? { skill: withPartyLevel(m, 'skill') } : {}) } })) : members;
   // Teto de pontos que sobe com a constelação.
   const raised = leveled.map((m) => (m.characterEffect?.pointMoves?.some((p) => p.maxBy) ? { ...m, characterEffect: { ...m.characterEffect, pointMoves: m.characterEffect.pointMoves.map((p) => (p.maxBy && (m.constellation ?? 0) >= p.maxBy.constellation ? { ...p, max: p.maxBy.max } : p)) } } : m));
   return applyTeamRules(raised).map((m) =>

@@ -39,11 +39,15 @@ describe('buff limitado aos N primeiros golpes (BuffWindow.maxHits)', () => {
     expect(all.length).toBeGreaterThan(3);
     expect(withTag(project())).toHaveLength(all.length);
   });
-  it('com limite 3, só os 3 primeiros (no tempo) recebem; os outros tipos de golpe nem contam', () => {
-    const got = withTag(project(3));
-    expect(got).toHaveLength(3);
-    const firstThree = [...skillIds(project())].sort((a, b) => (a.time ?? 0) - (b.time ?? 0)).slice(0, 3).map((a) => a.id).sort();
-    expect(got.map((a) => a.id).sort()).toEqual(firstThree);
+  it('com limite 3, recebem os golpes (no tempo) até gastar 3 acertos; os outros tipos de golpe nem contam', () => {
+    let used = 0;
+    const first = [...skillIds(project())].sort((a, b) => (a.time ?? 0) - (b.time ?? 0)).filter((a) => {
+      const fits = used < 3;
+      used += Math.max(1, a.move.hits) * a.executions;
+      return fits;
+    });
+    expect(first.length).toBeGreaterThan(0);
+    expect(withTag(project(3)).map((a) => a.id).sort()).toEqual(first.map((a) => a.id).sort());
   });
   it('limite maior que o número de golpes não corta nada', () => {
     expect(withTag(project(999))).toHaveLength(skillIds(project()).length);

@@ -49,7 +49,7 @@ export function BuffPanel({ v, lanes }: { v: ProjectView; lanes: LaneInfo[] }) {
           <Num label="Duração" value={end - start} unit="s" min={0.1} onCommit={(d) => free(() => st().setWindowLength(w.id, d))} />
           <Num label="Fim" value={end} unit="s" min={0.1} onCommit={(e) => free(() => st().updateWindow(w.id, { end: e }))} />
         </div>
-        <Num label="Vale só para os N primeiros golpes (0 = todos)" value={w.maxHits ?? 0} digits={0} min={0} onCommit={(n) => st().updateWindow(w.id, { maxHits: n >= 1 ? Math.round(n) : null })} />
+        <Num label="Vale só para os N primeiros acertos (0 = todos)" value={w.maxHits ?? 0} digits={0} min={0} onCommit={(n) => st().updateWindow(w.id, { maxHits: n >= 1 ? Math.round(n) : null })} />
         <span className="rt-note">Conta, em ordem de tempo, só os golpes que o buff afeta (ex.: os Normais). Os que passam do limite ficam sem o buff.</span>
         <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 110px', gap: 'var(--sp-2)' }}>
           <Sel label="Começa depois de" value={trigger} options={[{ value: '', label: 'Escolha um golpe' }, ...triggerOptions]} onChange={(a) => a && st().setWindowAnchor(w.id, { actionId: a, delay: w.anchor?.delay ?? 0 })} />

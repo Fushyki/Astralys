@@ -1,4 +1,4 @@
-/** Buff manual da rotação: qualquer bônus com nome, que vira uma faixa no plano de combate (com janela) e pode valer só para os N primeiros golpes. */
+/** Buff manual da rotação: qualquer bônus com nome, que vira uma faixa no plano de combate (com janela) e pode valer só para os N primeiros acertos. */
 import { useState } from 'react';
 import type { ProjectView } from '../../app/ProjectContext';
 import { Button } from '../../design/Button';
@@ -43,7 +43,7 @@ export function ManualBuffForm({ v }: { v: ProjectView }) {
   return (
     <details className="rt-manual">
       <summary>Criar buff manual</summary>
-      <p className="rt-note">Qualquer bônus com um nome, para valer na rotação (ex.: Rift da Skirk: +20% de DMG Normal nos 10 primeiros golpes). Aparece como uma faixa no plano de combate.</p>
+      <p className="rt-note">Qualquer bônus com um nome, para valer na rotação (ex.: Rift da Skirk: +20% de DMG Normal nos 10 primeiros acertos). Aparece como uma faixa no plano de combate.</p>
       <label className="rt-fld">Nome<input className="dz-input" value={label} maxLength={40} placeholder="Ex.: Rift da Skirk" onChange={(e) => setLabel(e.target.value)} /></label>
       <label className="rt-fld">Tipo de bônus
         <select className="dz-input" value={stat} onChange={(e) => setStat(e.target.value)}>
@@ -54,7 +54,7 @@ export function ManualBuffForm({ v }: { v: ProjectView }) {
       </label>
       <div className="rt-two">
         <label className="rt-fld">Valor{def?.pct ? ' (%)' : ''}<input className="dz-input num" inputMode="decimal" value={value} placeholder="20" onChange={(e) => setValue(e.target.value)} /></label>
-        <label className="rt-fld">Só os N primeiros golpes<input className="dz-input num" inputMode="numeric" value={limit} placeholder="todos" onChange={(e) => setLimit(e.target.value)} /></label>
+        <label className="rt-fld">Só os N primeiros acertos<input className="dz-input num" inputMode="numeric" value={limit} placeholder="todos" onChange={(e) => setLimit(e.target.value)} /></label>
       </div>
       <label className="rt-fld">Para quem
         <select className="dz-input" value={target} onChange={(e) => setTarget(e.target.value)}>

@@ -175,7 +175,7 @@ export default function Equipe() {
           const character = characters.find((c) => c.name === ref.character);
           const share = summary.members[i]?.fraction ?? 0;
           const role = roleOf(share);
-          const talents = effectiveTalents(ref.talents, ref.constellation, character ?? {});
+          const talents = v.inSync ? v.resolved.team.members[i].talents : effectiveTalents(ref.talents, ref.constellation, character ?? {});
           const stats = bundle.memberStats[i] && v.inSync ? keyStats(bundle, i, role) : [];
           const set = setPiecesText(ref);
           return (

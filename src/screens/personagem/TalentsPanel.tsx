@@ -12,7 +12,7 @@ import { elementColor } from '../../design/elements';
 import { DamageLegend, FamilyBadge, damageColor } from '../../design/damageFamily';
 import { Segmented, StarIcon } from '../../design/primitives';
 import type { CharacterBuff, CharacterInfo } from '../../effects/schema';
-import { KIT_INFUSIONS, assembleTeam, characterBuffDelta, effectiveTalents, scaleBuffStacks, stacksOf } from '../../engine';
+import { KIT_INFUSIONS, MAX_BASE_TALENT, assembleTeam, characterBuffDelta, scaleBuffStacks, stacksOf } from '../../engine';
 import type { MemberRef, ReactionChoice } from '../../engine';
 import { REACTION_LABEL, characterReactions, memberBuffCards, reactionOptions, type MoveLine } from '../../features/character/characterModel';
 import { buffHome, paramRows, skillIconUrl, splitChip, useTalents, type CharacterTalents, type TalentText } from '../../features/character/talents';
@@ -195,7 +195,7 @@ export function TalentsPanel({ v, index }: { v: ProjectView; index: number }) {
   const member = v.resolved.team.members[index];
   const character = member.character;
   const constellation = ref.constellation ?? 0;
-  const eff = effectiveTalents(ref.talents, ref.constellation, character);
+  const eff = v.resolved.team.members[index].talents;
   const { crit, setCrit, reaction, setReaction } = useDamageView(v.id, ref.character);
   const teamElements = v.resolved.team.members.map((m) => m.character.element);
   const options = reactionOptions(character.element, teamElements);
@@ -238,7 +238,7 @@ export function TalentsPanel({ v, index }: { v: ProjectView; index: number }) {
   const noteOf = (src: string) => notes.find((n) => n.src === src);
   const valueOf = (l: MoveLine) => formatHits(l[crit], l.result.hitShare);
   const rowsOf = (lines: MoveLine[]) => lines.map((l) => ({ key: l.id, name: l.name, value: valueOf(l), tone: damageColor(l.element, l.special), special: l.special }));
-  const setTalent = (k: 'normal' | 'skill' | 'burst', d: number) => updateMember(index, { talents: { ...ref.talents, [k]: Math.max(1, Math.min(15, ref.talents[k] + d)) } });
+  const setTalent = (k: 'normal' | 'skill' | 'burst', d: number) => updateMember(index, { talents: { ...ref.talents, [k]: Math.max(1, Math.min(MAX_BASE_TALENT, ref.talents[k] + d)) } });
   const setCons = (n: number) => updateMember(index, { constellation: Math.max(0, Math.min(6, n)) || undefined });
 
   type Group = { title: string; rows: { key: string; name: string; value: string; tone?: string; special?: string }[] };
@@ -277,7 +277,7 @@ export function TalentsPanel({ v, index }: { v: ProjectView; index: number }) {
             <b>{t.name}</b>
             <span className="dz-badge" style={{ background: tone.bg, color: tone.fg }}>{TALENT_TYPE[k]}</span>
           </span>
-          <Stepper label={`Nível de ${TALENT_TYPE[k]}`} value={ref.talents[k]} text={`Nv ${level}`} onDec={() => setTalent(k, -1)} onInc={() => setTalent(k, 1)} decOff={ref.talents[k] <= 1} incOff={ref.talents[k] >= 15} />
+          <Stepper label={`Nível de ${TALENT_TYPE[k]}`} value={ref.talents[k]} text={`Nv ${level}`} onDec={() => setTalent(k, -1)} onInc={() => setTalent(k, 1)} decOff={ref.talents[k] <= 1} incOff={ref.talents[k] >= MAX_BASE_TALENT} />
         </header>
         <OneLine title={t.name} text={t.description} />
         <div className="body">

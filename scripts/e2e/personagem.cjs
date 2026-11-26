@@ -56,8 +56,9 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
   await page.click('button[aria-label="Diminuir: Constelação"]'); await settle();
   await page.click('button[aria-label="Diminuir: Constelação"]'); await settle();
   check('o passo − volta a C0', /C0/.test(await page.textContent('.tl-card.cons .step span')));
-  await page.click('button[aria-label="Aumentar: Nível de Habilidade elemental"]'); await settle();
-  check('o passo de nível da habilidade sobe para Nv 11', /Nv 11/.test(await page.textContent('.tl-card[aria-label="Momento do Nome"] .step span')));
+  check('no nível 10 (coroado) o passo + fica desligado', await page.isDisabled('button[aria-label="Aumentar: Nível de Habilidade elemental"]'));
+  await page.click('button[aria-label="Diminuir: Nível de Habilidade elemental"]'); await settle();
+  check('o passo de nível da habilidade desce para Nv 9', /Nv 9/.test(await page.textContent('.tl-card[aria-label="Momento do Nome"] .step span')));
   await page.keyboard.press('Control+z'); await settle();
   await page.click('.tl-card[aria-label="Momento do Nome"] .tl-desc button'); await page.waitForSelector('.dz-dialog');
   check('"ver tudo" abre o texto completo do jogo e Esc fecha', (await page.textContent('.dz-dialog .tl-full')).length > 150);
@@ -127,7 +128,10 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
   check('a estrela C3 fica acesa e o selo mostra C3', (await page.getAttribute('g[aria-label^="Constelação 3"]', 'aria-pressed')) === 'true' && /C3/.test(await page.textContent('.sc-cons .badge')));
   await page.keyboard.press('Control+z'); await settle();
   await page.fill('input[aria-label="Nível de talento: Habilidade"]', '13'); await page.locator('input[aria-label="Nível de talento: Habilidade"]').blur(); await settle();
-  check('subir o nível da habilidade para 13', /10\/13\/10/.test(await eff()), await eff());
+  check('o nível digitado para em 10 (13 vira 10)', /10\/10\/10/.test(await eff()) && (await page.inputValue('input[aria-label="Nível de talento: Habilidade"]')) === '10', await eff());
+  await page.fill('input[aria-label="Nível de talento: Habilidade"]', '9'); await page.locator('input[aria-label="Nível de talento: Habilidade"]').blur(); await settle();
+  check('baixar o nível da habilidade para 9', /10\/9\/10/.test(await eff()), await eff());
+  await page.keyboard.press('Control+z'); await settle();
   await page.keyboard.press('Control+z'); await settle();
 
   // Rolls manuais (aba Build)

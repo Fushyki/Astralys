@@ -4,7 +4,9 @@ import { useState } from 'react';
 import type { Character } from '../../data/schema';
 import { CharacterAvatar } from '../../design/primitives';
 import { elementColor } from '../../design/elements';
-import { effectiveTalents, factionsOf, type MemberRef } from '../../engine';
+import { useProjectView } from '../../app/ProjectContext';
+import { MAX_BASE_TALENT, effectiveTalents, factionsOf, type MemberRef } from '../../engine';
+import { talentNote } from '../../features/character/talentNote';
 import { useTalents } from '../../features/character/talents';
 import { useRotationStore } from '../../features/rotation/store';
 import { formatPercent } from '../../ui/format';
@@ -16,7 +18,7 @@ const FACTION_HINT = {
   moonsign: 'Conta como membro Moonsign (regras "Nascent/Ascendant Gleam" do time).',
   hexerei: "Conta como Hexerei (Witch's Homework concluída; 2+ membros dão o Hexerei: Secret Rite).",
 } as const;
-const clamp = (v: number) => Math.max(1, Math.min(15, Math.round(v)));
+const clamp = (v: number) => Math.max(1, Math.min(MAX_BASE_TALENT, Math.round(v)));
 
 function Star({ x, y, lit, size = 9 }: { x: number; y: number; lit: boolean; size?: number }) {
   const s = size;
@@ -116,7 +118,8 @@ export function ConstellationCard({ character, memberRef, index, compact }: { ch
 
 export function TalentsCard({ character, memberRef, index, share, compact }: { character: Character; memberRef: MemberRef; index: number; share: number; compact?: boolean }) {
   const update = useRotationStore((s) => s.updateMember);
-  const eff = effectiveTalents(memberRef.talents, memberRef.constellation, character);
+  const v = useProjectView();
+  const eff = v.inSync ? v.resolved.team.members[index].talents : effectiveTalents(memberRef.talents, memberRef.constellation, character);
   const rows = [['normal', 'Normal'], ['skill', 'Habilidade'], ['burst', 'Supremo']] as const;
   return (
     <section className={`sc-card sc-talents${compact ? ' compact' : ''}`} aria-label="Talentos">
@@ -130,24 +133,26 @@ export function TalentsCard({ character, memberRef, index, share, compact }: { c
             <span className="ring">
               <input
                 key={String(memberRef.talents[k])}
-                type="number" inputMode="numeric" min={1} max={15} step={1}
+                type="number" inputMode="numeric" min={1} max={Math.max(MAX_BASE_TALENT, memberRef.talents[k])} step={1}
                 aria-label={`Nível de talento: ${label}`}
                 defaultValue={memberRef.talents[k]}
                 onBlur={(e) => {
                   const v = Number(e.currentTarget.value);
-                  if (Number.isFinite(v) && clamp(v) !== memberRef.talents[k]) update(index, { talents: { ...memberRef.talents, [k]: clamp(v) } });
-                  else e.currentTarget.value = String(memberRef.talents[k]);
+                  const next = Number.isFinite(v) && v !== memberRef.talents[k] ? clamp(v) : memberRef.talents[k];
+                  // O campo mostra o que valeu (13 digitado vira 10, mesmo quando o nível já era 10).
+                  e.currentTarget.value = String(next);
+                  if (next !== memberRef.talents[k]) update(index, { talents: { ...memberRef.talents, [k]: next } });
                 }}
                 onKeyDown={(e) => e.key === 'Enter' && e.currentTarget.blur()}
               />
-              {eff[k] > memberRef.talents[k] && <i className="plus num" title="Bônus da constelação">+{eff[k] - memberRef.talents[k]}</i>}
+              {eff[k] > memberRef.talents[k] && <i className="plus num" title="Bônus de constelação ou de passiva do time">+{eff[k] - memberRef.talents[k]}</i>}
             </span>
             <span className="lbl">{label}</span>
           </label>
         ))}
       </div>
       <span className="muted small num" data-testid="effective-talents">
-        Níveis efetivos: {eff.normal}/{eff.skill}/{eff.burst}{(memberRef.constellation ?? 0) >= 3 ? ' (com o +3 da constelação)' : ''} · {formatPercent(share, 1)} do dano do time
+        Níveis efetivos: {eff.normal}/{eff.skill}/{eff.burst}{talentNote(memberRef.talents, memberRef.constellation, character, eff)} · {formatPercent(share, 1)} do dano do time
       </span>
     </section>
   );

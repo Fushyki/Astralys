@@ -460,12 +460,14 @@ export function activeTeamDelta(
   include: (b: TeamBuff) => boolean = () => true,
   /** Segundos desde o início da janela de cada etiqueta, no instante do golpe (para os buffs que caem com o tempo). */
   ages?: Readonly<Record<string, number>>,
+  /** Fração de cada etiqueta neste golpe (limite de acertos). */
+  share?: Readonly<Record<string, number>>,
 ): StatBlock {
   const sum = zeroBlock();
   for (const b of buffs) {
     if (!receivesBuff(b, characterName) || !include(b)) continue;
     if (tags !== 'all' && !b.always && !tags.has(b.tag)) continue;
-    const k = b.decay && ages ? Math.min(1, Math.max(0, 1 - (ages[b.tag] ?? 0) / b.decay)) : 1;
+    const k = (b.decay && ages ? Math.min(1, Math.max(0, 1 - (ages[b.tag] ?? 0) / b.decay)) : 1) * (share?.[b.tag] ?? 1);
     addDelta(sum, k === 1 ? b.delta : scaleDelta(b.delta, k));
   }
   return sum;

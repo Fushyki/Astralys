@@ -77,6 +77,8 @@ export interface RotationAction {
   dmgAdjust: number;
   /** Segundos desde o início da janela de cada etiqueta no instante do golpe (faz cair os buffs com `decay`). */
   tagAges?: Readonly<Record<string, number>>;
+  /** Fração (0 a 1) do buff de cada etiqueta neste golpe, quando o limite de acertos acaba no meio dele. */
+  tagShare?: Readonly<Record<string, number>>;
   /**
    * Reações Lunar-Charged, Lunar-Crystallize e Stellar-Swirl: índices dos membros que aplicaram os elementos (até 4).
    * Sem lista, só o dono da ação contribui.
@@ -344,7 +346,7 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
   let decaying = DECAY_CACHE.get(assembly.buffs);
   if (!decaying) DECAY_CACHE.set(assembly.buffs, (decaying = new Set(assembly.buffs.filter((b) => b.decay).map((b) => b.tag))));
   const dec = decaying;
-  const statsFor = (member: number, tags: ReadonlySet<string> | 'all', ages?: Readonly<Record<string, number>>, tg?: { key: string; id: number }): FinalStats => {
+  const statsFor = (member: number, tags: ReadonlySet<string> | 'all', ages?: Readonly<Record<string, number>>, tg?: { key: string; id: number }, share?: Readonly<Record<string, number>>): FinalStats => {
     // Só as idades das etiquetas que caem com o tempo entram na chave (e no cálculo).
     let live: Record<string, number> | undefined;
     let liveKey = '';
@@ -357,7 +359,7 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
         if (tg) LIVE_CACHE.set(ages, { dec, tags: tg.id, live, key: liveKey });
       }
     }
-    const key = `${member}|${tags === 'all' ? '*' : tg ? tg.id : [...tags].sort().join(',')}|${liveKey}`;
+    const key = `${member}|${tags === 'all' ? '*' : tg ? tg.id : [...tags].sort().join(',')}|${liveKey}${share ? `|${JSON.stringify(share)}` : ''}`;
     let s = cache.get(key);
     if (!s) {
       const sh = ctx.shared;
@@ -366,7 +368,7 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
       if (!s) {
         let team = sh?.team.get(key);
         if (!team) {
-          team = activeTeamDelta(assembly.buffs, names[member], tags, undefined, live);
+          team = activeTeamDelta(assembly.buffs, names[member], tags, undefined, live, share);
           sh?.team.set(key, team);
         }
         s = finalStats(members[member], assembly.statics[member], ctx.rolls[member], team, assembly.resonanceAtkPct);
@@ -454,7 +456,7 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
     const foreign = activeCharacterBuffs(member).flatMap((b) => (b.onlyLabels && !b.onlyLabels.includes(move.label) ? [labelTag(b.label)] : []));
     const tg = tagsOf(foreign.length ? action.activeTags.filter((t) => !foreign.includes(t)) : action.activeTags);
     const tags = tg.set;
-    const stats = statsFor(action.member, tags, action.tagAges, tg);
+    const stats = statsFor(action.member, tags, action.tagAges, tg, action.tagShare);
     const enemy: EnemyStats = {
       level: config.enemyLevel,
       res: windowRes(assembly.enemyRes, stats.resShred),
@@ -485,7 +487,7 @@ export function evaluateRotation(ctx: RotationContext, actions: readonly Rotatio
         // Reação do time: cada contribuinte vale por si (EM e crítico próprios) e o total é a soma ponderada 1 + 1/2 + 1/12 + 1/12.
         const who = [...new Set(action.contributors?.length ? action.contributors : defaultContributors(members.map((m) => m.character.element), move.label, action.member))].filter((i) => i >= 0 && i < members.length).slice(0, CONTRIBUTOR_WEIGHTS.length);
         const each = who.map((i) => {
-          const st = statsFor(i, tags, action.tagAges, tg);
+          const st = statsFor(i, tags, action.tagAges, tg, action.tagShare);
           const en: EnemyStats = { ...enemy, defIgnore: Math.min(1, (config.enemyDefIgnore ?? 0) + (st.defIgnore ?? 0)) };
           const x = reactionAction({ move, executions: 1, ownElement: members[i].character.element, stats: st, scale, characterLevel: members[i].level ?? config.characterLevel, enemy: en });
           const n = x.breakdown.total * REACTION_COEF_FACTOR;

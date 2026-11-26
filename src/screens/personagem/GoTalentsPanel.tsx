@@ -8,7 +8,7 @@ import type { ProjectView } from '../../app/ProjectContext';
 import { damageColor } from '../../design/damageFamily';
 import { elementColor } from '../../design/elements';
 import { Segmented, StarIcon } from '../../design/primitives';
-import { effectiveTalents, type MemberRef } from '../../engine';
+import { MAX_BASE_TALENT, type MemberRef } from '../../engine';
 import { useDamageView } from '../../features/character/damageView';
 import { useTalents } from '../../features/character/talents';
 import { useRotationStore } from '../../features/rotation/store';
@@ -93,7 +93,7 @@ export function GoTalentsPanel({ v, index }: { v: ProjectView; index: number }) 
   const ref: MemberRef = v.project.members[index];
   const character = v.resolved.team.members[index].character;
   const constellation = ref.constellation ?? 0;
-  const eff = effectiveTalents(ref.talents, ref.constellation, character);
+  const eff = v.resolved.team.members[index].talents;
   const { crit, setCrit } = useDamageView(v.id, ref.character);
   const [go, setGo] = useState<Go | null>(null);
   const [failed, setFailed] = useState(false);
@@ -132,7 +132,7 @@ export function GoTalentsPanel({ v, index }: { v: ProjectView; index: number }) 
   if (!tl || !result) return <p className="note" role="status">Calculando os talentos…</p>;
 
   const blocksOf = (key: string) => result.cards.find((c) => c.key === key)?.blocks ?? [];
-  const setTalent = (k: 'normal' | 'skill' | 'burst', d: number) => updateMember(index, { talents: { ...ref.talents, [k]: Math.max(1, Math.min(15, ref.talents[k] + d)) } });
+  const setTalent = (k: 'normal' | 'skill' | 'burst', d: number) => updateMember(index, { talents: { ...ref.talents, [k]: Math.max(1, Math.min(MAX_BASE_TALENT, ref.talents[k] + d)) } });
   const setCons = (n: number) => updateMember(index, { constellation: Math.max(0, Math.min(6, n)) || undefined });
   const color = elementColor(character.element);
 
@@ -172,7 +172,7 @@ export function GoTalentsPanel({ v, index }: { v: ProjectView; index: number }) 
             <header>
               <span className="ico"><Icon name={t.icon} color={color} /></span>
               <span className="who"><b>{t.name}</b><span className="dz-badge">{TALENT_TYPE[t.talent]}</span></span>
-              <Stepper label={`Nível de ${TALENT_TYPE[t.talent]}`} value={ref.talents[t.talent]} text={`Nv ${eff[t.talent]}`} onDec={() => setTalent(t.talent, -1)} onInc={() => setTalent(t.talent, 1)} decOff={ref.talents[t.talent] <= 1} incOff={ref.talents[t.talent] >= 15} />
+              <Stepper label={`Nível de ${TALENT_TYPE[t.talent]}`} value={ref.talents[t.talent]} text={`Nv ${eff[t.talent]}`} onDec={() => setTalent(t.talent, -1)} onInc={() => setTalent(t.talent, 1)} decOff={ref.talents[t.talent] <= 1} incOff={ref.talents[t.talent] >= MAX_BASE_TALENT} />
             </header>
             <OneLine title={t.name} text={t.description} />
             <div className="body"><Blocks blocks={blocksOf(t.talent === 'normal' ? 'auto' : t.talent)} linked={linked} onSet={onSet} /></div>

@@ -1,7 +1,7 @@
 /**
- * Buff que vale só para os N primeiros golpes de uma janela (`BuffWindow.maxHits`): o Rift da Skirk dá +20% de Normal por 10 golpes,
- * então não basta uma janela de tempo. Conta, em ordem de tempo, os golpes que o buff realmente afeta (de quem o recebe e do tipo que ele
- * muda, ex.: só Normais) e tira a etiqueta dos que passam do limite.
+ * Buff que vale só para os N primeiros acertos de uma janela (`BuffWindow.maxHits`): o Rift da Skirk dá +20% de Normal por 10 golpes,
+ * então não basta uma janela de tempo. Conta, em ordem de tempo, os acertos dos golpes que o buff realmente afeta (de quem o recebe e do tipo que ele
+ * muda, ex.: só Normais), tira a etiqueta dos que passam do limite e reduz a do golpe que fica no meio.
  */
 import type { RotationAction } from './rotation';
 import type { BuffWindow } from './project';
@@ -34,7 +34,7 @@ export function hitTypesOf(buffs: readonly TeamBuff[]): Set<string> | null {
   return types;
 }
 
-/** Tira a etiqueta da janela dos golpes além do limite (muda `activeTags` das ações; as listas de etiquetas são novas). */
+/** Aplica o limite às ações (muda `activeTags` e `tagShare`; listas e objetos novos). */
 export function applyHitLimits(windows: readonly BuffWindow[], actions: RotationAction[], assembly: Pick<TeamAssembly, 'buffs'>, names: readonly string[]): void {
   for (const w of windows) {
     if (!w.maxHits) continue;
@@ -44,13 +44,17 @@ export function applyHitLimits(windows: readonly BuffWindow[], actions: Rotation
     const receives = (member: number) => buffs.some((b) => b.targets === 'all' || b.targets.includes(names[member]));
     const inWindow = (t: number) => w.whole || (t >= w.start && t < w.end);
     const order = actions.map((_, i) => i).sort((x, y) => (actions[x].time ?? 0) - (actions[y].time ?? 0) || x - y);
-    let n = 0;
+    let used = 0; // acertos já gastos: um golpe de 2 acertos gasta 2
     for (const i of order) {
       const a = actions[i];
       if (!inWindow(a.time ?? 0) || !a.activeTags.includes(w.tag) || !receives(a.member)) continue;
       if (types && !types.has(a.move.hitType)) continue;
-      n++;
-      if (n > w.maxHits) a.activeTags = a.activeTags.filter((t) => t !== w.tag);
+      const hits = Math.max(1, a.move.hits) * a.executions;
+      const left = w.maxHits - used;
+      used += hits;
+      if (left <= 0) a.activeTags = a.activeTags.filter((t) => t !== w.tag);
+      // O golpe que cruza o limite leva o buff só na fração dos acertos que couberam.
+      else if (left < hits) a.tagShare = { ...a.tagShare, [w.tag]: left / hits };
     }
   }
 }

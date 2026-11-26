@@ -36,7 +36,9 @@ describe('constelações e níveis de talento', () => {
   });
 
   it('o nível nunca passa de 15 e personagem sem dado de constelação não muda', () => {
-    expect(effectiveTalents({ normal: 10, skill: 14, burst: 15 }, 5, mavuika)).toEqual({ normal: 10, skill: 15, burst: 15 });
+    // Um valor acima de 10 já inclui os bônus: a constelação não soma de novo.
+    expect(effectiveTalents({ normal: 10, skill: 14, burst: 15 }, 5, mavuika)).toEqual({ normal: 10, skill: 14, burst: 15 });
+    expect(effectiveTalents({ normal: 10, skill: 10, burst: 10 }, 5, mavuika)).toEqual({ normal: 10, skill: 13, burst: 13 });
     expect(effectiveTalents({ normal: 1, skill: 1, burst: 1 }, 6, {})).toEqual({ normal: 1, skill: 1, burst: 1 });
   });
 

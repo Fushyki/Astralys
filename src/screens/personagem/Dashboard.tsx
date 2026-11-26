@@ -9,7 +9,7 @@ import type { ProjectView } from '../../app/ProjectContext';
 import { Segmented } from '../../design/primitives';
 import { elementColor } from '../../design/elements';
 import { DamageLegend, FamilyBadge, damageColor } from '../../design/damageFamily';
-import { SUBSTATS, assembleTeam, effectiveTalents, rollValues, type MemberRef, type Substat } from '../../engine';
+import { SUBSTATS, assembleTeam, rollValues, type MemberRef, type Substat } from '../../engine';
 import {
   REACTION_LABEL,
   characterReactions,
@@ -206,7 +206,7 @@ export function Dashboard({ v, index, onGood }: { v: ProjectView; index: number;
   const ampOf = (id: string) => reactions.find((r) => r.id === id && r.value.type === 'mult')?.value.amount;
   const buffs = useMemo(() => memberBuffCards(v.project, v.resolved, v.bundle, index).filter((b) => b.active), [v.project, v.resolved, v.bundle, index]);
   const summed = useMemo(() => aggregateBuffs(buffs), [buffs]);
-  const talents = effectiveTalents(ref.talents, ref.constellation, member.character);
+  const talents = member.talents;
   const pct = (f: number) => formatPercent(f, 1);
   const ec = elementColor(character.element);
 

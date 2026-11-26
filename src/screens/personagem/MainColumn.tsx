@@ -3,7 +3,7 @@ import { useDamageView } from '../../features/character/damageView';
 import { Fragment, useMemo, useState, type ReactNode } from 'react';
 import type { ProjectView } from '../../app/ProjectContext';
 import { Chip, Panel, Segmented } from '../../design/primitives';
-import { SUBSTATS, assembleTeam, damageTable, effectiveTalents, type ReactionChoice, type Substat } from '../../engine';
+import { SUBSTATS, assembleTeam, damageTable, type ReactionChoice, type Substat } from '../../engine';
 import {
   REACTION_LABEL,
   characterReactions,
@@ -71,8 +71,8 @@ export function useDamageGroups(v: ProjectView, index: number, reaction: Reactio
   const assembly = useMemo(() => assembleTeam(v.resolved.team, { rolls: v.bundle.optimization.rolls }), [v.resolved.team, v.bundle.optimization.rolls]);
   return useMemo(() => {
     const rows = damageTable({ team: v.resolved.team, assembly, rolls: v.bundle.optimization.rolls, member: index, moves: v.data.game.moves, reaction, ampCoefficient: v.resolved.ampCoefficient });
-    return moveGroups(rows, effectiveTalents(ref.talents, ref.constellation, member.character));
-  }, [v.resolved, v.bundle, v.data.game.moves, assembly, index, reaction, ref, member.character]);
+    return moveGroups(rows, member.talents);
+  }, [v.resolved, v.bundle, v.data.game.moves, assembly, index, reaction, member.talents]);
 }
 
 export function DamageTablePanel({ v, index }: { v: ProjectView; index: number }) {

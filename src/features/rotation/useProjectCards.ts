@@ -5,7 +5,7 @@
 import { useEffect, useState } from 'react';
 import { analyzeProject, resolveProject } from '../../engine';
 import { buildCardModel, hitTypeLookup, type CardModel } from '../card/cardModel';
-import type { LoadedData } from './data';
+import { covers, teamNames, type LoadedData } from './data';
 import { loadProject } from './persistence';
 
 export type CardsMap = Record<string, CardModel | 'error'>;
@@ -24,6 +24,7 @@ export function useProjectCards(ids: string[], data: LoadedData | undefined, ver
       let value: CardModel | 'error' = 'error';
       try {
         const p = loadProject(id);
+        if (p && !covers(data, teamNames(p))) return void setTimeout(next, 0); // ainda carregando: o card fica pendente
         if (p) {
           const r = resolveProject(p, data.game, data.effects);
           const bundle = analyzeProject({ team: r.team, actions: r.actions, flatEffects: r.flatEffects, ampCoefficient: r.ampCoefficient });

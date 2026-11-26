@@ -19,7 +19,12 @@ export default defineConfig({
     // Todo chunk de dados se chama `dados-*`: é assim que o orçamento e o e2e de leveza os reconhecem.
     rollupOptions: {
       output: {
-        chunkFileNames: (chunk) => (/\/src\/(data\/(generated|app)|effects)\/.*\.json$/.test(chunk.facadeModuleId ?? '') ? 'assets/dados-[name]-[hash].js' : 'assets/[name]-[hash].js'),
+        chunkFileNames: (chunk) => {
+          // O índice dos arquivos de dados também é custo de abrir um time: entra na conta.
+          if (chunk.facadeModuleId?.endsWith('/dataFiles.ts')) return 'assets/dados-indice-[hash].js';
+          const data = /\/src\/(?:data\/(?:generated|app)|effects)\/(?:(moves|effects|talents)\/)?[^/]+\.json$/.exec(chunk.facadeModuleId ?? '');
+          return data ? `assets/dados-${data[1] ? `${data[1]}-` : ''}[name]-[hash].js` : 'assets/[name]-[hash].js';
+        },
       },
     },
   }

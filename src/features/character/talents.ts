@@ -1,4 +1,4 @@
-/** Textos dos talentos, passivas e constelações (Lunaris em português), carregados só quando a aba Talentos abre. */
+/** Textos dos talentos, passivas e constelações (Lunaris em português): um arquivo por personagem, pedido pela tela dele. */
 import { useQuery } from '@tanstack/react-query';
 import type { CharacterBuff } from '../../effects/schema';
 import { formatDecimal } from '../../ui/format';
@@ -15,10 +15,10 @@ export interface CharacterTalents {
   constellations: (TalentText & { n: number })[];
 }
 
-export function useTalents() {
+export function useTalents(characterId: string) {
   return useQuery({
-    queryKey: ['talents'],
-    queryFn: async () => (await import('../../data/generated/talents.json')).default as unknown as CharacterTalents[],
+    queryKey: ['talents', characterId],
+    queryFn: async () => (await import('../rotation/dataFiles')).appFile<CharacterTalents | null>(`talents/${characterId}`),
     staleTime: Infinity,
     gcTime: Infinity,
   });

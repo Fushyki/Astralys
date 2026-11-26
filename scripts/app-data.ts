@@ -7,7 +7,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { Plugin } from 'vite';
-import type { ArtifactSet, Character, Weapon } from '../src/data/schema';
+import type { ArtifactSet, Character, Move, Weapon } from '../src/data/schema';
+import type { CharacterEffect } from '../src/effects/schema';
+import type { CharacterTalents } from '../src/features/character/talents';
 
 const SRC = fileURLToPath(new URL('../src', import.meta.url));
 const OUT = path.join(SRC, 'data', 'app');
@@ -17,14 +19,32 @@ const read = <T>(file: string): T => JSON.parse(fs.readFileSync(path.join(SRC, f
 const slimText = ({ params: _, description, ...rest }: { params: number[]; description: string; descriptionPt?: string }) =>
   rest.descriptionPt ? rest : { ...rest, description };
 
+/** Golpes, efeitos e textos de talento, um arquivo por personagem (`moves/<id>.json`…). `characters.json` é o índice. */
+function perCharacter(characters: Character[]): [string, unknown][] {
+  const moves = read<Move[]>('data/generated/moves.json');
+  const effects = read<CharacterEffect[]>('effects/characters.json');
+  const talents = read<CharacterTalents[]>('data/generated/talents.json');
+  const known = new Set(characters.map((c) => c.name));
+  // Nome sem personagem ficaria fora de todos os arquivos, sem ninguém notar.
+  const orphan = [...moves, ...effects, ...talents].find((x) => !known.has(x.character));
+  if (orphan) throw new Error(`Dados de um personagem que não está em characters.json: ${orphan.character}`);
+  return characters.flatMap((c): [string, unknown][] => [
+    [`moves/${c.id}.json`, moves.filter((m) => m.character === c.name)],
+    [`effects/${c.id}.json`, effects.filter((e) => e.character === c.name)],
+    [`talents/${c.id}.json`, talents.find((t) => t.character === c.name) ?? null],
+  ]);
+}
+
 /** Caminho relativo a `src/data/app/` → conteúdo. */
 export function appData(): Record<string, unknown> {
+  const characters = read<Character[]>('data/generated/characters.json');
   return {
+    ...Object.fromEntries(perCharacter(characters)),
     'weapons.json': read<Weapon[]>('data/generated/weapons.json').map((w) => ({ ...w, passive: w.passive && { ...w.passive, refinements: w.passive.refinements.map(slimText) } })),
     // O bônus de 1 peça não aparece no site.
     'artifacts.json': read<ArtifactSet[]>('data/generated/artifacts.json').map((s) => ({ ...s, bonuses: Object.fromEntries(Object.entries(s.bonuses).filter(([k]) => k !== 'onePiece').map(([k, b]) => [k, slimText(b)])) })),
     // A Recarga usa `effects/particles.json`.
-    'characters.json': read<Character[]>('data/generated/characters.json').map(({ particles: _, ...c }) => c),
+    'characters.json': characters.map(({ particles: _, ...c }) => c),
   };
 }
 

@@ -4,7 +4,7 @@
  */
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { resolveProject, type AnalysisBundle, type ResolvedProject, type RotationProject } from '../../engine';
-import type { LoadedData } from './data';
+import { covers, teamNames, type LoadedData } from './data';
 import { EngineClient } from './engineClient';
 
 export type AnalysisState =
@@ -19,7 +19,8 @@ const messageOf = (e: unknown) => (e instanceof Error ? e.message : String(e));
 
 export function useAnalysis(project: RotationProject | null, data: LoadedData | undefined): AnalysisState {
   const resolution = useMemo(() => {
-    if (!project || !data) return null;
+    // Personagem recém-trocado: o resultado anterior fica na tela até os golpes dele chegarem.
+    if (!project || !data || !covers(data, teamNames(project))) return null;
     try {
       return { resolved: resolveProject(project, data.game, data.effects) };
     } catch (e) {

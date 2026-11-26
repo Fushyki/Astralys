@@ -9,7 +9,7 @@ import '../design/design.css';
 import { analyzeProject, resolveProject } from '../engine';
 import { ACCENTS, buildCardModel, hitTypeLookup, type CardModel } from '../features/card/cardModel';
 import { compareModels } from '../features/compare/compareModel';
-import { useGameData, type LoadedData } from '../features/rotation/data';
+import { covers, teamNames, useGameData, type LoadedData } from '../features/rotation/data';
 import { listProjects, loadProject } from '../features/rotation/persistence';
 import { COMPARE_METRICS, CompareCard, type CompareMetric } from './card/CompareCard';
 import { toast } from '../app/toast';
@@ -45,10 +45,12 @@ function Swatches({ label, value, onChange }: { label: string; value: string; on
 
 export default function Comparar() {
   const [params, setParams] = useSearchParams();
-  const { data } = useGameData();
   const projects = useMemo(() => listProjects(), []);
   const aId = params.get('a');
   const bId = params.get('b');
+  const chosen = useMemo(() => teamNames(...[aId, bId].map((x) => (x ? loadProject(x) : null))), [aId, bId]);
+  const { data: loaded } = useGameData(chosen);
+  const data = loaded && covers(loaded, chosen) ? loaded : undefined;
   const a = useMemo(() => (data ? modelOf(aId, data) : null), [data, aId]);
   const b = useMemo(() => (data ? modelOf(bId, data) : null), [data, bId]);
   const cmp = isModel(a) && isModel(b) ? compareModels(a, b) : null;

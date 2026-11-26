@@ -9,7 +9,7 @@ import { memberColors } from '../design/elements';
 import { StateCard } from '../design/primitives';
 import { databaseOfProject, loadGood } from '../features/good/goodStore';
 import { withInventoryPieces } from '../features/good/inventoryPieces';
-import { useGameData } from '../features/rotation/data';
+import { covers, teamNames, useGameData } from '../features/rotation/data';
 import { SAMPLE_ID, loadProject, saveProject } from '../features/rotation/persistence';
 import { useRotationStore } from '../features/rotation/store';
 import { summarize } from '../features/rotation/summary';
@@ -27,7 +27,6 @@ export default function ProjectLayout() {
   const { id = SAMPLE_ID } = useParams();
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const { data, error: dataError } = useGameData();
   const project = useRotationStore((s) => s.project);
   const dirty = useRotationStore((s) => s.dirty);
   const selectedMember = useRotationStore((s) => s.selectedMember);
@@ -58,8 +57,11 @@ export default function ProjectLayout() {
     return () => clearTimeout(t);
   }, [project, dirty, markSaved]);
 
-  const exists = useMemo(() => loadProject(id) !== null, [id]);
+  const stored = useMemo(() => loadProject(id), [id]);
+  const exists = stored !== null;
   const current = project && project.id === id ? project : null;
+  const team = teamNames(current ?? stored);
+  const { data, error: dataError } = useGameData(team);
 
   // Ctrl+Z desfaz, Ctrl+Y (ou Ctrl+Shift+Z) refaz; ignorado enquanto se digita num campo.
   useEffect(() => {
@@ -143,11 +145,13 @@ export default function ProjectLayout() {
     );
   }
 
+  const stale = ready.stale || !covers(data, team);
+
   return (
     <div className="dz">
       <AppHeader projectId={id} memberName={headerMember} projectName={current.name} onRename={(name) => useRotationStore.getState().rename(name)} favorite={!!current.meta.favorite} onToggleFavorite={() => toggleFavorite(current)} />
-      <ProjectProvider value={{ id, project: current, data, bundle: ready.bundle, resolved: ready.resolved, stale: ready.stale, inSync, summary, colors }}>
-        <div className={ready.stale ? 'dz-busy' : undefined}>
+      <ProjectProvider value={{ id, project: current, data, bundle: ready.bundle, resolved: ready.resolved, stale, inSync, summary, colors }}>
+        <div className={stale ? 'dz-busy' : undefined}>
           <Outlet />
         </div>
         <ProjectSteps id={id} member={headerMember ?? current.members[0].character} />

@@ -5,11 +5,12 @@
 import { useMemo, useState, type ReactNode } from 'react';
 import { useEffect } from 'react';
 import { useGameData } from '../features/rotation/data';
-import { hasPlanilhaProjects } from '../features/rotation/planilhaCheck';
+import { hasPlanilhaProjects, planilhaCharacters } from '../features/rotation/planilhaCheck';
 
 export function PlanilhaGate({ children }: { children: ReactNode }) {
   const need = useMemo(hasPlanilhaProjects, []);
-  const { data, error } = useGameData(need);
+  const characters = useMemo(planilhaCharacters, []);
+  const { data, error } = useGameData(characters, need);
   const [done, setDone] = useState(!need);
   useEffect(() => {
     if (done || !need) return;

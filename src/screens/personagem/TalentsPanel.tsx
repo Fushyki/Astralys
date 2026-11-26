@@ -185,7 +185,6 @@ function InfoRows({ list }: { list: CharacterInfo[] }) {
 }
 
 export function TalentsPanel({ v, index }: { v: ProjectView; index: number }) {
-  const { data: all } = useTalents();
   const setSourceEnabled = useRotationStore((s) => s.setSourceEnabled);
   const setCondition = useRotationStore((s) => s.setCondition);
   const updateMember = useRotationStore((s) => s.updateMember);
@@ -201,7 +200,7 @@ export function TalentsPanel({ v, index }: { v: ProjectView; index: number }) {
   const activeReaction = options.includes(reaction) ? reaction : 'none';
   const groups = useDamageGroups(v, index, activeReaction);
   const color = elementColor(character.element);
-  const tl: CharacterTalents | undefined = all?.find((t) => t.character === ref.character);
+  const tl: CharacterTalents | undefined = useTalents(character.id).data ?? undefined;
   const effects = v.data.effects.characters.find((c) => c.character === ref.character);
   const buffs = effects?.buffs ?? [];
   const notes = effects?.notes ?? [];

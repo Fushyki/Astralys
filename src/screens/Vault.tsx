@@ -6,7 +6,7 @@ import '../design/design.css';
 import { elementColor } from '../design/elements';
 import { CharacterAvatar } from '../design/primitives';
 import { formatInt } from '../ui/format';
-import { useGameData } from '../features/rotation/data';
+import { dataFor, teamNames, useGameData } from '../features/rotation/data';
 import { downloadProject, importJson, withoutDuplicates, type ImportResult } from '../features/rotation/importFile';
 import { projectFromLink, projectLink } from '../features/rotation/projectLink';
 import { cloneProject, deleteStoredProject, listProjects, loadProject, saveProject, sampleForApp } from '../features/rotation/persistence';
@@ -28,8 +28,8 @@ const ELEMENTS = ['Pyro', 'Hydro', 'Anemo', 'Electro', 'Dendro', 'Cryo', 'Geo'];
 
 export default function Vault() {
   const navigate = useNavigate();
-  const { data } = useGameData();
   const [items, setItems] = useState(() => listProjects());
+  const { data } = useGameData(useMemo(() => teamNames(...items.map((i) => loadProject(i.id))), [items]));
   const [filters, setFilters] = useState<VaultFilters>(NO_FILTERS);
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
   const [renaming, setRenaming] = useState<string | null>(null);
@@ -110,7 +110,7 @@ export default function Vault() {
     setShareMsg(null);
     try {
       saveAuthor(name);
-      const pubId = await publishProject(current, data, name);
+      const pubId = await publishProject(current, await dataFor(data, current), name);
       edit(id, (p) => ({ ...p, meta: { ...p.meta, shared: true } }));
       const link = `${window.location.origin}/p/${pubId}`;
       let copied = false;
@@ -172,7 +172,7 @@ export default function Vault() {
     void run(async () => {
       const project = await projectFromLink(text);
       if (!project) throw new Error('Cole um link de time do Astralys (ele tem "#time=").');
-      return withoutDuplicates(project, [], data);
+      return withoutDuplicates(project, [], data && (await dataFor(data, project)));
     });
   // Abrir um link de time (/vault#time=…) importa o time direto.
   useEffect(() => {

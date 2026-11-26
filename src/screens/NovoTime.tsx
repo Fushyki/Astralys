@@ -8,7 +8,7 @@ import '../design/design.css';
 import { CharacterAvatar } from '../design/primitives';
 import { MAX_TEAM_SIZE, type MemberRef } from '../engine';
 import { applyGoodToMembers, enkaToGood } from '../features/enka/enkaImport';
-import { useGameData } from '../features/rotation/data';
+import { covers, useGameData } from '../features/rotation/data';
 import { buildNewTeam, defaultTeamName, type RotationStart } from '../features/rotation/newTeam';
 import { saveProject } from '../features/rotation/persistence';
 import { ONLINE_ENABLED } from '../online/config';
@@ -25,7 +25,6 @@ const STEPS: { n: Step; label: string }[] = [
 
 export default function NovoTime() {
   const navigate = useNavigate();
-  const { data } = useGameData();
   const [step, setStep] = useState<Step>(1);
   const [picked, setPicked] = useState<string[]>([]);
   const [picking, setPicking] = useState<number | null>(null);
@@ -45,6 +44,9 @@ export default function NovoTime() {
   const [rotation, setRotation] = useState<RotationStart>('basic');
   const [error, setError] = useState<string | null>(null);
 
+  const { data } = useGameData(picked);
+  /** Os golpes dos escolhidos já chegaram (a rotação básica é montada com eles). */
+  const ready = !!data && covers(data, picked);
   const characters = data?.game.characters ?? [];
   const characterOf = (n: string) => characters.find((c) => c.name === n);
   const slots = useMemo(() => Array.from({ length: MAX_TEAM_SIZE }, (_, i) => picked[i] ?? null), [picked]);
@@ -89,7 +91,7 @@ export default function NovoTime() {
   };
 
   const create = () => {
-    if (!data) return;
+    if (!data || !ready) return;
     try {
       const project = buildNewTeam(
         { name, characters: picked, builds: source === 'uid' ? builds : undefined, rotation, gameVersion: data.meta.gameVersion },
@@ -220,7 +222,7 @@ export default function NovoTime() {
         <div className="nt-nav">
           {step > 1 && <button type="button" className="dz-btn" onClick={() => setStep((step - 1) as Step)}>Voltar</button>}
           {step < 3 && <button type="button" className="dz-btn gold" disabled={picked.length === 0} onClick={() => setStep((step + 1) as Step)}>Continuar</button>}
-          {step === 3 && <button type="button" className="dz-btn gold" disabled={!data} onClick={create}>Criar o time</button>}
+          {step === 3 && <button type="button" className="dz-btn gold" disabled={!ready} onClick={create}>Criar o time</button>}
           {step === 1 && picked.length === 0 && <span className="muted small">Escolha pelo menos um personagem para continuar.</span>}
         </div>
 

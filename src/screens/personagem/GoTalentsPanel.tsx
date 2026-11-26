@@ -89,10 +89,10 @@ function Blocks({ blocks, linked, onSet }: { blocks: GoBlock[]; linked: Linked; 
 }
 
 export function GoTalentsPanel({ v, index }: { v: ProjectView; index: number }) {
-  const { data: all } = useTalents();
   const updateMember = useRotationStore((s) => s.updateMember);
   const ref: MemberRef = v.project.members[index];
   const character = v.resolved.team.members[index].character;
+  const { data: tl } = useTalents(character.id);
   const constellation = ref.constellation ?? 0;
   const eff = v.resolved.team.members[index].talents;
   const { crit, setCrit } = useDamageView(v.id, ref.character);
@@ -128,7 +128,6 @@ export function GoTalentsPanel({ v, index }: { v: ProjectView; index: number }) 
     setLocal(next);
     localStorage.setItem(storageKey(v.id), JSON.stringify(next));
   };
-  const tl = all?.find((t) => t.character === ref.character);
   if (failed) return <p className="note" role="alert">Não foi possível carregar a ficha do personagem. Recarregue a página.</p>;
   if (!tl || !result) return <p className="note" role="status">Calculando os talentos…</p>;
 

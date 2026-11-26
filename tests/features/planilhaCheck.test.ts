@@ -1,7 +1,8 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { hasPlanilhaProjects as full } from '../../src/features/rotation/leavePlanilha';
 import { sampleForApp, sampleProject } from '../../src/features/rotation/persistence';
-import { hasPlanilhaProjects as light } from '../../src/features/rotation/planilhaCheck';
+import { teamNames } from '../../src/features/rotation/data';
+import { hasPlanilhaProjects as light, planilhaCharacters } from '../../src/features/rotation/planilhaCheck';
 
 /** localStorage de mentira: como no navegador, `Object.keys` devolve as chaves guardadas. */
 const store = (entries: Record<string, string>) => {
@@ -32,6 +33,11 @@ describe('hasPlanilhaProjects leve', () => {
     store(entries);
     expect(full()).toBe(expected);
     expect(light()).toBe(expected);
+  });
+
+  it('lista os personagens dos times a converter (a migração precisa dos golpes deles)', () => {
+    store({ ...saved('a', planilha), ...saved('b', normal), 'astralys:projeto:x': '{"compat":"planilha","members":[null]}' });
+    expect(planilhaCharacters().sort()).toEqual(teamNames(planilha));
   });
 
   it('sem armazenamento responde false', () => {

@@ -18,7 +18,7 @@ import './comunidade.css';
 const PAGE = 24;
 
 export default function Comunidade() {
-  const { data } = useGameData();
+  const { data } = useGameData([]);
   const [q, setQ] = useState('');
   const [personagem, setPersonagem] = useState('');
   const [versao, setVersao] = useState('');

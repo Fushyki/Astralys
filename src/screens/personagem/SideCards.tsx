@@ -74,8 +74,7 @@ const POINTS: [number, number][] = [[16, 84], [54, 40], [100, 60], [136, 14], [1
 
 export function ConstellationCard({ character, memberRef, index, compact }: { character: Character; memberRef: MemberRef; index: number; compact?: boolean }) {
   const update = useRotationStore((s) => s.updateMember);
-  const { data: all } = useTalents();
-  const tl = all?.find((t) => t.character === character.name);
+  const { data: tl } = useTalents(character.id);
   const c = memberRef.constellation ?? 0;
   const set = (n: number) => update(index, { constellation: n === c ? (n - 1 || undefined) : n });
   return (

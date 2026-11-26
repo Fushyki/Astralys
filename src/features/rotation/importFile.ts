@@ -1,6 +1,6 @@
 /** Importação de arquivos no navegador: o JSON de um projeto exportado ou de uma rotação compartilhada. */
 import { parseProject, type RotationProject } from '../../engine';
-import type { LoadedData } from './data';
+import { dataFor, type LoadedData } from './data';
 import { toast } from '../../app/toast';
 import { newProjectId, sampleForApp } from './persistence';
 import { dropDuplicateExtras } from './extraDedupe';
@@ -13,7 +13,7 @@ export interface ImportResult {
 }
 
 
-/** Tira o modo planilha de arquivos antigos e descarta os buffs extras que repetem um buff já calculado (só com os dados do jogo carregados). */
+/** Tira o modo planilha de arquivos antigos e descarta os buffs extras que repetem um buff já calculado (só com os dados do time carregados). */
 export function withoutDuplicates(project: RotationProject, warnings: string[], data?: LoadedData): ImportResult {
   if (!data) return { project, warnings };
   const left = leavePlanilha(project, data);
@@ -32,10 +32,10 @@ export async function importJson(file: File, data?: LoadedData): Promise<ImportR
   const share = parseShare(raw);
   if (share) {
     const r = projectFromShare(share, { ...sampleForApp(), gameVersion: share.gameVersion });
-    return withoutDuplicates(r.project, r.warnings, data);
+    return withoutDuplicates(r.project, r.warnings, data && (await dataFor(data, r.project)));
   }
-  const parsed = parseProject(raw);
-  return withoutDuplicates({ ...parsed, id: newProjectId() }, [], data);
+  const parsed = { ...parseProject(raw), id: newProjectId() };
+  return withoutDuplicates(parsed, [], data && (await dataFor(data, parsed)));
 }
 
 /** Baixa o projeto como arquivo .json. */

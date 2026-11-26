@@ -17,7 +17,7 @@ import { ButtonLink } from '../design/Button';
 const ELEMENTS = ['Pyro', 'Hydro', 'Anemo', 'Electro', 'Dendro', 'Cryo', 'Geo'];
 
 export default function Personagens() {
-  const { data } = useGameData();
+  const { data } = useGameData([]);
   const good = useMemo(() => loadGood(), []);
   const projects = useMemo(() => listProjects(), []);
   const [query, setQuery] = useState('');

@@ -28,7 +28,7 @@ type Tab = 'artefatos' | 'armas';
 type Who = 'todos' | 'livres' | 'equipados';
 
 export default function Inventario() {
-  const { data } = useGameData();
+  const { data } = useGameData([]);
   const [good, setGood] = useState<Good | null>(() => loadGood());
   const [activeId, setActiveId] = useState<string | null>(() => activeDatabaseId());
   const [adding, setAdding] = useState(false);

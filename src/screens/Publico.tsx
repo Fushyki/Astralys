@@ -6,7 +6,7 @@ import '../design/design.css';
 import { elementColor } from '../design/elements';
 import { CharacterAvatar, Chip, StackedBar } from '../design/primitives';
 import { analyzeProject, effectiveDuration, parseProject, resolveProject, type RotationProject } from '../engine';
-import { useGameData } from '../features/rotation/data';
+import { covers, teamNames, useGameData } from '../features/rotation/data';
 import { cloneProject, saveProject } from '../features/rotation/persistence';
 import { getPublic, type PublicProject } from '../online/api';
 import { ONLINE_ENABLED } from '../online/config';
@@ -27,8 +27,8 @@ type Loaded =
 export default function Publico() {
   const { id = '' } = useParams();
   const navigate = useNavigate();
-  const { data } = useGameData();
   const [loaded, setLoaded] = useState<Loaded>({ state: 'loading' });
+  const { data } = useGameData(teamNames(loaded.state === 'ok' ? loaded.project : null));
   const [numbers, setNumbers] = useState<Numbers | 'error' | null>(null);
 
   useEffect(() => {
@@ -50,7 +50,7 @@ export default function Publico() {
   }, [id]);
 
   useEffect(() => {
-    if (loaded.state !== 'ok' || !data) return;
+    if (loaded.state !== 'ok' || !data || !covers(data, teamNames(loaded.project))) return;
     const t = setTimeout(() => {
       try {
         const r = resolveProject(loaded.project, data.game, data.effects);

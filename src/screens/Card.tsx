@@ -6,7 +6,7 @@ import '../design/design.css';
 import { Segmented, StateCard } from '../design/primitives';
 import type { RotationProject } from '../engine';
 import { ACCENTS, DEFAULT_ACCENT, DEFAULT_BADGE, buildCardModel, hitTypeLookup } from '../features/card/cardModel';
-import { useGameData } from '../features/rotation/data';
+import { teamNames, useGameData } from '../features/rotation/data';
 import { SAMPLE_ID, loadProject, loadVaultCardFormat, saveProject, saveVaultCardFormat } from '../features/rotation/persistence';
 import { useAnalysis } from '../features/rotation/useAnalysis';
 import { toast } from '../app/toast';
@@ -19,8 +19,8 @@ const FORMATS = (Object.keys(POSTER_LABEL) as PosterFormat[]).map((f) => ({ valu
 
 export default function Card() {
   const { id = SAMPLE_ID } = useParams();
-  const { data } = useGameData();
   const [project, setProject] = useState<RotationProject | null>(() => loadProject(id));
+  const { data } = useGameData(teamNames(project));
   const [format, setFormat] = useState<PosterFormat>('portrait');
   const [vaultFormat, setVaultFormat] = useState<PosterFormat>(loadVaultCardFormat);
   const [busy, setBusy] = useState(false);

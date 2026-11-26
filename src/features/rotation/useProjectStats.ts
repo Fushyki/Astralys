@@ -4,7 +4,7 @@
  */
 import { useEffect, useState } from 'react';
 import { analyzeProject, effectiveDuration, resolveProject } from '../../engine';
-import type { LoadedData } from './data';
+import { covers, teamNames, type LoadedData } from './data';
 import { loadProject } from './persistence';
 
 export interface ProjectStats {
@@ -30,6 +30,7 @@ export function useProjectStats(ids: string[], data: LoadedData | undefined, ver
       let value: ProjectStats | 'error' = 'error';
       try {
         const p = loadProject(id);
+        if (p && !covers(data, teamNames(p))) return void setTimeout(next, 0); // ainda carregando: o card fica pendente
         if (p) {
           const r = resolveProject(p, data.game, data.effects);
           const b = analyzeProject({ team: r.team, actions: r.actions, flatEffects: r.flatEffects, ampCoefficient: r.ampCoefficient });

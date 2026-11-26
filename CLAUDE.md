@@ -114,5 +114,7 @@ Plano completo: `C:\Users\dabiv\.claude\plans\hashed-nibbling-island.md`. Strix 
 - `:has()` só como melhoria, nunca necessário para o layout.
 - `:focus-visible` numa regra própria, nunca na mesma lista de seletores do `:hover`: o Safari 15.0 a 15.3 descarta a regra inteira.
 - A rota `/` não baixa dados do jogo. Dados só entram nas rotas que os usam.
+- O site não importa `src/data/generated/` nem `src/effects/characters.json` direto: `scripts/app-data.ts` gera `src/data/app/` (fora do git; o vite e o vitest geram ao iniciar), sem os campos que o site não lê e com golpes, efeitos e talentos em um arquivo por personagem. Campo novo que o site precise e que a cópia corte: ajuste lá.
+- `useGameData(nomes)` carrega golpes e efeitos só desses personagens. Antes de montar um time com o motor, confira `covers(data, teamNames(projeto))` ou use `dataFor`.
 - Biblioteca pesada (tesseract, html-to-image, xlsx) só por `import()` dinâmico.
 - Antes de cada commit: `npm run build && npm run budget`. Se estourar, corrija; só aumente `budget.json` com o motivo escrito na Issue.

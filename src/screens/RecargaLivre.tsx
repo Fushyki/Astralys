@@ -46,7 +46,7 @@ const load = (): RotationProject | null => {
 };
 
 export default function RecargaLivre() {
-  const { data } = useGameData();
+  const { data } = useGameData([]);
   const [project, setProject] = useState<RotationProject | null>(load);
   const [saved, setSaved] = useState<SavedEnergyTeam[]>(readSavedTeams);
   const [name, setName] = useState('');

@@ -29,9 +29,7 @@ for (const file of home) { // um Set visita também o que é acrescentado durant
 
 // (b) e (c)
 const chunks = fs.readdirSync(path.join(DIST, 'assets')).filter((f) => f.endsWith('.js'));
-const dataNames = new Set(['src/data/generated', 'src/effects'].flatMap((dir) =>
-  fs.readdirSync(path.join(ROOT, dir)).filter((f) => f.endsWith('.json')).map((f) => f.slice(0, -5))));
-const dataChunks = chunks.filter((f) => dataNames.has(f.replace(/-[\w-]{8}\.js$/, '')));
+const dataChunks = chunks.filter((f) => f.startsWith('dados-')); // o nome vem do vite.config.ts
 if (dataChunks.length === 0) fail('Nenhum chunk de dados encontrado em dist/assets (os nomes mudaram?).');
 const size = (f) => gzip(path.join(DIST, 'assets', f));
 const biggest = chunks.map((f) => ({ f, bytes: size(f) })).sort((a, b) => b.bytes - a.bytes)[0];

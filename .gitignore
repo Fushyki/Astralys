@@ -25,6 +25,9 @@ yarn-error.log*
 .DS_Store
 Thumbs.db
 
+# Cópias dos dados que o site importa (geradas por scripts/app-data.ts)
+src/data/app/
+
 # Cache bruto do Lunaris (nao versionar os dumps)
 data/raw/
 

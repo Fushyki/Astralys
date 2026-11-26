@@ -19,11 +19,12 @@ export interface LoadedData {
 const asDefault = async <T,>(p: Promise<{ default: unknown }>): Promise<T> => (await p).default as T;
 
 export async function loadData(): Promise<LoadedData> {
+  const { appFile } = await import('./dataFiles');
   const [characters, moves, weapons, artifacts, meta, ec, ew, es, ef, particles, levels] = await Promise.all([
-    asDefault<Character[]>(import('../../data/generated/characters.json')),
+    appFile<Character[]>('characters'),
     asDefault<Move[]>(import('../../data/generated/moves.json')),
-    asDefault<Weapon[]>(import('../../data/generated/weapons.json')),
-    asDefault<ArtifactSet[]>(import('../../data/generated/artifacts.json')),
+    appFile<Weapon[]>('weapons'),
+    appFile<ArtifactSet[]>('artifacts'),
     asDefault<SyncMeta>(import('../../data/generated/meta.json')),
     asDefault<CharacterEffect[]>(import('../../effects/characters.json')),
     asDefault<WeaponEffect[]>(import('../../effects/weapons.json')),

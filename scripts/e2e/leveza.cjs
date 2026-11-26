@@ -21,7 +21,7 @@ fs.mkdirSync(OUT, { recursive: true });
 
 const results = [];
 const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 'OK  ' : 'FALHA'} ${name}${extra ? ' — ' + extra : ''}`); };
-const DATA_CHUNK = /\/assets\/(characters|moves|weapons|talents|artifacts|levels|sets|particles)-[\w-]{8}\.js/;
+const DATA_CHUNK = /\/assets\/dados-[^/]+\.js/;
 
 (async () => {
   if (!['chromium', 'firefox', 'webkit'].includes(ENGINE)) throw new Error(`motor desconhecido: ${ENGINE} (use chromium, firefox ou webkit)`);

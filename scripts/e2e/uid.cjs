@@ -39,7 +39,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.waitForSelector('.pc-weapon');
   check('Bennett abre com a arma do exemplo', /Absolution/.test(await page.textContent('.pc-weapon')), (await page.textContent('.pc-weapon')).trim().slice(0, 60));
 
-  await page.click('.dz-panel:has(h2:text-is("Substats (rolls)")) button:has-text("Usar o inventário GOOD")'); await settle();
+  await page.goto(`${BASE}/inventario`, { waitUntil: 'networkidle' });
   check('o painel oferece buscar pelo UID', (await page.locator('input[aria-label="UID do jogo"]').count()) === 1);
   check('o botão fica desligado até o UID ter 9 números', await page.isDisabled('button:has-text("Buscar pelo UID")'));
 

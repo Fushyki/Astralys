@@ -1,6 +1,6 @@
 /**
  * "Resumo" do personagem num painel só (estilo calculadora): equipamento em uma linha, controles de crítico e reação,
- * atributos, golpes por tipo, reações, buffs do time e os substats como estrelas.
+ * atributos, golpes por tipo, reações, buffs do time e o panorama da build (stats fora e em campo).
  */
 import { useDamageView } from '../../features/character/damageView';
 import { useMemo, useState, type ReactNode } from 'react';
@@ -9,7 +9,9 @@ import type { ProjectView } from '../../app/ProjectContext';
 import { Segmented } from '../../design/primitives';
 import { elementColor } from '../../design/elements';
 import { DamageLegend, FamilyBadge, damageColor } from '../../design/damageFamily';
-import { SUBSTATS, assembleTeam, rollValues, type MemberRef, type Substat } from '../../engine';
+import { assembleTeam, type MemberRef } from '../../engine';
+import { overviewRows, sheetStats } from '../../features/character/buildOverview';
+import { useRotationStore } from '../../features/rotation/store';
 import {
   REACTION_LABEL,
   characterReactions,
@@ -19,7 +21,6 @@ import {
 } from '../../features/character/characterModel';
 import { formatDecimal, formatHits, formatInt, formatPercent } from '../../ui/format';
 import { BuildStrip } from './BuildStrip';
-import { SubstatsPanel } from './LeftColumn';
 import { useDamageGroups } from './MainColumn';
 import type { ReactionChoice } from '../../engine';
 import { Button, ButtonLink } from '../../design/Button';
@@ -85,61 +86,39 @@ function MovePanel({ title, badge, tone, lines, crit }: { title: string; badge: 
   );
 }
 
-// ---------- substats em estrelas ----------
+// ---------- panorama da build ----------
 
-const SUB_NAME: Record<Substat, string> = {
-  CR: 'Taxa crítica', CD: 'Dano crítico', 'ATK%': 'ATK%', EM: 'Proficiência Elemental', ER: 'Recarga', ATK: 'ATK fixo', 'HP%': 'HP%', HP: 'HP fixo', 'DEF%': 'DEF%', DEF: 'DEF fixo',
-};
-const PCT = new Set<Substat>(['CR', 'CD', 'ATK%', 'ER', 'HP%', 'DEF%']);
-const LEFT: Substat[] = ['CR', 'EM', 'ATK%', 'HP%', 'DEF%'];
-const RIGHT: Substat[] = ['CD', 'ER', 'ATK', 'HP', 'DEF'];
-
-function StarRow({ s, rolls, min, perRoll }: { s: Substat; rolls: number; min: number; perRoll: number }) {
-  const total = Math.max(14, Math.ceil(rolls), min);
-  const value = rolls * perRoll;
-  const extra = rolls - min;
-  const text = extra <= 0.0001 ? 'mínimo' : PCT.has(s) ? `+${formatDecimal(value * 100, 1)}%` : `+${formatInt(value)}`;
-  return (
-    <div className="sr">
-      <span className="k">{SUB_NAME[s]}</span>
-      <span className="stars" role="img" aria-label={`${formatDecimal(rolls, 1)} rolls, ${min} mínimos`}>
-        {Array.from({ length: total }, (_, i) => (
-          <i key={i} data-k={i < min ? 'min' : i < rolls - 0.0001 ? 'on' : i < rolls ? 'half' : 'off'}>✦</i>
-        ))}
-      </span>
-      <b className="num" data-min={extra <= 0.0001}>{text}</b>
-    </div>
-  );
-}
-
-function SubstatStars({ v, index, bases, onGood }: { v: ProjectView; index: number; bases: { atk: number; hp: number; def: number }; onGood: () => void }) {
+function BuildOverview({ v, index, element }: { v: ProjectView; index: number; element: string }) {
+  const useAuto = useRotationStore((s) => s.useAutoRolls);
   const ref = v.project.members[index];
+  const member = v.resolved.team.members[index];
   const rolls = v.bundle.optimization.rolls[index];
-  const [edit, setEdit] = useState(false);
-  if (!rolls || ref.pieces) {
-    // Peças reais: soma exata em chips (o painel antigo já faz isso).
-    return <SubstatsPanel memberRef={ref} index={index} bundle={v.bundle} onGood={onGood} bases={bases} />;
-  }
-  const min = v.project.config.minRollsPerSubstat;
-  const perRoll = rollValues(ref.artifacts);
-  const used = Math.round(SUBSTATS.reduce((a, k) => a + rolls[k], 0) * 100) / 100;
-  const manual = !!ref.manualRolls;
-  const row = (s: Substat) => <StarRow key={s} s={s} rolls={rolls[s]} min={min} perRoll={perRoll[s]} />;
+  const assembly = useMemo(() => assembleTeam(v.resolved.team), [v.resolved.team]);
+  const field = v.bundle.memberStats[index];
+  if (!rolls || !field || !assembly.sources[index]) return <Panel title="Panorama da build"><p className="muted small">Calculando…</p></Panel>;
+  const rows = overviewRows(sheetStats(member, assembly, index, rolls), field, element);
+  const badge = ref.pieces ? `${ref.pieces.length}/5 peças` : ref.manualRolls ? 'Substats à mão' : 'Substats otimizados';
+  const warnings = v.bundle.rollWarnings.filter((w) => w.member === index);
   return (
-    <section className="db-panel db-subs">
-      <header>
-        <span className="spark" aria-hidden="true">✦</span>
-        <h3>Substats · {used} rolls</h3>
-        <span className="badge num" data-tone="gold">{manual ? 'À MÃO' : 'OTIMIZADO'}</span>
-        <span className="legend">cada estrela = 1 roll · dourada = escolhida {manual ? 'por você' : 'pelo otimizador'}, apagada = mínimo obrigatório</span>
-        <Button variant="ghost" size="sm" aria-expanded={edit} onClick={() => setEdit(!edit)}>{edit ? 'Fechar edição' : 'Editar substats'}</Button>
-      </header>
-      <div className="cols">
-        <div>{LEFT.map(row)}</div>
-        <div>{RIGHT.map(row)}</div>
-      </div>
-      {edit && <div className="edit"><SubstatsPanel memberRef={ref} index={index} bundle={v.bundle} onGood={onGood} bases={bases} /></div>}
-    </section>
+    <Panel title="Panorama da build" badge={badge} className="db-over">
+      <table>
+        <thead>
+          <tr><th scope="col">Status</th><th scope="col" title="Personagem sem buffs, como na tela dele no jogo: sem passivas, set de 4 peças nem time">Fora de campo</th><th scope="col" title="Com todos os buffs ativos (arma, set, passivas e time)">Em campo</th></tr>
+        </thead>
+        <tbody>
+          {rows.map((r) => (
+            <tr key={r.key} data-stat={r.key}>
+              <th scope="row">{r.label}</th>
+              <td className="num">{r.out}</td>
+              <td className="num" data-up={r.changed || undefined}>{r.in}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p className="muted small">Fora de campo: sem buffs. Em campo: com todos os buffs ativos. Para editar os substats, use a aba Otimizar (alvo Manual).</p>
+      {!ref.pieces && ref.manualRolls && <Button variant="secondary" size="sm" onClick={() => useAuto(index)}>Usar substats otimizados</Button>}
+      {warnings.map((w) => <p className="dz-error" role="alert" key={w.message}>{w.message}</p>)}
+    </Panel>
   );
 }
 
@@ -180,7 +159,7 @@ export function aggregateBuffs(cards: { name: string; chips: string[]; needsConf
 
 // ---------- o painel ----------
 
-export function Dashboard({ v, index, onGood }: { v: ProjectView; index: number; onGood: () => void }) {
+export function Dashboard({ v, index }: { v: ProjectView; index: number }) {
   const ref: MemberRef = v.project.members[index];
   const member = v.resolved.team.members[index];
   const character = v.data.game.characters.find((c) => c.name === ref.character)!;
@@ -240,8 +219,7 @@ export function Dashboard({ v, index, onGood }: { v: ProjectView; index: number;
   return (
     <div className="db">
       <BuildStrip data={v.data} index={index} member={ref} projectId={v.id} compact editOpen={editBuild} onEditClose={() => setEditBuild(false)} />
-
-      <SubstatStars v={v} index={index} bases={{ atk: basePieces.atk, hp: basePieces.hp, def: basePieces.def }} onGood={onGood} />
+      <BuildOverview v={v} index={index} element={character.element} />
 
       <div className="db-toolbar">
         <Segmented label="Crítico" value={crit} options={CRIT_OPTIONS} onChange={setCrit} />

@@ -317,27 +317,17 @@
 .gr-more[open] { padding-bottom: 12px; }
 .gr-foot { margin-top: 8px; display: flex; justify-content: flex-end; }
 
-/* substats em estrelas */
-.db-subs { overflow: hidden; }
-.db-subs > header { flex-wrap: wrap; gap: 8px 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
-.db-subs .legend { margin-left: auto; font-size: 12px; color: var(--muted); }
-.db-subs .badge { margin-left: 0; }
-.db-subs .cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 40px; padding: 8px 16px 12px; }
-@media (max-width: 1100px) { .db-subs .cols { grid-template-columns: minmax(0, 1fr); } }
-.sr { display: grid; grid-template-columns: 150px minmax(0, 1fr) 76px; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--divider); font-size: 14px; }
-.sr .k { color: var(--text-2); }
-.sr .stars { display: flex; gap: 2px; flex-wrap: nowrap; overflow: hidden; }
-.sr .stars i { font-style: normal; font-size: 13px; line-height: 1; }
-.sr .stars i[data-k="min"] { color: #4b5fb0; }
-.sr .stars i[data-k="on"] { color: var(--gold); text-shadow: 0 0 6px rgba(233, 196, 106, .55); }
-@supports (color: color-mix(in srgb, red, blue)) { .sr .stars i[data-k="on"] { text-shadow: 0 0 6px color-mix(in srgb, var(--gold) 55%, transparent); } }
-.sr .stars i[data-k="half"] { color: rgb(141, 124, 90); }
-@supports (color: color-mix(in srgb, red, blue)) { .sr .stars i[data-k="half"] { color: color-mix(in srgb, var(--gold) 55%, #1d2547); } }
-.sr .stars i[data-k="off"] { color: #1f2850; }
-.sr b { text-align: right; font-size: 15px; }
-.sr b[data-min="true"] { color: var(--muted); font-weight: 500; font-size: 13px; }
-.db-subs .edit { padding: 0 16px 16px; }
-@media (max-width: 520px) { .sr { grid-template-columns: 1fr auto; } .sr .stars { grid-column: 1 / -1; order: 3; } }
+/* panorama da build */
+.db-over table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.db-over th, .db-over td { padding: 7px 14px; text-align: right; }
+.db-over th:first-child { text-align: left; }
+.db-over thead th { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.db-over tbody th { color: var(--text-2); font-weight: 400; }
+.db-over tbody tr:nth-child(odd) { background: rgba(255, 255, 255, .025); }
+.db-over td { font-weight: 700; font-size: 15px; white-space: nowrap; }
+.db-over td[data-up] { color: var(--gold-hi); }
+.db-over > p { padding-top: 10px; }
+@media (max-width: 520px) { .db-over th, .db-over td { padding: 7px 8px; } }
 
 /* Aba Otimizar: coluna lateral ao lado dos filtros; a barra de foco e os builds ocupam a largura toda */
 .pc-page.opt .pc-main, .pc-page.opt .ot { display: contents; }

@@ -50,7 +50,6 @@ export default function Personagem() {
   const character = v.data.game.characters.find((c) => c.name === name)!;
   const share = v.summary.members[index]?.fraction ?? 0;
   /** "Usar o inventário GOOD": o inventário agora vive na tela Inventário. */
-  const goToGood = () => navigate('/inventario');
 
   const eligible = v.data.effects.characters.find((c) => c.character === character.name)?.factions ?? [];
 
@@ -103,7 +102,7 @@ export default function Personagem() {
         )}
 
         <div className="pc-main">
-          {view === 'resumo' && <Dashboard v={v} index={index} onGood={goToGood} />}
+          {view === 'resumo' && <Dashboard v={v} index={index} />}
           {view === 'talentos' && (GO_TALENT_CHARACTERS.includes(v.project.members[index].character) ? <GoTalentsPanel key={`${v.id}-${index}`} v={v} index={index} /> : <TalentsPanel v={v} index={index} />)}
           {view === 'otimizar' && <OtimizadorPanel index={index} />}
           {view === 'avancado' && (

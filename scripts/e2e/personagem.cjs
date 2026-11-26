@@ -28,7 +28,6 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
   const field = (label) => page.locator(`label.dz-field:has(span:text-is("${label}"))`);
   const firstAvg = async () => page.locator('.pc-dmg tr:has-text("Dano do supremo")').first().locator('td.avg').textContent();
   const eff = () => page.textContent('[data-testid="effective-talents"]');
-  const openSubs = async () => { if (await page.locator('.db-subs button:has-text("Editar substats")').count()) { await page.click('.db-subs button:has-text("Editar substats")'); await page.waitForTimeout(300); } };
   const openMore = async () => { if (!(await page.locator('.gr-more[open]').count())) { await page.click('.gr-more summary'); await page.waitForTimeout(200); } };
 
   await page.goto(`${BASE}/projeto/exemplo/personagem/Mavuika`, { waitUntil: 'networkidle' });
@@ -71,7 +70,7 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
   await page.click('.pc-views button:has-text("Resumo e build")');
   check('abre no Resumo, com o painel de colunas', (await page.getAttribute('.pc-views button:has-text("Resumo e build")', 'aria-selected')) === 'true' && (await page.locator('.db-cols').count()) === 1);
   check('o Resumo não tem o bloco "Maiores golpes" nem a tabela inteira', (await page.locator('.dz-panel:has(h2:text-is("Maiores golpes"))').count()) === 0 && (await page.locator('.dz-panel:has(h2:text-is("Tabela de dano"))').count()) === 0);
-  check('Resumo e build na mesma página: faixa de build, substats e atributos', (await page.locator('.pcard.weapon').count()) === 1 && (await page.locator('.gt-piece').count()) === 5 && (await page.locator('.db-subs').count()) === 1 && (await page.locator('.db-panel:has(h3:text-is("Atributos"))').count()) === 1);
+  check('Resumo e build na mesma página: faixa de build, panorama e atributos', (await page.locator('.pcard.weapon').count()) === 1 && (await page.locator('.gt-piece').count()) === 5 && (await page.locator('.db-over').count()) === 1 && (await page.locator('.db-panel:has(h3:text-is("Atributos"))').count()) === 1);
   check('as ferramentas ficam só no Avançado', (await page.locator('.dz-panel:has(h2:text-is("Ferramentas"))').count()) === 0);
 
   // Abas e cabeçalho
@@ -134,19 +133,15 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
   await page.keyboard.press('Control+z'); await settle();
   await page.keyboard.press('Control+z'); await settle();
 
-  // Rolls manuais (aba Build)
+  // Panorama da build: fora de campo e em campo
   await view('Build');
-  await openSubs();
-  check('o painel de substats mostra as estrelas (otimizado)', (await page.locator('.db-subs .sr').count()) === 10 && /OTIMIZADO/.test(await page.textContent('.db-subs .badge')));
-  check('modo Otimizar mostra o orçamento de rolls (40 de 40)', /40 de 40 rolls · 20 fixos em crítico/.test(await page.locator('.dz-panel:has(h2:text-is("Substats (rolls)"))').textContent()));
-  await page.click('.dz-seg[aria-label="Modo dos substats"] button:has-text("À mão")'); await settle();
-  check('o modo à mão mostra os valores brutos (em %) por padrão', (await field('Taxa crít. (valor total em %)').count()) === 1);
-  await field('Taxa crít. (valor total em %)').locator('input').fill('33'); await field('Taxa crít. (valor total em %)').locator('input').blur(); await settle();
-  check('33% de Taxa Crítica vira 10 rolls (33 ÷ 3,3)', (await page.click('.dz-seg[aria-label="Unidade dos substats"] button:has-text("Rolls")'), await field('Taxa crít. (máx. 30)').locator('input').inputValue()) === '10');
-  const crit = await page.locator('.db-panel:has(h3:text-is("Atributos"))').textContent();
-  check('editar rolls à mão muda a Taxa crítica', !/95,6%/.test(crit), crit.match(/Taxa crítica\s*[\d,]+%/)?.[0]);
-  await page.click('.dz-seg[aria-label="Modo dos substats"] button:has-text("Otimizar")'); await settle();
-  check('voltar ao Otimizar restaura os 95,6%', /95,6%/.test(await page.locator('.db-panel:has(h3:text-is("Atributos"))').textContent()));
+  const over = async (k) => page.locator(`.db-over tr[data-stat="${k}"] td`).allTextContents();
+  const valor = (t) => Number(t.replace(/\./g, '').replace(',', '.').replace('%', ''));
+  const [atkOut, atkIn] = await over('atk');
+  check('o panorama mostra os 9 status com as colunas Fora de campo e Em campo', (await page.locator('.db-over tbody tr').count()) === 9 && /Fora de campo/.test(await page.textContent('.db-over thead')) && /Em campo/.test(await page.textContent('.db-over thead')));
+  const attrAtk = (await page.locator('.db-panel:has(h3:text-is("Atributos")) li:has-text("ATK") b').first().textContent()).trim();
+  check('em campo o ATK é o dos atributos com buffs; fora de campo é menor', atkIn === attrAtk && valor(atkOut) < valor(atkIn), `${atkOut} → ${atkIn} (atributos ${attrAtk})`);
+  check('o Resumo não edita mais substats', (await page.locator('.db-subs, [aria-label="Modo dos substats"]').count()) === 0 && (await page.locator('.db-over input').count()) === 0);
 
   // Editor de build
   await page.click('.db-toolbar button:has-text("Editar build")'); await page.waitForSelector('.dz-dialog');
@@ -241,11 +236,6 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
   const below = await page.evaluate(() => { const r = document.querySelector('.dz-panel:has(h2)') && [...document.querySelectorAll('.dz-panel')].find((p) => p.querySelector('h2')?.textContent === 'Reações deste time'); const v = [...document.querySelectorAll('.dz-panel')].find((p) => p.querySelector('h2')?.textContent === 'Valor de +1 roll'); return r && v && v.getBoundingClientRect().top >= r.getBoundingClientRect().bottom - 1 && Math.abs(v.getBoundingClientRect().left - r.getBoundingClientRect().left) < 2; });
   check('o Valor de +1 roll fica abaixo de Reações deste time', !!below);
 
-  // Inventário GOOD (pela ligação do painel de substats): leva à tela Inventário
-  await view('Build');
-  await openSubs();
-  await page.click('.dz-panel:has(h2:text-is("Substats (rolls)")) button:has-text("Usar o inventário GOOD")'); await page.waitForTimeout(800);
-  check('o link do Build leva à tela Inventário', /\/inventario/.test(page.url()));
   await page.goto(`${BASE}/projeto/exemplo/personagem/Mavuika`, { waitUntil: 'networkidle' });
 
   // Navegação entre personagens e id inexistente

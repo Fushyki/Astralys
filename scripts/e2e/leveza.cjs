@@ -47,6 +47,29 @@ const DATA_CHUNK = /\/assets\/dados-[^/]+\.js/;
   check('home não baixa dados do jogo', data.length === 0, data.join(', '));
   await shot('home');
 
+  // Modo leve: ligado, nada se mexe na home; desligado, o céu segue animado (prova que a conta enxerga as animações).
+  const home = async (modo, nome) => {
+    const context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, reducedMotion: 'no-preference' });
+    await context.addInitScript((m) => localStorage.setItem('astralys:config:modoleve', m), modo);
+    const p = await context.newPage();
+    p.on('pageerror', (e) => errors.push(e.message.slice(0, 200)));
+    await p.goto(BASE + '/', { waitUntil: 'networkidle' });
+    await p.waitForSelector('.in-sky i');
+    await p.waitForTimeout(1000);
+    const state = await p.evaluate(() => ({
+      leve: document.documentElement.dataset.leve === 'true',
+      animacoes: document.getAnimations().length,
+      estrelas: [...document.querySelectorAll('.in-sky i')].filter((i) => getComputedStyle(i).display !== 'none').length,
+    }));
+    await p.screenshot({ path: path.join(OUT, `leveza-${ENGINE}-home-${nome}.png`), fullPage: true });
+    await context.close();
+    return state;
+  };
+  const com = await home('on', 'com-modo-leve');
+  check('modo leve: nenhuma animação rodando na /', com.leve && com.animacoes === 0, JSON.stringify(com));
+  const sem = await home('off', 'sem-modo-leve');
+  check('sem o modo leve o céu segue animado e com todas as estrelas', !sem.leve && sem.animacoes > 0 && com.estrelas > 0 && com.estrelas < sem.estrelas / 2, JSON.stringify(sem));
+
   await open('/vault', '.vt-card .pc');
   await shot('vault');
   await page.click('.vt-card [aria-haspopup="menu"]');

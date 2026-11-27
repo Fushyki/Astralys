@@ -118,4 +118,5 @@ Plano completo: `C:\Users\dabiv\.claude\plans\hashed-nibbling-island.md`. Strix 
 - `useGameData(nomes)` carrega golpes e efeitos só desses personagens. Antes de montar um time com o motor, confira `covers(data, teamNames(projeto))` ou use `dataFor`.
 - Dados ao abrir um time: limite `dadosDoExemplo` em `budget.json`, conferido por `scripts/e2e/leveza.cjs` (faz parte do `npm run e2e`).
 - Biblioteca pesada (tesseract, html-to-image, xlsx) só por `import()` dinâmico.
+- Modo leve (`data-leve` no `<html>`, `app/settings.ts`): animações, transições e `backdrop-filter` já saem por uma regra geral em `design.css`. Efeito novo que dependa deles precisa continuar legível parado e sem desfoque; nunca esconda informação nesse modo.
 - Antes de cada commit: `npm run build && npm run budget`. Se estourar, corrija; só aumente `budget.json` com o motivo escrito na Issue.

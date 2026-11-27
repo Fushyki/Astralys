@@ -22,6 +22,7 @@
 /* Só o card: favorito e opções ficam sobre o canto, e o menu reúne as ações. */
 .vt-over { position: absolute; top: 10px; right: 10px; display: flex; align-items: center; gap: 8px; z-index: 2; }
 .vt-over .dz-iconbtn { background: rgba(10, 14, 28, .72); backdrop-filter: blur(4px); }
+[data-leve='true'] .vt-over .dz-iconbtn { background: var(--bg); }
 .vt-tag { font-size: 12px; padding: 4px 10px; border-radius: 999px; color: #7dd3a8; background: rgba(10, 14, 28, .72); border: 1px solid #25563f; }
 .vt-fav[aria-pressed="true"] { color: var(--gold); }
 .vt-card .warn { color: var(--warn); }

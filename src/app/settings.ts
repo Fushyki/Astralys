@@ -4,6 +4,7 @@ import { adminToken, setAdminToken } from '../features/community/published';
 import { verifyAdmin } from '../online/api';
 import { ONLINE_ENABLED } from '../online/config';
 import { toast } from './toast';
+import { modoLeveLigado, type ModoLeve } from './modoLeve';
 import { loadVaultCardFormat, saveVaultCardFormat } from '../features/rotation/persistence';
 import type { PosterFormat } from '../screens/card/PosterCard';
 
@@ -30,7 +31,25 @@ const loadShow = (k: CardShow): boolean => {
   }
 };
 
+const LEVE_KEY = 'astralys:config:modoleve';
+const loadLeve = (): ModoLeve => {
+  try {
+    const v = localStorage.getItem(LEVE_KEY);
+    return v === 'on' || v === 'off' ? v : 'auto';
+  } catch {
+    return 'auto';
+  }
+};
+/** O CSS desliga os efeitos visuais sob `[data-leve='true']`. */
+const applyLeve = (v: ModoLeve) => {
+  const menosMovimento = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+  if (modoLeveLigado(v, navigator, menosMovimento)) document.documentElement.dataset.leve = 'true';
+  else delete document.documentElement.dataset.leve;
+};
+
 interface Settings {
+  modoLeve: ModoLeve;
+  setModoLeve: (v: ModoLeve) => void;
   cardWeapon: boolean;
   cardGear: boolean;
   setCardShow: (k: CardShow, v: boolean) => void;
@@ -50,6 +69,12 @@ interface Settings {
 let adminTimer: ReturnType<typeof setTimeout> | undefined;
 
 export const useSettings = create<Settings>((set) => ({
+  modoLeve: loadLeve(),
+  setModoLeve: (v) => {
+    applyLeve(v);
+    try { localStorage.setItem(LEVE_KEY, v); } catch { /* sem armazenamento: vale até recarregar */ }
+    set({ modoLeve: v });
+  },
   cardBg: loadBg(),
   cardWeapon: loadShow('cardWeapon'),
   cardGear: loadShow('cardGear'),
@@ -87,6 +112,7 @@ export const useSettings = create<Settings>((set) => ({
 }));
 
 applyBg(useSettings.getState().cardBg);
+applyLeve(useSettings.getState().modoLeve);
 
 // código guardado de uma visita anterior: confirma de novo no servidor
 if (useSettings.getState().adminCode && ONLINE_ENABLED) {

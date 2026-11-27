@@ -307,6 +307,8 @@ button.name { background: none; border: 1px solid transparent; border-radius: va
 @supports (color: color-mix(in srgb, red, blue)) { .dz-toast.error { border-color: color-mix(in srgb, #f08a8a 60%, var(--border)); } }
 .dz-toast.error i { background: #f08a8a; }
 @keyframes dz-toast-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+/* Modo leve (settings.ts): nada se move nem desfoca. Só efeitos saem; quem trocar o desfoque por fundo sólido faz isso na própria tela. */
+[data-leve='true'] *, [data-leve='true'] *::before, [data-leve='true'] *::after { animation: none !important; transition: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
 @media (prefers-reduced-motion: reduce) { .dz-toast { animation: none; } }
 @media (max-width: 560px) { .dz-toasts { right: 16px; left: 16px; align-items: stretch; } .dz-toast { max-width: none; } }
 

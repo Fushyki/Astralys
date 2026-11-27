@@ -11,6 +11,7 @@ import { Menu } from '../design/Menu';
 import { Segmented } from '../design/primitives';
 import { POSTER_LABEL, type PosterFormat } from '../screens/card/PosterCard';
 import { useSettings, type CardBg } from './settings';
+import type { ModoLeve } from './modoLeve';
 import { TeamName } from './TeamName';
 
 /** Marca do Astralys: um A de traço simples com uma estrela de quatro pontas no topo. Ver `public/favicon.svg`. */
@@ -48,7 +49,7 @@ function GearIcon() {
 
 /** Engrenagem no cabeçalho: reúne as escolhas de visual para não ocupar espaço nas telas. */
 function SettingsMenu() {
-  const { cardBg, setCardBg, cardFormat, setCardFormat, cardWeapon, cardGear, setCardShow, adminCode, setAdminCode } = useSettings();
+  const { modoLeve, setModoLeve, cardBg, setCardBg, cardFormat, setCardFormat, cardWeapon, cardGear, setCardShow, adminCode, setAdminCode } = useSettings();
   const adminOk = useSettings((s) => s.adminOk);
   return (
     <>
@@ -69,6 +70,10 @@ function SettingsMenu() {
             <span>Retratos dos cards</span>
             <label className="dz-check"><input type="checkbox" checked={cardWeapon} onChange={(e) => setCardShow('cardWeapon', e.target.checked)} />Mostrar armas</label>
             <label className="dz-check"><input type="checkbox" checked={cardGear} onChange={(e) => setCardShow('cardGear', e.target.checked)} />Mostrar artefatos</label>
+          </div>
+          <div className="dz-settings-group">
+            <span>Modo leve</span>
+            <Segmented<ModoLeve> label="Modo leve" value={modoLeve} onChange={setModoLeve} options={[{ value: 'auto', label: 'Automático' }, { value: 'on', label: 'Ligado' }, { value: 'off', label: 'Desligado' }]} />
           </div>
           <div className="dz-settings-group">
             <label htmlFor="cfg-codigo">Código</label>

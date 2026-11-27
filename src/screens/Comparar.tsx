@@ -25,7 +25,7 @@ function modelOf(id: string | null, data: LoadedData): CardModel | { error: stri
   try {
     const r = resolveProject(p, data.game, data.effects);
     const b = analyzeProject({ team: r.team, actions: r.actions, flatEffects: r.flatEffects, ampCoefficient: r.ampCoefficient });
-    return buildCardModel(p, b, data.game.characters, hitTypeLookup(r), data.game.artifacts);
+    return buildCardModel(p, b, data.game.characters, hitTypeLookup(r), data.game.artifacts, data.game.weapons);
   } catch (e) {
     return { error: e instanceof Error ? e.message : String(e) };
   }
@@ -63,7 +63,6 @@ export default function Comparar() {
   const accentA = pickA ?? (isModel(a) ? a.members[0]?.color : undefined) ?? ACCENTS[0].color;
   const accentB = pickB ?? (isModel(b) ? b.members[0]?.color : undefined) ?? ACCENTS[3].color;
   const [metrics, setMetrics] = useState<CompareMetric[]>(['dps', 'dpr', 'duration', 'er']);
-  const [showGear, setShowGear] = useState(false);
   const [showBars, setShowBars] = useState(true);
   const [note, setNote] = useState('');
   const [busy, setBusy] = useState(false);
@@ -173,7 +172,6 @@ export default function Comparar() {
             </div>
             <div className="cp-row">
               <label><input type="checkbox" checked={showBars} onChange={(e) => setShowBars(e.target.checked)} />Dano por personagem</label>
-              <label><input type="checkbox" checked={showGear} onChange={(e) => setShowGear(e.target.checked)} />Artefatos nos retratos</label>
               <label className="dz-field cp-note">
                 <span>Legenda (canto do card)</span>
                 <input value={note} maxLength={50} placeholder="Ex.: Abismo 12 · por Davi" onChange={(e) => setNote(e.target.value)} />
@@ -191,7 +189,7 @@ export default function Comparar() {
             {cmp && isModel(a) && isModel(b) ? (
               <div className="cp-stage">
                 <ScaledPoster format="wide" maxHeight={cardW ? Math.round((cardW * 9) / 16) : undefined}>
-                  <CompareCard a={a} b={b} cmp={cmp} opts={{ titleA: titleA.trim() || a.title, titleB: titleB.trim() || b.title, accentA, accentB, metrics, showGear, showBars, note: note.trim() }} />
+                  <CompareCard a={a} b={b} cmp={cmp} opts={{ titleA: titleA.trim() || a.title, titleB: titleB.trim() || b.title, accentA, accentB, metrics, showBars, note: note.trim() }} />
                 </ScaledPoster>
               </div>
             ) : (

@@ -5,7 +5,7 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import type { CardModel } from '../../features/card/cardModel';
 import { compact, formatDecimal, formatPercent } from '../../ui/format';
-import { Donut, Face, GearLine, Strip, css, thousands } from './cardParts';
+import { Donut, Face, GearLine, Strip, WeaponLine, css, thousands } from './cardParts';
 import { RotationLanes, starPath } from './RotationLanes';
 import { TallCard } from './TallCard';
 import './card.css';
@@ -50,7 +50,7 @@ function WideCard({ model }: { model: CardModel }) {
               <Strip name={m.name} icon={m.icon} color={m.color} />
               <div className="pw-cap">
                 <span className="n">{m.name}</span>
-                <span className="w">{m.weapon}</span>
+                <WeaponLine member={m} />
                 <GearLine gear={m.gear} />
                 <span className="s num">{formatPercent(m.share, 0)} do dano</span>
               </div>
@@ -154,7 +154,7 @@ function PortraitCard({ model, lite = false }: { model: CardModel; lite?: boolea
             <span className="n">{m.name}</span>
             {!lite && (
               <>
-                <span className="w">{m.weapon}</span>
+                <WeaponLine member={m} />
                 <GearLine gear={m.gear} />
                 <span className="sh num" style={css({ '--c': m.color })}>{formatPercent(m.share, m.share < 0.1 ? 1 : 0)}</span>
               </>

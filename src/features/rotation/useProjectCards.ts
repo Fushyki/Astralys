@@ -28,7 +28,7 @@ export function useProjectCards(ids: string[], data: LoadedData | undefined, ver
         if (p) {
           const r = resolveProject(p, data.game, data.effects);
           const bundle = analyzeProject({ team: r.team, actions: r.actions, flatEffects: r.flatEffects, ampCoefficient: r.ampCoefficient });
-          value = buildCardModel(p, bundle, data.game.characters, hitTypeLookup(r), data.game.artifacts);
+          value = buildCardModel(p, bundle, data.game.characters, hitTypeLookup(r), data.game.artifacts, data.game.weapons);
         }
       } catch {
         value = 'error';

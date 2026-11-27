@@ -4,7 +4,7 @@
  */
 import type { CardModel } from '../../features/card/cardModel';
 import { formatDecimal, formatPercent } from '../../ui/format';
-import { GearLine, Strip, css, thousands } from './cardParts';
+import { GearLine, Strip, WeaponLine, css, thousands } from './cardParts';
 import { RotationLanes, starPath } from './RotationLanes';
 
 const W = 1080;
@@ -72,7 +72,7 @@ export function TallCard({ model }: { model: CardModel }) {
             <span className="tc-rank num">{i + 1}</span>
             <div className="tc-cap">
               <span className="n">{m.name}</span>
-              <span className="w">{m.weapon}</span>
+              <WeaponLine member={m} />
               <GearLine gear={m.gear} />
               <div className="row">
                 <span className="s num">{formatPercent(m.share, m.share < 0.1 ? 1 : 0)}</span>

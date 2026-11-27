@@ -54,6 +54,24 @@ const pngSize = (file) => { const b = fs.readFileSync(file); return { w: b.readU
     await page.screenshot({ path: path.join(OUT, `r-card-${cls}.png`), fullPage: true });
   }
 
+  // Armas e artefatos nos retratos: ligar e desligar pela engrenagem, nos 3 formatos
+  const arms = await page.locator('.pc .w').allInnerTexts();
+  check('cada personagem mostra a arma com imagem e refinamento', arms.length === 4 && arms.some((a) => /R1\s*A Thousand Blazing Suns/.test(a.replace(/\n/g, ' '))) && (await page.locator('.pc .w img').count()) === 4, arms.join(' | ').replace(/\n/g, ' '));
+  await page.click('button[aria-label="Configurações"]');
+  await page.uncheck('label:has-text("Mostrar armas") input');
+  await page.uncheck('label:has-text("Mostrar artefatos") input');
+  for (const label of ['16:9', '9:16', '4:5']) {
+    await page.click(`.cd-form .dz-seg button:has-text("${label}")`); await settle();
+    check(`${label} esconde armas e artefatos desligados`, (await page.locator('.pc .w').count()) === 0 && (await page.locator('.pc .gl').count()) === 0);
+  }
+  await page.reload({ waitUntil: 'networkidle' }); await page.waitForSelector('.pc');
+  check('a escolha sobrevive ao recarregar', (await page.locator('.pc .w').count()) === 0 && (await page.locator('.pc .gl').count()) === 0);
+  await page.click('button[aria-label="Configurações"]');
+  await page.check('label:has-text("Mostrar armas") input');
+  await page.check('label:has-text("Mostrar artefatos") input');
+  await page.keyboard.press('Escape');
+  check('ligar de novo traz as armas e os artefatos', (await page.locator('.pc .w').count()) === 4 && (await page.locator('.pc .gl').count()) === 4);
+
   // Escolher o card que a tela Times mostra
   await page.click('.dz-seg button:has-text("16:9")'); await settle();
   await page.click('button:has-text("Usar 16:9 em todos os times")'); await settle();

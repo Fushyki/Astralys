@@ -1,8 +1,9 @@
 /** Peças compartilhadas pelos cards: retrato, faixa alta, rosca de participação e formatadores. */
 import { useState, type CSSProperties } from 'react';
-import { pieceIconUrl } from '../../design/images';
+import { useSettings } from '../../app/settings';
+import { pieceIconUrl, weaponIconUrl } from '../../design/images';
 import { faceIconUrl } from '../../design/primitives';
-import type { CardSet } from '../../features/card/cardModel';
+import type { CardMember, CardSet } from '../../features/card/cardModel';
 import { formatDecimal } from '../../ui/format';
 
 export const css = (vars: Record<string, string | number>): CSSProperties => vars as CSSProperties;
@@ -58,20 +59,40 @@ export function Donut({ parts, size }: { parts: { share: number; color: string }
   );
 }
 
-/** Imagem do set (a flor dele no Lunaris); some se não carregar. */
-function SetIcon({ id }: { id: number }) {
+/** Imagem de arma ou set; some se não carregar. */
+function Icon({ src }: { src: string }) {
   const [failed, setFailed] = useState(false);
-  return failed ? null : <img src={pieceIconUrl(id, 'flower')} alt="" crossOrigin="anonymous" onError={() => setFailed(true)} />;
+  return failed ? null : <img src={src} alt="" crossOrigin="anonymous" onError={() => setFailed(true)} />;
+}
+
+/** A arma do personagem: imagem com o refinamento ("R1") e o nome. Some se desligada nas configurações. */
+export function WeaponLine({ member }: { member: CardMember }) {
+  const show = useSettings((s) => s.cardWeapon);
+  if (!show) return null;
+  const { weapon, weaponIcon, refinement } = member;
+  return (
+    <span className="w" aria-label="Arma">
+      {weaponIcon && (
+        <span className="ico">
+          <Icon key={weaponIcon} src={weaponIconUrl(weaponIcon)} />
+          <b>R{refinement}</b>
+        </span>
+      )}
+      <span className="nm">{weapon}</span>
+    </span>
+  );
 }
 
 /** Os artefatos do personagem: um item por set, com a imagem, o nome e as peças ("Obsidian Codex 4p"; "2p + 2p" quando são dois). */
 export function GearLine({ gear }: { gear: readonly CardSet[] }) {
+  const show = useSettings((s) => s.cardGear);
+  if (!show) return null;
   if (gear.length === 0) return <span className="gl none">Sem set de artefatos</span>;
   return (
     <span className="gl" aria-label="Artefatos">
       {gear.map((g) => (
         <span className="it" key={g.id}>
-          <SetIcon id={g.id} />
+          <Icon src={pieceIconUrl(g.id, 'flower')} />
           <span className="nm">{g.name}</span>
           <b>{g.count}p</b>
         </span>

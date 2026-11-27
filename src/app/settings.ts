@@ -19,7 +19,21 @@ const loadBg = (): CardBg => {
 };
 const applyBg = (v: CardBg) => { document.documentElement.dataset.cardBg = v; };
 
+/** O que os retratos dos cards mostram; ligado por padrão. */
+export type CardShow = 'cardWeapon' | 'cardGear';
+const SHOW_KEY: Record<CardShow, string> = { cardWeapon: 'astralys:config:cardweapon', cardGear: 'astralys:config:cardgear' };
+const loadShow = (k: CardShow): boolean => {
+  try {
+    return localStorage.getItem(SHOW_KEY[k]) !== 'off';
+  } catch {
+    return true;
+  }
+};
+
 interface Settings {
+  cardWeapon: boolean;
+  cardGear: boolean;
+  setCardShow: (k: CardShow, v: boolean) => void;
   /** Fundo dos cards de personagem e de recarga: com a cor do personagem ou neutro. */
   cardBg: CardBg;
   /** Formato dos cards na lista de Times. */
@@ -37,6 +51,12 @@ let adminTimer: ReturnType<typeof setTimeout> | undefined;
 
 export const useSettings = create<Settings>((set) => ({
   cardBg: loadBg(),
+  cardWeapon: loadShow('cardWeapon'),
+  cardGear: loadShow('cardGear'),
+  setCardShow: (k, v) => {
+    try { localStorage.setItem(SHOW_KEY[k], v ? 'on' : 'off'); } catch { /* sem armazenamento: vale até recarregar */ }
+    set({ [k]: v } as Pick<Settings, CardShow>);
+  },
   cardFormat: loadVaultCardFormat(),
   adminCode: adminToken(),
   adminOk: false,

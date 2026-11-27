@@ -2,7 +2,7 @@
  * Modelo do card infográfico: reduz um projeto + sua análise aos números e textos que o card mostra
  * (participação de cada personagem no dano, builds, DPS/DPR e a sequência de golpes). Função pura.
  */
-import type { ArtifactSet, Character } from '../../data/schema';
+import type { ArtifactSet, Character, Weapon } from '../../data/schema';
 import { effectiveDuration, type AnalysisBundle, type MemberRef, type ResolvedProject, type RotationProject } from '../../engine';
 import { norm } from '../good/goodImport';
 import { ELEMENT_COLORS, memberColors } from '../../design/elements';
@@ -24,6 +24,10 @@ export interface CardMember {
   share: number;
   avg: number;
   weapon: string;
+  /** Nome do arquivo da imagem da arma no Lunaris, se houver (sem arma não tem). */
+  weaponIcon?: string;
+  /** Refinamento da arma, de 1 a 5. */
+  refinement: number;
   sets: string[];
   /** Sets em uso com a contagem de peças (4 peças, ou 2 + 2); vem das peças reais do inventário quando o personagem as usa. */
   gear: CardSet[];
@@ -176,6 +180,7 @@ export function buildCardModel(
   characters: readonly Character[],
   hitTypeOf: (a: RotationProject['actions'][number]) => keyof typeof HIT_LETTER,
   artifacts: readonly ArtifactSet[] = [],
+  weapons: readonly Weapon[] = [],
 ): CardModel {
   const result = bundle.optimization.result;
   const colors = memberColors(project.members.map((m) => characters.find((x) => x.name === m.character)?.element));
@@ -190,6 +195,8 @@ export function buildCardModel(
       share: totals?.share ?? 0,
       avg: totals?.avg ?? 0,
       weapon: m.weapon,
+      weaponIcon: weapons.find((w) => norm(w.name) === norm(m.weapon))?.icon,
+      refinement: m.refinement ?? 1,
       sets: [m.primarySet, m.secondarySet].filter((s): s is string => !!s),
       gear: gearOf(m, artifacts),
       mains: [abbr(m.artifacts.sands), abbr(m.artifacts.goblet), abbr(m.artifacts.circlet)].join(' / '),

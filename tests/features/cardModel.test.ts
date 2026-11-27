@@ -25,7 +25,7 @@ const model = (mutate?: (p: ReturnType<typeof sampleProject>) => void) => {
   mutate?.(p);
   const resolved = resolveProject(p, game, effects);
   const bundle = analyzeProject({ team: resolved.team, actions: resolved.actions, flatEffects: resolved.flatEffects, ampCoefficient: resolved.ampCoefficient });
-  return buildCardModel(p, bundle, game.characters, hitTypeLookup(resolved), game.artifacts);
+  return buildCardModel(p, bundle, game.characters, hitTypeLookup(resolved), game.artifacts, game.weapons);
 };
 
 describe('modelo do card infográfico', () => {
@@ -46,6 +46,10 @@ describe('modelo do card infográfico', () => {
   it('build: arma, sets, main stats abreviados e ER final', () => {
     const mav = m.members[0];
     expect(mav.weapon).toBe('A Thousand Blazing Suns');
+    expect(mav.weaponIcon).toBe(game.weapons.find((w) => w.name === mav.weapon)!.icon);
+    expect(mav.weaponIcon).toBeTruthy();
+    expect(mav.refinement).toBe(1);
+    expect(model((p) => { p.members[0].refinement = 5; }).members[0].refinement).toBe(5);
     expect(mav.sets).toContain('Obsidian Codex');
     expect(mav.mains).toBe('EM / DMG / CD');
     expect(mav.er).toBeCloseTo(1.11, 2);

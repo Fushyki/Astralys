@@ -66,7 +66,7 @@ export default function Comunidade() {
     if (!r) return null;
     const duration = Math.max(r.duration, 0.1);
     const colors = memberColors(t.members.map((n) => characterOf(n)?.element));
-    const members = t.members.map((n, i) => ({ name: n, element: characterOf(n)?.element ?? null, icon: characterOf(n)?.icon, share: 0, avg: 0, weapon: '', sets: [], gear: [], mains: '', er: 1, critRate: 0, critDmg: 0, color: colors[i] }));
+    const members = t.members.map((n, i) => ({ name: n, element: characterOf(n)?.element ?? null, icon: characterOf(n)?.icon, share: 0, avg: 0, weapon: '', refinement: 1, sets: [], gear: [], mains: '', er: 1, critRate: 0, critDmg: 0, color: colors[i] }));
     // Times publicados antes do card não têm os golpes do card: a sequência (com o instante, quando há) ocupa o lugar.
     const hits = r.hits ?? r.sequence.map((x, i) => ({ at: x.time !== undefined ? Math.min(1, x.time / duration) : i / Math.max(1, r.sequence.length), member: x.member, weight: 0.5, burst: false, letter: '', count: Math.max(1, x.times) }));
     return {

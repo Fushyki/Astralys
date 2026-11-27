@@ -48,7 +48,7 @@ function GearIcon() {
 
 /** Engrenagem no cabeçalho: reúne as escolhas de visual para não ocupar espaço nas telas. */
 function SettingsMenu() {
-  const { cardBg, setCardBg, cardFormat, setCardFormat, adminCode, setAdminCode } = useSettings();
+  const { cardBg, setCardBg, cardFormat, setCardFormat, cardWeapon, cardGear, setCardShow, adminCode, setAdminCode } = useSettings();
   const adminOk = useSettings((s) => s.adminOk);
   return (
     <>
@@ -64,6 +64,11 @@ function SettingsMenu() {
           <div className="dz-settings-group">
             <span>Card dos times</span>
             <Segmented<PosterFormat> label="Card dos times" value={cardFormat} onChange={setCardFormat} options={(Object.keys(POSTER_LABEL) as PosterFormat[]).map((f) => ({ value: f, label: POSTER_LABEL[f] }))} />
+          </div>
+          <div className="dz-settings-group" role="group" aria-label="Retratos dos cards">
+            <span>Retratos dos cards</span>
+            <label className="dz-check"><input type="checkbox" checked={cardWeapon} onChange={(e) => setCardShow('cardWeapon', e.target.checked)} />Mostrar armas</label>
+            <label className="dz-check"><input type="checkbox" checked={cardGear} onChange={(e) => setCardShow('cardGear', e.target.checked)} />Mostrar artefatos</label>
           </div>
           <div className="dz-settings-group">
             <label htmlFor="cfg-codigo">Código</label>

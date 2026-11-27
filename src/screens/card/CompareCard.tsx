@@ -5,7 +5,7 @@
 import type { CardMember, CardModel } from '../../features/card/cardModel';
 import type { Comparison } from '../../features/compare/compareModel';
 import { formatDecimal, formatPercent } from '../../ui/format';
-import { GearLine, Strip, css, thousands } from './cardParts';
+import { GearLine, Strip, WeaponLine, css, thousands } from './cardParts';
 import { starPath } from './RotationLanes';
 import { POSTER_SIZE } from './PosterCard';
 import './card.css';
@@ -24,7 +24,6 @@ export interface CompareOptions {
   accentA: string;
   accentB: string;
   metrics: CompareMetric[];
-  showGear: boolean;
   showBars: boolean;
   note: string;
 }
@@ -32,7 +31,7 @@ export interface CompareOptions {
 const avgEr = (m: CardModel) => (m.members.length ? m.members.reduce((s, x) => s + x.er, 0) / m.members.length : 0);
 const signed = (f: number | null, d = 1) => (f === null ? '—' : `${f > 0 ? '+' : ''}${formatDecimal(f * 100, d)}%`);
 
-function Side({ model, title, accent, win, showGear, letter }: { model: CardModel; title: string; accent: string; win: boolean; showGear: boolean; letter: 'A' | 'B' }) {
+function Side({ model, title, accent, win, letter }: { model: CardModel; title: string; accent: string; win: boolean; letter: 'A' | 'B' }) {
   return (
     <section className="cc-side" style={css({ '--accent': accent })}>
       <header className="cc-head">
@@ -46,8 +45,8 @@ function Side({ model, title, accent, win, showGear, letter }: { model: CardMode
             <Strip name={m.name} icon={m.icon} color={m.color} />
             <div className="cc-cap">
               <span className="n">{m.name}</span>
-              <span className="w">{m.weapon}</span>
-              {showGear && <GearLine gear={m.gear} />}
+              <WeaponLine member={m} />
+              <GearLine gear={m.gear} />
               <span className="s num">{formatPercent(m.share, 0)}</span>
             </div>
           </div>
@@ -96,7 +95,7 @@ export function CompareCard({ a, b, cmp, opts }: { a: CardModel; b: CardModel; c
       </header>
 
       <div className="cc-main">
-        <Side model={a} title={opts.titleA} accent={opts.accentA} win={cmp.winner === 'a'} showGear={opts.showGear} letter="A" />
+        <Side model={a} title={opts.titleA} accent={opts.accentA} win={cmp.winner === 'a'} letter="A" />
         <div className="cc-mid">
           <div className="cc-verdict">
             {cmp.winner === 'tie' ? (
@@ -114,7 +113,7 @@ export function CompareCard({ a, b, cmp, opts }: { a: CardModel; b: CardModel; c
             ))}
           </div>
         </div>
-        <Side model={b} title={opts.titleB} accent={opts.accentB} win={cmp.winner === 'b'} showGear={opts.showGear} letter="B" />
+        <Side model={b} title={opts.titleB} accent={opts.accentB} win={cmp.winner === 'b'} letter="B" />
       </div>
 
       {opts.showBars && rowsN > 0 && (

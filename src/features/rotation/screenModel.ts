@@ -96,8 +96,12 @@ export function countActions(project: Pick<RotationProject, 'actions'>): { total
   return { total: loose + chains.size, continuous: chains.size };
 }
 
+/** Faixas que têm janela: as do usuário e as automáticas que ele não tirou. */
+export const tagsWithWindow = (project: Pick<RotationProject, 'buffWindows'> & Partial<Pick<RotationProject, 'autoOff'>>, lanes: readonly Pick<LaneInfo, 'tag' | 'auto'>[] = []): Set<string> =>
+  new Set([...project.buffWindows.map((w) => w.tag), ...lanes.filter((l) => l.auto && !project.autoOff?.includes(l.tag)).map((l) => l.tag)]);
+
 /** Janelas distintas por buff: "buffs com janela" do subtítulo. */
-export const windowedBuffs = (project: Pick<RotationProject, 'buffWindows'>): number => new Set(project.buffWindows.map((w) => w.tag)).size;
+export const windowedBuffs = (...args: Parameters<typeof tagsWithWindow>): number => tagsWithWindow(...args).size;
 
 export interface CurvePoint {
   t: number;

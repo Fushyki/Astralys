@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { expect, it } from 'vitest';
-import { assembleTeam, evaluateRotation, resolveProject, type EffectsData, type GameData } from '../../src/engine';
+import { assembleTeam, evaluateRotation, flatTag, resolveProject, type EffectsData, type GameData } from '../../src/engine';
 import { minimumRolls } from '../../src/engine/stats';
 import { sampleProject } from '../../src/features/rotation/persistence';
 import { defaultMember } from '../../src/features/rotation/teamOps';
@@ -32,7 +32,10 @@ function signature(holder: string, patch: Record<string, unknown>, fx: EffectsDa
   };
   const r = resolveProject(p as never, game, fx);
   const asm = assembleTeam(r.team);
-  return evaluateRotation({ members: r.team.members, assembly: asm, config: r.team.config, rolls: r.team.members.map(() => minimumRolls(2)), flatEffects: r.flatEffects }, r.actions).actions.map((a) => JSON.stringify([a.avg, a.stats])).join('|');
+  // Com todas as janelas ligadas (as de arma e set com duração incluídas).
+  const all = [...tags, ...asm.buffs.map((b) => b.tag), ...r.flatEffects.map(flatTag)];
+  const on = r.actions.map((a) => ({ ...a, activeTags: all }));
+  return evaluateRotation({ members: r.team.members, assembly: asm, config: r.team.config, rolls: r.team.members.map(() => minimumRolls(2)), flatEffects: r.flatEffects }, on).actions.map((a) => JSON.stringify([a.avg, a.stats])).join('|');
 }
 
 /**

@@ -72,6 +72,7 @@ export function removeMember(project: RotationProject, index: number): RotationP
       const tag = remapTag(w.tag, index);
       return tag === null ? [] : [{ ...w, tag }];
     }),
+    autoOff: project.autoOff.map((t) => remapTag(t, index)).filter((t): t is string => t !== null),
     profiles: Object.fromEntries(
       Object.entries(project.profiles).map(([name, tags]) => [name, tags.map((t) => remapTag(t, index)).filter((t): t is string => t !== null)]),
     ),

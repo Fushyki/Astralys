@@ -113,9 +113,9 @@ export const WEAPONS_2: Record<string, GearCur> = {
     note: 'Assume os 2 stacks (DEF e DMG elemental). O DMG elemental da equipe (8% por 1.000 de DEF, até 25,6%) vale nas janelas de buff.',
   },
   'Thrilling Tales of Dragon Slayers': {
-    buffs: [{ id: 'time', label: 'ATK do próximo personagem', scope: 'others', timed: true, stats: { atkPct: { p: 0 } } }],
+    buffs: [{ id: 'time', label: 'ATK do próximo personagem', scope: 'others', pickReceiver: true, timed: true, stats: { atkPct: { p: 0 } } }],
     expect: 'When switching characters',
-    note: 'Ao trocar de personagem, o que entra ganha ATK por 10 s (1 vez a cada 20 s): faixa no plano de combate, vale para os aliados do dono (parâmetro do Lunaris).',
+    note: 'Ao trocar de personagem, o que entra ganha ATK por 10 s (1 vez a cada 20 s). Vai para quem você escolher (padrão: o 1º do time), com o parâmetro do Lunaris.',
   },
   'Lightbearing Moonshard': { defPct: { lit: 0.2 }, buffs: [{ id: 'lcr', label: 'DMG Lunar-Cristalizar', timed: true, stats: { reactionBonus: { lunarcrystallize: { p: 0 } } } }], expect: 'Lunar-Crystallize', note: 'DEF e +64% (R1) de DMG Lunar-Cristalizar por 5 s depois da habilidade: faixa no plano de combate.' },
   'Whitelake Frostfeather': { atkPct: { p: 1, x: 3 }, buffs: [{ id: 'crit', label: 'Dano Crítico Estelar', stats: { reactionBonus: { stellarconductCritDmg: { p: 4 }, stellarswirlCritDmg: { p: 4 } } } }], expect: 'Lake-Hued Lament', note: 'ATK e, com 3 stacks (assumidos), +50% (R1) de Dano Crítico no dano Estelar. A energia não entra.' },

@@ -32,15 +32,15 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.reload({ waitUntil: 'networkidle' });
   await page.waitForSelector('.eq-card');
 
-  check('DPS do time do exemplo é 97.192', (await kpi('DPS do time')) === '97.192', await kpi('DPS do time'));
-  check('dano da rotação do exemplo é 1.700.863', (await kpi('Dano da rotação')) === '1.700.863', await kpi('Dano da rotação'));
+  check('DPS do time do exemplo é 106.288', (await kpi('DPS do time')) === '106.288', await kpi('DPS do time'));
+  check('dano da rotação do exemplo é 1.860.038', (await kpi('Dano da rotação')) === '1.860.038', await kpi('Dano da rotação'));
   check('a reação principal é Derreter', (await kpi('Reação principal')) === 'Derreter');
   check('quatro cartões na ordem do time', (await cards()).join() === 'Mavuika,Citlali,Iansan,Bennett', (await cards()).join());
   const roles = await page.$$eval('.eq-card .role', (e) => e.map((x) => x.textContent));
   check('papéis vêm da participação no dano (DPS principal e suportes)', /DPS principal · Pyro/.test(roles[0]) && roles.slice(1).every((r) => /Suporte/.test(r)), roles.join(' | '));
   const mav = await page.locator('.eq-card:has(.name:text-is("Mavuika"))').textContent();
   const gear = page.locator('.eq-card:has(.name:text-is("Mavuika")) .eq-gear');
-  check('o cartão da Mavuika mostra ATK e críticos reais', /5.611/.test(mav) && /95,6%/.test(mav) && /238,4%/.test(mav), mav.replace(/s+/g, ' ').slice(0, 200));
+  check('o cartão da Mavuika mostra ATK e críticos reais', /5.537/.test(mav) && /95,6%/.test(mav) && /238,4%/.test(mav), mav.replace(/s+/g, ' ').slice(0, 200));
   check('arma e artefatos são só imagem (sem o texto do equipamento)', !/A Thousand Blazing Suns/.test(mav) && !/Obsidian Codex/.test(mav) && (await gear.locator('img').count()) === 6);
   check('as imagens têm nome acessível com arma e set', /A Thousand Blazing Suns/.test(await gear.locator('.eq-tile.weapon').getAttribute('aria-label')) && /Obsidian Codex/.test(await gear.locator('.eq-pieces').getAttribute('title')));
   check('o set 4 peças não usa as cores de 2+2', (await gear.getAttribute('data-mode')) === 'four' && (await gear.locator('.eq-tile.piece[data-tone]').count()) === 0);
@@ -67,7 +67,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   const ben = await page.locator('.eq-card:has(.name:text-is("Bennett"))').textContent();
   check('o Bennett mostra o ATK fixo e o set', /ATK fixo/.test(ben) && /\+20% ATK/.test(ben));
   const given = await page.locator('.eq-card:has(.name:text-is("Citlali")) .bc-grp h4').allTextContents();
-  check('os buffs vêm agrupados pelo alcance (time todo, aliados, só ela)', given.join('|') === 'Buffa o time todo|Buffa os aliados|Buffa só ele', given.join('|'));
+  check('os buffs vêm agrupados pelo alcance (time todo, aliados, só ela)', given.join('|') === 'Buffa o time todo|Buffa só ele|Buffa personagens específicos', given.join('|'));
   const chips = await page.$$eval('.dz-chips .dz-chip', (e) => e.map((x) => x.textContent));
   check('chips de configuração e ressonância Pyro', chips.some((c) => /Inimigo nível 100/.test(c)) && chips.some((c) => /Rotação de 17,5 s/.test(c)) && chips.some((c) => /Ressonância Pyro/.test(c)), chips.join(' | '));
   await page.screenshot({ path: path.join(OUT, 'r-equipe.png'), fullPage: true });
@@ -108,7 +108,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.click('button:has-text("Duplicar")');
   await page.waitForURL(/\/projeto\/(?!exemplo)[^/]+$/);
   await page.waitForSelector('.eq-card');
-  check('duplicar abre a cópia com o mesmo DPS', (await kpi('DPS do time')) === '97.192');
+  check('duplicar abre a cópia com o mesmo DPS', (await kpi('DPS do time')) === '106.288');
 
   // Persistência
   await page.reload({ waitUntil: 'networkidle' }); await page.waitForSelector('.eq-card');
@@ -121,9 +121,9 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await mavCard.locator('.bc-head').click();
   const mavOn0 = Number((await mavCard.locator('.bc-badge').textContent()).split('/')[0]);
   const dps0 = await kpi('DPS do time');
-  await mavCard.locator('.bcard:has(.bc-tag:text-is("Arma")) input').uncheck(); await settle();
+  await mavCard.locator('.bcard:has(.bc-tag:text-is("Arma")) input').first().uncheck(); await settle();
   check('desligar a arma da Mavuika baixa o DPS e o contador', (await kpi('DPS do time')) !== dps0 && Number((await mavCard.locator('.bc-badge').textContent()).split('/')[0]) === mavOn0 - 1, `${dps0} -> ${await kpi('DPS do time')}`);
-  await mavCard.locator('.bcard:has(.bc-tag:text-is("Arma")) input').check(); await settle();
+  await mavCard.locator('.bcard:has(.bc-tag:text-is("Arma")) input').first().check(); await settle();
   check('religar volta ao DPS de antes', (await kpi('DPS do time')) === dps0);
   // desligar a habilidade de quem dá tira de todos que a recebem
   const benCard = page.locator('.eq-card:has(.name:text-is("Bennett"))');

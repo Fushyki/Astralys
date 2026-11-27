@@ -21,7 +21,9 @@ function run(character: string, patch: Partial<MemberRef>, disabled: string[] = 
   };
   const r = resolveProject(p, game, effects);
   const assembly = assembleTeam(r.team);
-  const a = evaluateRotation({ members: r.team.members, assembly, config: r.team.config, rolls: [minimumRolls(2)], flatEffects: r.flatEffects }, r.actions).actions[0];
+  // Todas as janelas ligadas: aqui vale o número de cada passiva, não o tempo dela.
+  const actions = r.actions.map((x) => ({ ...x, activeTags: assembly.buffs.map((b) => b.tag) }));
+  const a = evaluateRotation({ members: r.team.members, assembly, config: r.team.config, rolls: [minimumRolls(2)], flatEffects: r.flatEffects }, actions).actions[0];
   return { stats: a.stats, flat: a.flatDamage };
 }
 
@@ -82,6 +84,7 @@ describe('uma caixa por condição e versões alternativas', () => {
   it('Engulfing Lightning respeita o refino e a Recarga extra tem caixa', () => {
     for (const [refinement, coef, er] of [[1, 0.28, 0.3], [5, 0.56, 0.5]] as const) {
       expect(at('Engulfing Lightning', refinement).root.atkPctPerEr!.coef).toBeCloseTo(coef, 9);
+      // O id antigo da caixa (antes de a Recarga virar janela) continua desligando o buff.
       const patch = { weapon: 'Engulfing Lightning', refinement };
       const on = run('Xiangling', patch).stats;
       const off = run('Xiangling', patch, ['m0:cbuff-arma:recarga']).stats;

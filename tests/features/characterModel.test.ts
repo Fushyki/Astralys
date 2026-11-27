@@ -190,14 +190,14 @@ describe('buffs de arma e set começam desligados (gearManual)', () => {
     const weapon = memberBuffCards(manual, r, b, 0).find((c) => c.tag === 'Arma')!;
     expect(weapon.gear).toBe(true);
     expect(weapon.active).toBe(false);
-    const on = setBuffEnabled(manual, { toggleId: weapon.toggleId, baseId: weapon.toggleId, gear: true, receiver: names[0], receivers: [names[0]] }, true);
-    expect(on.enabled).toContain(weapon.toggleId);
+    const toggle = { toggleId: weapon.toggleId, baseId: weapon.id, gear: true, receiver: names[0], receivers: [names[0]] };
+    const on = setBuffEnabled(manual, toggle, true);
+    expect(on.enabled).toContain(weapon.id);
     expect(dps(on)).toBeGreaterThan(dps(manual));
     const r2 = resolveProject(on, game, effects);
     const b2 = analyzeProject({ team: r2.team, actions: r2.actions, flatEffects: r2.flatEffects, ampCoefficient: r2.ampCoefficient });
     expect(memberBuffCards(on, r2, b2, 0).find((c) => c.tag === 'Arma')!.active).toBe(true);
-    const off = setBuffEnabled(on, { toggleId: weapon.toggleId, baseId: weapon.toggleId, gear: true, receiver: names[0], receivers: [names[0]] }, false);
-    expect(off.enabled).not.toContain(weapon.toggleId);
+    const off = setBuffEnabled(on, toggle, false);
     expect(dps(off)).toBeCloseTo(dps(manual), 3);
   });
 

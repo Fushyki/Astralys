@@ -29,7 +29,9 @@ const effects: EffectsData = {
 const sample = windowsFromProfiles(parseProject(json('src/features/rotation/sample/mavuika-iansan.json')));
 // Sem o modo planilha a duração deixa de ser forçada: fica fixa na da planilha.
 const free = { ...sample, compat: 'none' as const, config: { ...sample.config, durationManual: true } };
-const { project, warnings } = dropDuplicateExtras(free, game, effects);
+const { project: deduped, warnings } = dropDuplicateExtras(free, game, effects);
+// O extra "TTDS" da planilha (R5, com as janelas dela) já é o bônus da arma: a janela automática da arma fica fora.
+const project = { ...deduped, autoOff: ['label:Thrilling Tales of Dragon Slayers: ATK do próximo personagem'] };
 writeFileSync(path.join(root, 'src/features/rotation/sample/mavuika-iansan.app.json'), JSON.stringify(project, null, 2) + '\n');
 console.log(`Exemplo do site gerado (${project.extras.length} extras, ${warnings.length} duplicados removidos).`);
 warnings.forEach((w) => console.log(' -', w));

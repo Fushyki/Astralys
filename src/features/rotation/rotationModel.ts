@@ -4,6 +4,7 @@
  */
 import {
   assembleTeam,
+  autoTagIntervals,
   critFactor,
   evaluateRotation,
   flatTag,
@@ -12,6 +13,7 @@ import {
   type ResolvedProject,
   type RotationProject,
   tagsAt,
+  type Interval,
   type TeamBuff,
 } from '../../engine';
 import { deltaChips } from '../team/teamModel';
@@ -33,10 +35,12 @@ export interface LaneInfo {
   detail: string;
   /** Duração do efeito (s) que o jogo informa: tamanho padrão da janela nova. */
   duration?: number;
+  /** Janelas que a rotação abre sozinha nesta faixa (valem enquanto o usuário não criar as dele nem as tirar). */
+  auto?: Interval[];
 }
 
 const ownerOf = (b: TeamBuff): number | null => {
-  const m = /^(?:gear|flat-atk|cbuff)-(\d+)/.exec(b.id);
+  const m = /^(?:gear|flat-atk|cbuff|set-res-shred)-(\d+)/.exec(b.id);
   return m ? Number(m[1]) : null;
 };
 
@@ -54,13 +58,15 @@ export function laneInfos(project: RotationProject, resolved: ResolvedProject): 
   const names = team.members.map((m) => m.character.name);
   const lanes = buffLanes(team);
   const buffs = assembleTeam(team).buffs;
+  const auto = autoTagIntervals(buffs, resolved.flatEffects, resolved.actions);
+  const autoOf = (tag: string) => (auto.get(tag)?.length ? { auto: auto.get(tag)! } : {});
   // Buff de dano fixo: faixa própria, a janela diz onde o automático procura os golpes.
   const flatLanes: LaneInfo[] = resolved.flatEffects
     .filter((e) => e.window && e.active && names.includes(e.source))
     .map((e) => {
       const giver = names.indexOf(e.source);
       const detail = `${e.name}: dano fixo${e.stacks ? `, ${e.stacks} golpes` : ''}. No automático vale só para os golpes dentro da janela.`;
-      return { tag: flatTag(e), label: e.name, source: giver >= 0 ? `${e.source} · ${e.name}` : e.name, target: 'dano fixo', value: 'Dano fixo', giver: giver >= 0 ? giver : null, detail };
+      return { tag: flatTag(e), label: e.name, source: giver >= 0 ? `${e.source} · ${e.name}` : e.name, target: 'dano fixo', value: 'Dano fixo', giver: giver >= 0 ? giver : null, detail, ...autoOf(flatTag(e)) };
     });
   return [...lanes.map((lane) => {
     const group = buffs.filter((b) => b.tag === lane.tag);
@@ -75,7 +81,7 @@ export function laneInfos(project: RotationProject, resolved: ResolvedProject): 
     const chips = [...new Set(group.flatMap((b) => deltaChips(b.delta)))];
     const source = giver !== null ? `${names[giver]} · ${lane.label}` : lane.label;
     void project;
-    return { tag: lane.tag, label: lane.label, source, target, value: chips.join(' · ') || lane.label, giver, detail: lane.detail, ...(lane.duration ? { duration: lane.duration } : {}) };
+    return { tag: lane.tag, label: lane.label, source, target, value: chips.join(' · ') || lane.label, giver, detail: lane.detail, ...(lane.duration ? { duration: lane.duration } : {}), ...autoOf(lane.tag) };
   }), ...flatLanes];
 }
 
@@ -171,7 +177,8 @@ export function hitBuffRows(project: RotationProject, resolved: ResolvedProject,
   const rolls = bundle.optimization.rolls;
   const assembly = assembleTeam(team, { rolls });
   const lanes = new Map(laneInfos(project, resolved).map((l) => [l.tag, l]));
-  const base = action.tagSource === 'windows' ? tagsAt(project.buffWindows, action.time) : action.activeTags;
+  const windows = action.tagSource === 'windows' ? tagsAt(project.buffWindows, action.time) : action.activeTags;
+  const base = [...new Set([...windows, ...(resolved.actions.find((a) => a.id === actionId)?.autoTags ?? [])])].sort();
   const off = new Set(action.tagsOff ?? []);
   const avgWith = (tags: string[]): number => {
     const actions = resolved.actions.map((a) => (a.id === actionId ? { ...a, activeTags: tags } : a));

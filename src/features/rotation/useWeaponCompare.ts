@@ -56,7 +56,7 @@ export function useWeaponCompare(project: RotationProject, resolved: ResolvedPro
           });
         }
         client.current
-          ?.request<WeaponCompareRow[]>({ type: 'weaponCompare', input: { member, candidates, actions: resolved.actions, flatEffects: resolved.flatEffects, ampCoefficient: resolved.ampCoefficient } })
+          ?.request<WeaponCompareRow[]>({ type: 'weaponCompare', input: { member, candidates, actions: resolved.actions, flatEffects: resolved.flatEffects, ampCoefficient: resolved.ampCoefficient, autoBlocked: resolved.autoBlocked } })
           .then((rows) => !cancelled && setState({ key, rows, error: null }))
           .catch((e) => !cancelled && setState({ key, rows: null, error: e instanceof Error ? e.message : String(e) }));
       } catch (e) {

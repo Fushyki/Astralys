@@ -26,7 +26,7 @@ type MemberSpec = { character: string; weapon?: string; primarySet?: string; sec
 type ActionSpec = { member?: number; talent?: 'normal' | 'skill' | 'burst' | 'proc'; label: string; element?: string; reaction?: string };
 
 /** Avalia uma rotação sem o modo planilha, com rolls mínimos (2 em cada substat). */
-function run(members: MemberSpec[], actions: ActionSpec[]) {
+function run(members: MemberSpec[], actions: ActionSpec[], windows = false) {
   const base = sampleProject();
   const p = {
     ...base,
@@ -46,13 +46,16 @@ function run(members: MemberSpec[], actions: ActionSpec[]) {
   const r = resolveProject(p as never, game, effects);
   const assembly = assembleTeam(r.team);
   const rolls = r.team.members.map(() => minimumRolls(2));
-  return { r, assembly, result: evaluateRotation({ members: r.team.members, assembly, config: r.team.config, rolls, flatEffects: r.flatEffects }, r.actions) };
+  const acts = windows ? r.actions.map((a) => ({ ...a, activeTags: assembly.buffs.map((b) => b.tag) })) : r.actions;
+  return { r, assembly, result: evaluateRotation({ members: r.team.members, assembly, config: r.team.config, rolls, flatEffects: r.flatEffects }, acts) };
 }
 
 describe('elemento Físico', () => {
   it('o golpe marcado como Físico usa a RES Física e o bônus Físico, sem o bônus elemental do cálice', () => {
-    const cryo = run([{ character: 'Eula', weapon: 'Dull Blade', primarySet: 'Pale Flame' }], [{ label: '1-Hit DMG' }]).result.actions[0];
-    const phys = run([{ character: 'Eula', weapon: 'Dull Blade', primarySet: 'Pale Flame' }], [{ label: '1-Hit DMG', element: 'Physical' }]).result.actions[0];
+    // Pale Flame é um efeito com duração: a janela dele entra ligada.
+    const hit = (element?: string) => run([{ character: 'Eula', weapon: 'Dull Blade', primarySet: 'Pale Flame' }], [{ label: '1-Hit DMG', ...(element ? { element } : {}) }], true).result.actions[0];
+    const cryo = hit();
+    const phys = hit('Physical');
     expect(cryo.element).toBe('Cryo');
     expect(phys.element).toBe('Physical');
     const s = phys.stats;

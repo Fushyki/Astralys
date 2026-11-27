@@ -15,7 +15,11 @@ it('Viridescent Venerer reduz em 40% a RES só dos elementos que existem no time
   Object.assign(members[2], { primarySet: 'Viridescent Venerer', secondarySet: undefined, fourPiece: true });
   const p: any = { ...sampleProject(), compat: 'none', elementMode: 'personagem', members, actions: [], buffWindows: [], disabled: [] };
   const r = resolveProject(p, game, effects);
-  const res = assembleTeam({ ...r.team, disabled: [] }).enemyRes;
+  const asm = assembleTeam({ ...r.team, disabled: [] });
+  // A redução do set dura 10 s: é um buff de janela, por cima da RES do inimigo.
+  const shred = asm.buffs.find((b) => b.id === 'set-res-shred-2')!;
+  expect(shred.duration).toBe(10);
+  const res = Object.fromEntries(Object.entries(asm.enemyRes).map(([el, v]) => [el, v - (shred.delta.resShred?.[el] ?? 0)])) as typeof asm.enemyRes;
   expect(res.Hydro).toBeCloseTo(0.1 - 0.4, 9);
   expect(res.Electro).toBeCloseTo(0.1 - 0.4, 9);
   expect(res.Pyro).toBeCloseTo(0.1, 9);

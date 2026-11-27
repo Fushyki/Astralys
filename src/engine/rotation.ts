@@ -81,6 +81,12 @@ export interface RotationAction {
   tagAges?: Readonly<Record<string, number>>;
   /** Fração (0 a 1) do buff de cada etiqueta neste golpe, quando o limite de acertos acaba no meio dele. */
   tagShare?: Readonly<Record<string, number>>;
+  /** Etiquetas das janelas automáticas que cobrem o golpe (`applyAutoWindows`), mesmo as desligadas nele. */
+  autoTags?: readonly string[];
+  /** Faixas que o usuário desligou só neste golpe. */
+  tagsOff?: readonly string[];
+  /** Execução seguinte de um golpe contínuo (não é um novo uso nem põe o personagem em campo). */
+  repeat?: boolean;
   /**
    * Reações Lunar-Charged, Lunar-Crystallize e Stellar-Swirl: índices dos membros que aplicaram os elementos (até 4).
    * Sem lista, só o dono da ação contribui.

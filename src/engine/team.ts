@@ -3,7 +3,7 @@
  * ressonância e redução de RES do inimigo.
  */
 import type { Element } from '../data/schema';
-import { weaponStatsAt } from '../effects/schema';
+import { weaponStatsAt, type AutoWindow } from '../effects/schema';
 import type { ResistanceMap } from './damage';
 import type { ElementOrPhysical } from './constants/reactions';
 import type { Rolls } from './artifacts';
@@ -90,6 +90,17 @@ export interface TeamAssembly {
 }
 
 const ELEMENTS: ElementOrPhysical[] = ['Pyro', 'Hydro', 'Anemo', 'Electro', 'Dendro', 'Cryo', 'Geo', 'Physical'];
+/** Duração e janela automática de um efeito, no formato do buff de time. */
+const windowOf = (b: { duration?: number; auto?: AutoWindow; legacy?: string }, member: number): Pick<TeamBuff, 'duration' | 'auto' | 'sheet'> => ({
+  ...(b.legacy ? { sheet: true as const } : {}),
+  ...(b.duration ? { duration: b.duration } : {}),
+  ...(b.auto && b.duration ? { auto: [{ ...b.auto, member, duration: b.duration }] } : {}),
+});
+
+/** A redução de RES do set vale neste elemento? (Viridescent: o que o dono espalhou; sem escolha, os elementos do time.) */
+const shredReaches = (sr: { reacted?: boolean; ifInTeam?: boolean }, el: ElementOrPhysical, m: MemberInput, members: MemberInput[]): boolean =>
+  sr.reacted && m.reacted ? m.reacted.includes(el as Element) : !sr.ifInTeam || members.some((x) => x.character.element === el);
+
 export const labelTag = (label?: string) => `label:${label?.trim() ? label.trim() : '_geral'}`;
 export const gearTag = (memberIndex: number) => `gear:${memberIndex}`;
 export const characterTag = (memberIndex: number) => `char:${memberIndex}`;
@@ -186,8 +197,12 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
     const atkPct = (w?.atkPct ?? 0) + (s?.atkPct ?? 0);
     const dmgBonus = (w?.dmgPct ?? 0) + (s?.dmgPct ?? 0);
     const em = (w?.em ?? 0) + (s?.em ?? 0);
+    // Arma e set dividem a faixa `gear:<i>`: cada um abre as próprias janelas e a duração sugerida é a menor.
+    const parts = [m.weaponEffect ? weaponStatsAt(m.weaponEffect, m.refinement).team : undefined, fourPieceActive(m) ? m.primarySet?.effect?.fourPiece?.team : undefined];
+    const durations = parts.flatMap((p) => (p?.duration ? [p.duration] : []));
+    const auto = parts.flatMap((p) => (p?.auto && p.duration ? [{ ...p.auto, member: i, duration: p.duration }] : []));
     if ((atkPct || dmgBonus || em) && !off(`gear-${i}`)) {
-      addBuff({ id: `gear-${i}`, tag: gearTag(i), targets: 'all', delta: { atkPct, dmgBonus, em }, description: `Arma/set de ${names[i]}` });
+      addBuff({ id: `gear-${i}`, tag: gearTag(i), targets: 'all', delta: { atkPct, dmgBonus, em }, description: `Arma/set de ${names[i]}`, ...(durations.length ? { duration: Math.min(...durations) } : {}), ...(auto.length ? { auto } : {}) });
     }
   });
 
@@ -208,7 +223,7 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
       });
       if (targets.length === 0) continue;
       const decays = b.decay && !(b.decay.noDecayFrom !== undefined && (m.constellation ?? 0) >= b.decay.noDecayFrom);
-      addBuff({ id: `cbuff-${i}-${b.id}`, tag: b.onCharTag ? characterTag(i) : labelTag(b.label), targets, delta, description: `${names[i]}: ${b.label}`, ...(b.timed ? {} : { always: true as const }), ...(decays ? { decay: b.decay!.duration } : {}), ...(b.duration ? { duration: b.duration } : {}) });
+      addBuff({ id: `cbuff-${i}-${b.id}`, tag: b.onCharTag ? characterTag(i) : labelTag(b.label), targets, delta, description: `${names[i]}: ${b.label}`, ...(b.timed ? {} : { always: true as const }), ...(decays ? { decay: b.decay!.duration } : {}), ...windowOf(b, i) });
     }
   });
 
@@ -220,8 +235,16 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
       if (!resShred && !b.defShred) continue;
       const id = `cbuff-shred-${i}-${b.id}`;
       if (off(id)) continue;
-      addBuff({ id, tag: labelTag(b.label), targets: 'all', delta: { ...(resShred ? { resShred } : {}), ...(b.defShred ? { defShred: b.defShred } : {}) }, description: `${names[i]}: ${b.label}`, ...(b.duration ? { duration: b.duration } : {}) });
+      addBuff({ id, tag: labelTag(b.label), targets: 'all', delta: { ...(resShred ? { resShred } : {}), ...(b.defShred ? { defShred: b.defShred } : {}) }, description: `${names[i]}: ${b.label}`, ...windowOf(b, i) });
     }
+  });
+  // 2d) Redução de RES do 4 peças com duração: também é janela (sem duração, vale o tempo todo, na RES do inimigo)
+  members.forEach((m, i) => {
+    const sr = fourPieceActive(m) ? m.primarySet?.effect?.fourPiece?.resShred : undefined;
+    if (!sr?.duration || !(sr.value > 0) || off(`set-res-shred-${i}`)) return;
+    const els = sr.elements.filter((el) => shredReaches(sr, el, m, members));
+    if (!els.length) return;
+    addBuff({ id: `set-res-shred-${i}`, tag: labelTag(`${m.primarySet!.name}: redução de RES`), targets: 'all', delta: { resShred: Object.fromEntries(els.map((el) => [el, sr.value])) }, description: `${names[i]}: ${m.primarySet!.name} (redução de RES)`, ...windowOf(sr, i) });
   });
 
   // 3) Extras de time (com etiqueta)
@@ -304,7 +327,7 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
       }
       addBuff({
         id, tag: b.onCharTag ? characterTag(i) : labelTag(b.label), targets, delta, description: `${names[i]}: ${b.label}`, derived: true,
-        ...(b.timed ? {} : { always: true }),
+        ...(b.timed ? {} : { always: true }), ...windowOf(b, i),
       });
     }
   });
@@ -323,7 +346,7 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
         if (br && !b.timed && br.value > 0 && br.elements.includes(el) && !off(`cbuff-res-${i}-${b.id}`)) shred += br.value;
       }
       const sr = fourPieceActive(m) ? m.primarySet?.effect?.fourPiece?.resShred : undefined;
-      if (sr && sr.value > 0 && sr.elements.includes(el) && (sr.reacted && m.reacted ? m.reacted.includes(el as Element) : !sr.ifInTeam || members.some((x) => x.character.element === el)) && !off(`set-res-shred-${i}`)) shred += sr.value;
+      if (sr && !sr.duration && sr.value > 0 && sr.elements.includes(el) && shredReaches(sr, el, m, members) && !off(`set-res-shred-${i}`)) shred += sr.value;
     });
     enemyRes[el] = config.enemyBaseRes - shred;
   }

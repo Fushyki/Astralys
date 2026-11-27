@@ -232,6 +232,49 @@ export const FlatDecaySchema = z.object({
 });
 export type FlatDecay = z.infer<typeof FlatDecaySchema>;
 
+/** Como a janela de um efeito de arma/set com duração nasce sozinha na rotação (ver `engine/autoWindows.ts`). */
+export const AutoWindowSchema = z.object({
+  /** Tipos de golpe que abrem a janela (vazio = qualquer golpe). */
+  on: z.array(HitTypeSchema).default([]),
+  /** De quem são esses golpes: do portador (padrão), da equipe toda ou só dos aliados. */
+  by: z.enum(['team', 'others']).optional(),
+  /** Tempo mínimo entre duas ativações (s); com `periodic`, o intervalo em que o efeito se reativa sozinho. */
+  cooldown: z.number().positive().optional(),
+  periodic: z.boolean().optional(),
+  /** Efeitos que se revezam a cada ativação: este é o de número `index` (a partir de 0) entre `length`. */
+  sequence: z.object({ index: z.number().int().min(0), length: z.number().int().min(2) }).optional(),
+  /** "Ao usar": as execuções seguintes de um golpe contínuo (invocação, zona) não abrem a janela. */
+  cast: z.boolean().optional(),
+  /** Golpes do portador que, dentro da janela, a alongam `add` s (no máximo `max` s no total, um a cada `every` s). */
+  extend: z.object({ on: z.array(HitTypeSchema).min(1), add: z.number().positive(), max: z.number().positive(), every: z.number().min(0).default(0) }).optional(),
+  /** A duração não corre enquanto o portador está fora de campo. */
+  pauseOff: z.boolean().optional(),
+});
+export type AutoWindow = z.infer<typeof AutoWindowSchema>;
+/** Janela automática já ligada a um membro do time. */
+export const AutoSourceSchema = AutoWindowSchema.extend({ member: z.number().int().min(0), duration: z.number().positive() });
+export type AutoSource = z.infer<typeof AutoSourceSchema>;
+
+/** Uma parte do efeito de arma/set que, no texto do jogo, tem duração: vira janela na linha do tempo. */
+export const TimedPartSchema = z.object({
+  /** O que tem duração (um destes): campos fixos da arma/4 peças, o buff de equipe, a redução de RES, um buff (id) ou um dano fixo (nome). */
+  root: z.array(z.string().min(1)).min(1).optional(),
+  team: z.boolean().optional(),
+  res: z.boolean().optional(),
+  buff: z.string().min(1).optional(),
+  flat: z.string().min(1).optional(),
+  /** Nome da faixa criada para os campos fixos (`root`). */
+  label: z.string().min(1).optional(),
+  duration: z.number().positive(),
+  /** Ausente = a condição não aparece na rotação: o usuário cria a janela. */
+  auto: AutoWindowSchema.optional(),
+  /** A janela automática só vale para estes portadores (ex.: efeitos de Nightsoul, só de Natlan). */
+  wielders: z.array(z.string().min(1)).optional(),
+  /** Portadores para quem a duração não corre fora de campo. */
+  pausesFor: z.array(z.string().min(1)).optional(),
+});
+export type TimedPart = z.infer<typeof TimedPartSchema>;
+
 /** Dano plano de arma/set: `perPoint` × stat do dono por golpe elegível, até `capPerHit` e `stacks` golpes. */
 export const WeaponFlatSchema = z.object({
   name: z.string().min(1),
@@ -254,6 +297,9 @@ export const WeaponFlatSchema = z.object({
   targets: z.enum(['self', 'team', 'others']).optional(),
   /** Só golpes destes elementos (ex.: Faruzan A4, dano Anemo). */
   elements: z.array(ElementSchema).optional(),
+  /** Duração (s) e janela automática, preenchidas por `timing` ao montar o time: o efeito só vale nas janelas. */
+  duration: z.number().positive().optional(),
+  auto: AutoWindowSchema.optional(),
 });
 export type WeaponFlat = z.infer<typeof WeaponFlatSchema>;
 
@@ -278,6 +324,10 @@ export const CharacterBuffSchema = z.object({
   forReacted: z.boolean().optional(),
   /** Duração do efeito em segundos, lida da descrição (ex.: Scroll of the Hero of Cinder City, 15 s e 20 s): tamanho padrão da janela. */
   duration: z.number().positive().optional(),
+  /** Janela que nasce sozinha na rotação (armas e sets com duração, via `timing`). */
+  auto: AutoWindowSchema.optional(),
+  /** De onde o buff saiu antes de virar janela (`timing`): o liga/desliga antigo continua valendo. */
+  legacy: z.enum(['weapon', 'set4p', 'static']).optional(),
   /** Só personagens destas facções recebem (ex.: Jahoda C6, "personagens Moonsign"). */
   forFactions: z.array(z.enum(['moonsign', 'hexerei'])).optional(),
   /** Condição da aba Talentos (ficha do Genshin Optimizer) que liga e desliga este buff; em membro com `condManual`, começa desligado. */
@@ -376,7 +426,7 @@ export const CharacterEffectSchema = z.object({
 });
 export type CharacterEffect = z.infer<typeof CharacterEffectSchema>;
 
-const TeamBuffSchema = z.object({ atkPct: frac, dmgPct: frac, em: frac });
+const TeamBuffSchema = z.object({ atkPct: frac, dmgPct: frac, em: frac, duration: z.number().positive().optional(), auto: AutoWindowSchema.optional() });
 
 /** Bônus que uma arma dá num refinamento (todos em fração, exceto EM). */
 const WeaponStatsSchema = z.object({
@@ -406,6 +456,8 @@ export const WeaponEffectSchema = WeaponStatsSchema.extend({
   weapon: z.string().min(1),
   /** Números de cada refinamento (R1 a R5). Ausente = só os campos acima, que valem para o R1 (planilha). */
   refinements: z.array(WeaponStatsSchema).length(5).optional(),
+  /** Partes da passiva com duração (viram janelas; no modo planilha não valem). */
+  timing: z.array(TimedPartSchema).optional(),
   /** O que foi assumido (stacks, tempo ativo) e o que NÃO entra no cálculo. */
   note: z.string().optional(),
   /** O efeito da passiva não toca em dano (energia, cura, estamina, reinício de recarga): nada a calcular. */
@@ -454,7 +506,7 @@ export const SetEffectSchema = z.object({
       hpPct: frac,
       defPct: frac,
       /** Redução de RES do inimigo nos elementos listados (ex.: Deepwood Memories, Dendro -30%). */
-      resShred: z.object({ value: z.number(), elements: z.array(ElementOrPhysicalSchema).min(1), /** Só vale para os elementos que existem entre os membros do time (ex.: Viridescent Venerer: elemento espalhado). */ ifInTeam: z.boolean().optional(), /** O usuário escolhe os elementos espalhados (`MemberRef.reacted`); sem escolha vale `ifInTeam`. */ reacted: z.boolean().optional() }).optional(),
+      resShred: z.object({ value: z.number(), elements: z.array(ElementOrPhysicalSchema).min(1), /** Só vale para os elementos que existem entre os membros do time (ex.: Viridescent Venerer: elemento espalhado). */ ifInTeam: z.boolean().optional(), /** O usuário escolhe os elementos espalhados (`MemberRef.reacted`); sem escolha vale `ifInTeam`. */ reacted: z.boolean().optional(), duration: z.number().positive().optional(), auto: AutoWindowSchema.optional() }).optional(),
       team: TeamBuffSchema.optional(),
       buffs: z.array(CharacterBuffSchema).default([]),
       flat: z.array(WeaponFlatSchema).default([]),
@@ -466,6 +518,8 @@ export const SetEffectSchema = z.object({
     .optional(),
   /** Buffs dos 2 peças além do stat simples (conversões, regras de time). */
   twoPieceBuffs: z.array(CharacterBuffSchema).default([]),
+  /** Partes do 4 peças com duração (viram janelas; no modo planilha não valem). */
+  timing: z.array(TimedPartSchema).optional(),
   /** O que foi assumido e o que NÃO entra no cálculo. */
   note: z.string().optional(),
   /** O efeito do set não toca em dano (ex.: Prayers): nada a calcular. */
@@ -505,6 +559,8 @@ export const FlatDamageEffectSchema = z.object({
   field: z.enum(['on', 'off']).optional(),
   /** No automático só os golpes dentro da janela da faixa do buff (`flatTag`) consomem; o golpe forçado ignora a janela. */
   window: z.boolean().optional(),
+  /** Janela automática (efeitos de arma/set com duração). */
+  auto: z.array(AutoSourceSchema).optional(),
   decay: FlatDecaySchema.optional(),
   /** Efeito do kit: `perPoint` é multiplicado por `table[nível do talento da fonte - 1]` ao montar o projeto. */
   level: BuffLevelSchema.optional(),

@@ -71,6 +71,9 @@ export interface RotationState {
   updateWindow: (id: string, patch: { start?: number; end?: number; maxHits?: number | null }) => void;
   shiftWindow: (id: string, start: number) => void;
   removeWindow: (id: string) => void;
+  /** Torna do usuário as janelas automáticas da faixa e seleciona a de número `index`. */
+  adoptAutoWindows: (tag: string, auto: readonly (readonly [number, number])[], index: number) => void;
+  setAutoWindows: (tag: string, on: boolean) => void;
   setTagSource: (id: string, source: 'manual' | 'windows') => void;
   convertProfilesToWindows: () => void;
   realign: (step?: number) => void;
@@ -233,6 +236,14 @@ export const useRotationStore = create<RotationState>((set, get) => {
     },
     updateWindow: (id, patch) => commit(get().project && ops.updateWindow(get().project!, id, patch)),
     shiftWindow: (id, start) => commit(get().project && ops.shiftWindow(get().project!, id, start)),
+    adoptAutoWindows: (tag, auto, index) => {
+      const project = get().project;
+      if (!project) return;
+      const { project: next, ids } = ops.adoptAutoWindows(project, tag, auto);
+      commit(next);
+      if (ids[index]) set({ selectedWindowId: ids[index], selectedActionId: null });
+    },
+    setAutoWindows: (tag, on) => commit(get().project && ops.setAutoWindows(get().project!, tag, on)),
     removeWindow: (id) => {
       const project = get().project;
       if (!project) return;

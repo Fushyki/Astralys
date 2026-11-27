@@ -7,8 +7,10 @@ import type { Element, Move, Talent } from '../../data/schema';
 import {
   ampMultiplier,
   assembleTeam,
+  autoTagIntervals,
   reactionTable,
   type AnalysisBundle,
+  type Interval,
   type ReactionChoice,
   type ReactionRow,
   type ResolvedProject,
@@ -210,17 +212,18 @@ export interface ReceivedBuff {
 const NEEDS_CONFIRMATION = /origem não identificada|confirme/i;
 
 function giverOf(b: TeamBuff): number | null {
-  const m = /^(?:gear|flat-atk|cbuff)-(?:shred-)?(\d+)/.exec(b.id);
+  const m = /^(?:gear|flat-atk|cbuff|set-res)-(?:shred-)?(\d+)/.exec(b.id);
   return m ? Number(m[1]) : null;
 }
 
 const fmt = (n: number) => n.toFixed(1).replace('.', ',');
 
-/** Janelas do projeto de uma etiqueta, como "5,9–17,5 s". */
-export function windowText(project: RotationProject, tag: string): string {
+/** Janelas de uma etiqueta, como "5,9–17,5 s": as do usuário ou, sem elas, as automáticas (`auto`). */
+export function windowText(project: RotationProject, tag: string, auto: readonly Interval[] = []): string {
   const ws = project.buffWindows.filter((w) => w.tag === tag).sort((a, b) => a.start - b.start);
-  if (ws.length === 0) return 'sem janela';
-  return ws.map((w) => `${fmt(w.start)}–${fmt(w.end)} s`).join(', ');
+  if (ws.length) return ws.map((w) => `${fmt(w.start)}–${fmt(w.end)} s`).join(', ');
+  if (!auto.length || project.autoOff.includes(tag)) return 'sem janela';
+  return `${auto.map(([s, e]) => `${fmt(s)}–${fmt(e)} s`).join(', ')} (automática)`;
 }
 
 /** Buffs de equipe que atingem o membro, com janela, valor e quanto do dano dele dependia de cada um. */
@@ -230,6 +233,7 @@ export function receivedBuffs(project: RotationProject, resolved: ResolvedProjec
   // Montagem SEM desligados: lista todos os buffs, inclusive os que o usuário desligou.
   const full = assembleTeam({ ...resolved.team, disabled: [] }, { rolls: bundle.optimization.rolls });
   const memberAvg = bundle.optimization.result.members[member]?.avg || 1;
+  const auto = autoTagIntervals(full.buffs, resolved.flatEffects, resolved.actions);
 
   const fromBuffs = full.buffs
     .filter((b) => b.targets === 'all' || b.targets.includes(name))
@@ -252,7 +256,7 @@ export function receivedBuffs(project: RotationProject, resolved: ResolvedProjec
         name: flagged ? 'Buff sem origem conhecida' : label,
         giver,
         giverName: giver !== null ? names[giver] : 'Time',
-        window: b.always ? 'o tempo todo' : windowText(project, b.tag),
+        window: b.always ? 'o tempo todo' : windowText(project, b.tag, auto.get(b.tag)),
         value: deltaChips(b.delta).join(', ') || '—',
         active,
         share: active && mine ? mine.contribution / memberAvg : null,
@@ -398,7 +402,8 @@ export function memberBuffCards(project: RotationProject, resolved: ResolvedProj
   // Set que reduz a RES dos elementos espalhados (Viridescent Venerer): o dono escolhe quais elementos reagiu.
   const shredSet = resolved.team.members[member].primarySet;
   const sr = fourPieceActive(resolved.team.members[member]) ? shredSet?.effect?.fourPiece?.resShred : undefined;
-  if (sr?.reacted) {
+  // Com duração, a redução já vem como buff de time (com janela) logo abaixo.
+  if (sr?.reacted && !sr.duration) {
     const id = `set-res-shred-${member}`;
     const active = !project.disabled.includes(id);
     const mine = project.members[member].reacted;
@@ -418,13 +423,22 @@ export function memberBuffCards(project: RotationProject, resolved: ResolvedProj
 
   // Os buffs extras do membro já vieram das fontes estáticas acima: não entram de novo (era a duplicata "Buff sem origem conhecida").
   const seen = new Set(cards.map((c) => c.id));
+  // O dono de um set de redução de RES com duração escolhe, no cartão dela, quais elementos reagiu.
+  const shredOf = (id: string): BuffCard['reacted'] => {
+    const giver = /^set-res-shred-(\d+)$/.exec(id)?.[1];
+    if (giver === undefined) return undefined;
+    const owner = resolved.team.members[Number(giver)];
+    const shred = owner.primarySet?.effect?.fourPiece?.resShred;
+    return shred?.reacted ? { giver: Number(giver), own: owner.character.element, els: project.members[Number(giver)].reacted ?? [], choices: shred.elements.filter((e): e is Element => e !== 'Physical') } : undefined;
+  };
   for (const b of receivedBuffs(project, resolved, bundle, member)) {
     if (seen.has(b.id)) continue;
     const idMatch = /^cbuff-(?:shred-)?(\d+)-(.+)$/.exec(b.id);
-    const tag = b.id.startsWith('gear-') ? 'Arma/set' : b.id.startsWith('flat-atk-') ? 'Passiva' : idMatch ? characterBuffTag(resolved, Number(idMatch[1]), idMatch[2]) : 'Extra';
+    const gearKind = idMatch?.[2].startsWith('arma:') ? 'Arma' : idMatch?.[2].startsWith('set4-') || b.id.startsWith('set-res-shred-') ? 'Set · 4 peças' : idMatch?.[2].startsWith('set2-') ? 'Set · 2 peças' : undefined;
+    const tag = gearKind ?? (b.id.startsWith('gear-') ? 'Arma/set' : b.id.startsWith('flat-atk-') ? 'Passiva' : idMatch ? characterBuffTag(resolved, Number(idMatch[1]), idMatch[2]) : 'Extra');
     cards.push({
       id: b.id, toggleId: b.toggleId, name: b.name, tag, giver: b.giver, giverName: b.giverName, window: b.window, chips: b.value === '—' ? [] : b.value.split(', '),
-      active: b.active, lockedOff: b.lockedOff, gear: b.gear, receivers: b.receivers, share: b.share, needsConfirmation: b.needsConfirmation, timed: b.window !== 'o tempo todo', stack: stackOf(b.id), reacted: reactedOf(b.id),
+      active: b.active, lockedOff: b.lockedOff, gear: b.gear, receivers: b.receivers, share: b.share, needsConfirmation: b.needsConfirmation, timed: b.window !== 'o tempo todo', stack: stackOf(b.id), reacted: reactedOf(b.id) ?? shredOf(b.id),
     });
   }
   return cards;
@@ -471,7 +485,10 @@ export function memberGivenCards(project: RotationProject, resolved: ResolvedPro
       byId.set(baseId, { ...c, baseId, toggleId: baseId, lockedOff: false, receiverNames: [...new Set(c.receivers.length ? c.receivers : [receiver])], scope: 'some', scopeLabel: '', share: null });
     }
   });
-  return [...byId.values()].map((c) => {
+  // Ordem fixa (a do kit): o cartão não muda de lugar quando é ligado ou desligado.
+  const kit = resolved.team.members[giver].characterEffect?.buffs ?? [];
+  const rank = (id: string) => kit.findIndex((b) => id.endsWith(`-${b.id}`) || id.endsWith(`:cbuff-${b.id}`));
+  return [...byId.values()].sort((a, b) => rank(a.baseId) - rank(b.baseId)).map((c) => {
     const baseActive = !project.disabled.includes(c.baseId) && !(c.gear && !project.enabled.includes(c.baseId));
     return { ...c, active: baseActive && c.receiverNames.some((r) => !project.disabled.includes(`${c.baseId}@${r}`)), ...scopeOf(c.receiverNames, names, names[giver]) };
   });

@@ -97,7 +97,7 @@ const DATA_CHUNK = /\/assets\/dados-[^/]+\.js/;
 
   await open('/projeto/exemplo/rotacao', '[data-testid="live-dps"]');
   const dps = await page.textContent('[data-testid="live-dps"]');
-  check('a rotação do exemplo mostra o DPS 97.192', dps === '97.192', dps);
+  check('a rotação do exemplo mostra o DPS 106.288', dps === '106.288', dps);
   await shot('rotacao');
   check('zero erros de página (pageerror)', errors.length === 0, errors.join(' | '));
 

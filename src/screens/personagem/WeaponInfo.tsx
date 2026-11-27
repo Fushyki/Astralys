@@ -5,7 +5,7 @@ import { cleanLunarisMarkup } from '../../data/clean';
 import { weaponIconUrl } from '../../design/images';
 import { weaponStatsAt } from '../../effects/schema';
 import { pickedReceivers, stacksOf } from '../../engine';
-import { memberBuffCards, type BuffCard } from '../../features/character/characterModel';
+import { memberGivenCards, type BuffCard } from '../../features/character/characterModel';
 import { useRotationStore } from '../../features/rotation/store';
 import { formatDecimal, formatInt } from '../../ui/format';
 import { StackInput } from './StackInput';
@@ -24,16 +24,10 @@ function useWeaponCards(index: number) {
   const refine = Math.min(5, Math.max(1, ref.refinement ?? 1));
   const teamGear = !!effect && (() => { const t = weaponStatsAt(effect, refine).team; return !!t && (t.atkPct > 0 || t.dmgPct > 0 || t.em > 0); })();
   // Um cartão por buff da arma (os mesmos números de "Buffs recebidos"), mesmo que só os aliados o recebam.
-  const buffs = useMemo(() => {
-    const seen = new Map<string, BuffCard>();
-    v.project.members.forEach((_, m) => {
-      for (const c of memberBuffCards(v.project, v.resolved, v.bundle, m)) {
-        const base = c.toggleId.split('@')[0];
-        if (c.giver === index && isWeaponId(base, index, teamGear) && !seen.has(base)) seen.set(base, c);
-      }
-    });
-    return [...seen.entries()].map(([base, card]) => ({ base, card }));
-  }, [v.project, v.resolved, v.bundle, index, teamGear]);
+  const buffs = useMemo(
+    () => memberGivenCards(v.project, v.resolved, v.bundle, index).filter((c) => isWeaponId(c.baseId, index, teamGear)).map((c) => ({ base: c.baseId, card: c as BuffCard })),
+    [v.project, v.resolved, v.bundle, index, teamGear],
+  );
   const isOn = (base: string) => !v.project.disabled.includes(base) && !(v.resolved.gearIds.includes(base) && !v.project.enabled.includes(base));
   return { effect, buffs, isOn };
 }

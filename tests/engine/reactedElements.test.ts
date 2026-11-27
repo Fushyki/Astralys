@@ -51,7 +51,10 @@ describe('Viridescent Venerer: RES só dos elementos espalhados', () => {
   const res = (reacted?: Element[]) => {
     const p = project();
     p.members[1] = { ...p.members[1], primarySet: 'Viridescent Venerer', secondarySet: undefined, fourPiece: true, ...(reacted ? { reacted } : {}) };
-    return assembleTeam(resolveProject(p, game, effects).team, {  }).enemyRes;
+    const asm = assembleTeam(resolveProject(p, game, effects).team, {});
+    // A redução do set é um buff de janela: aqui vale com a janela aberta.
+    const shred = asm.buffs.find((b) => b.id === 'set-res-shred-1')?.delta.resShred ?? {};
+    return Object.fromEntries(Object.entries(asm.enemyRes).map(([el, v]) => [el, v - (shred[el] ?? 0)])) as typeof asm.enemyRes;
   };
   it('sem escolha mantém o antigo (elementos do time)', () => {
     expect(res().Pyro).toBeLessThan(res(['Hydro']).Pyro);

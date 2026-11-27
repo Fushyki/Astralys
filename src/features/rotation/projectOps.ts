@@ -194,8 +194,29 @@ export function shiftWindow(project: RotationProject, id: string, start: number)
 }
 
 export function removeWindow(project: RotationProject, id: string): RotationProject {
-  if (!project.buffWindows.some((w) => w.id === id)) return project;
-  return touch({ ...project, buffWindows: project.buffWindows.filter((w) => w.id !== id) });
+  const gone = project.buffWindows.find((w) => w.id === id);
+  if (!gone) return project;
+  const buffWindows = project.buffWindows.filter((w) => w.id !== id);
+  // Tirar a última janela de uma faixa é tirar o buff: a automática não volta sozinha.
+  const autoOff = buffWindows.some((w) => w.tag === gone.tag) || project.autoOff.includes(gone.tag) ? project.autoOff : [...project.autoOff, gone.tag];
+  return touch({ ...project, buffWindows, autoOff });
+}
+
+/** As janelas automáticas da faixa viram janelas do usuário (para mover, encurtar ou apagar). Devolve os ids novos, na ordem. */
+export function adoptAutoWindows(project: RotationProject, tag: string, auto: readonly (readonly [number, number])[]): { project: RotationProject; ids: string[] } {
+  if (project.buffWindows.some((w) => w.tag === tag)) return { project, ids: [] };
+  let next = project;
+  const ids = auto.map(([start, end]) => {
+    next = addWindow(next, tag, start, end - start);
+    return next.buffWindows[next.buffWindows.length - 1].id;
+  });
+  return { project: next, ids };
+}
+
+/** Liga ou tira as janelas automáticas de uma faixa sem janelas do usuário. */
+export function setAutoWindows(project: RotationProject, tag: string, on: boolean): RotationProject {
+  if (on === !project.autoOff.includes(tag)) return project;
+  return touch({ ...project, autoOff: on ? project.autoOff.filter((t) => t !== tag) : [...project.autoOff, tag] });
 }
 
 export function setTagSource(project: RotationProject, id: string, source: 'manual' | 'windows'): RotationProject {

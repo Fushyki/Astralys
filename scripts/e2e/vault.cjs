@@ -52,7 +52,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   check('começa só com o exemplo', (await cards().count()) === 1 && /Exemplo/.test(await cards().first().getAttribute('data-name')));
   await page.waitForSelector('.vt-card .pc', { timeout: 30000 });
   const poster = (await page.textContent('.vt-card .pc')).replace(/\s+/g, ' ');
-  check('o cartão é o card do time (DPS 97.192 e dano 1,70 mi)', /97.192/.test(poster) && /1,70\s*mi/.test(poster), poster.slice(0, 120));
+  check('o cartão é o card do time (DPS 106.288 e dano 1,86 mi)', /106.288/.test(poster) && /1,86\s*mi/.test(poster), poster.slice(0, 120));
   check('o card mostra os 4 retratos e as barras de participação', (await page.locator('.vt-card .pc-face').count()) === 4 && (await page.locator('.vt-card .pc-bar').count()) >= 4);
   // Copiar o card pelo menu ⋯
   await openCardMenu(cards().first());

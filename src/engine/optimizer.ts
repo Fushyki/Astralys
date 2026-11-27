@@ -116,7 +116,7 @@ export function optimizeMember(ctx: OptimizerContext, memberIndex: number, flatB
   const slotMains = ['HP', 'ATK', m.artifacts.sands, m.artifacts.goblet, m.artifacts.circlet];
   const maxFree = (s: Substat) => (kqm ? 2 * slotMains.filter((mn) => mn !== s).length : Math.max(0, maxRollsFor(m.artifacts, s) - floor));
 
-  const er0 = 1 + statics.er + floor * rv.ER;
+  const er0 = 1 + statics.er + activeTeamDelta(assembly.buffs, names[memberIndex], 'all', (b) => !!b.sheet).er + floor * rv.ER;
   const minER = m.minER ?? 0;
   const statFocus = m.kqmStat;
   const erRolls = statFocus === 'er' ? Math.min(maxFree('ER'), free) : minER <= er0 ? 0 : Math.min(maxFree('ER'), free, ceilTol((minER - er0) / rv.ER));

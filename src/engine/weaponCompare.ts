@@ -6,7 +6,8 @@
 import type { FlatDamageEffect } from '../effects/schema';
 import { analyzeProject } from './bundle';
 import type { RotationAction } from './rotation';
-import type { TeamInput } from './team';
+import { assembleTeam, type TeamInput } from './team';
+import { applyAutoWindows } from './timing';
 
 export interface WeaponCandidate {
   weapon: string;
@@ -23,6 +24,8 @@ export interface WeaponCompareInput {
   actions: RotationAction[];
   flatEffects?: FlatDamageEffect[];
   ampCoefficient?: number;
+  /** Faixas em que o usuário já mexeu nas janelas (`ResolvedProject.autoBlocked`). */
+  autoBlocked?: readonly string[];
 }
 
 export interface WeaponCompareRow {
@@ -38,7 +41,9 @@ export interface WeaponCompareRow {
 export function compareWeapons(input: WeaponCompareInput): WeaponCompareRow[] {
   return input.candidates
     .map(({ weapon, refinement, constellation, team }) => {
-      const b = analyzeProject({ team, actions: input.actions, flatEffects: input.flatEffects, ampCoefficient: input.ampCoefficient });
+      // Cada arma abre as próprias janelas.
+      const actions = applyAutoWindows(input.actions, assembleTeam(team).buffs, input.flatEffects, new Set(input.autoBlocked));
+      const b = analyzeProject({ team, actions, flatEffects: input.flatEffects, ampCoefficient: input.ampCoefficient });
       const totals = b.optimization.result.totals;
       return { weapon, ...(refinement ? { refinement } : {}), ...(constellation !== undefined ? { constellation } : {}), teamAvg: totals.avg, memberAvg: b.optimization.result.members[input.member].avg, dps: totals.dps };
     })

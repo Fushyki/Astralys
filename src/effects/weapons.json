@@ -630,7 +630,19 @@
       }
     ],
     "note": "12% de DMG elemental fixo + Emblema (8/16/28% no R1 com 1/2/3 stacks): a quantidade de stacks é escolha sua (padrão: 3).",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts.",
+    "timing": [
+      {
+        "buff": "emblema",
+        "duration": 10,
+        "auto": {
+          "on": [
+            "normal",
+            "burst"
+          ]
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -935,7 +947,19 @@
       }
     ],
     "note": "Assume 2 stacks de Wavespike consumidos pela habilidade (+40% de Ataque Normal), sempre ativos.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts.",
+    "timing": [
+      {
+        "buff": "stacks",
+        "duration": 8,
+        "auto": {
+          "on": [
+            "skill"
+          ],
+          "cast": true
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -1228,7 +1252,16 @@
       }
     ],
     "note": "Assume 3 stacks de ATK (derrotar inimigos) sempre ativos.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts.",
+    "timing": [
+      {
+        "buff": "stacks",
+        "duration": 30,
+        "auto": {
+          "on": []
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -1814,7 +1847,16 @@
       }
     ],
     "note": "Assume 2 stacks de +DMG sempre ativos.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts.",
+    "timing": [
+      {
+        "buff": "stacks",
+        "duration": 6,
+        "auto": {
+          "on": []
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -1992,7 +2034,19 @@
       }
     ],
     "note": "Assume a Folha coletada e a Maestria ativa (limitado a uma a cada 20 s no jogo).",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts.",
+    "timing": [
+      {
+        "root": [
+          "em"
+        ],
+        "duration": 12,
+        "auto": {
+          "on": [],
+          "cooldown": 20
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -2260,7 +2314,20 @@
       }
     ],
     "note": "ATK próprio sempre ativo. O ATK da equipe (4 Sigils) vale só nas janelas de buff.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts.",
+    "timing": [
+      {
+        "team": true,
+        "duration": 12,
+        "auto": {
+          "on": [
+            "normal",
+            "charged"
+          ],
+          "cooldown": 20
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -2864,7 +2931,18 @@
       }
     ],
     "note": "Melhor caso: 6 stacks de Canopy's Favor ativos em habilidade e Supremo.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts.",
+    "timing": [
+      {
+        "buff": "stacks",
+        "duration": 6,
+        "auto": {
+          "on": [
+            "skill"
+          ]
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -3157,7 +3235,16 @@
       }
     ],
     "note": "Assume 3 stacks de ATK (derrotar inimigos) sempre ativos.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts.",
+    "timing": [
+      {
+        "buff": "stacks",
+        "duration": 30,
+        "auto": {
+          "on": []
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -3539,7 +3626,19 @@
       }
     ],
     "note": "Assume o bônus de 8 s depois da habilidade sempre ativo.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts.",
+    "timing": [
+      {
+        "root": [
+          "atkPct",
+          "em"
+        ],
+        "duration": 8,
+        "auto": {
+          "on": []
+        }
+      }
+    ]
   },
   {
     "atkPct": 0.24,
@@ -3628,7 +3727,18 @@
       }
     ],
     "note": "Assume o bônus depois de ser curado sempre ativo.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts.",
+    "timing": [
+      {
+        "root": [
+          "atkPct"
+        ],
+        "duration": 8,
+        "auto": {
+          "on": []
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -4070,7 +4180,26 @@
       }
     ],
     "note": "Assume 7 stacks de ATK e o +12% de DMG que vem com eles.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts.",
+    "timing": [
+      {
+        "root": [
+          "dmgPct"
+        ],
+        "label": "DMG com todos os stacks",
+        "duration": 6,
+        "auto": {
+          "on": []
+        }
+      },
+      {
+        "buff": "stacks",
+        "duration": 6,
+        "auto": {
+          "on": []
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -4363,7 +4492,16 @@
       }
     ],
     "note": "Assume 3 stacks de ATK (derrotar inimigos) sempre ativos.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts.",
+    "timing": [
+      {
+        "buff": "stacks",
+        "duration": 30,
+        "auto": {
+          "on": []
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -4935,7 +5073,19 @@
       }
     ],
     "note": "Assume a Folha coletada e o ATK ativo (limitado a uma a cada 20 s no jogo).",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts.",
+    "timing": [
+      {
+        "root": [
+          "atkPct"
+        ],
+        "duration": 12,
+        "auto": {
+          "on": [],
+          "cooldown": 20
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -5024,7 +5174,21 @@
       }
     ],
     "note": "Assume o DEF de 15 s depois da habilidade sempre ativo.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts.",
+    "timing": [
+      {
+        "root": [
+          "defPct"
+        ],
+        "duration": 15,
+        "auto": {
+          "on": [
+            "skill"
+          ],
+          "cast": true
+        }
+      }
+    ]
   },
   {
     "atkPct": 0.2,
@@ -5113,7 +5277,21 @@
       }
     ],
     "note": "Assume o ATK de 10 s depois da habilidade sempre ativo.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts.",
+    "timing": [
+      {
+        "root": [
+          "atkPct"
+        ],
+        "duration": 10,
+        "auto": {
+          "on": [
+            "skill"
+          ],
+          "cast": true
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -5860,7 +6038,19 @@
       }
     ],
     "note": "Assume o máximo de +48% (R1) de dano de Ataque Normal na janela.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts.",
+    "timing": [
+      {
+        "buff": "stacks",
+        "duration": 14,
+        "auto": {
+          "on": [
+            "skill"
+          ],
+          "cast": true
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -6165,7 +6355,20 @@
       }
     ],
     "note": "Assume 4 stacks de Scorching Summer (+48% de Ataque Normal no R1) ativos.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts.",
+    "timing": [
+      {
+        "buff": "stacks",
+        "duration": 14,
+        "auto": {
+          "on": [
+            "skill"
+          ],
+          "cooldown": 15,
+          "cast": true
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -6284,7 +6487,13 @@
       }
     ],
     "note": "Maestria fixa (100 no R1 a 200 no R5) sempre ativa. O +DMG vale para o personagem ativo, só nas janelas de buff.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts.",
+    "timing": [
+      {
+        "team": true,
+        "duration": 15
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -6577,7 +6786,16 @@
       }
     ],
     "note": "Assume 2 stacks de DMG elemental ativos.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts.",
+    "timing": [
+      {
+        "buff": "stacks",
+        "duration": 10,
+        "auto": {
+          "on": []
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -6666,7 +6884,21 @@
       }
     ],
     "note": "Assume a Recarga de 10 s depois da habilidade sempre ativa.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts.",
+    "timing": [
+      {
+        "root": [
+          "er"
+        ],
+        "duration": 10,
+        "auto": {
+          "on": [
+            "skill"
+          ],
+          "cast": true
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -7503,7 +7735,21 @@
       }
     ],
     "note": "ATK de Ashen Nightstar (10/20/30/48% no R1 com 1 a 4 stacks): a quantidade é escolha sua (padrão: 4).",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts.",
+    "timing": [
+      {
+        "buff": "nightstar",
+        "duration": 12,
+        "auto": {
+          "on": [
+            "normal",
+            "charged",
+            "skill",
+            "burst"
+          ]
+        }
+      }
+    ]
   },
   {
     "atkPct": 0.2,
@@ -7850,7 +8096,19 @@
       }
     ],
     "note": "ATK fixo + DMG de Ataque Normal do Thunder Emblem (12/24/40% no R1 com 1/2/3 stacks): a quantidade é escolha sua (padrão: 3).",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts.",
+    "timing": [
+      {
+        "buff": "emblema",
+        "duration": 10,
+        "auto": {
+          "on": [
+            "normal",
+            "skill"
+          ]
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -8143,7 +8401,16 @@
       }
     ],
     "note": "Assume 3 stacks de ATK (derrotar inimigos) sempre ativos.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts.",
+    "timing": [
+      {
+        "buff": "stacks",
+        "duration": 30,
+        "auto": {
+          "on": []
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -8739,7 +9006,21 @@
       }
     ],
     "note": "Assume o ATK de 6 s depois da habilidade sempre ativo.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts.",
+    "timing": [
+      {
+        "root": [
+          "atkPct"
+        ],
+        "duration": 6,
+        "auto": {
+          "on": [
+            "skill"
+          ],
+          "cast": true
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -9032,7 +9313,18 @@
       }
     ],
     "note": "Assume 2 stacks de Maestria ativos.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts.",
+    "timing": [
+      {
+        "buff": "stacks",
+        "duration": 6,
+        "auto": {
+          "on": [
+            "charged"
+          ]
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -9325,7 +9617,16 @@
       }
     ],
     "note": "Assume 3 stacks de ATK (derrotar inimigos) sempre ativos.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons.ts.",
+    "timing": [
+      {
+        "buff": "stacks",
+        "duration": 30,
+        "auto": {
+          "on": []
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -10240,7 +10541,19 @@
       }
     ],
     "note": "Assume 4 stacks de ATK e DEF.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "buff": "stacks",
+        "duration": 6,
+        "auto": {
+          "on": [
+            "normal",
+            "charged"
+          ]
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -11309,7 +11622,27 @@
       }
     ],
     "note": "Recarga = 0,036% (R1) por ponto de Maestria do dono, sempre ativa (renova a cada 10 s por 12 s); a equipe recebe 30% disso (0,0108% por ponto no R1) nas janelas de buff. Várias cópias da arma somando não entram.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/piloto-armas.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/piloto-armas.ts.",
+    "timing": [
+      {
+        "buff": "er",
+        "duration": 12,
+        "auto": {
+          "on": [],
+          "cooldown": 10,
+          "periodic": true
+        }
+      },
+      {
+        "buff": "er-time",
+        "duration": 12,
+        "auto": {
+          "on": [],
+          "cooldown": 10,
+          "periodic": true
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -11416,7 +11749,19 @@
       }
     ],
     "note": "Assume o inimigo marcado (Cursed Parasol) sempre.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "root": [
+          "dmgPct"
+        ],
+        "duration": 10,
+        "auto": {
+          "on": [],
+          "cooldown": 15
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -11709,7 +12054,21 @@
       }
     ],
     "note": "Assume 3 Símbolos consumidos (+Maestria por Símbolo) e o efeito Roused ativo. Assume os stacks máximos e a condição sempre ativos. A energia devolvida não entra.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "buff": "stacks",
+        "duration": 10,
+        "auto": {
+          "on": [
+            "skill",
+            "burst"
+          ],
+          "cooldown": 15,
+          "cast": true
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -12007,7 +12366,16 @@
       }
     ],
     "note": "Soma 16% (R1) do ATK ao dano base dos 18 primeiros golpes Normais (depois de correr). Assume a corrida feita antes.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "flat": "DMG do Normal por ATK",
+        "duration": 7,
+        "auto": {
+          "on": []
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -12096,7 +12464,21 @@
       }
     ],
     "note": "Só a DEF depois da habilidade (assumida ativa).",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "root": [
+          "defPct"
+        ],
+        "duration": 15,
+        "auto": {
+          "on": [
+            "skill"
+          ],
+          "cast": true
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -12700,7 +13082,25 @@
       }
     ],
     "note": "HP depois de reação (assumido ativo) e, com Moonsign: Ascendant Gleam (2+ membros Moonsign), mais 16% (R1).",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "root": [
+          "hpPct"
+        ],
+        "duration": 12,
+        "auto": {
+          "on": []
+        }
+      },
+      {
+        "buff": "moonsign",
+        "duration": 12,
+        "auto": {
+          "on": []
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -13520,7 +13920,25 @@
       }
     ],
     "note": "ATK depois de reação (assumido ativo); +16% (R1) de DMG Estelar por 12 s depois de uma reação Estelar: faixa no plano de combate.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "root": [
+          "atkPct"
+        ],
+        "duration": 12,
+        "auto": {
+          "on": []
+        }
+      },
+      {
+        "buff": "estelar",
+        "duration": 12,
+        "auto": {
+          "on": []
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -13813,7 +14231,19 @@
       }
     ],
     "note": "Assume 2 stacks.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "buff": "stacks",
+        "duration": 12,
+        "auto": {
+          "on": [
+            "skill"
+          ],
+          "cast": true
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -14316,7 +14746,23 @@
       }
     ],
     "note": "3 stacks de DMG da habilidade e 2 de HP (quando o HP de aliados muda). Assume os stacks máximos e a condição sempre ativos.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "buff": "stacks-2",
+        "duration": 6,
+        "auto": {
+          "on": []
+        }
+      },
+      {
+        "buff": "stacks-3",
+        "duration": 6,
+        "auto": {
+          "on": []
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -14717,7 +15163,29 @@
       }
     ],
     "note": "Assume os 2 stacks de Ode to Flowers (DEF 8% e DMG elemental 10% por stack no R1; 16% e 20% no R5). O DMG elemental da equipe (8% por 1.000 de DEF do dono, até 25,6% no R1; 16% e 51,2% no R5) vale nas janelas de buff. A DEF do dono já inclui o bônus dos stacks. Gatilho (Normal ou Plunge, 1 vez por 0,1 s, 6 s por stack; 15 s para a equipe) é do usuário.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/piloto-armas.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/piloto-armas.ts.",
+    "timing": [
+      {
+        "buff": "stacks",
+        "duration": 6,
+        "auto": {
+          "on": [
+            "normal",
+            "plunge"
+          ]
+        }
+      },
+      {
+        "buff": "def-time",
+        "duration": 15,
+        "auto": {
+          "on": [
+            "normal",
+            "plunge"
+          ]
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -14736,6 +15204,7 @@
         "minConstellation": 0,
         "scope": "others",
         "timed": true,
+        "pickReceiver": true,
         "stats": {
           "atkPct": 0.24,
           "dmgPct": 0,
@@ -14782,6 +15251,7 @@
             "minConstellation": 0,
             "scope": "others",
             "timed": true,
+            "pickReceiver": true,
             "stats": {
               "atkPct": 0.24,
               "dmgPct": 0,
@@ -14827,6 +15297,7 @@
             "minConstellation": 0,
             "scope": "others",
             "timed": true,
+            "pickReceiver": true,
             "stats": {
               "atkPct": 0.3,
               "dmgPct": 0,
@@ -14872,6 +15343,7 @@
             "minConstellation": 0,
             "scope": "others",
             "timed": true,
+            "pickReceiver": true,
             "stats": {
               "atkPct": 0.36,
               "dmgPct": 0,
@@ -14917,6 +15389,7 @@
             "minConstellation": 0,
             "scope": "others",
             "timed": true,
+            "pickReceiver": true,
             "stats": {
               "atkPct": 0.42,
               "dmgPct": 0,
@@ -14962,6 +15435,7 @@
             "minConstellation": 0,
             "scope": "others",
             "timed": true,
+            "pickReceiver": true,
             "stats": {
               "atkPct": 0.48,
               "dmgPct": 0,
@@ -14991,8 +15465,22 @@
         "procs": []
       }
     ],
-    "note": "Ao trocar de personagem, o que entra ganha ATK por 10 s (1 vez a cada 20 s): faixa no plano de combate, vale para os aliados do dono (parâmetro do Lunaris).",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "note": "Ao trocar de personagem, o que entra ganha ATK por 10 s (1 vez a cada 20 s). Vai para quem você escolher (padrão: o 1º do time), com o parâmetro do Lunaris.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "buff": "time",
+        "duration": 10,
+        "auto": {
+          "on": [
+            "skill",
+            "burst"
+          ],
+          "cooldown": 20,
+          "cast": true
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -15279,7 +15767,19 @@
       }
     ],
     "note": "DEF e +64% (R1) de DMG Lunar-Cristalizar por 5 s depois da habilidade: faixa no plano de combate.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "buff": "lcr",
+        "duration": 5,
+        "auto": {
+          "on": [
+            "skill"
+          ],
+          "cast": true
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -15770,7 +16270,27 @@
       }
     ],
     "note": "ATK e, com 3 stacks (assumidos), +50% (R1) de Dano Crítico no dano Estelar. A energia não entra.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "buff": "stacks",
+        "duration": 8,
+        "auto": {
+          "on": [
+            "skill"
+          ]
+        }
+      },
+      {
+        "buff": "crit",
+        "duration": 8,
+        "auto": {
+          "on": [
+            "skill"
+          ]
+        }
+      }
+    ]
   },
   {
     "atkPct": 0.16,
@@ -15859,7 +16379,18 @@
       }
     ],
     "note": "Só o ATK (assumido ativo). A energia devolvida não entra.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "root": [
+          "atkPct"
+        ],
+        "duration": 8,
+        "auto": {
+          "on": []
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -16146,7 +16677,42 @@
       }
     ],
     "note": "Dano Crítico da fase Devotion (assumida ativa); a fase Defiance (+36% de Redemoinho Estelar no R1) é faixa no plano de combate. A energia não entra.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "root": [
+          "critDmg"
+        ],
+        "label": "Winds of Devotion",
+        "duration": 10,
+        "auto": {
+          "on": [
+            "skill",
+            "burst"
+          ],
+          "sequence": {
+            "index": 0,
+            "length": 3
+          },
+          "cast": true
+        }
+      },
+      {
+        "buff": "defiance",
+        "duration": 10,
+        "auto": {
+          "on": [
+            "skill",
+            "burst"
+          ],
+          "sequence": {
+            "index": 1,
+            "length": 3
+          },
+          "cast": true
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -16325,7 +16891,19 @@
       }
     ],
     "note": "Assume o escudo ativo o tempo todo. A força do escudo não entra.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "root": [
+          "dmgPct"
+        ],
+        "duration": 10,
+        "auto": {
+          "on": [],
+          "cooldown": 45
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -16946,7 +17524,19 @@
       }
     ],
     "note": "Assume 4 stacks de ATK e DEF.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "buff": "stacks",
+        "duration": 6,
+        "auto": {
+          "on": [
+            "normal",
+            "charged"
+          ]
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -18195,7 +18785,27 @@
       }
     ],
     "note": "ATK fixo = 24% (R1) da Maestria do dono, sempre ativo. Os 30% para a equipe valem só nas janelas de buff. Vários exemplares da arma não se somam aqui.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "buff": "em-atk",
+        "duration": 12,
+        "auto": {
+          "on": [],
+          "cooldown": 10,
+          "periodic": true
+        }
+      },
+      {
+        "buff": "em-atk-time",
+        "duration": 12,
+        "auto": {
+          "on": [],
+          "cooldown": 10,
+          "periodic": true
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -18284,7 +18894,19 @@
       }
     ],
     "note": "Assume a Folha coletada e a Maestria ativa.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "root": [
+          "em"
+        ],
+        "duration": 12,
+        "auto": {
+          "on": [],
+          "cooldown": 20
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -18577,7 +19199,21 @@
       }
     ],
     "note": "Assume 3 Símbolos consumidos (+Maestria por Símbolo) e o efeito Roused ativo. Assume os stacks máximos e a condição sempre ativos. A energia devolvida não entra.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "buff": "stacks",
+        "duration": 10,
+        "auto": {
+          "on": [
+            "skill",
+            "burst"
+          ],
+          "cooldown": 15,
+          "cast": true
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -18888,7 +19524,20 @@
       }
     ],
     "note": "Taxa Crítica do Imersivo e DMG de Normal, Carregado e Imersivo (assumido depois de um Imersivo).",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "root": [
+          "dmgPctByType"
+        ],
+        "duration": 10,
+        "auto": {
+          "on": [
+            "plunge"
+          ]
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -18989,7 +19638,19 @@
       }
     ],
     "note": "Assume reação relacionada a Pyro causada por um aliado.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "root": [
+          "dmgPctByType"
+        ],
+        "duration": 8,
+        "auto": {
+          "on": [],
+          "by": "team"
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -19078,7 +19739,18 @@
       }
     ],
     "note": "Assume a reação (Eletrocarregado, Florescer, Cristalizar...) feita e a Maestria ativa. A energia não entra.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "root": [
+          "em"
+        ],
+        "duration": 15,
+        "auto": {
+          "on": []
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -19371,7 +20043,25 @@
       }
     ],
     "note": "Maestria depois de reação (assumida ativa) e, com Moonsign: Ascendant Gleam (2+ membros Moonsign), mais 60 (R1).",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "root": [
+          "em"
+        ],
+        "duration": 12,
+        "auto": {
+          "on": []
+        }
+      },
+      {
+        "buff": "moonsign",
+        "duration": 12,
+        "auto": {
+          "on": []
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -19646,7 +20336,22 @@
       }
     ],
     "note": "Maestria depois de reação (assumida ativa) e +16% (R1) de ATK por 12 s depois de uma reação Estelar (faixa).",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "root": [
+          "em"
+        ],
+        "duration": 12,
+        "auto": {
+          "on": []
+        }
+      },
+      {
+        "buff": "atk",
+        "duration": 12
+      }
+    ]
   },
   {
     "atkPct": 0.2,
@@ -19951,7 +20656,16 @@
       }
     ],
     "note": "ATK e 2 Selos (+DMG da habilidade). Assume Cristalizar ou Lunar-Cristalizar para os 2 Selos.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "buff": "stacks",
+        "duration": 15,
+        "auto": {
+          "on": []
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -20262,7 +20976,19 @@
       }
     ],
     "note": "Assume 2 stacks depois da habilidade.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "buff": "stacks",
+        "duration": 12,
+        "auto": {
+          "on": [
+            "skill"
+          ],
+          "cast": true
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -20411,7 +21137,19 @@
       }
     ],
     "note": "Soma 20% (R1) do ATK ao dano base de Normal e Carregado, assumindo uma partícula coletada nos últimos 5 s.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "flat": "Dano extra de Normal e Carregado por ATK",
+        "duration": 5,
+        "auto": {
+          "on": [
+            "skill"
+          ],
+          "cast": true
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -21780,7 +22518,19 @@
       }
     ],
     "note": "Assume reação feita e os bônus ativos.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "root": [
+          "atkPct",
+          "em"
+        ],
+        "duration": 10,
+        "auto": {
+          "on": []
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -22546,7 +23296,21 @@
       }
     ],
     "note": "Assume 3 Símbolos consumidos (+ATK% e +DMG% elemental por Símbolo) e o efeito Struggle ativo. Assume os stacks máximos e a condição sempre ativos.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "buff": "stacks",
+        "duration": 10,
+        "auto": {
+          "on": [
+            "skill",
+            "burst"
+          ],
+          "cooldown": 15,
+          "cast": true
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -23342,7 +24106,18 @@
       }
     ],
     "note": "Assume 3 stacks de ATK e Recarga.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "buff": "stacks",
+        "duration": 6,
+        "auto": {
+          "on": [
+            "skill"
+          ]
+        }
+      }
+    ]
   },
   {
     "atkPct": 0.2,
@@ -23431,7 +24206,18 @@
       }
     ],
     "note": "Assume reação Cryo ou Hydro e o ATK ativo. A energia dos aliados não entra.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "root": [
+          "atkPct"
+        ],
+        "duration": 15,
+        "auto": {
+          "on": []
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -23706,7 +24492,13 @@
       }
     ],
     "note": "+20% (R1) de ATK por 12 s depois de uma reação Estelar (faixa). A energia não entra.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "buff": "atk",
+        "duration": 12
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -24029,7 +24821,18 @@
       }
     ],
     "note": "ATK fixo = 52% da Maestria (R1) + 28% por stack depois da habilidade (até 3): a quantidade de stacks é escolha sua (padrão: 3).",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "buff": "dream",
+        "duration": 10,
+        "auto": {
+          "on": [
+            "skill"
+          ]
+        }
+      }
+    ]
   },
   {
     "atkPct": 0.12,
@@ -24670,7 +25473,17 @@
       }
     ],
     "note": "ATK base sempre (12% no R1). Fora de campo soma outros 12%: faixa no plano de combate, ligue enquanto o portador está fora de campo. Sweet Echoes: +32% (R1) de ATK por 3 s para o portador e para quem ele curou depois de curar (vale fora de campo); são dois buffs separados (portador e curado). O do curado vai só para quem você escolher no bloco da arma (padrão: o 1º do time, em campo).",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "buff": "echoes",
+        "duration": 3
+      },
+      {
+        "buff": "echoes-self",
+        "duration": 3
+      }
+    ]
   },
   {
     "atkPct": 0.24,
@@ -24957,7 +25770,26 @@
       }
     ],
     "note": "Assume o ATK depois de habilidade/Supremo sempre ativo. Electrifying Edict: +40% (R1) de DMG Lunar-Carregado da equipe por 20 s depois de criar um escudo com o ATK ativo: faixa, ligue nas janelas.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "root": [
+          "atkPct"
+        ],
+        "duration": 20,
+        "auto": {
+          "on": [
+            "skill",
+            "burst"
+          ],
+          "cast": true
+        }
+      },
+      {
+        "buff": "edict",
+        "duration": 20
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -25424,7 +26256,23 @@
       }
     ],
     "note": "+36% (R1) de DMG Lunar-Carregado por 3,5 s depois do Supremo e +28% de Dano Crítico por 6 s depois de um Lunar-Carregado: faixas. A energia não entra.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "buff": "lc",
+        "duration": 3.5,
+        "auto": {
+          "on": [
+            "burst"
+          ],
+          "cast": true
+        }
+      },
+      {
+        "buff": "requiem",
+        "duration": 6
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -26149,7 +26997,21 @@
       }
     ],
     "note": "A música é sorteada: cada uma vira uma faixa no plano de combate (ATK, DMG elemental ou Maestria) para você escolher qual vale em cada janela.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "buff": "recitativo",
+        "duration": 10
+      },
+      {
+        "buff": "aria",
+        "duration": 10
+      },
+      {
+        "buff": "interludio",
+        "duration": 10
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -26567,7 +27429,18 @@
       }
     ],
     "note": "Assume correr antes (ATK ativo). A estamina não entra.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "root": [
+          "atkPct"
+        ],
+        "duration": 5,
+        "auto": {
+          "on": []
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -28251,7 +29124,37 @@
       }
     ],
     "note": "Faixas de 6 s de DMG elemental: uma para os membros Electro e uma para o outro elemento de cada reação Electro (Pyro, Hydro, Cryo, Dendro, Anemo, Geo). Ligue nas janelas a faixa da reação que acontece (os bônus não se somam no jogo).",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "buff": "elemental",
+        "duration": 6
+      },
+      {
+        "buff": "pyro",
+        "duration": 6
+      },
+      {
+        "buff": "hydro",
+        "duration": 6
+      },
+      {
+        "buff": "cryo",
+        "duration": 6
+      },
+      {
+        "buff": "dendro",
+        "duration": 6
+      },
+      {
+        "buff": "anemo",
+        "duration": 6
+      },
+      {
+        "buff": "geo",
+        "duration": 6
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -28550,7 +29453,27 @@
       }
     ],
     "note": "ATK fixo = 24% (R1) da Maestria do dono, sempre ativo. Os 30% para a equipe valem só nas janelas de buff. Vários exemplares da arma não se somam aqui.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "buff": "em-atk",
+        "duration": 12,
+        "auto": {
+          "on": [],
+          "cooldown": 10,
+          "periodic": true
+        }
+      },
+      {
+        "buff": "em-atk-time",
+        "duration": 12,
+        "auto": {
+          "on": [],
+          "cooldown": 10,
+          "periodic": true
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -28843,7 +29766,16 @@
       }
     ],
     "note": "Assume 5 stacks (+Maestria e −5% de ATK por stack, ATK negativo).",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "buff": "stacks",
+        "duration": 6,
+        "auto": {
+          "on": []
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -29243,7 +30175,19 @@
       }
     ],
     "note": "Assume 3 stacks.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "buff": "stacks",
+        "duration": 6,
+        "auto": {
+          "on": [
+            "normal",
+            "charged"
+          ]
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -29733,7 +30677,33 @@
       }
     ],
     "note": "HP depois da habilidade e +HP por membro Hydro do time (até 2, contando o dono).",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "root": [
+          "hpPct"
+        ],
+        "duration": 10,
+        "auto": {
+          "on": [
+            "skill"
+          ],
+          "cooldown": 15,
+          "cast": true
+        }
+      },
+      {
+        "buff": "hydro",
+        "duration": 10,
+        "auto": {
+          "on": [
+            "skill"
+          ],
+          "cooldown": 15,
+          "cast": true
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -29936,7 +30906,19 @@
       }
     ],
     "note": "DMG do Normal = 0,6% (R1) por 1.000 de HP máximo, até o teto do Lunaris. Assume a habilidade usada antes.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "buff": "hp-normal",
+        "duration": 10,
+        "auto": {
+          "on": [
+            "skill"
+          ],
+          "cast": true
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -30025,7 +31007,21 @@
       }
     ],
     "note": "Assume a habilidade usada nos últimos 20 s.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "root": [
+          "em"
+        ],
+        "duration": 20,
+        "auto": {
+          "on": [
+            "skill"
+          ],
+          "cast": true
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -30617,7 +31613,31 @@
       }
     ],
     "note": "ATK e Maestria depois da habilidade (assumidos ativos).",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "root": [
+          "atkPct",
+          "em"
+        ],
+        "duration": 6,
+        "auto": {
+          "on": [
+            "skill"
+          ],
+          "cooldown": 12,
+          "cast": true,
+          "extend": {
+            "on": [
+              "charged"
+            ],
+            "add": 6,
+            "max": 6,
+            "every": 0
+          }
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -30910,7 +31930,25 @@
       }
     ],
     "note": "Maestria depois de reação (assumida ativa) e +16% (R1) de DMG Estelar por 12 s depois de uma reação Estelar (faixa).",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "root": [
+          "em"
+        ],
+        "duration": 12,
+        "auto": {
+          "on": []
+        }
+      },
+      {
+        "buff": "estelar",
+        "duration": 12,
+        "auto": {
+          "on": []
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -32311,7 +33349,16 @@
       }
     ],
     "note": "ATK e 3 stacks de Normal, Carregado e Estelar-Conduct (HP mudando, assumido).",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "buff": "stacks",
+        "duration": 4,
+        "auto": {
+          "on": []
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -32616,7 +33663,16 @@
       }
     ],
     "note": "HP e 3 stacks de DMG do Carregado (HP mudando, assumido). A energia não entra.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "buff": "stacks",
+        "duration": 4,
+        "auto": {
+          "on": []
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -32903,7 +33959,18 @@
       }
     ],
     "note": "Faixa de DMG do Imersivo para a equipe (depois de um Imersivo do dono). A energia devolvida não entra.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "buff": "imersivo",
+        "duration": 20,
+        "auto": {
+          "on": [
+            "plunge"
+          ]
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -33676,7 +34743,31 @@
       }
     ],
     "note": "HP e +ATK por HP acima de 40.000 (até 8% no R1) para o membro ativo, os dois por stack (3 por padrão); os +75% por 5 s depois de Congelado ou Redemoinho Estelar viram faixas.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "buff": "stacks",
+        "duration": 10,
+        "auto": {
+          "on": []
+        }
+      },
+      {
+        "buff": "hp-atk",
+        "duration": 10,
+        "auto": {
+          "on": []
+        }
+      },
+      {
+        "buff": "reforco-hp",
+        "duration": 5
+      },
+      {
+        "buff": "reforco-atk",
+        "duration": 5
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -33945,7 +35036,20 @@
       }
     ],
     "note": "Assume o ponto fraco acertado (ATK ativo).",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "root": [
+          "atkPct"
+        ],
+        "duration": 10,
+        "auto": {
+          "on": [
+            "charged"
+          ]
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -34238,7 +35342,19 @@
       }
     ],
     "note": "Assume 4 stacks de ATK. A velocidade de ataque não entra.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "buff": "stacks",
+        "duration": 6,
+        "auto": {
+          "on": [
+            "normal",
+            "charged"
+          ]
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -35133,7 +36249,23 @@
       }
     ],
     "note": "Maestria (assumida ativa). Golpe extra na paleta da rotação (coloque quantas vezes ele acontece). Golpe final de 100% (R1) do ATK, do elemento do personagem, quando o efeito acaba.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "root": [
+          "em"
+        ],
+        "duration": 12,
+        "auto": {
+          "on": [
+            "skill",
+            "burst"
+          ],
+          "cooldown": 20,
+          "cast": true
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -35431,7 +36563,20 @@
       }
     ],
     "note": "+28% (R1) de DMG do Carregado (inimigo marcado). Golpe extra na paleta da rotação (coloque quantas vezes ele acontece). Flecha de 60% (R1) do ATK, do elemento do personagem, a cada 10 s.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "root": [
+          "dmgPctByType"
+        ],
+        "duration": 10,
+        "auto": {
+          "on": [
+            "charged"
+          ]
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -35520,7 +36665,18 @@
       }
     ],
     "note": "Assume o personagem curado e o bônus ativo.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "root": [
+          "dmgPct"
+        ],
+        "duration": 8,
+        "auto": {
+          "on": []
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -35813,7 +36969,19 @@
       }
     ],
     "note": "Assume 2 stacks (depois de gastar energia).",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "buff": "stacks",
+        "duration": 18,
+        "auto": {
+          "on": [
+            "burst"
+          ],
+          "cast": true
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -36106,7 +37274,21 @@
       }
     ],
     "note": "Assume 3 Símbolos consumidos (+ATK% e +DMG% elemental por Símbolo) e o efeito Struggle ativo. Assume os stacks máximos e a condição sempre ativos.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "buff": "stacks",
+        "duration": 10,
+        "auto": {
+          "on": [
+            "skill",
+            "burst"
+          ],
+          "cooldown": 15,
+          "cast": true
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -36411,7 +37593,18 @@
       }
     ],
     "note": "Assume 6 stacks de DMG do Carregado (mira longa).",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "buff": "stacks",
+        "duration": 10,
+        "auto": {
+          "on": [
+            "charged"
+          ]
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -37602,7 +38795,25 @@
       }
     ],
     "note": "Maestria depois de reação (assumida ativa) e, com Moonsign: Ascendant Gleam (2+ membros Moonsign), mais 60 (R1).",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "root": [
+          "em"
+        ],
+        "duration": 12,
+        "auto": {
+          "on": []
+        }
+      },
+      {
+        "buff": "moonsign",
+        "duration": 12,
+        "auto": {
+          "on": []
+        }
+      }
+    ]
   },
   {
     "atkPct": 0.28,
@@ -37691,7 +38902,18 @@
       }
     ],
     "note": "Assume o ATK ativo (depois de acertar fora de campo).",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "root": [
+          "atkPct"
+        ],
+        "duration": 8,
+        "auto": {
+          "on": []
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -38355,7 +39577,21 @@
       }
     ],
     "note": "Assume a habilidade usada nos últimos 12 s.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "root": [
+          "em"
+        ],
+        "duration": 12,
+        "auto": {
+          "on": [
+            "skill"
+          ],
+          "cast": true
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -38648,7 +39884,19 @@
       }
     ],
     "note": "Recarga e +24% (R1) de DMG Estelar da equipe por 12 s (faixa).",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "buff": "viper",
+        "duration": 12,
+        "auto": {
+          "on": [
+            "skill",
+            "burst"
+          ]
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -39175,7 +40423,29 @@
       }
     ],
     "note": "HP máximo de Remedy (12/24/40% no R1 com 1/2/3 stacks): a quantidade é escolha sua (padrão: 3). Assume a Taxa Crítica do Supremo ativa.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "buff": "remedy",
+        "duration": 25,
+        "auto": {
+          "on": [
+            "skill"
+          ],
+          "cast": true
+        }
+      },
+      {
+        "buff": "crit-golpe",
+        "duration": 25,
+        "auto": {
+          "on": [
+            "skill"
+          ],
+          "cast": true
+        }
+      }
+    ]
   },
   {
     "atkPct": 0.24,
@@ -39774,7 +41044,18 @@
       }
     ],
     "note": "ATK depois de Swirl (assumido). Com 1 aliado de outro elemento vale o primeiro valor; com 2 ou mais, 2,4 vezes (48% e 24% no R1).",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons2.ts.",
+    "timing": [
+      {
+        "root": [
+          "atkPct"
+        ],
+        "duration": 12,
+        "auto": {
+          "on": []
+        }
+      }
+    ]
   },
   {
     "atkPct": 0.28,
@@ -40049,7 +41330,94 @@
       }
     ],
     "note": "Base: Scorching Brilliance sempre ativo (habilidade ou Supremo, 6 s, 1 vez a cada 10 s): +28% ATK e +20% Dano Crítico no R1. Com o dono em Nightsoul Blessing os efeitos sobem 75% (parâmetro 2): o buff \"Bênção do Espírito da Noite\" soma esse extra (+21% ATK e +15% CD no R1) e o usuário decide quando ele vale. A extensão de 2 s por Normal/Carregado e o contador que não corre fora de campo NÃO entram. No modo planilha o extra vale o tempo todo (o gabarito dela assume Nightsoul).",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/piloto-armas.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/piloto-armas.ts.",
+    "timing": [
+      {
+        "root": [
+          "atkPct",
+          "critDmg"
+        ],
+        "label": "Scorching Brilliance",
+        "duration": 6,
+        "auto": {
+          "on": [
+            "skill",
+            "burst"
+          ],
+          "cooldown": 10,
+          "cast": true,
+          "extend": {
+            "on": [
+              "normal",
+              "charged"
+            ],
+            "add": 2,
+            "max": 6,
+            "every": 1
+          }
+        },
+        "pausesFor": [
+          "Mavuika",
+          "Citlali",
+          "Kachina",
+          "Kinich",
+          "Mualani",
+          "Xilonen",
+          "Chasca",
+          "Ororon",
+          "Varesa",
+          "Iansan",
+          "Ifa"
+        ]
+      },
+      {
+        "buff": "nightsoul",
+        "duration": 6,
+        "auto": {
+          "on": [
+            "skill",
+            "burst"
+          ],
+          "cooldown": 10,
+          "cast": true,
+          "extend": {
+            "on": [
+              "normal",
+              "charged"
+            ],
+            "add": 2,
+            "max": 6,
+            "every": 1
+          }
+        },
+        "wielders": [
+          "Mavuika",
+          "Citlali",
+          "Kachina",
+          "Kinich",
+          "Mualani",
+          "Xilonen",
+          "Chasca",
+          "Ororon",
+          "Varesa",
+          "Iansan",
+          "Ifa"
+        ],
+        "pausesFor": [
+          "Mavuika",
+          "Citlali",
+          "Kachina",
+          "Kinich",
+          "Mualani",
+          "Xilonen",
+          "Chasca",
+          "Ororon",
+          "Varesa",
+          "Iansan",
+          "Ifa"
+        ]
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -40583,7 +41951,18 @@
       }
     ],
     "note": "Assume a reação Electro feita (12 s).",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts.",
+    "timing": [
+      {
+        "root": [
+          "atkPct"
+        ],
+        "duration": 12,
+        "auto": {
+          "on": []
+        }
+      }
+    ]
   },
   {
     "atkPct": 0.12,
@@ -40672,7 +42051,21 @@
       }
     ],
     "note": "Assume o Supremo usado (15 s). A velocidade não entra.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts.",
+    "timing": [
+      {
+        "root": [
+          "atkPct"
+        ],
+        "duration": 15,
+        "auto": {
+          "on": [
+            "burst"
+          ],
+          "cast": true
+        }
+      }
+    ]
   },
   {
     "atkPct": 0.2,
@@ -40761,7 +42154,18 @@
       }
     ],
     "note": "Assume a reação Hydro feita (12 s).",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts.",
+    "timing": [
+      {
+        "root": [
+          "atkPct"
+        ],
+        "duration": 12,
+        "auto": {
+          "on": []
+        }
+      }
+    ]
   },
   {
     "atkPct": 0.12,
@@ -40850,7 +42254,18 @@
       }
     ],
     "note": "Assume um inimigo derrotado (15 s). A velocidade não entra.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts.",
+    "timing": [
+      {
+        "root": [
+          "atkPct"
+        ],
+        "duration": 15,
+        "auto": {
+          "on": []
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -41143,7 +42558,19 @@
       }
     ],
     "note": "Stacks de ATK (4 por padrão).",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts.",
+    "timing": [
+      {
+        "buff": "stacks",
+        "duration": 6,
+        "auto": {
+          "on": [
+            "normal",
+            "charged"
+          ]
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -43443,7 +44870,16 @@
       }
     ],
     "note": "Dano Crítico e os stacks de DMG por Vínculo (0 por padrão: escolha se o personagem tem Vínculo).",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts.",
+    "timing": [
+      {
+        "buff": "vinculo",
+        "duration": 6,
+        "auto": {
+          "on": []
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -43940,7 +45376,20 @@
       }
     ],
     "note": "Stacks de ATK (5 por padrão); o dobro com escudo é uma faixa.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts.",
+    "timing": [
+      {
+        "buff": "stacks",
+        "duration": 8,
+        "auto": {
+          "on": []
+        }
+      },
+      {
+        "buff": "escudo",
+        "duration": 8
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -44473,7 +45922,27 @@
       }
     ],
     "note": "DMG de habilidade e Supremo e os stacks de Taxa Crítica de cada um (4 por padrão).",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts.",
+    "timing": [
+      {
+        "buff": "taxa-hab",
+        "duration": 10,
+        "auto": {
+          "on": [
+            "skill"
+          ]
+        }
+      },
+      {
+        "buff": "taxa-sup",
+        "duration": 10,
+        "auto": {
+          "on": [
+            "burst"
+          ]
+        }
+      }
+    ]
   },
   {
     "atkPct": 0.12,
@@ -44676,7 +46145,25 @@
       }
     ],
     "note": "ATK depois da habilidade; o ATK por Vínculo limpo (até 150 no R1) é faixa.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts.",
+    "timing": [
+      {
+        "root": [
+          "atkPct"
+        ],
+        "duration": 15,
+        "auto": {
+          "on": [
+            "skill"
+          ],
+          "cast": true
+        }
+      },
+      {
+        "buff": "vinculo",
+        "duration": 15
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -44963,7 +46450,21 @@
       }
     ],
     "note": "Taxa Crítica da habilidade e Recarga (5 s depois da habilidade, assumida ativa).",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts.",
+    "timing": [
+      {
+        "root": [
+          "er"
+        ],
+        "duration": 5,
+        "auto": {
+          "on": [
+            "skill"
+          ],
+          "cast": true
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -45292,7 +46793,25 @@
       }
     ],
     "note": "DMG próprio sempre ativo. O ATK e o DMG da equipe vêm de 2 Sigils: faixas.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts.",
+    "timing": [
+      {
+        "team": true,
+        "duration": 12,
+        "auto": {
+          "on": [],
+          "cooldown": 20
+        }
+      },
+      {
+        "buff": "cancao",
+        "duration": 12,
+        "auto": {
+          "on": [],
+          "cooldown": 20
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -45806,7 +47325,27 @@
       }
     ],
     "note": "HP e Maestria por HP (stacks, 3 por padrão); a Maestria da equipe é faixa.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts.",
+    "timing": [
+      {
+        "buff": "em-hp",
+        "duration": 20,
+        "auto": {
+          "on": [
+            "skill"
+          ]
+        }
+      },
+      {
+        "buff": "em-time",
+        "duration": 20,
+        "auto": {
+          "on": [
+            "skill"
+          ]
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -45961,7 +47500,18 @@
       }
     ],
     "note": "Taxa Crítica e o dano extra por Maestria no Normal e na habilidade (28 acertos).",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts.",
+    "timing": [
+      {
+        "flat": "DMG por Maestria",
+        "duration": 12,
+        "auto": {
+          "on": [
+            "normal"
+          ]
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -46272,7 +47822,16 @@
       }
     ],
     "note": "Valores base; o dobro depois de dano Geo é faixa.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts.",
+    "timing": [
+      {
+        "buff": "geo",
+        "duration": 15,
+        "auto": {
+          "on": []
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -46769,7 +48328,20 @@
       }
     ],
     "note": "Stacks de ATK (5 por padrão); o dobro com escudo é uma faixa.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts.",
+    "timing": [
+      {
+        "buff": "stacks",
+        "duration": 8,
+        "auto": {
+          "on": []
+        }
+      },
+      {
+        "buff": "escudo",
+        "duration": 8
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -47266,7 +48838,20 @@
       }
     ],
     "note": "Stacks de ATK (5 por padrão); o dobro com escudo é uma faixa.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts.",
+    "timing": [
+      {
+        "buff": "stacks",
+        "duration": 8,
+        "auto": {
+          "on": []
+        }
+      },
+      {
+        "buff": "escudo",
+        "duration": 8
+      }
+    ]
   },
   {
     "atkPct": 0.2,
@@ -47541,7 +49126,13 @@
       }
     ],
     "note": "ATK sempre; o da equipe (inimigo abaixo de 30% de HP) é faixa.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts.",
+    "timing": [
+      {
+        "buff": "lobo",
+        "duration": 12
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -48205,7 +49796,31 @@
       }
     ],
     "note": "Stacks de Four Winds' Hymn (4 por padrão); com Hexerei: Secret Rite, também Dano Crítico.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts.",
+    "timing": [
+      {
+        "buff": "stacks",
+        "duration": 4,
+        "auto": {
+          "on": [
+            "normal",
+            "charged",
+            "skill"
+          ]
+        }
+      },
+      {
+        "buff": "hex",
+        "duration": 4,
+        "auto": {
+          "on": [
+            "normal",
+            "charged",
+            "skill"
+          ]
+        }
+      }
+    ]
   },
   {
     "atkPct": 0.28,
@@ -48516,7 +50131,18 @@
       }
     ],
     "note": "ATK e os stacks de DMG Estelar (3 por padrão).",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts.",
+    "timing": [
+      {
+        "buff": "estelar",
+        "duration": 5,
+        "auto": {
+          "on": [
+            "charged"
+          ]
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -49323,7 +50949,33 @@
       }
     ],
     "note": "ATK mínimo (18% no R1) e o extra pela distância (0 por padrão; 18 passos dobram).",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts.",
+    "timing": [
+      {
+        "root": [
+          "atkPct"
+        ],
+        "duration": 14,
+        "auto": {
+          "on": [
+            "skill"
+          ],
+          "cooldown": 14,
+          "cast": true
+        }
+      },
+      {
+        "buff": "distancia",
+        "duration": 14,
+        "auto": {
+          "on": [
+            "skill"
+          ],
+          "cooldown": 14,
+          "cast": true
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -49820,7 +51472,20 @@
       }
     ],
     "note": "Stacks de ATK (5 por padrão); o dobro com escudo é uma faixa.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts.",
+    "timing": [
+      {
+        "buff": "stacks",
+        "duration": 8,
+        "auto": {
+          "on": []
+        }
+      },
+      {
+        "buff": "escudo",
+        "duration": 8
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -50616,7 +52281,22 @@
       }
     ],
     "note": "Stacks de Consummation (6 por padrão); o dobro fora de campo é faixa.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts.",
+    "timing": [
+      {
+        "buff": "stacks",
+        "duration": 20,
+        "auto": {
+          "on": [
+            "skill"
+          ]
+        }
+      },
+      {
+        "buff": "fora",
+        "duration": 20
+      }
+    ]
   },
   {
     "atkPct": 0.15,
@@ -50909,7 +52589,16 @@
       }
     ],
     "note": "ATK e os stacks de DMG com Queimadura (2 por padrão).",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts.",
+    "timing": [
+      {
+        "buff": "stacks",
+        "duration": 8,
+        "auto": {
+          "on": []
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -51430,7 +53119,42 @@
       }
     ],
     "note": "Stacks (3 por padrão) de DMG da habilidade e de Estelar-Conduct e o DMG elemental dos 3 stacks.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts.",
+    "timing": [
+      {
+        "root": [
+          "dmgPct"
+        ],
+        "label": "DMG com 3 stacks",
+        "duration": 24,
+        "auto": {
+          "on": [
+            "skill"
+          ],
+          "cast": true
+        }
+      },
+      {
+        "buff": "stacks",
+        "duration": 24,
+        "auto": {
+          "on": [
+            "skill"
+          ],
+          "cast": true
+        }
+      },
+      {
+        "buff": "estelar",
+        "duration": 24,
+        "auto": {
+          "on": [
+            "skill"
+          ],
+          "cast": true
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -51633,7 +53357,19 @@
       }
     ],
     "note": "DMG elemental por HP máximo, até o teto (12% no R1), depois do Supremo ou de um escudo.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts.",
+    "timing": [
+      {
+        "buff": "hp-dmg",
+        "duration": 3,
+        "auto": {
+          "on": [
+            "burst"
+          ],
+          "cast": true
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -52219,7 +53955,20 @@
       }
     ],
     "note": "Maestria própria; o buff de 4 Sigils da equipe é faixa.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts.",
+    "timing": [
+      {
+        "buff": "cancao",
+        "duration": 12,
+        "auto": {
+          "on": [
+            "skill",
+            "burst"
+          ],
+          "cooldown": 20
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -52368,7 +54117,18 @@
       }
     ],
     "note": "DMG elemental e o dano extra por Maestria no Carregado (12 acertos).",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts.",
+    "timing": [
+      {
+        "flat": "DMG do Carregado por Maestria",
+        "duration": 10,
+        "auto": {
+          "on": [
+            "charged"
+          ]
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -53584,7 +55344,26 @@
       }
     ],
     "note": "DEF; os bônus de Geo e Lunar-Cristalizar (do portador e dos aliados) são faixas.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons3.ts.",
+    "timing": [
+      {
+        "buff": "favor",
+        "duration": 6,
+        "auto": {
+          "on": [
+            "skill"
+          ]
+        }
+      },
+      {
+        "buff": "mischief-geo",
+        "duration": 6
+      },
+      {
+        "buff": "mischief-lc",
+        "duration": 6
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -54051,7 +55830,27 @@
       }
     ],
     "note": "Um efeito por caixa.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons4.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons4.ts.",
+    "timing": [
+      {
+        "buff": "carregado",
+        "duration": 6,
+        "auto": {
+          "on": [
+            "normal"
+          ]
+        }
+      },
+      {
+        "buff": "atk",
+        "duration": 6,
+        "auto": {
+          "on": [
+            "charged"
+          ]
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -55236,7 +57035,29 @@
       }
     ],
     "note": "Um efeito por caixa; o de 0 de energia vale dentro dos 12 s depois da habilidade.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons4.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons4.ts.",
+    "timing": [
+      {
+        "buff": "habilidade",
+        "duration": 12,
+        "auto": {
+          "on": [
+            "skill"
+          ],
+          "cast": true
+        }
+      },
+      {
+        "buff": "sem-energia",
+        "duration": 12,
+        "auto": {
+          "on": [
+            "skill"
+          ],
+          "cast": true
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -56279,7 +58100,45 @@
       }
     ],
     "note": "Dano Crítico do Supremo sempre; o ATK do dono tem caixa própria; o ATK dos aliados (3 s) vale nas janelas. Com Hexerei: Secret Rite (2+ membros) os dois ATK sobem 75%.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons4.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons4.ts.",
+    "timing": [
+      {
+        "buff": "lamina",
+        "duration": 3,
+        "auto": {
+          "on": [
+            "burst"
+          ]
+        }
+      },
+      {
+        "buff": "time",
+        "duration": 3,
+        "auto": {
+          "on": [
+            "burst"
+          ]
+        }
+      },
+      {
+        "buff": "hex",
+        "duration": 3,
+        "auto": {
+          "on": [
+            "burst"
+          ]
+        }
+      },
+      {
+        "buff": "hext",
+        "duration": 3,
+        "auto": {
+          "on": [
+            "burst"
+          ]
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -56734,7 +58593,23 @@
       }
     ],
     "note": "Um efeito por caixa.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons4.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons4.ts.",
+    "timing": [
+      {
+        "buff": "pyro",
+        "duration": 15,
+        "auto": {
+          "on": []
+        }
+      },
+      {
+        "buff": "outros",
+        "duration": 15,
+        "auto": {
+          "on": []
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -57189,7 +59064,29 @@
       }
     ],
     "note": "Um efeito por caixa.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons4.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons4.ts.",
+    "timing": [
+      {
+        "buff": "habilidade",
+        "duration": 15,
+        "auto": {
+          "on": [
+            "skill"
+          ],
+          "cast": true
+        }
+      },
+      {
+        "buff": "vinculo",
+        "duration": 15,
+        "auto": {
+          "on": [
+            "skill"
+          ],
+          "cast": true
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -57644,7 +59541,27 @@
       }
     ],
     "note": "Um efeito por caixa.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons4.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons4.ts.",
+    "timing": [
+      {
+        "buff": "carregado",
+        "duration": 10,
+        "auto": {
+          "on": [
+            "charged"
+          ]
+        }
+      },
+      {
+        "buff": "habilidade",
+        "duration": 10,
+        "auto": {
+          "on": [
+            "skill"
+          ]
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -58279,7 +60196,34 @@
       }
     ],
     "note": "Um efeito por caixa.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons4.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons4.ts.",
+    "timing": [
+      {
+        "buff": "redemoinho",
+        "duration": 6,
+        "auto": {
+          "on": []
+        }
+      },
+      {
+        "buff": "habilidade",
+        "duration": 9,
+        "auto": {
+          "on": [
+            "skill"
+          ]
+        }
+      },
+      {
+        "buff": "supremo",
+        "duration": 30,
+        "auto": {
+          "on": [
+            "burst"
+          ]
+        }
+      }
+    ]
   },
   {
     "atkPct": 0.28,
@@ -58758,7 +60702,28 @@
       }
     ],
     "note": "ATK sempre; um Dano Crítico do Imersivo por caixa.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons4.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons4.ts.",
+    "timing": [
+      {
+        "buff": "dawn",
+        "duration": 15,
+        "auto": {
+          "on": [
+            "plunge"
+          ]
+        }
+      },
+      {
+        "buff": "twilight",
+        "duration": 15,
+        "auto": {
+          "on": [
+            "skill",
+            "burst"
+          ]
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -59423,7 +61388,35 @@
       }
     ],
     "note": "Uma Maestria por caixa; com as duas, +120% de Florescer, +80% de Hiperflorescer e Brotar e +40% de Lunar-Florescer para a equipe (faixa).",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons4.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons4.ts.",
+    "timing": [
+      {
+        "buff": "oracao",
+        "duration": 4.5,
+        "auto": {
+          "on": [
+            "skill"
+          ]
+        }
+      },
+      {
+        "buff": "lua",
+        "duration": 10,
+        "auto": {
+          "on": [],
+          "by": "team"
+        }
+      },
+      {
+        "buff": "florescer",
+        "duration": 4.5,
+        "auto": {
+          "on": [
+            "skill"
+          ]
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -59722,7 +61715,16 @@
       }
     ],
     "note": "HP base sempre; o HP extra e o Dano Crítico Lunar depois de reação Lunar têm caixa própria.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons4.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons4.ts.",
+    "timing": [
+      {
+        "buff": "vinho",
+        "duration": 12,
+        "auto": {
+          "on": []
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -60207,7 +62209,28 @@
       }
     ],
     "note": "Um efeito por caixa.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons4.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons4.ts.",
+    "timing": [
+      {
+        "buff": "hab-sup",
+        "duration": 6,
+        "auto": {
+          "on": [
+            "normal"
+          ]
+        }
+      },
+      {
+        "buff": "normal",
+        "duration": 6,
+        "auto": {
+          "on": [
+            "skill",
+            "burst"
+          ]
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -60686,7 +62709,27 @@
       }
     ],
     "note": "Um efeito por caixa.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons4.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons4.ts.",
+    "timing": [
+      {
+        "buff": "habilidade",
+        "duration": 5,
+        "auto": {
+          "on": [
+            "normal"
+          ]
+        }
+      },
+      {
+        "buff": "normal",
+        "duration": 5,
+        "auto": {
+          "on": [
+            "skill"
+          ]
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -61609,7 +63652,89 @@
       }
     ],
     "note": "Um efeito por caixa; com Hexerei: Secret Rite os bônus sobem 75%.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons4.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons4.ts.",
+    "timing": [
+      {
+        "buff": "unforgivable",
+        "duration": 3,
+        "auto": {
+          "on": [
+            "skill"
+          ],
+          "cooldown": 18,
+          "cast": true,
+          "extend": {
+            "on": [
+              "skill",
+              "burst"
+            ],
+            "add": 1,
+            "max": 14,
+            "every": 0
+          }
+        }
+      },
+      {
+        "buff": "hex",
+        "duration": 3,
+        "auto": {
+          "on": [
+            "skill"
+          ],
+          "cooldown": 18,
+          "cast": true,
+          "extend": {
+            "on": [
+              "skill",
+              "burst"
+            ],
+            "add": 1,
+            "max": 14,
+            "every": 0
+          }
+        }
+      },
+      {
+        "buff": "irreparable",
+        "duration": 3,
+        "auto": {
+          "on": [
+            "skill"
+          ],
+          "cooldown": 18,
+          "cast": true,
+          "extend": {
+            "on": [
+              "normal",
+              "charged"
+            ],
+            "add": 1,
+            "max": 14,
+            "every": 0
+          }
+        }
+      },
+      {
+        "buff": "hex-hab",
+        "duration": 3,
+        "auto": {
+          "on": [
+            "skill"
+          ],
+          "cooldown": 18,
+          "cast": true,
+          "extend": {
+            "on": [
+              "normal",
+              "charged"
+            ],
+            "add": 1,
+            "max": 14,
+            "every": 0
+          }
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -62298,7 +64423,39 @@
       }
     ],
     "note": "Dano Crítico sempre; a Maestria da habilidade e os stacks (3 por padrão) têm caixa própria; com Radiance: Stellar-Conduct, Dano Crítico Estelar-Conduct por stack (faixa).",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons4.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons4.ts.",
+    "timing": [
+      {
+        "buff": "crystal",
+        "duration": 20,
+        "auto": {
+          "on": [
+            "skill"
+          ],
+          "cast": true
+        }
+      },
+      {
+        "buff": "stacks",
+        "duration": 20,
+        "auto": {
+          "on": [
+            "skill"
+          ],
+          "cast": true
+        }
+      },
+      {
+        "buff": "radiance",
+        "duration": 20,
+        "auto": {
+          "on": [
+            "skill"
+          ],
+          "cast": true
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -62933,7 +65090,34 @@
       }
     ],
     "note": "Taxa Crítica sempre; um efeito por caixa. O reforço vale com os dois juntos.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons4.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons4.ts.",
+    "timing": [
+      {
+        "buff": "segredo",
+        "duration": 12,
+        "auto": {
+          "on": [
+            "skill"
+          ]
+        }
+      },
+      {
+        "buff": "verdade",
+        "duration": 4,
+        "auto": {
+          "on": []
+        }
+      },
+      {
+        "buff": "ambos",
+        "duration": 4,
+        "auto": {
+          "on": [
+            "skill"
+          ]
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -63568,7 +65752,25 @@
       }
     ],
     "note": "Um efeito por caixa.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons4.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons4.ts.",
+    "timing": [
+      {
+        "buff": "habilidade",
+        "duration": 8,
+        "auto": {
+          "on": [
+            "skill"
+          ]
+        }
+      },
+      {
+        "buff": "dano",
+        "duration": 8,
+        "auto": {
+          "on": []
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -64538,7 +66740,20 @@
       }
     ],
     "note": "DMG da habilidade sempre; o extra depois da habilidade de um aliado tem caixa própria.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons4.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons4.ts.",
+    "timing": [
+      {
+        "buff": "aliado",
+        "duration": 8,
+        "auto": {
+          "on": [
+            "skill"
+          ],
+          "by": "others",
+          "cast": true
+        }
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -65053,7 +67268,20 @@
       }
     ],
     "note": "Stacks de Verdant (3 por padrão). Com Radiance: Stellar Glimmer, ligue a faixa por cima: ela troca a Maestria por mais ATK e DMG Estelar.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons4.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons4.ts.",
+    "timing": [
+      {
+        "buff": "stacks",
+        "duration": 6,
+        "auto": {
+          "on": []
+        }
+      },
+      {
+        "buff": "radiance",
+        "duration": 6
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -67247,7 +69475,63 @@
       }
     ],
     "note": "O +ATK da primeira fase fica sempre; as fases de Maestria e de DMG Estelar são faixas. O Contrapuntal soma uma cópia da fase ativa na hora da reação Estelar: ligue a faixa da mesma fase.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons4.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons4.ts.",
+    "timing": [
+      {
+        "root": [
+          "atkPct"
+        ],
+        "label": "Harmonic Movement (ATK)",
+        "duration": 10,
+        "auto": {
+          "on": [],
+          "cooldown": 10,
+          "periodic": true,
+          "sequence": {
+            "index": 0,
+            "length": 3
+          }
+        }
+      },
+      {
+        "buff": "em",
+        "duration": 10,
+        "auto": {
+          "on": [],
+          "cooldown": 10,
+          "periodic": true,
+          "sequence": {
+            "index": 1,
+            "length": 3
+          }
+        }
+      },
+      {
+        "buff": "estelar",
+        "duration": 10,
+        "auto": {
+          "on": [],
+          "cooldown": 10,
+          "periodic": true,
+          "sequence": {
+            "index": 2,
+            "length": 3
+          }
+        }
+      },
+      {
+        "buff": "contra-atk",
+        "duration": 12
+      },
+      {
+        "buff": "contra-em",
+        "duration": 12
+      },
+      {
+        "buff": "contra-estelar",
+        "duration": 12
+      }
+    ]
   },
   {
     "atkPct": 0,
@@ -68001,7 +70285,19 @@
       }
     ],
     "note": "ATK pela Recarga acima de 100%; a Recarga extra de 12 s depois do Supremo tem caixa própria.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons4.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons4.ts.",
+    "timing": [
+      {
+        "buff": "recarga",
+        "duration": 12,
+        "auto": {
+          "on": [
+            "burst"
+          ],
+          "cast": true
+        }
+      }
+    ]
   },
   {
     "atkPct": 0.12,
@@ -68348,6 +70644,16 @@
       }
     ],
     "note": "ATK; o DMG por ATK depois de criar um escudo é faixa (ligue nos golpes do personagem ativo). Com Hexerei: Secret Rite, os membros Hexerei fora de campo ganham metade: faixa própria.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons4.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros por refinamento); curadoria em scripts/curation/weapons4.ts.",
+    "timing": [
+      {
+        "buff": "luz",
+        "duration": 20
+      },
+      {
+        "buff": "luz-hex",
+        "duration": 20
+      }
+    ]
   }
 ]

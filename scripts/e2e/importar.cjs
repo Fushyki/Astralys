@@ -58,7 +58,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.setInputFiles('input[aria-label="Escolher projeto"]', file0);
   await page.waitForURL(/\/projeto\/(?!exemplo)[^/]+$/, { timeout: 30000 });
   await page.waitForSelector('[data-testid="team-dps"]', { timeout: 30000 });
-  check('importar o time exportado abre o projeto com DPS 97.192', (await page.textContent('[data-testid="team-dps"]')) === '97.192');
+  check('importar o time exportado abre o projeto com DPS 106.288', (await page.textContent('[data-testid="team-dps"]')) === '106.288');
   const importedUrl = page.url();
 
   await page.click('.dz-nav a:has-text("Times")'); await page.waitForSelector('.vt-card');
@@ -79,7 +79,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.setInputFiles('input[aria-label="Escolher projeto"]', file);
   await page.waitForURL(/\/projeto\/(?!exemplo)[^/]+$/, { timeout: 30000 });
   await page.waitForSelector('[data-testid="team-dps"]', { timeout: 30000 });
-  check('reimportar o JSON reproduz o mesmo DPS', (await page.textContent('[data-testid="team-dps"]')) === '97.192');
+  check('reimportar o JSON reproduz o mesmo DPS', (await page.textContent('[data-testid="team-dps"]')) === '106.288');
 
   // Inválido
   await page.goto(`${BASE}/vault`, { waitUntil: 'networkidle' }); await page.waitForSelector('.vt-card');
@@ -89,7 +89,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   check('arquivo inválido mostra um erro claro', /JSON válido/.test(await page.$eval('[role="alert"]', (e) => e.textContent).catch(() => '')));
 
   await page.goto(importedUrl, { waitUntil: 'networkidle' });
-  check('o projeto importado reabre pelo endereço', (await page.textContent('[data-testid="team-dps"]')) === '97.192');
+  check('o projeto importado reabre pelo endereço', (await page.textContent('[data-testid="team-dps"]')) === '106.288');
 
   // Comparar
   await page.goto(`${BASE}/comparar?a=exemplo`, { waitUntil: 'networkidle' });

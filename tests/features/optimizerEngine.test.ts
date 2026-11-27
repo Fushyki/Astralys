@@ -102,8 +102,9 @@ describe('otimizador com o motor real', () => {
     expect(inv.artifacts.some((a) => a.setKey !== 'ObsidianCodex')).toBe(true);
     expect(inv.removed.set).toBe(0);
     const evaluator = createEvaluator({ ...base, objective: config.objective, constraints: config.constraints });
+    // Com sets marcados o otimizador só devolve builds com o bônus completo (4 peças ou 2+2): a força bruta segue a mesma regra.
     const allowedOnly = (vec: Float64Array, cfg: { primarySet?: string; secondarySet?: string; fourPiece?: boolean }) =>
-      [cfg.primarySet, cfg.secondarySet].every((x) => !x || x === 'Obsidian Codex') ? evaluator.evaluate(vec, cfg) : -Infinity;
+      cfg.fourPiece !== false && [cfg.primarySet, cfg.secondarySet].every((x) => !x || x === 'Obsidian Codex') ? evaluator.evaluate(vec, cfg) : -Infinity;
     const expected = bruteForce(inv.slots, allowedOnly, 5);
     const got = runOptimizer({ ...base, good, characterKey: 'Mavuika', config });
     expect(got.builds.length).toBe(expected.length);
@@ -274,7 +275,9 @@ describe('peças reais no personagem (MemberRef.pieces)', () => {
     const rp = resolveProject(patched, game, effects);
     const b = analyzeProject({ team: rp.team, actions: rp.actions, flatEffects: rp.flatEffects, ampCoefficient: rp.ampCoefficient });
     expect(b.optimization.result.totals.avg).toBeCloseTo(top.report.teamAvg, 3);
-    expect(rp.team.members[0].primarySet?.name).toBe(top.config.primarySet);
+    // No 2+2 a ordem dos dois sets não importa.
+    const sets = (c: { primarySet?: { name: string } | string; secondarySet?: { name: string } | string }) => [c.primarySet, c.secondarySet].map((x) => (typeof x === 'string' ? x : x?.name) ?? '').sort();
+    expect(sets(rp.team.members[0])).toEqual(sets(top.config));
   });
 
   it('com menos de 5 peças, as posições vazias não contam (sem ATK de pluma nem HP de flor)', () => {

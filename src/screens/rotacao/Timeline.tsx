@@ -11,7 +11,7 @@ import { effectiveDuration, type ActionResult } from '../../engine';
 import { specialOfMove } from '../../engine/project';
 import { MIN_WINDOW, minPush } from '../../features/rotation/projectOps';
 import type { LaneInfo } from '../../features/rotation/rotationModel';
-import { fieldSegments, groupBuffLanes, hitTag } from '../../features/rotation/screenModel';
+import { fieldSegments, groupBuffLanes, hitTag, tagsWithWindow } from '../../features/rotation/screenModel';
 import { useRotationStore } from '../../features/rotation/store';
 import { SNAP, SNAP_COARSE, snap } from '../../features/rotation/timelineGeometry';
 import { formatDecimal, formatInt, formatPercent } from '../../ui/format';
@@ -85,7 +85,7 @@ export function Timeline({ v, lanes }: { v: ProjectView; lanes: LaneInfo[] }) {
   const maxAvg = useMemo(() => results.reduce((m, r) => Math.max(m, r.avg), 0), [results]);
   const total = v.bundle.optimization.result.totals.avg || 1;
   const effects = v.resolved.team.members.map((m) => m.characterEffect);
-  const windowedTags = useMemo(() => new Set(project.buffWindows.map((w) => w.tag)), [project.buffWindows]);
+  const windowedTags = useMemo(() => tagsWithWindow(project, lanes), [project, lanes]);
   const groups = useMemo(() => groupBuffLanes(lanes, names, windowedTags, buffMode === 'active'), [lanes, names, windowedTags, buffMode]);
   const field = useMemo(() => fieldSegments(project, duration), [project, duration]);
   const nextAt = mode === 'order' ? (project.actions.length ? lastTime + Math.max(0.05, gap) : 0) : playhead;
@@ -348,13 +348,31 @@ export function Timeline({ v, lanes }: { v: ProjectView; lanes: LaneInfo[] }) {
                 const wins = project.buffWindows.filter((w) => w.tag === lane.tag);
                 const color = lane.giver !== null ? v.colors[lane.giver] : '#c3caea';
                 const short = lane.label;
+                // Sem janela do usuário, valem as automáticas (pelos golpes, com a duração do texto), se ele não as tirou.
+                const auto = wins.length === 0 && !project.autoOff.includes(lane.tag) ? lane.auto ?? [] : [];
                 return (
                   <div className="rt-lane buff" key={lane.tag} style={{ gridTemplateColumns: `${labelW}px ${trackW}px` }}>
                     <span className="lname"><b title={lane.detail}>{short}</b><span>→ {lane.target}</span></span>
                     <div className="trk">
-                      {wins.length === 0 && (
+                      {auto.map(([start, end], k) => (
+                        <button
+                          key={`auto-${k}`}
+                          type="button"
+                          className="rt-bar auto"
+                          aria-label={`${lane.label}, janela automática de ${dec(start, 1)} a ${dec(end, 1)} segundos: ajustar`}
+                          title={`${lane.detail}\nJanela automática: aberta pelos golpes da rotação, com a duração do texto do jogo. Clique para ajustar; Delete tira o buff.`}
+                          style={{ left: `${x(Math.min(start, tmax))}%`, width: `${x(Math.max(0, Math.min(end, tmax) - Math.min(start, tmax)))}%`, background: color }}
+                          onClick={() => st().adoptAutoWindows(lane.tag, auto, k)}
+                          onKeyDown={(e) => { if (e.key === 'Delete' || e.key === 'Backspace') { e.preventDefault(); e.stopPropagation(); st().setAutoWindows(lane.tag, false); } }}
+                        >
+                          <span className="fx">{lane.value}</span>
+                          <span className="win num">auto {dec(start, 1)}–{dec(end, 1)} s</span>
+                        </button>
+                      ))}
+                      {wins.length === 0 && auto.length === 0 && (
                         <div className="rt-nowin">
                           <span>Sem janela · não entra no cálculo</span>
+                          {lane.auto && project.autoOff.includes(lane.tag) && <button type="button" className="dz-btn sm ghost" onClick={() => st().setAutoWindows(lane.tag, true)}>Automática</button>}
                           <button type="button" className="dz-btn sm ghost" onClick={() => { const id = st().addWindow(lane.tag, 0, duration); if (id) st().setWindowMode(id, 'whole'); }}>Rotação inteira</button>
                           <button type="button" className="dz-btn sm ghost" onClick={() => st().addWindow(lane.tag, snap(playhead), lane.duration)}>Definir tempo</button>
                         </div>

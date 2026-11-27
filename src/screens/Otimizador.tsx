@@ -304,7 +304,7 @@ export function OtimizadorPanel({ index }: { index: number }) {
     try {
       return evaluateEquipped({
         good, characterKey, config: { ...config(), constraints: {} }, member: index, rolls: v.bundle.optimization.rolls, ref,
-        resolved: { team: teamForRun, actions: v.resolved.actions, flatEffects: v.resolved.flatEffects, ampCoefficient: v.resolved.ampCoefficient },
+        resolved: { team: teamForRun, actions: v.resolved.actions, flatEffects: v.resolved.flatEffects, ampCoefficient: v.resolved.ampCoefficient, autoBlocked: v.resolved.autoBlocked },
         planilha: project.compat === 'planilha', game: data.game, effects: data.effects,
       }, ref.pieces?.length ? (ref.pieces as GoodArtifact[]) : kqmCurrent);
     } catch {
@@ -324,7 +324,7 @@ export function OtimizadorPanel({ index }: { index: number }) {
     const j = startOptimizerJob(
       {
         good, characterKey, config: config(), member: index, rolls: v.bundle.optimization.rolls, ref,
-        resolved: { team: teamForRun, actions: v.resolved.actions, flatEffects: v.resolved.flatEffects, ampCoefficient: v.resolved.ampCoefficient },
+        resolved: { team: teamForRun, actions: v.resolved.actions, flatEffects: v.resolved.flatEffects, ampCoefficient: v.resolved.ampCoefficient, autoBlocked: v.resolved.autoBlocked },
         planilha: project.compat === 'planilha', game: data.game, effects: data.effects,
       },
       setProgress,
@@ -456,7 +456,7 @@ export function OtimizadorPanel({ index }: { index: number }) {
     const rx = (v.resolved.actions.find((x) => x.member === index && x.move.id === focusMove.id)?.reaction ?? 'none') as ReactionChoice;
     const input = {
       good: good ?? ({ format: 'GOOD', characters: [], weapons: [], artifacts: [] } as Good), characterKey, member: index, rolls: v.bundle.optimization.rolls, ref,
-      resolved: { team: v.resolved.team, actions: v.resolved.actions, flatEffects: v.resolved.flatEffects, ampCoefficient: v.resolved.ampCoefficient },
+      resolved: { team: v.resolved.team, actions: v.resolved.actions, flatEffects: v.resolved.flatEffects, ampCoefficient: v.resolved.ampCoefficient, autoBlocked: v.resolved.autoBlocked },
       planilha: project.compat === 'planilha', game: data.game, effects: data.effects,
     };
     try {

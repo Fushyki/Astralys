@@ -105,6 +105,8 @@
 .rt-bar .fx { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .rt-bar .win { margin-left: auto; font-size: var(--fs-1); opacity: .85; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .rt-bar[aria-pressed='true'] { outline: 2px solid var(--gold); outline-offset: 2px; }
+/* janela automática: borda tracejada por dentro; clicar a torna do usuário */
+.rt-bar.auto { cursor: pointer; border: 2px dashed var(--bg); }
 .rt-bar .edge { position: absolute; top: 0; bottom: 0; width: 7px; cursor: ew-resize; }
 .rt-bar .edge.l { left: 0; }
 .rt-bar .edge.r { right: 0; }

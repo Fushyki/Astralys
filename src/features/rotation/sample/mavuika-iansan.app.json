@@ -926,6 +926,9 @@
       "note": "Bennett Q"
     }
   ],
+  "autoOff": [
+    "label:Thrilling Tales of Dragon Slayers: ATK do próximo personagem"
+  ],
   "buffWindows": [
     {
       "id": "w1",

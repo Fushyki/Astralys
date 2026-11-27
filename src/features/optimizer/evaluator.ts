@@ -11,6 +11,7 @@ import {
   activeTeamDelta,
   assembleTeam,
   addDelta,
+  applyAutoWindows,
   cloneBlock,
   foldSources,
   type StatBlock,
@@ -77,7 +78,7 @@ export interface Constraints {
 }
 
 export interface EvaluatorInput {
-  resolved: Pick<ResolvedProject, 'team' | 'actions' | 'flatEffects' | 'ampCoefficient'>;
+  resolved: Pick<ResolvedProject, 'team' | 'actions' | 'flatEffects' | 'ampCoefficient' | 'autoBlocked'>;
   /** O projeto está no modo planilha (os 4 personagens da planilha ficam só com os efeitos dela). */
   planilha?: boolean;
   member: number;
@@ -122,14 +123,15 @@ export function createEvaluator(input: EvaluatorInput): Evaluator {
   const { resolved, member, game, effects } = input;
   const name = resolved.team.members[member].character.name;
   const rolls = input.rolls.map((r, i) => (i === member ? zeroRolls() : r));
-  const cache = new Map<string, { members: MemberInput[]; flat: ResolvedProject['flatEffects']; assembly?: TeamAssembly; share?: StatsShare; baseStatics?: StatBlock; moves?: Map<string, RotationAction | null> }>();
+  const cache = new Map<string, { members: MemberInput[]; flat: ResolvedProject['flatEffects']; actions?: RotationAction[]; assembly?: TeamAssembly; share?: StatsShare; baseStatics?: StatBlock; moves?: Map<string, RotationAction | null> }>();
+  const autoBlocked = new Set(resolved.autoBlocked);
 
   const forConfig = (config: SetConfig) => {
     const key = configKey(config);
     let hit = cache.get(key);
     if (!hit) {
       const ref: MemberRef = { ...input.ref, primarySet: config.primarySet, secondarySet: config.secondarySet, fourPiece: config.fourPiece };
-      const base = resolved.team.members.map((m, i) => (i === member ? resolveMember(ref, game, effects, resolved.team.config.minRollsPerSubstat, resolved.team.config.characterLevel) : m));
+      const base = resolved.team.members.map((m, i) => (i === member ? resolveMember(ref, game, effects, resolved.team.config.minRollsPerSubstat, resolved.team.config.characterLevel, !!input.planilha) : m));
       // Só o membro refeito passa pelas regras: os outros já vieram finalizados e rodá-las de novo contaria duas vezes o que escala por nível.
       const done = finalizeMembers(base, !!input.planilha);
       const members = base.map((m, i) => (i === member ? done[i] : resolved.team.members[i]));
@@ -168,7 +170,8 @@ export function createEvaluator(input: EvaluatorInput): Evaluator {
       hit.share ??= { volatile: member, team: new Map(), final: new Map() };
     }
     const t1 = now();
-    const stats = finalStats(mine, assembly.statics[member], zeroRolls(), activeTeamDelta(assembly.buffs, name, new Set<string>()), assembly.resonanceAtkPct);
+    // Ficha para os mínimos: o que vale sempre mais as passivas próprias com duração (a janela só mexe no dano).
+    const stats = finalStats(mine, assembly.statics[member], zeroRolls(), activeTeamDelta(assembly.buffs, name, 'all', (b) => !!b.always || !!b.sheet), assembly.resonanceAtkPct);
     if (evalTimes.on) {
       evalTimes.assembleMs += t1 - t0;
       evalTimes.finalStatsMs += performance.now() - t1;
@@ -193,7 +196,8 @@ export function createEvaluator(input: EvaluatorInput): Evaluator {
   const rotation = (r: ReturnType<typeof run>) =>
     evaluateRotation(
       { members: r.members, assembly: r.assembly, config: r.team.config, rolls, flatEffects: withoutDecay(r.flat), ampCoefficient: resolved.ampCoefficient, shared: r.hit.share },
-      resolved.actions,
+      // As janelas automáticas mudam com o set testado (não com as peças): uma vez por set.
+      (r.hit.actions ??= applyAutoWindows(resolved.actions, r.assembly.buffs, r.flat, autoBlocked)),
     );
 
   /** Um golpe do kit sozinho, com todas as etiquetas de buff ligadas (como a tabela de dano do personagem). */

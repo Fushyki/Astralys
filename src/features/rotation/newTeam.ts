@@ -51,6 +51,7 @@ export function buildNewTeam(input: NewTeamInput, game: Pick<GameData, 'characte
     flatStacks: {},
     actions: [],
     buffWindows: [],
+    autoOff: [],
     chains: {},
     disabled: [],
     enabled: [],

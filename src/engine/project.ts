@@ -11,6 +11,7 @@ import { planilhaEffect, planilhaWeapon } from './compat/planilha';
 import { activeCharacterBuffs } from './stats';
 import { applyHitLimits } from './hitLimits';
 import { assembleTeam } from './team';
+import { applyAutoWindows, timedSet, timedWeapon } from './timing';
 import { weaponStatsAt, type CharacterBuff, type CharacterEffect, type FlatDamageEffect, type Proc, type SetEffect, type WeaponEffect, type WeaponFlat } from '../effects/schema';
 import { SUBSTATS, zeroRolls, type Rolls } from './artifacts';
 import { RealPieceSchema, buildFromPieces } from './pieces';
@@ -227,6 +228,8 @@ export const RotationProjectSchema = z
     actions: z.array(ActionSchema).default([]),
     /** Janelas de buff no tempo; dão as etiquetas das ações com `tagSource: 'windows'`. */
     buffWindows: z.array(BuffWindowSchema).default([]),
+    /** Faixas cujas janelas automáticas o usuário tirou. */
+    autoOff: z.array(z.string()).default([]),
     /** Golpes contínuos: intervalo e fim com que cada grupo (`ActionRef.chainId`) foi criado. */
     chains: z.record(z.object({ every: z.number().positive(), until: z.number().min(0) })).default({}),
     /** Ids de buffs/fontes desligados pelo usuário (checkbox em "Buffs recebidos"). */
@@ -564,6 +567,7 @@ export function gearFlat(members: MemberInput[], off: ReadonlySet<string> = new 
           name: `${origin}: ${f.name}`, source: m.character.name, sourceStat: f.sourceStat, perPoint: f.perPoint, threshold: 0,
           ...(f.capPerHit !== undefined ? { capPerHit: f.capPerHit } : {}), targets, elements: f.elements ?? [], hitTypes: f.hitTypes, ...(f.labels?.length ? { labels: f.labels } : {}),
           ...(f.stacks !== undefined ? { stacks: f.stacks } : {}), ...(f.decay ? { decay: f.decay } : {}), ...(f.reaction ? { reaction: f.reaction } : {}), ...(f.pool ? { pool: f.pool } : {}), active: true, fonte_info: `Passiva de ${origin} (curadoria do Lunaris)`,
+          ...(f.duration ? { window: true, ...(f.auto ? { auto: [{ ...f.auto, member: i, duration: f.duration }] } : {}) } : {}),
         });
       }
     }
@@ -582,13 +586,19 @@ export function factionsOf(chosen: readonly ('moonsign' | 'hexerei')[] | undefin
 
 /** `planilha`: o projeto está no modo planilha (a arma leva o extra de Nightsoul fixo; ver `planilhaWeapon`). */
 export function resolveMember(ref: MemberRef, data: GameData, effects: EffectsData, minRolls = 0, defaultLevel = 90, planilha = false): MemberInput {
-  const setOf = (name?: string) => (name ? { name, effect: effects.sets.find((s) => s.set === name) } : undefined);
+  // Fora do modo planilha, o que tem duração no texto da arma ou do set vira janela (`timing`).
+  const setOf = (name?: string) => {
+    if (!name) return undefined;
+    const effect = effects.sets.find((s) => s.set === name);
+    return { name, effect: planilha ? effect : timedSet(effect, ref.character) };
+  };
   const level = ref.level ?? defaultLevel;
   const character = characterAtLevel(byName(data.characters, ref.character, 'Personagem'), level, data.levels);
   const weapon: Weapon = ref.weapon === NO_WEAPON
     ? { id: 0, name: NO_WEAPON, namePt: NO_WEAPON, type: character.weapon, rarity: 1, baseAtk: 0, substat: null, passive: null }
     : byName(data.weapons, ref.weapon, 'Arma');
-  const weaponEffect = effects.weapons.find((w) => w.weapon === weapon.name);
+  const found = effects.weapons.find((w) => w.weapon === weapon.name);
+  const weaponEffect = planilha ? found : timedWeapon(found, character.name);
   const real = ref.pieces?.length
     ? buildFromPieces(ref.pieces, character.element, data.artifacts.map((a) => a.name))
     : ref.noArtifacts ? { stats: {}, primarySet: undefined, secondarySet: undefined, fourPiece: false } : undefined;
@@ -649,6 +659,8 @@ export interface ResolvedProject {
   /** Parte de `gearIds` que vem de condições da aba Talentos (o otimizador não as liga sozinho). */
   condIds: string[];
   flatEffects: FlatDamageEffect[];
+  /** Faixas sem janela automática: o usuário criou ou tirou as janelas delas (ou as marca à mão). */
+  autoBlocked: string[];
   /** Coeficiente de EM das amplificadoras (undefined = o padrão do motor, 25/9). */
   ampCoefficient: number | undefined;
 }
@@ -880,7 +892,7 @@ function withPoints(a: Pick<ActionRef, 'move' | 'extraScale'>, points: number | 
 /** Transforma o projeto salvo nas entradas do motor. Lança ProjectResolveError se algo não existir nos dados. */
 export function resolveProject(project: RotationProject, data: GameData, effects: EffectsData): ResolvedProject {
   const planilha = project.compat === 'planilha';
-  const members = finalizeMembers(project.members.map((m) => resolveMember(m, data, effects, project.config.minRollsPerSubstat, project.config.characterLevel)), planilha).map((m, i) => {
+  const members = finalizeMembers(project.members.map((m) => resolveMember(m, data, effects, project.config.minRollsPerSubstat, project.config.characterLevel, planilha)), planilha).map((m, i) => {
     // Multiplicador de golpes (Furina): o motor de dano o lê direto do kit, então o interruptor do buff o tira daqui.
     const off = (m.characterEffect?.buffs ?? []).filter((b) => b.moveMult && project.disabled.includes(`cbuff-${i}-${b.id}`));
     return off.length ? { ...m, characterEffect: { ...m.characterEffect!, buffs: m.characterEffect!.buffs.filter((b) => !off.includes(b)) } } : m;
@@ -895,6 +907,7 @@ export function resolveProject(project: RotationProject, data: GameData, effects
   // Último instante de dano de cada membro por tipo de golpe, em ordem de tempo.
   // shortcut: só a primeira volta (o fim da rotação não conta para o começo); trocar se o site passar a simular o ciclo.
   const lastHit: Partial<Record<HitType, number>>[] = members.map(() => ({}));
+  const chains = new Set<string>();
   const actions: RotationAction[] = chronological.map((a, i) => {
     const base =
       a.move.talent === 'proc' ? procMove(procs[a.member] ?? [], a.move, a.displayName)
@@ -916,6 +929,8 @@ export function resolveProject(project: RotationProject, data: GameData, effects
       ...(a.tagSource === 'windows' ? { tagAges: tagAgesAt(project.buffWindows, a.time) } : {}),
       dmgAdjust: a.dmgAdjust,
       ...(a.contributors?.length ? { contributors: a.contributors } : {}),
+      ...(a.tagsOff?.length ? { tagsOff: a.tagsOff } : {}),
+      ...(a.chainId && (chains.has(a.chainId) || !chains.add(a.chainId)) ? { repeat: true } : {}),
       ...(a.flatOff?.length ? { flatOff: a.flatOff } : {}),
       ...(a.flatOn?.length ? { flatOn: a.flatOn } : {}),
       ...(a.vinculo !== undefined ? { vinculo: a.vinculo } : {}),
@@ -927,6 +942,18 @@ export function resolveProject(project: RotationProject, data: GameData, effects
   const gearIds = members.flatMap((m, i) => (project.members[i]?.gearManual ? gearSourceIds(m, i) : []));
   const condIds = members.flatMap((m, i) => (project.members[i]?.condManual ? (m.characterEffect?.buffs ?? []).filter((b) => b.condition).map((b) => `cbuff-${i}-${b.id}`) : []));
   gearIds.push(...condIds.filter((id) => !gearIds.includes(id)));
+  // Parte que virou janela: o liga/desliga que o usuário já tinha na parte antiga continua valendo.
+  members.forEach((m, i) => {
+    for (const b of m.characterEffect?.buffs ?? []) {
+      if (!b.legacy) continue;
+      const id = `cbuff-${i}-${b.id}`;
+      const old = b.legacy === 'static' ? `m${i}:cbuff-${b.id}` : `m${i}:${b.legacy}`;
+      const at = gearIds.indexOf(id);
+      // Desligado à mão continua desligado (também no otimizador, que lê `condIds`); ligado à mão continua ligado.
+      if (project.disabled.includes(old)) { if (at < 0) gearIds.push(id); condIds.push(id); }
+      else if (at >= 0 && project.enabled.includes(old)) gearIds.splice(at, 1);
+    }
+  });
   const gearOff = gearIds.filter((id) => !project.enabled.includes(id));
   const disabled = [...project.disabled, ...gearOff];
   // Bônus de um golpe só (`onMove`) é lido do kit pelo motor de dano: o desligado sai dali.
@@ -935,16 +962,23 @@ export function resolveProject(project: RotationProject, data: GameData, effects
     return off.length ? { ...m, characterEffect: { ...m.characterEffect!, buffs: m.characterEffect!.buffs.filter((b) => !off.includes(b)) } } : m;
   });
   const team: TeamInput = { members: playing, extras: project.extras, config, disabled };
-  if (project.buffWindows.some((w) => w.maxHits)) applyHitLimits(project.buffWindows, actions, assembleTeam(team, {}), members.map((m) => m.character.name));
+  const flatEffects = [...applyFlatLevels(effects.flatDamage, members).map((e) => ({ ...e, ...(project.compat !== 'planilha' && e.stacks !== undefined ? { window: true as const } : {}) })), ...gearFlat(members, new Set(team.disabled))].map((e) => {
+    const o = project.flatStacks?.[flatId(e)];
+    return o === undefined ? e : { ...e, stacks: o === 'all' ? undefined : o };
+  });
+  const assembly = assembleTeam(team, {});
+  // Faixa que o usuário já controla (janelas dele, tirada, ou etiqueta marcada à mão num golpe) não ganha janela automática.
+  const byHand = project.actions.flatMap((a) => (a.tagSource === 'manual' ? a.activeTags : []));
+  const autoBlocked = [...new Set([...project.buffWindows.map((w) => w.tag), ...project.autoOff, ...byHand])];
+  const timed = applyAutoWindows(actions, assembly.buffs, flatEffects, new Set(autoBlocked));
+  if (project.buffWindows.some((w) => w.maxHits)) applyHitLimits(project.buffWindows, timed, assembly, members.map((m) => m.character.name));
   return {
     team,
     gearIds,
     condIds,
-    actions,
-    flatEffects: [...applyFlatLevels(effects.flatDamage, members).map((e) => ({ ...e, ...(project.compat !== 'planilha' && e.stacks !== undefined ? { window: true as const } : {}) })), ...gearFlat(members, new Set(team.disabled))].map((e) => {
-      const o = project.flatStacks?.[flatId(e)];
-      return o === undefined ? e : { ...e, stacks: o === 'all' ? undefined : o };
-    }),
+    actions: timed,
+    flatEffects,
+    autoBlocked,
     ampCoefficient: project.compat === 'planilha' ? AMP_EM_COEFFICIENT_SHEET : undefined,
   };
 }

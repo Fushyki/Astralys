@@ -32,7 +32,7 @@ const pngSize = (file) => { const b = fs.readFileSync(file); return { w: b.readU
   check('a aba Times está ativa', (await page.locator('.dz-nav a[aria-current="page"]').textContent()).includes('Times'));
   check('abre em 4:5 (1080×1350)', (await page.locator('.pc').evaluate((e) => `${parseInt(e.style.width)}x${parseInt(e.style.height)}`)) === '1080x1350');
   const text = await page.textContent('.pc');
-  check('o card mostra DPS 97.192 e 1,70 mi', text.includes('97.192') && text.includes('1,70 mi'), '');
+  check('o card mostra DPS 106.288 e 1,86 mi', text.includes('106.288') && text.includes('1,86 mi'), '');
   check('mostra os 4 personagens e a reação (Derreter · 53% do dano)', ['Mavuika', 'Citlali', 'Iansan', 'Bennett'].every((n) => text.includes(n)) && /Derreter\s*·\s*53%\s*do dano/.test(text));
   const gear = await page.locator('.pc .gl').allInnerTexts();
   check('cada personagem mostra o set de artefatos que usa (ex.: Obsidian Codex 4p)', gear.length === 4 && gear.some((g) => /Obsidian Codex\s*4p/.test(g.replace(/\n/g, ' '))), gear.join(' | ').replace(/\n/g, ' '));

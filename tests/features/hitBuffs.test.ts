@@ -49,7 +49,7 @@ describe('desligar um buff só para um golpe (tagsOff)', () => {
     expect(hit(b2).action.activeTags).not.toContain(row.tag);
     expect(hit(b2).avg).toBeLessThan(hit(b).avg);
     // só esse golpe mudou: os outros mantêm as etiquetas
-    const other = base.actions.find((a) => a.id !== burst.id && a.activeTags.includes(row.tag))!;
+    const other = r.actions.find((a) => a.id !== burst.id && a.activeTags.includes(row.tag))!;
     expect(b2.optimization.result.actions.find((x) => x.action.id === other.id)!.action.activeTags).toContain(row.tag);
     // a linha aparece desligada, com o ganho que ele daria
     const again = hitBuffRows(off, r2, b2, burst.id).find((x) => x.tag === row.tag)!;

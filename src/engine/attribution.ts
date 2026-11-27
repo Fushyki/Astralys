@@ -73,7 +73,8 @@ export function attributeBuffs(input: AttributionInput): AttributionResult {
       if (b.resShred && b.resShred.value > 0) candidates.push({ id: `cbuff-res-${i}-${b.id}`, label: `${names[i]}: ${b.label} (redução de RES)`, kind: 'res-shred', member: i });
     }
     const sr = fourPieceActive(m) ? m.primarySet?.effect?.fourPiece?.resShred : undefined;
-    if (sr && sr.value > 0) candidates.push({ id: `set-res-shred-${i}`, label: `${names[i]}: ${m.primarySet?.name} (redução de RES)`, kind: 'res-shred', member: i });
+    // Com duração, a redução já é um buff de time (entrou acima, com o mesmo id).
+    if (sr && sr.value > 0 && !sr.duration) candidates.push({ id: `set-res-shred-${i}`, label: `${names[i]}: ${m.primarySet?.name} (redução de RES)`, kind: 'res-shred', member: i });
   });
 
   const items: Attribution[] = candidates.map((c) => {

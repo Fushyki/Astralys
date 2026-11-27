@@ -33,7 +33,7 @@ export default function Rotacao() {
 
   const lanes = useMemo(() => laneInfos(v.project, v.resolved), [v.project, v.resolved]);
   const counts = countActions(v.project);
-  const buffs = windowedBuffs(v.project);
+  const buffs = windowedBuffs(v.project, lanes);
   // "Apertar a linha" só faz sentido se algum golpe sairia do lugar (há espaços vazios entre eles).
   const canTighten = useMemo(() => {
     if (v.project.actions.length === 0) return false;

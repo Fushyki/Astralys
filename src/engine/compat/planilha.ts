@@ -331,6 +331,7 @@ export function projectFromPlanilha(imported: PlanilhaImport, options: ProjectFr
       note: a.note,
     })),
     buffWindows: [],
+    autoOff: [],
     chains: {},
     disabled: [],
     enabled: [],

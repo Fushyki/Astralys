@@ -204,7 +204,21 @@
     },
     "twoPieceBuffs": [],
     "note": "Assume o bônus de 8 s depois da habilidade sempre ativo.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts.",
+    "timing": [
+      {
+        "root": [
+          "dmgPctByType"
+        ],
+        "duration": 8,
+        "auto": {
+          "on": [
+            "skill"
+          ],
+          "cast": true
+        }
+      }
+    ]
   },
   {
     "set": "Instructor",
@@ -237,7 +251,16 @@
     },
     "twoPieceBuffs": [],
     "note": "Os +120 de Maestria (parâmetro 1) vão para a equipe inteira, dono incluído, nas janelas de buff. O gatilho (qualquer Reação Elemental causada, 8 s, parâmetro 0) é do usuário: a janela é ligada onde a reação acontece. 2 peças: +80 de Maestria, sempre.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/piloto-sets.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/piloto-sets.ts.",
+    "timing": [
+      {
+        "team": true,
+        "duration": 8,
+        "auto": {
+          "on": []
+        }
+      }
+    ]
   },
   {
     "set": "Gambler",
@@ -519,7 +542,16 @@
     "twoPieceBuffs": [],
     "note": "+60% de Redemoinho e +20% de Redemoinho Estelar (também como ação na rotação). Entra a redução de 40% da RES de cada elemento (Pyro, Hydro, Electro, Cryo) que existe no time, assumida sempre ativa; a RES Cryo do Redemoinho Estelar não é separada.",
     "partial": true,
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts.",
+    "timing": [
+      {
+        "res": true,
+        "duration": 10,
+        "auto": {
+          "on": []
+        }
+      }
+    ]
   },
   {
     "set": "Wanderer's Troupe",
@@ -617,7 +649,20 @@
     },
     "twoPieceBuffs": [],
     "note": "Assume o +30% de dano Cryo do Supremo (10 s) sempre ativo. Os +100% de Supercondutor entram na tabela de reações.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts.",
+    "timing": [
+      {
+        "root": [
+          "dmgPct"
+        ],
+        "duration": 10,
+        "auto": {
+          "on": [
+            "burst"
+          ]
+        }
+      }
+    ]
   },
   {
     "set": "Thundering Fury",
@@ -672,7 +717,22 @@
       "meltBonus": 0.15,
       "vaporizeBonus": 0.15
     },
-    "fonte_info": "planilha Mavuika_Iansan_Combo2, aba \"Sets (efeitos)\". 1 stack"
+    "fonte_info": "planilha Mavuika_Iansan_Combo2, aba \"Sets (efeitos)\". 1 stack",
+    "timing": [
+      {
+        "root": [
+          "dmgPct"
+        ],
+        "label": "Stack depois da Habilidade",
+        "duration": 10,
+        "auto": {
+          "on": [
+            "skill"
+          ],
+          "cast": true
+        }
+      }
+    ]
   },
   {
     "set": "Noblesse Oblige",
@@ -695,7 +755,19 @@
         "em": 0
       }
     },
-    "fonte_info": "planilha Mavuika_Iansan_Combo2, aba \"Sets (efeitos)\""
+    "fonte_info": "planilha Mavuika_Iansan_Combo2, aba \"Sets (efeitos)\"",
+    "timing": [
+      {
+        "team": true,
+        "duration": 12,
+        "auto": {
+          "on": [
+            "burst"
+          ],
+          "cast": true
+        }
+      }
+    ]
   },
   {
     "set": "Bloodstained Chivalry",
@@ -756,7 +828,13 @@
     },
     "twoPieceBuffs": [],
     "note": "+50% de DMG do Carregado por 10 s depois de derrotar um inimigo: faixa no plano de combate, ligue na janela.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts.",
+    "timing": [
+      {
+        "buff": "carregado",
+        "duration": 10
+      }
+    ]
   },
   {
     "set": "Prayers for Illumination",
@@ -857,7 +935,13 @@
     "twoPieceBuffs": [],
     "note": "+35% de DMG elemental da equipe por 10 s depois de pegar um fragmento de Cristalizar: faixa no plano de combate. Só um elemento por vez; ligue em quem tem o elemento do fragmento.",
     "partial": true,
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts.",
+    "timing": [
+      {
+        "buff": "geo",
+        "duration": 10
+      }
+    ]
   },
   {
     "set": "Retracing Bolide",
@@ -916,7 +1000,21 @@
     },
     "twoPieceBuffs": [],
     "note": "Assume o bônus de 15 s depois da habilidade sempre ativo.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts.",
+    "timing": [
+      {
+        "root": [
+          "dmgPctByType"
+        ],
+        "duration": 15,
+        "auto": {
+          "on": [
+            "skill"
+          ],
+          "cast": true
+        }
+      }
+    ]
   },
   {
     "set": "Tenacity of the Millelith",
@@ -949,7 +1047,18 @@
     },
     "twoPieceBuffs": [],
     "note": "ATK da equipe por 3 s depois da habilidade: só vale nas janelas de buff. A força do escudo NÃO entra.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts.",
+    "timing": [
+      {
+        "team": true,
+        "duration": 3,
+        "auto": {
+          "on": [
+            "skill"
+          ]
+        }
+      }
+    ]
   },
   {
     "set": "Pale Flame",
@@ -1041,7 +1150,27 @@
     },
     "twoPieceBuffs": [],
     "note": "Assume 2 stacks (9% de ATK cada) e, com eles, o bônus Físico de 2 peças dobrado (+25%).",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts.",
+    "timing": [
+      {
+        "buff": "stacks",
+        "duration": 7,
+        "auto": {
+          "on": [
+            "skill"
+          ]
+        }
+      },
+      {
+        "buff": "fisico",
+        "duration": 7,
+        "auto": {
+          "on": [
+            "skill"
+          ]
+        }
+      }
+    ]
   },
   {
     "set": "Shimenawa's Reminiscence",
@@ -1062,7 +1191,21 @@
       "meltBonus": 0,
       "vaporizeBonus": 0
     },
-    "fonte_info": "planilha Mavuika_Iansan_Combo2, aba \"Sets (efeitos)\""
+    "fonte_info": "planilha Mavuika_Iansan_Combo2, aba \"Sets (efeitos)\"",
+    "timing": [
+      {
+        "root": [
+          "dmgPctByType"
+        ],
+        "duration": 10,
+        "auto": {
+          "on": [
+            "skill"
+          ],
+          "cast": true
+        }
+      }
+    ]
   },
   {
     "set": "Emblem of Severed Fate",
@@ -1171,7 +1314,16 @@
     },
     "twoPieceBuffs": [],
     "note": "Assume os 4 stacks de Curiosity (+24% de DEF e +24% de DMG Geo). O DMG Geo vale como DMG% geral: use em personagens Geo.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts.",
+    "timing": [
+      {
+        "buff": "stacks",
+        "duration": 6,
+        "auto": {
+          "on": []
+        }
+      }
+    ]
   },
   {
     "set": "Ocean-Hued Clam",
@@ -1224,7 +1376,21 @@
     },
     "twoPieceBuffs": [],
     "note": "Só os 8% de ATK do Supremo. Os +10% por perda de HP (até 4 vezes) NÃO entram.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts.",
+    "timing": [
+      {
+        "root": [
+          "atkPct"
+        ],
+        "duration": 16,
+        "auto": {
+          "on": [
+            "burst"
+          ],
+          "cast": true
+        }
+      }
+    ]
   },
   {
     "set": "Echoes of an Offering",
@@ -1288,7 +1454,19 @@
     },
     "twoPieceBuffs": [],
     "note": "Reduz a RES Dendro do inimigo em 30% (assume sempre ativo).",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts.",
+    "timing": [
+      {
+        "res": true,
+        "duration": 8,
+        "auto": {
+          "on": [
+            "skill",
+            "burst"
+          ]
+        }
+      }
+    ]
   },
   {
     "set": "Gilded Dreams",
@@ -1397,7 +1575,25 @@
     },
     "twoPieceBuffs": [],
     "note": "Faixas de 8 s depois de uma reação: ATK por aliado do mesmo elemento e Maestria por aliado de elemento diferente (até 3 cada). Ligue nas janelas.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts.",
+    "timing": [
+      {
+        "buff": "mesmo",
+        "duration": 8,
+        "auto": {
+          "on": [],
+          "cooldown": 8
+        }
+      },
+      {
+        "buff": "outro",
+        "duration": 8,
+        "auto": {
+          "on": [],
+          "cooldown": 8
+        }
+      }
+    ]
   },
   {
     "set": "Desert Pavilion Chronicle",
@@ -1430,7 +1626,20 @@
     },
     "twoPieceBuffs": [],
     "note": "Assume o bônus de 15 s depois do ataque carregado sempre ativo. A velocidade de ataque NÃO entra.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts.",
+    "timing": [
+      {
+        "root": [
+          "dmgPctByType"
+        ],
+        "duration": 15,
+        "auto": {
+          "on": [
+            "charged"
+          ]
+        }
+      }
+    ]
   },
   {
     "set": "Flower of Paradise Lost",
@@ -1503,7 +1712,16 @@
     },
     "twoPieceBuffs": [],
     "note": "Florescer, Hiperflorescer e Brotar +40% e Lunar-Florescer +10%; cada stack soma +25% desses valores (até 4): a quantidade é escolha sua (padrão: 4).",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts.",
+    "timing": [
+      {
+        "buff": "stacks",
+        "duration": 10,
+        "auto": {
+          "on": []
+        }
+      }
+    ]
   },
   {
     "set": "Nymph's Dream",
@@ -1613,7 +1831,23 @@
     },
     "twoPieceBuffs": [],
     "note": "ATK (7/16/25%) e dano Hydro (4/9/15%) de Mirrored Nymph: a quantidade de stacks é escolha sua (padrão: 3).",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts.",
+    "timing": [
+      {
+        "buff": "nymph-atk",
+        "duration": 8,
+        "auto": {
+          "on": []
+        }
+      },
+      {
+        "buff": "nymph-dmg",
+        "duration": 8,
+        "auto": {
+          "on": []
+        }
+      }
+    ]
   },
   {
     "set": "Vourukasha's Glow",
@@ -1711,7 +1945,16 @@
     },
     "twoPieceBuffs": [],
     "note": "Assume 3 stacks de +12% de Taxa Crítica (variação de HP).",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts.",
+    "timing": [
+      {
+        "buff": "stacks",
+        "duration": 5,
+        "auto": {
+          "on": []
+        }
+      }
+    ]
   },
   {
     "set": "Golden Troupe",
@@ -1827,7 +2070,21 @@
     },
     "twoPieceBuffs": [],
     "note": "Assume +20% de dano Geo depois da habilidade sempre ativo. O aumento com escudo de Cristalizar NÃO entra.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts.",
+    "timing": [
+      {
+        "root": [
+          "dmgPct"
+        ],
+        "duration": 10,
+        "auto": {
+          "on": [
+            "skill"
+          ],
+          "cast": true
+        }
+      }
+    ]
   },
   {
     "set": "Fragment of Harmonic Whimsy",
@@ -1889,7 +2146,16 @@
     },
     "twoPieceBuffs": [],
     "note": "Assume 3 stacks de +18% de dano (Bond of Life).",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts.",
+    "timing": [
+      {
+        "buff": "stacks",
+        "duration": 6,
+        "auto": {
+          "on": []
+        }
+      }
+    ]
   },
   {
     "set": "Unfinished Reverie",
@@ -1963,7 +2229,36 @@
         }
       ]
     },
-    "note": "Duas faixas no plano de combate, para o dono e a equipe: +12% por 15 s e, se o dono estava em Bênção do Espírito da Noite, +28% por 20 s. Valem para quem tem o elemento do dono ou um elemento da reação (escolhidos na Equipe, em \"Elementos da reação\"). Conjuntos com o mesmo nome não acumulam."
+    "note": "Duas faixas no plano de combate, para o dono e a equipe: +12% por 15 s e, se o dono estava em Bênção do Espírito da Noite, +28% por 20 s. Valem para quem tem o elemento do dono ou um elemento da reação (escolhidos na Equipe, em \"Elementos da reação\"). Conjuntos com o mesmo nome não acumulam.",
+    "timing": [
+      {
+        "buff": "reacao",
+        "duration": 15,
+        "auto": {
+          "on": []
+        }
+      },
+      {
+        "buff": "noite",
+        "duration": 20,
+        "auto": {
+          "on": []
+        },
+        "wielders": [
+          "Mavuika",
+          "Citlali",
+          "Kachina",
+          "Kinich",
+          "Mualani",
+          "Xilonen",
+          "Chasca",
+          "Ororon",
+          "Varesa",
+          "Iansan",
+          "Ifa"
+        ]
+      }
+    ]
   },
   {
     "set": "Obsidian Codex",
@@ -1991,7 +2286,32 @@
     },
     "twoPieceBuffs": [],
     "note": "Assume o dono sempre em Bênção do Espírito da Noite e em campo: 2 peças = +15% de DMG (parâmetro 0 do 2 peças, vale para qualquer elemento) e 4 peças = +40% de Taxa CRIT (6 s, gatilho 1 vez por segundo ao gastar 1 ponto de Espírito da Noite; com o gasto contínuo a cobertura é total). Fora da Bênção ou fora de campo os dois bônus não valem: o motor não tem essa condição, o usuário deve tirar o set.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/piloto-sets.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/piloto-sets.ts.",
+    "timing": [
+      {
+        "root": [
+          "critRate"
+        ],
+        "duration": 6,
+        "auto": {
+          "on": [],
+          "cast": true
+        },
+        "wielders": [
+          "Mavuika",
+          "Citlali",
+          "Kachina",
+          "Kinich",
+          "Mualani",
+          "Xilonen",
+          "Chasca",
+          "Ororon",
+          "Varesa",
+          "Iansan",
+          "Ifa"
+        ]
+      }
+    ]
   },
   {
     "set": "Long Night's Oath",
@@ -2055,7 +2375,20 @@
     },
     "twoPieceBuffs": [],
     "note": "Assume 5 stacks de +15% de dano do ataque imersivo.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts.",
+    "timing": [
+      {
+        "buff": "stacks",
+        "duration": 6,
+        "auto": {
+          "on": [
+            "plunge",
+            "charged",
+            "skill"
+          ]
+        }
+      }
+    ]
   },
   {
     "set": "Finale of the Deep Galleries",
@@ -2223,7 +2556,30 @@
     },
     "twoPieceBuffs": [],
     "note": "Por 4 s depois de uma reação Lunar com o dono em campo: +15%/30% de Taxa Crítica (Nascent/Ascendant Gleam) e +10% de DMG das reações Lunares da equipe: faixas. Cada efeito Gleaming Moon diferente soma 10%; o mesmo efeito em dois membros não se soma.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts.",
+    "timing": [
+      {
+        "buff": "cr-n",
+        "duration": 4,
+        "auto": {
+          "on": []
+        }
+      },
+      {
+        "buff": "cr-a",
+        "duration": 4,
+        "auto": {
+          "on": []
+        }
+      },
+      {
+        "buff": "lunar",
+        "duration": 4,
+        "auto": {
+          "on": []
+        }
+      }
+    ]
   },
   {
     "set": "Silken Moon's Serenade",
@@ -2352,7 +2708,30 @@
     },
     "twoPieceBuffs": [],
     "note": "Por 8 s depois de causar dano elemental: +60/120 de Maestria da equipe (Nascent/Ascendant Gleam) e +10% de DMG das reações Lunares da equipe: faixas. Cada efeito Gleaming Moon diferente soma 10%; o mesmo efeito não se soma.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts.",
+    "timing": [
+      {
+        "buff": "em-n",
+        "duration": 8,
+        "auto": {
+          "on": []
+        }
+      },
+      {
+        "buff": "em-a",
+        "duration": 8,
+        "auto": {
+          "on": []
+        }
+      },
+      {
+        "buff": "lunar",
+        "duration": 8,
+        "auto": {
+          "on": []
+        }
+      }
+    ]
   },
   {
     "set": "Aubade of Morningstar and Moon",
@@ -2480,7 +2859,18 @@
     },
     "twoPieceBuffs": [],
     "note": "Só o +25% de ATK. O efeito extra de \"Witch's Homework\" NÃO entra.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts.",
+    "timing": [
+      {
+        "root": [
+          "atkPct"
+        ],
+        "duration": 6,
+        "auto": {
+          "on": []
+        }
+      }
+    ]
   },
   {
     "set": "Celestial Gift",
@@ -2632,7 +3022,13 @@
     },
     "twoPieceBuffs": [],
     "note": "+16% de Taxa Crítica e +40% de Redemoinho Estelar por 10 s depois de um Redemoinho Estelar: faixa no plano de combate.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts.",
+    "timing": [
+      {
+        "buff": "taxa",
+        "duration": 10
+      }
+    ]
   },
   {
     "set": "Heart of the Furnace",
@@ -2724,6 +3120,19 @@
     },
     "twoPieceBuffs": [],
     "note": "+12% de ATK do dono por 12 s depois de uma reação Estelar e +50% de DMG Estelar da equipe (não se soma com outro Heart of the Furnace): faixas.",
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts.",
+    "timing": [
+      {
+        "buff": "atk",
+        "duration": 12
+      },
+      {
+        "buff": "estelar",
+        "duration": 12,
+        "auto": {
+          "on": []
+        }
+      }
+    ]
   }
 ]

@@ -13,7 +13,7 @@
  */
 import { readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
-import { CharacterBuffSchema, CharacterEffectSchema, ProcSchema, SetEffectSchema, WeaponEffectSchema, type CharacterBuff, type CharacterEffect, type Proc, type SetEffect, type WeaponEffect, type WeaponFlat, type WeaponStats } from '../src/effects/schema';
+import { CharacterBuffSchema, CharacterEffectSchema, ProcSchema, SetEffectSchema, TimedPartSchema, WeaponEffectSchema, type CharacterBuff, type CharacterEffect, type Proc, type SetEffect, type TimedPart, type WeaponEffect, type WeaponFlat, type WeaponStats } from '../src/effects/schema';
 import { FOUR_PIECE, type Val } from './curation/sets';
 import { FOUR_PIECE_2 } from './curation/sets2';
 import { PILOTO_SETS } from './curation/piloto-sets';
@@ -25,6 +25,7 @@ import { PILOTO_ARMAS } from './curation/piloto-armas';
 import { WEAPONS_3 } from './curation/weapons3';
 import { WEAPONS_4 } from './curation/weapons4';
 import type { BuffCur, FlatCur, GearCur, ProcCur, StatsCur, Sum } from './curation/gear';
+import { SET_TIMING, WEAPON_TIMING, type TimeCur } from './curation/timing';
 import { CHARACTERS as CHARACTERS_1 } from './curation/characters';
 import { CHARACTERS_2 } from './curation/characters2';
 import { CHARACTERS_3 } from './curation/characters3';
@@ -403,7 +404,63 @@ function gearStats(full: GearCur, c: Ctx): WeaponStats {
   };
 }
 
-const sets = buildSets();
+// ---------- Partes com duração (viram janelas) ----------
+
+/** Confere cada linha de `curation/timing.ts` contra o efeito pronto e resolve os segundos pelo parâmetro do Lunaris. */
+function timingOf(name: string, list: TimeCur[], gears: (Pick<WeaponStats, 'buffs' | 'flat' | 'team'> & { resShred?: unknown })[], texts: { text: string; params: number[] }[]): TimedPart[] {
+  return list.map((t) => {
+    const where = `${name} (tempo ${t.buff ?? t.flat ?? t.root?.join('+') ?? (t.team ? 'equipe' : 'RES')})`;
+    const seconds = texts.map((x) => valueOf(t.s, x.params, where, x.text));
+    if (seconds.some((s) => s !== seconds[0] || !(s > 0))) throw new Error(`${where}: duração inválida ou que muda com o refino (${seconds.join(', ')})`);
+    if (typeof t.s === 'object' && 'lit' in t.s && !new RegExp(`(^|[^\\d.])${t.s.lit}(\\.0)? ?s(ec|econds?)?\\b`).test(texts[0].text)) throw new Error(`${where}: "${t.s.lit}s" não está no texto`);
+    for (const g of gears) {
+      if (t.buff && !g.buffs.some((b) => b.id === t.buff)) throw new Error(`${where}: não existe o buff "${t.buff}"`);
+      if (t.flat && !g.flat.some((f) => f.name === t.flat)) throw new Error(`${where}: não existe o dano fixo "${t.flat}"`);
+      if (t.team && !g.team) throw new Error(`${where}: não há buff de equipe`);
+      if (t.res && !g.resShred) throw new Error(`${where}: não há redução de RES`);
+      for (const key of t.root ?? []) {
+        const v = (g as unknown as Record<string, unknown>)[key];
+        if (!v || (typeof v === 'object' && Object.keys(v).length === 0)) throw new Error(`${where}: o campo "${key}" está vazio`);
+      }
+    }
+    const auto = t.auto;
+    const cooldown = auto?.cd === undefined ? undefined : valueOf(auto.cd, texts[0].params, where, texts[0].text);
+    return TimedPartSchema.parse({
+      ...(t.root ? { root: t.root } : {}), ...(t.team ? { team: true } : {}), ...(t.res ? { res: true } : {}), ...(t.buff ? { buff: t.buff } : {}), ...(t.flat ? { flat: t.flat } : {}),
+      ...(t.label ? { label: t.label } : {}), duration: seconds[0],
+      ...(auto ? { auto: { on: auto.on ?? [], ...(auto.by ? { by: auto.by } : {}), ...(cooldown ? { cooldown } : {}), ...(auto.periodic ? { periodic: true } : {}), ...(auto.seq ? { sequence: { index: auto.seq[0], length: auto.seq[1] } } : {}), ...(auto.cast ? { cast: true } : {}),
+        ...(auto.extend ? { extend: { on: auto.extend.on, add: valueOf(auto.extend.add, texts[0].params, where, texts[0].text), max: valueOf(auto.extend.max, texts[0].params, where, texts[0].text), every: auto.extend.every === undefined ? 0 : valueOf(auto.extend.every, texts[0].params, where, texts[0].text) } } : {}) } } : {}),
+      ...(t.wielders ? { wielders: t.wielders } : {}), ...(t.pausesFor ? { pausesFor: t.pausesFor } : {}),
+    });
+  });
+}
+
+function withSetTiming(list: SetEffect[]): SetEffect[] {
+  const raw = read<RawSet[]>('src/data/generated/artifacts.json');
+  const unknown = Object.keys(SET_TIMING).filter((n) => !list.some((s) => s.set === n && s.fourPiece));
+  if (unknown.length) throw new Error(`Tempo de sets sem 4 peças: ${unknown.join(', ')}`);
+  return list.map(({ timing: _old, ...s }) => {
+    const cur = SET_TIMING[s.set];
+    if (!cur) return s;
+    const bonus = raw.find((x) => x.name === s.set)!.bonuses.fourPiece!;
+    return { ...s, timing: timingOf(s.set, cur, [s.fourPiece!], [{ text: bonus.description, params: bonus.params }]) };
+  });
+}
+
+function withWeaponTiming(list: WeaponEffect[]): WeaponEffect[] {
+  const raw = read<RawWeapon[]>('src/data/generated/weapons.json');
+  const unknown = Object.keys(WEAPON_TIMING).filter((n) => !list.some((w) => w.weapon === n));
+  if (unknown.length) throw new Error(`Tempo de armas que não existem: ${unknown.join(', ')}`);
+  return list.map(({ timing: _old, ...w }) => {
+    const cur = WEAPON_TIMING[w.weapon];
+    if (!cur) return w;
+    const found = raw.find((x) => x.name === w.weapon && x.passive)!;
+    const texts = found.passive!.refinements.map((r) => ({ text: r.description, params: r.params }));
+    return { ...w, timing: timingOf(w.weapon, cur, w.refinements ?? [w], texts) };
+  });
+}
+
+const sets = withSetTiming(buildSets());
 write('src/effects/sets.json', sets);
 console.log(`sets.json: ${sets.length} sets (${sets.filter((s) => s.fourPiece).length} com 4 peças, ${sets.filter((s) => s.twoPiece).length} com 2 peças)`);
 
@@ -449,7 +506,7 @@ function buildWeapons(): WeaponEffect[] {
   return out;
 }
 
-const weapons = buildWeapons();
+const weapons = withWeaponTiming(buildWeapons());
 write('src/effects/weapons.json', weapons);
 console.log(`weapons.json: ${weapons.length} armas (${weapons.filter((w) => w.refinements).length} com tabela por refinamento)`);
 

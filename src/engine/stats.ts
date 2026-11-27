@@ -9,7 +9,7 @@
 import type { Element } from '../data/schema';
 import type { ElementOrPhysical } from './constants/reactions';
 import type { Character, HitType, Weapon } from '../data/schema';
-import { REACTION_BONUS_KEYS, weaponStatsAt, type BuffStats, type CharacterBuff, type CharacterEffect, type ReactionBonusKey, type SetEffect, type WeaponEffect } from '../effects/schema';
+import { REACTION_BONUS_KEYS, weaponStatsAt, type AutoSource, type BuffStats, type CharacterBuff, type CharacterEffect, type ReactionBonusKey, type SetEffect, type WeaponEffect } from '../effects/schema';
 import {
   FLOWER_HP,
   MAIN_STAT_VALUES,
@@ -450,6 +450,10 @@ export interface TeamBuff {
   decay?: number;
   /** Quanto dura o efeito (s), quando o texto do jogo diz: é o tamanho da janela criada na linha do tempo. */
   duration?: number;
+  /** Quem abre sozinho as janelas deste buff (armas e sets com duração); ver `applyAutoWindows`. */
+  auto?: AutoSource[];
+  /** Passiva própria que contava sempre antes de virar janela: segue valendo nos mínimos do otimizador e na Recarga exigida. */
+  sheet?: true;
 }
 
 export function receivesBuff(buff: TeamBuff, characterName: string): boolean {

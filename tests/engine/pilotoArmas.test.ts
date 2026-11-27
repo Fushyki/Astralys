@@ -26,14 +26,17 @@ const buff = (p: RotationProject, id: string) => resolveProject(p, game, effects
 const bennett = sampleProject().members.findIndex((m) => m.character === 'Bennett');
 
 describe('piloto de armas: valores por refinamento no cálculo', () => {
-  it('A Thousand Blazing Suns: base 28%/20% (R1) sempre; Nightsoul liga um extra de +75% (21%/15%); planilha soma os dois (49%/35%)', () => {
+  it('A Thousand Blazing Suns: base 28%/20% (R1) em janela; Nightsoul liga um extra de +75% (21%/15%); planilha soma os dois (49%/35%)', () => {
     const w = (r: number) => weaponStatsAt(resolveProject(project('A Thousand Blazing Suns', r), game, effects).team.members[0].weaponEffect!, r);
-    expect([w(1).atkPct, w(1).critDmg]).toEqual([0.28, 0.2]);
-    expect([w(5).atkPct, w(5).critDmg]).toEqual([0.56, 0.4]);
+    const base = (r: number) => w(r).buffs.find((x) => x.id === 'tempo-0')!;
+    expect([w(1).atkPct, w(1).critDmg]).toEqual([0, 0]);
+    expect([base(1).stats!.atkPct, base(1).stats!.critDmg, base(1).duration]).toEqual([0.28, 0.2, 6]);
+    expect([base(5).stats!.atkPct, base(5).stats!.critDmg]).toEqual([0.56, 0.4]);
     const extra = (r: number) => w(r).buffs.find((x) => x.id === 'nightsoul')!;
     expect(extra(1).timed).toBe(true);
     expect([extra(1).stats!.atkPct, extra(1).stats!.critDmg]).toEqual([0.21, 0.15]);
-    const fold = (r: number) => weaponStatsAt(planilhaWeapon(w(r) && resolveProject(project('A Thousand Blazing Suns', r), game, effects).team.members[0].weaponEffect)!, r);
+    // A planilha usa o efeito sem janelas.
+    const fold = (r: number) => weaponStatsAt(planilhaWeapon(effects.weapons.find((x) => x.weapon === 'A Thousand Blazing Suns'))!, r);
     expect([fold(1).atkPct, fold(1).critDmg]).toEqual([0.49, 0.35]);
     expect([fold(5).atkPct, fold(5).critDmg]).toEqual([0.98, 0.7]);
     expect(fold(1).buffs.some((x) => x.id === 'nightsoul')).toBe(false);

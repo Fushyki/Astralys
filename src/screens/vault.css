@@ -62,6 +62,7 @@
 .vt-opt.gold { border-color: rgba(233, 196, 106, .6); background: rgba(233, 196, 106, .1); }
 @supports (color: color-mix(in srgb, red, blue)) { .vt-opt.gold { border-color: color-mix(in srgb, var(--gold) 60%, transparent); background: color-mix(in srgb, var(--gold) 10%, transparent); } }
 .vt-optlink input { width: 100%; min-width: 0; padding: 4px 0; font: inherit; font-size: 13px; color: var(--text); background: transparent; border: 0; border-bottom: 1px solid var(--border); outline: 0; }
+.vt-optlink input:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 .vt-optlink input:focus { border-bottom-color: var(--gold); }
 .vt-close { align-self: center; padding: 4px 12px; font: inherit; font-size: 13px; color: var(--muted); background: transparent; border: 0; cursor: pointer; }
 .vt-close:hover { color: var(--text); }
@@ -78,7 +79,7 @@
 .vt-statbtn:hover span, .vt-statbtn[aria-pressed="true"] span { color: var(--gold); }
 .vt-top { display: flex; flex-wrap: wrap; gap: 10px; margin-left: auto; }
 .vt-face { position: relative; padding: 0; border: 0; background: none; cursor: pointer; border-radius: 50%; }
-.vt-face em { position: absolute; right: -4px; bottom: -4px; min-width: 18px; padding: 0 4px; border-radius: 9px; background: var(--bg-header); border: 1px solid var(--border-strong, var(--border)); font: 600 11px/16px var(--font-display); font-style: normal; text-align: center; color: var(--text); }
+.vt-face em { position: absolute; right: -4px; bottom: -4px; min-width: 18px; padding: 0 4px; border-radius: 9px; background: var(--bg-header); border: 1px solid var(--border-strong, var(--border)); font: 600 var(--fs-1)/16px var(--font-display); font-style: normal; text-align: center; color: var(--text); }
 .vt-face[aria-pressed="true"] { outline: 2px solid var(--gold); outline-offset: 3px; }
 .vt-face:hover { transform: translateY(-2px); }
 .vt-face { transition: transform .15s; }

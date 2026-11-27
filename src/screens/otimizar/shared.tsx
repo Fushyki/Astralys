@@ -31,7 +31,7 @@ export function PieceArt({ piece, setId, setName, dot }: { piece: GoodArtifact; 
   const slot = piece.slotKey as PieceKey;
   return (
     <span className="ot-art" data-rarity={piece.rarity} title={setName ?? piece.setKey}>
-      {setId && !failed ? <img src={pieceIconUrl(setId, slot)} alt="" loading="lazy" crossOrigin="anonymous" onError={() => setFailed(true)} /> : <b className="ph" aria-hidden="true">{SLOT_GLYPH[piece.slotKey]}</b>}
+      {setId && !failed ? <img src={pieceIconUrl(setId, slot)} decoding="async" width={256} height={256} alt="" loading="lazy" crossOrigin="anonymous" onError={() => setFailed(true)} /> : <b className="ph" aria-hidden="true">{SLOT_GLYPH[piece.slotKey]}</b>}
       <b className="lv num">+{piece.level ?? 0}</b>
       {dot && <i className="dot" style={{ background: setColor(setName ?? piece.setKey) }} />}
     </span>
@@ -49,5 +49,5 @@ export const fmtInt = formatInt;
 /** Imagem grande da peça (64 px) ou o glifo da posição quando falta. */
 export function ArtImg({ setId, slot }: { setId?: number; slot: string }) {
   const [failed, setFailed] = useState(false);
-  return setId && !failed ? <img src={pieceIconUrl(setId, slot as PieceKey)} alt="" loading="lazy" crossOrigin="anonymous" onError={() => setFailed(true)} /> : <b className="ph" aria-hidden="true">{SLOT_GLYPH[slot]}</b>;
+  return setId && !failed ? <img src={pieceIconUrl(setId, slot as PieceKey)} decoding="async" width={256} height={256} alt="" loading="lazy" crossOrigin="anonymous" onError={() => setFailed(true)} /> : <b className="ph" aria-hidden="true">{SLOT_GLYPH[slot]}</b>;
 }

@@ -37,7 +37,7 @@ export function ArtCard({
     <section className={`sc-art${compact ? ' compact' : ''}`} style={{ ['--c' as string]: color, ['--e' as string]: ec }} aria-label={`${character.name}, ${character.element}`}>
       <div className="art">
         {character.splash && !failed ? (
-          <img src={`${SPLASH}/${character.splash}.webp`} alt="" crossOrigin="anonymous" loading="lazy" onError={() => setFailed(true)} />
+          <img src={`${SPLASH}/${character.splash}.webp`} decoding="async" width={2048} height={1024} alt="" crossOrigin="anonymous" loading="lazy" onError={() => setFailed(true)} />
         ) : (
           <CharacterAvatar name={character.name} icon={character.icon} color={color} size={120} />
         )}

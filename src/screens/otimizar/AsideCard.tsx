@@ -20,7 +20,7 @@ const clamp = (n: number) => Math.max(1, Math.min(MAX_BASE_TALENT, Math.round(n)
 
 function Img({ src, fallback }: { src: string | undefined; fallback: string }) {
   const [failed, setFailed] = useState(false);
-  return src && !failed ? <img src={src} alt="" loading="lazy" crossOrigin="anonymous" onError={() => setFailed(true)} /> : <b className="ph" aria-hidden="true">{fallback}</b>;
+  return src && !failed ? <img src={src} decoding="async" width={256} height={256} alt="" loading="lazy" crossOrigin="anonymous" onError={() => setFailed(true)} /> : <b className="ph" aria-hidden="true">{fallback}</b>;
 }
 
 export function AsideCard({ v, index }: { v: ProjectView; index: number }) {
@@ -42,7 +42,7 @@ export function AsideCard({ v, index }: { v: ProjectView; index: number }) {
     <section className="dz-panel oa" style={{ ['--c' as string]: color, ['--e' as string]: elementColor(character.element) }} aria-label={`${character.name}, ${character.element}`}>
       <div className="oa-art">
         {character.splash && !failed ? (
-          <img src={`${SPLASH}/${character.splash}.webp`} alt="" crossOrigin="anonymous" loading="lazy" onError={() => setFailed(true)} />
+          <img src={`${SPLASH}/${character.splash}.webp`} decoding="async" width={2048} height={1024} alt="" crossOrigin="anonymous" loading="lazy" onError={() => setFailed(true)} />
         ) : (
           <CharacterAvatar name={character.name} icon={character.icon} color={color} size={120} />
         )}

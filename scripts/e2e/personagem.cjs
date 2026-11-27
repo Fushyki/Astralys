@@ -184,7 +184,7 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
   await page.keyboard.press('Control+z'); await settle();
 
   // Trocar arma: grade com imagens, filtro por raridade e busca
-  await page.click('.pcard.weapon .setname'); await page.waitForSelector('.dz-dialog .wcard');
+  await page.click('.pcard.weapon .setname', { force: true }); await page.waitForSelector('.dz-dialog .wcard');
   check('o seletor de armas é uma grade de cards com imagem', (await page.locator('.dz-dialog .wcard').count()) > 10 && (await page.locator('.dz-dialog .wcard img').count()) > 5);
   check('a arma atual vem marcada como Equipada', (await page.locator('.dz-dialog .wcard[data-current="true"]').count()) === 1);
   await page.click('.dz-dialog .dz-seg button:has-text("4★")'); await settle();
@@ -195,7 +195,7 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
   check('a busca filtra as armas pelo nome', (await page.locator('.dz-dialog .wcard').count()) < before && (await page.locator('.dz-dialog .wcard').count()) >= 1);
   await page.keyboard.press('Escape');
   check('Esc fecha o seletor de armas', (await page.locator('.dz-dialog').count()) === 0);
-  await page.click('.pcard.weapon .setname'); await page.waitForSelector('.dz-dialog .wcard');
+  await page.click('.pcard.weapon .setname', { force: true }); await page.waitForSelector('.dz-dialog .wcard');
   await page.fill('.dz-dialog input[type="search"]', 'Royal Greatsword'); await settle();
   await page.click('.dz-dialog .wcard:has-text("Royal Greatsword")'); await settle();
   check('escolher uma arma troca a arma e fecha o seletor', /Royal Greatsword/.test(await page.textContent('.pcard.weapon')) && (await page.locator('.dz-dialog').count()) === 0);

@@ -41,7 +41,7 @@ type SetInfo = { id?: number; name: string; namePt?: string; rarity?: number };
 
 function SetIcon({ set, slot }: { set: SetInfo; slot: SlotKey }) {
   const [failed, setFailed] = useState(false);
-  return set.id == null || failed ? <b className="aa-seticon ph" aria-hidden="true" /> : <img className="aa-seticon" src={pieceIconUrl(set.id, slot)} alt="" loading="lazy" crossOrigin="anonymous" onError={() => setFailed(true)} />;
+  return set.id == null || failed ? <b className="aa-seticon ph" aria-hidden="true" /> : <img className="aa-seticon" src={pieceIconUrl(set.id, slot)} decoding="async" width={256} height={256} alt="" loading="lazy" crossOrigin="anonymous" onError={() => setFailed(true)} />;
 }
 
 /** Escolha do set com a imagem da peça (um select nativo não mostra imagens). */
@@ -167,7 +167,7 @@ export function AddArtifact({ sets, onClose, onSaved, initial, onSubmit }: { set
           <section className="aa-shot" aria-label="Ler de um print">
             <button type="button" className="aa-drop" disabled={!!reading} onClick={() => file.current?.click()}
               onDragOver={(e) => e.preventDefault()} onDrop={(e) => { e.preventDefault(); const f = e.dataTransfer.files[0]; if (f?.type.startsWith('image/')) void read(f); }}>
-              {preview ? <img src={preview} alt="Print do artefato" /> : <><b>Ler de um print</b><span>Arraste a imagem, cole com Ctrl+V ou clique para escolher.</span></>}
+              {preview ? <img src={preview} loading="lazy" decoding="async" alt="Print do artefato" /> : <><b>Ler de um print</b><span>Arraste a imagem, cole com Ctrl+V ou clique para escolher.</span></>}
             </button>
             <input ref={file} type="file" accept="image/*" hidden onChange={(e) => { const f = e.target.files?.[0]; if (f) void read(f); e.target.value = ''; }} />
             {reading && <p className="aa-status" role="status">{reading}</p>}

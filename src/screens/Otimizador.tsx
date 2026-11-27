@@ -125,7 +125,7 @@ const readUi = (key: string, fallback: () => UiState): UiState => {
 
 function Img({ src, fallback }: { src?: string; fallback: string }) {
   const [failed, setFailed] = useState(false);
-  return src && !failed ? <img src={src} alt="" loading="lazy" crossOrigin="anonymous" onError={() => setFailed(true)} /> : <b className="ph" aria-hidden="true">{fallback}</b>;
+  return src && !failed ? <img src={src} decoding="async" width={256} height={256} alt="" loading="lazy" crossOrigin="anonymous" onError={() => setFailed(true)} /> : <b className="ph" aria-hidden="true">{fallback}</b>;
 }
 
 /** Rota antiga: manda para a aba Otimizar do personagem. */
@@ -536,7 +536,8 @@ export function OtimizadorPanel({ index }: { index: number }) {
         />
       )}
       {!good ? (
-        <>
+        // Um bloco só na grade: soltos, os dois painéis caíam na mesma célula e o build cobria o aviso.
+        <div className="ot-noinv">
           <Panel title="Inventário">
             <div className="ot-empty">
               <p>Importe o inventário (arquivo do Genshin Optimizer ou UID) para otimizar. Sem inventário você ainda pode montar o build à mão:</p>
@@ -544,7 +545,7 @@ export function OtimizadorPanel({ index }: { index: number }) {
             </div>
           </Panel>
           {manualBox}
-        </>
+        </div>
       ) : ui.goal === 'dano' && ui.scope === 'manual' ? (
         <>
           <section className="ot-bar" aria-label="Foco da otimização"><div className="ot-bar-cfg"><div className="ot-bar-line">{goalField}{alvoField}</div></div></section>

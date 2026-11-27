@@ -71,7 +71,7 @@
 /* ferramentas */
 .pc-opt svg { width: 100%; height: auto; max-height: 260px; display: block; }
 .pc-opt .grid { stroke: var(--divider); }
-.pc-opt .tick { fill: var(--faint); font-size: 11px; font-family: var(--font-body); }
+.pc-opt .tick { fill: var(--faint); font-size: var(--fs-1); font-family: var(--font-body); }
 .pc-opt .line { fill: none; stroke: var(--gold); stroke-width: 2; }
 .pc-opt .cursor { stroke: var(--border-ctl-hi); stroke-dasharray: 3 3; }
 .pc-opt circle.best { fill: none; stroke: var(--gold); stroke-width: 2; }
@@ -162,7 +162,7 @@
 .pp-tile ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; font-size: 12px; }
 .pp-tile li { display: flex; justify-content: space-between; gap: 6px; }
 .pp-tile li span { color: var(--muted); }
-.pp-tile .tag { font-size: 11px; color: var(--warn); }
+.pp-tile .tag { font-size: var(--fs-1); color: var(--warn); }
 .pp-tile .tag.mine, .pp-tile .tag.now { color: var(--good); }
 .pp-others { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-2); }
 .pc-piece.real .main { color: var(--gold-hi); }
@@ -221,7 +221,7 @@
 .sc-card > header, .db-panel > header { display: flex; align-items: center; gap: 8px; }
 .sc-card h3, .db-panel h3 { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 15px; letter-spacing: .1em; text-transform: uppercase; }
 .sc-card .spark, .db-panel .spark { color: var(--gold); font-size: 12px; }
-.sc-card .badge, .db-panel .badge { margin-left: auto; padding: 2px 10px; border-radius: 6px; font: 700 11px var(--font-display); letter-spacing: .08em; text-transform: uppercase; background: #1b2550; color: #9fb3ff; border: 1px solid #2a3770; white-space: nowrap; }
+.sc-card .badge, .db-panel .badge { margin-left: auto; padding: 2px 10px; border-radius: 6px; font: 700 var(--fs-1) var(--font-display); letter-spacing: .08em; text-transform: uppercase; background: #1b2550; color: #9fb3ff; border: 1px solid #2a3770; white-space: nowrap; }
 .db-panel .badge[data-tone="gold"], .sc-cons .badge { background: #3a2f10; color: var(--gold-hi); border-color: #6a5420; }
 .db-panel .badge[data-tone="good"] { background: #10332a; color: #7fe3b4; border-color: #1f6a52; }
 .db-panel > header { padding: 12px 14px 8px; }
@@ -233,6 +233,7 @@
 .cm-star { fill: #232d5a; stroke: #3a4780; stroke-width: 1; }
 .cm-star[data-lit="true"] { fill: var(--gold-hi); stroke: var(--gold); filter: drop-shadow(0 0 4px var(--gold)); }
 .cm-node { cursor: pointer; outline: none; }
+.cm-node:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 .cm-node .hit { fill: transparent; }
 .cm-node .halo { fill: none; stroke: transparent; }
 .cm-node[data-lit="true"] .halo { fill: rgba(233, 196, 106, .14); stroke: rgba(233, 196, 106, .45); }
@@ -249,7 +250,7 @@
 .sc-talents .ring input::-webkit-outer-spin-button, .sc-talents .ring input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .sc-talents .ring:focus-within { box-shadow: 0 0 0 3px rgba(233, 196, 106, .35); }
 @supports (color: color-mix(in srgb, red, blue)) { .sc-talents .ring:focus-within { box-shadow: 0 0 0 3px color-mix(in srgb, var(--gold) 35%, transparent); } }
-.sc-talents .plus { position: absolute; right: -4px; bottom: -2px; font-style: normal; font-size: 11px; font-weight: 700; padding: 0 6px; border-radius: 999px; background: var(--gold); color: var(--on-gold); }
+.sc-talents .plus { position: absolute; right: -4px; bottom: -2px; font-style: normal; font-size: var(--fs-1); font-weight: 700; padding: 0 6px; border-radius: 999px; background: var(--gold); color: var(--on-gold); }
 .sc-talents .lbl { font-size: 12px; color: var(--muted); }
 
 /* painel */
@@ -281,9 +282,9 @@
 .db-rows .ico { color: var(--muted); flex: none; }
 .db-rows.buffs .k { flex-direction: column; align-items: flex-start; gap: 1px; }
 .db-rows.buffs .n { color: var(--text); font-weight: 500; line-height: 1.25; }
-.db-rows.buffs small { font-size: 11px; color: var(--muted); }
+.db-rows.buffs small { font-size: var(--fs-1); color: var(--muted); }
 .db-rows.buffs b { color: var(--gold-hi); }
-.db-sub { margin: 0; padding: 0 14px 10px; font-size: 11px; color: var(--faint); }
+.db-sub { margin: 0; padding: 0 14px 10px; font-size: var(--fs-1); color: var(--faint); }
 .db-panel > .dz-btn { margin: 0 14px 12px; align-self: flex-start; }
 .db-panel > p { margin: 0; padding: 0 14px 12px; }
 
@@ -297,7 +298,7 @@
 .gt-weapon { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; padding: 10px 12px; }
 .gt-weapon .art { position: relative; width: 64px; height: 64px; flex: none; display: grid; place-items: center; border-radius: 10px; background: rgba(0, 0, 0, .25); border: 1px solid #5a4524; }
 .gt-weapon .art img { width: 100%; height: 100%; object-fit: contain; }
-.gt-weapon .rf { position: absolute; left: 4px; bottom: 4px; padding: 0 6px; font-size: 11px; border-radius: 4px; background: var(--gold); color: var(--on-gold); }
+.gt-weapon .rf { position: absolute; left: 4px; bottom: 4px; padding: 0 6px; font-size: var(--fs-1); border-radius: 4px; background: var(--gold); color: var(--on-gold); }
 .gt-weapon .txt { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 0; }
 .gt-weapon .n { font-size: 14px; line-height: 1.2; overflow-wrap: anywhere; }
 .gt-weapon .sub { font-size: 12px; color: var(--text-2); }
@@ -322,7 +323,7 @@
 @media (min-width: 1101px) {
   .pc-page.opt .pc-aside { grid-column: 1; grid-row: 1; align-self: stretch; }
   .pc-page.opt .pc-aside > :last-child { flex: 1; }
-  .pc-page.opt .ot-top, .pc-page.opt .ot > .dz-panel, .pc-page.opt .ot > .ot-empty { grid-column: 2; grid-row: 1; }
+  .pc-page.opt .ot-top, .pc-page.opt .ot > .dz-panel, .pc-page.opt .ot > .ot-empty, .pc-page.opt .ot > .ot-noinv { grid-column: 2; grid-row: 1; }
   .pc-page.opt .ot-top { align-self: stretch; }
   .pc-page.opt .ot-bar, .pc-page.opt .ot-results { grid-column: 1 / -1; }
 }
@@ -332,7 +333,7 @@
 .db-rows.buffs .top { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
 .db-rows.buffs .n { color: var(--text); font-weight: 600; font-size: 14px; }
 .db-rows.buffs .top b { color: var(--gold-hi); font-size: 15px; }
-.db-rows.buffs small { color: var(--muted); font-size: 11px; line-height: 1.3; }
+.db-rows.buffs small { color: var(--muted); font-size: var(--fs-1); line-height: 1.3; }
 
 /* Coluna do personagem compacta (aba Otimizar): arte baixa, constelação em botões, talentos em linha */
 .sc-art.compact .art { aspect-ratio: 4 / 2.6; }
@@ -349,6 +350,11 @@
 .pc-weapon .art.info, .gt-weapon .art.info { cursor: help; border-radius: var(--r-ctl); }
 .pc-weapon .art.info:hover, .gt-weapon .art.info:hover { outline: 2px solid var(--gold); outline-offset: 2px; }
 .pc-weapon .art.info:focus-visible, .gt-weapon .art.info:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+/* O botão que troca a arma cobre o cartão; o do ícone fica por cima dele. */
+.pc-swap { position: absolute; inset: 0; z-index: 1; padding: 0; border: 0; border-radius: inherit; background: none; cursor: pointer; }
+.pc-swap:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
+.pc-weapon button.art, .pcard.weapon button.art { z-index: 2; padding: 0; border: 0; background: none; color: inherit; font: inherit; }
+.pc-weapon button.art { position: relative; }
 .dz-dialog.wi { width: min(560px, calc(100vw - 32px)); height: auto; display: flex; flex-direction: column; }
 .wi-body { display: flex; flex-direction: column; gap: var(--sp-4, 16px); padding: var(--sp-4, 16px) 20px 20px; overflow-y: auto; min-height: 0; }
 .wi-top { display: flex; align-items: center; gap: var(--sp-4, 16px); padding: var(--sp-3); border-radius: var(--r-inner); background: var(--bg-header); border: 1px solid var(--border); }
@@ -356,7 +362,7 @@
 .wi-stats { display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-4, 16px); }
 .wi-stat { display: flex; flex-direction: column; gap: 2px; }
 .wi-stat b { font: 700 var(--fs-5) var(--font-display); color: var(--text); }
-.wi-stat small { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.wi-stat small { font-size: var(--fs-1); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 .wi-top[data-rarity='5'] { border-color: var(--rar5-border); background: var(--rar5-bg); }
 .wi-top .art { flex: none; width: var(--ico-4); height: var(--ico-4); display: grid; place-items: center; }
 .wi-top .art img { width: 100%; height: 100%; object-fit: contain; }
@@ -374,8 +380,8 @@
 .wi-buff .b { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .wi-buff .b b { font-size: var(--fs-2); }
 .wi-buff .b .chips { font-size: var(--fs-1); color: var(--gold-hi); }
-.wi-buff .b small { font-size: 11px; color: var(--muted); }
-.wi-buff .st { font: 600 11px var(--font-display); letter-spacing: .06em; text-transform: uppercase; color: var(--faint); }
+.wi-buff .b small { font-size: var(--fs-1); color: var(--muted); }
+.wi-buff .st { font: 600 var(--fs-1) var(--font-display); letter-spacing: .06em; text-transform: uppercase; color: var(--faint); }
 .wi-buff[data-on='true'] .st { color: var(--gold); }
 .wi-sec p.wi-desc { white-space: pre-line; }
 .pc-col { display: flex; flex-direction: column; gap: var(--panel-gap); min-width: 0; }
@@ -394,6 +400,7 @@
 .cb-add .dz-input { width: 100%; margin: 0; min-height: var(--ctl-sm); height: var(--ctl-sm); padding: 0 10px; font-size: var(--fs-2); }
 .cb-add .val { display: flex; align-items: center; justify-content: space-between; height: var(--ctl-sm); padding: 0 10px; border-radius: var(--r-ctl); border: 1px solid var(--border-ctl-hi); background: var(--bg); box-sizing: border-box; }
 .cb-add .val input { width: 100%; min-width: 0; border: 0; background: none; outline: none; color: var(--text); font: inherit; font-size: var(--fs-2); }
+.cb-add .val input:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 .cb-add .val i { font-style: normal; color: var(--faint); }
 .cb-add .dz-btn { min-height: var(--ctl-sm); }
 .gear-acts-slot { display: contents; }
@@ -405,10 +412,11 @@
 .lvlctl { display: inline-flex; align-items: center; gap: 4px; }
 .lvlctl input { width: 2.2em; text-align: center; background: transparent; border: 0; border-bottom: 1px solid var(--border-ctl-hi); color: inherit; font: inherit; padding: 0; }
 .lvlctl input:focus { outline: none; border-bottom-color: var(--gold); }
+.lvlctl input:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 .lvlctl button { width: 18px; height: 18px; display: inline-grid; place-items: center; padding: 0; line-height: 1; border: 1px solid var(--border-ctl); border-radius: 50%; background: transparent; color: inherit; cursor: pointer; }
 .lvlctl button:hover:not(:disabled) { border-color: var(--gold); color: var(--gold-hi); }
 .lvlctl button:disabled { opacity: .35; cursor: default; }
-.lvlctl small { color: var(--gold); font-size: .85em; }
+.lvlctl small { color: var(--gold); font-size: max(var(--fs-1), .85em); }
 
 /* aviso de build teórica */
 .pc-theory { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-3); padding: var(--sp-2) var(--sp-3); margin-bottom: var(--sp-2); border: 1px solid var(--border-ctl); border-radius: var(--r-inner); background: var(--surface-2); color: var(--text-2); font-size: var(--fs-2); }

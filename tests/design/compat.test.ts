@@ -64,6 +64,48 @@ const HAS_PERMITIDO = [
   'src/screens/personagem.css',
 ];
 
+/** CSS e TSX de `src/`: tamanho de texto e foco também são declarados nos componentes. */
+const fontes = (readdirSync(path.join(ROOT, 'src'), { recursive: true }) as string[])
+  .map((f) => `src/${f.replace(/\\/g, '/')}`)
+  .filter((f) => /\.(css|tsx)$/.test(f))
+  .sort();
+
+/** Tamanhos abaixo de 12 px: em CSS (`font-size`, `font`, mínimo do `clamp`, fração de em/rem) e em `fontSize` no TSX. `0` esconde o texto de propósito. */
+function textoPequeno(source: string): string[] {
+  const px = [
+    /font-size\s*:\s*(?:clamp\(\s*)?([\d.]+)px/g,
+    /(?<![-\w])font\s*:\s*(?:(?:[a-z]+|\d{3})\s+)*(?:clamp\(\s*)?([\d.]+)px/g,
+    /fontSize\s*[:=]\s*[{"'\s]*([\d.]+)(?:px)?(?![\w.%])/g,
+  ].flatMap((re) => [...source.matchAll(re)].filter((m) => Number(m[1]) > 0 && Number(m[1]) < 12).map((m) => m[0]));
+  return [...px, ...(source.match(/font-size\s*:\s*0?\.\d+r?em/g) ?? [])];
+}
+
+const semContorno = (source: string) => /outline\s*:\s*['"]?(none|0)(?![\w.])/.test(source) && !source.includes(':focus-visible');
+
+describe('legibilidade e teclado', () => {
+  it('os detectores pegam cada forma', () => {
+    for (const ruim of ['a { font-size: 11px }', 'a { font: 600 10px/16px var(--x) }', 'a { font: italic 700 11.5px serif }', 'a { font-size: clamp(9px, 2vw, 20px) }', 'a { font-size: .85em }', '<text fontSize="11">', '<span style={{ fontSize: 10 }}>', "style={{ fontSize: '9px' }}"]) {
+      expect(textoPequeno(ruim), ruim).toHaveLength(1);
+    }
+    for (const ok of ['a { font-size: 12px }', 'a { font-size: 0 }', 'a { font: 600 var(--fs-1) serif }', 'a { font-size: max(var(--fs-1), .85em) }', 'a { font-size: 1.2em }', '<text fontSize="14">', "style={{ fontSize: 'var(--fs-1)' }}"]) {
+      expect(textoPequeno(ok), ok).toEqual([]);
+    }
+    expect(semContorno('a:focus { outline: none }')).toBe(true);
+    expect(semContorno('a:focus { outline: 0; }\nb:focus-visible { outline: 2px solid }')).toBe(false);
+    expect(semContorno('a { outline: 0.5px solid }')).toBe(false);
+  });
+
+  it('nenhum texto abaixo de 12 px (menos nos rótulos dos cards exportados como imagem)', () => {
+    const novos = fontes.filter((f) => !f.startsWith('src/screens/card/')).flatMap((file) => textoPequeno(read(file)).map((t) => `${file}: ${t}`));
+    expect(novos, `texto abaixo de 12 px (use var(--fs-1) ou maior):\n${novos.join('\n')}`).toEqual([]);
+  });
+
+  it('todo outline removido tem um :focus-visible no mesmo arquivo', () => {
+    const novos = fontes.filter((file) => semContorno(read(file)));
+    expect(novos, 'outline: none sem :focus-visible (use o contorno ouro)').toEqual([]);
+  });
+});
+
 describe('compatibilidade do CSS', () => {
   it('o detector exige a reserva certa para cada caso', () => {
     const ok = `.a { color: red; color: color-mix(in srgb, red 1%, blue); }

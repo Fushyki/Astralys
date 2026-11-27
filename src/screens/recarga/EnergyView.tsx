@@ -130,7 +130,7 @@ export function EnergyView({
           const funOpts = funnelOptions(m.name, names);
           return (
             <section className="dz-panel rc-card" key={m.name} style={{ ['--c' as string]: color }} aria-label={`Recarga de ${m.name}`}>
-              <img className="splash" style={splashCrop(character?.icon ?? '')} src={splashUrl(character?.icon ?? '')} alt="" loading="lazy" crossOrigin="anonymous" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+              <img className="splash" style={splashCrop(character?.icon ?? '')} src={splashUrl(character?.icon ?? '')} decoding="async" width={320} height={1024} alt="" loading="lazy" crossOrigin="anonymous" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
               <div className="rc-head">
                 <span className="rc-slot">Slot {i + 1}</span>
                 <span className="rc-pills">

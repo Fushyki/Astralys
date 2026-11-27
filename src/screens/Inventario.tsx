@@ -131,7 +131,7 @@ export default function Inventario() {
                 {[[24, 62, 'Flor'], [96, 30, 'Pluma'], [180, 52, 'Areia'], [264, 22, 'Cálice'], [336, 56, 'Tiara']].map(([x, y, n]) => (
                   <g key={String(n)}>
                     <path d="M0 -9 L2.4 -2.4 L9 0 L2.4 2.4 L0 9 L-2.4 2.4 L-9 0 L-2.4 -2.4 Z" transform={`translate(${x} ${y})`} fill="#f1c96b" />
-                    <text x={Number(x)} y={Number(y) + 26} textAnchor="middle" fontSize="11" fill="#8f98c4">{n}</text>
+                    <text x={Number(x)} y={Number(y) + 26} textAnchor="middle" style={{ fontSize: 'var(--fs-1)' }} fill="#8f98c4">{n}</text>
                   </g>
                 ))}
               </svg>
@@ -226,7 +226,7 @@ export default function Inventario() {
                   const info = data?.game.weapons.find((x) => norm(x.name) === norm(w.key));
                   return (
                     <div className="inv-weapon" key={i} data-rarity={info?.rarity ?? 4}>
-                      <span className="art">{info?.icon ? <img src={weaponIconUrl(info.icon)} alt="" loading="lazy" crossOrigin="anonymous" /> : <b className="ph" />}</span>
+                      <span className="art">{info?.icon ? <img src={weaponIconUrl(info.icon)} decoding="async" width={256} height={256} alt="" loading="lazy" crossOrigin="anonymous" /> : <b className="ph" />}</span>
                       <span className="n">{info?.name ?? w.key}</span>
                       <span className="num sub">Nv {w.level ?? '?'} · R{w.refinement ?? 1}</span>
                       {w.location && <Chip>de {characterDisplayName(w.location, data?.game.characters)}</Chip>}
@@ -258,7 +258,7 @@ function ArtifactTile({ a, setInfo, characters }: { a: GoodArtifact; setInfo?: {
         <span className="lvl num">+{level}</span>
       </header>
       <div className="face">
-        <span className="art">{setInfo && !failed ? <img src={pieceIconUrl(setInfo.id, a.slotKey as 'flower')} alt="" loading="lazy" crossOrigin="anonymous" onError={() => setFailed(true)} /> : <b className="ph" />}</span>
+        <span className="art">{setInfo && !failed ? <img src={pieceIconUrl(setInfo.id, a.slotKey as 'flower')} decoding="async" width={256} height={256} alt="" loading="lazy" crossOrigin="anonymous" onError={() => setFailed(true)} /> : <b className="ph" />}</span>
         <div className="mainstat">
           <span className="k">{MAIN_LABEL[mainKey] ?? mainKey}</span>
           <b className="v num">{mainValue}</b>

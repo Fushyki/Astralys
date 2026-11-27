@@ -91,7 +91,7 @@ export function CharacterAvatar({ name, icon, color, size = 64 }: { name: string
   const [failed, setFailed] = useState(false);
   return (
     <span className="dz-avatar" style={css({ '--c': color, '--s': `${size}px` })} aria-hidden="true">
-      {icon && !failed ? <img src={faceIconUrl(icon)} alt="" loading="lazy" crossOrigin="anonymous" onError={() => setFailed(true)} /> : name.charAt(0)}
+      {icon && !failed ? <img src={faceIconUrl(icon)} decoding="async" width={256} height={256} alt="" loading="lazy" crossOrigin="anonymous" onError={() => setFailed(true)} /> : name.charAt(0)}
     </span>
   );
 }

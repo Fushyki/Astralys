@@ -30,12 +30,12 @@ const PIECE_NAME = { flower: 'Flor', plume: 'Pluma', sands: 'Areia', goblet: 'C√
 
 function Splash({ icon, name }: { icon?: string; name: string }) {
   const [failed, setFailed] = useState(false);
-  return icon && !failed ? <img className="splash" style={splashCrop(icon)} src={splashUrl(icon)} alt="" loading="lazy" crossOrigin="anonymous" onError={() => setFailed(true)} /> : <b className="splash init" aria-hidden="true">{name.charAt(0)}</b>;
+  return icon && !failed ? <img className="splash" style={splashCrop(icon)} src={splashUrl(icon)} decoding="async" width={320} height={1024} alt="" loading="lazy" crossOrigin="anonymous" onError={() => setFailed(true)} /> : <b className="splash init" aria-hidden="true">{name.charAt(0)}</b>;
 }
 
 function GearImg({ src, fallback }: { src?: string; fallback: string }) {
   const [failed, setFailed] = useState(false);
-  return src && !failed ? <img src={src} alt="" loading="lazy" crossOrigin="anonymous" onError={() => setFailed(true)} /> : <b className="ph" aria-hidden="true">{fallback}</b>;
+  return src && !failed ? <img src={src} decoding="async" width={256} height={256} alt="" loading="lazy" crossOrigin="anonymous" onError={() => setFailed(true)} /> : <b className="ph" aria-hidden="true">{fallback}</b>;
 }
 
 /** Arma e 5 artefatos s√≥ como imagem; tocar abre a troca. Em 2+2 cada set ganha uma cor e o selo "2". */

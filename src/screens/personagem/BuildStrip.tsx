@@ -2,7 +2,7 @@
  * Faixa de build: o card da arma e os 5 cards de artefato (peça, raridade, main stat e valor). Clicar abre o editor
  * (arma, refinamento, sets, main stats, raridades e ER mínimo).
  */
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { loadGood } from '../../features/good/goodStore';
 import { norm, type GoodArtifact } from '../../features/good/goodImport';
@@ -70,7 +70,7 @@ function Passive({ text }: { text: string }) {
 
 function Img({ src, fallback }: { src: string | undefined; fallback: string }) {
   const [failed, setFailed] = useState(false);
-  return src && !failed ? <img src={src} alt="" loading="lazy" crossOrigin="anonymous" onError={() => setFailed(true)} /> : <b className="ph" aria-hidden="true">{fallback}</b>;
+  return src && !failed ? <img src={src} decoding="async" width={256} height={256} alt="" loading="lazy" crossOrigin="anonymous" onError={() => setFailed(true)} /> : <b className="ph" aria-hidden="true">{fallback}</b>;
 }
 
 export function BuildStrip({ data, index, member: memberRef, projectId, compact, editOpen, onEditClose }: { data: LoadedData; index: number; member: MemberRef; projectId: string; compact?: boolean; editOpen?: boolean; onEditClose?: () => void }) {
@@ -119,9 +119,9 @@ export function BuildStrip({ data, index, member: memberRef, projectId, compact,
   // Com dois sets (2+2), a 1ª, 2ª e 5ª peça ilustram o principal; as outras, o segundo.
   const setFor = (i: number) => (sets.length === 2 && (i === 2 || i === 3) ? sets[1] : sets[0]);
 
-  /** O ícone da arma abre o popup da passiva (o resto do cartão continua trocando a arma). */
-  const openInfo = (e: React.MouseEvent) => { e.stopPropagation(); setInfoWeapon(true); };
-  const onInfoKey = (e: React.KeyboardEvent) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); setInfoWeapon(true); } };
+  // Dois botões irmãos no cartão da arma: um cobre o cartão e troca a arma; o ícone, por cima, abre a passiva.
+  const swapButton = <button type="button" className="pc-swap" title="Trocar a arma" aria-label={`Trocar a arma ${memberRef.weapon}`} onClick={() => setPickWeapon(true)} />;
+  const infoButton = (children: ReactNode) => <button type="button" className="art info" aria-label={`Passiva e buff de ${memberRef.weapon}`} title="Ver a passiva e o buff da arma" onClick={() => setInfoWeapon(true)}>{children}</button>;
 
   const acts = (editBtn: boolean) => (
     <span className="pc-gearacts">
@@ -144,17 +144,12 @@ export function BuildStrip({ data, index, member: memberRef, projectId, compact,
       )}
       <div className="pc-gear">
         {compact ? (
-          <div
-            className="pcard weapon" data-rarity={weapon?.rarity ?? 5} role="button" tabIndex={0} title="Trocar a arma"
-            aria-label={`Trocar a arma ${memberRef.weapon}`} onClick={() => setPickWeapon(true)}
-            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setPickWeapon(true); } }}
-          >
+          <div className="pcard weapon" data-rarity={weapon?.rarity ?? 5}>
+            {swapButton}
             <i className="bar" />
             <div className="phead"><span className="slot">Arma</span><em>R{refine}</em></div>
             <div className="pic">
-              <span className="art info" role="button" tabIndex={0} aria-label={`Passiva e buff de ${memberRef.weapon}`} title="Ver a passiva e o buff da arma" onClick={openInfo} onKeyDown={onInfoKey}>
-                <Img src={weapon?.icon ? weaponIconUrl(weapon.icon) : undefined} fallback="" />
-              </span>
+              {infoButton(<Img src={weapon?.icon ? weaponIconUrl(weapon.icon) : undefined} fallback="" />)}
               <i className="stars" aria-label={`${weapon?.rarity ?? 5} estrelas`}>{'★'.repeat(weapon?.rarity ?? 5)}</i>
             </div>
             <span className="setname" title={memberRef.weapon}>{memberRef.weapon}</span>
@@ -170,13 +165,14 @@ export function BuildStrip({ data, index, member: memberRef, projectId, compact,
             </ul>
           </div>
         ) : (
-          <button type="button" className="pc-weapon gear-tile" data-rarity={weapon?.rarity ?? 5} onClick={() => setPickWeapon(true)} aria-label={`Trocar a arma ${memberRef.weapon}`}>
-            <span className="art info" role="button" tabIndex={0} aria-label={`Passiva e buff de ${memberRef.weapon}`} title="Ver a passiva e o buff da arma" onClick={openInfo} onKeyDown={onInfoKey}><Img src={weapon?.icon ? weaponIconUrl(weapon.icon) : undefined} fallback="" /></span>
+          <div className="pc-weapon gear-tile" data-rarity={weapon?.rarity ?? 5}>
+            {swapButton}
+            {infoButton(<Img src={weapon?.icon ? weaponIconUrl(weapon.icon) : undefined} fallback="" />)}
             <span className="lv num">Nv 90</span>
             <span className="rf num">R{refine}</span>
             <span className="n">{memberRef.weapon}</span>
             <span className="num sub">{weapon ? `ATK ${formatInt(weapon.baseAtk)}` : ''}{substat ? ` · ${substat}` : ''}</span>
-          </button>
+          </div>
         )}
         {PIECE_SLOTS.map((slot, i) => {
           const piece = memberRef.pieces?.find((p) => p.slotKey === slot);

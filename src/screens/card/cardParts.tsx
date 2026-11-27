@@ -15,7 +15,7 @@ export function Face({ name, icon, color }: { name: string; icon?: string; color
   const [failed, setFailed] = useState(false);
   return (
     <span className="pc-face" style={css({ '--c': color })}>
-      {icon && !failed ? <img src={faceIconUrl(icon)} alt="" crossOrigin="anonymous" onError={() => setFailed(true)} /> : <b>{name.charAt(0)}</b>}
+      {icon && !failed ? <img src={faceIconUrl(icon)} loading="lazy" decoding="async" width={256} height={256} alt="" crossOrigin="anonymous" onError={() => setFailed(true)} /> : <b>{name.charAt(0)}</b>}
     </span>
   );
 }
@@ -38,7 +38,7 @@ export const splashCrop = (icon: string): CSSProperties | undefined => {
 export function Strip({ name, icon, color }: { name: string; icon?: string; color: string }) {
   const [failed, setFailed] = useState(false);
   const src = icon ? splashUrl(icon) : '';
-  return src && !failed ? <img className="pw-img" style={splashCrop(icon!)} src={src} alt="" crossOrigin="anonymous" onError={() => setFailed(true)} /> : <b className="pw-init" style={css({ '--c': color })}>{name.charAt(0)}</b>;
+  return src && !failed ? <img className="pw-img" style={splashCrop(icon!)} src={src} loading="lazy" decoding="async" width={320} height={1024} alt="" crossOrigin="anonymous" onError={() => setFailed(true)} /> : <b className="pw-init" style={css({ '--c': color })}>{name.charAt(0)}</b>;
 }
 
 /** Rosca de participação no dano: um arco por personagem, começando no maior. */
@@ -62,7 +62,7 @@ export function Donut({ parts, size }: { parts: { share: number; color: string }
 /** Imagem de arma ou set; some se não carregar. */
 function Icon({ src }: { src: string }) {
   const [failed, setFailed] = useState(false);
-  return failed ? null : <img src={src} alt="" crossOrigin="anonymous" onError={() => setFailed(true)} />;
+  return failed ? null : <img src={src} loading="lazy" decoding="async" width={256} height={256} alt="" crossOrigin="anonymous" onError={() => setFailed(true)} />;
 }
 
 /** A arma do personagem: imagem com o refinamento ("R1") e o nome. Some se desligada nas configurações. */

@@ -57,6 +57,7 @@ body { font-family: var(--font-body); font-size: 15px; line-height: 1.5; -webkit
 .dz-field { display: grid; gap: 4px; font-size: 13px; color: var(--muted); min-width: 0; }
 .dz-field input, .dz-field select, .dz-input { width: 100%; min-width: 0; min-height: var(--control-h); background: var(--bg-header); color: var(--text); border: 1px solid var(--border-ctl); border-radius: var(--radius-ctl); padding: 8px 12px; font: inherit; font-variant-numeric: tabular-nums; }
 .dz-field input:focus, .dz-field select:focus, .dz-input:focus { border-color: var(--gold); outline: none; }
+.dz-field input:focus-visible, .dz-field select:focus-visible, .dz-input:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 .dz-field input[aria-invalid="true"] { border-color: var(--warn); }
 .dz-check { display: flex; align-items: center; gap: 8px; color: var(--text-2); font-size: 14px; min-height: 28px; }
 .dz-check input { accent-color: var(--gold); width: 18px; height: 18px; }
@@ -102,7 +103,7 @@ body { font-family: var(--font-body); font-size: 15px; line-height: 1.5; -webkit
 .dz-dot { display: inline-block; width: 8px; height: 8px; border-radius: 2px; background: var(--c, var(--gold)); margin-right: 5px; }
 
 /* ---- Avatar ---- */
-.dz-avatar { flex: none; width: var(--s, 64px); height: var(--s, 64px); border-radius: 50%; display: grid; place-items: center; overflow: hidden; background: var(--bg-header); border: 2px solid var(--c, var(--gold)); font-family: var(--font-display); font-weight: 700; font-size: calc(var(--s, 64px) * .46); color: var(--c, var(--gold)); }
+.dz-avatar { flex: none; width: var(--s, 64px); height: var(--s, 64px); border-radius: 50%; display: grid; place-items: center; overflow: hidden; background: var(--bg-header); border: 2px solid var(--c, var(--gold)); font-family: var(--font-display); font-weight: 700; font-size: max(var(--fs-1), calc(var(--s, 64px) * .46)); color: var(--c, var(--gold)); }
 .dz-avatar img { width: 100%; height: 100%; object-fit: cover; }
 
 /* ---- Linhas de atributo ---- */
@@ -152,7 +153,7 @@ body { font-family: var(--font-body); font-size: 15px; line-height: 1.5; -webkit
 .dz-menu-list.left { left: 0; }
 .dz-menu-item { display: flex; align-items: center; min-height: 44px; padding: 0 14px; border: 0; border-radius: 8px; background: none; color: var(--text); font: inherit; font-size: 15px; text-align: left; text-decoration: none; cursor: pointer; white-space: nowrap; }
 .dz-menu-item:hover { background: var(--bg-header, #0d1226); color: var(--gold); outline: none; }
-.dz-menu-item:focus-visible { background: var(--bg-header, #0d1226); color: var(--gold); outline: none; }
+.dz-menu-item:focus-visible { background: var(--bg-header, #0d1226); color: var(--gold); outline: 2px solid var(--gold); outline-offset: -2px; }
 .dz-menu-item.danger { color: #f08a8a; }
 .dz-menu-item:disabled { opacity: .5; cursor: default; }
 .dz-menu-note { padding: 10px 14px 4px; font-size: 14px; color: var(--muted); }

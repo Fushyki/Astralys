@@ -138,7 +138,7 @@ export function WeaponInfoDialog({ index, onClose }: { index: number; onClose: (
         </header>
         <div className="wi-body">
         <div className="wi-top" data-rarity={weapon?.rarity ?? 5}>
-          <span className="art">{weapon?.icon ? <img src={weaponIconUrl(weapon.icon)} alt="" crossOrigin="anonymous" /> : <b aria-hidden="true" />}</span>
+          <span className="art">{weapon?.icon ? <img src={weaponIconUrl(weapon.icon)} loading="lazy" decoding="async" width={256} height={256} alt="" crossOrigin="anonymous" /> : <b aria-hidden="true" />}</span>
           <span className="t">
             <small>{weapon ? TYPE_LABEL[weapon.type] ?? weapon.type : ''} · {'★'.repeat(weapon?.rarity ?? 5)} · Nv 90/90 · R{refine}</small>
             <span className="wi-stats">

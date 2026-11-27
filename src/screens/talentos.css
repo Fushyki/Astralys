@@ -77,7 +77,8 @@
 /* Constelação */
 .tl-card.cons > svg { width: calc(100% - var(--sp-5)); height: auto; margin: var(--sp-2) var(--sp-3) 0; }
 .tl-card.cons .node { cursor: pointer; outline: none; }
-.tl-card.cons .node text { font: 700 10px var(--font-display); pointer-events: none; }
+.tl-card.cons .node:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.tl-card.cons .node text { font: 700 var(--fs-1) var(--font-display); pointer-events: none; }
 .tl-card.cons .node:focus-visible circle { stroke: var(--gold-hi); stroke-width: 2.4; }
 .tl-card.cons .list { display: flex; flex-direction: column; gap: var(--sp-2); padding: var(--sp-2) var(--sp-3) var(--sp-4); flex: 1; }
 .tl-card.cons .cst { display: flex; flex-direction: column; gap: var(--sp-2); padding: var(--sp-3); border-radius: var(--r-inner); border: 1px solid #1a2350; background: var(--bg-deep); }
@@ -108,6 +109,7 @@
 /* número de stacks digitável */
 .stack-in { width: 3.4em; min-width: 0; text-align: center; background: transparent; border: 0; border-bottom: 1px solid var(--border-ctl-hi); color: inherit; font: inherit; padding: 0 2px; }
 .stack-in:focus { outline: none; border-bottom-color: var(--gold); }
+.stack-in:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 .stack-in:disabled { opacity: .5; }
 
 .tl-cond label select { min-height: var(--row-h); max-width: 50%; }

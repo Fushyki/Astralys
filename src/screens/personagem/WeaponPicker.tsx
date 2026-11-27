@@ -13,7 +13,7 @@ const substatText = (w: Weapon): string => {
 
 function Icon({ w }: { w: Weapon }) {
   const [failed, setFailed] = useState(false);
-  return w.icon && !failed ? <img src={weaponIconUrl(w.icon)} alt="" loading="lazy" crossOrigin="anonymous" onError={() => setFailed(true)} /> : <b className="ph" aria-hidden="true" />;
+  return w.icon && !failed ? <img src={weaponIconUrl(w.icon)} decoding="async" width={256} height={256} alt="" loading="lazy" crossOrigin="anonymous" onError={() => setFailed(true)} /> : <b className="ph" aria-hidden="true" />;
 }
 
 export function WeaponPickerDialog({

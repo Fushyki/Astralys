@@ -79,7 +79,7 @@ export default function Personagens() {
               const pieces = good?.artifacts.filter((a) => norm(a.location) === norm(c.name)).length ?? 0;
               return (
                 <article className="pe-card" key={c.id} style={{ ['--c' as string]: elementColor(c.element) }} data-rarity={c.rarity} data-mine={owned.has(norm(c.name)) ? '' : undefined}>
-                  <img className="splash" style={splashCrop(c.icon ?? '')} src={splashUrl(c.icon ?? '')} alt="" loading="lazy" crossOrigin="anonymous" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+                  <img className="splash" style={splashCrop(c.icon ?? '')} src={splashUrl(c.icon ?? '')} decoding="async" width={320} height={1024} alt="" loading="lazy" crossOrigin="anonymous" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
                   <div className="info">
                     <span className="el">{c.element} · {c.weapon}</span>
                     <b className="nm">{c.name}</b>

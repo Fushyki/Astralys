@@ -37,7 +37,7 @@ const NODES: [number, number][] = [[22, 96], [66, 58], [114, 74], [150, 26], [20
 
 export function Icon({ name, color }: { name: string; color?: string }) {
   const [failed, setFailed] = useState(false);
-  return name && !failed ? <img src={skillIconUrl(name)} alt="" loading="lazy" crossOrigin="anonymous" onError={() => setFailed(true)} style={color ? { borderColor: color } : undefined} /> : <StarIcon size={20} color={color} />;
+  return name && !failed ? <img src={skillIconUrl(name)} decoding="async" width={128} height={128} alt="" loading="lazy" crossOrigin="anonymous" onError={() => setFailed(true)} style={color ? { borderColor: color } : undefined} /> : <StarIcon size={20} color={color} />;
 }
 
 /** Título de seção do texto do jogo: linha curta, sem ponto final. */

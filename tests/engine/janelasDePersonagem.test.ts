@@ -55,7 +55,7 @@ describe('constelações da Mona', () => {
     expect(pair.of('Mona C4 (Hexerei)')).toBeDefined();
   });
 
-  it('Esplendor da Hydromancia: o próximo Vaporizar de um aliado gasta os acúmulos, num acerto só, e soma com a C1', () => {
+  it('Esplendor da Hydromancia: os stacks escolhidos vão para o próximo Vaporizar de um aliado, num acerto só, e somam com a C1', () => {
     const hex: Partial<MemberRef> = { factions: ['hexerei'] };
     const p = project(
       [['Hu Tao'], ['Mona', { ...hex, constellation: 1 }], ['Fischl', hex]],
@@ -66,13 +66,17 @@ describe('constelações da Mona', () => {
     const r = resolveProject(p, game, effects);
     const tag = 'label:Mona: Esplendor da Hydromancia (Hexerei)';
     expect(r.actions.map((a) => a.activeTags.includes(tag))).toEqual([false, false, false, true, false, false, false, false, false, true, false]);
-    // 2 acertos da Mona = 2/3 do bônus; 4 acertos = 3 acúmulos, divididos pelos 2 acertos do golpe que os gasta
-    expect(r.actions[3].tagShare?.[tag]).toBeCloseTo(2 / 3, 9);
+    // o golpe de 1 acerto leva o bônus inteiro, quantos golpes a Mona tenha dado; o de 2 acertos, em um deles
+    expect(r.actions[3].tagShare?.[tag]).toBeUndefined();
     expect(r.actions[9].tagShare?.[tag]).toBeCloseTo(1 / 2, 9);
-    const asm = assembleTeam(r.team);
-    const bonus = (i: number) => asm.buffs.filter((b) => r.actions[i].activeTags.includes(b.tag) && (b.targets === 'all' || b.targets.includes('Hu Tao'))).reduce((s, b) => s + (b.delta.vaporizeBonus ?? 0) * (r.actions[i].tagShare?.[b.tag] ?? 1), 0);
-    expect(bonus(3)).toBeCloseTo(0.15 + 0.1, 9);
-    expect(bonus(4)).toBeCloseTo(0.15, 9);
+    const bonus = (res: typeof r, i: number) => assembleTeam(res.team).buffs.filter((b) => res.actions[i].activeTags.includes(b.tag) && (b.targets === 'all' || b.targets.includes('Hu Tao'))).reduce((s, b) => s + (b.delta.vaporizeBonus ?? 0) * (res.actions[i].tagShare?.[b.tag] ?? 1), 0);
+    expect(bonus(r, 3)).toBeCloseTo(0.15 + 0.15, 9);
+    expect(bonus(r, 4)).toBeCloseTo(0.15, 9);
+    // o seletor vale exatamente: 2 stacks = +10%, 1 = +5%
+    for (const n of [2, 1]) {
+      const chosen = { ...p, members: p.members.map((m) => (m.character === 'Mona' ? { ...m, stacks: { hexglow: n } } : m)) };
+      expect(bonus(resolveProject(chosen, game, effects), 3)).toBeCloseTo(0.15 + 0.05 * n, 9);
+    }
   });
 
   it('no modo planilha nada muda', () => {

@@ -258,10 +258,10 @@ export const AutoWindowSchema = z.object({
   /** Segundos que o efeito ainda dura depois do fim da janela (ex.: Mona C1, 8 s depois do último acerto no Presságio). */
   tail: z.number().positive().optional(),
   /**
-   * Acúmulos que um aliado gasta: cada golpe do dono (`on`) dá um por acerto, até `max`; o 1º golpe de outro membro com a
-   * reação, dentro da duração, leva todos num acerto só (Esplendor da Hydromancia da Mona).
+   * Efeito que um aliado gasta: um golpe do dono (`on`) o carrega e o 1º golpe de outro membro com a reação, dentro da
+   * duração, o leva num acerto só (Esplendor da Hydromancia da Mona). Quantos acúmulos valem é a escolha do buff (`stacks`).
    */
-  consume: z.object({ reaction: z.enum(['vaporize']), max: z.number().int().positive() }).optional(),
+  consume: z.object({ reaction: z.enum(['vaporize']) }).optional(),
   /** A janela começa tantos segundos depois do golpe (ex.: quando o estado do talento acaba). */
   delay: z.number().positive().optional(),
   /** Só os golpes cujo rótulo contém um destes trechos (ex.: "Press" e "Hold"). */

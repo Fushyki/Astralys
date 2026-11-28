@@ -52,8 +52,9 @@ const buffs: Record<string, BuffCuration[]> = {
     },
     {
       id: 'hexglow', label: 'Mona: Esplendor da Hydromancia (Hexerei)', src: 'p4', scope: 'others', timed: true, team: { hexerei: 2, ownerFaction: 'hexerei' },
-      stats: { vaporizeBonus: { p: 2, x: 3 } }, expect: 'Each stack consumed increases the damage of that Vaporize reaction by 5%',
-      note: 'Cada acerto Normal ou Carregado da Mona dá 1 acúmulo (até 3, por 8 s); o próximo Vaporizar de um aliado gasta todos: +5% por acúmulo, só naquele acerto. Soma com a C1. Precisa da Mona e de mais um Hexerei: ligue a janela.',
+      stats: { vaporizeBonus: { p: 2, x: 3 } }, stacks: { max: 3, unit: 'stacks de Esplendor da Hydromancia' },
+      expect: 'Each stack consumed increases the damage of that Vaporize reaction by 5%',
+      note: '+5% de Vaporizar por stack (escolha de 0 a 3; padrão 3). Um Normal ou Carregado da Mona carrega o efeito por 8 s e o próximo Vaporizar de um aliado gasta tudo, só naquele acerto. Soma com a C1. Precisa da Mona e de mais um Hexerei: a janela nasce sozinha.',
     },
   ],
   'Sangonomiya Kokomi': [

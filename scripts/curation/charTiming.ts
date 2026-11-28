@@ -20,7 +20,7 @@ export interface CharAuto {
   labels?: string[];
   extend?: { on: HitType[]; add: number; max: number; every?: number };
   /** Acúmulos que o 1º golpe de um aliado com a reação gasta (ver `AutoWindow.consume`). */
-  consume?: { reaction: 'vaporize'; max: number };
+  consume?: { reaction: 'vaporize' };
 }
 
 export interface CharTime {
@@ -113,7 +113,7 @@ export const CHARACTER_TIMING: Record<string, Record<string, CharTime>> = {
   // C1: 8 s depois de cada acerto num inimigo com Presságio, então até 8 s depois do fim dele.
   Mona: {
     c2: t(12, CHARGED), burst: OMEN, c1: { ...OMEN, tail: [8, 'const1'] }, ...each(['c4', 'c4h', 'c6omen'], OMEN), c6: t(8, { on: ['burst', 'charged'] }),
-    hexglow: t(8, { on: ['normal', 'charged'], consume: { reaction: 'vaporize', max: 3 } }),
+    hexglow: t(8, { on: ['normal', 'charged'], consume: { reaction: 'vaporize' } }),
   },
   Keqing: { c4: t(10, OWN), a4: t(8, USE_BURST), c6: t(8, OWN) },
   Sucrose: {

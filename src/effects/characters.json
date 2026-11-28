@@ -9806,8 +9806,7 @@
             "charged"
           ],
           "consume": {
-            "reaction": "vaporize",
-            "max": 3
+            "reaction": "vaporize"
           }
         },
         "stats": {
@@ -9839,9 +9838,10 @@
         },
         "flat": [],
         "stacks": {
-          "max": 3
+          "max": 3,
+          "unit": "stacks de Esplendor da Hydromancia"
         },
-        "note": "Cada acerto Normal ou Carregado da Mona dá 1 acúmulo (até 3, por 8 s); o próximo Vaporizar de um aliado gasta todos: +5% por acúmulo, só naquele acerto. Soma com a C1. Precisa da Mona e de mais um Hexerei: a janela nasce sozinha."
+        "note": "+5% de Vaporizar por stack (escolha de 0 a 3; padrão 3). Um Normal ou Carregado da Mona carrega o efeito por 8 s e o próximo Vaporizar de um aliado gasta tudo, só naquele acerto. Soma com a C1. Precisa da Mona e de mais um Hexerei: a janela nasce sozinha."
       }
     ],
     "notes": [

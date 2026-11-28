@@ -125,32 +125,31 @@ function endRule(s: AutoSource, actions: readonly Hit[]): (start: number) => num
 }
 
 /**
- * Fonte com acúmulos que um aliado gasta (`consume`): quanto do bônus cheio cada golpe que os gasta leva (a fração dos
- * acúmulos, num acerto só) e os trechos em que havia acúmulo guardado.
+ * Fonte que um aliado gasta (`consume`): quais golpes a levam (num acerto só: a fração é 1 sobre os acertos do golpe)
+ * e os trechos em que ela estava carregada. A quantidade de acúmulos não entra aqui: é a do seletor do buff.
  */
 export function consumption(s: AutoSource, actions: readonly Hit[]): { spent: Map<Hit, number>; spans: Interval[] } {
   const spent = new Map<Hit, number>();
   const spans: Interval[] = [];
-  const { reaction, max } = s.consume!;
-  let stacks = 0;
+  const { reaction } = s.consume!;
+  let loaded = false;
   let since = 0;
   let until = 0;
   for (const a of [...actions].sort((x, y) => (x.time ?? 0) - (y.time ?? 0))) {
     const t = a.time ?? 0;
-    if (stacks && t >= until - 1e-9) { spans.push([since, until]); stacks = 0; }
-    const hits = Math.max(1, a.move.hits ?? 1) * (a.executions ?? 1);
+    if (loaded && t >= until - 1e-9) { spans.push([since, until]); loaded = false; }
     if (a.member === s.member) {
       if (!accepts(s, a)) continue;
-      if (!stacks) since = t;
-      stacks = Math.min(max, stacks + hits);
+      if (!loaded) since = t;
+      loaded = true;
       until = round(t + s.duration);
-    } else if (stacks && a.reaction === reaction) {
-      spent.set(a, stacks / max / hits);
+    } else if (loaded && a.reaction === reaction) {
+      spent.set(a, 1 / (Math.max(1, a.move.hits ?? 1) * (a.executions ?? 1)));
       spans.push([since, round(t + 0.001)]);
-      stacks = 0;
+      loaded = false;
     }
   }
-  if (stacks) spans.push([since, until]);
+  if (loaded) spans.push([since, until]);
   return { spent, spans };
 }
 

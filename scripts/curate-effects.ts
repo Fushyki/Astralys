@@ -561,8 +561,6 @@ function withCharTime(name: string, buff: Record<string, unknown> & { id: string
   if (cur.plus && !textOf(cur.plus[3]).includes(cur.plus[2])) throw new Error(`${where}: "${cur.plus[2]}" não está no texto de ${cur.plus[3]}`);
   for (const n of cur.hex ? [cur.hex.add, cur.hex.max, cur.hex.every] : []) check(n, cur.hex!.from);
   if (cur.tail) check(cur.tail[0], cur.tail[1]);
-  const max = cur.auto?.consume?.max;
-  if (max && !textOf(cur.from).includes(`Max ${max} stacks`)) throw new Error(`${where}: "Max ${max} stacks" não está no texto`);
   const delay = cur.delay === undefined ? undefined : Array.isArray(cur.delay) ? rowOf(cur.delay)[9] : check(cur.delay, cur.from);
   const a = cur.auto;
   const auto = a && {

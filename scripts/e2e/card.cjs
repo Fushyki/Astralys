@@ -32,8 +32,8 @@ const pngSize = (file) => { const b = fs.readFileSync(file); return { w: b.readU
   check('a aba Times está ativa', (await page.locator('.dz-nav a[aria-current="page"]').textContent()).includes('Times'));
   check('abre em 4:5 (1080×1350)', (await page.locator('.pc').evaluate((e) => `${parseInt(e.style.width)}x${parseInt(e.style.height)}`)) === '1080x1350');
   const text = await page.textContent('.pc');
-  check('o card mostra DPS 106.288 e 1,86 mi', text.includes('106.288') && text.includes('1,86 mi'), '');
-  check('mostra os 4 personagens e a reação (Derreter · 53% do dano)', ['Mavuika', 'Citlali', 'Iansan', 'Bennett'].every((n) => text.includes(n)) && /Derreter\s*·\s*53%\s*do dano/.test(text));
+  check('o card mostra DPS 156.338 e 2,74 mi', text.includes('156.338') && text.includes('2,74 mi'), '');
+  check('mostra os 4 personagens e a reação (Derreter · 55% do dano)', ['Mavuika', 'Citlali', 'Iansan', 'Bennett'].every((n) => text.includes(n)) && /Derreter\s*·\s*55%\s*do dano/.test(text));
   const gear = await page.locator('.pc .gl').allInnerTexts();
   check('cada personagem mostra o set de artefatos que usa (ex.: Obsidian Codex 4p)', gear.length === 4 && gear.some((g) => /Obsidian Codex\s*4p/.test(g.replace(/\n/g, ' '))), gear.join(' | ').replace(/\n/g, ' '));
   check('rotação em faixas: 4 personagens e 24 golpes (4+ Supremos em destaque)', (await page.locator('.pc-lanes text').allTextContents()).filter((x) => /^(MAVUIKA|CITLALI|IANSAN|BENNETT)$/.test(x)).length === 4 && (await page.locator('.pc-lanes [data-hit]').count()) === 24 && (await page.locator('.pc-lanes [data-burst]').count()) >= 4);

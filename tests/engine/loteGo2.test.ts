@@ -6,12 +6,13 @@ import { assembleTeam, evaluateRotation, labelTag, resolveProject, type EffectsD
 import { activeCharacterBuffs, minimumRolls } from '../../src/engine/stats';
 import { sampleProject } from '../../src/features/rotation/persistence';
 import { defaultMember } from '../../src/features/rotation/teamOps';
+import { semAuto } from '../helpers/semAuto';
 
 const json = <T>(rel: string): T => JSON.parse(readFileSync(path.join(__dirname, '../..', rel), 'utf8'));
 const game: GameData = { characters: json('src/data/generated/characters.json'), moves: json('src/data/generated/moves.json'), weapons: json('src/data/generated/weapons.json'), artifacts: json('src/data/generated/artifacts.json') };
 const effects: EffectsData = { characters: json('src/effects/characters.json'), weapons: json('src/effects/weapons.json'), sets: json('src/effects/sets.json'), flatDamage: json('src/effects/flatDamage.json') };
 
-const resolve = (names: string[], actions: unknown[] = []) => resolveProject({ ...sampleProject(), compat: 'none', extras: [], buffWindows: [], disabled: [], members: names.map((n) => defaultMember(n, game)), actions } as never, game, effects);
+const resolve = (names: string[], actions: unknown[] = []) => resolveProject(semAuto({ ...sampleProject(), compat: 'none', extras: [], buffWindows: [], disabled: [], members: names.map((n) => defaultMember(n, game)), actions } as never, game, effects), game, effects);
 const has = (names: string[], id: string) => activeCharacterBuffs(resolve(names).team.members[0]).some((b) => b.id === id);
 
 /** Bônus de DMG que o golpe recebe com a etiqueta do buff ligada, menos sem ela. */

@@ -1,6 +1,6 @@
 /** Compara as armas do tipo do personagem no Web Worker (a rotação inteira é reanalisada para cada arma). */
 import { useEffect, useRef, useState } from 'react';
-import { resolveMember, swapMember, type ResolvedProject, type RotationProject, type WeaponCandidate, type WeaponCompareRow } from '../../engine';
+import { resolveMember, swapMember, teamFlat, type MemberRef, type ResolvedProject, type RotationProject, type WeaponCandidate, type WeaponCompareRow } from '../../engine';
 import type { LoadedData } from './data';
 import { EngineClient } from './engineClient';
 import { weaponsFor } from './teamOps';
@@ -25,36 +25,16 @@ export function useWeaponCompare(project: RotationProject, resolved: ResolvedPro
         const ref = project.members[member];
         const character = data.game.characters.find((c) => c.name === ref?.character);
         if (!ref || !character) return;
-        const candidates: WeaponCandidate[] = weaponsFor(character, data.game.weapons).map((w) => ({
-          weapon: w.name,
-          team: {
-            ...resolved.team,
-            members: swapMember(resolved.team.members, member, resolveMember({ ...ref, weapon: w.name, ...(refinement ? { refinement } : {}) }, data.game, data.effects, project.config.minRollsPerSubstat, project.config.characterLevel, project.compat === 'planilha'), project.compat === 'planilha'),
-          },
-        }));
+        const planilha = project.compat === 'planilha';
+        /** O time com o membro trocado, com o dano fixo que ele tem assim (o da arma atual não vale para as outras). */
+        const candidate = (next: MemberRef): Pick<WeaponCandidate, 'team' | 'flatEffects'> => {
+          const members = swapMember(resolved.team.members, member, resolveMember(next, data.game, data.effects, project.config.minRollsPerSubstat, project.config.characterLevel, planilha), planilha);
+          return { team: { ...resolved.team, members }, flatEffects: teamFlat(data.effects.flatDamage, members, new Set(resolved.team.disabled), planilha, project.flatStacks) };
+        };
+        const candidates: WeaponCandidate[] = weaponsFor(character, data.game.weapons).map((w) => ({ weapon: w.name, ...candidate({ ...ref, weapon: w.name, ...(refinement ? { refinement } : {}) }) }));
         const hasTable = data.effects.weapons.find((e) => e.weapon === ref.weapon)?.refinements;
-        if (hasTable) {
-          for (const r of [1, 2, 3, 4, 5]) {
-            candidates.push({
-              weapon: ref.weapon,
-              refinement: r,
-              team: {
-                ...resolved.team,
-                members: swapMember(resolved.team.members, member, resolveMember({ ...ref, refinement: r }, data.game, data.effects, project.config.minRollsPerSubstat, project.config.characterLevel, project.compat === 'planilha'), project.compat === 'planilha'),
-              },
-            });
-          }
-        }
-        for (const c of [0, 1, 2, 3, 4, 5, 6]) {
-          candidates.push({
-            weapon: ref.weapon,
-            constellation: c,
-            team: {
-              ...resolved.team,
-              members: swapMember(resolved.team.members, member, resolveMember({ ...ref, constellation: c || undefined }, data.game, data.effects, project.config.minRollsPerSubstat, project.config.characterLevel, project.compat === 'planilha'), project.compat === 'planilha'),
-            },
-          });
-        }
+        if (hasTable) for (const r of [1, 2, 3, 4, 5]) candidates.push({ weapon: ref.weapon, refinement: r, ...candidate({ ...ref, refinement: r }) });
+        for (const c of [0, 1, 2, 3, 4, 5, 6]) candidates.push({ weapon: ref.weapon, constellation: c, ...candidate({ ...ref, constellation: c || undefined }) });
         client.current
           ?.request<WeaponCompareRow[]>({ type: 'weaponCompare', input: { member, candidates, actions: resolved.actions, flatEffects: resolved.flatEffects, ampCoefficient: resolved.ampCoefficient, autoBlocked: resolved.autoBlocked } })
           .then((rows) => !cancelled && setState({ key, rows, error: null }))

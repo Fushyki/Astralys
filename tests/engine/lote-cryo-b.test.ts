@@ -5,6 +5,7 @@ import { assembleTeam, evaluateRotation, resolveProject, type EffectsData, type 
 import { minimumRolls } from '../../src/engine/stats';
 import { sampleProject } from '../../src/features/rotation/persistence';
 import { defaultMember } from '../../src/features/rotation/teamOps';
+import { semAuto } from '../helpers/semAuto';
 
 // Só passa depois de `npx tsx scripts/curate-effects.ts` com o lote cryo-b registrado.
 const root = path.resolve(__dirname, '../..');
@@ -23,7 +24,7 @@ function run(members: Mem[], a: Act, elementMode: 'kit' | 'personagem' = 'person
     actions: [{ id: 'a0', member: a.member ?? 0, move: { character: members[a.member ?? 0].character, talent: a.talent, label: a.label, variant: 0 }, executions: 1, reaction: 'none', activeTags: a.tags ?? [], tagSource: 'manual', dmgAdjust: 0, time: 0 }],
     buffWindows: [], disabled: [],
   };
-  const r = resolveProject(p as never, game, effects);
+  const r = resolveProject(semAuto(p as never, game, effects), game, effects);
   const asm = assembleTeam(r.team);
   const [out] = evaluateRotation({ members: r.team.members, assembly: asm, config: r.team.config, rolls: r.team.members.map(() => minimumRolls(2)), flatEffects: r.flatEffects }, r.actions).actions;
   return out;

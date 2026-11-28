@@ -7,6 +7,7 @@ import { minimumRolls } from '../../src/engine/stats';
 import { sampleProject } from '../../src/features/rotation/persistence';
 import { defaultMember } from '../../src/features/rotation/teamOps';
 import type { CharacterEffect } from '../../src/effects/schema';
+import { semAuto } from '../helpers/semAuto';
 
 const root = path.resolve(__dirname, '../..');
 const json = <T>(rel: string): T => JSON.parse(readFileSync(path.join(root, rel), 'utf8'));
@@ -49,7 +50,7 @@ function run(members: MemberSpec[], actions: ActionSpec[], override: CharacterEf
     buffWindows: [],
     disabled: [],
   };
-  const r = resolveProject(p as never, game, effects);
+  const r = resolveProject(semAuto(p as never, game, effects), game, effects);
   const assembly = assembleTeam(r.team);
   const rolls = r.team.members.map(() => minimumRolls(2));
   return { r, assembly, result: evaluateRotation({ members: r.team.members, assembly, config: r.team.config, rolls, flatEffects: r.flatEffects }, r.actions) };
@@ -224,7 +225,8 @@ describe('curadoria Estelar, golpes derivados e dano fixo de outro personagem', 
     const ay = run([{ character: 'Kamisato Ayaka', constellation: 2 }], [{ talent: 'burst', label: 'Cutting DMG' }, { talent: 'proc', label: 'char:c2c' }]).result.actions;
     expect(ay[1].scale.atk).toBeCloseTo(ay[0].scale.atk * 0.2, 9);
     expect(ay[1].action.move.hitType).toBe('burst');
-    const es = run([{ character: 'Escoffier', constellation: 2 }, { character: 'Kamisato Ayaka' }], [{ member: 1, label: '1-Hit DMG' }]).result.actions[0];
+    // A Habilidade da Escoffier abre o Cold Dish; o golpe da aliada vem depois.
+    const es = run([{ character: 'Escoffier', constellation: 2 }, { character: 'Kamisato Ayaka' }], [{ member: 0, talent: 'skill', label: 'Skill DMG' }, { member: 1, label: '1-Hit DMG' }]).result.actions[1];
     expect(es.flatDamage).toBeGreaterThan(0);
   });
 });

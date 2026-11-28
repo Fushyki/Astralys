@@ -16,6 +16,8 @@ export interface WeaponCandidate {
   /** Quando informado, é uma linha de comparação de constelações do mesmo personagem. */
   constellation?: number;
   team: TeamInput;
+  /** Dano fixo desta equipe (a arma e a constelação mudam o que existe); ausente = o do projeto. */
+  flatEffects?: FlatDamageEffect[];
 }
 
 export interface WeaponCompareInput {
@@ -40,10 +42,10 @@ export interface WeaponCompareRow {
 
 export function compareWeapons(input: WeaponCompareInput): WeaponCompareRow[] {
   return input.candidates
-    .map(({ weapon, refinement, constellation, team }) => {
+    .map(({ weapon, refinement, constellation, team, flatEffects = input.flatEffects }) => {
       // Cada arma abre as próprias janelas.
-      const actions = applyAutoWindows(input.actions, assembleTeam(team).buffs, input.flatEffects, new Set(input.autoBlocked));
-      const b = analyzeProject({ team, actions, flatEffects: input.flatEffects, ampCoefficient: input.ampCoefficient });
+      const actions = applyAutoWindows(input.actions, assembleTeam(team).buffs, flatEffects, new Set(input.autoBlocked));
+      const b = analyzeProject({ team, actions, flatEffects, ampCoefficient: input.ampCoefficient });
       const totals = b.optimization.result.totals;
       return { weapon, ...(refinement ? { refinement } : {}), ...(constellation !== undefined ? { constellation } : {}), teamAvg: totals.avg, memberAvg: b.optimization.result.members[input.member].avg, dps: totals.dps };
     })

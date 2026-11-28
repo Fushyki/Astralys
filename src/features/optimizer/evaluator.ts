@@ -17,12 +17,11 @@ import {
   type StatBlock,
   type StatsShare,
   type TeamAssembly,
-  applyFlatLevels,
   evaluateRotation,
   withoutDecay,
   finalizeMembers,
   finalStats,
-  gearFlat,
+  teamFlat,
   resolveMember,
   kitProcMoves,
   pointExtra,
@@ -36,6 +35,7 @@ import {
   type MemberRef,
   type ReactionChoice,
   type ResolvedProject,
+  type RotationProject,
   type RotationAction,
   type Rolls,
 } from '../../engine';
@@ -81,6 +81,8 @@ export interface EvaluatorInput {
   resolved: Pick<ResolvedProject, 'team' | 'actions' | 'flatEffects' | 'ampCoefficient' | 'autoBlocked'>;
   /** O projeto está no modo planilha (os 4 personagens da planilha ficam só com os efeitos dela). */
   planilha?: boolean;
+  /** Acúmulos de dano fixo escolhidos no projeto (`RotationProject.flatStacks`). */
+  flatStacks?: RotationProject['flatStacks'];
   member: number;
   /** Rolls de todos os membros (os do membro otimizado são ignorados). */
   rolls: Rolls[];
@@ -135,7 +137,7 @@ export function createEvaluator(input: EvaluatorInput): Evaluator {
       // Só o membro refeito passa pelas regras: os outros já vieram finalizados e rodá-las de novo contaria duas vezes o que escala por nível.
       const done = finalizeMembers(base, !!input.planilha);
       const members = base.map((m, i) => (i === member ? done[i] : resolved.team.members[i]));
-      hit = { members, flat: [...applyFlatLevels(effects.flatDamage, members), ...gearFlat(members, new Set(resolved.team.disabled))] };
+      hit = { members, flat: teamFlat(effects.flatDamage, members, new Set(resolved.team.disabled), !!input.planilha, input.flatStacks) };
       cache.set(key, hit);
     }
     return hit;

@@ -5,6 +5,7 @@ import { assembleTeam, evaluateRotation, resolveProject, type EffectsData, type 
 import { minimumRolls } from '../../src/engine/stats';
 import { sampleProject } from '../../src/features/rotation/persistence';
 import { defaultMember } from '../../src/features/rotation/teamOps';
+import { semAuto } from '../helpers/semAuto';
 
 const root = path.resolve(__dirname, '../..');
 const json = <T>(rel: string): T => JSON.parse(readFileSync(path.join(root, rel), 'utf8'));
@@ -21,7 +22,7 @@ function team(members: Mem[], a: Act, stacks?: Record<string, number>) {
     actions: [{ id: 'a0', member: 0, move: { character: members[0].character, talent: a.talent, label: a.label, variant: 0 }, executions: 1, reaction: 'none', activeTags: a.tags ?? [], tagSource: 'manual', dmgAdjust: 0, time: 0 }],
     buffWindows: [], disabled: [],
   };
-  const r = resolveProject(p as never, game, effects);
+  const r = resolveProject(semAuto(p as never, game, effects), game, effects);
   const asm = assembleTeam(r.team);
   return evaluateRotation({ members: r.team.members, assembly: asm, config: r.team.config, rolls: r.team.members.map(() => minimumRolls(2)), flatEffects: r.flatEffects }, r.actions).actions[0];
 }

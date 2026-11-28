@@ -5,6 +5,7 @@ import { assembleTeam, evaluateRotation, resolveProject, type EffectsData, type 
 import { minimumRolls } from '../../src/engine/stats';
 import { sampleProject } from '../../src/features/rotation/persistence';
 import { defaultMember } from '../../src/features/rotation/teamOps';
+import { semAuto } from '../helpers/semAuto';
 
 const root = path.resolve(__dirname, '../..');
 const json = <T>(rel: string): T => JSON.parse(readFileSync(path.join(root, rel), 'utf8'));
@@ -23,7 +24,7 @@ function run(members: Mem[], actions: Act[]) {
     })),
     buffWindows: [], disabled: [],
   };
-  const r = resolveProject(p as never, game, effects);
+  const r = resolveProject(semAuto(p as never, game, effects), game, effects);
   const asm = assembleTeam(r.team);
   const out = evaluateRotation({ members: r.team.members, assembly: asm, config: r.team.config, rolls: r.team.members.map(() => minimumRolls(2)), flatEffects: r.flatEffects }, r.actions).actions;
   return Object.assign(out, { tags: [...new Set(asm.buffs.map((b) => b.tag))] });
@@ -102,7 +103,9 @@ describe('Ororon', () => {
 describe('Varesa', () => {
   const plunge: Act = { member: 0, talent: 'normal', label: 'Low/High Plunge DMG' };
   const fiery: Act = { member: 0, talent: 'normal', label: 'Fiery Passion Low/High Plunge DMG' };
-  const flat = (m: Mem[], a: Act) => run(m, [{ ...a, tags: tagsOf(m) }])[0];
+  // O dano fixo vive numa janela aberta pela Habilidade (A1) e pelo Supremo (C4): os dois vêm antes da queda.
+  const opens: Act[] = [{ member: 0, talent: 'skill', label: 'Rush DMG' }, { member: 0, talent: 'burst', label: 'Flying Kick DMG' }];
+  const flat = (m: Mem[], a: Act) => run(m, [...opens, { ...a, tags: tagsOf(m) }])[opens.length];
   it('A1: 50% do ATK sem Fiery Passion e 180% em Fiery Passion (golpes diferentes)', () => {
     const m: Mem[] = [{ character: 'Varesa' }];
     const a = flat(m, plunge);

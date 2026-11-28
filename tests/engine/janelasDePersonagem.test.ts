@@ -81,6 +81,25 @@ describe('constelações da Mona', () => {
   });
 });
 
+describe('gatilhos próprios', () => {
+  it('atraso: o A1 da Hu Tao começa quando o Paramita acaba', () => {
+    const w = windows(project([['Hu Tao'], ['Xingqiu']], [[0, 'skill', 2]]));
+    const a1 = w.asm.buffs.find((b) => b.description?.startsWith('Hu Tao') && b.auto?.[0].delay)!;
+    expect(autoTagIntervals([a1], [], w.r.actions).get(a1.tag)).toEqual([[11, 19]]);
+  });
+
+  it('talento sem golpe de dano (Supremo do Xiao) abre pelos ataques', () => {
+    const w = windows(project([['Xiao']], [[0, 'normal', 3]]));
+    expect(w.of('Xiao: Máscara Yaksha')).toEqual([[3, 18]]);
+  });
+
+  it('rótulo: a Shenhe só abre o bônus do toque que ela usou', () => {
+    const w = windows(project([['Shenhe']], [[0, 'skill', 0, 'Press Skill DMG']]));
+    const opened = w.r.actions[0].activeTags.filter((t) => t.includes('Shenhe A4'));
+    expect(opened).toHaveLength(1);
+  });
+});
+
 describe('Dádiva Celestial (4 peças)', () => {
   const gift: Partial<MemberRef> = { primarySet: 'Celestial Gift', secondarySet: undefined, fourPiece: true, gearManual: false };
   const team = (a: Partial<MemberRef>, b: Partial<MemberRef> = {}): [string, Partial<MemberRef>?][] => [['Hu Tao', b], ['Mona', { ...gift, ...a }], ['Xingqiu']];

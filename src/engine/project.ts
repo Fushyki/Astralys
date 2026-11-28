@@ -598,6 +598,18 @@ export function gearFlat(members: MemberInput[], off: ReadonlySet<string> = new 
 }
 
 /**
+ * Todo o dano fixo de um time: o do kit e da planilha (`flatDamage`, no nível da fonte; fora da planilha, o que tem
+ * acúmulos vive numa janela) mais o de armas, sets e buffs. Quem troca arma ou set (comparação, otimizador) refaz por aqui.
+ */
+export function teamFlat(flatDamage: FlatDamageEffect[], members: MemberInput[], off: ReadonlySet<string>, planilha: boolean, stacks?: RotationProject['flatStacks']): FlatDamageEffect[] {
+  const kit = applyFlatLevels(flatDamage, members).map((e) => ({ ...e, ...(!planilha && e.stacks !== undefined ? { window: true as const } : {}) }));
+  return [...kit, ...gearFlat(members, off)].map((e) => {
+    const o = stacks?.[flatId(e)];
+    return o === undefined ? e : { ...e, stacks: o === 'all' ? undefined : o };
+  });
+}
+
+/**
  * Facções ligadas do membro. Sem escolha salva, os personagens Moonsign já nascem Moonsign (no Genshin Optimizer é fixo no kit);
  * Hexerei continua uma escolha do usuário. Escolha salva (mesmo vazia) vale como está.
  */
@@ -662,6 +674,7 @@ export function resolveMember(ref: MemberRef, data: GameData, effects: EffectsDa
     kqmFocus: ref.kqmFocus,
     kqmStat: ref.kqmStat,
     normalInfusion: ref.normalInfusion,
+    silent: (['skill', 'burst'] as const).filter((t) => !data.moves.some((x) => x.character === character.name && x.talent === t)),
     totalRolls: ref.totalRolls,
     forcedCritRolls: ref.forcedCritRolls,
     // Com peças reais os rolls não existem (a soma exata está em externalStats) e o otimizador de substats não mexe no membro.
@@ -1004,10 +1017,7 @@ export function resolveProject(project: RotationProject, data: GameData, effects
     return off.length ? { ...m, characterEffect: { ...m.characterEffect!, buffs: m.characterEffect!.buffs.filter((b) => !off.includes(b)) } } : m;
   });
   const team: TeamInput = { members: playing, extras: project.extras, config, disabled };
-  const flatEffects = [...applyFlatLevels(effects.flatDamage, members).map((e) => ({ ...e, ...(project.compat !== 'planilha' && e.stacks !== undefined ? { window: true as const } : {}) })), ...gearFlat(members, new Set(team.disabled))].map((e) => {
-    const o = project.flatStacks?.[flatId(e)];
-    return o === undefined ? e : { ...e, stacks: o === 'all' ? undefined : o };
-  });
+  const flatEffects = teamFlat(effects.flatDamage, members, new Set(team.disabled), project.compat === 'planilha', project.flatStacks);
   const assembly = assembleTeam(team, {});
   // Faixa que o usuário já controla (janelas dele, tirada, ou etiqueta marcada à mão num golpe) não ganha janela automática.
   const byHand = project.actions.flatMap((a) => (a.tagSource === 'manual' ? a.activeTags : []));

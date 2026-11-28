@@ -32,15 +32,15 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.reload({ waitUntil: 'networkidle' });
   await page.waitForSelector('.eq-card');
 
-  check('DPS do time do exemplo é 106.288', (await kpi('DPS do time')) === '106.288', await kpi('DPS do time'));
-  check('dano da rotação do exemplo é 1.860.038', (await kpi('Dano da rotação')) === '1.860.038', await kpi('Dano da rotação'));
+  check('DPS do time do exemplo é 156.338', (await kpi('DPS do time')) === '156.338', await kpi('DPS do time'));
+  check('dano da rotação do exemplo é 2.735.921', (await kpi('Dano da rotação')) === '2.735.921', await kpi('Dano da rotação'));
   check('a reação principal é Derreter', (await kpi('Reação principal')) === 'Derreter');
   check('quatro cartões na ordem do time', (await cards()).join() === 'Mavuika,Citlali,Iansan,Bennett', (await cards()).join());
   const roles = await page.$$eval('.eq-card .role', (e) => e.map((x) => x.textContent));
   check('papéis vêm da participação no dano (DPS principal e suportes)', /DPS principal · Pyro/.test(roles[0]) && roles.slice(1).every((r) => /Suporte/.test(r)), roles.join(' | '));
   const mav = await page.locator('.eq-card:has(.name:text-is("Mavuika"))').textContent();
   const gear = page.locator('.eq-card:has(.name:text-is("Mavuika")) .eq-gear');
-  check('o cartão da Mavuika mostra ATK e críticos reais', /5.537/.test(mav) && /95,6%/.test(mav) && /238,4%/.test(mav), mav.replace(/s+/g, ' ').slice(0, 200));
+  check('o cartão da Mavuika mostra ATK e críticos reais', /5.483/.test(mav) && /95,6%/.test(mav) && /238,4%/.test(mav), mav.replace(/s+/g, ' ').slice(0, 200));
   check('arma e artefatos são só imagem (sem o texto do equipamento)', !/A Thousand Blazing Suns/.test(mav) && !/Obsidian Codex/.test(mav) && (await gear.locator('img').count()) === 6);
   check('as imagens têm nome acessível com arma e set', /A Thousand Blazing Suns/.test(await gear.locator('.eq-tile.weapon').getAttribute('aria-label')) && /Obsidian Codex/.test(await gear.locator('.eq-pieces').getAttribute('title')));
   check('o set 4 peças não usa as cores de 2+2', (await gear.getAttribute('data-mode')) === 'four' && (await gear.locator('.eq-tile.piece[data-tone]').count()) === 0);
@@ -108,7 +108,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.click('button:has-text("Duplicar")');
   await page.waitForURL(/\/projeto\/(?!exemplo)[^/]+$/);
   await page.waitForSelector('.eq-card');
-  check('duplicar abre a cópia com o mesmo DPS', (await kpi('DPS do time')) === '106.288');
+  check('duplicar abre a cópia com o mesmo DPS', (await kpi('DPS do time')) === '156.338');
 
   // Persistência
   await page.reload({ waitUntil: 'networkidle' }); await page.waitForSelector('.eq-card');

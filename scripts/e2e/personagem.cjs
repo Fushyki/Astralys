@@ -75,12 +75,12 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
 
   // Abas e cabeçalho
   const tabs = await page.$$eval('.pc-tabs a', (a) => a.map((x) => x.textContent));
-  check('uma sub-aba por personagem com a % do dano', tabs.length === 4 && /Mavuika.*90,9%/.test(tabs[0]) && /Citlali.*5,0%/.test(tabs[1]), tabs.join(' | '));
+  check('uma sub-aba por personagem com a % do dano', tabs.length === 4 && /Mavuika.*93,6%/.test(tabs[0]) && /Citlali.*3,4%/.test(tabs[1]), tabs.join(' | '));
   check('a aba Personagens do time está marcada', (await page.getAttribute('.dz-subnav a:has-text("Personagens")', 'aria-current')) === 'page');
 
   // Atributos do gabarito
   const attrs = await page.locator('.db-panel:has(h3:text-is("Atributos"))').textContent();
-  check('atributos finais do exemplo (ATK 5.537, EM 405, Taxa 95,6%, Dano 238,4%)', /5.537/.test(attrs) && /405/.test(attrs) && /95,6%/.test(attrs) && /238,4%/.test(attrs), attrs.replace(/s+/g, ' ').slice(0, 260));
+  check('atributos finais do exemplo (ATK 5.483, EM 424, Taxa 95,6%, Dano 238,4%)', /5.483/.test(attrs) && /424/.test(attrs) && /95,6%/.test(attrs) && /238,4%/.test(attrs), attrs.replace(/s+/g, ' ').slice(0, 260));
   check('mostra o valor base ao lado do ATK', /1\.100 ATK base/.test(attrs));
 
   // Tabela de dano (aba Avançado): sem nomes repetidos, reação filtrada
@@ -108,11 +108,11 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
 
   // Reações deste time
   const rx = await page.locator('.dz-panel:has(h2:text-is("Reações deste time"))').textContent();
-  check('reações do time: Derreter ×3,25 e Sobrecarga', /Derreter \(Pyro\)/.test(rx) && /×3,25/.test(rx) && /Sobrecarga/.test(rx), rx.replace(/\s+/g, ' ').slice(0, 220));
+  check('reações do time: Derreter ×3,29 e Sobrecarga', /Derreter \(Pyro\)/.test(rx) && /×3,29/.test(rx) && /Sobrecarga/.test(rx), rx.replace(/\s+/g, ' ').slice(0, 220));
 
   // Buffs recebidos
   const buffs = await page.$$eval('.pc-buffs .b', (b) => b.map((x) => x.textContent));
-  check('buffs recebidos com fonte e participação', buffs.length >= 6 && buffs.some((t) => /Inspiration Field/.test(t) && /ATK fixo/.test(t) && /21,6%/.test(t)), `${buffs.length} buffs: ${buffs.find((t) => /Inspiration Field/.test(t))}`);
+  check('buffs recebidos com fonte e participação', buffs.length >= 6 && buffs.some((t) => /Inspiration Field/.test(t) && /ATK fixo/.test(t) && /20,4%/.test(t)), `${buffs.length} buffs: ${buffs.find((t) => /Inspiration Field/.test(t))}`);
   const avgBefore = num(await firstAvg());
   await page.click('.pc-buffs .b:has-text("Inspiration Field") input'); await settle();
   const avgOff = num(await firstAvg());

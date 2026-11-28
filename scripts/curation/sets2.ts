@@ -69,7 +69,14 @@ export const FOUR_PIECE_2: Record<string, FourCuration> = {
     expect: 'Lunar Reaction DMG is increased by 20%',
     note: '+20% de DMG das reações Lunares do dono enquanto ele está fora de campo (e até 3 s depois de entrar), +40% com Moonsign: Ascendant Gleam: faixas.',
   },
-  'Celestial Gift': { partial: true, expect: "Witch's Homework", note: 'O bônus é DMG do elemento do DONO para a equipe inteira (e, com Hexerei: Secret Rite, também do personagem ativo): o motor só dá DMG elemental a membros daquele elemento, então o efeito fica de fora.' },
+  'Celestial Gift': {
+    buffs: [
+      { id: 'luz', label: 'DMG do elemento do portador', scope: 'team', timed: true, forOwnerElement: 'own', team: { ownerFaction: 'hexerei' }, stats: { dmgPct: { p: 0 } } },
+      { id: 'cantico', label: 'DMG do portador e do personagem ativo (Hexerei)', scope: 'team', timed: true, forOwnerElement: 'ownOrActive', replaces: 'luz', team: { ownerFaction: 'hexerei', hexerei: 2 }, stats: { dmgPct: { p: 2 } } },
+    ],
+    expect: "Witch's Homework",
+    note: 'Precisa do portador marcado como Hexerei. Por 20 s depois da habilidade dele: +20% de DMG do elemento dele para quem é desse elemento; com 2+ Hexerei no time, +40% para quem é do elemento dele ou do 1º do time (o personagem em campo). Não soma entre portadores. Golpe infundido por outro elemento não entra.',
+  },
   'Disenchantment in Deep Shadow': { reactionBonus: { superconduct: { p: 0 }, stellarconduct: { p: 2 } }, buffs: [{ id: 'cr', label: 'Taxa Crítica (inimigo com Supercondutor)', timed: true, stats: { critRate: { p: 1 } } }], expect: 'Increases Superconduct Reaction DMG by 80%', note: '+80% de Supercondutor, +40% de Estelar-Conduct e +16% de Taxa Crítica contra inimigo sob Supercondutor ou Estelar-Conduct (faixa).' },
   'Scarlet Proof': { buffs: [{ id: 'taxa', label: 'Taxa Crítica depois de Redemoinho Estelar', timed: true, stats: { critRate: { p: 0 }, reactionBonus: { stellarswirl: { p: 1 } } } }], expect: 'CRIT Rate by 16%', note: '+16% de Taxa Crítica e +40% de Redemoinho Estelar por 10 s depois de um Redemoinho Estelar: faixa no plano de combate.' },
   'Heart of the Furnace': { buffs: [{ id: 'atk', label: 'ATK depois de reação Estelar', timed: true, stats: { atkPct: { p: 0 } } }, { id: 'estelar', label: 'DMG Estelar da equipe', scope: 'team', timed: true, stats: { reactionBonus: { stellarconduct: { p: 1 }, stellarswirl: { p: 1 } } } }], expect: 'Increases the equipping character\'s ATK by 12%', note: '+12% de ATK do dono por 12 s depois de uma reação Estelar e +50% de DMG Estelar da equipe (não se soma com outro Heart of the Furnace): faixas.' },

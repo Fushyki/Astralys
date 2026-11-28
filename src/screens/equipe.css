@@ -87,9 +87,10 @@
 .eq-buffs .bcard[data-locked='true'] { cursor: not-allowed; opacity: .6; }
 .eq-buffs .bcard input[type="checkbox"] { width: 20px; height: 20px; margin: 2px 0 0; accent-color: var(--good); cursor: inherit; }
 .eq-buffs .bcard .bc-body { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
-.eq-buffs .bcard .bc-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
-.eq-buffs .bcard .bc-n { font-weight: 600; font-size: 13px; line-height: 1.3; overflow-wrap: anywhere; }
-.eq-buffs .bcard .bc-tag { flex: none; padding: 1px 7px; border-radius: 6px; background: var(--bg); border: 1px solid var(--border-ctl); color: var(--gold-hi); font-size: var(--fs-1); font-weight: 600; white-space: nowrap; }
+.eq-buffs .bcard .bc-top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: var(--sp-1) var(--sp-2); }
+/* A etiqueta comprida ("Set · 4 peças · Para A, B, C") desce de linha em vez de espremer o nome. */
+.eq-buffs .bcard .bc-n { flex: 1 1 12ch; min-width: 0; font-weight: 600; font-size: 13px; line-height: 1.3; overflow-wrap: anywhere; }
+.eq-buffs .bcard .bc-tag { flex: 0 1 auto; max-width: 100%; padding: 1px 7px; border-radius: 6px; background: var(--bg); border: 1px solid var(--border-ctl); color: var(--gold-hi); font-size: var(--fs-1); font-weight: 600; }
 .eq-buffs .bcard .bc-vals { display: flex; flex-wrap: wrap; gap: 4px 6px; }
 .eq-buffs .bcard .bc-vals .num { padding: 1px 8px; border-radius: 6px; background: var(--bg); font-size: 12px; font-weight: 600; color: var(--text); }
 .eq-buffs .bcard[data-active='false'] .bc-vals .num { opacity: .5; }

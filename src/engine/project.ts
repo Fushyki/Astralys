@@ -11,7 +11,7 @@ import { planilhaEffect, planilhaWeapon } from './compat/planilha';
 import { activeCharacterBuffs } from './stats';
 import { applyHitLimits } from './hitLimits';
 import { assembleTeam } from './team';
-import { applyAutoWindows, timedSet, timedWeapon } from './timing';
+import { applyAutoWindows, autoSource, timedSet, timedWeapon } from './timing';
 import { weaponStatsAt, type CharacterBuff, type CharacterEffect, type FlatDamageEffect, type Proc, type SetEffect, type WeaponEffect, type WeaponFlat } from '../effects/schema';
 import { SUBSTATS, zeroRolls, type Rolls } from './artifacts';
 import { RealPieceSchema, buildFromPieces } from './pieces';
@@ -300,7 +300,24 @@ export const RotationProjectSchema = z
 export type RotationProject = z.infer<typeof RotationProjectSchema>;
 
 /** Valida um projeto vindo de fora (arquivo, backend, localStorage). Lança ZodError com os problemas. */
-export const parseProject = (raw: unknown): RotationProject => RotationProjectSchema.parse(raw);
+export const parseProject = (raw: unknown): RotationProject => renameFlat(RotationProjectSchema.parse(raw));
+
+/** Linhas de dano fixo que mudaram de nome (#68): o que o usuário marcou nelas continua valendo. */
+const RENAMED_FLAT: Record<string, string> = {
+  "Illuga|Illuga: Nightingale's Song (Supremo): Bônus de Dano Geo por Maestria": 'Illuga|Quills do Supremo · Geo: dano por Maestria',
+  "Illuga|Illuga: Nightingale's Song (Supremo, Lunar-Cristalizar): Bônus de Lunar-Cristalizar por Maestria": 'Illuga|Quills do Supremo · Lunar-Cristalizar: dano por Maestria',
+  "Illuga|Illuga A4 (Nightingale's Song): Nightingale's Song por Maestria": 'Illuga|Quills do A4 · Geo: dano por Maestria',
+  "Illuga|Illuga A4 (Lunar-Cristalizar): Nightingale's Song por Maestria (Lunar-Cristalizar)": 'Illuga|Quills do A4 · Lunar-Cristalizar: dano por Maestria',
+};
+
+function renameFlat(project: RotationProject): RotationProject {
+  const now = (id: string) => RENAMED_FLAT[id] ?? id;
+  return {
+    ...project,
+    actions: project.actions.map((a) => (a.flatOff || a.flatOn ? { ...a, ...(a.flatOff ? { flatOff: a.flatOff.map(now) } : {}), ...(a.flatOn ? { flatOn: a.flatOn.map(now) } : {}) } : a)),
+    ...(project.flatStacks ? { flatStacks: Object.fromEntries(Object.entries(project.flatStacks).map(([id, v]) => [now(id), v])) } : {}),
+  };
+}
 
 /** Etiquetas ativas no instante `t`: as das janelas que o cobrem. Resultado ordenado e sem repetição. */
 /** Segundos desde o início da janela de cada etiqueta ativa em `t` (a janela mais recente, se houver mais de uma). */
@@ -396,7 +413,7 @@ const withPartyLevel = (m: MemberInput, t: Talent): number =>
 export function gearBuffs(m: Pick<MemberInput, 'weapon' | 'weaponEffect' | 'refinement' | 'primarySet' | 'secondarySet' | 'fourPiece'>): CharacterBuff[] {
   const out: CharacterBuff[] = [];
   const add = (prefix: string, label: string, list: CharacterBuff[]) => {
-    for (const b of list) out.push({ ...b, id: `${prefix}:${b.id}`, label: `${label}: ${b.label}`, ...(b.stacks?.of ? { stacks: { ...b.stacks, of: `${prefix}:${b.stacks.of}` } } : {}) });
+    for (const b of list) out.push({ ...b, id: `${prefix}:${b.id}`, label: `${label}: ${b.label}`, ...(b.replaces ? { replaces: `${prefix}:${b.replaces}` } : {}), ...(b.stacks?.of ? { stacks: { ...b.stacks, of: `${prefix}:${b.stacks.of}` } } : {}) });
   };
   if (m.weaponEffect) add('arma', m.weapon.name, weaponStatsAt(m.weaponEffect, m.refinement).buffs);
   for (const set of [m.primarySet, m.secondarySet]) {
@@ -550,6 +567,11 @@ export function procMove(procs: readonly MemberProc[], ref: MoveRef, displayName
   };
 }
 
+function autoOfFlat(auto: WeaponFlat['auto'], duration: number, member: number, m: MemberInput): Pick<FlatDamageEffect, 'auto'> {
+  const source = auto && autoSource(auto, duration, member, m.silent);
+  return source ? { auto: [source] } : {};
+}
+
 /** Dano fixo de arma e de set de 4 peças (ex.: "Dano de Habilidade aumentado em 40% da DEF"). */
 export function gearFlat(members: MemberInput[], off: ReadonlySet<string> = new Set()): FlatDamageEffect[] {
   const out: FlatDamageEffect[] = [];
@@ -566,8 +588,8 @@ export function gearFlat(members: MemberInput[], off: ReadonlySet<string> = new 
         out.push({
           name: `${origin}: ${f.name}`, source: m.character.name, sourceStat: f.sourceStat, perPoint: f.perPoint, threshold: 0,
           ...(f.capPerHit !== undefined ? { capPerHit: f.capPerHit } : {}), targets, elements: f.elements ?? [], hitTypes: f.hitTypes, ...(f.labels?.length ? { labels: f.labels } : {}),
-          ...(f.stacks !== undefined ? { stacks: f.stacks } : {}), ...(f.decay ? { decay: f.decay } : {}), ...(f.reaction ? { reaction: f.reaction } : {}), ...(f.pool ? { pool: f.pool } : {}), active: true, fonte_info: `Passiva de ${origin} (curadoria do Lunaris)`,
-          ...(f.duration ? { window: true, ...(f.auto ? { auto: [{ ...f.auto, member: i, duration: f.duration }] } : {}) } : {}),
+          ...(f.stacks !== undefined ? { stacks: f.stacks } : {}), ...(f.decay ? { decay: f.decay } : {}), ...(f.reaction ? { reaction: f.reaction } : {}), ...(f.pool ? { pool: f.pool } : {}), ...(f.afterBurst ? { afterBurst: f.afterBurst } : {}), ...(f.field ? { field: f.field } : {}), active: true, fonte_info: `Passiva de ${origin} (curadoria do Lunaris)`,
+          ...(f.duration ? { window: true, ...autoOfFlat(f.auto, f.duration, i, m) } : {}),
         });
       }
     }
@@ -583,6 +605,8 @@ export function factionsOf(chosen: readonly ('moonsign' | 'hexerei')[] | undefin
   const list = eligible ?? [];
   return chosen === undefined ? list.filter((f) => f === 'moonsign') : list.filter((f) => chosen.includes(f));
 }
+
+const withoutAuto = ({ auto: _auto, ...b }: CharacterBuff): CharacterBuff => ({ ...b, ...(b.flat ? { flat: b.flat.map(({ auto: _a, duration: _d, ...f }) => f) } : {}) });
 
 /** `planilha`: o projeto está no modo planilha (a arma leva o extra de Nightsoul fixo; ver `planilhaWeapon`). */
 export function resolveMember(ref: MemberRef, data: GameData, effects: EffectsData, minRolls = 0, defaultLevel = 90, planilha = false): MemberInput {
@@ -606,7 +630,9 @@ export function resolveMember(ref: MemberRef, data: GameData, effects: EffectsDa
   const secondarySet = setOf(real ? real.secondarySet : ref.secondarySet);
   const fourPiece = real ? real.fourPiece : ref.fourPiece;
   const gear = gearBuffs({ weapon, weaponEffect, refinement: ref.refinement, primarySet, secondarySet, fourPiece });
-  const own = effects.characters.find((c) => c.character === ref.character);
+  const curated = effects.characters.find((c) => c.character === ref.character);
+  // No modo planilha os efeitos de personagem não ganham janela automática: o gabarito não muda.
+  const own = planilha && curated ? { ...curated, buffs: curated.buffs.map(withoutAuto) } : curated;
   // Os stacks escolhidos valem para os buffs do personagem e também para os de arma e set (ids `arma:...`, `set4-...`).
   const merged: CharacterEffect | undefined = gear.length
     ? {
@@ -665,6 +691,19 @@ export interface ResolvedProject {
   ampCoefficient: number | undefined;
 }
 
+/** Duração e janela do buff para este membro: nível do talento, constelação que alonga e extensão de Hexerei. */
+function timeOf(b: CharacterBuff, m: MemberInput, secretRite: boolean): CharacterBuff {
+  const byLevel = b.durationByLevel;
+  let duration = byLevel ? byLevel.table[Math.min(15, Math.max(1, Math.round(m.talents[byLevel.talent]))) - 1] : b.duration;
+  if (duration && b.durationPlus && (m.constellation ?? 0) >= b.durationPlus.constellation) duration += b.durationPlus.seconds;
+  const { hexExtend, ...auto } = b.auto ?? { hexExtend: undefined };
+  return {
+    ...b,
+    ...(duration ? { duration } : {}),
+    ...(hexExtend && secretRite ? { auto: { ...(auto as NonNullable<CharacterBuff['auto']>), extend: hexExtend } } : {}),
+  };
+}
+
 /**
  * Aplica as regras de composição (`CharacterBuff.team`) e o nível do talento (`CharacterBuff.level`): tira os
  * buffs que o time não cumpre e multiplica os que escalam pela quantidade de elementos ou pelo nível. Devolve cópias; os dados de efeitos não são alterados.
@@ -676,9 +715,11 @@ export function applyTeamRules(members: MemberInput[]): MemberInput[] {
   const hexerei = faction('hexerei');
   return withMoonsignGleam(members, moonsign).map((m, self) => {
     const buffs = m.characterEffect?.buffs;
-    if (!buffs?.some((b) => b.team || b.level || b.convert?.capByLevel)) return m;
+    if (!buffs?.some((b) => b.team || b.level || b.convert?.capByLevel || b.durationByLevel || b.durationPlus || b.auto?.hexExtend)) return m;
     const others = members.filter((_, j) => j !== self);
-    const next = buffs.flatMap((b0) => {
+    const secretRite = hexerei >= 2 && !!m.factions?.includes('hexerei');
+    const next = buffs.flatMap((raw) => {
+      const b0 = timeOf(raw, m, secretRite);
       const cl = b0.convert?.capByLevel;
       const b = cl ? { ...b0, convert: { ...b0.convert!, cap: cl.table[Math.min(15, Math.max(1, Math.round(m.talents[cl.talent]))) - 1] } } : b0;
       const t = b.team;
@@ -686,6 +727,7 @@ export function applyTeamRules(members: MemberInput[]): MemberInput[] {
       if (t?.moonsignMax && moonsign > t.moonsignMax) return [];
       if (t?.fewerThan && elements.filter((e) => t.fewerThan!.of.includes(e)).length >= t.fewerThan.count) return [];
       if (t?.hexerei && hexerei < t.hexerei) return [];
+      if (t?.ownerFaction && !m.factions?.includes(t.ownerFaction)) return [];
       if (t?.only && !elements.every((e) => t.only!.includes(e))) return [];
       if (t?.eachOf && !t.eachOf.every((e) => elements.includes(e))) return [];
       if (t?.minDistinct && new Set(elements).size < t.minDistinct) return [];

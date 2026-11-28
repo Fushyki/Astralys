@@ -55,9 +55,10 @@ export interface BuffCuration {
     physCritDmg?: Val;
     /** Bônus de dano de reação (ex.: { bloom: { p: 0 } }). */
     reactionBonus?: Partial<Record<ReactionKey, Val>>;
+    vaporizeBonus?: Val;
   };
   /** Dano fixo por golpe elegível (ex.: Gorou A4, 156% da DEF no dano da habilidade). */
-  flat?: { name: string; sourceStat: 'ATK' | 'HP' | 'DEF' | 'EM' | 'BaseATK'; perPoint: Val; cap?: Val; hitTypes: ('normal' | 'charged' | 'plunge' | 'skill' | 'burst')[]; labels?: string[]; stacks?: number; targets?: 'self' | 'team' | 'others'; elements?: Element[]; /** Ver `WeaponFlat.reaction`, `pool` e `extra`. */ reaction?: 'lunarcrystallize'; pool?: string; extra?: { max: number; step: number; label: string }; /** Gasta o recurso a cada acerto (Masque da Arlecchino). */ decay?: { rate: number; floorPct: number; maxPct: number } }[];
+  flat?: { name: string; sourceStat: 'ATK' | 'HP' | 'DEF' | 'EM' | 'BaseATK'; perPoint: Val; cap?: Val; hitTypes: ('normal' | 'charged' | 'plunge' | 'skill' | 'burst')[]; labels?: string[]; stacks?: number; targets?: 'self' | 'team' | 'others'; elements?: Element[]; /** Ver `WeaponFlat.reaction`, `pool` e `extra`. */ reaction?: 'lunarcrystallize'; pool?: string; afterBurst?: number; field?: 'on'; extra?: { max: number; step: number; label: string }; /** Gasta o recurso a cada acerto (Masque da Arlecchino). */ decay?: { rate: number; floorPct: number; maxPct: number } }[];
   resShred?: { value: Val; elements: (Element | 'Physical')[] };
   /** Redução de DEF do inimigo, em fração (vale o tempo todo). */
   defShred?: Val;
@@ -67,7 +68,7 @@ export interface BuffCuration {
    */
   kit?: { talent: 'normal' | 'skill' | 'burst'; key?: string; /** Linha do kit (números puros, 15 níveis) que vira o teto da conversão por nível. */ capKey?: string; /** Tabela dos 15 níveis (fração) que o Lunaris não traz; vem do Genshin Optimizer (`skillParam.json`). */ table?: number[] };
   /** Regras de composição do time (ver `BuffTeamRulesSchema`); `scale.table` vem de parâmetros do Lunaris. */
-  team?: { only?: Element[]; eachOf?: Element[]; scale?: { of: 'distinct' | 'same' | 'different' | Element[]; table: Val[] }; fewerThan?: { of: Element[]; count: number }; stackPerMate?: Element[]; /** Mínimo de membros Moonsign / Hexerei no time. */ moonsign?: number; moonsignMax?: number; hexerei?: number };
+  team?: { only?: Element[]; eachOf?: Element[]; scale?: { of: 'distinct' | 'same' | 'different' | Element[]; table: Val[] }; fewerThan?: { of: Element[]; count: number }; stackPerMate?: Element[]; /** Mínimo de membros Moonsign / Hexerei no time. */ moonsign?: number; moonsignMax?: number; hexerei?: number; ownerFaction?: 'moonsign' | 'hexerei' };
   /** Bônus que depende de um stat da fonte (ver `BuffConvertSchema`). Substitui `stats`. */
   convert?: {
     from: 'atk' | 'baseAtk' | 'hp' | 'def' | 'em' | 'er';

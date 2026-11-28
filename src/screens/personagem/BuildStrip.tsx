@@ -16,6 +16,7 @@ import { FLOWER_HP, MAIN_STAT_VALUES, PLUME_ATK, PIECE_SLOTS, buildFromPieces, m
 import { weaponsFor } from '../../features/rotation/teamOps';
 import { WeaponPickerDialog } from './WeaponPicker';
 import { WeaponBuffs, WeaponInfoDialog } from './WeaponInfo';
+import { SetRequirement } from '../equipe/SetRequirement';
 import { CustomBuffs } from './CustomBuffs';
 import { PieceCard } from '../otimizar/PieceCard';
 
@@ -283,6 +284,7 @@ export function BuildStrip({ data, index, member: memberRef, projectId, compact,
               )}
             </div>
           ))}
+          <SetRequirement index={index} />
         </section>
       </div>
         </details>
@@ -334,6 +336,7 @@ export function BuildStrip({ data, index, member: memberRef, projectId, compact,
               )}
             </div>
           ))}
+          <SetRequirement index={index} />
         </section>
       </div>
       )}

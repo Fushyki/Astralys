@@ -26,6 +26,7 @@ import { WEAPONS_3 } from './curation/weapons3';
 import { WEAPONS_4 } from './curation/weapons4';
 import type { BuffCur, FlatCur, GearCur, ProcCur, StatsCur, Sum } from './curation/gear';
 import { SET_TIMING, WEAPON_TIMING, type TimeCur } from './curation/timing';
+import { CHARACTER_NO_WINDOW, CHARACTER_TIMING, type CharTime } from './curation/charTiming';
 import { CHARACTERS as CHARACTERS_1 } from './curation/characters';
 import { CHARACTERS_2 } from './curation/characters2';
 import { CHARACTERS_3 } from './curation/characters3';
@@ -362,6 +363,8 @@ function buildBuff(b: BuffCur, c: Ctx): CharacterBuff {
     id: b.id, label: b.label, minConstellation: 0, scope: b.scope ?? 'self', timed: b.timed ?? false,
     ...(b.forElements ? { forElements: b.forElements } : {}),
     ...(b.pickReceiver ? { pickReceiver: true } : {}),
+    ...(b.forOwnerElement ? { forOwnerElement: b.forOwnerElement } : {}),
+    ...(b.replaces ? { replaces: b.replaces } : {}),
     ...(b.forFactions ? { forFactions: b.forFactions } : {}),
     ...(b.stats ? { stats: buffStats(b.stats, c) } : {}),
     ...(b.convert
@@ -526,6 +529,58 @@ const percentOf = (text: string): number => {
   return round(Number(m[1]) / 100);
 };
 
+/** "12.5" no texto como duração: "12.5s", "12.5 seconds"... */
+const saysSeconds = (text: string, n: number) => new RegExp(`(^|[^\\d.])${String(n).replace('.', '\\.')}(\\.0)? ?s(ec|econds?)?\\b`).test(text);
+
+/** Confere uma linha de `curation/charTiming.ts` contra os textos do Lunaris e põe duração e janela no buff. */
+function withCharTime(name: string, buff: Record<string, unknown> & { id: string; timed: boolean; flat?: object[]; note?: string }, cur: CharTime, raw: RawChar, own: string, strip: (t: string) => string) {
+  const where = `${name} ${buff.id} (tempo)`;
+  const textOf = (src?: string) => {
+    if (!src) return strip(own);
+    const node = src === 'skill' || src === 'burst' ? raw.skills?.[SKILL_KEY[src]] : (src.startsWith('const') ? raw.constellations : raw.passives)?.[src];
+    if (!node) throw new Error(`${where}: o texto "${src}" não existe`);
+    return strip(node.description);
+  };
+  const check = (n: number, src?: string) => {
+    if (!saysSeconds(textOf(src), n)) throw new Error(`${where}: "${n}s" não está no texto${src ? ` de ${src}` : ''}`);
+    return n;
+  };
+  const rowOf = ([talent, key]: [ 'skill' | 'burst', string ]) => {
+    const row = raw.skills?.[SKILL_KEY[talent]]?.multipliers?.[key];
+    if (!row || row.length !== 15) throw new Error(`${where}: a linha "${key}" não existe ou não tem 15 níveis`);
+    return row.map((v) => {
+      const m = /^\s*(\d+(?:\.\d+)?)\s*s/.exec(v);
+      if (!m) throw new Error(`${where}: "${v}" não é duração`);
+      return Number(m[1]);
+    });
+  };
+  const table = cur.row ? rowOf(cur.row) : undefined;
+  const duration = table ? table[9] : cur.s !== undefined ? check(cur.s, cur.from) : undefined;
+  if (!duration) throw new Error(`${where}: sem duração`);
+  const byLevel = table && table.some((x) => x !== table[0]) ? { talent: cur.row![0], table } : undefined;
+  if (cur.plus && !textOf(cur.plus[3]).includes(cur.plus[2])) throw new Error(`${where}: "${cur.plus[2]}" não está no texto de ${cur.plus[3]}`);
+  for (const n of cur.hex ? [cur.hex.add, cur.hex.max, cur.hex.every] : []) check(n, cur.hex!.from);
+  if (cur.tail) check(cur.tail[0], cur.tail[1]);
+  const max = cur.auto?.consume?.max;
+  if (max && !textOf(cur.from).includes(`Max ${max} stacks`)) throw new Error(`${where}: "Max ${max} stacks" não está no texto`);
+  const delay = cur.delay === undefined ? undefined : Array.isArray(cur.delay) ? rowOf(cur.delay)[9] : check(cur.delay, cur.from);
+  const a = cur.auto;
+  const auto = a && {
+    on: a.on ?? [], ...(a.by ? { by: a.by } : {}), ...(a.cd !== undefined ? { cooldown: check(a.cd, cur.from) } : {}), ...(a.cast ? { cast: true } : {}),
+    ...(a.labels ? { labels: a.labels } : {}), ...(a.extend ? { extend: { every: 0, ...a.extend } } : {}), ...(delay ? { delay } : {}),
+    ...(cur.hex ? { hexExtend: { on: cur.hex.on, add: cur.hex.add, max: cur.hex.max, every: cur.hex.every } } : {}),
+    ...(cur.tail ? { tail: cur.tail[0] } : {}), ...(a.consume ? { consume: a.consume } : {}),
+  };
+  const when = { duration, ...(auto ? { auto } : {}) };
+  // A nota antiga mandava ligar a janela; agora ela nasce sozinha.
+  const note = auto ? buff.note?.replace(/ligue (a janela|nas (mesmas )?janelas?|na janela( da habilidade| do Supremo)?|a faixa|nas faixas)( e escolha)?/gi, (m: string) => `a janela nasce sozinha${/escolha$/i.test(m) ? '; escolha' : ''}`) : buff.note;
+  if (!buff.timed) {
+    if (!buff.flat?.length) throw new Error(`${where}: buff fixo sem dano fixo não vira janela`);
+    return { ...buff, note, flat: buff.flat.map((f) => ({ ...f, ...when })) };
+  }
+  return { ...buff, note, ...when, ...(byLevel ? { durationByLevel: byLevel } : {}), ...(cur.plus ? { durationPlus: { constellation: cur.plus[0], seconds: cur.plus[1] } } : {}) };
+}
+
 function buildCharacters(): CharacterEffect[] {
   const existing = handMade(read<CharacterEffect[]>('src/effects/characters.json'));
   const chars = read<{ id: string; name: string }[]>('src/data/generated/characters.json');
@@ -536,6 +591,10 @@ function buildCharacters(): CharacterEffect[] {
 
   const moves = read<{ character: string; talent: string; label: string; variant: number }[]>('src/data/generated/moves.json');
   const names = [...new Set([...Object.keys(POINT_MOVES), ...Object.keys(CHARACTER_BUFFS), ...Object.keys(CHARACTER_NOTES), ...Object.keys(CHARACTER_PROCS), ...Object.keys(LUNAR_PROCS), ...Object.keys(FACTIONS), ...Object.keys(SPECIAL_MOVES)])];
+  // Linha de tempo que não acha o buff é erro de digitação: o efeito ficaria sem janela sem ninguém notar.
+  for (const [name, ids] of [...Object.entries(CHARACTER_TIMING), ...Object.entries(CHARACTER_NO_WINDOW)]) {
+    for (const id of Object.keys(ids)) if (!CHARACTER_BUFFS[name]?.some((b) => b.id === id)) errors.push(`${name}: tempo de um buff que não existe (${id})`);
+  }
   for (const name of names) {
     const list = CHARACTER_BUFFS[name] ?? [];
     const handMadeEntry = existing.find((e) => e.character === name);
@@ -579,7 +638,7 @@ function buildCharacters(): CharacterEffect[] {
       }
       const v = (x: Val | undefined) => (x === undefined ? 0 : valueOf(x, node.params, `${name} ${b.id}`));
       const s = b.stats;
-      return {
+      const built = {
         id: b.id,
         label: b.label,
         minConstellation: b.minConstellation ?? (isConst ? Number(b.src.slice(5)) : 0),
@@ -609,6 +668,7 @@ function buildCharacters(): CharacterEffect[] {
                 atkFlat: v(s.atkFlat), atkBaseFlat: v(s.atkBaseFlat), hpFlat: v(s.hpFlat), defFlat: v(s.defFlat),
                 physDmgPct: v(s.physDmgPct), physCritDmg: v(s.physCritDmg),
                 reactionBonus: Object.fromEntries(Object.entries(s.reactionBonus ?? {}).map(([k, x]) => [k, v(x)])),
+                ...(s.vaporizeBonus !== undefined ? { vaporizeBonus: v(s.vaporizeBonus) } : {}),
               },
             }
           : {}),
@@ -618,7 +678,7 @@ function buildCharacters(): CharacterEffect[] {
                 name: f.name, sourceStat: f.sourceStat, perPoint: v(f.perPoint), ...(f.cap !== undefined ? { capPerHit: v(f.cap) } : {}),
                 hitTypes: f.hitTypes, ...(f.labels ? { labels: f.labels } : {}), ...(f.stacks !== undefined ? { stacks: f.stacks } : {}),
                 ...(f.targets ? { targets: f.targets } : {}), ...(f.elements ? { elements: f.elements } : {}), ...(f.decay ? { decay: f.decay } : {}),
-                ...(f.reaction ? { reaction: f.reaction } : {}), ...(f.pool ? { pool: f.pool } : {}), ...(f.extra ? { extra: f.extra } : {}),
+                ...(f.reaction ? { reaction: f.reaction } : {}), ...(f.pool ? { pool: f.pool } : {}), ...(f.extra ? { extra: f.extra } : {}), ...(f.afterBurst ? { afterBurst: f.afterBurst } : {}), ...(f.field ? { field: f.field } : {}),
               })),
             }
           : {}),
@@ -633,6 +693,7 @@ function buildCharacters(): CharacterEffect[] {
                 ...(b.team.moonsign ? { moonsign: b.team.moonsign } : {}),
                 ...(b.team.moonsignMax ? { moonsignMax: b.team.moonsignMax } : {}),
                 ...(b.team.hexerei ? { hexerei: b.team.hexerei } : {}),
+                ...(b.team.ownerFaction ? { ownerFaction: b.team.ownerFaction } : {}),
               },
             }
           : {}),
@@ -655,6 +716,8 @@ function buildCharacters(): CharacterEffect[] {
         ...(b.defShred !== undefined ? { defShred: v(b.defShred) } : {}),
         note: b.note,
       };
+      const time = CHARACTER_TIMING[name]?.[b.id];
+      return time ? withCharTime(name, built, time, raw, node.description, strip) : built;
     });
     const notes = Object.entries(CHARACTER_NOTES[name] ?? {}).map(([src, n]) => ({ src, kind: n!.kind, note: n!.note }));
     const infos = (INFOS[name] ?? []).map((i) => {

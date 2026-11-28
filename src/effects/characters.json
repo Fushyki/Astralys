@@ -8495,6 +8495,12 @@
         "minConstellation": 2,
         "scope": "team",
         "timed": true,
+        "duration": 12,
+        "auto": {
+          "on": [
+            "charged"
+          ]
+        },
         "stats": {
           "atkPct": 0,
           "dmgPct": 0,
@@ -8518,7 +8524,7 @@
           "reactionBonus": {}
         },
         "flat": [],
-        "note": "+80 de Maestria da equipe por 12 s depois do Ataque Carregado da Mona: ligue nas janelas."
+        "note": "+80 de Maestria da equipe por 12 s depois do Ataque Carregado da Mona: a janela nasce sozinha."
       },
       {
         "id": "a4",
@@ -8547,6 +8553,42 @@
         "minConstellation": 0,
         "scope": "team",
         "timed": true,
+        "duration": 5,
+        "auto": {
+          "on": [
+            "burst"
+          ],
+          "cast": true,
+          "hexExtend": {
+            "on": [
+              "normal",
+              "charged"
+            ],
+            "add": 2,
+            "max": 8,
+            "every": 0.5
+          }
+        },
+        "durationByLevel": {
+          "talent": "burst",
+          "table": [
+            4,
+            4,
+            4,
+            4.5,
+            4.5,
+            4.5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5
+          ]
+        },
         "stats": {
           "atkPct": 0,
           "dmgPct": 1,
@@ -8590,7 +8632,7 @@
           ]
         },
         "flat": [],
-        "note": "DMG da equipe contra inimigos com Presságio, pelo nível do Supremo (o aumento do golpe que o aplica não entra): ligue nas janelas."
+        "note": "DMG da equipe contra inimigos com Presságio, pelo nível do Supremo (o aumento do golpe que o aplica não entra): a janela nasce sozinha."
       },
       {
         "id": "c1",
@@ -8598,6 +8640,43 @@
         "minConstellation": 1,
         "scope": "team",
         "timed": true,
+        "duration": 5,
+        "auto": {
+          "on": [
+            "burst"
+          ],
+          "cast": true,
+          "hexExtend": {
+            "on": [
+              "normal",
+              "charged"
+            ],
+            "add": 2,
+            "max": 8,
+            "every": 0.5
+          },
+          "tail": 8
+        },
+        "durationByLevel": {
+          "talent": "burst",
+          "table": [
+            4,
+            4,
+            4,
+            4.5,
+            4.5,
+            4.5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5
+          ]
+        },
         "stats": {
           "atkPct": 0,
           "dmgPct": 0,
@@ -8622,10 +8701,11 @@
             "electrocharged": 0.15,
             "lunarcharged": 0.15,
             "lunarcrystallize": 0.15
-          }
+          },
+          "vaporizeBonus": 0.15
         },
         "flat": [],
-        "note": "+15% de Eletrocarregado, Lunar-Carregado e Lunar-Cristalizar por 8 s depois que um aliado acerta inimigo com Presságio: ligue a janela. Pendente: Vaporizar (o formato não tem bônus de Vaporizar) e Redemoinho Hydro (o bônus de Redemoinho do motor vale para todo elemento) não entram; o reforço para 160% quando quem aciona está fora de campo também não."
+        "note": "+15% de Vaporizar, Eletrocarregado, Lunar-Carregado e Lunar-Cristalizar por 8 s depois que um aliado acerta inimigo com Presságio: a janela nasce sozinha. Pendente: Redemoinho Hydro (o bônus de Redemoinho do motor vale para todo elemento) não entra; o reforço para 160% quando quem aciona está fora de campo também não."
       },
       {
         "id": "c4",
@@ -8633,6 +8713,42 @@
         "minConstellation": 4,
         "scope": "team",
         "timed": true,
+        "duration": 5,
+        "auto": {
+          "on": [
+            "burst"
+          ],
+          "cast": true,
+          "hexExtend": {
+            "on": [
+              "normal",
+              "charged"
+            ],
+            "add": 2,
+            "max": 8,
+            "every": 0.5
+          }
+        },
+        "durationByLevel": {
+          "talent": "burst",
+          "table": [
+            4,
+            4,
+            4,
+            4.5,
+            4.5,
+            4.5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5
+          ]
+        },
         "stats": {
           "atkPct": 0,
           "dmgPct": 0,
@@ -8656,7 +8772,7 @@
           "reactionBonus": {}
         },
         "flat": [],
-        "note": "+15% de Taxa Crítica de qualquer personagem do time que ataca um inimigo com Presságio (4 s depois do Supremo): ligue a janela. O +15% de Dano Crítico dos Hexerei está em \"Mona C4 (Hexerei)\"."
+        "note": "+15% de Taxa Crítica de qualquer personagem do time que ataca um inimigo com Presságio (4 s depois do Supremo): a janela nasce sozinha. O +15% de Dano Crítico dos Hexerei está em \"Mona C4 (Hexerei)\"."
       },
       {
         "id": "c4h",
@@ -8664,6 +8780,42 @@
         "minConstellation": 4,
         "scope": "team",
         "timed": true,
+        "duration": 5,
+        "auto": {
+          "on": [
+            "burst"
+          ],
+          "cast": true,
+          "hexExtend": {
+            "on": [
+              "normal",
+              "charged"
+            ],
+            "add": 2,
+            "max": 8,
+            "every": 0.5
+          }
+        },
+        "durationByLevel": {
+          "talent": "burst",
+          "table": [
+            4,
+            4,
+            4,
+            4.5,
+            4.5,
+            4.5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5
+          ]
+        },
         "forFactions": [
           "hexerei"
         ],
@@ -8690,7 +8842,7 @@
           "reactionBonus": {}
         },
         "flat": [],
-        "note": "+15% de Dano Crítico só dos membros Hexerei (marque-os como Hexerei na página do personagem) que atacam inimigo com Presságio: ligue a janela junto com o C4."
+        "note": "+15% de Dano Crítico só dos membros Hexerei (marque-os como Hexerei na página do personagem) que atacam inimigo com Presságio: a janela nasce sozinha junto com o C4."
       },
       {
         "id": "c6",
@@ -8698,6 +8850,13 @@
         "minConstellation": 6,
         "scope": "self",
         "timed": true,
+        "duration": 8,
+        "auto": {
+          "on": [
+            "burst",
+            "charged"
+          ]
+        },
         "stats": {
           "atkPct": 0,
           "dmgPct": 0,
@@ -8728,7 +8887,126 @@
           "unit": "s de acúmulo",
           "default": 3
         },
-        "note": "+60% de DMG do próximo Carregado por segundo, até 180% (3 s, o teto do texto), por no máximo 8 s: ligue a janela e escolha os segundos de 0 a 3. Pendente: o aumento do Carregado para 200% do dano original contra inimigo com Presságio não entra (o texto não diz se multiplica o dano final ou só a base)."
+        "note": "+60% de DMG do próximo Carregado por segundo, até 180% (3 s, o teto do texto), por no máximo 8 s: a janela nasce sozinha; escolha os segundos de 0 a 3. O 200% contra Presságio está em \"Mona C6 (Presságio)\"."
+      },
+      {
+        "id": "c6omen",
+        "label": "Mona C6 (Presságio)",
+        "minConstellation": 6,
+        "scope": "self",
+        "timed": true,
+        "duration": 5,
+        "auto": {
+          "on": [
+            "burst"
+          ],
+          "cast": true,
+          "hexExtend": {
+            "on": [
+              "normal",
+              "charged"
+            ],
+            "add": 2,
+            "max": 8,
+            "every": 0.5
+          }
+        },
+        "durationByLevel": {
+          "talent": "burst",
+          "table": [
+            4,
+            4,
+            4,
+            4.5,
+            4.5,
+            4.5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5
+          ]
+        },
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {
+            "charged": 1
+          },
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {}
+        },
+        "flat": [],
+        "note": "Carregado contra inimigo com Presságio causa 200% do dano original (+100% sobre o dano base, como os outros \"% do dano original\"): a janela nasce sozinha."
+      },
+      {
+        "id": "hexglow",
+        "label": "Mona: Esplendor da Hydromancia (Hexerei)",
+        "minConstellation": 0,
+        "scope": "others",
+        "timed": true,
+        "duration": 8,
+        "auto": {
+          "on": [
+            "normal",
+            "charged"
+          ],
+          "consume": {
+            "reaction": "vaporize",
+            "max": 3
+          }
+        },
+        "stats": {
+          "atkPct": 0,
+          "dmgPct": 0,
+          "critRate": 0,
+          "critDmg": 0,
+          "em": 0,
+          "er": 0,
+          "hpPct": 0,
+          "defPct": 0,
+          "dmgPctByType": {},
+          "critRateByType": {},
+          "critDmgByType": {},
+          "baseMultByType": {},
+          "defIgnore": 0,
+          "atkFlat": 0,
+          "atkBaseFlat": 0,
+          "hpFlat": 0,
+          "defFlat": 0,
+          "physDmgPct": 0,
+          "physCritDmg": 0,
+          "reactionBonus": {},
+          "vaporizeBonus": 0.15
+        },
+        "team": {
+          "hexerei": 2,
+          "ownerFaction": "hexerei"
+        },
+        "flat": [],
+        "stacks": {
+          "max": 3
+        },
+        "note": "Cada acerto Normal ou Carregado da Mona dá 1 acúmulo (até 3, por 8 s); o próximo Vaporizar de um aliado gasta todos: +5% por acúmulo, só naquele acerto. Soma com a C1. Precisa da Mona e de mais um Hexerei: a janela nasce sozinha."
       }
     ],
     "notes": [
@@ -17381,7 +17659,7 @@
       },
       {
         "id": "burst",
-        "label": "Illuga: Nightingale's Song (Supremo)",
+        "label": "Quills do Supremo · Geo",
         "minConstellation": 0,
         "scope": "self",
         "timed": false,
@@ -17408,7 +17686,7 @@
         },
         "flat": [
           {
-            "name": "Bônus de Dano Geo por Maestria",
+            "name": "dano por Maestria",
             "sourceStat": "EM",
             "perPoint": 1,
             "hitTypes": [
@@ -17420,6 +17698,8 @@
             ],
             "stacks": 21,
             "pool": "quills",
+            "afterBurst": 20,
+            "field": "on",
             "extra": {
               "max": 3,
               "step": 5,
@@ -17431,11 +17711,11 @@
             ]
           }
         ],
-        "note": "Soma ao Dano Geo da equipe uma parte da Maestria dele (nível do Supremo). Cada golpe gasta 1 acúmulo de Canção de Luscinia (21, mais os extras por construção Geo que você escolher), do mesmo total do Lunar-Cristalizar."
+        "note": "Só o 1º do time (o personagem em campo) recebe e gasta. Soma ao Dano Geo da equipe uma parte da Maestria dele (nível do Supremo). Cada golpe gasta 1 acúmulo de Canção de Luscinia (21, mais os extras por construção Geo que você escolher), do mesmo total do Lunar-Cristalizar."
       },
       {
         "id": "burstlcr",
-        "label": "Illuga: Nightingale's Song (Supremo, Lunar-Cristalizar)",
+        "label": "Quills do Supremo · Lunar-Cristalizar",
         "minConstellation": 0,
         "scope": "self",
         "timed": false,
@@ -17462,7 +17742,7 @@
         },
         "flat": [
           {
-            "name": "Bônus de Lunar-Cristalizar por Maestria",
+            "name": "dano por Maestria",
             "sourceStat": "EM",
             "perPoint": 1,
             "hitTypes": [
@@ -17475,6 +17755,8 @@
             "stacks": 21,
             "reaction": "lunarcrystallize",
             "pool": "quills",
+            "afterBurst": 20,
+            "field": "on",
             "extra": {
               "max": 3,
               "step": 5,
@@ -17483,11 +17765,11 @@
             "targets": "team"
           }
         ],
-        "note": "Parte da Maestria dele (nível do Supremo) somada aos golpes Lunar-Cristalizar dos personagens, gastando os mesmos acúmulos do Dano Geo. A reação do time não gasta acúmulo (como no GO)."
+        "note": "Só o 1º do time (o personagem em campo) recebe e gasta. Parte da Maestria dele (nível do Supremo) somada aos golpes Lunar-Cristalizar dos personagens, gastando os mesmos acúmulos do Dano Geo. A reação do time não gasta acúmulo (como no GO)."
       },
       {
         "id": "a4geo",
-        "label": "Illuga A4 (Nightingale's Song)",
+        "label": "Quills do A4 · Geo",
         "minConstellation": 0,
         "scope": "self",
         "timed": false,
@@ -17507,7 +17789,7 @@
         },
         "flat": [
           {
-            "name": "Nightingale's Song por Maestria",
+            "name": "dano por Maestria",
             "sourceStat": "EM",
             "perPoint": 1,
             "hitTypes": [
@@ -17519,6 +17801,8 @@
             ],
             "stacks": 21,
             "pool": "quills",
+            "afterBurst": 20,
+            "field": "on",
             "extra": {
               "max": 3,
               "step": 5,
@@ -17530,11 +17814,11 @@
             ]
           }
         ],
-        "note": "Dano Geo da equipe +7%/14%/24% da Maestria dele com 1/2/3 membros Hydro ou Geo, nos mesmos acúmulos do Supremo."
+        "note": "Só o 1º do time (o personagem em campo) recebe e gasta. Dano Geo da equipe +7%/14%/24% da Maestria dele com 1/2/3 membros Hydro ou Geo, nos mesmos acúmulos do Supremo."
       },
       {
         "id": "a4lcr",
-        "label": "Illuga A4 (Lunar-Cristalizar)",
+        "label": "Quills do A4 · Lunar-Cristalizar",
         "minConstellation": 0,
         "scope": "self",
         "timed": false,
@@ -17554,7 +17838,7 @@
         },
         "flat": [
           {
-            "name": "Nightingale's Song por Maestria (Lunar-Cristalizar)",
+            "name": "dano por Maestria",
             "sourceStat": "EM",
             "perPoint": 1,
             "hitTypes": [
@@ -17567,6 +17851,8 @@
             "stacks": 21,
             "reaction": "lunarcrystallize",
             "pool": "quills",
+            "afterBurst": 20,
+            "field": "on",
             "extra": {
               "max": 3,
               "step": 5,
@@ -17575,7 +17861,7 @@
             "targets": "team"
           }
         ],
-        "note": "Golpes Lunar-Cristalizar +48%/96%/160% da Maestria dele, nos mesmos acúmulos do Supremo."
+        "note": "Só o 1º do time (o personagem em campo) recebe e gasta. Golpes Lunar-Cristalizar +48%/96%/160% da Maestria dele, nos mesmos acúmulos do Supremo."
       },
       {
         "id": "c4",

@@ -76,6 +76,8 @@ const BuffStatsSchema = z.object({
   physCritDmg: frac,
   /** Bônus de dano de reação (ex.: "+40% de Florescer"), por reação. Derreter/Vaporizar ficam nos campos próprios dos sets. */
   reactionBonus: z.record(ReactionBonusKeySchema, z.number()).default({}),
+  /** Bônus de dano de Vaporizar, em fração (ex.: Mona C1). */
+  vaporizeBonus: z.number().optional(),
 });
 export type BuffStats = z.infer<typeof BuffStatsSchema>;
 
@@ -200,6 +202,8 @@ export const BuffTeamRulesSchema = z.object({
   stackPerMate: z.array(ElementSchema).min(1).optional(),
   /** Só vale com ao menos tantos membros Hexerei no time (Genshin Optimizer `tally.hexerei`). */
   hexerei: z.number().int().positive().optional(),
+  /** Só vale se o DONO é desta facção (ex.: Dádiva Celestial, "Tarefa da Bruxa" concluída). */
+  ownerFaction: z.enum(['moonsign', 'hexerei']).optional(),
   /**
    * `of`: 'distinct' = elementos diferentes no time; lista de elementos ou `{ names }` (nomes de personagem) = quantos
    * membros são desses; 'same' / 'different' = quantos OUTROS membros têm o mesmo elemento / outro elemento que o dono.
@@ -232,7 +236,9 @@ export const FlatDecaySchema = z.object({
 });
 export type FlatDecay = z.infer<typeof FlatDecaySchema>;
 
-/** Como a janela de um efeito de arma/set com duração nasce sozinha na rotação (ver `engine/autoWindows.ts`). */
+const ExtendSchema = z.object({ on: z.array(HitTypeSchema).min(1), add: z.number().positive(), max: z.number().positive(), every: z.number().min(0).default(0) });
+
+/** Como a janela de um efeito com duração nasce sozinha na rotação (ver `engine/timing.ts`). */
 export const AutoWindowSchema = z.object({
   /** Tipos de golpe que abrem a janela (vazio = qualquer golpe). */
   on: z.array(HitTypeSchema).default([]),
@@ -246,7 +252,20 @@ export const AutoWindowSchema = z.object({
   /** "Ao usar": as execuções seguintes de um golpe contínuo (invocação, zona) não abrem a janela. */
   cast: z.boolean().optional(),
   /** Golpes do portador que, dentro da janela, a alongam `add` s (no máximo `max` s no total, um a cada `every` s). */
-  extend: z.object({ on: z.array(HitTypeSchema).min(1), add: z.number().positive(), max: z.number().positive(), every: z.number().min(0).default(0) }).optional(),
+  extend: ExtendSchema.optional(),
+  /** `extend` que só vale com Hexerei: Secret Rite e o dono Hexerei (resolvido ao montar o time). */
+  hexExtend: ExtendSchema.optional(),
+  /** Segundos que o efeito ainda dura depois do fim da janela (ex.: Mona C1, 8 s depois do último acerto no Presságio). */
+  tail: z.number().positive().optional(),
+  /**
+   * Acúmulos que um aliado gasta: cada golpe do dono (`on`) dá um por acerto, até `max`; o 1º golpe de outro membro com a
+   * reação, dentro da duração, leva todos num acerto só (Esplendor da Hydromancia da Mona).
+   */
+  consume: z.object({ reaction: z.enum(['vaporize']), max: z.number().int().positive() }).optional(),
+  /** A janela começa tantos segundos depois do golpe (ex.: quando o estado do talento acaba). */
+  delay: z.number().positive().optional(),
+  /** Só os golpes cujo rótulo contém um destes trechos (ex.: "Press" e "Hold"). */
+  labels: z.array(z.string().min(1)).optional(),
   /** A duração não corre enquanto o portador está fora de campo. */
   pauseOff: z.boolean().optional(),
 });
@@ -291,6 +310,10 @@ export const WeaponFlatSchema = z.object({
   reaction: z.enum(['lunarcrystallize']).optional(),
   /** Acúmulos compartilhados: os efeitos do mesmo dono e `pool` gastam um só por acerto (Canção de Luscinia do Illuga). */
   pool: z.string().min(1).optional(),
+  /** Só vale depois do Supremo do dono, por estes segundos; cada Supremo renova os acúmulos (Canção de Luscinia: 20 s). */
+  afterBurst: z.number().positive().optional(),
+  /** Ver `FlatDamageEffect.field` (as quills do Illuga: só o personagem em campo). */
+  field: z.enum(['on', 'off']).optional(),
   /** Acúmulos a mais que o usuário escolhe (0 a `max` vezes `step`; `MemberRef.stacks['pool:<pool>']`). */
   extra: z.object({ max: z.number().int().positive(), step: z.number().int().positive(), label: z.string().min(1) }).optional(),
   /** Quem recebe: o dono (padrão), a equipe inteira ou só os outros (ex.: Xilonen C4, nos Normais dos aliados). */
@@ -324,8 +347,14 @@ export const CharacterBuffSchema = z.object({
   forReacted: z.boolean().optional(),
   /** Duração do efeito em segundos, lida da descrição (ex.: Scroll of the Hero of Cinder City, 15 s e 20 s): tamanho padrão da janela. */
   duration: z.number().positive().optional(),
-  /** Janela que nasce sozinha na rotação (armas e sets com duração, via `timing`). */
+  /** Janela que nasce sozinha na rotação (efeitos com duração; ver `curation/timing.ts` e `charTiming.ts`). */
   auto: AutoWindowSchema.optional(),
+  /** Duração que muda com o nível do talento (substitui `duration` ao montar o time). */
+  durationByLevel: BuffLevelSchema.optional(),
+  /** Segundos a mais a partir de uma constelação (somados ao montar o time). */
+  durationPlus: z.object({ constellation: z.number().int().min(0).max(6), seconds: z.number().positive() }).optional(),
+  /** Quem recebe pelo elemento: o do dono (`own`) ou também o do 1º personagem do time, o ativo (`ownOrActive`). */
+  forOwnerElement: z.enum(['own', 'ownOrActive']).optional(),
   /** De onde o buff saiu antes de virar janela (`timing`): o liga/desliga antigo continua valendo. */
   legacy: z.enum(['weapon', 'set4p', 'static']).optional(),
   /** Só personagens destas facções recebem (ex.: Jahoda C6, "personagens Moonsign"). */
@@ -552,9 +581,10 @@ export const FlatDamageEffectSchema = z.object({
   labels: z.array(z.string().min(1)).optional(),
   /** Quantos hits consomem o buff (undefined = ilimitado). Consumidos pelos primeiros hits elegíveis. */
   stacks: z.number().int().positive().optional(),
-  /** Ver `WeaponFlat.reaction` e `WeaponFlat.pool`. */
+  /** Ver `WeaponFlat.reaction`, `WeaponFlat.pool` e `WeaponFlat.afterBurst`. */
   reaction: z.enum(['lunarcrystallize']).optional(),
   pool: z.string().min(1).optional(),
+  afterBurst: z.number().positive().optional(),
   /** Só golpes do 1º personagem do time, que fica em campo (`on`), ou dos outros, fora de campo (`off`); ausente = qualquer. O manual ignora. */
   field: z.enum(['on', 'off']).optional(),
   /** No automático só os golpes dentro da janela da faixa do buff (`flatTag`) consomem; o golpe forçado ignora a janela. */

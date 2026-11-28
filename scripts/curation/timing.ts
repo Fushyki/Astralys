@@ -257,6 +257,8 @@ export const SET_TIMING: Record<string, TimeCur[]> = {
   "Silken Moon's Serenade": each(['em-n', 'em-a', 'lunar'], p(0), ANY),
   'A Day Carved From Rising Winds': [{ root: ['atkPct'], s: p(0), auto: ANY }],
   'Scarlet Proof': [{ buff: 'taxa', s: p(2) }],
+  // Vale mesmo fora de campo: abre a cada uso da Habilidade do portador.
+  'Celestial Gift': each(['luz', 'cantico'], p(1), USE_SKILL),
   'Heart of the Furnace': [{ buff: 'atk', s: p(2) }, { buff: 'estelar', s: p(2), auto: ANY }],
 };
 
@@ -283,5 +285,5 @@ export const NO_WINDOW: Record<string, string> = {
   'Unfinished Reverie': STATE, Adventurer: 'O tempo é só da cura.', 'Golden Troupe': STATE, 'Aubade of Morningstar and Moon': STATE,
   'Finale of the Deep Galleries': 'O tempo é a trava entre Normal e Supremo, que o motor já aplica golpe a golpe.',
   'Thundering Fury': 'O tempo é só o da recarga da Habilidade.',
-  "Vourukasha's Glow": UNMODELED, 'Ocean-Hued Clam': UNMODELED, 'Echoes of an Offering': UNMODELED, 'Song of Days Past': UNMODELED, 'Celestial Gift': UNMODELED,
+  "Vourukasha's Glow": UNMODELED, 'Ocean-Hued Clam': UNMODELED, 'Echoes of an Offering': UNMODELED, 'Song of Days Past': UNMODELED,
 };

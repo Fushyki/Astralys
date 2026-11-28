@@ -30,10 +30,18 @@ export function deltaChips(d: StatDelta): string[] {
   for (const [type, v] of Object.entries(d.dmgByType ?? {})) if (v) out.push(`${pct(v)} DMG ${TYPE_LABEL[type] ?? type}`);
   if (d.meltBonus) out.push(`${pct(d.meltBonus)} Derreter`);
   if (d.vaporizeBonus) out.push(`${pct(d.vaporizeBonus)} Vaporizar`);
+  for (const [key, v] of Object.entries(d.reactionBonus ?? {})) if (v && REACTION_NAME[key]) out.push(`${pct(v)} ${REACTION_NAME[key]}`);
   for (const [el, v] of Object.entries(d.resShred ?? {})) if (v) out.push(`RES ${el} do inimigo −${formatDecimal(v * 100, 0)}%`);
   if (d.defShred) out.push(`DEF do inimigo −${formatDecimal(d.defShred * 100, 0)}%`);
   return out;
 }
+
+/** Nome de cada reação; nas etiquetas de buff só entra o bônus de dano dela (crítico, base e dano fixo ficam fora). */
+const REACTION_NAME: Record<string, string> = {
+  melt: 'Derreter', vaporize: 'Vaporizar', overloaded: 'Sobrecarga', shattered: 'Estilhaçar', electrocharged: 'Eletrocarregado', superconduct: 'Supercondutor', swirl: 'Redemoinho',
+  burning: 'Queimadura', bloom: 'Florescer', burgeon: 'Brotar', hyperbloom: 'Hiperflorescer', spread: 'Intensificar', aggravate: 'Propagar',
+  lunarcharged: 'Lunar-Carregado', lunarbloom: 'Lunar-Florescer', lunarcrystallize: 'Lunar-Cristalizar', stellarconduct: 'Condução Estelar', stellarswirl: 'Redemoinho Estelar',
+};
 
 const TYPE_LABEL: Record<string, string> = { normal: 'Normal', charged: 'Carregado', plunge: 'Imersivo', skill: 'Habilidade', burst: 'Supremo' };
 
@@ -88,8 +96,6 @@ export function keyStats(bundle: AnalysisBundle, index: number, role: Role): Key
     ? [main, em, { k: 'Taxa crít.', v: pctText(s.critRate) }, { k: 'Dano crít.', v: pctText(s.critDmg) }]
     : [main, em, { k: 'Recarga', v: pctText(s.er) }, { k: 'Taxa crít.', v: pctText(s.critRate) }];
 }
-
-const REACTION_NAME: Record<string, string> = { melt: 'Derreter', vaporize: 'Vaporizar', spread: 'Intensificar', aggravate: 'Propagar' };
 
 /** Reação que mais rende: o ganho da amplificação (dano − dano sem a reação) somado por tipo de reação. */
 export function mainReaction(bundle: AnalysisBundle): { name: string; fraction: number } | null {

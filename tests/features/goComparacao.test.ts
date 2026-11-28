@@ -1,7 +1,8 @@
 /**
  * A rotação contra a ficha do Genshin Optimizer, golpe a golpe: mesmo time, mesmos atributos e todas as condições ligadas.
- * Fora da comparação: a Ressonância Geo (no GO é condicional, o motor a aplica sempre) e os 21 acúmulos do Supremo da Illuga
- * (aqui liberados para todos os golpes, como no GO).
+ * Fora da comparação: a Ressonância Geo (no GO é condicional, o motor a aplica sempre), os 21 acúmulos do Supremo da Illuga
+ * e a espera pelo Supremo dela (aqui liberados para todos os golpes, como no GO), nem a regra de só o 1º do time (o ativo)
+ * gastar as quills (#68).
  */
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
@@ -39,7 +40,7 @@ function compare(constellation: number) {
   for (const e of resolveProject(p, game, effects).flatEffects) p.flatStacks![`${e.source}|${e.name}`] = 'all';
   const r = resolveProject(p, game, effects);
   const rolls = r.team.members.map(() => minimumRolls(2));
-  const result = evaluateRotation({ members: r.team.members, assembly: assembleTeam(r.team), config: r.team.config, rolls, flatEffects: r.flatEffects }, r.actions);
+  const result = evaluateRotation({ members: r.team.members, assembly: assembleTeam(r.team), config: r.team.config, rolls, flatEffects: r.flatEffects.map(({ afterBurst: _, field: _f, ...e }) => e) }, r.actions);
   const sheet = NAMES.map((_, i) => computeTalents(goRequest(p, r, rolls, i, 'hit', ALL_ON)));
 
   return result.actions.flatMap((a) => {

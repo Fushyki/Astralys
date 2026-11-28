@@ -14,6 +14,7 @@ import { weaponsFor } from '../features/rotation/teamOps';
 import { SetPickerDialog } from './personagem/SetPicker';
 import { GivenBuffs, TeamBuffs } from './equipe/MemberBuffs';
 import { ReactedChips } from './equipe/ReactedChips';
+import { SetRequirement } from './equipe/SetRequirement';
 import type { Element } from '../data/schema';
 import { WeaponPickerDialog } from './personagem/WeaponPicker';
 import { downloadProject } from '../features/rotation/importFile';
@@ -210,6 +211,7 @@ export default function Equipe() {
                 </div>
 
                 <GivenBuffs v={v} index={i} />
+                <SetRequirement index={i} />
 
                 {(() => {
                   // Set que depende dos elementos com que o dono reage: Scroll (bônus de DMG) e Viridescent (redução de RES).

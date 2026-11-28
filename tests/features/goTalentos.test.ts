@@ -62,7 +62,7 @@ describe('condições da aba ligadas à rotação', () => {
     const r = resolveProject(p, game, effects);
     return analyzeProject({ team: r.team, actions: r.actions, flatEffects: r.flatEffects }).optimization.result.totals.avg;
   };
-  const burstFlat = (p: typeof project) => resolveProject(p, game, effects).flatEffects.filter((e) => /Illuga: Nightingale|Illuga A4/.test(e.name));
+  const burstFlat = (p: typeof project) => resolveProject(p, game, effects).flatEffects.filter((e) => /Quills do (Supremo|A4)/.test(e.name));
 
   it('cada condição ligada existe na ficha do GO', () => {
     const full = { ...project, members: project.members.map((m) => ({ ...m, constellation: 6 })) };
@@ -80,7 +80,9 @@ describe('condições da aba ligadas à rotação', () => {
     const on = toggle(project, 'Illuga', 'burstSong', true);
     expect(linkedOf(on).Illuga.burstSong.value).toBe('on');
     expect(burstFlat(on)).toHaveLength(4); // Geo e Lunar-Cristalizar, do Supremo e da A4
-    expect(total(on)).toBeGreaterThan(total(project));
+    // Os acúmulos só existem depois do Supremo da Illuga: ela age primeiro.
+    const illugaFirst = (p: typeof project) => ({ ...p, actions: p.actions.map((a) => (a.move.character === 'Illuga' ? { ...a, time: 0 } : a)) });
+    expect(total(illugaFirst(on))).toBeGreaterThan(total(illugaFirst(project)));
     expect(burstFlat(toggle(on, 'Illuga', 'burstSong', false))).toEqual([]);
   });
 

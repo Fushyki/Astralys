@@ -2891,15 +2891,107 @@
       "er": 0,
       "hpPct": 0,
       "defPct": 0,
-      "buffs": [],
+      "buffs": [
+        {
+          "id": "luz",
+          "label": "DMG do elemento do portador",
+          "minConstellation": 0,
+          "scope": "team",
+          "timed": true,
+          "forOwnerElement": "own",
+          "stats": {
+            "atkPct": 0,
+            "dmgPct": 0.2,
+            "critRate": 0,
+            "critDmg": 0,
+            "em": 0,
+            "er": 0,
+            "hpPct": 0,
+            "defPct": 0,
+            "dmgPctByType": {},
+            "critRateByType": {},
+            "critDmgByType": {},
+            "baseMultByType": {},
+            "defIgnore": 0,
+            "atkFlat": 0,
+            "atkBaseFlat": 0,
+            "hpFlat": 0,
+            "defFlat": 0,
+            "physDmgPct": 0,
+            "physCritDmg": 0,
+            "reactionBonus": {}
+          },
+          "team": {
+            "ownerFaction": "hexerei"
+          },
+          "flat": []
+        },
+        {
+          "id": "cantico",
+          "label": "DMG do portador e do personagem ativo (Hexerei)",
+          "minConstellation": 0,
+          "scope": "team",
+          "timed": true,
+          "forOwnerElement": "ownOrActive",
+          "replaces": "luz",
+          "stats": {
+            "atkPct": 0,
+            "dmgPct": 0.4,
+            "critRate": 0,
+            "critDmg": 0,
+            "em": 0,
+            "er": 0,
+            "hpPct": 0,
+            "defPct": 0,
+            "dmgPctByType": {},
+            "critRateByType": {},
+            "critDmgByType": {},
+            "baseMultByType": {},
+            "defIgnore": 0,
+            "atkFlat": 0,
+            "atkBaseFlat": 0,
+            "hpFlat": 0,
+            "defFlat": 0,
+            "physDmgPct": 0,
+            "physCritDmg": 0,
+            "reactionBonus": {}
+          },
+          "team": {
+            "hexerei": 2,
+            "ownerFaction": "hexerei"
+          },
+          "flat": []
+        }
+      ],
       "flat": [],
       "reactionBonus": {},
       "procs": []
     },
     "twoPieceBuffs": [],
-    "note": "O bônus é DMG do elemento do DONO para a equipe inteira (e, com Hexerei: Secret Rite, também do personagem ativo): o motor só dá DMG elemental a membros daquele elemento, então o efeito fica de fora.",
-    "partial": true,
-    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts."
+    "note": "Precisa do portador marcado como Hexerei. Por 20 s depois da habilidade dele: +20% de DMG do elemento dele para quem é desse elemento; com 2+ Hexerei no time, +40% para quem é do elemento dele ou do 1º do time (o personagem em campo). Não soma entre portadores. Golpe infundido por outro elemento não entra.",
+    "fonte_info": "Lunaris 7.1.53 (descrição e parâmetros); curadoria em scripts/curation/sets.ts.",
+    "timing": [
+      {
+        "buff": "luz",
+        "duration": 20,
+        "auto": {
+          "on": [
+            "skill"
+          ],
+          "cast": true
+        }
+      },
+      {
+        "buff": "cantico",
+        "duration": 20,
+        "auto": {
+          "on": [
+            "skill"
+          ],
+          "cast": true
+        }
+      }
+    ]
   },
   {
     "set": "Disenchantment in Deep Shadow",

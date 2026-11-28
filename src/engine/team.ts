@@ -7,6 +7,7 @@ import { weaponStatsAt, type AutoWindow } from '../effects/schema';
 import type { ResistanceMap } from './damage';
 import type { ElementOrPhysical } from './constants/reactions';
 import type { Rolls } from './artifacts';
+import { autoSource } from './timing';
 import {
   type SetLockout,
   activeCharacterBuffs,
@@ -20,6 +21,7 @@ import {
   type StatDelta,
   staticSources,
   activeTeamDelta,
+  receivesBuff,
   minimumRolls,
   zeroBlock,
   type MemberInput,
@@ -91,11 +93,14 @@ export interface TeamAssembly {
 
 const ELEMENTS: ElementOrPhysical[] = ['Pyro', 'Hydro', 'Anemo', 'Electro', 'Dendro', 'Cryo', 'Geo', 'Physical'];
 /** Duração e janela automática de um efeito, no formato do buff de time. */
-const windowOf = (b: { duration?: number; auto?: AutoWindow; legacy?: string }, member: number): Pick<TeamBuff, 'duration' | 'auto' | 'sheet'> => ({
-  ...(b.legacy ? { sheet: true as const } : {}),
-  ...(b.duration ? { duration: b.duration } : {}),
-  ...(b.auto && b.duration ? { auto: [{ ...b.auto, member, duration: b.duration }] } : {}),
-});
+const windowOf = (b: { duration?: number; auto?: AutoWindow; legacy?: string }, member: number, m: MemberInput): Pick<TeamBuff, 'duration' | 'auto' | 'sheet'> => {
+  const source = b.auto && b.duration ? autoSource(b.auto, b.duration, member, m.silent) : undefined;
+  return {
+    ...(b.legacy ? { sheet: true as const } : {}),
+    ...(b.duration ? { duration: b.duration } : {}),
+    ...(source ? { auto: [source] } : {}),
+  };
+};
 
 /** A redução de RES do set vale neste elemento? (Viridescent: o que o dono espalhou; sem escolha, os elementos do time.) */
 const shredReaches = (sr: { reacted?: boolean; ifInTeam?: boolean }, el: ElementOrPhysical, m: MemberInput, members: MemberInput[]): boolean =>
@@ -140,9 +145,16 @@ export function pickedReceivers(names: readonly string[], owner: number, picked:
   return picked && (present.length > 0 || picked.length === 0) ? present : others.slice(0, 1);
 }
 
-/** O buff chega a `target` pelo elemento? `forElements` fixo; `forReacted` = elemento do dono (`owner`) mais os que ele reagiu. */
-function receivesByElement(b: { forElements?: Element[]; forReacted?: boolean }, owner: MemberInput, target: MemberInput): boolean {
+/** Buff de bônus elemental: só vale em golpe do elemento de quem recebe. */
+const isElemental = (b: { forElements?: Element[]; forReacted?: boolean; forOwnerElement?: string }) => !!b.forElements || !!b.forReacted || !!b.forOwnerElement;
+
+/**
+ * O buff chega a `target` pelo elemento? `forElements` fixo; `forReacted` = elemento do dono (`owner`) mais os que ele
+ * reagiu; `forOwnerElement` = o do dono e, com `ownOrActive`, o do 1º personagem do time (o que fica em campo).
+ */
+function receivesByElement(b: { forElements?: Element[]; forReacted?: boolean; forOwnerElement?: 'own' | 'ownOrActive' }, owner: MemberInput, target: MemberInput, active: MemberInput): boolean {
   const el = target.character.element;
+  if (b.forOwnerElement) return el === owner.character.element || (b.forOwnerElement === 'ownOrActive' && el === active.character.element);
   if (b.forReacted) return el === owner.character.element || !!owner.reacted?.includes(el);
   return !b.forElements || b.forElements.includes(el);
 }
@@ -200,7 +212,7 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
     // Arma e set dividem a faixa `gear:<i>`: cada um abre as próprias janelas e a duração sugerida é a menor.
     const parts = [m.weaponEffect ? weaponStatsAt(m.weaponEffect, m.refinement).team : undefined, fourPieceActive(m) ? m.primarySet?.effect?.fourPiece?.team : undefined];
     const durations = parts.flatMap((p) => (p?.duration ? [p.duration] : []));
-    const auto = parts.flatMap((p) => (p?.auto && p.duration ? [{ ...p.auto, member: i, duration: p.duration }] : []));
+    const auto = parts.flatMap((p) => (p?.auto && p.duration ? autoSource(p.auto, p.duration, i, m.silent) ?? [] : []));
     if ((atkPct || dmgBonus || em) && !off(`gear-${i}`)) {
       addBuff({ id: `gear-${i}`, tag: gearTag(i), targets: 'all', delta: { atkPct, dmgBonus, em }, description: `Arma/set de ${names[i]}`, ...(durations.length ? { duration: Math.min(...durations) } : {}), ...(auto.length ? { auto } : {}) });
     }
@@ -211,7 +223,7 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
     for (const b of activeCharacterBuffs(m)) {
       // Sem `timed`, o buff do próprio membro já está no bloco estático; o de equipe vale em toda ação (`always`).
       if (!b.stats || (!b.timed && b.scope === 'self')) continue;
-      const delta = characterBuffDelta(b.stats, !!b.forElements || !!b.forReacted);
+      const delta = characterBuffDelta(b.stats, isElemental(b));
       if (isEmptyDelta(delta) || off(`cbuff-${i}-${b.id}`)) continue;
       const chosen = b.pickReceiver ? pickedReceivers(names, i, m.receivers?.[b.id]) : undefined;
       const targets = names.filter((n, j) => {
@@ -219,11 +231,13 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
         if (b.scope === 'self' && j !== i) return false;
         if (b.scope === 'others' && j === i) return false;
         if (b.forFactions && !b.forFactions.some((f) => members[j].factions?.includes(f))) return false;
-        return receivesByElement(b, m, members[j]);
+        // Bônus de set com o mesmo nome não somam: o segundo portador não repete em quem já recebe.
+        if (b.forOwnerElement && buffs.some((x) => x.tag === labelTag(b.label) && receivesBuff(x, n))) return false;
+        return receivesByElement(b, m, members[j], members[0]);
       });
       if (targets.length === 0) continue;
       const decays = b.decay && !(b.decay.noDecayFrom !== undefined && (m.constellation ?? 0) >= b.decay.noDecayFrom);
-      addBuff({ id: `cbuff-${i}-${b.id}`, tag: b.onCharTag ? characterTag(i) : labelTag(b.label), targets, delta, description: `${names[i]}: ${b.label}`, ...(b.timed ? {} : { always: true as const }), ...(decays ? { decay: b.decay!.duration } : {}), ...windowOf(b, i) });
+      addBuff({ id: `cbuff-${i}-${b.id}`, tag: b.onCharTag ? characterTag(i) : labelTag(b.label), targets, delta, description: `${names[i]}: ${b.label}`, ...(b.timed ? {} : { always: true as const }), ...(decays ? { decay: b.decay!.duration } : {}), ...windowOf(b, i, m) });
     }
   });
 
@@ -235,7 +249,7 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
       if (!resShred && !b.defShred) continue;
       const id = `cbuff-shred-${i}-${b.id}`;
       if (off(id)) continue;
-      addBuff({ id, tag: labelTag(b.label), targets: 'all', delta: { ...(resShred ? { resShred } : {}), ...(b.defShred ? { defShred: b.defShred } : {}) }, description: `${names[i]}: ${b.label}`, ...windowOf(b, i) });
+      addBuff({ id, tag: labelTag(b.label), targets: 'all', delta: { ...(resShred ? { resShred } : {}), ...(b.defShred ? { defShred: b.defShred } : {}) }, description: `${names[i]}: ${b.label}`, ...windowOf(b, i, m) });
     }
   });
   // 2d) Redução de RES do 4 peças com duração: também é janela (sem duração, vale o tempo todo, na RES do inimigo)
@@ -244,7 +258,7 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
     if (!sr?.duration || !(sr.value > 0) || off(`set-res-shred-${i}`)) return;
     const els = sr.elements.filter((el) => shredReaches(sr, el, m, members));
     if (!els.length) return;
-    addBuff({ id: `set-res-shred-${i}`, tag: labelTag(`${m.primarySet!.name}: redução de RES`), targets: 'all', delta: { resShred: Object.fromEntries(els.map((el) => [el, sr.value])) }, description: `${names[i]}: ${m.primarySet!.name} (redução de RES)`, ...windowOf(sr, i) });
+    addBuff({ id: `set-res-shred-${i}`, tag: labelTag(`${m.primarySet!.name}: redução de RES`), targets: 'all', delta: { resShred: Object.fromEntries(els.map((el) => [el, sr.value])) }, description: `${names[i]}: ${m.primarySet!.name} (redução de RES)`, ...windowOf(sr, i, m) });
   });
 
   // 3) Extras de time (com etiqueta)
@@ -312,7 +326,7 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
         if (b.scope === 'self' && j !== i) return false;
         if (b.scope === 'others' && j === i) return false;
         if (b.forFactions && !b.forFactions.some((f) => members[j].factions?.includes(f))) return false;
-        return receivesByElement(b, m, members[j]);
+        return receivesByElement(b, m, members[j], members[0]);
       });
       if (targets.length === 0) continue;
       const delta: StatDelta = { dmgByType: {} };
@@ -320,14 +334,14 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
         if (to === 'atkFlat' || to === 'hpFlat' || to === 'defFlat' || to === 'atkPct' || to === 'hpPct' || to === 'defPct' || to === 'em' || to === 'critRate' || to === 'critDmg' || to === 'er') delta[to] = value;
         else if (to === 'dmgPct') {
           delta.dmgBonus = value;
-          if (b.forElements || b.forReacted) delta.eleDmg = value;
+          if (isElemental(b)) delta.eleDmg = value;
         }
         else if (to === 'normal' || to === 'charged' || to === 'plunge' || to === 'skill' || to === 'burst') delta.dmgByType![to] = value;
         else delta.reactionBonus = { ...delta.reactionBonus, [to]: value };
       }
       addBuff({
         id, tag: b.onCharTag ? characterTag(i) : labelTag(b.label), targets, delta, description: `${names[i]}: ${b.label}`, derived: true,
-        ...(b.timed ? {} : { always: true }), ...windowOf(b, i),
+        ...(b.timed ? {} : { always: true }), ...windowOf(b, i, m),
       });
     }
   });

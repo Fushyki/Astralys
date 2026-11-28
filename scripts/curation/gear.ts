@@ -51,6 +51,10 @@ export interface BuffCur {
   /** Vira faixa no plano de combate (só vale nas janelas ligadas). Padrão: sempre ativo. */
   timed?: boolean;
   forElements?: Element[];
+  /** Recebem os do elemento do dono (e, com `ownOrActive`, os do elemento do 1º do time). */
+  forOwnerElement?: 'own' | 'ownOrActive';
+  /** Id de outro buff do mesmo efeito que este substitui quando vale. */
+  replaces?: string;
   /** Vai só para quem o usuário escolher (ver `CharacterBuff.pickReceiver`). */
   pickReceiver?: true;
   forFactions?: ('moonsign' | 'hexerei')[];

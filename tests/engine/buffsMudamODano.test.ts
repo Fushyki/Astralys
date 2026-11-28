@@ -5,6 +5,7 @@ import { assembleTeam, evaluateRotation, resolveProject, type EffectsData, type 
 import { minimumRolls } from '../../src/engine/stats';
 import { sampleProject } from '../../src/features/rotation/persistence';
 import { defaultMember } from '../../src/features/rotation/teamOps';
+import { semAuto } from '../helpers/semAuto';
 
 const root = path.resolve(__dirname, '../..');
 const json = <T>(rel: string): T => JSON.parse(readFileSync(path.join(root, rel), 'utf8'));
@@ -33,7 +34,7 @@ function total(character: string, tags: string[]): string {
     actions: actions.map((a, i) => ({ id: `a${i}`, member: a.member, move: a.move, executions: 1, reaction: 'none', activeTags: a.tags, tagSource: 'manual', dmgAdjust: 0, time: i })),
     buffWindows: [], disabled: [],
   };
-  const r = resolveProject(p as never, game, effects);
+  const r = resolveProject(semAuto(p as never, game, effects), game, effects);
   const asm = assembleTeam(r.team);
   return evaluateRotation({ members: r.team.members, assembly: asm, config: r.team.config, rolls: r.team.members.map(() => minimumRolls(2)), flatEffects: r.flatEffects }, r.actions).actions.map((a) => [a.avg, a.stats]).map((x) => JSON.stringify(x)).join('|');
 }
@@ -50,7 +51,7 @@ it('cada buff em janela dos personagens muda o dano ou os stats quando ligado (s
   for (const e of effects.characters) {
     // Um buff substituído por outro (constelação, o teste usa C6) não tem o que mudar.
     const replaced = new Set((e.buffs ?? []).flatMap((x) => (x.replaces ? [x.replaces] : [])));
-    for (const b of (e.buffs ?? []).filter((x) => x.timed && !replaced.has(x.id) && !x.onlyLabels && !x.team?.fewerThan)) { // golpe ou time específicos: ver loteGo2.test.ts
+    for (const b of (e.buffs ?? []).filter((x) => x.timed && !replaced.has(x.id) && !x.onlyLabels && !x.team?.fewerThan && !x.team?.ownerFaction)) { // golpe, time ou facção específicos: ver loteGo2.test.ts e janelasDePersonagem.test.ts
       checked++;
       if (total(e.character, OTHERS) === total(e.character, [...OTHERS, b.onCharTag ? CHARS[0] : `label:${b.label}`])) dead.push(`${e.character}:${b.id}`);
     }

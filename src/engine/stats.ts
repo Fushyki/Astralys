@@ -227,6 +227,8 @@ export interface MemberInput {
   kqmStat?: 'hp' | 'atk' | 'def' | 'em' | 'er';
   /** Infusão dos ataques normais, carregados e de queda (Hu Tao, Xiao, Yoimiya…): elemento no lugar do Físico. */
   normalInfusion?: ElementOrPhysical;
+  /** Talentos sem golpe de dano: o uso deles não aparece na rotação (ver `autoSource`). */
+  silent?: string[];
   /** Rolls totais de substat (padrão: 9 por peça 5★ + 7 por peça 4★). */
   totalRolls?: number;
   /** Rolls TOTAIS em CR+CD forçados (inclui os mínimos). Vazio = otimizar. */
@@ -297,6 +299,7 @@ export function characterBuffDelta(stats: BuffStats | undefined, elemental = fal
     critRateByType: stats.critRateByType ?? {}, critDmgByType: stats.critDmgByType ?? {}, baseMultByType: stats.baseMultByType ?? {}, defIgnore: stats.defIgnore ?? 0,
     atkFlat: stats.atkFlat ?? 0, atkBaseFlat: stats.atkBaseFlat ?? 0, hpFlat: stats.hpFlat ?? 0, defFlat: stats.defFlat ?? 0,
     physDmg: stats.physDmgPct ?? 0, physCritDmg: stats.physCritDmg ?? 0, reactionBonus: stats.reactionBonus ?? {},
+    ...(stats.vaporizeBonus ? { vaporizeBonus: stats.vaporizeBonus } : {}),
     // Buff só para certos elementos ("DMG Pyro +X%" para membros Pyro): é bônus elemental, não vale em golpe Físico.
     ...(elemental ? { eleDmg: stats.dmgPct ?? 0 } : {}),
   };

@@ -25,9 +25,9 @@ const buffs: Record<string, BuffCuration[]> = {
   Mona: [
     {
       id: 'c1', label: 'Mona C1 (reações)', src: 'const1', scope: 'team', timed: true,
-      stats: { reactionBonus: { electrocharged: { p: 0 }, lunarcharged: { p: 1 }, lunarcrystallize: { lit: 0.15 } } },
-      expect: 'Electro-Charged DMG increases by 15%, Lunar-Charged DMG increases by 15%',
-      note: '+15% de Eletrocarregado, Lunar-Carregado e Lunar-Cristalizar por 8 s depois que um aliado acerta inimigo com Presságio: ligue a janela. Pendente: Vaporizar (o formato não tem bônus de Vaporizar) e Redemoinho Hydro (o bônus de Redemoinho do motor vale para todo elemento) não entram; o reforço para 160% quando quem aciona está fora de campo também não.',
+      stats: { reactionBonus: { electrocharged: { p: 0 }, lunarcharged: { p: 1 }, lunarcrystallize: { lit: 0.15 } }, vaporizeBonus: { lit: 0.15 } },
+      expect: 'Electro-Charged DMG increases by 15%, Lunar-Charged DMG increases by 15%, Vaporize DMG increases by 15%',
+      note: '+15% de Vaporizar, Eletrocarregado, Lunar-Carregado e Lunar-Cristalizar por 8 s depois que um aliado acerta inimigo com Presságio: ligue a janela. Pendente: Redemoinho Hydro (o bônus de Redemoinho do motor vale para todo elemento) não entra; o reforço para 160% quando quem aciona está fora de campo também não.',
     },
     {
       id: 'c4', label: 'Mona C4', src: 'const4', scope: 'team', timed: true, stats: { critRate: { p: 1 } },
@@ -43,7 +43,17 @@ const buffs: Record<string, BuffCuration[]> = {
       id: 'c6', label: 'Mona C6', src: 'const6', scope: 'self', timed: true, stats: { byType: { charged: { p: 1, x: 3 } } },
       stacks: { max: 3, unit: 's de acúmulo', default: 3 },
       expect: 'A maximum DMG Bonus of 180% can be achieved in this manner',
-      note: '+60% de DMG do próximo Carregado por segundo, até 180% (3 s, o teto do texto), por no máximo 8 s: ligue a janela e escolha os segundos de 0 a 3. Pendente: o aumento do Carregado para 200% do dano original contra inimigo com Presságio não entra (o texto não diz se multiplica o dano final ou só a base).',
+      note: '+60% de DMG do próximo Carregado por segundo, até 180% (3 s, o teto do texto), por no máximo 8 s: ligue a janela e escolha os segundos de 0 a 3. O 200% contra Presságio está em "Mona C6 (Presságio)".',
+    },
+    {
+      id: 'c6omen', label: 'Mona C6 (Presságio)', src: 'const6', scope: 'self', timed: true, stats: { baseMultByType: { charged: { lit: 1 } } },
+      expect: 'increased to 200% of the original DMG',
+      note: 'Carregado contra inimigo com Presságio causa 200% do dano original (+100% sobre o dano base, como os outros "% do dano original"): ligue a janela.',
+    },
+    {
+      id: 'hexglow', label: 'Mona: Esplendor da Hydromancia (Hexerei)', src: 'p4', scope: 'others', timed: true, team: { hexerei: 2, ownerFaction: 'hexerei' },
+      stats: { vaporizeBonus: { p: 2, x: 3 } }, expect: 'Each stack consumed increases the damage of that Vaporize reaction by 5%',
+      note: 'Cada acerto Normal ou Carregado da Mona dá 1 acúmulo (até 3, por 8 s); o próximo Vaporizar de um aliado gasta todos: +5% por acúmulo, só naquele acerto. Soma com a C1. Precisa da Mona e de mais um Hexerei: ligue a janela.',
     },
   ],
   'Sangonomiya Kokomi': [

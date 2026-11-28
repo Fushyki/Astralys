@@ -156,6 +156,12 @@ export function consumption(s: AutoSource, actions: readonly Hit[]): { spent: Ma
 /** Janelas que uma fonte abre sozinha nesta rotação, já unidas quando se encostam. */
 export function autoIntervals(s: AutoSource, actions: readonly Hit[]): Interval[] {
   if (s.consume) return union(consumption(s, actions).spans);
+  const endOf = endRule(s, actions);
+  return union(autoStarts(s, actions).map((t) => [t, round(endOf(t))]));
+}
+
+/** Instantes em que a fonte abre (ou renova) a janela. */
+function autoStarts(s: AutoSource, actions: readonly Hit[]): number[] {
   let starts: number[] = [];
   if (s.periodic && s.cooldown) {
     const last = actions.reduce((m, a) => Math.max(m, a.time ?? 0), 0);
@@ -170,8 +176,7 @@ export function autoIntervals(s: AutoSource, actions: readonly Hit[]): Interval[
   if (seq) starts = starts.filter((_, k) => k % seq.length === seq.index);
   const delay = s.delay;
   if (delay) starts = starts.map((t) => round(t + delay));
-  const endOf = endRule(s, actions);
-  return union(starts.map((t) => [t, round(endOf(t))]));
+  return starts;
 }
 
 /** Une as janelas que se encostam ou se cobrem. */
@@ -206,6 +211,9 @@ export function applyAutoWindows(actions: readonly RotationAction[], buffs: read
   for (const b of buffs) {
     for (const s of b.auto ?? []) if (s.consume) spent.set(b.tag, new Map([...(spent.get(b.tag) ?? []), ...consumption(s, actions).spent]));
   }
+  // Buffs que caem com o tempo (A4 da Mavuika): precisam da idade, contada da última vez que a janela abriu.
+  const opened = new Map<string, number[]>();
+  for (const b of buffs) if (b.decay && b.auto) opened.set(b.tag, [...(opened.get(b.tag) ?? []), ...b.auto.flatMap((s) => autoStarts(s, actions))]);
   return actions.map((a) => {
     const base = a.autoTags ? a.activeTags.filter((t) => !a.autoTags!.includes(t)) : a.activeTags;
     const t = a.time ?? 0;
@@ -217,7 +225,11 @@ export function applyAutoWindows(actions: readonly RotationAction[], buffs: read
       ...Object.entries(a.tagShare ?? {}).filter(([tag]) => !a.autoTags?.includes(tag)),
       ...on.flatMap((tag) => { const k = spent.get(tag)?.get(a); return k !== undefined && k < 1 ? [[tag, k] as const] : []; }),
     ]);
-    const { tagShare: _old, ...rest } = a;
-    return { ...rest, activeTags: [...base, ...on], autoTags: auto, ...(Object.keys(share).length ? { tagShare: share } : {}) };
+    const ages = Object.fromEntries([
+      ...Object.entries(a.tagAges ?? {}).filter(([tag]) => !a.autoTags?.includes(tag)),
+      ...on.flatMap((tag) => { const from = opened.get(tag)?.filter((s) => s <= t + 1e-9); return from?.length ? [[tag, round(t - Math.max(...from))] as const] : []; }),
+    ]);
+    const { tagShare: _share, tagAges: _ages, ...rest } = a;
+    return { ...rest, activeTags: [...base, ...on], autoTags: auto, ...(Object.keys(share).length ? { tagShare: share } : {}), ...(a.tagAges || Object.keys(ages).length ? { tagAges: ages } : {}) };
   });
 }

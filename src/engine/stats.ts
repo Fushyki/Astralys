@@ -363,8 +363,8 @@ export const isEmptyDelta = (d: StatDelta) =>
 export function staticSources(m: MemberInput, member = 0): StatSource[] {
   const out: StatSource[] = [];
   const el = m.character.element;
-  const add = (id: string, label: string, kind: StatSourceKind, delta: StatDelta | null) => {
-    if (delta && !isEmptyDelta(delta)) out.push({ id: `m${member}:${id}`, label, kind, member, delta });
+  const add = (id: string, label: string, kind: StatSourceKind, delta: StatDelta | null, keep = false) => {
+    if (delta && (keep || !isEmptyDelta(delta))) out.push({ id: `m${member}:${id}`, label, kind, member, delta });
   };
 
   if (m.character.ascension) {
@@ -386,7 +386,7 @@ export function staticSources(m: MemberInput, member = 0): StatSource[] {
   }
 
   for (const b of activeCharacterBuffs(m)) {
-    if (!b.timed && b.scope === 'self') add(`cbuff-${b.id}`, b.label, 'character', characterBuffDelta(b.stats, !!b.forElements || !!b.forReacted));
+    if (!b.timed && b.scope === 'self') add(`cbuff-${b.id}`, b.label, 'character', characterBuffDelta(b.stats, !!b.forElements || !!b.forReacted), !!b.stacks && !!b.stats);
   }
 
   const we = m.weaponEffect ? weaponStatsAt(m.weaponEffect, m.refinement) : undefined;

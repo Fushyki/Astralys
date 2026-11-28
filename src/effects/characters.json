@@ -84,12 +84,7 @@
           "duration": 20,
           "noDecayFrom": 4
         },
-        "stacks": {
-          "max": 10,
-          "unit": "tempo restante do buff (s)",
-          "step": 2
-        },
-        "note": "+40% de DMG de quem está em campo (200 de Espírito Lutador no Supremo), caindo em linha reta até 0 em 20 s (4% a cada 2 s). Escolha o tempo restante do buff: 20 s = +40%, 10 s = +20%, 0 = nada. Na rotação ele já cai sozinho pelo tempo do golpe, então deixe em 20 s. A C4 tira o decaimento."
+        "note": "+40% de DMG de quem está em campo (200 de Espírito Lutador no Supremo), caindo em linha reta até 0 em 20 s (4% a cada 2 s). Na rotação ele cai sozinho pelo tempo do golpe. A C4 tira o decaimento."
       },
       {
         "id": "c1",
@@ -1920,11 +1915,6 @@
         "scope": "self",
         "timed": true,
         "duration": 12.5,
-        "auto": {
-          "on": [
-            "burst"
-          ]
-        },
         "stats": {
           "atkPct": 0,
           "dmgPct": 0,
@@ -1980,7 +1970,7 @@
             1
           ]
         },
-        "note": "DMG de Ataque Normal depois do Havoc: Extinction, pelo nível do Supremo e pelas Fendas absorvidas (padrão 3). Vale para os 10 primeiros acertos: a janela nasce sozinha. O caso sem nenhuma Fenda (+8% no nível 10) não entra."
+        "note": "DMG de Ataque Normal depois do Havoc: Extinction, pelo nível do Supremo e pelas Fendas absorvidas (padrão 3). Vale para os 10 primeiros acertos: ligue na janela. O caso sem nenhuma Fenda (+8% no nível 10) não entra."
       },
       {
         "id": "a4b",
@@ -2879,7 +2869,7 @@
           "reactionBonus": {}
         },
         "flat": [],
-        "note": "+20% de Taxa Crítica por 5 s nas Frostflake Arrows seguintes e nos florescimentos (são golpes de Carregado). A primeira flecha não recebe. a janela nasce sozinha só sobre elas: o tiro mirado comum também receberia."
+        "note": "+20% de Taxa Crítica por 5 s nas Frostflake Arrows seguintes e nos florescimentos (são golpes de Carregado). A primeira flecha não recebe. a janela nasce sozinha e cobre todo golpe do intervalo: ajuste para valer só sobre elas: o tiro mirado comum também receberia."
       },
       {
         "id": "c1",
@@ -3777,12 +3767,6 @@
         "scope": "self",
         "timed": true,
         "duration": 6,
-        "auto": {
-          "on": [
-            "skill"
-          ],
-          "cast": true
-        },
         "stats": {
           "atkPct": 0,
           "dmgPct": 0,
@@ -6173,12 +6157,6 @@
         "scope": "self",
         "timed": true,
         "duration": 10,
-        "auto": {
-          "on": [
-            "skill"
-          ],
-          "cast": true
-        },
         "stats": {
           "atkPct": 0,
           "dmgPct": 0,
@@ -8838,12 +8816,6 @@
         "scope": "others",
         "timed": true,
         "duration": 12,
-        "auto": {
-          "on": [
-            "burst"
-          ],
-          "cast": true
-        },
         "convert": {
           "from": "atk",
           "source": "self",
@@ -8855,7 +8827,7 @@
           ]
         },
         "flat": [],
-        "note": "Dano de Estelar-Conduct / Redemoinho Estelar do personagem em campo (não a Qiqi) +600% do ATK dela por reação, até 4 reações em 12 s depois do Supremo: a janela nasce sozinha só sobre as reações que consomem o stack. Assume que o bônus soma à base da reação (como o C1 da Mizuki)."
+        "note": "Dano de Estelar-Conduct / Redemoinho Estelar do personagem em campo (não a Qiqi) +600% do ATK dela por reação, até 4 reações em 12 s depois do Supremo: ligue a janela só sobre as reações que consomem o stack. Assume que o bônus soma à base da reação (como o C1 da Mizuki)."
       }
     ],
     "notes": [
@@ -10098,12 +10070,6 @@
           "Cryo"
         ],
         "duration": 6,
-        "auto": {
-          "on": [
-            "burst"
-          ],
-          "cast": true
-        },
         "durationPlus": {
           "constellation": 2,
           "seconds": 2
@@ -10131,7 +10097,7 @@
           "reactionBonus": {}
         },
         "flat": [],
-        "note": "+20% de DMG do elemento absorvido durante o Supremo: a janela nasce sozinha em que o elemento bate com o de quem ataca."
+        "note": "+20% de DMG do elemento absorvido durante o Supremo: ligue nas janelas em que o elemento bate com o de quem ataca."
       },
       {
         "id": "a4",
@@ -10268,12 +10234,6 @@
           "Cryo"
         ],
         "duration": 6,
-        "auto": {
-          "on": [
-            "burst"
-          ],
-          "cast": true
-        },
         "durationPlus": {
           "constellation": 2,
           "seconds": 2
@@ -12244,7 +12204,7 @@
           "reactionBonus": {}
         },
         "flat": [],
-        "note": "Soma +60 de Maestria à equipe (além dos +60 do C4) quando o Fashioner's Tanglevine Shaft dispara Queimadura, Florescer, Lunar-Florescer, Acelerar ou Propagar: a janela nasce sozinha só quando a reação acontecer (renova os 8 s)."
+        "note": "Soma +60 de Maestria à equipe (além dos +60 do C4) quando o Fashioner's Tanglevine Shaft dispara Queimadura, Florescer, Lunar-Florescer, Acelerar ou Propagar: a janela nasce sozinha e cobre todo golpe do intervalo: ajuste para valer só quando a reação acontecer (renova os 8 s)."
       }
     ],
     "notes": [],
@@ -16375,12 +16335,6 @@
         "scope": "team",
         "timed": true,
         "duration": 5,
-        "auto": {
-          "on": [
-            "skill"
-          ],
-          "cast": true
-        },
         "convert": {
           "from": "em",
           "source": "self",
@@ -16391,7 +16345,7 @@
           ]
         },
         "flat": [],
-        "note": "Redemoinho com +1.100% da Maestria dela (1 por ativação): a janela nasce sozinha do Redemoinho."
+        "note": "Redemoinho com +1.100% da Maestria dela (1 por ativação): ligue na janela do Redemoinho."
       },
       {
         "id": "c1s",
@@ -16400,12 +16354,6 @@
         "scope": "team",
         "timed": true,
         "duration": 5,
-        "auto": {
-          "on": [
-            "skill"
-          ],
-          "cast": true
-        },
         "convert": {
           "from": "em",
           "source": "self",
@@ -16416,7 +16364,7 @@
           ]
         },
         "flat": [],
-        "note": "Redemoinho Estelar com +550% da Maestria dela: a janela nasce sozinha."
+        "note": "Redemoinho Estelar com +550% da Maestria dela: ligue na janela."
       },
       {
         "id": "c6",
@@ -18313,12 +18261,6 @@
         "scope": "self",
         "timed": true,
         "duration": 20,
-        "auto": {
-          "on": [
-            "burst"
-          ],
-          "cast": true
-        },
         "convert": {
           "from": "atk",
           "source": "self",
@@ -18330,7 +18272,7 @@
           ]
         },
         "flat": [],
-        "note": "Aproximação: +3% de DMG do Supremo por 100 de ATK, até 75% (assume os 10 stacks), durante os 20 s depois do Supremo: a janela nasce sozinha. No jogo vale só para os ataques periódicos do dragão, 1 stack por ataque (10 no total), e é \"% do dano original\"; aqui entra como DMG% do Supremo inteiro, então ligue só sobre os golpes do dragão."
+        "note": "Aproximação: +3% de DMG do Supremo por 100 de ATK, até 75% (assume os 10 stacks), durante os 20 s depois do Supremo: ligue a janela. No jogo vale só para os ataques periódicos do dragão, 1 stack por ataque (10 no total), e é \"% do dano original\"; aqui entra como DMG% do Supremo inteiro, então ligue só sobre os golpes do dragão."
       },
       {
         "id": "c6def",
@@ -18677,10 +18619,6 @@
         "scope": "team",
         "timed": true,
         "duration": 8,
-        "auto": {
-          "on": [],
-          "by": "team"
-        },
         "convert": {
           "from": "hp",
           "source": "self",
@@ -18703,10 +18641,6 @@
         "scope": "team",
         "timed": true,
         "duration": 8,
-        "auto": {
-          "on": [],
-          "by": "team"
-        },
         "convert": {
           "from": "hp",
           "source": "self",
@@ -18729,10 +18663,6 @@
         "scope": "team",
         "timed": true,
         "duration": 8,
-        "auto": {
-          "on": [],
-          "by": "team"
-        },
         "convert": {
           "from": "hp",
           "source": "self",
@@ -18899,10 +18829,6 @@
           "Electro"
         ],
         "duration": 8,
-        "auto": {
-          "on": [],
-          "by": "team"
-        },
         "stats": {
           "atkPct": 0,
           "dmgPct": 0,
@@ -18926,7 +18852,7 @@
           "reactionBonus": {}
         },
         "flat": [],
-        "note": "+80% de Dano Crítico do dano Hydro e Electro por 8 s depois de um Lunar-Carregado no Lunar Domain: a janela nasce sozinha. O motor dá o bônus aos membros desses elementos (o número 80% está só no texto)."
+        "note": "+80% de Dano Crítico do dano Hydro e Electro por 8 s depois de um Lunar-Carregado no Lunar Domain: ligue nas janelas. O motor dá o bônus aos membros desses elementos (o número 80% está só no texto)."
       },
       {
         "id": "c6lb",
@@ -18939,10 +18865,6 @@
           "Dendro"
         ],
         "duration": 8,
-        "auto": {
-          "on": [],
-          "by": "team"
-        },
         "stats": {
           "atkPct": 0,
           "dmgPct": 0,
@@ -18979,10 +18901,6 @@
           "Geo"
         ],
         "duration": 8,
-        "auto": {
-          "on": [],
-          "by": "team"
-        },
         "stats": {
           "atkPct": 0,
           "dmgPct": 0,
@@ -19903,9 +19821,6 @@
           "Pyro"
         ],
         "duration": 10,
-        "auto": {
-          "on": []
-        },
         "stats": {
           "atkPct": 0,
           "dmgPct": 0.2,
@@ -19929,7 +19844,7 @@
           "reactionBonus": {}
         },
         "flat": [],
-        "note": "+20% de DMG Pyro por 10 s depois de um Redemoinho do elemento Pyro: a janela nasce sozinha só se o Redemoinho foi desse elemento. O bônus de Anemo está em \"Varka C4\"."
+        "note": "+20% de DMG Pyro por 10 s depois de um Redemoinho do elemento Pyro: ligue a janela só se o Redemoinho foi desse elemento. O bônus de Anemo está em \"Varka C4\"."
       },
       {
         "id": "c4-hydro",
@@ -19941,9 +19856,6 @@
           "Hydro"
         ],
         "duration": 10,
-        "auto": {
-          "on": []
-        },
         "stats": {
           "atkPct": 0,
           "dmgPct": 0.2,
@@ -19967,7 +19879,7 @@
           "reactionBonus": {}
         },
         "flat": [],
-        "note": "+20% de DMG Hydro por 10 s depois de um Redemoinho do elemento Hydro: a janela nasce sozinha só se o Redemoinho foi desse elemento. O bônus de Anemo está em \"Varka C4\"."
+        "note": "+20% de DMG Hydro por 10 s depois de um Redemoinho do elemento Hydro: ligue a janela só se o Redemoinho foi desse elemento. O bônus de Anemo está em \"Varka C4\"."
       },
       {
         "id": "c4-cryo",
@@ -19979,9 +19891,6 @@
           "Cryo"
         ],
         "duration": 10,
-        "auto": {
-          "on": []
-        },
         "stats": {
           "atkPct": 0,
           "dmgPct": 0.2,
@@ -20005,7 +19914,7 @@
           "reactionBonus": {}
         },
         "flat": [],
-        "note": "+20% de DMG Cryo por 10 s depois de um Redemoinho do elemento Cryo: a janela nasce sozinha só se o Redemoinho foi desse elemento. O bônus de Anemo está em \"Varka C4\"."
+        "note": "+20% de DMG Cryo por 10 s depois de um Redemoinho do elemento Cryo: ligue a janela só se o Redemoinho foi desse elemento. O bônus de Anemo está em \"Varka C4\"."
       },
       {
         "id": "c4-electro",
@@ -20017,9 +19926,6 @@
           "Electro"
         ],
         "duration": 10,
-        "auto": {
-          "on": []
-        },
         "stats": {
           "atkPct": 0,
           "dmgPct": 0.2,
@@ -20043,7 +19949,7 @@
           "reactionBonus": {}
         },
         "flat": [],
-        "note": "+20% de DMG Electro por 10 s depois de um Redemoinho do elemento Electro: a janela nasce sozinha só se o Redemoinho foi desse elemento. O bônus de Anemo está em \"Varka C4\"."
+        "note": "+20% de DMG Electro por 10 s depois de um Redemoinho do elemento Electro: ligue a janela só se o Redemoinho foi desse elemento. O bônus de Anemo está em \"Varka C4\"."
       }
     ],
     "notes": [
@@ -20813,12 +20719,6 @@
           "Hydro"
         ],
         "duration": 12,
-        "auto": {
-          "on": [
-            "burst"
-          ],
-          "cast": true
-        },
         "stats": {
           "atkPct": 0,
           "dmgPct": 0.12,
@@ -20854,12 +20754,6 @@
           "Electro"
         ],
         "duration": 12,
-        "auto": {
-          "on": [
-            "burst"
-          ],
-          "cast": true
-        },
         "stats": {
           "atkPct": 0,
           "dmgPct": 0.12,
@@ -20895,12 +20789,6 @@
           "Pyro"
         ],
         "duration": 12,
-        "auto": {
-          "on": [
-            "burst"
-          ],
-          "cast": true
-        },
         "stats": {
           "atkPct": 0,
           "dmgPct": 0.12,
@@ -21662,12 +21550,6 @@
           "Hydro"
         ],
         "duration": 12,
-        "auto": {
-          "on": [
-            "burst"
-          ],
-          "cast": true
-        },
         "stats": {
           "atkPct": 0,
           "dmgPct": 0.12,
@@ -21703,12 +21585,6 @@
           "Electro"
         ],
         "duration": 12,
-        "auto": {
-          "on": [
-            "burst"
-          ],
-          "cast": true
-        },
         "stats": {
           "atkPct": 0,
           "dmgPct": 0.12,
@@ -21744,12 +21620,6 @@
           "Pyro"
         ],
         "duration": 12,
-        "auto": {
-          "on": [
-            "burst"
-          ],
-          "cast": true
-        },
         "stats": {
           "atkPct": 0,
           "dmgPct": 0.12,
@@ -22205,12 +22075,6 @@
         "scope": "team",
         "timed": true,
         "duration": 10,
-        "auto": {
-          "on": [
-            "skill"
-          ],
-          "cast": true
-        },
         "convert": {
           "from": "def",
           "source": "self",
@@ -22221,7 +22085,7 @@
           ]
         },
         "flat": [],
-        "note": "Cada golpe Lunar-Cristalizar da equipe gasta 1 stack e ganha 75% da DEF dela: a janela nasce sozinha com stacks (6 por habilidade). O consumo maior do Million Ton Crush NÃO entra."
+        "note": "Cada golpe Lunar-Cristalizar da equipe gasta 1 stack e ganha 75% da DEF dela: ligue nas janelas com stacks (6 por habilidade). O consumo maior do Million Ton Crush NÃO entra."
       },
       {
         "id": "c6",
@@ -22230,12 +22094,6 @@
         "scope": "team",
         "timed": true,
         "duration": 10,
-        "auto": {
-          "on": [
-            "skill"
-          ],
-          "cast": true
-        },
         "convert": {
           "from": "def",
           "source": "self",
@@ -22513,7 +22371,7 @@
           "hexerei": 2
         },
         "flat": [],
-        "note": "Hexerei: +30% de ATK de quem causou o Redemoinho ou Redemoinho Estelar, por 5 s: a janela nasce sozinha só no personagem que o causou."
+        "note": "Hexerei: +30% de ATK de quem causou o Redemoinho ou Redemoinho Estelar, por 5 s: a janela nasce sozinha e cobre todo golpe do intervalo: ajuste para valer só no personagem que o causou."
       }
     ],
     "notes": [
@@ -26247,12 +26105,6 @@
         "scope": "team",
         "timed": true,
         "duration": 15,
-        "auto": {
-          "on": [
-            "burst"
-          ],
-          "cast": true
-        },
         "convert": {
           "from": "em",
           "source": "self",
@@ -26265,7 +26117,7 @@
           ]
         },
         "flat": [],
-        "note": "Pale Hymn: +500% da Maestria dela no dano de Florescer, Hiperflorescer e Brotar: a janela nasce sozinha do Supremo (o motor não conta os stacks)."
+        "note": "Pale Hymn: +500% da Maestria dela no dano de Florescer, Hiperflorescer e Brotar: ligue nas janelas do Supremo (o motor não conta os stacks)."
       },
       {
         "id": "c2lb",
@@ -26274,12 +26126,6 @@
         "scope": "team",
         "timed": true,
         "duration": 15,
-        "auto": {
-          "on": [
-            "burst"
-          ],
-          "cast": true
-        },
         "convert": {
           "from": "em",
           "source": "self",
@@ -26290,7 +26136,7 @@
           ]
         },
         "flat": [],
-        "note": "Pale Hymn: +400% da Maestria dela no dano Lunar-Florescer: a janela nasce sozinha do Supremo."
+        "note": "Pale Hymn: +400% da Maestria dela no dano Lunar-Florescer: ligue nas janelas do Supremo."
       },
       {
         "id": "c2a",
@@ -26371,12 +26217,6 @@
         "scope": "team",
         "timed": true,
         "duration": 15,
-        "auto": {
-          "on": [
-            "burst"
-          ],
-          "cast": true
-        },
         "convert": {
           "from": "em",
           "source": "self",
@@ -26409,7 +26249,7 @@
           ]
         },
         "flat": [],
-        "note": "Pale Hymn: o dano de Florescer, Hiperflorescer e Brotar da equipe sobe uma % (pelo nível do Supremo) da Maestria dela, por 15 s. a janela nasce sozinha do Supremo; o motor não conta os stacks (18 do Supremo, 1 gasto por golpe). O reforço do C2 está em \"Lauma C2\" (soma a este)."
+        "note": "Pale Hymn: o dano de Florescer, Hiperflorescer e Brotar da equipe sobe uma % (pelo nível do Supremo) da Maestria dela, por 15 s. Ligue nas janelas do Supremo; o motor não conta os stacks (18 do Supremo, 1 gasto por golpe). O reforço do C2 está em \"Lauma C2\" (soma a este)."
       },
       {
         "id": "palelb",
@@ -26418,12 +26258,6 @@
         "scope": "team",
         "timed": true,
         "duration": 15,
-        "auto": {
-          "on": [
-            "burst"
-          ],
-          "cast": true
-        },
         "convert": {
           "from": "em",
           "source": "self",
@@ -26454,7 +26288,7 @@
           ]
         },
         "flat": [],
-        "note": "Pale Hymn: o dano de Lunar-Florescer da equipe sobe uma % (pelo nível do Supremo) da Maestria dela, por 15 s. a janela nasce sozinha do Supremo; o motor não conta os stacks."
+        "note": "Pale Hymn: o dano de Lunar-Florescer da equipe sobe uma % (pelo nível do Supremo) da Maestria dela, por 15 s. Ligue nas janelas do Supremo; o motor não conta os stacks."
       },
       {
         "id": "skill-res",
@@ -28582,13 +28416,6 @@
         "scope": "self",
         "timed": true,
         "duration": 20,
-        "auto": {
-          "on": [
-            "skill",
-            "burst"
-          ],
-          "cast": true
-        },
         "resShred": {
           "value": 0.2,
           "elements": [
@@ -28605,13 +28432,6 @@
         "scope": "self",
         "timed": true,
         "duration": 20,
-        "auto": {
-          "on": [
-            "skill",
-            "burst"
-          ],
-          "cast": true
-        },
         "resShred": {
           "value": 0.2,
           "elements": [
@@ -28797,10 +28617,6 @@
         "scope": "team",
         "timed": true,
         "duration": 10,
-        "auto": {
-          "on": [],
-          "by": "team"
-        },
         "stats": {
           "atkPct": 0.225,
           "dmgPct": 0,
@@ -28827,7 +28643,7 @@
           "hexerei": 2
         },
         "flat": [],
-        "note": "Hexerei (2+ membros Hexerei, Witch's Homework concluída): +22,5% de ATK por 10 s depois de uma Sobrecarga com o Oz: a janela nasce sozinha."
+        "note": "Hexerei (2+ membros Hexerei, Witch's Homework concluída): +22,5% de ATK por 10 s depois de uma Sobrecarga com o Oz: ligue nas janelas."
       },
       {
         "id": "hex-em",
@@ -28836,10 +28652,6 @@
         "scope": "team",
         "timed": true,
         "duration": 10,
-        "auto": {
-          "on": [],
-          "by": "team"
-        },
         "stats": {
           "atkPct": 0,
           "dmgPct": 0,
@@ -28866,7 +28678,7 @@
           "hexerei": 2
         },
         "flat": [],
-        "note": "Hexerei: +90 de Maestria por 10 s depois de Eletrocarregado ou Lunar-Carregado com o Oz: a janela nasce sozinha."
+        "note": "Hexerei: +90 de Maestria por 10 s depois de Eletrocarregado ou Lunar-Carregado com o Oz: ligue nas janelas."
       },
       {
         "id": "c6atk",
@@ -28875,12 +28687,6 @@
         "scope": "team",
         "timed": true,
         "duration": 10,
-        "auto": {
-          "on": [
-            "skill",
-            "burst"
-          ]
-        },
         "stats": {
           "atkPct": 0.225,
           "dmgPct": 0,
@@ -28916,12 +28722,6 @@
         "scope": "team",
         "timed": true,
         "duration": 10,
-        "auto": {
-          "on": [
-            "skill",
-            "burst"
-          ]
-        },
         "stats": {
           "atkPct": 0,
           "dmgPct": 0,

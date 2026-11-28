@@ -224,7 +224,8 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
       // Sem `timed`, o buff do próprio membro já está no bloco estático; o de equipe vale em toda ação (`always`).
       if (!b.stats || (!b.timed && b.scope === 'self')) continue;
       const delta = characterBuffDelta(b.stats, isElemental(b));
-      if (isEmptyDelta(delta) || off(`cbuff-${i}-${b.id}`)) continue;
+      // Buff com stacks escolhidos em 0 continua na lista: é no cartão dele que se volta a subir.
+      if ((isEmptyDelta(delta) && !b.stacks) || off(`cbuff-${i}-${b.id}`)) continue;
       const chosen = b.pickReceiver ? pickedReceivers(names, i, m.receivers?.[b.id]) : undefined;
       const targets = names.filter((n, j) => {
         if (chosen && !chosen.includes(n)) return false;
@@ -321,7 +322,7 @@ export function assembleTeam(input: TeamInput, options: AssembleOptions = {}): T
       const raw = (c.perPoint ?? 0) * Math.max(0, stat - (c.threshold ?? 0));
       const caps = [c.cap, c.capBaseAtk !== undefined ? c.capBaseAtk * srcBase : undefined].filter((x): x is number => x !== undefined);
       const value = caps.length ? Math.min(raw, ...caps) : raw;
-      if (value <= 0) continue;
+      if (value <= 0 && !b.stacks) continue;
       const targets = names.filter((_, j) => {
         if (b.scope === 'self' && j !== i) return false;
         if (b.scope === 'others' && j === i) return false;

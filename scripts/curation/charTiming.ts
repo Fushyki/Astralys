@@ -61,7 +61,8 @@ const SHENHE = r('burst', 'Duration', USE_BURST, { plus: [2, 6, '6 seconds', 'co
 const OMEN: CharTime = r('burst', 'Omen Duration', USE_BURST, { hex: { on: ['normal', 'charged'], add: 2, max: 8, every: 0.5, from: 'p4' } });
 const GEO_TRAVELER: Record<string, CharTime> = { c1: r('burst', 'Stonewall Duration', USE_BURST) };
 const ELECTRO_TRAVELER: Record<string, CharTime> = { c2: t(8, BURST) };
-const DENDRO_TRAVELER = each(['a1', 'c6', 'c6h', 'c6e', 'c6p'], r('burst', 'Lea Lotus Lamp Duration', USE_BURST));
+// O elemento da transfiguração é um só: c6h, c6e e c6p ficam com a janela do usuário.
+const DENDRO_TRAVELER: Record<string, CharTime> = { ...each(['a1', 'c6'], r('burst', 'Lea Lotus Lamp Duration', USE_BURST)), ...each(['c6h', 'c6e', 'c6p'], r('burst', 'Lea Lotus Lamp Duration')) };
 const PYRO_TRAVELER: Record<string, CharTime> = { c4: t(9, USE_BURST) };
 const CRYO_TRAVELER: Record<string, CharTime> = { ...each(['c2', 'c2x'], t(5, SKILL)), c6: t(15, USE_BURST) };
 
@@ -73,7 +74,7 @@ export const CHARACTER_TIMING: Record<string, Record<string, CharTime>> = {
   Lyney: { c4: t(6, CHARGED) },
   'Shikanoin Heizou': { a4: t(10, SKILL) },
   'Raiden Shogun': { c4: t(10, USE_BURST, { delay: ['burst', 'Musou Isshin Duration'] }), c2: r('burst', 'Musou Isshin Duration', USE_BURST) },
-  Skirk: { c2: t(12.5, BURST), burst: r('skill', 'Seven-Phase Flash Mode Duration', BURST), a4b: t(20, TEAM), c4: t(20, TEAM, { from: 'p2' }) },
+  Skirk: { c2: t(12.5, BURST), burst: r('skill', 'Seven-Phase Flash Mode Duration'), a4b: t(20, TEAM), c4: t(20, TEAM, { from: 'p2' }) },
   Xiangling: { a4: t(10, USE_SKILL), c6: r('burst', 'Duration', USE_BURST, { plus: [4, 4, '40%', 'const4'] }), c1: t(6, SKILL) },
   Yelan: { c4: t(25, USE_SKILL), a4: r('burst', 'Duration', USE_BURST) },
   'Hu Tao': { a1: t(8, USE_SKILL, { delay: ['skill', 'Duration'] }), c4: t(15), c6: t(10), paramita: r('skill', 'Duration', USE_SKILL) },
@@ -81,7 +82,7 @@ export const CHARACTER_TIMING: Record<string, Record<string, CharTime>> = {
   'Kamisato Ayaka': { a1: t(6, USE_SKILL), a4: t(10, OWN), c6: t(0.5, { on: ['charged'], cd: 10 }), c4: t(6, BURST) },
   Xingqiu: { c4: r('burst', 'Duration', USE_BURST, { plus: [2, 3, '3s', 'const2'] }), c2: t(4, BURST) },
   Albedo: { a4: t(10, USE_BURST), c1: t(20, USE_SKILL), c4: t(3, { on: ['plunge'] }), ...each(['c6', 'a4hs', 'a4hx'], t(20, USE_SKILL)) },
-  Diluc: { a4: r('burst', 'Infusion Duration', USE_BURST, { plus: [0, 4, '4s', 'p2'] }), c2: t(10), c4: t(2, USE_SKILL, { delay: 2 }), c6: t(6, USE_SKILL) },
+  Diluc: { a4: r('burst', 'Infusion Duration', USE_BURST, { plus: [0, 4, '4s', 'p2'] }), c2: t(10), c4: t(2, USE_SKILL, { delay: 2 }), c6: t(6) },
   Klee: { c1: t(12), ...each(['c6s', 'c6o'], t(25, USE_BURST)), c2: t(10, SKILL) },
   'Yae Miko': { c4: t(5, SKILL), c1: t(10, OWN), c2: r('skill', 'Duration', USE_SKILL) },
   Eula: { c1: t(6, BOTH), ...each(['skill', 'skill-fis'], r('skill', 'RES Decrease Duration', USE_SKILL)) },
@@ -92,7 +93,7 @@ export const CHARACTER_TIMING: Record<string, Record<string, CharTime>> = {
   Thoma: { c6: t(6, BOTH) },
   Nilou: { a1: t(30, USE_SKILL), c4: t(8, SKILL), ...each(['c2', 'c2d'], t(10, TEAM)) },
   Neuvillette: { c2: t(30, TEAM, { from: 'p1' }) },
-  Wriothesley: each(['a4', 'c2n'], r('skill', 'Duration', USE_SKILL)),
+  Wriothesley: { a4: r('skill', 'Duration', USE_SKILL), c2n: r('skill', 'Duration') },
   Clorinde: { c6: t(12, USE_SKILL), a4: t(15, OWN), ...each(['a1', 'c2'], t(15, TEAM)) },
   Navia: { a1: t(4, USE_SKILL), c4: t(8, BURST) },
   Kinich: { c2: t(6, SKILL), a4: t(15, TEAM) },
@@ -107,7 +108,7 @@ export const CHARACTER_TIMING: Record<string, Record<string, CharTime>> = {
   Xiao: { ...each(['burst', 'a1'], r('burst', 'Duration', USE_BURST)), a4: t(7, USE_SKILL) },
   Ningguang: { a4: t(10, USE_SKILL) },
   Noelle: each(['c6', 'burst'], r('burst', 'Duration', USE_BURST)),
-  Qiqi: { a4rad: r('skill', 'Duration', USE_SKILL), c6: t(12, USE_BURST) },
+  Qiqi: { a4rad: r('skill', 'Duration', USE_SKILL), c6: t(12) },
   Chongyun: { a4: t(8, USE_SKILL, { delay: ['skill', 'Field Duration'] }) },
   Diona: each(['c6', 'c6rad'], r('burst', 'Duration', USE_BURST)),
   // C1: 8 s depois de cada acerto num inimigo com Presságio, então até 8 s depois do fim dele.
@@ -118,7 +119,8 @@ export const CHARACTER_TIMING: Record<string, Record<string, CharTime>> = {
   Keqing: { c4: t(10, OWN), a4: t(8, USE_BURST), c6: t(8, OWN) },
   Sucrose: {
     a1: t(8, OWN), a4: t(8, BOTH), p4s: t(15, USE_SKILL), p4l: t(20, USE_BURST),
-    ...each(['c6', 'c6hex'], r('burst', 'Duration', USE_BURST, { plus: [2, 2, '2s', 'const2'] })),
+    // Só o elemento absorvido ganha: a rotação não diz qual foi.
+    ...each(['c6', 'c6hex'], r('burst', 'Duration', undefined, { plus: [2, 2, '2s', 'const2'] })),
   },
   Rosaria: { a1: t(5, USE_SKILL), c1: t(4, OWN), c6: t(10, BURST) },
   Yoimiya: { a1: t(3, NORMAL), ...each(['a4', 'a4s'], t(15, USE_BURST)), c1: t(20), c2: t(6, OWN) },
@@ -157,24 +159,26 @@ export const CHARACTER_TIMING: Record<string, Record<string, CharTime>> = {
   Mualani: { a4: t(20, TEAM) },
   Ororon: { c2: t(9, USE_BURST), c6: t(9, TEAM) },
   'Lan Yan': { c4: t(12, USE_BURST) },
-  'Yumemizuki Mizuki': { a4: t(4, TEAM), ...each(['c1', 'c1s', 'c6', 'c2', 'c2d', 'skill-swirl', 'skill-stellar', 'p4em'], r('skill', 'Dreamdrifter Duration', USE_SKILL)) },
+  'Yumemizuki Mizuki': { a4: t(4, TEAM), ...each(['c6', 'c2', 'c2d', 'skill-swirl', 'skill-stellar', 'p4em'], r('skill', 'Dreamdrifter Duration', USE_SKILL)), ...each(['c1', 'c1s'], r('skill', 'Dreamdrifter Duration')) },
   Varesa: { a4: t(12, TEAM), ...each(['a1', 'a1fp'], t(5, USE_SKILL)), c1: t(5, { on: ['skill', 'plunge', 'burst'] }), c4dr: t(15, USE_BURST) },
   Ifa: { a4: t(10, TEAM), c4: t(15, USE_BURST) },
   Flins: { c2res: t(7, OWN) },
   Aino: { c1: t(15, USE_BOTH), ...each(['c6', 'c6g'], t(15, USE_BURST)) },
   Nefer: { ...each(['c2', 'a1'], t(8, OWN)), c4: r('skill', 'Shadow Dance Duration', USE_SKILL) },
-  Durin: { c2: t(20, USE_BURST), ...each(['c6', 'c6dark', 'c6def'], t(6, BURST)), a1: t(6, TEAM), a1hex: t(6, TEAM, { from: 'p1' }), a4: t(20, USE_BURST), ...each(['c1p', 'c1d'], t(20, USE_BURST)) },
+  Durin: { c2: t(20, USE_BURST), ...each(['c6', 'c6dark', 'c6def'], t(6, BURST)), a1: t(6, TEAM), a1hex: t(6, TEAM, { from: 'p1' }), a4: t(20), ...each(['c1p', 'c1d'], t(20, USE_BURST)) },
   Jahoda: { a4: t(6, USE_BURST), c6: t(20, USE_SKILL) },
-  Columbina: { a1: t(10, TEAM), ...each(['c2', 'c2lc', 'c2lb', 'c2lcr', 'c6lc', 'c6lb', 'c6lcr'], t(8, TEAM)), domain: r('burst', 'Lunar Domain Duration', USE_BURST) },
+  // Só um tipo de reação Lunar vale por vez (e no C6 não somam no mesmo elemento): as variantes são do usuário.
+  Columbina: { a1: t(10, TEAM), c2: t(8, TEAM), ...each(['c2lc', 'c2lb', 'c2lcr', 'c6lc', 'c6lb', 'c6lcr'], t(8)), domain: r('burst', 'Lunar Domain Duration', USE_BURST) },
   Illuga: { ...each(['a1', 'a1g'], t(20, USE_BOTH)), ...each(['c6', 'c6g'], t(20, USE_BOTH, { from: 'p1' })), c4: r('burst', 'Duration', USE_BURST) },
-  Varka: { ...each(['c4', 'c4-pyro', 'c4-hydro', 'c4-cryo', 'c4-electro'], t(10, OWN)), a4: t(8, TEAM), ...each(['a1m', 'a1m2'], r('skill', 'Sturm und Drang Duration', USE_SKILL)) },
+  Varka: { c4: t(10, OWN), ...each(['c4-pyro', 'c4-hydro', 'c4-cryo', 'c4-electro'], t(10)), a4: t(8, TEAM), ...each(['a1m', 'a1m2'], r('skill', 'Sturm und Drang Duration', USE_SKILL)) },
   Lohen: { ...each(['a4', 'a4o'], t(8, TEAM)), c2: t(8, BOTH), a4hex: t(6, BOTH) },
   'Aether (Geo)': GEO_TRAVELER, 'Lumine (Geo)': GEO_TRAVELER,
   'Aether (Electro)': ELECTRO_TRAVELER, 'Lumine (Electro)': ELECTRO_TRAVELER,
   'Aether (Dendro)': DENDRO_TRAVELER, 'Lumine (Dendro)': DENDRO_TRAVELER,
   'Aether (Pyro)': PYRO_TRAVELER, 'Lumine (Pyro)': PYRO_TRAVELER,
   'Aether (Cryo)': CRYO_TRAVELER, 'Lumine (Cryo)': CRYO_TRAVELER,
-  Linnea: { c2: t(8, TEAM), c4: t(5, TEAM), c1: t(10, USE_SKILL), c6: t(10, USE_SKILL, { from: 'const1' }) },
+  // C1 e C6 gastam acúmulos (6 por habilidade): sem limite de usos na janela automática, ficam com a do usuário.
+  Linnea: { c2: t(8, TEAM), c4: t(5, TEAM), c1: t(10), c6: t(10, undefined, { from: 'const1' }) },
   Prune: {
     a4: t(5, BOTH), c2: r('burst', 'Hunter-Seeker Mode Duration', USE_BURST, { plus: [6, 4, '4s', 'const6'] }),
     c6: t(5, TEAM), 'hex-self': t(5, TEAM), 'hex-trig': t(5, TEAM),
@@ -194,7 +198,7 @@ export const CHARACTER_TIMING: Record<string, Record<string, CharTime>> = {
   Charlotte: { c2: t(12, SKILL) },
   Ineffa: { a4: t(20, USE_BURST), c1: t(20, USE_SKILL) },
   Lauma: {
-    ...each(['a1n', 'a1a'], t(20, USE_SKILL)), ...each(['c2', 'c2lb', 'pale', 'palelb'], r('burst', 'Pale Hymn Duration', USE_BURST)),
+    ...each(['a1n', 'a1a'], t(20, USE_SKILL)), ...each(['c2', 'c2lb', 'pale', 'palelb'], r('burst', 'Pale Hymn Duration')),
     'skill-res': r('skill', 'Elemental RES Decrease Duration', SKILL),
   },
   Zibai: { c2: r('skill', 'Lunar Phase Shift Duration', USE_SKILL), c6: t(3, SKILL) },
@@ -204,10 +208,11 @@ export const CHARACTER_TIMING: Record<string, Record<string, CharTime>> = {
   },
   Alyosha: each(['c6', 'hp'], r('skill', "Hunter's Precision Duration", USE_SKILL)),
   Odette: {
-    ...each(['a1', 'c6', 'c2', 'c2res', 'c2res-electro', 'c2res-anemo'], r('skill', 'Solo Dance Double Duration', USE_BOTH)),
+    ...each(['a1', 'c6', 'c2', 'c2res'], r('skill', 'Solo Dance Double Duration', USE_BOTH)), ...each(['c2res-electro', 'c2res-anemo'], r('skill', 'Solo Dance Double Duration')),
     c4: t(6, USE_BURST), burst: r('burst', "Snow Swan's Dream Duration", USE_BURST),
   },
-  Fischl: { ...each(['hex-atk', 'hex-em'], t(10, TEAM)), ...each(['c6atk', 'c6em'], t(10, BOTH)) },
+  // ATK vem da Sobrecarga e Maestria do Eletrocarregado: a rotação não garante qual aconteceu.
+  Fischl: each(['hex-atk', 'hex-em', 'c6atk', 'c6em'], t(10)),
   Chasca: { c6: t(3, SKILL) },
 };
 

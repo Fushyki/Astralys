@@ -32,8 +32,8 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.reload({ waitUntil: 'networkidle' });
   await page.waitForSelector('.eq-card');
 
-  check('DPS do time do exemplo é 156.338', (await kpi('DPS do time')) === '156.338', await kpi('DPS do time'));
-  check('dano da rotação do exemplo é 2.735.921', (await kpi('Dano da rotação')) === '2.735.921', await kpi('Dano da rotação'));
+  check('DPS do time do exemplo é 152.153', (await kpi('DPS do time')) === '152.153', await kpi('DPS do time'));
+  check('dano da rotação do exemplo é 2.662.674', (await kpi('Dano da rotação')) === '2.662.674', await kpi('Dano da rotação'));
   check('a reação principal é Derreter', (await kpi('Reação principal')) === 'Derreter');
   check('quatro cartões na ordem do time', (await cards()).join() === 'Mavuika,Citlali,Iansan,Bennett', (await cards()).join());
   const roles = await page.$$eval('.eq-card .role', (e) => e.map((x) => x.textContent));
@@ -108,7 +108,7 @@ const check = (name, ok, extra = '') => { results.push(ok); console.log(`${ok ? 
   await page.click('button:has-text("Duplicar")');
   await page.waitForURL(/\/projeto\/(?!exemplo)[^/]+$/);
   await page.waitForSelector('.eq-card');
-  check('duplicar abre a cópia com o mesmo DPS', (await kpi('DPS do time')) === '156.338');
+  check('duplicar abre a cópia com o mesmo DPS', (await kpi('DPS do time')) === '152.153');
 
   // Persistência
   await page.reload({ waitUntil: 'networkidle' }); await page.waitForSelector('.eq-card');

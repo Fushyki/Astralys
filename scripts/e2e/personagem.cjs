@@ -75,7 +75,7 @@ const num = (t) => Number(String(t).replace(/\./g, '').replace(',', '.').replace
 
   // Abas e cabeçalho
   const tabs = await page.$$eval('.pc-tabs a', (a) => a.map((x) => x.textContent));
-  check('uma sub-aba por personagem com a % do dano', tabs.length === 4 && /Mavuika.*93,6%/.test(tabs[0]) && /Citlali.*3,4%/.test(tabs[1]), tabs.join(' | '));
+  check('uma sub-aba por personagem com a % do dano', tabs.length === 4 && /Mavuika.*93,4%/.test(tabs[0]) && /Citlali.*3,5%/.test(tabs[1]), tabs.join(' | '));
   check('a aba Personagens do time está marcada', (await page.getAttribute('.dz-subnav a:has-text("Personagens")', 'aria-current')) === 'page');
 
   // Atributos do gabarito

@@ -571,7 +571,10 @@ function withCharTime(name: string, buff: Record<string, unknown> & { id: string
   };
   const when = { duration, ...(auto ? { auto } : {}) };
   // A nota antiga mandava ligar a janela; agora ela nasce sozinha.
-  const note = auto ? buff.note?.replace(/ligue (a janela|nas (mesmas )?janelas?|na janela( da habilidade| do Supremo)?|a faixa|nas faixas)( e escolha)?/gi, (m: string) => `a janela nasce sozinha${/escolha$/i.test(m) ? '; escolha' : ''}`) : buff.note;
+  const note = auto
+    ? buff.note?.replace(/ligue (a janela|nas (mesmas )?janelas?|na janela( da habilidade| do Supremo)?|a faixa|nas faixas)( e escolha| só)?/gi, (m: string) =>
+        /só$/i.test(m) ? 'a janela nasce sozinha e cobre todo golpe do intervalo: ajuste para valer só' : `a janela nasce sozinha${/escolha$/i.test(m) ? '; escolha' : ''}`)
+    : buff.note;
   if (!buff.timed) {
     if (!buff.flat?.length) throw new Error(`${where}: buff fixo sem dano fixo não vira janela`);
     return { ...buff, note, flat: buff.flat.map((f) => ({ ...f, ...when })) };

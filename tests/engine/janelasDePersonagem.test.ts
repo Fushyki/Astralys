@@ -104,6 +104,31 @@ describe('gatilhos próprios', () => {
   });
 });
 
+describe('stacks e tempo', () => {
+  it('a A4 da Mavuika cai com o tempo também na janela automática, e o Supremo renova', () => {
+    const r = windows(project([['Mavuika'], ['Bennett']], [[0, 'burst', 0], [0, 'normal', 10], [0, 'burst', 15], [0, 'normal', 16]])).r;
+    expect(r.actions.map((a) => a.tagAges?.['label:Mavuika A4'])).toEqual([0, 10, 0, 1]);
+  });
+
+  it('seletor em 0 mantém o buff na lista, sem valor', () => {
+    const w = windows(project([['Yelan', { stacks: { a4: 0 } }], ['Hu Tao']], [[0, 'burst', 0]]));
+    expect(w.asm.buffs.find((b) => b.id === 'cbuff-0-a4')!.delta.dmgBonus).toBeCloseTo(0, 9);
+  });
+
+  it('variantes que não somam e efeitos com usos limitados não abrem sozinhos', () => {
+    const closed: [string, string[]][] = [
+      ['Columbina', ['c2lc', 'c2lb', 'c2lcr', 'c6lc', 'c6lb', 'c6lcr']], ['Linnea', ['c1', 'c6']], ['Qiqi', ['c6']], ['Lauma', ['pale', 'palelb', 'c2', 'c2lb']],
+      ['Varka', ['c4-pyro', 'c4-hydro', 'c4-cryo', 'c4-electro']], ['Aether (Dendro)', ['c6h', 'c6e', 'c6p']], ['Sucrose', ['c6', 'c6hex']], ['Fischl', ['hex-atk', 'hex-em', 'c6atk', 'c6em']],
+      ['Odette', ['c2res-electro', 'c2res-anemo']], ['Yumemizuki Mizuki', ['c1', 'c1s']], ['Skirk', ['burst']], ['Diluc', ['c6']], ['Wriothesley', ['c2n']], ['Durin', ['a4']],
+    ];
+    const list = effects.characters as { character: string; buffs: { id: string; auto?: unknown; duration?: number }[] }[];
+    for (const [name, ids] of closed) for (const id of ids) {
+      const b = list.find((e) => e.character === name)!.buffs.find((x) => x.id === id)!;
+      expect([name, id, !!b.auto, !!b.duration]).toEqual([name, id, false, true]);
+    }
+  });
+});
+
 describe('Dádiva Celestial (4 peças)', () => {
   const gift: Partial<MemberRef> = { primarySet: 'Celestial Gift', secondarySet: undefined, fourPiece: true, gearManual: false };
   const team = (a: Partial<MemberRef>, b: Partial<MemberRef> = {}): [string, Partial<MemberRef>?][] => [['Hu Tao', b], ['Mona', { ...gift, ...a }], ['Xingqiu']];
